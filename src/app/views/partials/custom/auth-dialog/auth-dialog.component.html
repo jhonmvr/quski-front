@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Validacion&#243;n Seguridad</h1>
+<mat-dialog-content>
+        <div class="col-md-4">
+            <span class="badge badge-danger">Su session se ha caducado, desea renovar su token. {{mensaje}}</span>   
+        </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <div class="row">
+        
+        <div class="col-md-4">
+            <mat-cell *matCellDef="let element"></mat-cell>
+            <a href="javascript:void(0);" (click)="cerrar()">
+                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Cerrar">
+                    close</mat-icon>
+                <span style="position: relative;top: -10px;margin-left: 5px;">Cerrar</span>
+            </a>
+        </div>
+    </div>
+</mat-dialog-actions>

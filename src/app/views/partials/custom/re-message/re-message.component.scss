@@ -1,0 +1,43 @@
+::ng-deep snack-bar-container.success-snackbar {
+    color: white;
+    background-color: #00cc00;
+    border-color: white;
+    font-weight: 400;
+  }
+  
+  ::ng-deep snack-bar-container.warning-snackbar {
+    color: white;
+    background-color: #00cc00;
+    border-color: white;
+    font-weight: 400;
+  }
+
+  ::ng-deep snack-bar-container.error-snackbar {
+    color: white;
+    background-color: red;
+    border-color: white;
+    font-weight: 400;
+  }    
+
+  ::ng-deep snack-bar-container.error-snackbar {
+    color: rgb(14, 0, 0);
+    background-color: rgb(197, 179, 13);
+    border-color: rgb(255, 251, 251);
+    font-weight: 400;
+  }
+
+
+  ::ng-deep .custom-class .mat-simple-snackbar {
+    color: green;
+  }
+
+.alert.m-alert--outline.alert-success {
+    color: #575962;
+    background-color: #fff;
+    border-color: #1649d6;
+    color: #1649d6;
+    font-weight: 400;
+}
+
+
+

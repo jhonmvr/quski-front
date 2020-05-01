@@ -1,0 +1,36 @@
+  
+    <div style="text-align: center">
+    <h3>Tomar foto</h3>
+    
+    <webcam [height]="300" [width]="300" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam"
+    [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable" [videoOptions]="videoOptions" (cameraSwitched)="cameraWasSwitched($event)"
+    (initError)="handleInitError($event)">
+    </webcam>
+  
+    </div>  
+    
+  
+    <div style="text-align: center">
+        <a href="javascript:void(0);" (click)="triggerSnapshot();">
+        <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
+        <span style="position: relative;top: -10px;margin-left: 5px;">Tomar foto</span>
+        </a> 
+    </div>
+
+    <div style="text-align: center">
+        <div class="snapshot" *ngIf="webcamImage">
+            <img [src]="webcamImage.imageAsDataUrl" [width]="300" [height]= "300" />
+        </div>
+    </div>
+<div style="text-align: center">
+<br>
+         <a href="javascript:void(0);"  matTooltip="Guardar" (click)="guardar()"  style="font-size: 12px; vertical-align: middle;">
+             <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="">save</mat-icon>
+             <span style="position: relative;top: -10px;margin-left: 5px;">Guardar</span>
+         </a>
+         <a href="javascript:void(0);" (click)="cancelar();" matTooltip="Cancelar"  style="font-size: 12px; vertical-align: middle;">
+            <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="">cancelar</mat-icon>
+            <span style="position: relative;top: -10px;margin-left: 5px;">Cancelar</span>
+        </a>
+     
+ </div>

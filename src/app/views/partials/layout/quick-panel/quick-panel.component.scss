@@ -1,0 +1,27 @@
+:host {
+	::ng-deep {
+		ngb-tabset > .nav-tabs {
+			display: none;
+		}
+	}
+}
+
+.success-snackbar {
+    color: white;
+    background-color: #00cc00;
+    border-color: white;
+    font-weight: 400;
+}
+.warning-snackbar {
+    color: white;
+    background-color: darkorange;
+    border-color: white;
+    font-weight: 400;
+}
+
+.error-snackbar {
+    color: white;
+    background-color: red;
+    border-color: white;
+    font-weight: 400;
+}

@@ -1,0 +1,28 @@
+  
+    <div style="text-align: center">
+      <h3>Archivo</h3>
+      <img [src]="" [width]="300" [height]= "200" *ngif(imagenSubida) />  
+      </div>    
+      <div style="text-align: center">
+  
+    
+     
+      
+  </div>
+      
+  <div style="text-align: center">
+  <br>
+          <a href="javascript:void(0);"  matTooltip="Subir Archivo"  style="font-size: 12px; vertical-align: middle;">
+          <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="">cloud_upload</mat-icon>
+          <span style="position: relative;top: -10px;margin-left: 5px;">Subir Archivo</span>
+          </a>
+           <a href="javascript:void(0);"  matTooltip="Guardar"  style="font-size: 12px; vertical-align: middle;">
+               <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="">save</mat-icon>
+               <span style="position: relative;top: -10px;margin-left: 5px;">Guardar</span>
+           </a>
+           <a href="javascript:void(0);" (click)="cancelar();" matTooltip="Cancelar"  style="font-size: 12px; vertical-align: middle;">
+              <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="">cancelar</mat-icon>
+              <span style="position: relative;top: -10px;margin-left: 5px;">Cancelar</span>
+          </a>
+       
+   </div>

@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Cargar</h1>
+<div mat-dialog-content>
+  <input type="file" class="inputfile"  id="fileUpload" (change)="onFileChange($event,element)" #fileInput value="Escoja" >
+  <button type="button"  class="btn btn-sm btn-default" (click)="subirArchivoHabilitante(element)">
+    <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
+  </button>
+</div>
+<div mat-dialog-actions>
+    <!--button mat-button (click)="onNoClick()">Cancelar</button-->
+    <a href="javascript:void(0);" (click)="onNoClick()" matTooltip="Cancelar" style="font-size: 12px; vertical-align: middle;">
+      <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="Cancelar">cancel</mat-icon><span style="position: relative;top: -10px;margin-left: 5px;">Cancelar</span>
+    </a>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial
+        disabled="{{isDisabledGuardar}}" (click)="subirArchivoHabilitante(element)">Guardar</button>
+</div>
