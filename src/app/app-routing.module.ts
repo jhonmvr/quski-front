@@ -22,6 +22,9 @@ const routes: Routes = [
 			{
 				path: 'cliente',
 				loadChildren: () => import('app/views/pages/apps/cliente/cliente.module').then(m => m.ClienteModule),
+			},{
+			path: 'cotizacion',
+				loadChildren: () => import('app/views/pages/apps/cotizacion/cotizar.module').then(m => m.CotizarModule),
 			},
 			{
 				path: 'user-management',
