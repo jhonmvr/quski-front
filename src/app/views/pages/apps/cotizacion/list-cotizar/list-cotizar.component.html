@@ -1,0 +1,225 @@
+<!-- comento los vertical para que salga 
+      <mat-vertical-stepper>
+        <mat-step> -->
+
+<re-portlet>
+  <re-portlet-header
+    [title]="'Listado Cotizaciones'"
+    [class]="'kt-portlet__head--lg'"
+  >
+    <ng-container ktPortletTools>
+      <a
+        href="javascript:void(0);"
+        (click)="buscar()"
+        matTooltip="Buscar Cliente"
+        style="font-size: 12px; vertical-align: middle;"
+      >
+        <mat-icon
+          style="font-size: 24px;"
+          class="orange-icon"
+          matTooltipPosition="above"
+          >search</mat-icon
+        >
+        <span
+          style="position: relative; top: -10px; margin-left: 5px;"
+          class="orange-icon"
+          >Buscar cliente</span
+        >
+      </a>
+      <a
+        href="javascript:void(0);"
+        [routerLink]="['../gestion-cliente', '']"
+        matTooltip="Crear nuevo cotización"
+        style="font-size: 12px; vertical-align: middle;"
+      >
+        <mat-icon
+          style="font-size: 24px;"
+          matTooltipPosition="above"
+          class="blue-icon"
+          >control_point</mat-icon
+        >
+        <span
+          style="position: relative; top: -10px; margin-left: 5px;"
+          class="blue-icon"
+          >Nueva cotizacion</span
+        >
+      </a>
+    </ng-container>
+  </re-portlet-header>
+  <re-portlet-body>
+    <!-- start::FILTERS & GROUP ACTIONS -->
+
+    <div class="kt-form">
+      <mat-vertical-stepper>
+        <mat-step>
+          <div class="kt-form__filtration">
+            <div class="row align-items-center">
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input
+                    matInput
+                    [formControl]="cedula"
+                    placeholder="C.I."
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field>
+                  <mat-label>Fecha de nacimiento</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker3"
+                    [value]="fechaNacimiento.value"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker3"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker3></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input
+                    matInput
+                    [formControl]="nombresCompletos"
+                    placeholder="Nombres Completos "
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input
+                    matInput
+                    [formControl]="edad"
+                    placeholder="Edad "
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input
+                    matInput
+                    [formControl]="nacionalidad"
+                    placeholder="Nacionalidad "
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input
+                    matInput
+                    [formControl]="movil"
+                    placeholder="Móvil "
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input
+                    matInput
+                    [formControl]="telefonoDomicilio"
+                    placeholder="Teléfono Domicilio"
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input
+                    matInput
+                    [formControl]="publicidad"
+                    placeholder="Publicidad"
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input
+                    matInput
+                    [formControl]="correoElectronico"
+                    placeholder="Correo Eléctronico"
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input
+                    matInput
+                    [formControl]="campania"
+                    placeholder="Campaña"
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <label class="mat-form-field-fluid">
+                  Aprobado Web MUPI
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    value="SI"
+                    [formControl]="aprobacionMupi"
+                  />
+                  <span>SI</span>
+                </label>
+                <span> </span>
+                <label>
+                  <input
+                    type="radio"
+                    value="NO"
+                    [formControl]="aprobacionMupi"
+                  />
+                  <span>NO</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </mat-step>
+
+        <mat-step>
+          <ng-template matStepLabel>Variables crediticias </ng-template>
+          <div class="row">
+            <div class="col-md-12"></div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <a
+                href="javascript:void(0);"
+                matTooltip="Ver riesgo acumulado "
+                style="font-size: 12px; vertical-align: middle;"
+              >
+                <mat-icon
+                  style="font-size: 32px;"
+                  matTooltipPosition="above"
+                  matTooltip=""
+                  >remove_red_eye</mat-icon
+                >
+                <span style="position: relative; top: -10px; margin-left: 5px;"
+                  >Ver riesgo acumulado
+                </span>
+              </a>
+            </div>
+          </div>
+        </mat-step>
+        
+      </mat-vertical-stepper>
+    </div>
+
+    <!-- END FILTERS -->
+  </re-portlet-body>
+  <re-portlet-footer></re-portlet-footer>
+</re-portlet>
+
+<!-- comento los vertical para que salga   </mat-step>     </mat-vertical-stepper> -->
