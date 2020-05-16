@@ -4,7 +4,7 @@
 
 <re-portlet>
   <re-portlet-header
-    [title]="'Listado Cotizaciones'"
+    [title]="'Cotizar'"
     [class]="'kt-portlet__head--lg'"
   >
     <ng-container ktPortletTools>
@@ -99,6 +99,7 @@
                     [formControl]="edad"
                     placeholder="Edad "
                     autocomplete="off"
+                    readonly
                   />
                 </mat-form-field>
               </div>
@@ -171,7 +172,7 @@
                   <input
                     type="radio"
                     value="SI"
-                    [formControl]="aprobacionMupi"
+                    [formControl]="aprobadoWebMupi"
                   />
                   <span>SI</span>
                 </label>
@@ -180,20 +181,80 @@
                   <input
                     type="radio"
                     value="NO"
-                    [formControl]="aprobacionMupi"
+                    [formControl]="aprobadoWebMupi"
                   />
                   <span>NO</span>
                 </label>
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-3">
+              <a
+                href="javascript:void(0);"
+                matTooltip="Ver riesgo acumulado "
+                style="font-size: 12px; vertical-align: middle;"
+              >
+                <mat-icon
+                  style="font-size: 32px;"
+                  matTooltipPosition="above"
+                  matTooltip=""
+                  >remove_red_eye</mat-icon
+                >
+                <span style="position: relative; top: -10px; margin-left: 5px;"
+                  >Ver Precios
+                </span>
+              </a>
+            </div>
+          </div>
         </mat-step>
 
         <mat-step>
           <ng-template matStepLabel>Variables crediticias </ng-template>
-          <div class="row">
-            <div class="col-md-12"></div>
+          <!--START MAT TABLE-->
+          <div class="mat-table__wrapper">
+            <mat-table
+              #table
+              class="mat-elevation-z8"
+              [dataSource]="dataSource"
+              matSort
+              #sort1="matSort"
+              matSortActive="variable"
+              matSortDirection="asc"
+              matSortDisableClear
+            >
+              <ng-container matColumnDef="orden">
+                <mat-header-cell *matHeaderCellDef>Orden</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="variable">
+                <mat-header-cell *matHeaderCellDef mat-sort-header
+                  >Variable</mat-header-cell
+                >
+              </ng-container>
+              <ng-container matColumnDef="valor">
+                <mat-header-cell *matHeaderCellDef mat-sort-header
+                  >Valor</mat-header-cell
+                >
+              </ng-container>
+              <mat-header-row
+                *matHeaderRowDef="displayedColumns"
+              ></mat-header-row>
+              <mat-row
+                *matRowDef="let row; columns: displayedColumns"
+              ></mat-row>
+            </mat-table>
+            <mat-paginator
+              #paginator
+              [pageSize]="pageSize"
+              [pageSizeOptions]="[5, 10, 20]"
+              [showFirstLastButtons]="true"
+              [length]="totalResults"
+              [pageIndex]="currentPage"
+              (page)="paged()"
+            >
+            </mat-paginator>
           </div>
+          <!--end MAT TABLE-->
           <div class="row">
             <div class="col-md-3">
               <a
@@ -219,26 +280,94 @@
           <ng-template matStepLabel>Precio Oro</ng-template>
           <div class="row">
             <div class="col-md-12"></div>
+
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-select
+                  placeholder="Tipo de oro"
+                  [formControl]="tipoOro"
+                  (selectionChange)="setPrecioOro()"
+                >
+                  <mat-option>--</mat-option>
+                  <mat-option
+                    *ngFor="let tipoOro of listOros"
+                    [value]="tipoOro"
+                  >
+                    {{ tipoOro.quilate }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <input matInput placeholder="Precio" [formControl]="precio" />
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <input
+                  matInput
+                  placeholder="Precio Neto Estimado"
+                  [formControl]="precioEstimado"
+                />
+              </mat-form-field>
+            </div>
           </div>
-          <div class="col-md-4">
-            <mat-form-field>
-              <mat-select
-                placeholder="Tipo de oro"
-                [formControl]="tipoOro"
-                (selectionChange)="setPrecioOro()"
-              >
-                <mat-option>--</mat-option>
-                <mat-option *ngFor="let tipoOro of listOros" [value]="tipoOro">
-                  {{ tipoOro.quilate }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+          <!--START MAT TABLE-->
+          <div class="mat-table__wrapper">
+            <mat-table
+              #table
+              class="mat-elevation-z8"
+              [dataSource]="dataSource"
+              matSort
+              #sort1="matSort"
+              matSortActive="variable"
+              matSortDirection="asc"
+              matSortDisableClear
+            >
+              <ng-container matColumnDef="accion">
+                <mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="tipoOro">
+                <mat-header-cell *matHeaderCellDef mat-sort-header
+                  >Tipo Oro</mat-header-cell
+                >
+              </ng-container>
+              <ng-container matColumnDef="precio">
+                <mat-header-cell *matHeaderCellDef mat-sort-header
+                  >Precio</mat-header-cell
+                >
+              </ng-container>
+              <ng-container matColumnDef="pesoNetoEstimado">
+                <mat-header-cell *matHeaderCellDef mat-sort-header
+                  >Peso Neto Estimado</mat-header-cell
+                >
+              </ng-container>
+              <mat-header-row
+                *matHeaderRowDef="displayedColumnsI"
+              ></mat-header-row>
+              <mat-row
+                *matRowDef="let row; columns: displayedColumnsI"
+              ></mat-row>
+            </mat-table>
+            <mat-paginator
+              #paginator
+              [pageSize]="pageSize"
+              [pageSizeOptions]="[5, 10, 20]"
+              [showFirstLastButtons]="true"
+              [length]="totalResults"
+              [pageIndex]="currentPage"
+              (page)="paged()"
+            >
+            </mat-paginator>
           </div>
+          <!--end MAT TABLE-->
+
           <div class="row">
             <div class="col-md-3">
               <a
                 href="javascript:void(0);"
-                matTooltip="Ver riesgo acumulado "
+                matTooltip="Simular "
                 style="font-size: 12px; vertical-align: middle;"
               >
                 <mat-icon
@@ -248,20 +377,72 @@
                   >remove_red_eye</mat-icon
                 >
                 <span style="position: relative; top: -10px; margin-left: 5px;"
-                  >Ver riesgo acumulado
+                  >Simular
                 </span>
               </a>
             </div>
           </div>
         </mat-step>
         <mat-step>
-          
-          <div class="col-md-4">
-            <ng-template matStepLabel>Opciones de Crédito </ng-template>
-            <mat-form-field>
-              <input matInput placeholder="Precio" [formControl]="precio" />
-            </mat-form-field>
+          <ng-template matStepLabel>Opciones de Crédito </ng-template>
+
+           <!--START MAT TABLE-->
+           <div class="mat-table__wrapper">
+            <mat-table
+              #table
+              class="mat-elevation-z8"
+              [dataSource]="dataSource"
+              matSort
+              #sort1="matSort"
+              matSortActive="variable"
+              matSortDirection="asc"
+              matSortDisableClear
+            >
+              <ng-container matColumnDef="accion">
+                <mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="tipoOro">
+                <mat-header-cell *matHeaderCellDef mat-sort-header
+                  >Tipo Oro</mat-header-cell
+                >
+              </ng-container>
+              <ng-container matColumnDef="precio">
+                <mat-header-cell *matHeaderCellDef mat-sort-header
+                  >Precio</mat-header-cell
+                >
+              </ng-container>
+              <ng-container matColumnDef="pesoNetoEstimado">
+                <mat-header-cell *matHeaderCellDef mat-sort-header
+                  >Peso Neto Estimado</mat-header-cell
+                >
+              </ng-container>
+              <mat-header-row
+                *matHeaderRowDef="displayedColumnsI"
+              ></mat-header-row>
+              <mat-row
+                *matRowDef="let row; columns: displayedColumnsI"
+              ></mat-row>
+            </mat-table>
+            <mat-paginator
+              #paginator
+              [pageSize]="pageSize"
+              [pageSizeOptions]="[5, 10, 20]"
+              [showFirstLastButtons]="true"
+              [length]="totalResults"
+              [pageIndex]="currentPage"
+              (page)="paged()"
+            >
+            </mat-paginator>
           </div>
+          <!--end MAT TABLE-->
+
+
+
+
+
+
+
+
         </mat-step>
       </mat-vertical-stepper>
     </div>
