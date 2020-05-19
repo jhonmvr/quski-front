@@ -4,13 +4,16 @@ import { FormControl } from '@angular/forms';
 import { Page } from '../../../../../core/model/page';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
-import { TbMiCliente } from '../../../../../core/model/quski/TbMiCliente';
 import { TituloContratoService } from '../../../../../core/services/quski/titulo.contrato.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { merge, tap } from 'rxjs/operators';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { TbQoPrecioOro } from '../../../../../core/model/quski/TbQoPrecioOro';
+import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
+import { TbQoVariableCrediticia } from '../../../../../core/model/quski/TbQoVariableCrediticia';
+
+import { DialogSolicitudDeAutorizacionComponent } from './dialog-solicitud-de-autorizacion/dialog-solicitud-de-autorizacion.component';
 
 
 @Component({
@@ -40,11 +43,12 @@ export class ListCotizarComponent implements OnInit {
   precio = new FormControl('', []);
   precioEstimado = new FormControl('', []);
   pesoNetoEstimado = new FormControl('', []);
-  accion = new FormControl('', []);
+
   //OPCIONES DE CREDITO
   plazo = new FormControl('', []);
-  montoPreaprobado = new FormControl('', []);
+  montoPreAprobado = new FormControl('', []);
   aRecibir = new FormControl('', []);
+  totalCostosOperacion = new FormControl('', []);
   totalCostosNuevaOperacion = new FormControl('', []);
   costoCustodia = new FormControl('', []);
   costoTransporte = new FormControl('', []);
@@ -56,15 +60,20 @@ export class ListCotizarComponent implements OnInit {
   gradoInteres = new FormControl('', []);
   motivoDesestimiento = new FormControl('', []);
 
-  displayedColumns = ['orden', 'variable', 'valor'];
-  displayedColumnsI = ['accion', 'tipoOro', 'precio', 'pesoNetoEstimado'];
-  displayedColumnsC = ['plazo', 'montoPreAprobado', 'aRecibir', 'totalCostosOperacion', 'costoCustodia', 'costoTransporte', 'costoCredito', 'costoSeguro', 'costoResguardo', 'costoEstimado', 'valorCuota'];
-
+  displayedColumnsVarCredi = ['orden', 'variable', 'valor'];
+  displayedColumnsPrecioOro = ['accion', 'tipoOro', 'precio', 'pesoNetoEstimado'];
+  displayedColumnsCreditoNegociacion = ['plazo', 'montoPreAprobado', 'aRecibir', 'totalCostosOperacion', 'costoCustodia', 'costoTransporte', 'costoCredito', 'costoSeguro', 'costoResguardo', 'costoEstimado', 'valorCuota'];
   /**Obligatorio paginacion */
   p = new Page();
-  dataSource: MatTableDataSource<TbMiCliente> = new MatTableDataSource<TbMiCliente>();
-  dataSourceTipoPrecio: MatTableDataSource<TbQoPrecioOro> = new MatTableDataSource<TbQoPrecioOro>();
-  dataSourceCredito = new MatTableDataSource<any>();
+
+  //DATASOURCE
+  dataSourceVarCredi: MatTableDataSource<TbQoVariableCrediticia> = new MatTableDataSource<TbQoVariableCrediticia>();
+  dataSourcePrecioOro: MatTableDataSource<TbQoPrecioOro> = new MatTableDataSource<TbQoPrecioOro>();
+  dataSourceCredito: MatTableDataSource<TbQoCreditoNegociacion> = new MatTableDataSource<TbQoCreditoNegociacion>();
+
+
+
+
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
   totalResults: number;
@@ -104,12 +113,15 @@ export class ListCotizarComponent implements OnInit {
    * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
    */
   initiateTablePaginator(): void {
-    this.dataSource = new MatTableDataSource();
-    this.dataSourceTipoPrecio = new MatTableDataSource();
+    this.dataSourceVarCredi = new MatTableDataSource();
+    this.dataSourcePrecioOro = new MatTableDataSource();
+    this.dataSourceCredito = new MatTableDataSource();
     this.paginator.pageSize = 5;
     this.paginator.pageIndex = 0;
     this.totalResults = 0;
-    this.dataSource.paginator = this.paginator;
+    this.dataSourceVarCredi.paginator = this.paginator;
+    this.dataSourcePrecioOro.paginator = this.paginator;
+    this.dataSourceCredito.paginator = this.paginator;
   }
 
   /**
@@ -187,5 +199,26 @@ export class ListCotizarComponent implements OnInit {
     }]
 
   }
+
+  seleccionarEditar() {
+    console.log(">>>INGRESA AL DIALOGO ><<<<<<");
+    const dialogRefGuardar = this.dialog.open(DialogSolicitudDeAutorizacionComponent, {
+      width: '600px',
+      height: 'auto',
+
+
+    });
+
+    dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
+      console.log("envio de datos ");
+      if (respuesta)
+        this.submit();
+
+    });
+
+
+
+  }
+
 
 }

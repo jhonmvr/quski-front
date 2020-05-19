@@ -37,16 +37,18 @@ import {
 	MatDialogRef,
 	MatButtonToggleGroup,
 } from '@angular/material';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPermissionsModule } from 'ngx-permissions';
 
 // Component
 import { CotizarComponent } from './cotizar.component';
-import {ListCotizarComponent} from './list-cotizar/list-cotizar.component';
+import { ListCotizarComponent } from './list-cotizar/list-cotizar.component';
 import { DetalleCotizacionComponent } from './detalle-cotizacion/detalle-cotizacion.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
-import {PartialsModule} from '../../../partials/partials.module'
+import { PartialsModule } from '../../../partials/partials.module';
+import { DialogSolicitudDeAutorizacionComponent } from './list-cotizar/dialog-solicitud-de-autorizacion/dialog-solicitud-de-autorizacion.component';
+import { DialogCargarComponent } from './list-cotizar/dialog-solicitud-de-autorizacion/dialog-cargar/dialog-cargar.component'
 const routes: Routes = [
 	{
 		path: '',
@@ -79,10 +81,10 @@ const routes: Routes = [
 @NgModule({
 	imports: [
 		CommonModule,
-    	RouterModule.forChild(routes),
-    	MatDialogModule,
-    	CommonModule,
-    	NgxPermissionsModule.forChild(),
+		RouterModule.forChild(routes),
+		MatDialogModule,
+		CommonModule,
+		NgxPermissionsModule.forChild(),
 		RouterModule.forChild(routes),
 		FormsModule,
 		ReactiveFormsModule,
@@ -90,7 +92,7 @@ const routes: Routes = [
 		MatButtonModule,
 		MatMenuModule,
 		MatSelectModule,
-    	MatInputModule,
+		MatInputModule,
 		MatTableModule,
 		MatAutocompleteModule,
 		MatRadioModule,
@@ -108,14 +110,13 @@ const routes: Routes = [
 		MatTooltipModule,
 		MatButtonToggleModule,
 		NgbProgressbarModule,
-		
 		MatStepperModule,
 		PartialsModule
-  ],
-  providers:[
-	ModuleGuard,
-	{ provide: MatDialogRef, useValue: {} },
-    {
+	],
+	providers: [
+		ModuleGuard,
+		{ provide: MatDialogRef, useValue: {} },
+		{
 			provide: MAT_DIALOG_DEFAULT_OPTIONS,
 			useValue: {
 				hasBackdrop: true,
@@ -124,15 +125,18 @@ const routes: Routes = [
 				width: '900px'
 			}
 		},
-  ],
-declarations: [
-    CotizarComponent,
-    ListCotizarComponent,
-    DetalleCotizacionComponent,
-  ],
-  entryComponents: [
-	AddFotoComponent
-	
-  ]
+	],
+	declarations: [
+		CotizarComponent,
+		ListCotizarComponent,
+		DetalleCotizacionComponent,
+		DialogSolicitudDeAutorizacionComponent,
+		DialogCargarComponent,
+	],
+	entryComponents: [
+		AddFotoComponent,
+		DialogSolicitudDeAutorizacionComponent
+
+	]
 })
-export class CotizarModule {}
+export class CotizarModule { }
