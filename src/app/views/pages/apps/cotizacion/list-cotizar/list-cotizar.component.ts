@@ -14,6 +14,7 @@ import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCred
 import { TbQoVariableCrediticia } from '../../../../../core/model/quski/TbQoVariableCrediticia';
 
 import { DialogSolicitudDeAutorizacionComponent } from './dialog-solicitud-de-autorizacion/dialog-solicitud-de-autorizacion.component';
+import { SolicitudAutorizacionDialogComponent } from '../../../../../../app/views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 
 
 @Component({
@@ -202,9 +203,10 @@ export class ListCotizarComponent implements OnInit {
 
   seleccionarEditar() {
     console.log(">>>INGRESA AL DIALOGO ><<<<<<");
-    const dialogRefGuardar = this.dialog.open(DialogSolicitudDeAutorizacionComponent, {
+    const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
       width: '600px',
       height: 'auto',
+      data:this.cedula.value
 
 
     });
