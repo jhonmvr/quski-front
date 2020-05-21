@@ -143,14 +143,14 @@
                   <mat-select
                     placeholder="Publicidad"
                     [formControl]="publicidad"
-                    (selectionChange)="setPrecioOro()"
+                   
                   >
                     <mat-option>--</mat-option>
                     <mat-option
-                      *ngFor="let tipoOro of listOros"
-                      [value]="tipoOro"
+                      *ngFor="let publicidad of publicidad"
+                      [value]="publicidad"
                     >
-                      {{ tipoOro.quilate }}
+                      {{ publicidad }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -255,6 +255,7 @@
                 href="javascript:void(0);"
                 matTooltip="Ver riesgo acumulado "
                 style="font-size: 12px; vertical-align: middle;"
+                class="blue-icon"
               >
                 <mat-icon
                   style="font-size: 32px;"
@@ -488,14 +489,14 @@
                 <mat-select
                   placeholder="Grado de Interés"
                   [formControl]="gradoInteres"
-                  (selectionChange)="setPrecioOro()"
+                  
                 >
                   <mat-option>--</mat-option>
                   <mat-option
-                    *ngFor="let tipoOro of listOros"
-                    [value]="tipoOro"
+                    *ngFor="let gradoInteres of gradoInteres"
+                    [value]="gradoInteres"
                   >
-                    {{ tipoOro.quilate }}
+                    {{ gradoInteres }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -505,14 +506,14 @@
                 <mat-select
                   placeholder="Motivo de Desestimiento"
                   [formControl]="motivoDesestimiento"
-                  (selectionChange)="setPrecioOro()"
+                  
                 >
                   <mat-option>--</mat-option>
                   <mat-option
-                    *ngFor="let tipoOro of listOros"
-                    [value]="tipoOro"
+                    *ngFor="let motivoDesestimiento of motivoDesestimiento"
+                    [value]="motivoDesestimiento"
                   >
-                    {{ tipoOro.quilate }}
+                    {{ motivoDesestimiento }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

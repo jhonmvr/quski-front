@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Page } from '../../../../../core/model/page';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
@@ -12,9 +12,14 @@ import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-d
 import { TbQoPrecioOro } from '../../../../../core/model/quski/TbQoPrecioOro';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { TbQoVariableCrediticia } from '../../../../../core/model/quski/TbQoVariableCrediticia';
+import { PulicidadEnum } from '../../../../../core/enum/PublicidadEnum';
+import { TipoOroEnum } from '../../../../../core/enum/TipoOroEnum';
+import { GradoInteresEnum } from '../../../../../core/enum/GradoInteresEnum';
+import { MotivoDesestimientoEnum } from '../../../../../core/enum/MotivoDesestimientoEnum';
 
 import { DialogSolicitudDeAutorizacionComponent } from './dialog-solicitud-de-autorizacion/dialog-solicitud-de-autorizacion.component';
 import { SolicitudAutorizacionDialogComponent } from '../../../../../../app/views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
+import { ValidateCedula } from '../../../../../core/util/validate.util';
 
 
 @Component({
@@ -27,20 +32,18 @@ export class ListCotizarComponent implements OnInit {
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
 
-  cedula = new FormControl('', []);
+  cedula = new FormControl('', [Validators.required, ValidateCedula]);
   fechaNacimiento = new FormControl('', []);
   nombresCompletos = new FormControl('', []);
   edad = new FormControl('', []);
   nacionalidad = new FormControl('', []);
   movil = new FormControl('', []);
   telefonoDomicilio = new FormControl('', []);
-  publicidad = new FormControl('', []);
   correoElectronico = new FormControl('', []);
   campania = new FormControl('', []);
   aprobadoWebMupi = new FormControl('', []);
   apellidoCliente = new FormControl('', []);
   //OPCIONES PRECIO ORO
-  tipoOro = new FormControl('', []);
   precio = new FormControl('', []);
   precioEstimado = new FormControl('', []);
   pesoNetoEstimado = new FormControl('', []);
@@ -58,8 +61,7 @@ export class ListCotizarComponent implements OnInit {
   costoResguardo = new FormControl('', []);
   costoEstimado = new FormControl('', []);
   valorCuota = new FormControl('', []);
-  gradoInteres = new FormControl('', []);
-  motivoDesestimiento = new FormControl('', []);
+
 
   displayedColumnsVarCredi = ['orden', 'variable', 'valor'];
   displayedColumnsPrecioOro = ['accion', 'tipoOro', 'precio', 'pesoNetoEstimado'];
@@ -71,7 +73,11 @@ export class ListCotizarComponent implements OnInit {
   dataSourceVarCredi: MatTableDataSource<TbQoVariableCrediticia> = new MatTableDataSource<TbQoVariableCrediticia>();
   dataSourcePrecioOro: MatTableDataSource<TbQoPrecioOro> = new MatTableDataSource<TbQoPrecioOro>();
   dataSourceCredito: MatTableDataSource<TbQoCreditoNegociacion> = new MatTableDataSource<TbQoCreditoNegociacion>();
-
+  // ENUMERADORES
+  publicidad = new Array();
+  tipoOro = new Array();
+  gradoInteres = new Array();
+  motivoDesestimiento = new Array();
 
 
 
@@ -96,6 +102,32 @@ export class ListCotizarComponent implements OnInit {
   }
 
   ngOnInit() {
+    /*
+    this.estados.push(EstadoAprobacionEnum[EstadoAprobacionEnum.EN_EJECUCION]);
+    this.estados.push(EstadoAprobacionEnum[EstadoAprobacionEnum.DISPONIBLE]);
+    */
+    //agrego los enums de publicidad
+    this.publicidad.push(PulicidadEnum[PulicidadEnum.REDES_SOCICALES]);
+    this.publicidad.push(PulicidadEnum[PulicidadEnum.WEB]);
+    this.publicidad.push(PulicidadEnum[PulicidadEnum.REFERIDO]);
+    this.publicidad.push(PulicidadEnum[PulicidadEnum.CLIENTE_QUSKI]);
+    this.publicidad.push(PulicidadEnum[PulicidadEnum.VOLANTEO]);
+    this.publicidad.push(PulicidadEnum[PulicidadEnum.RADIO]);
+    this.publicidad.push(PulicidadEnum[PulicidadEnum.MUPI]);
+    //agrego los enums de tipoOro
+    this.tipoOro.push(TipoOroEnum[TipoOroEnum.QUILATE14]);
+    this.tipoOro.push(TipoOroEnum[TipoOroEnum.QUILATE18]);
+    //agrego los enums de gradoInteres
+    this.gradoInteres.push(GradoInteresEnum[GradoInteresEnum.MUY_INTERESADO]);
+    this.gradoInteres.push(GradoInteresEnum[GradoInteresEnum.INTERESADO]);
+    this.gradoInteres.push(GradoInteresEnum[GradoInteresEnum.LO_VA_A_PENSAR]);
+    this.gradoInteres.push(GradoInteresEnum[GradoInteresEnum.NO_LE_INTERESA]);
+    //agrego los motivos de Desestimiento
+    this.motivoDesestimiento.push(MotivoDesestimientoEnum[MotivoDesestimientoEnum.MUY_CARO]);
+    this.motivoDesestimiento.push(MotivoDesestimientoEnum[MotivoDesestimientoEnum.NO_LE_DAN_EL_MONTO_QUE_NECESITA]);
+    this.motivoDesestimiento.push(MotivoDesestimientoEnum[MotivoDesestimientoEnum.NO_LE_GUSTO_EL_PRODUCTO]);
+    this.motivoDesestimiento.push(MotivoDesestimientoEnum[MotivoDesestimientoEnum.NO_LE_GUSTO_LA_ATENCION]);
+
     //this.titulo.setNotice("GESTION DE CLIENTES")
     this.loading = this.loadingSubject.asObservable();
     // Set title to page breadCrumbs
@@ -206,7 +238,7 @@ export class ListCotizarComponent implements OnInit {
     const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
       width: '600px',
       height: 'auto',
-      data:this.cedula.value
+      data: this.cedula.value
 
 
     });
@@ -221,6 +253,8 @@ export class ListCotizarComponent implements OnInit {
 
 
   }
+
+
 
 
 }

@@ -234,7 +234,8 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 	],
 	entryComponents:[
 		AuthDialogComponent,
-		SolicitudAutorizacionDialogComponent
+		SolicitudAutorizacionDialogComponent,
+		CargarFotoDialogComponent
 	]
 })
 export class PartialsModule {

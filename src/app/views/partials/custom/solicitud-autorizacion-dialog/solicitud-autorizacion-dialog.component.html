@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Solicitud de autorizaci&#243;n</h1>
 <mat-dialog-content>
-  <p class="icon-orange">
+  <p class="red-icon">
     Cargue la autorización de buró para proceder la búsqueda en Equifax y
     prospecto CRM.
   </p>
@@ -29,25 +29,27 @@
 
 <mat-dialog-actions>
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <mat-cell *matCellDef="let element"></mat-cell>
       <a
         href="javascript:void(0);"
         (click)="descargarPlantillaHabilitante(element)"
+        class="blue-icon"
       >
         <mat-icon
           style="font-size: 32px;"
           matTooltipPosition="above"
           matTooltip="Descarga archivo"
-          class="icon-blue"
+          class="blue-icon"
           >cloud_download</mat-icon
         >
         <span style="position: relative; top: -10px; margin-left: 5px;"
+        class="blue-icon"
           >Descarga Plantilla</span
         >
       </a>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <a
         href="javascript:void(0);"
         (click)="loadArchivoCliente(element); $event.preventDefault()"
@@ -56,42 +58,47 @@
           style="font-size: 32px;"
           matTooltipPosition="above"
           matTooltip="Subir Archivo"
-          class="icon-blue"
+          class="blue-icon"
           >cloud_upload</mat-icon
         >
-        <span style="position: relative; top: -10px; margin-left: 5px;"
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon"
           >Carga Archivo</span
         >
       </a>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
       <a
         href="javascript:void(0);"
         (click)="consultar()"
         matTooltip="Consultar"
         style="font-size: 12px; vertical-align: middle;"
+        class="blue-icon"
       >
-        <mat-icon style="font-size: 32px;" matTooltipPosition="above"
+        <mat-icon style="font-size: 32px;" matTooltipPosition="above" class="blue-icon"
           >search</mat-icon
         >
         <span style="position: relative; top: -10px; margin-left: 5px;"
+        class="blue-icon"
           >Consultar</span
         >
       </a>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
       <a
         href="javascript:void(0);"
         (click)="salir()"
         matTooltip="Cancelar"
         style="font-size: 12px; vertical-align: middle;"
+        class="orange-icon"
       >
-        <mat-icon style="font-size: 32px;" matTooltipPosition="above"
+        <mat-icon style="font-size: 32px;" matTooltipPosition="above" class="orange-icon"
           >cancel</mat-icon
         >
-        <span style="position: relative; top: -10px; margin-left: 5px;"
+        <span
+          style="position: relative; top: -10px; margin-left: 5px;"
+          class="orange-icon"
           >Cancelar</span
         >
       </a>
