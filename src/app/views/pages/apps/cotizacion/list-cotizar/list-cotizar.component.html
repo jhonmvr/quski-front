@@ -5,7 +5,6 @@
 <re-portlet>
   <re-portlet-header [title]="'Cotizar'" [class]="'kt-portlet__head--lg'">
     <ng-container ktPortletTools>
-     
       <a
         href="javascript:void(0);"
         matTooltip="Guardar"
@@ -25,8 +24,6 @@
           >Guardar</span
         >
       </a>
-
-    
     </ng-container>
   </re-portlet-header>
   <re-portlet-body>
@@ -143,7 +140,6 @@
                   <mat-select
                     placeholder="Publicidad"
                     [formControl]="publicidad"
-                   
                   >
                     <mat-option>--</mat-option>
                     <mat-option
@@ -230,8 +226,7 @@
             </mat-paginator>
           </div>
           <!--end MAT TABLE-->
-          &nbsp;
-          &nbsp;
+          &nbsp; &nbsp;
 
           <div class="col-md-6 kt-margin-bottom-10-mobile">
             <label class="mat-form-field-fluid">
@@ -247,8 +242,7 @@
               <span>NO</span>
             </label>
           </div>
-          &nbsp;
-          &nbsp;
+          &nbsp; &nbsp;
           <div class="row">
             <div class="col-md-5">
               <a
@@ -264,8 +258,9 @@
                   class="blue-icon"
                   >remove_red_eye</mat-icon
                 >
-                <span style="position: relative; top: -10px; margin-left: 5px;"
-                class="blue-icon"
+                <span
+                  style="position: relative; top: -10px; margin-left: 5px;"
+                  class="blue-icon"
                   >Ver Precios
                 </span>
               </a>
@@ -287,18 +282,20 @@
                   (selectionChange)="setPrecioOro()"
                 >
                   <mat-option>--</mat-option>
-                  <mat-option
-                    *ngFor="let tipoOro of listOros"
-                    [value]="tipoOro"
-                  >
-                    {{ tipoOro.quilate }}
+                  <mat-option *ngFor="let tipoOro of tipoOro" [value]="tipoOro">
+                    {{ tipoOro }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Precio" [formControl]="precio" readonly/>
+                <input
+                  matInput
+                  placeholder="Precio"
+                  [formControl]="precio"
+                  readonly
+                />
               </mat-form-field>
             </div>
             <div class="col-md-4">
@@ -325,8 +322,9 @@
                   class="blue-icon"
                   >add_circle_outline</mat-icon
                 >
-                <span style="position: relative; top: -10px; margin-left: 5px;"
-                class="blue-icon"
+                <span
+                  style="position: relative; top: -10px; margin-left: 5px;"
+                  class="blue-icon"
                   >Agregar</span
                 >
               </a>
@@ -489,7 +487,6 @@
                 <mat-select
                   placeholder="Grado de Interés"
                   [formControl]="gradoInteres"
-                  
                 >
                   <mat-option>--</mat-option>
                   <mat-option
@@ -506,7 +503,6 @@
                 <mat-select
                   placeholder="Motivo de Desestimiento"
                   [formControl]="motivoDesestimiento"
-                  
                 >
                   <mat-option>--</mat-option>
                   <mat-option
@@ -519,7 +515,6 @@
               </mat-form-field>
             </div>
           </div>
-          
         </mat-step>
       </mat-vertical-stepper>
     </div>

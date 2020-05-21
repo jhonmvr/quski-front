@@ -107,7 +107,7 @@ export class ListCotizarComponent implements OnInit {
     this.estados.push(EstadoAprobacionEnum[EstadoAprobacionEnum.DISPONIBLE]);
     */
     //agrego los enums de publicidad
-    this.publicidad.push(PulicidadEnum[PulicidadEnum.REDES_SOCICALES]);
+    this.publicidad.push(PulicidadEnum[PulicidadEnum.REDES_SOCIALES]);
     this.publicidad.push(PulicidadEnum[PulicidadEnum.WEB]);
     this.publicidad.push(PulicidadEnum[PulicidadEnum.REFERIDO]);
     this.publicidad.push(PulicidadEnum[PulicidadEnum.CLIENTE_QUSKI]);
@@ -252,6 +252,10 @@ export class ListCotizarComponent implements OnInit {
 
 
 
+  }
+  onChange(){
+    let fechaSeleccionada=this.fechaNacimiento.value;
+    console.log("La fechaNacimiento fechaSeleccionada es"+fechaSeleccionada)
   }
 
 

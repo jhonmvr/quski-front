@@ -1,10 +1,10 @@
 export enum PulicidadEnum {
-    REDES_SOCICALES = 'REDES_SOCIALES',
+   REDES_SOCIALES='REDES_SOCIALES',
     WEB = 'WEB',
     REFERIDO = 'REFERIDO',
-    CLIENTE_QUSKI = 'CLENTE_QUSKI',
+    CLIENTE_QUSKI ='CLIENTE_QUSKI',
     VOLANTEO = 'VOLANTEO',
     RADIO = 'RADIO',
-    MUPI = 'MUPI',
-     
+    MUPI = 'MUPI'
+
 }
