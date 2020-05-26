@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormGroup, PatternValidator, FormBuilder } from '@angular/forms';
 import { Page } from '../../../../../core/model/page';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDatepickerInputEvent } from '@angular/material';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { TituloContratoService } from '../../../../../core/services/quski/titulo.contrato.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
@@ -19,7 +19,18 @@ import { MotivoDesestimientoEnum } from '../../../../../core/enum/MotivoDesestim
 
 import { DialogSolicitudDeAutorizacionComponent } from './dialog-solicitud-de-autorizacion/dialog-solicitud-de-autorizacion.component';
 import { SolicitudAutorizacionDialogComponent } from '../../../../../../app/views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
-import { ValidateCedula } from '../../../../../core/util/validate.util';
+import { ValidateCedula, ValidateCedulaNumber } from '../../../../../core/util/validate.util';
+import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
+import { ParametroService } from '../../../../../core/services/quski/parametro.service';
+import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
+import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
+import { constructor } from 'lodash';
+import { CotizacionService } from '../../../../../core/services/quski/cotizacion.service';
+import { TbCotizacion } from '../../../../../core/model/quski/TbCotizacion';
+import { User } from '../../cliente/gestion-cliente/gestion-cliente.component';
+
+
+
 
 
 @Component({
@@ -28,19 +39,37 @@ import { ValidateCedula } from '../../../../../core/util/validate.util';
   styleUrls: ['./list-cotizar.component.scss']
 })
 export class ListCotizarComponent implements OnInit {
+  //STANDARD VARIABLES
+  public loading;
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  public lCreate;
+  public fechaSeleccionada: any;
+  public cliente = new TbQoCliente();
+  date;
+  // STREPPER
+  isLinear = true;
+  //ENUMS 
+  listPublicidad = Object.keys(PulicidadEnum); 
+  
+  public formCliente: FormGroup = new FormGroup({});
+  public fpublicidad = new FormControl('', []);
+  public cedula = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
+  public fechaNacimiento = new FormControl('', [Validators.required]);
+  public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
 
-  loading;
-  loadingSubject = new BehaviorSubject<boolean>(false);
+  public edad = new FormControl('', []);
+  public nacionalidad = new FormControl('', [Validators.required]);
 
-  cedula = new FormControl('', [Validators.required, ValidateCedula]);
-  fechaNacimiento = new FormControl('', []);
-  nombresCompletos = new FormControl('', []);
-  edad = new FormControl('', []);
-  nacionalidad = new FormControl('', []);
-  movil = new FormControl('', []);
-  telefonoDomicilio = new FormControl('', []);
-  correoElectronico = new FormControl('', []);
-  campania = new FormControl('', []);
+  public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+  public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
+  public correoElectronico = new FormControl('', [Validators.required, Validators.email]);
+  public campania = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public primerNombre = '';
+  public segundoNombre = '';
+  public primerApellido = '';
+  public segundoApellido = '';
+
+  gradoIntere = new FormControl('', []);
   aprobadoWebMupi = new FormControl('', []);
   apellidoCliente = new FormControl('', []);
   //OPCIONES PRECIO ORO
@@ -73,6 +102,7 @@ export class ListCotizarComponent implements OnInit {
   dataSourceVarCredi: MatTableDataSource<TbQoVariableCrediticia> = new MatTableDataSource<TbQoVariableCrediticia>();
   dataSourcePrecioOro: MatTableDataSource<TbQoPrecioOro> = new MatTableDataSource<TbQoPrecioOro>();
   dataSourceCredito: MatTableDataSource<TbQoCreditoNegociacion> = new MatTableDataSource<TbQoCreditoNegociacion>();
+  dataSourceCliente: MatTableDataSource<TbQoCliente> = new MatTableDataSource<TbQoCliente>();
   // ENUMERADORES
   publicidad = new Array();
   tipoOro = new Array();
@@ -89,6 +119,7 @@ export class ListCotizarComponent implements OnInit {
 
   /**Obligatorio ordenamiento */
   @ViewChild('sort1', { static: true }) sort: MatSort;
+  roomsFilter: any;
 
 
 
@@ -97,23 +128,30 @@ export class ListCotizarComponent implements OnInit {
     private sinNoticeService: ReNoticeService,
     private subheaderService: SubheaderService,
     private noticeService: ReNoticeService,
-    public dialog: MatDialog) {
+    private sp: ParametroService,
+    private cs: CotizacionService,
+    public dialog: MatDialog, private fb:FormBuilder) { 
     this.clienteService.setParameter();
+    this.sp.setParameter();//siempre que usan un servicio deben usar set parametert
+    //FORM CLIENTE
+    this.formCliente.addControl("cedula", this.cedula);
+    this.formCliente.addControl("fechaNacimiento", this.fechaNacimiento);
+    this.formCliente.addControl("nombresCompletos", this.nombresCompletos);
+    this.formCliente.addControl("edad", this.edad);
+    this.formCliente.addControl("nacionalidad", new FormControl('', Validators.required  ) );
+    this.formCliente.addControl("movil", this.movil);
+    this.formCliente.addControl("telefonoDomicilio", this.telefonoDomicilio);
+    this.formCliente.addControl("correoElectronico", this.correoElectronico);
+    this.formCliente.addControl("campania", this.campania);
+    this.formCliente.addControl("fpublicidad", this.fpublicidad);
+    this.fb.group( this.formCliente );
+
   }
 
   ngOnInit() {
-    /*
-    this.estados.push(EstadoAprobacionEnum[EstadoAprobacionEnum.EN_EJECUCION]);
-    this.estados.push(EstadoAprobacionEnum[EstadoAprobacionEnum.DISPONIBLE]);
-    */
-    //agrego los enums de publicidad
-    this.publicidad.push(PulicidadEnum[PulicidadEnum.REDES_SOCIALES]);
-    this.publicidad.push(PulicidadEnum[PulicidadEnum.WEB]);
-    this.publicidad.push(PulicidadEnum[PulicidadEnum.REFERIDO]);
-    this.publicidad.push(PulicidadEnum[PulicidadEnum.CLIENTE_QUSKI]);
-    this.publicidad.push(PulicidadEnum[PulicidadEnum.VOLANTEO]);
-    this.publicidad.push(PulicidadEnum[PulicidadEnum.RADIO]);
-    this.publicidad.push(PulicidadEnum[PulicidadEnum.MUPI]);
+
+    this.date = new Date();
+
     //agrego los enums de tipoOro
     this.tipoOro.push(TipoOroEnum[TipoOroEnum.QUILATE14]);
     this.tipoOro.push(TipoOroEnum[TipoOroEnum.QUILATE18]);
@@ -142,6 +180,17 @@ export class ListCotizarComponent implements OnInit {
 
   }
 
+  displayFn(user?: User): string | undefined {
+    return user ? user.name : undefined;
+  }
+
+
+  getPublicidades( ){
+    this.sp.findByNombreTipoOrdered(null,"PUB","Y").subscribe( wrapper:Parametro=>{
+
+    } );
+  }
+
   /**
    * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
    */
@@ -149,6 +198,8 @@ export class ListCotizarComponent implements OnInit {
     this.dataSourceVarCredi = new MatTableDataSource();
     this.dataSourcePrecioOro = new MatTableDataSource();
     this.dataSourceCredito = new MatTableDataSource();
+    this.dataSourceCliente = new MatTableDataSource();
+
     this.paginator.pageSize = 5;
     this.paginator.pageIndex = 0;
     this.totalResults = 0;
@@ -171,7 +222,6 @@ export class ListCotizarComponent implements OnInit {
     return p;
   }
 
-
   /**
   * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
   */
@@ -187,43 +237,216 @@ export class ListCotizarComponent implements OnInit {
   buscar() {
     this.initiateTablePaginator();
     this.p = this.getPaginacion(this.sort.active, this.sort.direction, 'Y', 0);
-    this.submit();
+    //this.submit();
+  }
+
+  dividirCadena() {
+    const nombreCambiado = this.nombresCompletos.value;
+    const cedula = this.cedula.value;
+    //const fechaNacimientoS=this.fechaSeleccionada.value;
+    console.log("NOMBRE CAMBISDO" + nombreCambiado);
+    console.log("CEDULA" + cedula);
+    console.log("FECHA DE NACIMINETO" + this.fechaNacimiento.value);
+    console.log("NACIONALIDAD" + this.nacionalidad.value);
+    console.log("MOVIL" + this.movil.value);
+    //console.log("TELEFONO DOMICILIO"+this.telefonoDomicilio.value);
+    console.log("PUBLICIDAD" + this.fpublicidad.value);
+    console.log("CORREO ELECTRONICO" + this.correoElectronico.value);
+    console.log("Campania" + this.campania.value);
+
+    const fragmentoTexto = nombreCambiado.split(' ');
+    console.log("el valor de nombre " + fragmentoTexto);
+    for (var index = 1; index <= fragmentoTexto.length; index++){
+      switch (index) {
+        case 0:
+          this.primerNombre = fragmentoTexto[index];
+          console.log("VALOR DEL PRIMER NOMBRE" + this.primerNombre);
+        case 1:
+          this.segundoNombre = fragmentoTexto[index];
+          console.log("VALOR DEL SEGUNDO NOMBRE" + this.segundoNombre);
+        case 2:
+          this.primerApellido = fragmentoTexto[index];
+          console.log("VALOR DEL PRIMER APELLIDO " + this.primerApellido);
+        case 3:
+          this.segundoApellido = fragmentoTexto[index];
+          console.log("VALOR DEL SEGUNDO APELLIDO " + this.segundoApellido);
+          break;
+
+        default:
+          break;
+      }
+    }
+    
+
+    this.cliente.cedulaCliente = this.cedula.value;
+    this.cliente.primerNombre=this.nombresCompletos.value;
+    this.cliente.fechaNacimiento = this.fechaNacimiento.value;
+    this.cliente.edad=this.edad.value;
+    this.cliente.nacionalidad=this.nacionalidad.value;
+
+    this.cliente.publicidad = this.fpublicidad.value;
+    this.cliente.email = this.correoElectronico.value;
+    this.cliente.campania = this.campania.value;
+    
+    //return cadenaDividida;
+  }
+
+  _keyUp(event: any) {
+    const pattern = /[0-9\+\-\ ]/;
+    let inputChar = String.fromCharCode(event.charCode);
+
+    if (!pattern.test(inputChar)) {
+      // invalid character, prevent input
+      event.preventDefault();
+    }
   }
 
 
   submit() {
-    //console.log("====> paged: " + JSON.stringify( this.p ));
-    /* this.loadingSubject.next(true);
-     this.dataSource = null;
-     this.clienteService.findClienteByParams(this.p, this.cedula.value, this.nombresCompletos.value, this.apellidoCliente.value
-       ,null,null,null,null,null,null,null,null,null).subscribe((data: any) => {
-       this.loadingSubject.next(false);
-       //console.log("====> datos: " + JSON.stringify( data ));
-       if (data.list) {
-        
-         this.totalResults = data.totalResults;
-         this.dataSource = new MatTableDataSource<TbMiCliente>(data.list);
-         //this.dataSource.paginator=this.paginator;
-         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'info');
-       } else {
-         this.sinNoticeService.setNotice("NO SE ENCONTRAR REGISTROS", 'success');
-       }
-     }, error => {
-       this.loadingSubject.next(false);
-       if(  error.error ){
-         this.noticeService.setNotice(error.error.codError + ' - ' + error.error.msgError  , 'error');
-       } else if(  error.statusText && error.status==401 ){
-         this.dialog.open(AuthDialogComponent, {
-           data: {
-             mensaje:"Error " + error.statusText + " - " + error.message
-           }
-         });
-       } else {
-         this.noticeService.setNotice("Error al cargar las notificaciones o alertas", 'error');
-       }
-     }
-     );*/
+    if (this.formCliente.valid) {
+      // this.cedula.value;
+
+
+    }
+    this.loadingSubject.next(true);
+    this.dataSourceCliente = null;
+
+    this.cs.findByIdCliente(this.cedula.value).subscribe((data: any) => {
+      this.loadingSubject.next(false);
+      if (data.list) {
+        this.totalResults = data.totalResults;
+        //this.dataSource.data = new MatTableDataSource<TbCotizacion>(data.list);
+        //console.log("data>>>>>>>>>>>>>>>>>" + JSON.stringify( this.dataSource));
+        console.log("data cotizacion ", data.list);
+      } else {
+        this.sinNoticeService.setNotice("NO SE ENCONTRAR REGISTROS", 'info');
+      }
+    }, error => {
+      this.loadingSubject.next(false);
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice("ERROR AL CARGAR", 'error');
+      }
+    }
+    );
   }
+  limpiarCampos() {
+    Object.keys(this.formCliente.controls).forEach((name) => {
+      //console.log( "==limpiando " + name )
+      let control = this.formCliente.controls[name];
+      control.setErrors(null);
+      control.setValue(null);
+    });
+
+  }
+
+
+  //Mensages
+  getErrorMessage(pfield: string) {
+    const errorRequerido = 'Ingresar valores';
+    const errorEmail = 'Correo Incorrecto';
+    const errorNumero = 'Ingreso solo numeros';
+    let maximo = "El maximo de caracteres es: ";
+    const errorFormatoIngreso = 'Use el formato : 0.00';
+    const invalidIdentification = 'La identificacion no es valida';
+    const errorLogitudExedida = 'La longitud sobrepasa el limite';
+    const errorInsuficiente = 'La longitud es insuficiente';
+    let errorrequiredo = "Ingresar valores";
+
+    if (pfield && pfield === "cedula") {
+      const input = this.formCliente.get("cedula");
+      return input.hasError("required")
+        ? errorRequerido
+        : input.hasError("pattern")
+          ? errorNumero
+          : input.hasError("invalid-identification")
+            ? invalidIdentification
+            : input.hasError("maxlength")
+              ? errorLogitudExedida
+              : input.hasError("minlength")
+                ? errorInsuficiente
+                : "";
+    }
+
+
+    //Validaciones de datos personales
+    if (pfield && pfield === 'nombresCompletos') {
+      const input = this.nombresCompletos;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+
+
+    if (pfield && pfield === 'fechaNacimiento') {
+      const input = this.fechaNacimiento;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+
+    if (pfield && pfield === 'nacionalidad') {
+      const input = this.nacionalidad;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+
+
+
+
+    /*if (pfield && pfield === 'telefonoDomicilio') {
+      const input = this.formCliente.get('telefonoDomicilio');
+      console.log("telefonoDocimicilio",this.formCliente.get('telefonoDomicilio'))
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('pattern')
+          ? errorNumero
+          : input.hasError('maxlength')
+            ? errorLogitudExedida
+            : input.hasError('minlength')
+              ? errorInsuficiente
+              : '';
+    }*/
+
+    if (pfield && pfield == "correoElectronico") {
+
+      return this.correoElectronico.hasError('required') ? errorRequerido : this.correoElectronico.hasError('email') ? 'E-mail no valido' : this.correoElectronico.hasError('maxlength') ? maximo
+        + this.correoElectronico.errors.maxlength.requiredLength : '';
+
+    }
+
+
+
+
+    if (pfield && pfield === 'movil') {
+      const input = this.movil;
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('pattern')
+          ? errorNumero
+          : input.hasError('maxlength')
+            ? errorLogitudExedida
+            : input.hasError('minlength')
+              ? errorInsuficiente
+              : '';
+    }
+
+
+
+
+  }
+
+  blurIdentificacion(value: number) {
+    const input = this.formCliente.get("identificacion");
+    const celudaValida = ValidateCedulaNumber(input.value);
+    if (celudaValida && celudaValida["cedulaIncorecta"] === true) {
+      input.setErrors({ "invalid-identification": true });
+    }
+  }
+
+
+  setPrecioOro() {
+
+  }
+
+
 
   editarUsuario() {
     [{
@@ -253,10 +476,69 @@ export class ListCotizarComponent implements OnInit {
 
 
   }
-  onChange(){
-    let fechaSeleccionada=this.fechaNacimiento.value;
-    console.log("La fechaNacimiento fechaSeleccionada es"+fechaSeleccionada)
+
+
+  onChangeFechaNacimiento() {
+
+    this.loadingSubject.next(true);
+    console.log("VALOR DE LA FECHA" + this.fechaNacimiento.value);
+    const fechaSeleccionada = new Date(
+      this.fechaNacimiento.value
+    );
+    console.log("FECHA SELECCIONADA" + fechaSeleccionada);
+    if (fechaSeleccionada) {
+      this.getDiffFechas(fechaSeleccionada, "dd/MM/yyy");
+    } else {
+      this.sinNoticeService.setNotice(
+        "El valor de la fecha es nulo",
+        "warning"
+      );
+      this.loadingSubject.next(false);
+    }
   }
+
+  getDiffFechas(fecha: Date, format: string) {
+    this.loadingSubject.next(true);
+    const convertFechas = new RelativeDateAdapter();
+    this.svcParametros
+      .getDiffBetweenDateInicioActual(
+        convertFechas.format(fecha, "input"),
+        format
+      )
+      .subscribe(
+        (rDiff: any) => {
+          const diff: YearMonthDay = rDiff.entidad;
+          this.edad.setValue(diff.year);
+          console.log("La edad es " + this.edad.value);
+
+          //this.edad.get("edad").setValue(diff.year);
+          //Validacion para que la edad sea mayor a 18 años
+          const edad = this.edad.value;
+          if (edad != undefined && edad != null && edad < 18) {
+            this.edad
+              .get("edad")
+              .setErrors({ "server-error": "error" });
+          }
+          this.loadingSubject.next(false);
+        },
+        error => {
+          if (JSON.stringify(error).indexOf("codError") > 0) {
+            const b = error.error;
+            this.sinNoticeService.setNotice(b.msgError, "error");
+          } else {
+            this.sinNoticeService.setNotice(
+              "Error obtener diferencia de fechas",
+              "error"
+            );
+            console.log(error);
+          }
+          this.loadingSubject.next(false);
+        }
+      );
+  }
+
+
+
 
 
 

@@ -41,7 +41,7 @@ public findByNombre(nombre:string){
     this.params=this.params.set("ordered", ordered);
     //console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params:this.params };
-    return this.http.get<any>(this.appResourcesUrl  +"parametroRestController/findByNombreTipoOrdered", this.options);
+    return this.http.get<Parameter>(this.appResourcesUrl  +"parametroRestController/findByNombreTipoOrdered", this.options);
   }
 
   public addDaysToDate(fecha:string, dias:string){
