@@ -182,7 +182,7 @@ export class ListCotizarComponent implements OnInit {
 
   getPublicidades( ){
     this.sp.findByNombreTipoOrdered("","PUB","Y").subscribe( (wrapper:any)=>{
-      console.log("retornos "+ JSON.stringify(wrapper)  );
+      //console.log("retornos "+ JSON.stringify(wrapper)  );
         if( wrapper && wrapper.entidades ){
           this.listPublicidad=wrapper.entidades;
         }
