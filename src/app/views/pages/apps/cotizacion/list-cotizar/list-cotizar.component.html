@@ -88,10 +88,11 @@
               </div>
               <div class="col-md-6 kt-margin-bottom-10-mobile">
                 <mat-form-field>
-                  <mat-select placeholder="Publicidad" [formControl]="fpublicidad" required="true">
+                  <mat-select placeholder="Publicidad" [formControl]="fpublicidad" required="true" 
+                  (selectionChange)="cambioSeleccion($event)">
                     <mat-option>--</mat-option>
                     <mat-option *ngFor="let publicidad of listPublicidad" [value]="publicidad">
-                      {{ publicidad }}
+                      {{ publicidad.valor }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>

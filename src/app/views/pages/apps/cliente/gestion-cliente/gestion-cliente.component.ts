@@ -103,15 +103,7 @@ export class GestionClienteComponent implements OnInit {
   // LISTAS & ENUMS
   listSeparacionBienes = [SeparacionBienesEnum.S_SI, SeparacionBienesEnum.S_NO];
   listProfesion = [ProfesionEnum.profesion];
-  listEstadoCivil = [
-    EstadoCivilEnum.SOLTERO,
-    EstadoCivilEnum.CASADO,
-    EstadoCivilEnum.DIVORCIADO,
-    EstadoCivilEnum.CASADO_SEP_BIENES,
-    EstadoCivilEnum.UNION_DE_HECHO,
-    EstadoCivilEnum.UNION_LIBRE,
-    EstadoCivilEnum.VIUDO
-  ];
+  listEstadoCivil = Object.keys(EstadoCivilEnum);
   listNivel = [
     NivelEstudioEnum.PRIMARIA,
     NivelEstudioEnum.SECUNDARIA,

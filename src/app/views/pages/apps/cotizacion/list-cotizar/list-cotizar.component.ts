@@ -1,33 +1,28 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { FormControl, Validators, FormGroup, PatternValidator, FormBuilder } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { Page } from '../../../../../core/model/page';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDatepickerInputEvent } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { TituloContratoService } from '../../../../../core/services/quski/titulo.contrato.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { SubheaderService } from '../../../../../core/_base/layout';
-import { merge, tap } from 'rxjs/operators';
-import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { TbQoPrecioOro } from '../../../../../core/model/quski/TbQoPrecioOro';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { TbQoVariableCrediticia } from '../../../../../core/model/quski/TbQoVariableCrediticia';
-import { PulicidadEnum } from '../../../../../core/enum/PublicidadEnum';
 import { TipoOroEnum } from '../../../../../core/enum/TipoOroEnum';
 import { GradoInteresEnum } from '../../../../../core/enum/GradoInteresEnum';
 import { MotivoDesestimientoEnum } from '../../../../../core/enum/MotivoDesestimientoEnum';
 
-import { DialogSolicitudDeAutorizacionComponent } from './dialog-solicitud-de-autorizacion/dialog-solicitud-de-autorizacion.component';
 import { SolicitudAutorizacionDialogComponent } from '../../../../../../app/views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { ValidateCedula, ValidateCedulaNumber } from '../../../../../core/util/validate.util';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
-import { constructor } from 'lodash';
 import { CotizacionService } from '../../../../../core/services/quski/cotizacion.service';
-import { TbCotizacion } from '../../../../../core/model/quski/TbCotizacion';
 import { User } from '../../cliente/gestion-cliente/gestion-cliente.component';
+import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 
 
 
@@ -49,10 +44,10 @@ export class ListCotizarComponent implements OnInit {
   // STREPPER
   isLinear = true;
   //ENUMS 
-  listPublicidad = Object.keys(PulicidadEnum); 
+  listPublicidad=[]; //= Object.keys(PulicidadEnum); 
   
   public formCliente: FormGroup = new FormGroup({});
-  public fpublicidad = new FormControl('', []);
+  public fpublicidad = new FormControl('', [Validators.required]);
   public cedula = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
   public fechaNacimiento = new FormControl('', [Validators.required]);
   public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -127,7 +122,6 @@ export class ListCotizarComponent implements OnInit {
     private clienteService: ClienteService,
     private sinNoticeService: ReNoticeService,
     private subheaderService: SubheaderService,
-    private noticeService: ReNoticeService,
     private sp: ParametroService,
     private cs: CotizacionService,
     public dialog: MatDialog, private fb:FormBuilder) { 
@@ -145,7 +139,8 @@ export class ListCotizarComponent implements OnInit {
     this.formCliente.addControl("campania", this.campania);
     this.formCliente.addControl("fpublicidad", this.fpublicidad);
     this.fb.group( this.formCliente );
-
+    this.getPublicidades();
+    this.sinNoticeService.setNotice(null);
   }
 
   ngOnInit() {
@@ -186,9 +181,33 @@ export class ListCotizarComponent implements OnInit {
 
 
   getPublicidades( ){
-    this.sp.findByNombreTipoOrdered(null,"PUB","Y").subscribe( wrapper:Parametro=>{
-
+    this.sp.findByNombreTipoOrdered("","PUB","Y").subscribe( (wrapper:any)=>{
+      console.log("retornos "+ JSON.stringify(wrapper)  );
+        if( wrapper && wrapper.entidades ){
+          this.listPublicidad=wrapper.entidades;
+        }
+    },error => {
+      if(  error.error ){
+        if( error.error.codError ){
+          this.sinNoticeService.setNotice(error.error.codError + ' - ' + error.error.msgError  , 'error');
+        } else {
+          this.sinNoticeService.setNotice("Error al cargar parametros de publicidad"  , 'error');
+        }
+			} else if(  error.statusText && error.status==401 ){
+				this.dialog.open(AuthDialogComponent, {
+					data: {
+						mensaje:"Error " + error.statusText + " - " + error.message
+					}
+				});
+			} else {
+				this.sinNoticeService.setNotice("Error al cargar publicidades", 'error');
+			}
     } );
+  }
+
+  cambioSeleccion(event){
+    console.log("evento " +  JSON.stringify(event.value));
+    console.log("evento " +  JSON.stringify( this.fpublicidad.value));
   }
 
   /**
@@ -346,14 +365,11 @@ export class ListCotizarComponent implements OnInit {
   //Mensages
   getErrorMessage(pfield: string) {
     const errorRequerido = 'Ingresar valores';
-    const errorEmail = 'Correo Incorrecto';
     const errorNumero = 'Ingreso solo numeros';
     let maximo = "El maximo de caracteres es: ";
-    const errorFormatoIngreso = 'Use el formato : 0.00';
     const invalidIdentification = 'La identificacion no es valida';
     const errorLogitudExedida = 'La longitud sobrepasa el limite';
     const errorInsuficiente = 'La longitud es insuficiente';
-    let errorrequiredo = "Ingresar valores";
 
     if (pfield && pfield === "cedula") {
       const input = this.formCliente.get("cedula");
@@ -433,7 +449,7 @@ export class ListCotizarComponent implements OnInit {
 
   }
 
-  blurIdentificacion(value: number) {
+  blurIdentificacion() {
     const input = this.formCliente.get("identificacion");
     const celudaValida = ValidateCedulaNumber(input.value);
     if (celudaValida && celudaValida["cedulaIncorecta"] === true) {
@@ -500,7 +516,7 @@ export class ListCotizarComponent implements OnInit {
   getDiffFechas(fecha: Date, format: string) {
     this.loadingSubject.next(true);
     const convertFechas = new RelativeDateAdapter();
-    this.svcParametros
+    this.sp
       .getDiffBetweenDateInicioActual(
         convertFechas.format(fecha, "input"),
         format
