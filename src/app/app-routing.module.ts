@@ -24,6 +24,10 @@ const routes: Routes = [
 				loadChildren: () => import('app/views/pages/apps/cliente/cliente.module').then(m => m.ClienteModule),
 			},
 			{
+				path: 'tracking',
+				loadChildren: () => import('../app/views/pages/apps/tracking/tracking.module').then(m => m.TrackingModule),
+			},
+			{
 				path: 'user-management',
 				loadChildren: () => import('app/views/pages/user-management/user-management.module').then(m => m.UserManagementModule)
 			},
