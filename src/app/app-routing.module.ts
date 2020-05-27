@@ -8,7 +8,7 @@ import { ErrorPageComponent } from './views/theme/content/error-page/error-page.
 import { AuthGuard } from './core/auth';
 
 const routes: Routes = [
-	{path: 'auth', loadChildren: () => import('app/views/pages/auth/auth.module').then(m => m.AuthModule)},
+	{path: 'auth', loadChildren: () => import('../app/views/pages/auth/auth.module').then(m => m.AuthModule)},
 
 	{
 		path: '',
@@ -17,14 +17,14 @@ const routes: Routes = [
 		children: [
 			{
 				path: 'dashboard',
-				loadChildren: () => import('app/views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
+				loadChildren: () => import('../app/views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
 			},
 			{
 				path: 'cliente',
-				loadChildren: () => import('app/views/pages/apps/cliente/cliente.module').then(m => m.ClienteModule),
+				loadChildren: () => import('../app/views/pages/apps/cliente/cliente.module').then(m => m.ClienteModule),
 			},{
 			path: 'cotizacion',
-				loadChildren: () => import('app/views/pages/apps/cotizacion/cotizar.module').then(m => m.CotizarModule),
+				loadChildren: () => import('../app/views/pages/apps/cotizacion/cotizar.module').then(m => m.CotizarModule),
 			},
 			{
 				path: 'tracking',
@@ -32,11 +32,11 @@ const routes: Routes = [
 			},
 			{
 				path: 'user-management',
-				loadChildren: () => import('app/views/pages/user-management/user-management.module').then(m => m.UserManagementModule)
+				loadChildren: () => import('../app/views/pages/user-management/user-management.module').then(m => m.UserManagementModule)
 			},
 			{
 				path: 'builder',
-				loadChildren: () => import('app/views/theme/content/builder/builder.module').then(m => m.BuilderModule)
+				loadChildren: () => import('../app/views/theme/content/builder/builder.module').then(m => m.BuilderModule)
 			},
 			{
 				path: 'error/403',
