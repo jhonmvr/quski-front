@@ -3,7 +3,7 @@ import { ArchivoUploadDialogComponent } from '../../../../../views/partials/cust
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EstadoJoyaEnum } from '../../../../../core/enum/EstadoJoyaEnum';
-import { MatTableDataSource, MatDialog, MatDialogRef,MatPaginator, MatStepper,MAT_DIALOG_DATA } from '@angular/material';
+import { MatTableDataSource, MatDialog, MatDialogRef, MatPaginator, MatStepper, MAT_DIALOG_DATA } from '@angular/material';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { Page } from '../../../../../core/model/page';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
@@ -50,7 +50,7 @@ export class GestionClienteComponent implements OnInit {
   public agrupacionEstadoSelected: string;
   public estadoSelected: string;
   public id;
-  @ViewChild('ref',{static:true}) ref;
+  @ViewChild('ref', { static: true }) ref;
   checked = false;
   disableConsultar;
   @Input() nombreParroquia: string;
@@ -103,15 +103,7 @@ export class GestionClienteComponent implements OnInit {
   // LISTAS & ENUMS
   listSeparacionBienes = [SeparacionBienesEnum.S_SI, SeparacionBienesEnum.S_NO];
   listProfesion = [ProfesionEnum.profesion];
-  listEstadoCivil = [
-    EstadoCivilEnum.SOLTERO,
-    EstadoCivilEnum.CASADO,
-    EstadoCivilEnum.DIVORCIADO,
-    EstadoCivilEnum.CASADO_SEP_BIENES,
-    EstadoCivilEnum.UNION_DE_HECHO,
-    EstadoCivilEnum.UNION_LIBRE,
-    EstadoCivilEnum.VIUDO
-  ];
+  listEstadoCivil = Object.keys(EstadoCivilEnum);
   listNivel = [
     NivelEstudioEnum.PRIMARIA,
     NivelEstudioEnum.SECUNDARIA,
@@ -317,8 +309,8 @@ export class GestionClienteComponent implements OnInit {
 
     this.disableConsultar = this.disableConsultarSubject.asObservable();
     this.filteredOptions = this.myControl.valueChanges.pipe(
-        startWith('')
-      );
+      startWith('')
+    );
     this.clienteNegociacion();
     this.buscarCatalogobyTipo();
     this.loadActividad();
@@ -886,7 +878,7 @@ export class GestionClienteComponent implements OnInit {
     console.log("===> va a subir imagen");
     const dialogRef = this.dialog.open(AddFotoComponent, {
       data: {
-        fileBase64:""
+        fileBase64: ""
       }
     });
 

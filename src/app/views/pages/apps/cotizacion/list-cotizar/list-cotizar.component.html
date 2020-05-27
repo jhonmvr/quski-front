@@ -1,0 +1,347 @@
+<!-- comento los vertical para que salga 
+      <mat-vertical-stepper>
+        <mat-step> -->
+
+<re-portlet>
+  <re-portlet-header [title]="'Cotizar'" [class]="'kt-portlet__head--lg'">
+    <ng-container ktPortletTools>
+      <a href="javascript:void(0);" matTooltip="Guardar" (click)="dividirCadena()"
+        style="font-size: 12px; vertical-align: middle;">
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save</mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Guardar</span>
+      </a>
+    </ng-container>
+  </re-portlet-header>
+  <re-portlet-body>
+    <!-- start::FILTERS & GROUP ACTIONS -->
+
+    <div class="kt-form">
+      <form no-validate [formGroup]="formCliente">
+      <mat-vertical-stepper>
+        <mat-step>
+          <ng-template matStepLabel>Datos Cliente</ng-template>
+          <div class="kt-form__filtration">
+            <div class="row align-items-center">
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="cedula" placeholder="C.I." autocomplete="off" required="true"
+                    (selectionChange)="blurIdentificacion()" matInput numeric numericType="number" />
+
+                  <mat-error>{{ getErrorMessage("cedula") }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              <a href="javascript:void(0);" matTooltip="Buscar Cliente" style="font-size: 12px; vertical-align: middle;"
+                (click)="seleccionarEditar()">
+                <mat-icon style="font-size: 24px;" class="orange-icon" matTooltipPosition="above">search</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Buscar
+                  cliente</span>
+              </a>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input name="nombresCompletos" matInput [formControl]="nombresCompletos"
+                    placeholder="Nombres Completos " autocomplete="off" ng-pattern="patternNombre" required="true" />
+                  <mat-error>{{
+                      getErrorMessage("nombresCompletos")
+                    }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row align-items-center">
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field>
+                  <mat-label>Fecha de nacimiento</mat-label>
+                  <input matInput #inputFechaNacimiento [matDatepicker]="pickerFechaNacimiento"
+                    (dateChange)="onChangeFechaNacimiento()" [formControl]="fechaNacimiento" />
+                  <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput [formControl]="edad" placeholder="Edad " autocomplete="off" readonly />
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput [formControl]="nacionalidad" placeholder="Nacionalidad " autocomplete="off" />
+                </mat-form-field>
+                <mat-error>{{ getErrorMessage("nacionalidad") }}</mat-error>
+              </div>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput numeric numericType="number" [formControl]="movil" placeholder="Móvil "
+                    autocomplete="off" required="true" />
+                </mat-form-field>
+                <mat-error>{{ getErrorMessage("movil") }}</mat-error>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input matInput [formControl]="telefonoDomicilio" placeholder="Teléfono Domicilio" required="true">
+                </mat-form-field>
+                <mat-error *ngIf="telefonoDomicilio.invalid">
+                  Ingrese un telefono valido
+                </mat-error>
+              </div>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field>
+                  <mat-select placeholder="Publicidad" [formControl]="fpublicidad" required="true" 
+                  (selectionChange)="cambioSeleccion($event)">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let publicidad of listPublicidad" [value]="publicidad">
+                      {{ publicidad.valor }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-error>{{ getErrorMessage("fpublicidad") }}</mat-error>
+              </div>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput [formControl]="correoElectronico" placeholder="Correo Eléctronico" autocomplete="off"
+                    required="true" />
+                </mat-form-field>
+                <mat-error>{{
+                    getErrorMessage("correoElectronico")
+                  }}</mat-error>
+              </div>
+              <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput [formControl]="campania" placeholder="Campaña" autocomplete="off" />
+                </mat-form-field>
+                <mat-error>{{ getErrorMessage("campania") }}</mat-error>
+              </div>
+            </div>
+          </div>
+        </mat-step>
+
+        <mat-step>
+          <ng-template matStepLabel>Variables crediticias </ng-template>
+          <div class="row">
+            <div class="col-md-12" style="text-align: right;">
+              <button mat-button class="blue-icon">
+                Ver Riesgo Acumulado
+              </button>
+            </div>
+          </div>
+          <!--START MAT TABLE-->
+          <div class="mat-table__wrapper">
+            <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceVarCredi" matSort #sort1="matSort"
+              matSortActive="variable" matSortDirection="asc" matSortDisableClear>
+              <ng-container matColumnDef="orden">
+                <mat-header-cell *matHeaderCellDef>Orden</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="variable">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Variable</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="valor">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Valor</mat-header-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsVarCredi"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsVarCredi"></mat-row>
+            </mat-table>
+            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+              [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+            </mat-paginator>
+          </div>
+          <!--end MAT TABLE-->
+          &nbsp; &nbsp;
+
+          <div class="col-md-6 kt-margin-bottom-10-mobile">
+            <label class="mat-form-field-fluid">
+              Aprobado Web MUPI
+            </label>
+            <label>
+              <input type="radio" value="SI" [formControl]="aprobadoWebMupi" />
+              <span>SI</span>
+            </label>
+            <span> </span>
+            <label>
+              <input type="radio" value="NO" [formControl]="aprobadoWebMupi" />
+              <span>NO</span>
+            </label>
+          </div>
+          &nbsp; &nbsp;
+          <div class="row">
+            <div class="col-md-5">
+              <a href="javascript:void(0);" matTooltip="Ver riesgo acumulado "
+                style="font-size: 12px; vertical-align: middle;" class="blue-icon">
+                <mat-icon style="font-size: 32px;" matTooltipPosition="above" matTooltip="" class="blue-icon">
+                  remove_red_eye</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Ver Precios
+                </span>
+              </a>
+            </div>
+          </div>
+        </mat-step>
+
+        <mat-step>
+          <ng-template matStepLabel>Precio Oro</ng-template>
+
+          <div class="row">
+            <div class="col-md-12"></div>
+
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-select placeholder="Tipo de oro" (selectionChange)="setPrecioOro()">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let tipoOro of tipoOro" [value]="tipoOro">
+                    {{ tipoOro }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <input matInput placeholder="Precio" [formControl]="precio" readonly />
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <input matInput placeholder="Precio Neto Estimado" [formControl]="precioEstimado" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <a href="javascript:void(0);" matTooltip="Agregar " style="font-size: 12px; vertical-align: middle;"
+                class="blue-icon">
+                <mat-icon style="font-size: 32px; text-align: center;" matTooltipPosition="above" class="blue-icon">
+                  add_circle_outline</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Agregar</span>
+              </a>
+            </div>
+          </div>
+          <!--START MAT TABLE-->
+          <div class="mat-table__wrapper">
+            <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourcePrecioOro" matSort #sort1="matSort"
+              matSortActive="tipoOro" matSortDirection="asc" matSortDisableClear>
+              <ng-container matColumnDef="accion">
+                <mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="tipoOro">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo Oro</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="precio">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="pesoNetoEstimado">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Peso Neto Estimado</mat-header-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsPrecioOro"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsPrecioOro"></mat-row>
+            </mat-table>
+            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+              [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+            </mat-paginator>
+          </div>
+          <!--end MAT TABLE-->
+
+          <div class="row">
+            <div class="col-md-2">
+              <button mat-button class="blue-icon">Simular</button>
+            </div>
+            <div class="col-md-2">
+              <button mat-button class="blue-icon">Negociar</button>
+            </div>
+          </div>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>Opciones de Crédito </ng-template>
+
+          <!--START MAT TABLE-->
+          <div class="mat-table__wrapper">
+            <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceCredito" matSort #sort1="matSort"
+              matSortActive="plazo" matSortDirection="asc" matSortDisableClear>
+              <ng-container matColumnDef="plazo">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Plazo</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="montoPreAprobado">
+                <mat-header-cell *matHeaderCellDef>Monto Preaprobado</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="aRecibir">
+                <mat-header-cell *matHeaderCellDef>A Recibir</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="totalCostosOperacion">
+                <mat-header-cell *matHeaderCellDef>A Recibir</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="totalCostosNuevaOperacion">
+                <mat-header-cell *matHeaderCellDef>totalCostosNuevaOperacion</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="costoCustodia">
+                <mat-header-cell *matHeaderCellDef>Costo Custodia</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="costoTransporte">
+                <mat-header-cell *matHeaderCellDef>Costo transporte</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="costoCredito">
+                <mat-header-cell *matHeaderCellDef>Costo Crédito</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="costoSeguro">
+                <mat-header-cell *matHeaderCellDef>
+                  Costo Seguro</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="costoResguardo">
+                <mat-header-cell *matHeaderCellDef>
+                  Costo Resguardo
+                </mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="costoEstimado">
+                <mat-header-cell *matHeaderCellDef>Costo Estimado</mat-header-cell>
+              </ng-container>
+              <ng-container matColumnDef="valorCuota">
+                <mat-header-cell *matHeaderCellDef>Valor Cuota</mat-header-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
+              <mat-row *matRowDef="
+                    let row;
+                    columns: displayedColumnsCreditoNegociacion
+                  "></mat-row>
+            </mat-table>
+            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+              [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+            </mat-paginator>
+          </div>
+          <!--end MAT TABLE-->
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field>
+                <!--mat-select placeholder="Grado de Interés" [formControl]="gradoIntere">
+                  <mat-option *ngFor="let gradoIntere of gradoInteres" [value]="gradoIntere">
+                    {{ gradoIntere }}
+                  </mat-option>
+                </mat-select-->
+                <mat-select placeholder="Provincia" [formControl]="fpublicidad"
+                            (selectionChange)="changeEvento($event.value)">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let publicidad of publicidades" [value]="publicidad">
+                        {{publicidad.valor}}
+                    </mat-option>
+                </mat-select>
+                <mat-error>{{getErrorMessage('provinciaAgente') }}</mat-error>
+              </mat-form-field>
+              
+            </div>
+            <div class="col-md-6">
+              <mat-form-field>
+                <mat-select placeholder="Motivo de Desestimiento">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let motivoDesestimiento of motivoDesestimiento" [value]="motivoDesestimiento">
+                    {{ motivoDesestimiento }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-step>
+      </mat-vertical-stepper>
+    </form>
+    </div>
+
+    <!-- END FILTERS -->
+  </re-portlet-body>
+  <re-portlet-footer></re-portlet-footer>
+</re-portlet>

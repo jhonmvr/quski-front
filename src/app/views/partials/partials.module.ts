@@ -233,7 +233,9 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 		{ provide: MAT_DIALOG_DATA, useValue: [] },
 	],
 	entryComponents:[
-		AuthDialogComponent
+		AuthDialogComponent,
+		SolicitudAutorizacionDialogComponent,
+		CargarFotoDialogComponent
 	]
 })
 export class PartialsModule {
