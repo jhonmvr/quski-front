@@ -13,7 +13,7 @@ import { TbQoVariableCrediticia } from '../../../../../core/model/quski/TbQoVari
 import { TipoOroEnum } from '../../../../../core/enum/TipoOroEnum';
 import { GradoInteresEnum } from '../../../../../core/enum/GradoInteresEnum';
 import { MotivoDesestimientoEnum } from '../../../../../core/enum/MotivoDesestimientoEnum';
-
+import { TbCotizacion } from '../../../../../core/model/quski/TbCotizacion';
 import { SolicitudAutorizacionDialogComponent } from '../../../../../../app/views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { ValidateCedula, ValidateCedulaNumber } from '../../../../../core/util/validate.util';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
@@ -24,6 +24,7 @@ import { CotizacionService } from '../../../../../core/services/quski/cotizacion
 import { User } from '../../cliente/gestion-cliente/gestion-cliente.component';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { EstadoQuskiEnum } from '../../../../../core/enum/EstadoQuskiEnum';
+import { TbMiCotizacion } from '../../../../../core/model/quski/TbMiCotizacion';
 
 
 
@@ -41,6 +42,7 @@ export class ListCotizarComponent implements OnInit {
   public lCreate;
   public fechaSeleccionada: any;
   public cliente = new TbQoCliente();
+  public cotizacion = new TbCotizacion();
   date;
   // STREPPER
   isLinear = true;
@@ -48,7 +50,7 @@ export class ListCotizarComponent implements OnInit {
   listPublicidad = []; //= Object.keys(PulicidadEnum); 
   listGradosInteres = [];
   listMotivoDesestimiento = [];
-  listEstado=Object.keys(EstadoQuskiEnum);
+  listEstado = Object.keys(EstadoQuskiEnum);
 
   public formCliente: FormGroup = new FormGroup({});
   public fpublicidad = new FormControl('', [Validators.required]);
@@ -105,6 +107,7 @@ export class ListCotizarComponent implements OnInit {
   dataSourcePrecioOro: MatTableDataSource<TbQoPrecioOro> = new MatTableDataSource<TbQoPrecioOro>();
   dataSourceCredito: MatTableDataSource<TbQoCreditoNegociacion> = new MatTableDataSource<TbQoCreditoNegociacion>();
   dataSourceCliente: MatTableDataSource<TbQoCliente> = new MatTableDataSource<TbQoCliente>();
+  dataSourceCotizacion: MatTableDataSource<TbCotizacion> = new MatTableDataSource<TbCotizacion>();
   /*  // ENUMERADORES
     publicidad = new Array();
     tipoOro = new Array();
@@ -355,17 +358,25 @@ export class ListCotizarComponent implements OnInit {
     this.cliente.publicidad = this.fpublicidad.value.valor;
     this.cliente.email = this.correoElectronico.value;
     this.cliente.campania = this.campania.value;
-    this.cliente.telefonoFijo=this.telefonoDomicilio.value;
-    this.cliente.telefonoMovil=this.movil.value;
-    this.cliente.estado=EstadoQuskiEnum.ACT;
+    this.cliente.telefonoFijo = this.telefonoDomicilio.value;
+    this.cliente.telefonoMovil = this.movil.value;
+    this.cliente.estado = EstadoQuskiEnum.ACT;
     console.log("DATOS DE CLIENTE" + JSON.stringify(this.cliente));
     //if (this.formCliente.valid) {S
     // this.cedula.value;
-       //this.dataSourceCliente = null;
+    //this.dataSourceCliente = null;
     console.log("INICIA EL SUBMIT*****");
     console.log("DATOS DE CLIENTE EN EL SUBMIT" + JSON.stringify(this.cliente));
-    this.clienteService.guardarCliente(this.cliente).subscribe(() => {
+
+    this.clienteService.guardarCliente(this.cliente).subscribe((data: any) => {
       this.sinNoticeService.setNotice("REGISTRO EXITOSO", 'success');
+      console.log("El valor de CLIENTE DEVUELTO ES " + JSON.stringify(data.entidad));
+      this.cotizacion.estado = EstadoQuskiEnum.ACT;
+      this.cotizacion.motivoDesestimiento = this.fmotivoDesestimiento.value.valor;
+      this.cotizacion.gradoInteres = this.fgradoInteres.value.valor;
+      this.cotizacion.tbQoCliente = data.entidad;
+      console.log("DATOS DE COTIZACION EN EL SUBMIT" + JSON.stringify(this.cotizacion));
+      this.cotizacionGuardar();
 
     }, error => {
       this.loadingSubject.next(false);
@@ -373,12 +384,37 @@ export class ListCotizarComponent implements OnInit {
         let b = error.error;
         this.sinNoticeService.setNotice(b.msgError, 'error');
       } else {
-        this.sinNoticeService.setNotice("ERROR AL REGISTRAR EL BANCO", 'error');
+        this.sinNoticeService.setNotice("ERROR AL REGISTRAR EL CLIENTE", 'error');
       }
     });
-
-    //return cadenaDividida;
+    //return submit
   }
+
+  //INICIO COTIZACION CREDITO
+  //actualizar busco el objeto actualizo el estado a ACT YLO QUE ENCUENTRE ACTUALIZA A ESTADO CANCELADO
+  //TERMINAR LA PRUEBA QUE NO SE REGISTRE VARIOS 
+  cotizacionGuardar() {
+    this.cs.guardarCotizacion(this.cotizacion).subscribe((data: any) => {
+      console.log("INGRESA A GUARDAR COTIZACIÓN");
+      this.sinNoticeService.setNotice("REGISTRO EXITOSO COTIZACION", 'success');
+      console.log("DATOS DE COTIZACION EN EL SUBMIT" + JSON.stringify(this.cotizacion));
+      this.cotizacion = data.entidad;
+    }, error => {
+
+      this.loadingSubject.next(false);
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice("ERROR AL REGISTRAR EL BANCO", 'error');
+      }
+
+    });
+  }
+
+
+
+
 
 
 
@@ -399,207 +435,207 @@ export class ListCotizarComponent implements OnInit {
 
 
 
-limpiarCampos() {
-  Object.keys(this.formCliente.controls).forEach((name) => {
-    //console.log( "==limpiando " + name )
-    let control = this.formCliente.controls[name];
-    control.setErrors(null);
-    control.setValue(null);
-  });
+  limpiarCampos() {
+    Object.keys(this.formCliente.controls).forEach((name) => {
+      //console.log( "==limpiando " + name )
+      let control = this.formCliente.controls[name];
+      control.setErrors(null);
+      control.setValue(null);
+    });
 
-}
+  }
 
 
-//Mensages
-getErrorMessage(pfield: string) {
-  const errorRequerido = 'Ingresar valores';
-  const errorNumero = 'Ingreso solo numeros';
-  let maximo = "El maximo de caracteres es: ";
-  const invalidIdentification = 'La identificacion no es valida';
-  const errorLogitudExedida = 'La longitud sobrepasa el limite';
-  const errorInsuficiente = 'La longitud es insuficiente';
+  //Mensages
+  getErrorMessage(pfield: string) {
+    const errorRequerido = 'Ingresar valores';
+    const errorNumero = 'Ingreso solo numeros';
+    let maximo = "El maximo de caracteres es: ";
+    const invalidIdentification = 'La identificacion no es valida';
+    const errorLogitudExedida = 'La longitud sobrepasa el limite';
+    const errorInsuficiente = 'La longitud es insuficiente';
 
-  if (pfield && pfield === "cedula") {
-    const input = this.formCliente.get("cedula");
-    return input.hasError("required")
-      ? errorRequerido
-      : input.hasError("pattern")
-        ? errorNumero
-        : input.hasError("invalid-identification")
-          ? invalidIdentification
-          : input.hasError("maxlength")
+    if (pfield && pfield === "cedula") {
+      const input = this.formCliente.get("cedula");
+      return input.hasError("required")
+        ? errorRequerido
+        : input.hasError("pattern")
+          ? errorNumero
+          : input.hasError("invalid-identification")
+            ? invalidIdentification
+            : input.hasError("maxlength")
+              ? errorLogitudExedida
+              : input.hasError("minlength")
+                ? errorInsuficiente
+                : "";
+    }
+
+
+    //Validaciones de datos personales
+    if (pfield && pfield === 'nombresCompletos') {
+      const input = this.nombresCompletos;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+
+
+    if (pfield && pfield === 'fechaNacimiento') {
+      const input = this.fechaNacimiento;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+
+    if (pfield && pfield === 'nacionalidad') {
+      const input = this.nacionalidad;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+
+
+
+
+    /*if (pfield && pfield === 'telefonoDomicilio') {
+      const input = this.formCliente.get('telefonoDomicilio');
+      console.log("telefonoDocimicilio",this.formCliente.get('telefonoDomicilio'))
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('pattern')
+          ? errorNumero
+          : input.hasError('maxlength')
             ? errorLogitudExedida
-            : input.hasError("minlength")
+            : input.hasError('minlength')
               ? errorInsuficiente
-              : "";
-  }
+              : '';
+    }*/
 
+    if (pfield && pfield == "correoElectronico") {
 
-  //Validaciones de datos personales
-  if (pfield && pfield === 'nombresCompletos') {
-    const input = this.nombresCompletos;
-    return input.hasError('required') ? errorRequerido : '';
-  }
+      return this.correoElectronico.hasError('required') ? errorRequerido : this.correoElectronico.hasError('email') ? 'E-mail no valido' : this.correoElectronico.hasError('maxlength') ? maximo
+        + this.correoElectronico.errors.maxlength.requiredLength : '';
 
-
-  if (pfield && pfield === 'fechaNacimiento') {
-    const input = this.fechaNacimiento;
-    return input.hasError('required') ? errorRequerido : '';
-  }
-
-  if (pfield && pfield === 'nacionalidad') {
-    const input = this.nacionalidad;
-    return input.hasError('required') ? errorRequerido : '';
-  }
+    }
 
 
 
 
-  /*if (pfield && pfield === 'telefonoDomicilio') {
-    const input = this.formCliente.get('telefonoDomicilio');
-    console.log("telefonoDocimicilio",this.formCliente.get('telefonoDomicilio'))
-    return input.hasError('required')
-      ? errorRequerido
-      : input.hasError('pattern')
-        ? errorNumero
-        : input.hasError('maxlength')
-          ? errorLogitudExedida
-          : input.hasError('minlength')
-            ? errorInsuficiente
-            : '';
-  }*/
+    if (pfield && pfield === 'movil') {
+      const input = this.movil;
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('pattern')
+          ? errorNumero
+          : input.hasError('maxlength')
+            ? errorLogitudExedida
+            : input.hasError('minlength')
+              ? errorInsuficiente
+              : '';
+    }
 
-  if (pfield && pfield == "correoElectronico") {
 
-    return this.correoElectronico.hasError('required') ? errorRequerido : this.correoElectronico.hasError('email') ? 'E-mail no valido' : this.correoElectronico.hasError('maxlength') ? maximo
-      + this.correoElectronico.errors.maxlength.requiredLength : '';
+
 
   }
 
+  blurIdentificacion() {
+    const input = this.formCliente.get("identificacion");
+    const celudaValida = ValidateCedulaNumber(input.value);
+    if (celudaValida && celudaValida["cedulaIncorecta"] === true) {
+      input.setErrors({ "invalid-identification": true });
+    }
+  }
 
 
+  setPrecioOro() {
 
-  if (pfield && pfield === 'movil') {
-    const input = this.movil;
-    return input.hasError('required')
-      ? errorRequerido
-      : input.hasError('pattern')
-        ? errorNumero
-        : input.hasError('maxlength')
-          ? errorLogitudExedida
-          : input.hasError('minlength')
-            ? errorInsuficiente
-            : '';
   }
 
 
 
+  editarUsuario() {
+    [{
+      path: 'add/:id',
 
-}
+    }]
 
-blurIdentificacion() {
-  const input = this.formCliente.get("identificacion");
-  const celudaValida = ValidateCedulaNumber(input.value);
-  if (celudaValida && celudaValida["cedulaIncorecta"] === true) {
-    input.setErrors({ "invalid-identification": true });
   }
-}
+
+  seleccionarEditar() {
+    console.log(">>>INGRESA AL DIALOGO ><<<<<<");
+    const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
+      width: '600px',
+      height: 'auto',
+      data: this.cedula.value
 
 
-setPrecioOro() {
+    });
 
-}
+    dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
+      console.log("envio de datos ");
+      if (respuesta)
+        this.submit();
 
-
-
-editarUsuario() {
-  [{
-    path: 'add/:id',
-
-  }]
-
-}
-
-seleccionarEditar() {
-  console.log(">>>INGRESA AL DIALOGO ><<<<<<");
-  const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
-    width: '600px',
-    height: 'auto',
-    data: this.cedula.value
-
-
-  });
-
-  dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
-    console.log("envio de datos ");
-    if (respuesta)
-      this.submit();
-
-  });
+    });
 
 
 
-}
+  }
 
 
-onChangeFechaNacimiento() {
+  onChangeFechaNacimiento() {
 
-  this.loadingSubject.next(true);
-  console.log("VALOR DE LA FECHA" + this.fechaNacimiento.value);
-  const fechaSeleccionada = new Date(
-    this.fechaNacimiento.value
-  );
-  console.log("FECHA SELECCIONADA" + fechaSeleccionada);
-  if (fechaSeleccionada) {
-    this.getDiffFechas(fechaSeleccionada, "dd/MM/yyy");
-  } else {
-    this.sinNoticeService.setNotice(
-      "El valor de la fecha es nulo",
-      "warning"
+    this.loadingSubject.next(true);
+    console.log("VALOR DE LA FECHA" + this.fechaNacimiento.value);
+    const fechaSeleccionada = new Date(
+      this.fechaNacimiento.value
     );
-    this.loadingSubject.next(false);
+    console.log("FECHA SELECCIONADA" + fechaSeleccionada);
+    if (fechaSeleccionada) {
+      this.getDiffFechas(fechaSeleccionada, "dd/MM/yyy");
+    } else {
+      this.sinNoticeService.setNotice(
+        "El valor de la fecha es nulo",
+        "warning"
+      );
+      this.loadingSubject.next(false);
+    }
   }
-}
 
-getDiffFechas(fecha: Date, format: string) {
-  this.loadingSubject.next(true);
-  const convertFechas = new RelativeDateAdapter();
-  this.sp
-    .getDiffBetweenDateInicioActual(
-      convertFechas.format(fecha, "input"),
-      format
-    )
-    .subscribe(
-      (rDiff: any) => {
-        const diff: YearMonthDay = rDiff.entidad;
-        this.edad.setValue(diff.year);
-        console.log("La edad es " + this.edad.value);
+  getDiffFechas(fecha: Date, format: string) {
+    this.loadingSubject.next(true);
+    const convertFechas = new RelativeDateAdapter();
+    this.sp
+      .getDiffBetweenDateInicioActual(
+        convertFechas.format(fecha, "input"),
+        format
+      )
+      .subscribe(
+        (rDiff: any) => {
+          const diff: YearMonthDay = rDiff.entidad;
+          this.edad.setValue(diff.year);
+          console.log("La edad es " + this.edad.value);
 
-        //this.edad.get("edad").setValue(diff.year);
-        //Validacion para que la edad sea mayor a 18 años
-        const edad = this.edad.value;
-        if (edad != undefined && edad != null && edad < 18) {
-          this.edad
-            .get("edad")
-            .setErrors({ "server-error": "error" });
+          //this.edad.get("edad").setValue(diff.year);
+          //Validacion para que la edad sea mayor a 18 años
+          const edad = this.edad.value;
+          if (edad != undefined && edad != null && edad < 18) {
+            this.edad
+              .get("edad")
+              .setErrors({ "server-error": "error" });
+          }
+          this.loadingSubject.next(false);
+        },
+        error => {
+          if (JSON.stringify(error).indexOf("codError") > 0) {
+            const b = error.error;
+            this.sinNoticeService.setNotice(b.msgError, "error");
+          } else {
+            this.sinNoticeService.setNotice(
+              "Error obtener diferencia de fechas",
+              "error"
+            );
+            console.log(error);
+          }
+          this.loadingSubject.next(false);
         }
-        this.loadingSubject.next(false);
-      },
-      error => {
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          const b = error.error;
-          this.sinNoticeService.setNotice(b.msgError, "error");
-        } else {
-          this.sinNoticeService.setNotice(
-            "Error obtener diferencia de fechas",
-            "error"
-          );
-          console.log(error);
-        }
-        this.loadingSubject.next(false);
-      }
-    );
-}
+      );
+  }
 
 
 
