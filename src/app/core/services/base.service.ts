@@ -23,6 +23,7 @@ export class BaseService {
   public segResourcesUrl: string;
   public appRootContextUrl: string;
   public appResourcesUrl: string;
+  public crmResourcesUrl: string;
   public appWebSocketUrl: string;
   public menuServiceUrl: string;
   public userRolServiceUrl: string;
@@ -78,7 +79,9 @@ export class BaseService {
            //object storage 
            this.mongoDb = atob(localStorage.getItem( environment.prefix + 'RE009')).replace(this.keyUnencrypt, '');
            this.mongoAlertaColeccion = atob(localStorage.getItem( environment.prefix + 'RE010')).replace(this.keyUnencrypt, '');
+           
            //parametros quski
+           this.crmResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE011')).replace(this.keyUnencrypt, '');
            
   }
 

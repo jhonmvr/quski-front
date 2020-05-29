@@ -1,0 +1,19 @@
+<div class="spinner-container" *ngIf="loading | async">
+    <mat-spinner class="spiner"></mat-spinner>
+</div>
+
+<re-portlet>
+    <re-portlet-header [title]="'Listado Tracking'" [class]="'kt-portlet__head--lg'">
+        
+		<ng-container ktPortletTools>
+            <a href="javascript:void(0);" (click)="buscar()" matTooltip="Buscar" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above" >search</mat-icon>
+                <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar</span>
+            </a>
+        </ng-container>
+    </re-portlet-header>
+    <re-portlet-body>
+        <kt-tabla-tracking></kt-tabla-tracking>
+    </re-portlet-body>    
+    <re-portlet-footer></re-portlet-footer>
+</re-portlet>

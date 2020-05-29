@@ -9,7 +9,7 @@ export const environment = {
     authKey: 'authcekey',
     prefix:'local',
     authprefix:'relative ',
-    paramsize:12,
+    paramsize:13,
     aplicacion:'1',
     wsProtocol:'ws',
     hashWebSocketKey:"RE2000",

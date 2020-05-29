@@ -11,6 +11,7 @@ import { CoreModule } from '../../core/core.module';
 import { UserManagementModule } from './user-management/user-management.module';
 
 import { ClienteModule } from './apps/cliente/cliente.module';
+import { TrackingModule } from './apps/tracking/tracking.module';
 import {CotizarModule} from './apps/cotizacion/cotizar.module';
 
 
@@ -39,6 +40,7 @@ const RELATIVE_DATE_FORMATS = {
 		//MailModule,
 		//ECommerceModule,
 		ClienteModule,
+		TrackingModule,
 		CotizarModule,
 		UserManagementModule,
 	],
