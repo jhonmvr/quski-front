@@ -1,3 +1,4 @@
+
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -42,37 +43,30 @@ import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPermissionsModule } from 'ngx-permissions';
 
 // Component
-import { CotizarComponent } from './cotizar.component';
-import { ListCotizarComponent } from './list-cotizar/list-cotizar.component';
-import { DetalleCotizacionComponent } from './detalle-cotizacion/detalle-cotizacion.component';
+import { ClienteNegociacionComponent } from './cliente-negociacion/cliente-negociacion.component';
+import { NegociacionComponent } from './negociacion.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
+import { GestionNegociacionComponent } from './gestion-negociacion/gestion-negociacion.component';
 
-import { DialogCargarComponent } from './list-cotizar/dialog-solicitud-de-autorizacion/dialog-cargar/dialog-cargar.component'
-import { SolicitudAutorizacionDialogComponent } from '../../../../views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 const routes: Routes = [
 	{
 		path: '',
-		component: CotizarComponent,
+		component: NegociacionComponent,
 		// canActivate: [ModuleGuard],
 		// data: { moduleName: 'ecommerce' },
 		children: [
 			{
 				path: '',
-				redirectTo: 'lista-cotizacion',
+				redirectTo: 'cliente-negociacion',
 				pathMatch: 'full'
+			},{
+				path: 'gestion-negociacion',
+				component: GestionNegociacionComponent
 			},
 			{
-				path: 'lista-cotizacion',
-				component: ListCotizarComponent
-			},
-			{
-				path: 'detalle-cotizacion',
-				component: DetalleCotizacionComponent
-			},
-			{
-				path: 'detalle-cotizacion/:id',
-				component: DetalleCotizacionComponent
+				path: 'cliente-negociacion',
+				component: ClienteNegociacionComponent
 			}
 		]
 	}
@@ -111,8 +105,8 @@ const routes: Routes = [
 		MatTooltipModule,
 		MatButtonToggleModule,
 		NgbProgressbarModule,
-		MatStepperModule,
-		PartialsModule
+    MatStepperModule,
+    PartialsModule
 	],
 	providers: [
 		ModuleGuard,
@@ -128,17 +122,12 @@ const routes: Routes = [
 		},
 	],
 	declarations: [
-		CotizarComponent,
-		ListCotizarComponent,
-		DetalleCotizacionComponent,
-		
-		DialogCargarComponent,
+NegociacionComponent,
+ClienteNegociacionComponent,
+GestionNegociacionComponent
 	],
-	entryComponents: [
-		AddFotoComponent,
-		
-		
+	entryComponents: [	
 
 	]
 })
-export class CotizarModule { }
+export class NegociacionModule { }

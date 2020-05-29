@@ -187,4 +187,12 @@ export class ClienteService extends BaseService {
 
   }
 
+  public findClienteByCedulaQusqui(tipoIdentificacion:string,identificacion: string) {
+    const serviceUrl =
+      this.appResourcesUrl + 'integracionRestController/getInformacionPersona';
+    this.params = new HttpParams().set('tipoIdentificacion', tipoIdentificacion).set('identificacion', identificacion).set('tipoConsulta', "").set('calificacion', "");
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+
 }

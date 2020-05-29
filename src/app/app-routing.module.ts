@@ -25,7 +25,10 @@ const routes: Routes = [
 			},{
 			path: 'cotizacion',
 				loadChildren: () => import('../app/views/pages/apps/cotizacion/cotizar.module').then(m => m.CotizarModule),
-			},
+			},{
+				path: 'negociacion',
+				loadChildren: () => import('../app/views/pages/apps/negociacion/negociacion.module').then(m => m.NegociacionModule),
+				},
 			{
 				path: 'tracking',
 				loadChildren: () => import('../app/views/pages/apps/tracking/tracking.module').then(m => m.TrackingModule),
