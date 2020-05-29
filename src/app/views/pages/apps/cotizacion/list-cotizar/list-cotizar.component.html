@@ -1,6 +1,9 @@
 <!-- comento los vertical para que salga 
       <mat-vertical-stepper>
         <mat-step> -->
+<div class="spinner-container" *ngIf="loading | async">
+  <mat-spinner class="spiner"></mat-spinner>
+</div>
 
 <re-portlet>
   <re-portlet-header [title]="'Cotizar'" [class]="'kt-portlet__head--lg'">
@@ -24,15 +27,15 @@
               <div class="row align-items-center">
                 <div class="col-md-6 kt-margin-bottom-10-mobile">
                   <mat-form-field class="mat-form-field-fluid">
-                    <input [formControl]="cedula" placeholder="C.I." autocomplete="off" required="true"
+                    <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required="true"
                       (selectionChange)="blurIdentificacion()" matInput numeric numericType="number" />
 
-                    <mat-error>{{ getErrorMessage("cedula") }}</mat-error>
+                    <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
                   </mat-form-field>
                 </div>
 
                 <a href="javascript:void(0);" matTooltip="Buscar Cliente"
-                  style="font-size: 12px; vertical-align: middle;" (click)="seleccionarEditar()">
+                  style="font-size: 12px; vertical-align: middle;" (click)="buscarCliente()">
                   <mat-icon style="font-size: 24px;" class="orange-icon" matTooltipPosition="above">search</mat-icon>
                   <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Buscar
                     cliente</span>
