@@ -1,0 +1,70 @@
+ <!--START MAT TABLE-->
+ <div class="mat-table__wrapper">
+    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
+    matSort #sort1="matSort" matSortActive="codigoRegistro" matSortDirection="asc" matSortDisableClear>
+        <ng-container matColumnDef="proceso">
+            <mat-header-cell *matHeaderCellDef>Proceso</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.proceso}}</mat-cell>
+            <mat-footer-cell *matFooterCellDef> Total </mat-footer-cell>    
+        </ng-container>
+        <ng-container matColumnDef="codigoRegistro">
+            <mat-header-cell *matHeaderCellDef>Codigo Registro</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.codigoRegistro}}</mat-cell>
+            <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+        </ng-container>
+        <ng-container matColumnDef="actividad">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Actividad</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.actividad}}</mat-cell>
+            <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+        </ng-container>
+        <ng-container matColumnDef="fechaInicio">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Inicio</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.fechaInicio | date:'short'}} </mat-cell>
+            <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+        </ng-container>
+        <ng-container matColumnDef="fechaAsignacion">
+            <mat-header-cell *matHeaderCellDef>Fecha Asignacion</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.fechaAsignacion | date:'short'}} </mat-cell>
+            <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+        </ng-container>
+        
+        <ng-container matColumnDef="fechaInicioAtencion">
+            <mat-header-cell *matHeaderCellDef>Fecha Inicio Atencion</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.fechaInicioAtencion | date:'short'}} </mat-cell>
+            <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+        </ng-container>
+        <ng-container matColumnDef="fechaFin">
+            <mat-header-cell *matHeaderCellDef>Fecha Fin</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.fechaFin | date:'short'}} </mat-cell>
+            <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+        </ng-container>
+        <ng-container matColumnDef="estado">
+            <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
+            <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+        </ng-container>
+        <ng-container matColumnDef="usuario">
+                <mat-header-cell *matHeaderCellDef>Usuario</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.usuario}} </mat-cell>
+                <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+            </ng-container>
+        <ng-container matColumnDef="tiempoTotal">
+            <mat-header-cell *matHeaderCellDef>Total Tiempo</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.tiempoTotal}} </mat-cell>
+            <mat-footer-cell *matFooterCellDef> {{total}} </mat-footer-cell>    
+        </ng-container>
+        <ng-container matColumnDef="observacion">
+            <mat-header-cell *matHeaderCellDef>Observacion</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.observacion}} </mat-cell>
+            <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+        </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            <mat-footer-row *matFooterRowDef="displayedColumns"></mat-footer-row>
+    </mat-table>
+    <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" 
+    [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+    </mat-paginator>
+    
+</div>
+<!--end MAT TABLE-->

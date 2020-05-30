@@ -8,8 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DocumentoHabilitanteService } from '../../../../core/services/quski/documento-habilitante.service';
-
-import { saveAs } from "FileSaver";
+import { saveAs } from 'file-saver';
 
 export interface DataUpload {
   name: string;
@@ -42,19 +41,19 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   private identificacionClienteSubject = new BehaviorSubject<string>("");
 
 
- 
+
   //public dataUpload: DataUpload;
   isDisabledGuardar: any;
   element: any;
 
-  constructor(private dh: DocumentoHabilitanteService, private sinNoticeService : ReNoticeService,
+  constructor(private dh: DocumentoHabilitanteService, private sinNoticeService: ReNoticeService,
     public dialogRef: MatDialogRef<SolicitudAutorizacionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: string, public dialog: MatDialog,private upload: ReFileUploadService) {
-      console.log(">>><<<<<<<<<<<<<<< DATA COTIZACION" + JSON.stringify(data));
-      this.formDatosSolicitud.addControl("nombresCompletos", this.nombresCompletos);
-      this.formDatosSolicitud.addControl("identificacion", this.identificacion);
-    
-    }
+    @Inject(MAT_DIALOG_DATA) private data: string, public dialog: MatDialog, private upload: ReFileUploadService) {
+    console.log(">>><<<<<<<<<<<<<<< DATA COTIZACION" + JSON.stringify(data));
+    this.formDatosSolicitud.addControl("nombresCompletos", this.nombresCompletos);
+    this.formDatosSolicitud.addControl("identificacion", this.identificacion);
+
+  }
 
   ngOnInit() {
   }
@@ -62,11 +61,11 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   public formDatosSolicitud: FormGroup = new FormGroup({});
   public nombresCompletos = new FormControl('', [Validators.required]);
   public identificacion = new FormControl(this.data, [Validators.required]);
-  
-  
+
+
   loadArchivoCliente(element) {
-    console.log("===>>ingreso: ",this.nombresCompletos.value );
-     let d = {
+    console.log("===>>ingreso: ", this.nombresCompletos.value);
+    let d = {
       idTipoDocumento: 1,
       identificacionCliente: this.identificacion.value,
       data: this.data,
@@ -74,25 +73,25 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
     /* if (
       this.nombresCompletos.value 
     ) {  */
-      const dialogRef = this.dialog.open(CargarFotoDialogComponent, {
-        width: "auto",
-        height: "auto",
-        data: d
-        
-      });
-      console.log("===>>envio data: ",this.data );
-      dialogRef.afterClosed().subscribe(r => {
-        console.log("===>>ertorno al cierre: " + JSON.stringify(r));
-        if (r) {
-          this.validar='ACT';
-          this.sinNoticeService.setNotice(
-            "ARCHIVO CARGADO CORRECTAMENTE",
-            "success"
-          );
-          //this.validateContratoByHabilitante('false');
-        }
-        //this.submit();
-      });
+    const dialogRef = this.dialog.open(CargarFotoDialogComponent, {
+      width: "auto",
+      height: "auto",
+      data: d
+
+    });
+    console.log("===>>envio data: ", this.data);
+    dialogRef.afterClosed().subscribe(r => {
+      console.log("===>>ertorno al cierre: " + JSON.stringify(r));
+      if (r) {
+        this.validar = 'ACT';
+        this.sinNoticeService.setNotice(
+          "ARCHIVO CARGADO CORRECTAMENTE",
+          "success"
+        );
+        //this.validateContratoByHabilitante('false');
+      }
+      //this.submit();
+    });
     /* } else {
       console.log("===>>errorrrr al cierre: ");
       this.sinNoticeService.setNotice(
@@ -127,92 +126,92 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  consultar(){
+  consultar() {
     this.validar;
-     console.log("llegaaaa",this.validar); 
-     if(this.validar == 'ACT'){
+    console.log("llegaaaa", this.validar);
+    if (this.validar == 'ACT') {
       this.dialogRef.close(this.validar);
-     }else {
+    } else {
       this.sinNoticeService.setNotice("POR FAVOR DEBE CARGAR EL DOCUMENTO DE AUTORIZACION", 'warning');
-     }
-    
+    }
+
   }
 
   onFileChange(event) {
     console.log(
       "===>contraro relate idContrato: " + JSON.stringify(this.data)
     );
-    
+
     let relatedstr = "";
     let process = "";
-    if (this.data  !== "") {
+    if (this.data !== "") {
       relatedstr = this.data;
       process = "CLIENTE";
-   
-    let reader = new FileReader();
-    if (event.target.files && event.target.files.length > 0) {
-      let file = event.target.files[0];
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.uploadSubject.next(true);
-       /*  this.dataUpload = {
-          name: file.name,
-          type: file.type,
-          process: process,
-          relatedId: 0,
-          relatedIdStr: relatedstr,
-          typeAction: this.data.idTipoDocumento,
-          fileBase64: reader.result.split(",")[1]
-        }; */
-      };
-    } else {
-      this.uploadSubject.next(false);
+
+      let reader = new FileReader();
+      if (event.target.files && event.target.files.length > 0) {
+        let file = event.target.files[0];
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          this.uploadSubject.next(true);
+          /*  this.dataUpload = {
+             name: file.name,
+             type: file.type,
+             process: process,
+             relatedId: 0,
+             relatedIdStr: relatedstr,
+             typeAction: this.data.idTipoDocumento,
+             fileBase64: reader.result.split(",")[1]
+           }; */
+        };
+      } else {
+        this.uploadSubject.next(false);
+      }
     }
-  }
   }
 
 
 
   descargarPlantillaHabilitante(row) {
-    
-    console.log(      "<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>", this.nombresCompletos.value, this.data );
- 
-       this.dh.downloadHabilitantePlantilla(1, this.identificacion.value,this.nombresCompletos.value, 
-       null,null,"PDF").subscribe(
-        (data: any) => {
-          console.log("descargarNotificacion datos xx " + data);
-          console.log("descargarNotificacion datos " + JSON.stringify(data));
-          if (data) {
-            this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
-            saveAs(data, "AurotizacionBuro" + ".pdf");
-          } else {
-            this.sinNoticeService.setNotice(
-              "NO SE ENCONTRO REGISTRO PARA DESCARGA",
-              "error"
-            );
-          }
-        },
-        error => {
-          console.log("================>error: " + JSON.stringify(error));
+
+    console.log("<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>", this.nombresCompletos.value, this.data);
+
+    this.dh.downloadAutorizacionPlantilla(1, "PDF", this.nombresCompletos.value, this.identificacion.value).subscribe(
+      (data: any) => {
+        //console.log("descargarNotificacion datos xx " + data.entidad);
+        //console.log("descargarNotificacion datos " + JSON.stringify(data));
+        if (data) {
+          //this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
+          //console.log("datos de salida",data);
+          saveAs(data, "Carta solicitud Autorizacion Buro" + ".pdf");
+        } else {
           this.sinNoticeService.setNotice(
-            "ERROR DESCARGA DE PLANTILLA HABILITANTE",
+            "NO SE ENCONTRO REGISTRO PARA DESCARGA",
             "error"
           );
         }
-      );
+      },
+      error => {
+        console.log("================>error: " + JSON.stringify(error));
+        this.sinNoticeService.setNotice(
+          "ERROR DESCARGA DE PLANTILLA HABILITANTE",
+          "error"
+        );
+      }
+    );
     //console.log("descargarNotificacion");
   }
 
-   
+
   public subirArchivoHabilitante() {
     console.log(
       "===> subirArchivoHabilitantecontraro relate id: " +
-        JSON.stringify(this.data)
+      JSON.stringify(this.data)
     );
-    
+
     this.sinNoticeService.setNotice("SE SUBIO EXITOSAMENTE ", 'success');
     this.validar = 'ACT';
-    
+
 
     /* this.upload
       .uploadFile(
@@ -279,6 +278,6 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
       );
 
     //console.log("descargarNotificacion"); */
-  }
+}
 
 

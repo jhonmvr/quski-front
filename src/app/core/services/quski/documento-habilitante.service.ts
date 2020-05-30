@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import { BaseService } from "../base.service";
-
-import { DatePipe } from "@angular/common";
-import { ReNoticeService } from "../re-notice.service";
+import { BaseService } from '../base.service';
+//import { DatePipe } from "@angular/common";
+import { ReNoticeService } from '../../services/re-notice.service';
 import { HttpParams, HttpClient } from "@angular/common/http";
-import { Page } from "../../model/page";
+import { Page } from '../../../core/model/page';
+import { tap } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
@@ -12,14 +12,25 @@ import { Page } from "../../model/page";
 export class DocumentoHabilitanteService extends BaseService {
   constructor(
     _http: HttpClient,
-    private datePipe: DatePipe,
+   // private datePipe: DatePipe,
     private ns: ReNoticeService
   ) {
     super();
     this.http = _http;
     this.setParameter();
   }
-
+  /**
+   * Valida el contrato habilitante
+   * @param codigoContrato 
+   * @param idJoya 
+   * @param idAbono 
+   * @param tipoDocumento 
+   * @param estadoContrato 
+   * @param estadoJoya 
+   * @param estadoAbono 
+   * @param idVentaLote 
+   * @param estadoFinalVentaLote 
+   */
   validateContratoByHabilitante(
     codigoContrato: string,
     idJoya: string,
@@ -72,7 +83,14 @@ export class DocumentoHabilitanteService extends BaseService {
     // params.append("codigo",codigoContrato).append("tipoDocumento",tipoDocumento);
     return this.findByParams(params, url);
   }
-
+  /**
+   * Encuentra un tipo de documento por codigo de contrato 
+   * @param codigoContrato 
+   * @param idJoya 
+   * @param idAbono 
+   * @param tipoDocumento 
+   * @param p 
+   */
   public findByTipoDocumentoAndCodigoContrato(
     codigoContrato: string,
     idJoya: string,
@@ -98,7 +116,15 @@ export class DocumentoHabilitanteService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-
+  /**
+   * Encuentra el habilitatne por el parametro 
+   * @param p 
+   * @param codigoContrato 
+   * @param idJoya 
+   * @param nombreCliente 
+   * @param identificacionCliente 
+   * @param estado 
+   */
   findHabilitantesByParams(
     p: Page,
     codigoContrato,
@@ -149,6 +175,14 @@ export class DocumentoHabilitanteService extends BaseService {
     return this.http.get(serviceUrl, this.options);
   }
 
+  /**
+   * Descarga el Habilitante por los parametros
+   * @param id 
+   * @param codigo 
+   * @param idJoya 
+   * @param idAbono 
+   * @param idVentaLote 
+   */
   downloadHabilitante(id, codigo, idJoya, idAbono, idVentaLote) {
     const serviceUrl =
       this.appResourcesUrl +
@@ -175,14 +209,21 @@ export class DocumentoHabilitanteService extends BaseService {
       responseType: "blob" as "json"
     });
   }
-
-  downloadHabilitantePlantilla(
+  /**
+   * 
+   * @param id Descarga la plantilla del tipo documento
+   * @param identificacionCliente 
+   * @param nombreCliente 
+   * @param idCotizador 
+   * @param idNegociacion 
+   * @param format 
+   */
+  downloadAutorizacionPlantilla(
     id,
-    identificacionCliente: string,
+    format: string,
     nombreCliente: string,
-    idCotizador: string,
-    idNegociacion: string,
-    format: string  
+    identificacionCliente: string
+
   ) {
     const serviceUrl =
       this.appResourcesUrl + "tipoDocumentoRestController/getPlantilla";
@@ -190,27 +231,19 @@ export class DocumentoHabilitanteService extends BaseService {
     if (id && id != "") {
       this.params = this.params.set("id", id);
     }
-    if (identificacionCliente && identificacionCliente != "") {
-      this.params = this.params.set("identificacionCliente", identificacionCliente);
+    if (format && format != "") {
+      this.params = this.params.set("format", format);
     }
     if (nombreCliente && nombreCliente != "") {
       this.params = this.params.set("nombreCliente", nombreCliente);
     }
-    if (idCotizador && idCotizador != "") {
-      this.params = this.params.set("idCotizador", idCotizador);
+    if (identificacionCliente && identificacionCliente != "") {
+      this.params = this.params.set("identificacionCliente", identificacionCliente);
     }
-    if (idNegociacion && idNegociacion != "") {
-      this.params = this.params.set("idNegociacion", idNegociacion);
-    }
-    if (format && format != "") {
-      this.params = this.params.set("format", format);
-    }
-    
-    // this.options = { params: this.params, responseType: 'blob' as 'json' };
     this.options = {
       headers: this.headers,
       params: this.params,
-      responseType: "blob"
+      responseType: 'blob' as 'json' 
     };
     console.log(
       "downloadHabilitantePlantilla options " + JSON.stringify(this.options)
@@ -221,6 +254,13 @@ export class DocumentoHabilitanteService extends BaseService {
     //return this.http.get(serviceUrl, { params: this.params, responseType: 'blob' as 'json' });
     return this.http.get(serviceUrl, this.options);
   }
+
+
+  /**
+   * Encuentra los abonos 
+   * @param page 
+   * @param identificacionCliente 
+   */
   findAbonos(page: Page, identificacionCliente: any) {
     const serviceUrl = this.appResourcesUrl + "abonoRestController/findPendienteByIdentificacion";
     this.setSearchParams(page);
@@ -229,8 +269,13 @@ export class DocumentoHabilitanteService extends BaseService {
 
     return this.http.get(serviceUrl, this.options);
   }
-
-  findVentaLote(page: Page, identificacionCliente: any, codigo:any) {
+  /**
+   * Encuentra las ventas por lote
+   * @param page 
+   * @param identificacionCliente 
+   * @param codigo 
+   */
+  findVentaLote(page: Page, identificacionCliente: any, codigo: any) {
     const serviceUrl = this.appResourcesUrl + "ventaLoteRestController/findPendienteByCodigo";
     this.setSearchParams(page);
     this.params = this.params.set('identificacion', identificacionCliente);
@@ -240,7 +285,13 @@ export class DocumentoHabilitanteService extends BaseService {
     return this.http.get(serviceUrl, this.options);
 
   }
-  findVentaVitrina(page: Page, identificacionCliente: any, codigo:any) {
+  /**
+   * Encuentra la Venta vitrina
+   * @param page 
+   * @param identificacionCliente 
+   * @param codigo 
+   */
+  findVentaVitrina(page: Page, identificacionCliente: any, codigo: any) {
     const serviceUrl = this.appResourcesUrl + "joyaRestController/findPendienteByIdentificacion";
     this.setSearchParams(page);
     this.params = this.params.set('identificacion', identificacionCliente);

@@ -31,7 +31,7 @@ public findByNombre(nombre:string){
   this.params = new HttpParams().set("nombre", nombre);
   //console.log("==> parametros obtenidos " +  this.params.toString() );
   this.options = { headers: this.headers, params:this.params };
-  return this.http.get<any>(this.appResourcesUrl  +"parametroRestController/getEntityByNombre", this.options);
+  return this.http.get<any>(this.genericResourcesUrl  +"parametroRestController/getEntityByNombre", this.options);
 }
 
   public findByNombreTipoOrdered(nombre:string, tipo:string, ordered:string){
@@ -41,7 +41,7 @@ public findByNombre(nombre:string){
     this.params=this.params.set("ordered", ordered);
     //console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params:this.params };
-    return this.http.get<any>(this.appResourcesUrl  +"parametroRestController/findByNombreTipoOrdered", this.options);
+    return this.http.get<any>(this.genericResourcesUrl  +"parametroRestController/findByNombreTipoOrdered", this.options);
   }
 
   public addDaysToDate(fecha:string, dias:string){
@@ -51,7 +51,7 @@ public findByNombre(nombre:string){
     this.params=this.params.set("format", environment.DATE_FORMAT);
     //console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params:this.params };
-    return this.http.get<any>(this.appResourcesUrl  +"parametroRestController/addDaysToDate", this.options);
+    return this.http.get<any>(this.genericResourcesUrl  +"parametroRestController/addDaysToDate", this.options);
   }
 
   public countDaysBetweenDate(fechaIni:string, fechaFin:string){
@@ -61,11 +61,11 @@ public findByNombre(nombre:string){
     this.params=this.params.set("format", environment.DATE_FORMAT);
     //console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params:this.params };
-    return this.http.get<any>(this.appResourcesUrl  +"parametroRestController/countDaysBetweenDate", this.options);
+    return this.http.get<any>(this.genericResourcesUrl  +"parametroRestController/countDaysBetweenDate", this.options);
   }
 
   public getPaises(){
-    let url = this.appResourcesUrl  +"parametroRestController/getPaises";
+    let url = this.genericResourcesUrl  +"parametroRestController/getPaises";
     this.params = new HttpParams();
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(url, this.options);
@@ -89,14 +89,14 @@ public findByNombre(nombre:string){
     this.params=this.params.append("isPaginated", page.isPaginated);
     //console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params:this.params };
-    return this.http.get<any>(this.appResourcesUrl  +"parametroRestController/listByParamEntities", this.options);
+    return this.http.get<any>(this.genericResourcesUrl  +"parametroRestController/listByParamEntities", this.options);
   }
 
 public findTipos(){
   this.params = new HttpParams();
   this.params=this.params.append("isPaginated", "N");
   this.options = { headers: this.headers, params:this.params };
-    return this.http.get<any>(this.appResourcesUrl  +"parametroRestController/listAllTipos", this.options);
+    return this.http.get<any>(this.genericResourcesUrl  +"parametroRestController/listAllTipos", this.options);
 }
 
 

@@ -39,7 +39,7 @@
     "@ngx-loading-bar/core": "^4.2.0",
     "@ngx-translate/core": "^11.0.1",
     "@types/lodash": "^4.14.149",
-    "FileSaver": "^0.10.0",
+    "file-saver": "^2.0.0-rc.4",
     "angular-in-memory-web-api": "^0.8.0",
     "bootstrap": "^4.4.1",
     "chart.js": "^2.9.3",
