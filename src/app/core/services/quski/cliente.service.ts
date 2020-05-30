@@ -191,7 +191,6 @@ export class ClienteService extends BaseService {
 
   public findClienteByCedulaCRM(identificacion: string) {
     const serviceUrl =    this.crmResourcesUrl + 'prospectoQuskiRestController/getProspectoByCedula';
-    console.log( "==>findClienteByCedulaCRM " + serviceUrl);
     this.params = new HttpParams().set('ced',identificacion);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);

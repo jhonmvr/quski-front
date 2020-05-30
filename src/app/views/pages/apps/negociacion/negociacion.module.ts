@@ -47,9 +47,6 @@ import { ClienteNegociacionComponent } from './cliente-negociacion/cliente-negoc
 import { NegociacionComponent } from './negociacion.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
-import { VercotizacionComponent } from './cliente-negociacion/vercotizacion/vercotizacion.component';
-import { DialogCargarComponent } from '../cotizacion/list-cotizar/dialog-solicitud-de-autorizacion/dialog-cargar/dialog-cargar.component';
-
 
 const routes: Routes = [
 	{
@@ -66,6 +63,7 @@ const routes: Routes = [
 				path: 'cliente-negociacion',
 				component: ClienteNegociacionComponent
 			}
+
 		]
 	}
 ];
@@ -121,7 +119,7 @@ const routes: Routes = [
 	],
 	declarations: [
 NegociacionComponent,
-ClienteNegociacionComponent,
+ClienteNegociacionComponent
 	],
 	entryComponents: [	
 

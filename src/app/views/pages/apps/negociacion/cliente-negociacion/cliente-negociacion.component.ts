@@ -216,7 +216,6 @@ export class ClienteNegociacionComponent implements OnInit {
             this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE DEL CRM", 'success');
           } else {
             this.sinNoticeService.setNotice("Usuario no registrado ", 'error');
-
           }
         },
         );
