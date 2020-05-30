@@ -135,12 +135,21 @@
                 matSortActive="variable" matSortDirection="asc" matSortDisableClear>
                 <ng-container matColumnDef="orden">
                   <mat-header-cell *matHeaderCellDef>Orden</mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{element.orden}}
+                  </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="variable">
                   <mat-header-cell *matHeaderCellDef mat-sort-header>Variable</mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{element.nombre}}
+                  </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="valor">
                   <mat-header-cell *matHeaderCellDef mat-sort-header>Valor</mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{element.valor}}
+                  </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="displayedColumnsVarCredi"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumnsVarCredi"></mat-row>

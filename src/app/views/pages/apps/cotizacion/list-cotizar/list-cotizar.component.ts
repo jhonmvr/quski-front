@@ -48,6 +48,7 @@ export class ListCotizarComponent implements OnInit {
   listGradosInteres = [];
   listMotivoDesestimiento = [];
   listEstado = Object.keys(EstadoQuskiEnum);
+  listVariables = [];
   //FORM CLIENTE
   public formCliente: FormGroup = new FormGroup({});
   public fpublicidad = new FormControl('', [Validators.required]);
@@ -456,52 +457,53 @@ export class ListCotizarComponent implements OnInit {
    */
   buscarCliente() {
     this.loadingSubject.next(true);
-    if (this.tipoIdentificacion != null) {
-      /**
-       * Busco en Calculadora Quski
-       */
-      this.clienteService.findClienteByCedulaQusqui(this.tipoIdentificacion = "C", this.identificacion.value).subscribe((dataCalculator: any) => {
+    this.clienteService.findClienteByCedulaQusqui(this.tipoIdentificacion = "C", this.identificacion.value).subscribe((dataCalculator: any) => {
+
+      this.loadingSubject.next(false);
+      if (dataCalculator.entidad.datoscliente.nombrescompletos) {
+        console.log('cliente quski ', dataCalculator.entidad);
+        this.nombresCompletos.setValue(dataCalculator.entidad.datoscliente.nombrescompletos);
+        this.fechaNacimiento.setValue(dataCalculator.entidad.datoscliente.fechanacimiento);
+        this.edad.setValue(dataCalculator.entidad.datoscliente.edad);
+        this.nacionalidad.setValue(dataCalculator.entidad.datoscliente.nacionalidad);
+        this.movil.setValue(dataCalculator.entidad.datoscliente.telefonomovil);
+        this.telefonoDomicilio.setValue(dataCalculator.entidad.datoscliente.telefonofijo);
+        this.fpublicidad.setValue(dataCalculator.entidad.datoscliente.publicidad);
+        this.correoElectronico.setValue(dataCalculator.entidad.datoscliente.correoelectronico);
+        this.campania.setValue(dataCalculator.entidad.datoscliente.codigocampania);
+        //Cargo la lista de variables para la tabla de variables crediticias
+        this.listVariables = dataCalculator.entidad.xmlVariablesInternas.variablesInternas.variable;
+        console.log("VARIABLES CREDITICIAS CALCULADORA>>>>++++" + JSON.stringify(this.listVariables));
+        this.dataSourceVarCredi = new MatTableDataSource(this.listVariables);
+        console.log("VARIABLES CREDITICIAS CALCULADORA>>>>++++" + JSON.stringify(this.dataSourceVarCredi));
+        this.loadingSubject.next(false);
+        this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE CALCULADORA QUSKI", 'success');
+      } else {
+        /**
+         * SERVICIO CRM
+         */
+        console.log('INGRESA A CRM');
         console.log('identificacion ', this.identificacion.value);
-        console.log('identificacion ', this.tipoIdentificacion);
-        this.loadingSubject.next(false);
-
-        if (dataCalculator.entidad != null) {
-          //Imprimo el objeto que viene de la consulta
-          console.log('cliente quski ', dataCalculator.entidad);
-          this.nombresCompletos.setValue(dataCalculator.entidad.datoscliente.nombrescompletos);
-          this.fechaNacimiento.setValue(dataCalculator.entidad.datoscliente.fechanacimiento);
-          this.edad.setValue(dataCalculator.entidad.datoscliente.edad);
-          this.nacionalidad.setValue(dataCalculator.entidad.datoscliente.nacionalidad);
-          this.movil.setValue(dataCalculator.entidad.datoscliente.telefonomovil);
-          this.telefonoDomicilio.setValue(dataCalculator.entidad.datoscliente.telefonofijo);
-          this.fpublicidad.setValue(dataCalculator.entidad.datoscliente.publicidad);
-          this.correoElectronico.setValue(dataCalculator.entidad.datoscliente.correoelectronico);
-          this.campania.setValue(dataCalculator.entidad.datoscliente.codigocampania);
-          this.loadingSubject.next(true);
-          this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
-        } else {
-          /**
-           * Busco en CRM
-           */
-          //TODO:LLAMAR AL SERVICIO DE CRM SATELITE ESPERAR QUE ESTE LA URL
-
-        }
-        if (this.nombresCompletos.value == null) {
-          this.submit();
-        }
-      }, error => {
-        this.loadingSubject.next(false);
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          let b = error.error;
-          this.sinNoticeService.setNotice(b.msgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice("ERROR AL CARGAR", 'error');
-        }
+        this.loadingSubject.next(true);
+        this.clienteService.findClienteByCedulaCRM(this.identificacion.value).subscribe((data: any) => {
+          console.log('===>PASA SERVICIO Y DEVUELVE DATOS  ');
+          console.log('==>cliente CRM ', data.list);
+          console.log('==>identificacion ', this.identificacion.value);
+          this.loadingSubject.next(false);
+          if (data.list) {
+            this.loadingSubject.next(false);
+            this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE DEL CRM", 'success');
+          } else {
+            this.sinNoticeService.setNotice("Usuario no registrado ", 'error');
+          }
+        },
+        );
       }
-
-      );
-    }
+    },
+    );
   }
+
+
   /**
    * Guarda la cotizacion en la base 
    */
