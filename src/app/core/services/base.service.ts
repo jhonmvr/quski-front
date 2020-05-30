@@ -81,7 +81,7 @@ export class BaseService {
            this.mongoAlertaColeccion = atob(localStorage.getItem( environment.prefix + 'RE010')).replace(this.keyUnencrypt, '');
            
            //parametros quski
-           this.crmResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE011')).replace(this.keyUnencrypt, '');
+           this.crmResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE012')).replace(this.keyUnencrypt, '');
            
   }
 

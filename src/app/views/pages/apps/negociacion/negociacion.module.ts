@@ -47,7 +47,9 @@ import { ClienteNegociacionComponent } from './cliente-negociacion/cliente-negoc
 import { NegociacionComponent } from './negociacion.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
-import { GestionNegociacionComponent } from './gestion-negociacion/gestion-negociacion.component';
+import { VercotizacionComponent } from './cliente-negociacion/vercotizacion/vercotizacion.component';
+import { DialogCargarComponent } from '../cotizacion/list-cotizar/dialog-solicitud-de-autorizacion/dialog-cargar/dialog-cargar.component';
+
 
 const routes: Routes = [
 	{
@@ -61,10 +63,6 @@ const routes: Routes = [
 				redirectTo: 'cliente-negociacion',
 				pathMatch: 'full'
 			},{
-				path: 'gestion-negociacion',
-				component: GestionNegociacionComponent
-			},
-			{
 				path: 'cliente-negociacion',
 				component: ClienteNegociacionComponent
 			}
@@ -105,8 +103,8 @@ const routes: Routes = [
 		MatTooltipModule,
 		MatButtonToggleModule,
 		NgbProgressbarModule,
-    MatStepperModule,
-    PartialsModule
+   	    MatStepperModule,
+        PartialsModule
 	],
 	providers: [
 		ModuleGuard,
@@ -124,7 +122,6 @@ const routes: Routes = [
 	declarations: [
 NegociacionComponent,
 ClienteNegociacionComponent,
-GestionNegociacionComponent
 	],
 	entryComponents: [	
 

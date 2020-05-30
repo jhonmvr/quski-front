@@ -44,7 +44,7 @@ const RELATIVE_DATE_FORMATS = {
 		ClienteModule,
 		TrackingModule,
 		CotizarModule,
-		//NegociacionModule,
+		NegociacionModule,
 		UserManagementModule,
 	],
 	providers: []
