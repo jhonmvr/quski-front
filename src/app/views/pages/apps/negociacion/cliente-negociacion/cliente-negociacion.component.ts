@@ -1,3 +1,5 @@
+import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
+import { RelativeDateAdapter } from './../../../../../core/util/relative.dateadapter';
 import { VercotizacionComponent } from './vercotizacion/vercotizacion.component';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
@@ -5,7 +7,6 @@ import { AuthDialogComponent } from './../../../../partials/custom/auth-dialog/a
 import { MatDialog } from '@angular/material';
 import { ParametroService } from './../../../../../core/services/quski/parametro.service';
 import { ClienteService } from './../../../../../core/services/quski/cliente.service';
-import { OroService } from './../../../../../core/services/quski/oro.service';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
@@ -30,8 +31,9 @@ export class ClienteNegociacionComponent implements OnInit {
 
 
   ///Validaciones formulario cliente 
-
-
+  public formOpcionesCredito: FormGroup = new FormGroup({});
+  public gradoInteres = new FormControl('', [Validators.required]);
+  public motivoDesistimiento = new FormControl('', []);
   public identificacion = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public nombresCompletos = new FormControl('', [Validators.required]);
   public fechaNacimiento = new FormControl('', [Validators.required]);
@@ -43,10 +45,8 @@ export class ClienteNegociacionComponent implements OnInit {
   public correoElectronico = new FormControl('', [Validators.required]);
   public campania = new FormControl('', [Validators.required]);
   public tipoIdentificacion = "C";
-
-
-
-
+  public aprobacionMupi = new FormControl('', []);
+  
   constructor(private sinNoticeService: ReNoticeService, 
     private cs: ClienteService, 
     private sp: ParametroService, 
@@ -56,6 +56,11 @@ export class ClienteNegociacionComponent implements OnInit {
     private subheaderService: SubheaderService,) { 
       this.sp.setParameter();
       this.cs.setParameter();
+        
+
+        ///FORM DE OPCIONES DE CREDITO 
+      this. formOpcionesCredito.addControl("motivoDesistimiento  ", this.motivoDesistimiento);
+      this.formOpcionesCredito.addControl("gradoInteres  ", this.gradoInteres);
 
   }
   
@@ -182,6 +187,65 @@ export class ClienteNegociacionComponent implements OnInit {
     });
 
 
+  }
+
+  ////Calcular la fecha de nacimiento 
+  onChangeFechaNacimiento() {
+
+    this.loadingSubject.next(true);
+    console.log("VALOR DE LA FECHA" + this.fechaNacimiento.value);
+    const fechaSeleccionada = new Date(
+      this.fechaNacimiento.value
+    );
+    console.log("FECHA SELECCIONADA" + fechaSeleccionada);
+    if (fechaSeleccionada) {
+      this.getDiffFechas(fechaSeleccionada, "dd/MM/yyy");
+    } else {
+      this.sinNoticeService.setNotice(
+        "El valor de la fecha es nulo",
+        "warning"
+      );
+      this.loadingSubject.next(false);
+    }
+  }
+
+
+  getDiffFechas(fecha: Date, format: string) {
+    this.loadingSubject.next(true);
+    const convertFechas = new RelativeDateAdapter();
+    this.sp
+      .getDiffBetweenDateInicioActual(
+        convertFechas.format(fecha, "input"),
+        format
+      )
+      .subscribe(
+        (rDiff: any) => {
+          const diff: YearMonthDay = rDiff.entidad;
+          this.edad.setValue(diff.year);
+          console.log("La edad es " + this.edad.value);
+          this.loadingSubject.next(false);
+          const edad = this.edad.value;
+          if (edad != undefined && edad != null && edad < 18) {
+            this.edad
+              .get("edad")
+              .setErrors({ "server-error": "error" });
+          }
+          this.loadingSubject.next(false);
+        },
+        error => {
+          if (JSON.stringify(error).indexOf("codError") > 0) {
+            const b = error.error;
+            this.sinNoticeService.setNotice(b.msgError, "error");
+          } else {
+            this.sinNoticeService.setNotice(
+              "Error obtener diferencia de fechas",
+              "error"
+            );
+            console.log(error);
+          }
+          this.loadingSubject.next(false);
+        }
+      );
   }
 
   buscarCliente() {
