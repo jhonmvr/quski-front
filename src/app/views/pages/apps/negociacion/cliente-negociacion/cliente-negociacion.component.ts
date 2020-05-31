@@ -1,3 +1,4 @@
+import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
 import { RelativeDateAdapter } from './../../../../../core/util/relative.dateadapter';
 import { VercotizacionComponent } from './vercotizacion/vercotizacion.component';
@@ -280,6 +281,7 @@ export class ClienteNegociacionComponent implements OnInit {
             this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE DEL CRM", 'success');
           } else {
             this.sinNoticeService.setNotice("Usuario no registrado ", 'error');
+            this.seleccionarEditar();
           }
         },
         );
@@ -287,5 +289,29 @@ export class ClienteNegociacionComponent implements OnInit {
     },
     );
   }
+
+
+  seleccionarEditar() {
+
+    console.log(">>>INGRESA AL DIALOGO ><<<<<<");
+    const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
+      width: '600px',
+      height: 'auto',
+      data: this.identificacion.value
+
+
+    });
+
+    dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
+      console.log("envio de datos ");
+      if (respuesta)
+      console.log("aqui");
+
+    });
+
+
+
+  }
+
 
 }
