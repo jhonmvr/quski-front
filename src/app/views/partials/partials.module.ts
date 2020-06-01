@@ -29,11 +29,11 @@ import {
 	MAT_DIALOG_DATA,
 } from '@angular/material';
 // NgBootstrap
-import {NgbDropdownModule, NgbTabsetModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbTabsetModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 // Perfect Scrollbar
-import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // Core module
-import {CoreModule} from '../../core/core.module';
+import { CoreModule } from '../../core/core.module';
 // CRUD Partials
 import {
 	ActionNotificationComponent,
@@ -67,15 +67,15 @@ import {
 	UserProfileComponent,
 } from './layout';
 // General
-import {NoticeComponent} from './content/general/notice/notice.component';
-import {PortletModule} from './content/general/portlet/portlet.module';
+import { NoticeComponent } from './content/general/notice/notice.component';
+import { PortletModule } from './content/general/portlet/portlet.module';
 // Errpr
-import {ErrorComponent} from './content/general/error/error.component';
+import { ErrorComponent } from './content/general/error/error.component';
 // Extra module
-import {WidgetModule} from './content/widgets/widget.module';
+import { WidgetModule } from './content/widgets/widget.module';
 // SVG inline
-import {InlineSVGModule} from 'ng-inline-svg';
-import {CartComponent} from './layout/topbar/cart/cart.component';
+import { InlineSVGModule } from 'ng-inline-svg';
+import { CartComponent } from './layout/topbar/cart/cart.component';
 
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -84,6 +84,8 @@ import { AddFotoComponent } from './custom/fotos/add-foto/add-foto.component';
 import { ArchivoUploadDialogComponent } from './custom/archivo/archivo-upload-dialog/archivo-upload-dialog.component';
 import { CargarFotoDialogComponent } from './custom/fotos/cargar-foto-dialog/cargar-foto-dialog.component';
 import { SolicitudAutorizacionDialogComponent } from './custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
+import { CreditoVigenteDialogComponent } from './custom/riesgo-acomulado-dialog/credito-vigente-dialog/credito-vigente-dialog.component';
+
 import { WebcamModule } from 'ngx-webcam';
 import { ReMessageComponent } from './custom/re-message/re-message.component';
 
@@ -138,6 +140,7 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 		PortletFooterComponent,
 		AuthDialogComponent,
 		SolicitudAutorizacionDialogComponent,
+		CreditoVigenteDialogComponent,
 		VercotizacionComponent,
 		ArchivoUploadDialogComponent,
 		CargarFotoDialogComponent,
@@ -179,7 +182,7 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 		UserProfile2Component,
 		UserProfile3Component,
 		CartComponent,
-		
+
 		ErrorComponent,
 		ReMessageComponent,
 		PortletComponent,
@@ -220,7 +223,7 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 		MatTabsModule,
 		MatTooltipModule,
 		MatDialogModule,
-		
+
 
 		// ng-bootstrap modules
 		NgbDropdownModule,
@@ -230,13 +233,14 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 		TranslateModule,
 		WebcamModule
 	],
-	providers:[
+	providers: [
 		{ provide: MatDialogRef, useValue: {} },
 		{ provide: MAT_DIALOG_DATA, useValue: [] },
 	],
-	entryComponents:[
+	entryComponents: [
 		AuthDialogComponent,
 		SolicitudAutorizacionDialogComponent,
+		CreditoVigenteDialogComponent,
 		VercotizacionComponent,
 		CargarFotoDialogComponent
 	]

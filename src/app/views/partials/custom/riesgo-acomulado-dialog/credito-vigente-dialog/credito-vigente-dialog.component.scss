@@ -1,0 +1,197 @@
+.example-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    min-width: 300px;
+    position: relative;
+  }
+  .material-icons {
+    font-size: 31px !important;
+    height: 31px;
+    width: 34px;
+    color: gray;
+    text-align: center;
+  }
+  .mat-button .mat-button-wrapper > *,
+  .mat-fab .mat-button-wrapper > *,
+  .mat-flat-button .mat-button-wrapper > *,
+  .mat-icon-button .mat-button-wrapper > *,
+  .mat-mini-fab .mat-button-wrapper > *,
+  .mat-raised-button .mat-button-wrapper > *,
+  .mat-stroked-button .mat-button-wrapper > * {
+    vertical-align: baseline;
+  }
+  .mat-button,
+  .mat-flat-button,
+  .mat-icon-button,
+  .mat-stroked-button {
+    min-width: 28px;
+    height: fit-content;
+  }
+  example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+  
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .example-header {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    font-size: 20px;
+  }
+  
+  .example-table {
+    overflow: auto;
+    min-height: auto;
+  }
+  .mat-table-sticky {
+    border-top: 1px solid #e0e0e0;
+  }
+  .mat-table {
+    overflow: auto;
+    max-height: auto;
+    width: 100%;
+  }
+  .mat-footer-row {
+    font-weight: bold;
+    justify-content: start;
+  }
+  .mat-column-NroPrestamo {
+    flex: 0 0 100px;
+    justify-content: flex-end;
+    padding-right: 15px;
+  }
+  
+  .mat-column-CuentaIndividual {
+    flex: 0 0 100px;
+    justify-content: flex-start; 
+  }
+  
+  .mat-column-TipoCredito {
+    flex: 0 0 150px;
+    justify-content: start;
+  }
+  
+  .mat-column-CapitaInicial {
+    flex: 0 0 100px;
+    justify-content: flex-end;
+    padding-right: 15px;
+  }
+  
+  .mat-column-SaldoCapital {
+    flex: 0 0 100px;
+    justify-content: flex-end;
+    padding-right: 15px;
+  }
+  
+  .mat-column-Plazo {
+    flex: 0 0 80px;
+    justify-content: flex-end;
+    padding-right: 15px;
+  }
+  
+  .mat-column-FechaAprobacion {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+  
+  .mat-column-FechaFinalCredito {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+  
+  .mat-column-CoberturaAnterior {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+  
+  .mat-column-CoberturaActual {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  
+  .mat-column-EstatusCredito {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+  
+  .mat-column-MotivoBloqueo {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+  
+  .mat-column-DiasMora {
+    flex: 0 0 80px;
+    justify-content: flex-end;
+    padding-right: 15px;
+  }
+  
+  .mat-column-EstadoMediacion {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  
+  .mat-column-Retanqueo {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+  
+  .mat-column-Cuota {
+    flex: 0 0 80px;
+    justify-content: flex-end;
+    padding-right: 15px;
+  }
+  
+  .mat-column-CapitalCuotaAtrasada {
+    flex: 0 0 150px;
+    justify-content: flex-end;
+  }
+  .mat-column-InteresCuotaAtrasada {
+    flex: 0 0 150px;
+    justify-content: flex-end;
+  }
+  .mat-column-Mora {
+    flex: 0 0 80px;
+    justify-content: flex-end;
+  }
+  
+  .mat-column-GestionCobranza {
+    flex: 0 0 120px;
+    justify-content: flex-end;
+  }
+  
+  .mat-column-Custodia {
+    flex: 0 0 100px;
+    justify-content: flex-end;
+  }
+  
+  .mat-column-TotalDeuda {
+    flex: 0 0 80px;
+    justify-content: flex-end;
+  }
+  
+  .mat-column-NroCuotasImpagadas {
+    flex: 0 0 150px;
+    justify-content: flex-end;
+  }
+  
+  .mat-column-UltDivPagado {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  
+
+  
+

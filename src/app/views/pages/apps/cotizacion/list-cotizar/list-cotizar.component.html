@@ -27,8 +27,8 @@
               <div class="row align-items-center">
                 <div class="col-md-6 kt-margin-bottom-10-mobile">
                   <mat-form-field class="mat-form-field-fluid">
-                    <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required="true"
-                      (selectionChange)="blurIdentificacion()" matInput numeric numericType="number" />
+                    <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required="true" matInput
+                      numeric numericType="number" />
 
                     <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
                   </mat-form-field>
@@ -92,7 +92,7 @@
                 <div class="col-md-6 kt-margin-bottom-10-mobile">
                   <mat-form-field>
                     <mat-select placeholder="Publicidad" [formControl]="fpublicidad" required="true"
-                      (selectionChange)="cambioSeleccion($event)">
+                      (selectionChange)="cambioSeleccionPublicidad($event)">
                       <mat-option>--</mat-option>
                       <mat-option *ngFor="let publicidad of listPublicidad" [value]="publicidad">
                         {{ publicidad.valor }}
@@ -124,7 +124,7 @@
             <ng-template matStepLabel>Variables crediticias </ng-template>
             <div class="row">
               <div class="col-md-12" style="text-align: right;">
-                <button mat-button class="blue-icon">
+                <button mat-button class="blue-icon" matTooltip="Ver Riesgo Acumulado" (click)="goRiesgoAcumulado()">
                   Ver Riesgo Acumulado
                 </button>
               </div>
