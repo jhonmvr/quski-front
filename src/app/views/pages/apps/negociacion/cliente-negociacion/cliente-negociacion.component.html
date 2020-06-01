@@ -58,7 +58,7 @@
                             <div class="col-md-6 kt-margin-bottom-10-mobile">
                               <mat-form-field>
                                 <mat-label>Fecha de nacimiento</mat-label>
-                                <input matInput #inputFechaNacimiento [matDatepicker]="pickerFechaNacimiento" [formControl]="fechaNacimiento" />
+                                <input (dateChange)="onChangeFechaNacimiento()" matInput #inputFechaNacimiento [matDatepicker]="pickerFechaNacimiento" [formControl]="fechaNacimiento" />
                                 <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
                                 <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
                               </mat-form-field>
@@ -112,21 +112,25 @@
                             </div>
                             
                           </div>
-                          <div class="col-md-6 kt-margin-bottom-10-mobile">
-                            <label class="mat-form-field-fluid">
-                              Aprobado Web MUPI
-                            </label>
-                            <label>
-                              <input type="radio" value="SI" [formControl]="aprobadoWebMupi" />
-                              <span>SI</span>
-                            </label>
-                            <span> </span>
-                            <br>
-                            <label>
-                              <input type="radio" value="NO" [formControl]="aprobadoWebMupi" />
-                              <span>NO</span>
-                            </label>
-                          </div>
+                          <form [formGroup]="formAprobacion">
+        
+                            <div class="row">
+                                <div class="col-md-10">
+                            <h6>
+                              Aprobaci&#243;n MUPI
+                            </h6>
+                                <label>
+                                  <input type="radio" value="SI" [formControl]="aprobacionMupi">
+                                    <span>SI</span>
+                                </label>
+                              <br>
+                                <label>
+                                  <input type="radio" value="NO" [formControl]="aprobacionMupi">
+                                    <span>NO</span>
+                                </label>
+                               </div>
+                              </div>
+                            </form>
                           <br>
                           <br>
                           <div class="row">
