@@ -1,4 +1,4 @@
-import { VercotizacionComponent } from './../pages/apps/negociacion/cliente-negociacion/vercotizacion/vercotizacion.component';
+
 // Angular
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -140,8 +140,6 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 		PortletFooterComponent,
 		AuthDialogComponent,
 		SolicitudAutorizacionDialogComponent,
-		CreditoVigenteDialogComponent,
-		VercotizacionComponent,
 		ArchivoUploadDialogComponent,
 		CargarFotoDialogComponent,
 		ArchivoComponent,
@@ -240,8 +238,7 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 	entryComponents: [
 		AuthDialogComponent,
 		SolicitudAutorizacionDialogComponent,
-		CreditoVigenteDialogComponent,
-		VercotizacionComponent,
+
 		CargarFotoDialogComponent
 	]
 })

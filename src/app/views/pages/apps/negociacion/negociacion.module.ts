@@ -47,6 +47,8 @@ import { ClienteNegociacionComponent } from './cliente-negociacion/cliente-negoc
 import { NegociacionComponent } from './negociacion.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
+import { VariablesCrediticiasComponent } from './variables-crediticias/variables-crediticias.component';
+import { VercotizacionComponent } from './cliente-negociacion/vercotizacion/vercotizacion.component';
 
 const routes: Routes = [
 	{
@@ -61,6 +63,9 @@ const routes: Routes = [
 				pathMatch: 'full'
 			},{
 				path: 'cliente-negociacion',
+				component: ClienteNegociacionComponent
+			},{
+				path: 'variables-crediticia',
 				component: ClienteNegociacionComponent
 			}
 
@@ -118,11 +123,13 @@ const routes: Routes = [
 		},
 	],
 	declarations: [
-NegociacionComponent,
-ClienteNegociacionComponent
+		NegociacionComponent,
+		ClienteNegociacionComponent,
+		VercotizacionComponent,
+		VariablesCrediticiasComponent
 	],
 	entryComponents: [	
-
+		VercotizacionComponent
 	]
 })
 export class NegociacionModule { }

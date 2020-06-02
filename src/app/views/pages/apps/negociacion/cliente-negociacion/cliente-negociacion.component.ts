@@ -1,3 +1,4 @@
+import { TbQoVariableCrediticia } from './../../../../../core/model/quski/TbQoVariableCrediticia';
 import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
 import { RelativeDateAdapter } from './../../../../../core/util/relative.dateadapter';
@@ -5,11 +6,12 @@ import { VercotizacionComponent } from './vercotizacion/vercotizacion.component'
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
 import { AuthDialogComponent } from './../../../../partials/custom/auth-dialog/auth-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { ParametroService } from './../../../../../core/services/quski/parametro.service';
 import { ClienteService } from './../../../../../core/services/quski/cliente.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Page } from '../../../../../core/model/page';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -47,7 +49,21 @@ export class ClienteNegociacionComponent implements OnInit {
   public campania = new FormControl('', [Validators.required]);
   public tipoIdentificacion = "C";
   public aprobacionMupi = new FormControl('', []);
-  
+
+  displayedColumnsVarCredi = ['orden', 'variable', 'valor'];
+
+  //Paginacion 
+  p = new Page();
+
+  @ViewChild(MatPaginator, { static: true })
+  paginator: MatPaginator;
+  totalResults: number;
+  pageSize = 5;
+  currentPage;
+  /**Obligatorio ordenamiento */
+  @ViewChild('sort1', { static: true }) sort: MatSort;
+  roomsFilter: any;
+ ////CONSTRUCTOR DE LA CLASE 
   constructor(private sinNoticeService: ReNoticeService, 
     private cs: ClienteService, 
     private sp: ParametroService, 
