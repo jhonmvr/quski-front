@@ -1,3 +1,4 @@
+import { ValidateCedula, ValidateCedulaNumber } from '../../../../../core/util/validate.util';
 import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
 import { RelativeDateAdapter } from './../../../../../core/util/relative.dateadapter';
@@ -5,12 +6,13 @@ import { VercotizacionComponent } from './vercotizacion/vercotizacion.component'
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
 import { AuthDialogComponent } from './../../../../partials/custom/auth-dialog/auth-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { ParametroService } from './../../../../../core/services/quski/parametro.service';
 import { ClienteService } from './../../../../../core/services/quski/cliente.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
+
 
 @Component({
   selector: 'kt-cliente-negociacion',
@@ -32,22 +34,24 @@ export class ClienteNegociacionComponent implements OnInit {
 
 
   ///Validaciones formulario cliente 
-  public formOpcionesCredito: FormGroup = new FormGroup({});
-  public gradoInteres = new FormControl('', [Validators.required]);
-  public motivoDesistimiento = new FormControl('', []);
-  public identificacion = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
-  public nombresCompletos = new FormControl('', [Validators.required]);
-  public fechaNacimiento = new FormControl('', [Validators.required]);
-  public edad = new FormControl('', [Validators.required]);
-  public nacionalidad = new FormControl('', [Validators.required]);
-  public movil = new FormControl('', [Validators.required]);
-  public telefonoDomicilio = new FormControl('', [Validators.required]);
-  public fpublicidad = new FormControl('', [Validators.required]);
-  public correoElectronico = new FormControl('', [Validators.required]);
-  public campania = new FormControl('', [Validators.required]);
+
+  public formCliente: FormGroup = new FormGroup({});
+  public fpublicidad = new FormControl( [Validators.required]);
+  public identificacion = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
+  public fechaNacimiento = new FormControl();
+  public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public edad = new FormControl('', []);
+  public nacionalidad = new FormControl();
+  public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+  public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
+  public correoElectronico = new FormControl('', [Validators.required, Validators.email]);
+  public campania = new FormControl();
   public tipoIdentificacion = "C";
   public aprobacionMupi = new FormControl('', []);
-  
+  /**Obligatorio ordenamiento */
+  @ViewChild('sort1', { static: true }) sort: MatSort;
+  roomsFilter: any;
+ ////CONSTRUCTOR DE LA CLASE 
   constructor(private sinNoticeService: ReNoticeService, 
     private cs: ClienteService, 
     private sp: ParametroService, 
@@ -57,11 +61,18 @@ export class ClienteNegociacionComponent implements OnInit {
     private subheaderService: SubheaderService,) { 
       this.sp.setParameter();
       this.cs.setParameter();
-        
+      this.formCliente.addControl("identificacion", this.identificacion);
+      this.formCliente.addControl("fechaNacimiento", this.fechaNacimiento);
+      this.formCliente.addControl("nombresCompletos", this.nombresCompletos);
+      this.formCliente.addControl("edad", this.edad);
+      this.formCliente.addControl("nacionalidad", new FormControl('', Validators.required));
+      this.formCliente.addControl("movil", this.movil);
+      this.formCliente.addControl("telefonoDomicilio", this.telefonoDomicilio);
+      this.formCliente.addControl("correoElectronico", this.correoElectronico);
+      this.formCliente.addControl("campania", this.campania);
+      this.formCliente.addControl("fpublicidad", this.fpublicidad);
 
-        ///FORM DE OPCIONES DE CREDITO 
-      this. formOpcionesCredito.addControl("motivoDesistimiento  ", this.motivoDesistimiento);
-      this.formOpcionesCredito.addControl("gradoInteres  ", this.gradoInteres);
+      
 
   }
   
@@ -73,75 +84,89 @@ export class ClienteNegociacionComponent implements OnInit {
     this.subheaderService.setTitle('Negociación');
   }
 
-
-  getErrorMessage(pfield: string) {
-    const errorRequerido = "Ingresar valores";
-    const errorEmail = "Correo Incorrecto";
-    const errorNumero = "Ingreso solo numeros";
-    const errorFormatoIngreso = "Use el formato : 0.00";
-    const invalidIdentification = "La identificacion no es valida";
-    const errorLogitudExedida = "La longitud sobrepasa el limite";
-    const errorInsuficiente = "La longitud es insuficiente";
-    const errorEdad = "Debe ser mayor de edad";
-
-
-    if (pfield && pfield === "identificacion") {
-      const input = this.formDatosCliente.get("identificacion");
-      return input.hasError("required")
-        ? errorRequerido
-        : input.hasError("pattern")
-          ? errorNumero
-          : input.hasError("invalid-identification")
-            ? invalidIdentification
-            : input.hasError("maxlength")
-              ? errorLogitudExedida
-              : input.hasError("minlength")
-                ? errorInsuficiente
-                : "";
-    }
-
-    if (pfield && pfield === "telefonoFijo") {
-      const input = this.formDatosCliente.get("telefonoFijo");
-      return input.hasError("required")
-        ? errorRequerido
-        : input.hasError("pattern")
-          ? errorNumero
+///Validaciones de errores
+getErrorMessage(pfield: string) {
+  const errorRequerido = 'Ingresar valores';
+  const errorNumero = 'Ingreso solo numeros';
+  let maximo = "El maximo de caracteres es: ";
+  const invalidIdentification = 'La identificacion no es valida';
+  const errorLogitudExedida = 'La longitud sobrepasa el limite';
+  const errorInsuficiente = 'La longitud es insuficiente';
+  if (pfield && pfield === "identificacion") {
+    const input = this.formCliente.get("identificacion");
+    return input.hasError("required")
+      ? errorRequerido
+      : input.hasError("pattern")
+        ? errorNumero
+        : input.hasError("invalid-identification")
+          ? invalidIdentification
           : input.hasError("maxlength")
             ? errorLogitudExedida
             : input.hasError("minlength")
               ? errorInsuficiente
               : "";
-    }
-
-    if (pfield && pfield === "email") {
-      const input = this.formDatosCliente.get("email");
-      return input.hasError("required")
-        ? errorRequerido
-        : input.hasError("email")
-          ? errorEmail
-          : input.hasError("maxlength")
-            ? errorLogitudExedida
-            : "";
-    }
-
-    if (pfield && pfield === "telefonoCelular") {
-      const input = this.formDatosCliente.get("telefonoCelular");
-      return input.hasError("required")
-        ? errorRequerido
-        : input.hasError("pattern")
-          ? errorNumero
-          : input.hasError("maxlength")
-            ? errorLogitudExedida
-            : input.hasError("minlength")
-              ? errorInsuficiente
-              : "";
-    }
-    if (pfield && pfield === "publicidad") {
-      const input = this.formDatosCliente.get("publicidad");
-      return input.hasError("required")
-    }
-    return "";
   }
+
+  if (pfield && pfield === 'nombresCompletos') {
+    const input = this.nombresCompletos;
+    return input.hasError('required') ? errorRequerido : '';
+  }
+ 
+  if (pfield && pfield === 'fechaNacimiento') {
+    const input = this.fechaNacimiento;
+    return input.hasError('required') ? errorRequerido : '';
+  }
+  
+  if (pfield && pfield === 'nacionalidad') {
+    const input = this.nacionalidad;
+    return input.hasError('required') ? errorRequerido : '';
+  }
+  
+  if (pfield && pfield === 'telefonoDomicilio') {
+    const input = this.formCliente.get('telefonoDomicilio');
+    console.log("telefonoDocimicilio", this.formCliente.get('telefonoDomicilio'))
+    return input.hasError('required')
+      ? errorRequerido
+      : input.hasError('pattern')
+        ? errorNumero
+        : input.hasError('maxlength')
+          ? errorLogitudExedida
+          : input.hasError('minlength')
+            ? errorInsuficiente
+            : '';
+  }
+ 
+  if (pfield && pfield == "correoElectronico") {
+
+    return this.correoElectronico.hasError('required') ? errorRequerido : this.correoElectronico.hasError('email') ? 'E-mail no valido' : this.correoElectronico.hasError('maxlength') ? maximo
+      + this.correoElectronico.errors.maxlength.requiredLength : '';
+
+  }
+ 
+
+  if (pfield && pfield === 'movil') {
+    const input = this.movil;
+    return input.hasError('required')
+      ? errorRequerido
+      : input.hasError('pattern')
+        ? errorNumero
+        : input.hasError('maxlength')
+          ? errorLogitudExedida
+          : input.hasError('minlength')
+            ? errorInsuficiente
+            : '';
+  }
+}
+
+///Validar solo numeros
+numberOnly(event): boolean {
+  const charCode = (event.which) ? event.which : event.keyCode;
+  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    return false;
+  }
+  return true;
+
+}
   
 
   getPublicidades() {
@@ -190,7 +215,8 @@ export class ClienteNegociacionComponent implements OnInit {
 
   }
 
-  ////Calcular la fecha de nacimiento 
+
+  ////Metodo de calculo de la fecha de nacimiento
   onChangeFechaNacimiento() {
 
     this.loadingSubject.next(true);
@@ -210,7 +236,7 @@ export class ClienteNegociacionComponent implements OnInit {
     }
   }
 
-
+/// Consulta de la edad me diante la fecha 
   getDiffFechas(fecha: Date, format: string) {
     this.loadingSubject.next(true);
     const convertFechas = new RelativeDateAdapter();
@@ -248,7 +274,11 @@ export class ClienteNegociacionComponent implements OnInit {
         }
       );
   }
-
+/**
+ * Metodo buscar cliente wn primera instancia busca en CloudStudio luego en la Calculadora Quski
+ * y  en CRM 
+ * Si no existe pide que se suba la autorizacion de equifax.
+ */
   buscarCliente() {
     this.loadingSubject.next(true);
     this.cs.findClienteByCedulaQusqui(this.tipoIdentificacion = "C", this.identificacion.value).subscribe((data: any) => {
@@ -290,7 +320,7 @@ export class ClienteNegociacionComponent implements OnInit {
     );
   }
 
-
+///Abrir el POPUP de la solicitud de equifax
   seleccionarEditar() {
 
     console.log(">>>INGRESA AL DIALOGO ><<<<<<");

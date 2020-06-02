@@ -47,6 +47,11 @@ import { ClienteNegociacionComponent } from './cliente-negociacion/cliente-negoc
 import { NegociacionComponent } from './negociacion.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
+import { VariablesCrediticiasComponent } from './variables-crediticias/variables-crediticias.component';
+import { VercotizacionComponent } from './cliente-negociacion/vercotizacion/vercotizacion.component';
+import { RiesgoAcumuladoComponent } from './riesgo-acumulado/riesgo-acumulado.component';
+import { GestionNegociacionComponent } from './gestion-negociacion/gestion-negociacion.component';
+import { TasacionComponent } from './tasacion/tasacion.component';
 
 const routes: Routes = [
 	{
@@ -57,11 +62,22 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				redirectTo: 'cliente-negociacion',
+				redirectTo: 'gestion-negociacion',
 				pathMatch: 'full'
+			},{
+				path: 'gestion-negociacion',
+				component: GestionNegociacionComponent
 			},{
 				path: 'cliente-negociacion',
 				component: ClienteNegociacionComponent
+			}
+			,{
+				path: 'variables-crediticia',
+				component: VariablesCrediticiasComponent
+			}
+			,{
+				path: 'riesgo-acumulado',
+				component: RiesgoAcumuladoComponent
 			}
 
 		]
@@ -118,11 +134,17 @@ const routes: Routes = [
 		},
 	],
 	declarations: [
-NegociacionComponent,
-ClienteNegociacionComponent
+		GestionNegociacionComponent,
+		NegociacionComponent,
+		ClienteNegociacionComponent,
+		VercotizacionComponent,
+		VariablesCrediticiasComponent,
+		RiesgoAcumuladoComponent,
+		GestionNegociacionComponent,
+		TasacionComponent
 	],
 	entryComponents: [	
-
+		VercotizacionComponent
 	]
 })
 export class NegociacionModule { }
