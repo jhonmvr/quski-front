@@ -51,6 +51,7 @@ import { VariablesCrediticiasComponent } from './variables-crediticias/variables
 import { VercotizacionComponent } from './cliente-negociacion/vercotizacion/vercotizacion.component';
 import { RiesgoAcumuladoComponent } from './riesgo-acumulado/riesgo-acumulado.component';
 import { GestionNegociacionComponent } from './gestion-negociacion/gestion-negociacion.component';
+import { TasacionComponent } from './tasacion/tasacion.component';
 
 const routes: Routes = [
 	{
@@ -73,6 +74,10 @@ const routes: Routes = [
 			,{
 				path: 'variables-crediticia',
 				component: VariablesCrediticiasComponent
+			}
+			,{
+				path: 'riesgo-acumulado',
+				component: RiesgoAcumuladoComponent
 			}
 
 		]
@@ -135,7 +140,8 @@ const routes: Routes = [
 		VercotizacionComponent,
 		VariablesCrediticiasComponent,
 		RiesgoAcumuladoComponent,
-		GestionNegociacionComponent
+		GestionNegociacionComponent,
+		TasacionComponent
 	],
 	entryComponents: [	
 		VercotizacionComponent

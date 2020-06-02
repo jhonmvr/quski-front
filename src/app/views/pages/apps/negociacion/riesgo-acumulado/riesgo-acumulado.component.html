@@ -1,1 +1,136 @@
-<p>riesgo-acumulado works!</p>
+<mat-dialog-content>
+    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceCre">
+      <ng-container matColumnDef="NumeroOperacion">
+          <mat-header-cell *matHeaderCellDef> N. Operaciòn </mat-header-cell>
+          <mat-cell *matCellDef="">
+         
+          </mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="TipoOferta">
+          <mat-header-cell *matHeaderCellDef> Tipo Oferta </mat-header-cell>
+          <mat-cell *matCellDef="">
+            
+          </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="Vencimiento">
+          <mat-header-cell *matHeaderCellDef> Vencimiento </mat-header-cell>
+          <mat-cell *matCellDef="">
+           
+          </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="Cuotas">
+        <mat-header-cell *matHeaderCellDef> Cuotas </mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef="CapitaInicial">
+        <mat-header-cell *matHeaderCellDef> Capital Inicial </mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="SaldoCapital">
+        <mat-header-cell *matHeaderCellDef> Saldo Capital </mat-header-cell>
+        <mat-cell *matCellDef="">
+          
+        </mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef="Plazo">
+      <mat-header-cell *matHeaderCellDef> Plazo </mat-header-cell>
+      <mat-cell *matCellDef="">
+       
+      </mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef="FechaAprobacion">
+      <mat-header-cell *matHeaderCellDef> Fecha Aprobacion </mat-header-cell>
+      <mat-cell *matCellDef="">
+       
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="FechaFinalCredito">
+      <mat-header-cell *matHeaderCellDef> Fecha Final Crèdito </mat-header-cell>
+      <mat-cell *matCellDef="">
+      
+      </mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef="DiasMora">
+      <mat-header-cell *matHeaderCellDef> Dias Mora </mat-header-cell>
+      <mat-cell *matCellDef="">
+       
+      </mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef="ValorCuota">
+      <mat-header-cell *matHeaderCellDef> Valor Cuota </mat-header-cell>
+      <mat-cell *matCellDef="">
+        
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="MotivoBloqueo">
+      <mat-header-cell *matHeaderCellDef> Motivo Bloqueo </mat-header-cell>
+      <mat-cell *matCellDef="">
+       
+      </mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef="TotalCredito">
+      <mat-header-cell *matHeaderCellDef> Total Credito </mat-header-cell>
+      <mat-cell *matCellDef="">
+       
+      </mat-cell>
+    </ng-container>
+    
+    
+    <ng-container matColumnDef="CoberturaAnterior">
+      <mat-header-cell *matHeaderCellDef> Cobertura Anterior </mat-header-cell>
+      <mat-cell *matCellDef="">
+        
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="CoverturaVigente">
+      <mat-header-cell *matHeaderCellDef> Cobertura Vigente </mat-header-cell>
+      <mat-cell *matCellDef="">
+       
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="DeudaTotal">
+        <mat-header-cell *matHeaderCellDef> Deuda Total </mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="TotalSaldo">
+        <mat-header-cell *matHeaderCellDef> Deuda Total </mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="RiesgoTotalCliente">
+        <mat-header-cell *matHeaderCellDef> Riesgo Total Cliente </mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+    
+    
+    
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    
+    </mat-table>
+    
+    <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true"
+    [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+    </mat-paginator>
+    
+    </mat-dialog-content>
+  
