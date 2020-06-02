@@ -26,6 +26,11 @@ import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-d
 import { EstadoQuskiEnum } from '../../../../../core/enum/EstadoQuskiEnum';
 import { TbMiCotizacion } from '../../../../../core/model/quski/TbMiCotizacion';
 import { CreditoVigenteDialogComponent } from '../../../../partials/custom/riesgo-acomulado-dialog/credito-vigente-dialog/credito-vigente-dialog.component';
+import { JoyaService } from '../../../../../core/services/quski/joya.service';
+import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
+import { TbQoTipoOro } from '../../../../..//core/model/quski/TbQoTipoOro';
+import { TipoOroWrapper } from '../../../../..//core/model/quski/TipoOroWrapper';
+import { SelectionModel } from '@angular/cdk/collections';
 @Component({
   selector: 'kt-list-cotizar',
   templateUrl: './list-cotizar.component.html',
@@ -35,6 +40,7 @@ export class ListCotizarComponent implements OnInit {
   //STANDARD VARIABLES
   public loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
+  private disableSimulaSubject = new BehaviorSubject<boolean>(false);
   public lCreate;
   public fechaSeleccionada: any;
   public cliente = new TbQoCliente();
@@ -49,7 +55,11 @@ export class ListCotizarComponent implements OnInit {
   listMotivoDesestimiento = [];
   listEstado = Object.keys(EstadoQuskiEnum);
   listVariables = [];
+  listOros = null;
+  //TODO: SE TOMA EL ENUM YA QUE NO SE SABE DE DONDE SACAR LA INFORMACION
+  listTipoOro = Object.keys(TipoOroEnum);
   //FORM CLIENTE
+  public formAprobacion: FormGroup = new FormGroup({});
   public formCliente: FormGroup = new FormGroup({});
   public fpublicidad = new FormControl('', [Validators.required]);
   public identificacion = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
@@ -65,6 +75,22 @@ export class ListCotizarComponent implements OnInit {
   public fgradoInteres = new FormControl('', [Validators.required]);
   public fmotivoDesestimiento = new FormControl('', [Validators.required]);
 
+  // FORM PRECIO ORO
+  
+  public formPrecioOro: FormGroup = new FormGroup({});
+  public tipoOro = new FormControl('', [Validators.required]);
+  public pesoNetoEstimado = new FormControl('', [Validators.required, ValidateDecimal]);
+  public precio = new FormControl('', [Validators.required, ValidateDecimal]);
+  public aprobacionMupi = new FormControl('', []);
+  selection = new SelectionModel<Element>(true, []);
+  tipoOroW: TbQoTipoOro;
+
+  //VARIABLES PRECIO ORO/
+  public totalPrecio: number = 0;
+  public totalPeso: number = 0;
+  public precioOro: TbQoPrecioOro;
+  public element;
+
   public primerNombre = '';
   public segundoNombre = '';
   public primerApellido = '';
@@ -77,9 +103,8 @@ export class ListCotizarComponent implements OnInit {
   aprobadoWebMupi = new FormControl('', []);
   apellidoCliente = new FormControl('', []);
   //OPCIONES PRECIO ORO
-  precio = new FormControl('', []);
   precioEstimado = new FormControl('', []);
-  pesoNetoEstimado = new FormControl('', []);
+
 
   //OPCIONES DE CREDITO
   plazo = new FormControl('', []);
@@ -95,7 +120,8 @@ export class ListCotizarComponent implements OnInit {
   costoEstimado = new FormControl('', []);
   valorCuota = new FormControl('', []);
 
-
+  displayedColumnsI = ['accion', 'N', 'tipoOro', 'precio', 'pesoNetoEstimado'];
+  dataSourceI = new MatTableDataSource<any>();
   displayedColumnsVarCredi = ['orden', 'variable', 'valor'];
   displayedColumnsPrecioOro = ['accion', 'tipoOro', 'precio', 'pesoNetoEstimado'];
   displayedColumnsCreditoNegociacion = ['plazo', 'montoPreAprobado', 'aRecibir', 'totalCostosOperacion', 'costoCustodia', 'costoTransporte', 'costoCredito', 'costoSeguro', 'costoResguardo', 'costoEstimado', 'valorCuota'];
@@ -119,13 +145,12 @@ export class ListCotizarComponent implements OnInit {
   @ViewChild('sort1', { static: true }) sort: MatSort;
   roomsFilter: any;
   disableVerPrecio;
-  disableVerPrecioSubject=new BehaviorSubject<boolean>(true);
-
-
+  disableVerPrecioSubject = new BehaviorSubject<boolean>(true);
 
   /**
    * Constructor de la clase 
    * @param titulo 
+   * @param js 
    * @param clienteService 
    * @param sinNoticeService 
    * @param subheaderService 
@@ -135,6 +160,7 @@ export class ListCotizarComponent implements OnInit {
    * @param fb 
    */
   constructor(public titulo: TituloContratoService,
+    private js: JoyaService,
     private clienteService: ClienteService,
     private sinNoticeService: ReNoticeService,
     private subheaderService: SubheaderService,
@@ -155,6 +181,10 @@ export class ListCotizarComponent implements OnInit {
     this.formCliente.addControl("campania", this.campania);
     this.formCliente.addControl("fpublicidad", this.fpublicidad);
     this.fb.group(this.formCliente);
+    this.formPrecioOro.addControl("tipoOro  ", this.tipoOro);
+    this.formPrecioOro.addControl("pesoNetoEstimado  ", this.pesoNetoEstimado);
+    this.formPrecioOro.addControl("precio  ", this.precio);
+    this.fb.group(this.formPrecioOro);
     this.getPublicidades();
     this.getGradoInteres();
     this.getMotivoDesestimiento();
@@ -168,6 +198,7 @@ export class ListCotizarComponent implements OnInit {
     this.titulo.setNotice("GESTION DE COTIZACION")
     this.loading = this.loadingSubject.asObservable();
     this.disableVerPrecio = this.disableVerPrecioSubject.asObservable();
+    this.loadTipoOro();
     // Set title to page breadCrumbs
     this.subheaderService.setTitle('Cotización');
     this.initiateTablePaginator();
@@ -332,11 +363,15 @@ export class ListCotizarComponent implements OnInit {
   /**
   * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
   */
-  buscar() {
-    this.initiateTablePaginator();
-    this.p = this.getPaginacion(this.sort.active, this.sort.direction, 'Y', 0);
-    //this.submit();
-  }
+ buscar() {
+  this.p = new Page();
+  this.totalResults = 0;
+  this.paginator.pageIndex = 0;
+  this.p.isPaginated = "Y";
+  this.p.size = 5;
+  this.p.pageNumber = 0;
+  this.nuevo();
+}
 
   /**ACCION DE BOTONES */
   /**
@@ -350,7 +385,7 @@ export class ListCotizarComponent implements OnInit {
     /**
      * Valores que tomo de la vista
      */
-    console.log("NOMBRE:"+this.nombresCompletos.value)
+    console.log("NOMBRE:" + this.nombresCompletos.value)
     console.log("CEDULA" + cedula);
     console.log("FECHA DE NACIMINETO" + this.fechaNacimiento.value);
     console.log("NACIONALIDAD" + this.nacionalidad.value);
@@ -530,8 +565,6 @@ export class ListCotizarComponent implements OnInit {
     });
 
   }
-
-
   /**
    * MANEJO DE ERRORES
    */
@@ -634,10 +667,18 @@ export class ListCotizarComponent implements OnInit {
       input.setErrors({ "invalid-identification": true });
     }
   }
-  /**SETEO EL PRECIO ORO */
-  setPrecioOro() {
 
+  /**
+ * Metodo que toma el valor del combo Tipo de Oro
+ * @param event 
+ */
+  cambioSeleccionTipoOro(event) {
+    console.log("evento " + JSON.stringify(event.value));
+    console.log("evento " + JSON.stringify(this.tipoOro.value));
+    this.setPrecioOro();
   }
+  /**SETEO EL PRECIO ORO */
+ 
   /**POP UP SOLICITUD EQUIFAX */
   SolicitudAutorizacion() {
 
@@ -720,8 +761,161 @@ export class ListCotizarComponent implements OnInit {
         }
       );
   }
+  /**
+   * Metodo que realiza la acción del botón VerPrecio
+   */
+  verPrecio() {
+    console.log("ver precios");
+    //this.stepper.selectedIndex = 3;
+  }
+  /**
+   * Metodo limpia los campos del formPrecioOro
+   */
+  limpiarCamposPrecioOro() {
+    Object.keys(this.formPrecioOro.controls).forEach((name) => {
+      let control = this.formPrecioOro.controls[name];
+      control.setErrors(null);
+      control.setValue(null);
+    });
+  }
+  /**
+   * Seteo el nuevo Precio Oro
+   */
+  nuevoPrecioOro() {
+    this.sinNoticeService.setNotice(null);
+    if (this.formPrecioOro.valid) {
+      this.disableSimulaSubject.next(true);
+      this.totalPeso = 0;
+      this.totalPrecio = 0;
+      this.precioOro = new TbQoPrecioOro;
+      this.tipoOroW = new TbQoTipoOro();
+   
+      //this.precioOro = new TbQoPrecioOro;
+      this.tipoOroW = this.tipoOro.value;
+      this.precioOro.tbQoTipoOro = this.tipoOro.value;
+      this.precioOro.precio = this.precio.value;
+      this.precioOro.estado = "ACT"
+      this.precioOro.pesoNetoEstimado = this.pesoNetoEstimado.value;
+      console.log("joyas  >>>><<<<" + JSON.stringify(this.precioOro));
+      console.log(" ELEMENTO" + JSON.stringify(this.element));
+      if (this.element) {
+        console.log("LLEGA ELEMENTO" + JSON.stringify(this.element));
+        const index = this.dataSourcePrecioOro.data.indexOf(this.element);
+        this.dataSourcePrecioOro.data.splice(index, 1);
+        const data = this.dataSourcePrecioOro.data;
+        this.dataSourcePrecioOro.data = data;
+      }
+      const data = this.dataSourcePrecioOro.data;
+      data.push(this.precioOro);
+      this.dataSourcePrecioOro.data = data;
+      this.element = null;
+      this.calcular();
+      this.limpiarCamposPrecioOro();
+      console.log("datos ingresos - egresos  >>>><<<<" + JSON.stringify(this.precioOro));
+      console.log("VALOR DE THIS ELEMENT>>>>>>>>>>" + this.element);
 
 
+    } else {
+      this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'warning');
+    }
+
+
+  }
+  /**
+   * Metodo que calcula el total de los valores
+   */
+  calcular() {
+    this.totalPeso = 0;
+    this.totalPrecio = 0;
+    if (this.dataSourceI.data) {
+      console.log("<<<<<<<<<<Data source >>>>>>>>>> " + JSON.stringify(this.dataSourceI.data));
+      this.dataSourceI.data.forEach(element => {
+        this.totalPeso = Number(this.totalPeso) + Number(element.pesoNetoEstimado);
+        this.totalPrecio = Number(this.totalPrecio) + Number(element.precio);
+      });
+    }
+  }
+  /**
+   * Edita una fila seleccionada
+   */
+  setPrecioOro() {
+    this.precio.setValue('');
+    //console.log('llega ');
+    this.loadingSubject.next(true);
+    this.js.findTipoOroByQuilate(this.tipoOro.value.quilate).subscribe((data: any) => {
+      console.log('tipoOro ', this.tipoOro.value);
+      this.loadingSubject.next(false);
+      console.log('cliente ', data.entidad);
+      if (data.entidad) {
+        console.log('oro entidad ', data.entidad);
+        this.precio.setValue(data.entidad.precio);
+      } else {
+        this.sinNoticeService.setNotice("ESPECIFIQUE EL TIPO DE ORO", 'info');
+      }
+    }, error => {
+      this.loadingSubject.next(false);
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice("ERROR AL CARGAR", 'error');
+      }
+    }
+    );
+  }
+  editar(element) {
+    this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
+    this.element = element;
+    const toSelectOro = this.listOros.find(p => p.id == element.tbQoTipoOro.id);
+    this.tipoOro.setValue(toSelectOro);
+    this.precio.setValue(element.precio);
+    this.pesoNetoEstimado.setValue(element.pesoNetoEstimado);
+  }
+  nuevo() {
+    if (this.formPrecioOro.valid) {
+      this.disableSimulaSubject.next(true);
+      this.totalPeso = 0;
+      
+      this.totalPrecio = 0;
+      this.precioOro = new TbQoPrecioOro;
+      let tipoOro = new TbQoTipoOro();
+      //this.precioOro = new TbQoPrecioOro;
+      tipoOro = this.tipoOro.value;
+      this.precioOro.tbQoTipoOro = tipoOro;
+      this.precioOro.precio = this.precio.value;
+      this.precioOro.estado = "ACT"
+      this.precioOro.pesoNetoEstimado = this.pesoNetoEstimado.value;
+      //console.log("joyas  >>>><<<<" + JSON.stringify(this.joyas));
+      if (this.element) {
+        const index = this.dataSourceI.data.indexOf(this.element);
+        this.dataSourceI.data.splice(index, 1);
+        const data = this.dataSourceI.data;
+        this.dataSourceI.data = data;
+
+      }
+      const data = this.dataSourceI.data;
+      data.push(this.precioOro);
+      this.dataSourceI.data = data;
+      this.element = null;
+      this.calcular();
+      this.limpiarCamposPrecioOro();
+    } else {
+      this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'warning');
+    }
+  }
+
+  loadTipoOro() {
+    let p = new Page();
+    p.isPaginated = "N";
+    p.sortFields = "id";
+    p.sortDirections = "asc";
+    this.js.getAllPaginatedUrl(p, this.js.appResourcesUrl + "tipoOroRestController/listAllEntities"
+    ).subscribe((data: any) => {
+      this.listOros = data.list;
+      console.log("<<<<<<<<<<listaOro>>>>>>>>>> " + this.listOros);
+
+    });
+  }
 
 
 

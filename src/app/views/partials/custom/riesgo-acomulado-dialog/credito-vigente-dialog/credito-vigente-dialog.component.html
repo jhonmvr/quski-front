@@ -3,30 +3,30 @@
 <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceCre" >
 
   <ng-container matColumnDef="NroPrestamo">
-      <mat-header-cell *matHeaderCellDef> Nro.Prestamo </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> Nro.Préstamo </mat-header-cell>
       <mat-cell *matCellDef="let element">{{element.nroPrestamo}}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="CuentaIndividual">
-      <mat-header-cell *matHeaderCellDef> Cuenta individual </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> Cuenta Individual </mat-header-cell>
       <mat-cell *matCellDef="let element">{{element.cuentaIndividual}}
       </mat-cell>
   </ng-container>
   <ng-container matColumnDef="TipoCredito">
-      <mat-header-cell *matHeaderCellDef> Tipo cr&#233;dito </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> Tipo Crédito </mat-header-cell>
       <mat-cell *matCellDef="let element">
         {{element.tipoCredito}}
       </mat-cell>
   </ng-container>
   <ng-container matColumnDef="CapitaInicial">
-    <mat-header-cell *matHeaderCellDef> Capita inicial </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef> Capita Inicial </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{element.capitalInicial}}
     </mat-cell>
 </ng-container>
 
 <ng-container matColumnDef="SaldoCapital">
-    <mat-header-cell *matHeaderCellDef> Saldo capital </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef> Saldo Capital </mat-header-cell>
     <mat-cell *matCellDef="let element">
       {{element.saldoCapital}}
     </mat-cell>
@@ -39,34 +39,34 @@
 </ng-container>
 
 <ng-container matColumnDef="FechaAprobacion">
-  <mat-header-cell *matHeaderCellDef> Fecha aprobacion </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Fecha Aprobación </mat-header-cell>
   <mat-cell *matCellDef="let element">
     {{element.fechaAprobacion}}
   </mat-cell>
 </ng-container>
 
 <ng-container matColumnDef="FechaFinalCredito">
-  <mat-header-cell *matHeaderCellDef> Fecha finalCredito </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Fecha Final Crédito </mat-header-cell>
   <mat-cell *matCellDef="let element">
     {{element.fechaFinalCredito}}
   </mat-cell>
 </ng-container>
 <ng-container matColumnDef="CoberturaAnterior">
-  <mat-header-cell *matHeaderCellDef> Cobertura anterior </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Cobertura Anterior </mat-header-cell>
   <mat-cell *matCellDef="let element">
     {{element.coberturaAnterior}}
   </mat-cell>
 </ng-container>
 
 <ng-container matColumnDef="CoberturaActual">
-  <mat-header-cell *matHeaderCellDef> Cobertura actual </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Cobertura Actual </mat-header-cell>
   <mat-cell *matCellDef="let element">
     {{element.coberturaActual}}
   </mat-cell>
 </ng-container>
 
 <ng-container matColumnDef="EstatusCredito">
-  <mat-header-cell *matHeaderCellDef> Estatus cr&#233;dito </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Estatus Crédito </mat-header-cell>
   <mat-cell *matCellDef="let element">
     {{element.estatusCredito}}
   </mat-cell>
@@ -79,14 +79,14 @@
 </ng-container>
 
 <ng-container matColumnDef="DiasMora">
-  <mat-header-cell *matHeaderCellDef> Dias mora </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Días Mora </mat-header-cell>
   <mat-cell *matCellDef="let element">
     {{element.diasMora}}
   </mat-cell>
 </ng-container>
 
 <ng-container matColumnDef="EstadoMediacion">
-  <mat-header-cell *matHeaderCellDef> Estado mediaci&#243;n </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Estado Mediación </mat-header-cell>
   <mat-cell *matCellDef="let element">
     {{element.estadoMediacion}}
   </mat-cell>
@@ -105,14 +105,14 @@
 </ng-container>
 
 <ng-container matColumnDef="CapitalCuotaAtrasada">
-  <mat-header-cell *matHeaderCellDef> Capital cuota atrasada </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Capital Cuota Atrasada </mat-header-cell>
   <mat-cell *matCellDef="let element">
     {{element.capitalCuotaAtrasada}}
   </mat-cell>
 </ng-container>
 
 <ng-container matColumnDef="InteresCuotaAtrasada">
-  <mat-header-cell *matHeaderCellDef> Interes cuota atrasada </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Interes Cuota Atrasada </mat-header-cell>
   <mat-cell *matCellDef="let element">
     {{element.interesesCuotaAtrasada}}
   </mat-cell>
@@ -124,7 +124,7 @@
   </mat-cell>
 </ng-container>
 <ng-container matColumnDef="GestionCobranza">
-  <mat-header-cell *matHeaderCellDef> Gestion cobranza </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Gestión Cobranza </mat-header-cell>
   <mat-cell *matCellDef="let element">
     {{element.gestionCobranza}}
   </mat-cell>
@@ -135,17 +135,17 @@
   </mat-cell>
 </ng-container>
 <ng-container matColumnDef="TotalDeuda">
-  <mat-header-cell *matHeaderCellDef> Total deuda </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Total Deuda </mat-header-cell>
   <mat-cell *matCellDef="let element">{{element.totalDeuda}}
   </mat-cell>
 </ng-container>
 <ng-container matColumnDef="NroCuotasImpagadas">
-  <mat-header-cell *matHeaderCellDef> Nro. Cuotas impagadas </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Nro. Cuotas Impagadas </mat-header-cell>
   <mat-cell *matCellDef="let element">{{element.nroCuotaImpagas}}
   </mat-cell>
 </ng-container>
 <ng-container matColumnDef="UltDivPagado">
-  <mat-header-cell *matHeaderCellDef> Ult div pagado </mat-header-cell>
+  <mat-header-cell *matHeaderCellDef> Ult Div Pagado </mat-header-cell>
   <mat-cell *matCellDef="let element">{{element.ultDivPagado}}
   </mat-cell>
 </ng-container>

@@ -124,6 +124,8 @@
             <ng-template matStepLabel>Variables crediticias </ng-template>
             <div class="row">
               <div class="col-md-12" style="text-align: right;">
+
+
                 <button mat-button class="blue-icon" matTooltip="Ver Riesgo Acumulado" (click)="goRiesgoAcumulado()">
                   Ver Riesgo Acumulado
                 </button>
@@ -159,28 +161,33 @@
               </mat-paginator>
             </div>
             <!--end MAT TABLE-->
-            &nbsp; &nbsp;
+            <form [formGroup]="formAprobacion">
 
-            <div class="col-md-6 kt-margin-bottom-10-mobile">
-              <label class="mat-form-field-fluid">
-                Aprobado Web MUPI
-              </label>
-              <label>
-                <input type="radio" value="SI" [formControl]="aprobadoWebMupi" />
-                <span>SI</span>
-              </label>
-              <span> </span>
-              <label>
-                <input type="radio" value="NO" [formControl]="aprobadoWebMupi" />
-                <span>NO</span>
-              </label>
-            </div>
-            &nbsp; &nbsp;
+              <div class="row">
+                <div class="col-md-10">
+                  <h6>
+                    Aprobaci&#243;n MUPI
+                  </h6>
+                  <label>
+                    <input type="radio" value="SI" [formControl]="aprobacionMupi">
+                    <span>SI</span>
+                  </label>
+                  <br>
+                  <label>
+                    <input type="radio" value="NO" [formControl]="aprobacionMupi">
+                    <span>NO</span>
+                  </label>
+                </div>
+              </div>
+            </form>
             <div class="row">
               <div class="col-md-5">
-                <a href="javascript:void(0);" matTooltip="Ver riesgo acumulado "
+             
+
+
+                <a href="javascript:void(0);" *ngIf="disableVerPrecio | async" href="javascript:void(0);" matTooltip="Ver riesgo acumulado "
                   style="font-size: 12px; vertical-align: middle;" class="blue-icon">
-                  <mat-icon style="font-size: 32px;" matTooltipPosition="above" matTooltip="" class="blue-icon">
+                  <mat-icon style="font-size: 32px;" matTooltipPosition="above" matTooltip="" (click)="verPrecio()" class="blue-icon">
                     remove_red_eye</mat-icon>
                   <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Ver Precios
                   </span>
@@ -191,74 +198,90 @@
 
           <mat-step>
             <ng-template matStepLabel>Precio Oro</ng-template>
+         
+        <form [formGroup]="formPrecioOro">
+          <div class="row">
+              <div class="col-md-4">
+                  <mat-form-field>
+                      <mat-select placeholder="Tipo de oro" [formControl]="tipoOro" (selectionChange)="setPrecioOro()" >
+                          <mat-option>--</mat-option>
+                          <mat-option *ngFor="let tipoOro of listOros" [value]="tipoOro">
+                              {{tipoOro.quilate}}
+                          </mat-option>
+                      </mat-select>
+                  </mat-form-field>
+              </div>
+             
+              <div class="col-md-4">
+                  <mat-form-field>
+                      <input matInput placeholder="Precio"  [formControl]="precio">
+                  </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                  <mat-form-field>
+                      <input matInput placeholder="Peso Neto Estimado "  [formControl]="pesoNetoEstimado">
+                      <mat-error>{{ getErrorMessage('pesoNetoEstimado') }}</mat-error>
 
-            <div class="row">
-              <div class="col-md-12"></div>
+                  </mat-form-field>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-2">
 
-              <div class="col-md-4">
-                <mat-form-field>
-                  <mat-select placeholder="Tipo de oro" (selectionChange)="setPrecioOro()">
-                    <mat-option>--</mat-option>
-                    <mat-option *ngFor="let tipoOro of tipoOro" [value]="tipoOro">
-                      {{ tipoOro }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-md-4">
-                <mat-form-field>
-                  <input matInput placeholder="Precio" [formControl]="precio" readonly />
-                </mat-form-field>
-              </div>
-              <div class="col-md-4">
-                <mat-form-field>
-                  <input matInput placeholder="Precio Neto Estimado" [formControl]="precioEstimado" />
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="form-group row">
-              <div class="col-md-12">
-                <a href="javascript:void(0);" matTooltip="Agregar " style="font-size: 12px; vertical-align: middle;"
-                  class="blue-icon">
-                  <mat-icon style="font-size: 32px; text-align: center;" matTooltipPosition="above" class="blue-icon">
-                    add_circle_outline</mat-icon>
-                  <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Agregar</span>
+                  <a href="javascript:void(0);" class="blue-icon style=" (click)="buscar()"  matTooltip="Agregar"
+                  style="font-size: 12px; vertical-align: middle;">
+                  <mat-icon  style="font-size: 32px" matTooltipPosition="above"  class="blue-icon style=">add_circle_outline</mat-icon>
+                  <span style="position: relative;top: -10px;margin-left: 5px;">Agregar</span>
                 </a>
-              </div>
-            </div>
-            <!--START MAT TABLE-->
-            <div class="mat-table__wrapper">
-              <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourcePrecioOro" matSort #sort1="matSort"
-                matSortActive="tipoOro" matSortDirection="asc" matSortDisableClear>
-                <ng-container matColumnDef="accion">
-                  <mat-header-cell *matHeaderCellDef>Acción</mat-header-cell>
-                </ng-container>
-                <ng-container matColumnDef="tipoOro">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo Oro</mat-header-cell>
-                </ng-container>
-                <ng-container matColumnDef="precio">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
-                </ng-container>
-                <ng-container matColumnDef="pesoNetoEstimado">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Peso Neto Estimado</mat-header-cell>
-                </ng-container>
-                <mat-header-row *matHeaderRowDef="displayedColumnsPrecioOro"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumnsPrecioOro"></mat-row>
-              </mat-table>
-              <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
-                [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
-              </mat-paginator>
-            </div>
-            <!--end MAT TABLE-->
+          </div>
+          </div>
 
-            <div class="row">
-              <div class="col-md-2">
-                <button mat-button class="blue-icon">Simular</button>
-              </div>
-              <div class="col-md-2">
-                <button mat-button class="blue-icon">Negociar</button>
-              </div>
-            </div>
+          <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceI" >
+
+              <ng-container matColumnDef="accion">
+                  <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                      <a (click)="editar(element)">
+                          <mat-icon matTooltip="Editar">edit</mat-icon>
+                      </a>
+                  </mat-cell>
+                  <td align="left" mat-footer-cell *matFooterCellDef>&#8212;</td>
+              </ng-container>
+              <ng-container matColumnDef="N">
+                  <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
+                  <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>
+                  <td align="right" mat-footer-cell *matFooterCellDef>&#8212;</td>
+              </ng-container>
+
+              <ng-container matColumnDef="tipoOro">
+                  <mat-header-cell *matHeaderCellDef> Tipo Oro </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.tbQoTipoOro.quilate}} </mat-cell>
+                  <td mat-footer-cell *matFooterCellDef>Total</td>
+
+              </ng-container>
+              <ng-container matColumnDef="precio">
+                  <mat-header-cell *matHeaderCellDef> Precio </mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{element.precio}}
+                  </mat-cell>
+                  <td mat-footer-cell *matFooterCellDef>
+                    {{ totalPrecio | currency: "USD":true:"1.2" }}
+                  </td>
+              </ng-container>
+              <ng-container matColumnDef="pesoNetoEstimado">
+                  <mat-header-cell *matHeaderCellDef> Peso Neto Estimado </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.pesoNetoEstimado | number: '1.2'}} </mat-cell>
+                  <td align="right" mat-footer-cell *matFooterCellDef> {{totalPeso}} </td>   
+
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsI"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsI;"></mat-row>
+              <mat-footer-row *matFooterRowDef="displayedColumnsI; sticky: true"></mat-footer-row>
+
+          </mat-table>
+
+          
+       
+      </form>
           </mat-step>
           <mat-step>
             <ng-template matStepLabel>Opciones de Crédito </ng-template>
