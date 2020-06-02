@@ -49,6 +49,8 @@ import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-fo
 import { PartialsModule } from '../../../partials/partials.module';
 import { VariablesCrediticiasComponent } from './variables-crediticias/variables-crediticias.component';
 import { VercotizacionComponent } from './cliente-negociacion/vercotizacion/vercotizacion.component';
+import { RiesgoAcumuladoComponent } from './riesgo-acumulado/riesgo-acumulado.component';
+import { GestionNegociacionComponent } from './gestion-negociacion/gestion-negociacion.component';
 
 const routes: Routes = [
 	{
@@ -59,14 +61,18 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				redirectTo: 'cliente-negociacion',
+				redirectTo: 'gestion-negociacion',
 				pathMatch: 'full'
+			},{
+				path: 'gestion-negociacion',
+				component: GestionNegociacionComponent
 			},{
 				path: 'cliente-negociacion',
 				component: ClienteNegociacionComponent
-			},{
+			}
+			,{
 				path: 'variables-crediticia',
-				component: ClienteNegociacionComponent
+				component: VariablesCrediticiasComponent
 			}
 
 		]
@@ -123,10 +129,13 @@ const routes: Routes = [
 		},
 	],
 	declarations: [
+		GestionNegociacionComponent,
 		NegociacionComponent,
 		ClienteNegociacionComponent,
 		VercotizacionComponent,
-		VariablesCrediticiasComponent
+		VariablesCrediticiasComponent,
+		RiesgoAcumuladoComponent,
+		GestionNegociacionComponent
 	],
 	entryComponents: [	
 		VercotizacionComponent

@@ -3,22 +3,11 @@
 </div>
 
             <re-portlet>
-                <re-portlet-header [title]="'Negociación'" [class]="'kt-portlet__head--lg'">
-                  <ng-container ktPortletTools>
-                    <a href="javascript:void(0);" matTooltip="Guardar" 
-                      style="font-size: 12px; vertical-align: middle;">
-                      <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save</mat-icon>
-                      <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Guardar</span>
-                    </a>
-                  </ng-container>
-                </re-portlet-header>
                 <re-portlet-body>
                   <!-- start::FILTERS & GROUP ACTIONS -->
                   <div class="kt-form">
                     <form no-validate [formGroup]="formDatosCliente">
-                    <mat-vertical-stepper>
-                      <mat-step>
-                        <ng-template matStepLabel>Datos Cliente</ng-template>
+         
                         <div class="row">
                           <div class="col-md-12" style="text-align: right;">
                             <a href="javascript:void(0);"   matTooltip="Ver cotizacion"  (click)="abrirPopupVerCotizacion()"
@@ -92,7 +81,7 @@
                             </div>
                             <div class="col-md-6 kt-margin-bottom-10-mobile">
                               <mat-form-field>
-                                <mat-select placeholder="Publicidad" [formControl]="publicidad" required="true" >
+                                <mat-select placeholder="Publicidad" [formControl]="fpublicidad"  required="true" >
                                   <mat-option>--</mat-option>
                                   <mat-option *ngFor="let publicidad of listPublicidad" [value]="fpublicidad">
                                     {{ publicidad.valor }}
@@ -151,18 +140,9 @@
                           </div>
 
                         </div>
-                      </mat-step>
-
-          <mat-step>
-            <ng-template matStepLabel>Variables crediticias </ng-template>
-          <kt-variables-crediticias></kt-variables-crediticias>
-          </mat-step>
-              
-                    </mat-vertical-stepper>
                   </form>
                   </div>
               
                   <!-- END FILTERS -->
                 </re-portlet-body>
-                <re-portlet-footer></re-portlet-footer>
               </re-portlet>
