@@ -1,3 +1,5 @@
+import { ClienteCRM } from './../../../../../core/model/quski/ClienteCRM';
+import { TbQoCliente } from './../../../../../core/model/quski/TbQoCliente';
 import { ValidateCedula, ValidateCedulaNumber } from '../../../../../core/util/validate.util';
 import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
@@ -31,6 +33,11 @@ export class ClienteNegociacionComponent implements OnInit {
 
   // STANDARD VARIABLES
   public loadingSubject = new BehaviorSubject<boolean>(false);
+  public tipoIdentificacion = "C";
+  
+  ///// Instancias 
+  clienteCRM: ClienteCRM;
+  public idCliente: TbQoCliente;
 
 
   ///Validaciones formulario cliente 
@@ -46,7 +53,7 @@ export class ClienteNegociacionComponent implements OnInit {
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
   public correoElectronico = new FormControl('', [Validators.required, Validators.email]);
   public campania = new FormControl();
-  public tipoIdentificacion = "C";
+  
   public aprobacionMupi = new FormControl('', []);
   /**Obligatorio ordenamiento */
   @ViewChild('sort1', { static: true }) sort: MatSort;
@@ -73,7 +80,6 @@ export class ClienteNegociacionComponent implements OnInit {
       this.formCliente.addControl("fpublicidad", this.fpublicidad);
 
       
-
   }
   
 
@@ -340,6 +346,28 @@ numberOnly(event): boolean {
     });
 
 
+
+  }
+  public cadena="";
+  public cadena1;
+  ////Registro del prospecto en el CRM////
+  registrarProspecto(){
+   
+    if(this.identificacion.value!=""&&this.nombresCompletos.value!=""&&this.correoElectronico.value!=""){
+    this.clienteCRM=new ClienteCRM();
+    this.clienteCRM.firstName=this.nombresCompletos.value;
+    this.clienteCRM.phoneHome=this.telefonoDomicilio.value;
+    this.clienteCRM.phoneMobile=this.movil.value;
+    this.clienteCRM.cedulaC=this.identificacion.value;
+    this.clienteCRM.emailAddress=this.correoElectronico.value;
+    this.cadena =this.correoElectronico.value;
+    this.cadena1 = this.cadena.toUpperCase();
+    this.clienteCRM.emailAddressCaps=this.cadena1;
+    
+    console.log("datos de envio: " + JSON.stringify(this.clienteCRM));
+  }else{
+    this.sinNoticeService.setNotice("DEBE COMPLETAR LA INFORMACION ", 'error');
+  }
 
   }
 

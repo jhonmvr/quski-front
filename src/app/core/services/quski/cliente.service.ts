@@ -196,5 +196,14 @@ export class ClienteService extends BaseService {
     return this.http.get(serviceUrl, this.options);
   }
 
+  ///////Guardado del prospectoo en el CRM
+  public guardarProspectoCRM(TbQoCliente) {
+    let serviceUrl = this.crmResourcesUrl + "prospectoQuskiRestController/persistEntity";
+    let wrapper = { entidad: TbQoCliente }
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+
+
 
 }
