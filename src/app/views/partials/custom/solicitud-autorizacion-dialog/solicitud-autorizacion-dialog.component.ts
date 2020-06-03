@@ -1,3 +1,4 @@
+import { ClienteService } from './../../../../core/services/quski/cliente.service';
 import { Component, OnInit, Inject, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatDialog } from '@angular/material';
 import { CargarFotoDialogComponent } from '../../custom/fotos/cargar-foto-dialog/cargar-foto-dialog.component';
@@ -45,14 +46,17 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   //public dataUpload: DataUpload;
   isDisabledGuardar: any;
   element: any;
+ tipoIdentificacion="";
+  equifax: String;
 
   constructor(private dh: DocumentoHabilitanteService, private sinNoticeService: ReNoticeService,
     public dialogRef: MatDialogRef<SolicitudAutorizacionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: string, public dialog: MatDialog, private upload: ReFileUploadService) {
+    @Inject(MAT_DIALOG_DATA) private data: string, public dialog: MatDialog, private upload: ReFileUploadService,
+    private cs: ClienteService ) {
     console.log(">>><<<<<<<<<<<<<<< DATA COTIZACION" + JSON.stringify(data));
     this.formDatosSolicitud.addControl("nombresCompletos", this.nombresCompletos);
     this.formDatosSolicitud.addControl("identificacion", this.identificacion);
-
+   
   }
 
   ngOnInit() {
@@ -127,11 +131,20 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   }
 
   consultar() {
+    
     this.validar;
     console.log("llegaaaa", this.validar);
     if (this.validar == 'ACT') {
       this.dialogRef.close(this.validar);
-      data: this.nombresCompletos.value;
+      
+    this.cs.findClienteByCedulaQusqui(this.tipoIdentificacion = "C", this.identificacion.value).subscribe((data: any) => {
+      if (data.entidad.datoscliente) {
+        console.log('cliente quski ', data.entidad);
+        this.equifax=data.entidad;
+        console.log('cliente quskidffd ', this.equifax);
+      }
+    },
+    );
     } else {
       this.sinNoticeService.setNotice("POR FAVOR DEBE CARGAR EL DOCUMENTO DE AUTORIZACION", 'warning');
     }
