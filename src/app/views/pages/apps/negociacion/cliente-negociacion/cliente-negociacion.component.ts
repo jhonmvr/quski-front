@@ -130,7 +130,6 @@ getErrorMessage(pfield: string) {
   
   if (pfield && pfield === 'telefonoDomicilio') {
     const input = this.formCliente.get('telefonoDomicilio');
-    console.log("telefonoDocimicilio", this.formCliente.get('telefonoDomicilio'))
     return input.hasError('required')
       ? errorRequerido
       : input.hasError('pattern')
@@ -354,6 +353,7 @@ numberOnly(event): boolean {
   registrarProspecto(){
    
     if(this.identificacion.value!=""&&this.nombresCompletos.value!=""&&this.correoElectronico.value!=""){
+   
     this.clienteCRM=new ClienteCRM();
     this.clienteCRM.firstName=this.nombresCompletos.value;
     this.clienteCRM.phoneHome=this.telefonoDomicilio.value;
@@ -363,9 +363,17 @@ numberOnly(event): boolean {
     this.cadena =this.correoElectronico.value;
     this.cadena1 = this.cadena.toUpperCase();
     this.clienteCRM.emailAddressCaps=this.cadena1;
-    
+    this.sinNoticeService.setNotice("REGISTRO CORRECTO DEL PROSPECTO", 'success');
+    this.cs.guardarProspectoCRM(this.clienteCRM).subscribe((data: any) => {
     console.log("datos de envio: " + JSON.stringify(this.clienteCRM));
-  }else{
+  }, error => {
+    console.log("error al guardar el cliente en el CRM: " + error);
+    console.log("------------manageurl errorsss : " + JSON.stringify(error));
+    this.sinNoticeService.setNotice("NO SE PUEDE GUARDAR", 'error');
+    //  this.loadingSubject.next(false);
+  });
+}  
+  else{
     this.sinNoticeService.setNotice("DEBE COMPLETAR LA INFORMACION ", 'error');
   }
 

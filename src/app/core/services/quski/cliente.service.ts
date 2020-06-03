@@ -1,3 +1,4 @@
+import { ClienteCRM } from './../../model/quski/ClienteCRM';
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 // import { Http, Headers, Response, RequestOptions, URLSearchParams, ResponseContentType } from '@angular/http';
@@ -197,9 +198,9 @@ export class ClienteService extends BaseService {
   }
 
   ///////Guardado del prospectoo en el CRM
-  public guardarProspectoCRM(TbQoCliente) {
+  public guardarProspectoCRM(ClienteCRM) {
     let serviceUrl = this.crmResourcesUrl + "prospectoQuskiRestController/persistEntity";
-    let wrapper = { entidad: TbQoCliente }
+    let wrapper = { entidad: ClienteCRM }
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }

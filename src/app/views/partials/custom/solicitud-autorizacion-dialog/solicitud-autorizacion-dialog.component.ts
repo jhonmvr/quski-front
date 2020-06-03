@@ -131,6 +131,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
     console.log("llegaaaa", this.validar);
     if (this.validar == 'ACT') {
       this.dialogRef.close(this.validar);
+      data: this.nombresCompletos.value;
     } else {
       this.sinNoticeService.setNotice("POR FAVOR DEBE CARGAR EL DOCUMENTO DE AUTORIZACION", 'warning');
     }
