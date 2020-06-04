@@ -898,7 +898,7 @@ export class ListCotizarComponent implements OnInit {
 
 
   /**
-   * Método que realiza la edicionde la tabla precioOro
+   * Método que realiza la edicion de la tabla precioOro
    * @param element 
    */
   editar(element) {

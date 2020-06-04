@@ -204,8 +204,7 @@
                 <div class="col-md-4">
                   <mat-form-field>
                     <mat-select placeholder="Tipo de oro" [formControl]="tipoOro"
-                    
-                    (selectionChange)="cambioSeleccionTipoOro($event)">
+                      (selectionChange)="cambioSeleccionTipoOro($event)">
                       <mat-option>--</mat-option>
                       <mat-option *ngFor="let tipoOro of listOros" [value]="tipoOro">
                         {{tipoOro.quilate}}
@@ -282,23 +281,27 @@
               </mat-table>
 
 
-&nbsp;
-&nbsp;
+
             </form>
-            <div class="col-md-4">
-              <a href="javascript:void(0);"   matTooltip="Simular" *ngIf="(disableSimular  | async)" matTooltip="Guardar"  (click)= "simular()"
-                  style="font-size: 12px ; vertical-align: middle;">
-                  <mat-icon style="font-size: 32px" matTooltipPosition="above">android</mat-icon>
-                  <span style="position: relative;top: -10px;margin-left: 5px;">Simular</span>
-              </a>
-          </div>
+            &nbsp;
+            &nbsp;
+            &nbsp;
+            &nbsp;
+
             <div class="row">
               <div class="col-md-4" style="text-align: right;">
                 <button mat-button class="blue-icon" matTooltip="Simular" (click)="goRiesgoAcumulado()">
                   Simular
                 </button>
               </div>
+              <div class="col-md-4" style="text-align: right;">
+                <button mat-button class="blue-icon" matTooltip="Simular"
+                  [routerLink]="['../../negociacion/gestion-negociacion']" routerLinkActive="active">
+                  Negociar
+                </button>
+              </div>
             </div>
+
           </mat-step>
           <mat-step>
             <ng-template matStepLabel>Opciones de Crédito </ng-template>
@@ -342,7 +345,7 @@
                 <ng-container matColumnDef="costoSeguro">
                   <mat-header-cell *matHeaderCellDef>
                     Costo Seguro</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.costoSeguro}} </mat-cell>
+                  <mat-cell *matCellDef="let element"> {{element.costoSeguro}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="costoResguardo">
                   <mat-header-cell *matHeaderCellDef>
