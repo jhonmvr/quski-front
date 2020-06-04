@@ -8,7 +8,7 @@
                   <div class="kt-form">
                     <form no-validate [formGroup]="formDatosCliente">
          
-                        <div class="row">
+                      <!--    <div class="row">
                           <div class="col-md-12" style="text-align: right;">
                             <a href="javascript:void(0);"   matTooltip="Ver cotizacion"  (click)="abrirPopupVerCotizacion()"
                             style="font-size: 12px; vertical-align: middle;">
@@ -16,7 +16,7 @@
                             <span style="position: relative;top: -10px;margin-left: 5px;">Ver cotizacion</span>
                         </a> 
                           </div>
-                        </div>
+                        </div>-->
                       
                         <div class="kt-form__filtration">
                           <div class="row align-items-center">
@@ -106,25 +106,6 @@
                             </div>
                             
                           </div>
-                          <form [formGroup]="formAprobacion">
-        
-                            <div class="row">
-                                <div class="col-md-10">
-                            <h6>
-                              Aprobaci&#243;n MUPI
-                            </h6>
-                                <label>
-                                  <input type="radio" value="SI" [formControl]="aprobacionMupi">
-                                    <span>SI</span>
-                                </label>
-                              <br>
-                                <label>
-                                  <input type="radio" value="NO" [formControl]="aprobacionMupi">
-                                    <span>NO</span>
-                                </label>
-                               </div>
-                              </div>
-                            </form>
                           <br>
                           <br>
                           <div class="row">

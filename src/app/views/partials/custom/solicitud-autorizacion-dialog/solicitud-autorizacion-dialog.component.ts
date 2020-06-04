@@ -136,15 +136,8 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
     console.log("llegaaaa", this.validar);
     if (this.validar == 'ACT') {
       this.dialogRef.close(this.validar);
-      
-    this.cs.findClienteByCedulaQusqui(this.tipoIdentificacion = "C", this.identificacion.value).subscribe((data: any) => {
-      if (data.entidad.datoscliente) {
-        console.log('cliente quski ', data.entidad);
-        this.equifax=data.entidad;
-        console.log('cliente quskidffd ', this.equifax);
-      }
-    },
-    );
+     this.equifax="Equifax";
+     
     } else {
       this.sinNoticeService.setNotice("POR FAVOR DEBE CARGAR EL DOCUMENTO DE AUTORIZACION", 'warning');
     }
@@ -189,6 +182,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   descargarPlantillaHabilitante(row) {
 
     console.log("<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>", this.nombresCompletos.value, this.data);
+    if(this.nombresCompletos.value!=""){
 
     this.dh.downloadAutorizacionPlantilla(1, "PDF", this.nombresCompletos.value, this.identificacion.value).subscribe(
       (data: any) => {
@@ -213,7 +207,8 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
         );
       }
     );
-    //console.log("descargarNotificacion");
+  }else 
+  this.sinNoticeService.setNotice("INGRESA LOS NOMBRES COMPLETOS  ", 'error');
   }
 
 

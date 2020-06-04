@@ -23,7 +23,26 @@
   
             <mat-step>
               <ng-template matStepLabel>Variables crediticias </ng-template>
-            <kt-variables-crediticias></kt-variables-crediticias>
+            <kt-variables-crediticias> </kt-variables-crediticias>
+            <form [formGroup]="formAprobacion">
+        
+              <div class="row">
+                  <div class="col-md-10">
+              <h6>
+                Aprobaci&#243;n MUPI
+              </h6>
+                  <label>
+                    <input type="radio" value="SI" [formControl]="aprobacionMupi">
+                      <span>SI</span>
+                  </label>
+                <br>
+                  <label>
+                    <input type="radio" value="NO" [formControl]="aprobacionMupi">
+                      <span>NO</span>
+                  </label>
+                 </div>
+                </div>
+              </form>
             </mat-step>
 
             <mat-step>
