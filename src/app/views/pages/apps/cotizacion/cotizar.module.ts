@@ -48,7 +48,6 @@ import { DetalleCotizacionComponent } from './detalle-cotizacion/detalle-cotizac
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { DialogCargarComponent } from './list-cotizar/dialog-solicitud-de-autorizacion/dialog-cargar/dialog-cargar.component'
-//import { CreditoDialogComponent } from '../cotizacion/list-cotizar/riesgo-acomulado-dialog/credito-dialog/credito-dialog.component';
 import { SolicitudAutorizacionDialogComponent } from '../../../../views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 const routes: Routes = [
 	{
@@ -132,7 +131,7 @@ const routes: Routes = [
 		CotizarComponent,
 		ListCotizarComponent,
 		DetalleCotizacionComponent,
-		//CreditoDialogComponent,
+		
 
 		DialogCargarComponent,
 	],

@@ -96,7 +96,7 @@
                       <mat-option>--</mat-option>
                       <mat-option *ngFor="let publicidad of listPublicidad" [value]="publicidad">
                         {{ publicidad.valor }}
-                    
+
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -125,8 +125,6 @@
             <ng-template matStepLabel>Variables crediticias </ng-template>
             <div class="row">
               <div class="col-md-12" style="text-align: right;">
-
-
                 <button mat-button class="blue-icon" matTooltip="Ver Riesgo Acumulado" (click)="goRiesgoAcumulado()">
                   Ver Riesgo Acumulado
                 </button>
@@ -183,12 +181,13 @@
             </form>
             <div class="row">
               <div class="col-md-5">
-             
 
 
-                <a href="javascript:void(0);" *ngIf="disableVerPrecio | async" href="javascript:void(0);" matTooltip="Ver riesgo acumulado "
-                  style="font-size: 12px; vertical-align: middle;" class="blue-icon">
-                  <mat-icon style="font-size: 32px;" matTooltipPosition="above" matTooltip="" (click)="verPrecio()" class="blue-icon">
+
+                <a href="javascript:void(0);" *ngIf="disableVerPrecio | async" href="javascript:void(0);"
+                  matTooltip="Ver riesgo acumulado " style="font-size: 12px; vertical-align: middle;" class="blue-icon">
+                  <mat-icon style="font-size: 32px;" matTooltipPosition="above" matTooltip="" (click)="verPrecio()"
+                    class="blue-icon">
                     remove_red_eye</mat-icon>
                   <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Ver Precios
                   </span>
@@ -199,90 +198,107 @@
 
           <mat-step>
             <ng-template matStepLabel>Precio Oro</ng-template>
-         
-        <form [formGroup]="formPrecioOro">
-          <div class="row">
-              <div class="col-md-4">
+
+            <form [formGroup]="formPrecioOro">
+              <div class="row">
+                <div class="col-md-4">
                   <mat-form-field>
-                      <mat-select placeholder="Tipo de oro" [formControl]="tipoOro" (selectionChange)="setPrecioOro()" >
-                          <mat-option>--</mat-option>
-                          <mat-option *ngFor="let tipoOro of listOros" [value]="tipoOro">
-                              {{tipoOro.quilate}}
-                          </mat-option>
-                      </mat-select>
+                    <mat-select placeholder="Tipo de oro" [formControl]="tipoOro"
+                    
+                    (selectionChange)="cambioSeleccionTipoOro($event)">
+                      <mat-option>--</mat-option>
+                      <mat-option *ngFor="let tipoOro of listOros" [value]="tipoOro">
+                        {{tipoOro.quilate}}
+                      </mat-option>
+                    </mat-select>
                   </mat-form-field>
-              </div>
-             
-              <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
                   <mat-form-field>
-                      <input matInput placeholder="Precio"  [formControl]="precio">
+                    <input matInput placeholder="Precio" [formControl]="precio" readonly>
                   </mat-form-field>
-              </div>
-              <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
                   <mat-form-field>
-                      <input matInput placeholder="Peso Neto Estimado "  [formControl]="pesoNetoEstimado">
-                      <mat-error>{{ getErrorMessage('pesoNetoEstimado') }}</mat-error>
+                    <input matInput placeholder="Peso Neto Estimado " [formControl]="pesoNetoEstimado">
+                    <mat-error>{{ getErrorMessage('pesoNetoEstimado') }}</mat-error>
 
                   </mat-form-field>
+                </div>
               </div>
-          </div>
-          <div class="row">
-              <div class="col-md-2">
+              <div class="row">
+                <div class="col-md-2">
 
-                  <a href="javascript:void(0);" class="blue-icon style=" (click)="buscar()"  matTooltip="Agregar"
-                  style="font-size: 12px; vertical-align: middle;">
-                  <mat-icon  style="font-size: 32px" matTooltipPosition="above"  class="blue-icon style=">add_circle_outline</mat-icon>
-                  <span style="position: relative;top: -10px;margin-left: 5px;">Agregar</span>
-                </a>
-          </div>
-          </div>
+                  <a href="javascript:void(0);" class="blue-icon style=" (click)="buscar()" matTooltip="Agregar"
+                    style="font-size: 12px; vertical-align: middle;">
+                    <mat-icon style="font-size: 32px" matTooltipPosition="above" class="blue-icon style=">
+                      add_circle_outline</mat-icon>
+                    <span style="position: relative;top: -10px;margin-left: 5px;">Agregar</span>
+                  </a>
+                </div>
+              </div>
 
-          <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceI" >
+              <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceI">
 
-              <ng-container matColumnDef="accion">
+                <ng-container matColumnDef="accion">
                   <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
                   <mat-cell *matCellDef="let element">
-                      <a (click)="editar(element)">
-                          <mat-icon matTooltip="Editar">edit</mat-icon>
-                      </a>
+                    <a (click)="editar(element)">
+                      <mat-icon matTooltip="Editar">edit</mat-icon>
+                    </a>
                   </mat-cell>
                   <td align="left" mat-footer-cell *matFooterCellDef>&#8212;</td>
-              </ng-container>
-              <ng-container matColumnDef="N">
+                </ng-container>
+                <ng-container matColumnDef="N">
                   <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
                   <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>
                   <td align="right" mat-footer-cell *matFooterCellDef>&#8212;</td>
-              </ng-container>
+                </ng-container>
 
-              <ng-container matColumnDef="tipoOro">
+                <ng-container matColumnDef="tipoOro">
                   <mat-header-cell *matHeaderCellDef> Tipo Oro </mat-header-cell>
                   <mat-cell *matCellDef="let element"> {{element.tbQoTipoOro.quilate}} </mat-cell>
-                  <td mat-footer-cell *matFooterCellDef>Total</td>
+                  <td mat-footer-cell *matFooterCellDef></td>
 
-              </ng-container>
-              <ng-container matColumnDef="precio">
+                </ng-container>
+                <ng-container matColumnDef="precio">
                   <mat-header-cell *matHeaderCellDef> Precio </mat-header-cell>
                   <mat-cell *matCellDef="let element">{{element.precio}}
                   </mat-cell>
                   <td mat-footer-cell *matFooterCellDef>
-                    {{ totalPrecio | currency: "USD":true:"1.2" }}
+
                   </td>
-              </ng-container>
-              <ng-container matColumnDef="pesoNetoEstimado">
+                </ng-container>
+                <ng-container matColumnDef="pesoNetoEstimado">
                   <mat-header-cell *matHeaderCellDef> Peso Neto Estimado </mat-header-cell>
                   <mat-cell *matCellDef="let element"> {{element.pesoNetoEstimado | number: '1.2'}} </mat-cell>
-                  <td align="right" mat-footer-cell *matFooterCellDef> {{totalPeso}} </td>   
+                  <td align="right" mat-footer-cell *matFooterCellDef> </td>
 
-              </ng-container>
-              <mat-header-row *matHeaderRowDef="displayedColumnsI"></mat-header-row>
-              <mat-row *matRowDef="let row; columns: displayedColumnsI;"></mat-row>
-              <mat-footer-row *matFooterRowDef="displayedColumnsI; sticky: true"></mat-footer-row>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumnsI"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsI;"></mat-row>
 
-          </mat-table>
 
-          
-       
-      </form>
+              </mat-table>
+
+
+&nbsp;
+&nbsp;
+            </form>
+            <div class="col-md-4">
+              <a href="javascript:void(0);"   matTooltip="Simular" *ngIf="(disableSimular  | async)" matTooltip="Guardar"  (click)= "simular()"
+                  style="font-size: 12px ; vertical-align: middle;">
+                  <mat-icon style="font-size: 32px" matTooltipPosition="above">android</mat-icon>
+                  <span style="position: relative;top: -10px;margin-left: 5px;">Simular</span>
+              </a>
+          </div>
+            <div class="row">
+              <div class="col-md-4" style="text-align: right;">
+                <button mat-button class="blue-icon" matTooltip="Simular" (click)="goRiesgoAcumulado()">
+                  Simular
+                </button>
+              </div>
+            </div>
           </mat-step>
           <mat-step>
             <ng-template matStepLabel>Opciones de Crédito </ng-template>
@@ -293,42 +309,54 @@
                 matSortActive="plazo" matSortDirection="asc" matSortDisableClear>
                 <ng-container matColumnDef="plazo">
                   <mat-header-cell *matHeaderCellDef mat-sort-header>Plazo</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.plazo}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="montoPreAprobado">
                   <mat-header-cell *matHeaderCellDef>Monto Preaprobado</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.costoSeguro}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="aRecibir">
                   <mat-header-cell *matHeaderCellDef>A Recibir</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.valorARecibir}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="totalCostosOperacion">
                   <mat-header-cell *matHeaderCellDef>A Recibir</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.totalCostosOperacionAnterior}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="totalCostosNuevaOperacion">
                   <mat-header-cell *matHeaderCellDef>totalCostosNuevaOperacion</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.costoSeguro}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="costoCustodia">
                   <mat-header-cell *matHeaderCellDef>Costo Custodia</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.totalCostosOperacionAnterior}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="costoTransporte">
                   <mat-header-cell *matHeaderCellDef>Costo transporte</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.costoTransporte}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="costoCredito">
                   <mat-header-cell *matHeaderCellDef>Costo Crédito</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.costoSeguro}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="costoSeguro">
                   <mat-header-cell *matHeaderCellDef>
                     Costo Seguro</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.costoSeguro}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="costoResguardo">
                   <mat-header-cell *matHeaderCellDef>
                     Costo Resguardo
                   </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.costoSeguro}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="costoEstimado">
                   <mat-header-cell *matHeaderCellDef>Costo Estimado</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.costoSeguro}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="valorCuota">
                   <mat-header-cell *matHeaderCellDef>Valor Cuota</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.cuota}} </mat-cell>
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>

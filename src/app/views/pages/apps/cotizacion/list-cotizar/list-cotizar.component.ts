@@ -21,6 +21,7 @@ import { ParametroService } from '../../../../../core/services/quski/parametro.s
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { CotizacionService } from '../../../../../core/services/quski/cotizacion.service';
+import { OroService } from '../../../../../core/services/quski/oro.service';
 import { User } from '../../cliente/gestion-cliente/gestion-cliente.component';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { EstadoQuskiEnum } from '../../../../../core/enum/EstadoQuskiEnum';
@@ -31,6 +32,7 @@ import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
 import { TbQoTipoOro } from '../../../../..//core/model/quski/TbQoTipoOro';
 import { TipoOroWrapper } from '../../../../..//core/model/quski/TipoOroWrapper';
 import { SelectionModel } from '@angular/cdk/collections';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'kt-list-cotizar',
   templateUrl: './list-cotizar.component.html',
@@ -55,9 +57,10 @@ export class ListCotizarComponent implements OnInit {
   listMotivoDesestimiento = [];
   listEstado = Object.keys(EstadoQuskiEnum);
   listVariables = [];
+  listOpciones = [];
   listOros = null;
   //TODO: SE TOMA EL ENUM YA QUE NO SE SABE DE DONDE SACAR LA INFORMACION
-  listTipoOro = Object.keys(TipoOroEnum);
+  listTipoOro = new Array();
   //FORM CLIENTE
   public formAprobacion: FormGroup = new FormGroup({});
   public formCliente: FormGroup = new FormGroup({});
@@ -76,7 +79,7 @@ export class ListCotizarComponent implements OnInit {
   public fmotivoDesestimiento = new FormControl('', [Validators.required]);
 
   // FORM PRECIO ORO
-  
+
   public formPrecioOro: FormGroup = new FormGroup({});
   public tipoOro = new FormControl('', [Validators.required]);
   public pesoNetoEstimado = new FormControl('', [Validators.required, ValidateDecimal]);
@@ -134,6 +137,7 @@ export class ListCotizarComponent implements OnInit {
   dataSourceCredito: MatTableDataSource<TbQoCreditoNegociacion> = new MatTableDataSource<TbQoCreditoNegociacion>();
   dataSourceCliente: MatTableDataSource<TbQoCliente> = new MatTableDataSource<TbQoCliente>();
   dataSourceCotizacion: MatTableDataSource<TbCotizacion> = new MatTableDataSource<TbCotizacion>();
+  dataSourceTipoOro: MatTableDataSource<TbQoTipoOro> = new MatTableDataSource<TbQoTipoOro>();
 
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
@@ -159,7 +163,10 @@ export class ListCotizarComponent implements OnInit {
    * @param dialog 
    * @param fb 
    */
-  constructor(public titulo: TituloContratoService,
+  constructor(
+    public datepipe: DatePipe,
+    public titulo: TituloContratoService,
+    private os: OroService,
     private js: JoyaService,
     private clienteService: ClienteService,
     private sinNoticeService: ReNoticeService,
@@ -199,6 +206,7 @@ export class ListCotizarComponent implements OnInit {
     this.loading = this.loadingSubject.asObservable();
     this.disableVerPrecio = this.disableVerPrecioSubject.asObservable();
     this.loadTipoOro();
+    //this.cargarTipoOro();
     // Set title to page breadCrumbs
     this.subheaderService.setTitle('Cotización');
     this.initiateTablePaginator();
@@ -209,6 +217,7 @@ export class ListCotizarComponent implements OnInit {
       //ABRE EL POPUP
       this.buscar()
     });
+
 
   }
   displayFn(user?: User): string | undefined {
@@ -363,15 +372,15 @@ export class ListCotizarComponent implements OnInit {
   /**
   * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
   */
- buscar() {
-  this.p = new Page();
-  this.totalResults = 0;
-  this.paginator.pageIndex = 0;
-  this.p.isPaginated = "Y";
-  this.p.size = 5;
-  this.p.pageNumber = 0;
-  this.nuevo();
-}
+  buscar() {
+    this.p = new Page();
+    this.totalResults = 0;
+    this.paginator.pageIndex = 0;
+    this.p.isPaginated = "Y";
+    this.p.size = 5;
+    this.p.pageNumber = 0;
+    this.nuevo();
+  }
 
   /**ACCION DE BOTONES */
   /**
@@ -485,11 +494,15 @@ export class ListCotizarComponent implements OnInit {
         this.fpublicidad.setValue(dataCalculator.entidad.datoscliente.publicidad);
         this.correoElectronico.setValue(dataCalculator.entidad.datoscliente.correoelectronico);
         this.campania.setValue(dataCalculator.entidad.datoscliente.codigocampania);
-        //Cargo la lista de variables para la tabla de variables crediticias
-        this.listVariables = dataCalculator.entidad.xmlVariablesInternas.variablesInternas.variable;
-        //console.log("VARIABLES CREDITICIAS CALCULADORA>>>>++++" + JSON.stringify(this.listVariables));
-        this.dataSourceVarCredi = new MatTableDataSource(this.listVariables);
-        //console.log("VARIABLES CREDITICIAS CALCULADORA>>>>++++" + JSON.stringify(this.dataSourceVarCredi));
+        if ((dataCalculator.entidad.xmlVariablesInternas.variablesInternas != null) && (dataCalculator.entidad.xmlVariablesInternas.variablesInternas.variable)) {
+          //Cargo la lista de variables para la tabla de variables crediticias
+          this.listVariables = dataCalculator.entidad.xmlVariablesInternas.variablesInternas.variable;
+          //console.log("VARIABLES CREDITICIAS CALCULADORA>>>>++++" + JSON.stringify(this.listVariables));
+          this.dataSourceVarCredi = new MatTableDataSource(this.listVariables);
+          //console.log("VARIABLES CREDITICIAS CALCULADORA>>>>++++" + JSON.stringify(this.dataSourceVarCredi));
+
+        }
+
         this.loadingSubject.next(false);
         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE CALCULADORA QUSKI", 'success');
       } else {
@@ -509,6 +522,7 @@ export class ListCotizarComponent implements OnInit {
             this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE DEL CRM", 'success');
           } else {
             this.sinNoticeService.setNotice("Usuario no registrado ", 'error');
+            this.SolicitudAutorizacion();
           }
         },
         );
@@ -674,11 +688,11 @@ export class ListCotizarComponent implements OnInit {
  */
   cambioSeleccionTipoOro(event) {
     console.log("evento " + JSON.stringify(event.value));
-    console.log("evento " + JSON.stringify(this.tipoOro.value));
+    console.log(" TOMA EL VALOR DEL EVENTO DEL ORO evento " + JSON.stringify(this.tipoOro.value));
     this.setPrecioOro();
   }
   /**SETEO EL PRECIO ORO */
- 
+
   /**POP UP SOLICITUD EQUIFAX */
   SolicitudAutorizacion() {
 
@@ -789,7 +803,7 @@ export class ListCotizarComponent implements OnInit {
       this.totalPrecio = 0;
       this.precioOro = new TbQoPrecioOro;
       this.tipoOroW = new TbQoTipoOro();
-   
+
       //this.precioOro = new TbQoPrecioOro;
       this.tipoOroW = this.tipoOro.value;
       this.precioOro.tbQoTipoOro = this.tipoOro.value;
@@ -836,33 +850,57 @@ export class ListCotizarComponent implements OnInit {
     }
   }
   /**
-   * Edita una fila seleccionada
+   * Se establece el precio oro
    */
   setPrecioOro() {
     this.precio.setValue('');
+    //TRANSFORMAR A TIPO STRING
+    console.log("LA CEDULA DEL CLIENTE ES LA SIGUIENTE:::::::::::::::::::::::::::::::::: " + JSON.stringify(this.cliente.cedulaCliente));
+    console.log("LA FECHA DE NACIMIENTO_____:::::::::::::::::::::::::::::::::::::" + JSON.stringify(this.cliente.fechaNacimiento));
+    console.log("EL VALOR SELECCIONADO PARA EL TIPO ORO ES:::::::::::::::::::::::" + JSON.stringify(this.tipoOro.value.quilate));
     //console.log('llega ');
     this.loadingSubject.next(true);
-    this.js.findTipoOroByQuilate(this.tipoOro.value.quilate).subscribe((data: any) => {
-      console.log('tipoOro ', this.tipoOro.value);
-      this.loadingSubject.next(false);
-      console.log('cliente ', data.entidad);
-      if (data.entidad) {
-        console.log('oro entidad ', data.entidad);
-        this.precio.setValue(data.entidad.precio);
-      } else {
-        this.sinNoticeService.setNotice("ESPECIFIQUE EL TIPO DE ORO", 'info');
+    if (this.cliente.cedulaCliente) {
+      this.os.findTipoOroByCedulaQuski(this.cliente.cedulaCliente, this.tipoOro.value.quilate, this.cliente.fechaNacimiento).subscribe((dataTipoOro: any) => {
+        console.log("tipo de oro que responde>>>>>>>" + JSON.stringify(dataTipoOro.entidad));
+        console.log("SACO EL VALOR DEL TIPO ORO")
+        console.log('tipoOro >>>>>>>>>>>>>>', this.tipoOro.value);
+        this.loadingSubject.next(false);
+        console.log('cliente >>>>>>>>>>>', dataTipoOro.entidad);
+        if (dataTipoOro.entidad) {
+          console.log('oro entidad >>>>>>>>>>', dataTipoOro.entidad);
+          this.precio.setValue(dataTipoOro.entidad.simularResult.xmlGarantias.garantias.garantia.valorOro);
+          //validdo que no venga valor null
+          if ((dataTipoOro.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion != null) && (dataTipoOro.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion)) {
+            //Cargo la lista de variables para la tabla de opciones de credito
+            this.listOpciones = dataTipoOro.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
+            console.log("VALORES DE MI LISTA DE OPCIONES RENOVACION" + JSON.stringify(this.listOpciones));
+            //Asigno la informacion al datasource para que cargue las opciones de credito
+            this.dataSourceCredito = new MatTableDataSource(this.listOpciones);
+          }
+        } else {
+          this.sinNoticeService.setNotice("ESPECIFIQUE EL TIPO DE ORO", 'info');
+        }
+      }, error => {
+        this.loadingSubject.next(false);
+        if (JSON.stringify(error).indexOf("codError") > 0) {
+          let b = error.error;
+          this.sinNoticeService.setNotice(b.msgError, 'error');
+        } else {
+          this.sinNoticeService.setNotice("ERROR AL CARGAR", 'error');
+        }
       }
-    }, error => {
-      this.loadingSubject.next(false);
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("ERROR AL CARGAR", 'error');
-      }
+      );
     }
-    );
   }
+
+
+
+
+  /**
+   * Método que realiza la edicionde la tabla precioOro
+   * @param element 
+   */
   editar(element) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
@@ -875,7 +913,7 @@ export class ListCotizarComponent implements OnInit {
     if (this.formPrecioOro.valid) {
       this.disableSimulaSubject.next(true);
       this.totalPeso = 0;
-      
+
       this.totalPrecio = 0;
       this.precioOro = new TbQoPrecioOro;
       let tipoOro = new TbQoTipoOro();
@@ -912,7 +950,7 @@ export class ListCotizarComponent implements OnInit {
     this.js.getAllPaginatedUrl(p, this.js.appResourcesUrl + "tipoOroRestController/listAllEntities"
     ).subscribe((data: any) => {
       this.listOros = data.list;
-      console.log("<<<<<<<<<<listaOro>>>>>>>>>> " + this.listOros);
+      // console.log("<<<<<<<<<<listaOro>>>>>>>>>> " + this.listOros);
 
     });
   }
@@ -920,4 +958,6 @@ export class ListCotizarComponent implements OnInit {
 
 
 
+
 }
+

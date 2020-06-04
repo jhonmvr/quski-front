@@ -173,25 +173,28 @@ export class ClienteService extends BaseService {
     /*servicio para buscar la cedula en el crm*/
     //let serviceUrl = this.segApiUrl + "/prospectoQuskiRestController/getProspectoByCedula?ced=" + cedula;
     //console.log("IMPRIME LA VARIABLE " + serviceUrl);
-   /* if (cedula && cedula != null) {
-      this.params = this.params.set('cedula', cedula);
-    }
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);*/
+    /* if (cedula && cedula != null) {
+       this.params = this.params.set('cedula', cedula);
+     }
+     this.options = { headers: this.headers, params: this.params };
+     return this.http.get(serviceUrl, this.options);*/
 
   }
 
-  public findClienteByCedulaQusqui(tipoIdentificacion:string,identificacion: string) {
+  public findClienteByCedulaQusqui(tipoIdentificacion: string, identificacion: string) {
     const serviceUrl =
       this.appResourcesUrl + 'integracionRestController/getInformacionPersona';
-    this.params = new HttpParams().set('tipoIdentificacion', tipoIdentificacion).set('identificacion', identificacion).set('tipoConsulta', "").set('calificacion', "");
+    this.params = new HttpParams().set('tipoIdentificacion', tipoIdentificacion)
+      .set('identificacion', identificacion)
+      .set('tipoConsulta', "")
+      .set('calificacion', "");
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
 
   public findClienteByCedulaCRM(identificacion: string) {
-    const serviceUrl =    this.crmResourcesUrl + 'prospectoQuskiRestController/getProspectoByCedula';
-    this.params = new HttpParams().set('ced',identificacion);
+    const serviceUrl = this.crmResourcesUrl + 'prospectoQuskiRestController/getProspectoByCedula';
+    this.params = new HttpParams().set('ced', identificacion);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }

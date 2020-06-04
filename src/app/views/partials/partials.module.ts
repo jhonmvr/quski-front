@@ -140,6 +140,7 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 		PortletFooterComponent,
 		AuthDialogComponent,
 		SolicitudAutorizacionDialogComponent,
+		CreditoVigenteDialogComponent,
 		ArchivoUploadDialogComponent,
 		CargarFotoDialogComponent,
 		ArchivoComponent,
@@ -238,6 +239,7 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 	entryComponents: [
 		AuthDialogComponent,
 		SolicitudAutorizacionDialogComponent,
+		CreditoVigenteDialogComponent,
 
 		CargarFotoDialogComponent
 	]
