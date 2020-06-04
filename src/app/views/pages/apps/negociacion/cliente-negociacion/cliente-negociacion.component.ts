@@ -1,3 +1,5 @@
+import { ClienteCRM } from './../../../../../core/model/quski/ClienteCRM';
+import { TbQoCliente } from './../../../../../core/model/quski/TbQoCliente';
 import { ValidateCedula, ValidateCedulaNumber } from '../../../../../core/util/validate.util';
 import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
@@ -6,10 +8,10 @@ import { VercotizacionComponent } from './vercotizacion/vercotizacion.component'
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
 import { AuthDialogComponent } from './../../../../partials/custom/auth-dialog/auth-dialog.component';
-import { MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatDialog, MatTableDataSource, MatPaginator, MatSort, MAT_DIALOG_DATA } from '@angular/material';
 import { ParametroService } from './../../../../../core/services/quski/parametro.service';
 import { ClienteService } from './../../../../../core/services/quski/cliente.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
@@ -31,6 +33,11 @@ export class ClienteNegociacionComponent implements OnInit {
 
   // STANDARD VARIABLES
   public loadingSubject = new BehaviorSubject<boolean>(false);
+  public tipoIdentificacion = "C";
+  
+  ///// Instancias 
+  clienteCRM: ClienteCRM;
+  public idCliente: TbQoCliente;
 
 
   ///Validaciones formulario cliente 
@@ -46,7 +53,7 @@ export class ClienteNegociacionComponent implements OnInit {
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
   public correoElectronico = new FormControl('', [Validators.required, Validators.email]);
   public campania = new FormControl();
-  public tipoIdentificacion = "C";
+  
   public aprobacionMupi = new FormControl('', []);
   /**Obligatorio ordenamiento */
   @ViewChild('sort1', { static: true }) sort: MatSort;
@@ -58,7 +65,11 @@ export class ClienteNegociacionComponent implements OnInit {
     public dialog: MatDialog, 
     private fb: FormBuilder, 
     private noticeService: ReNoticeService, 
-    private subheaderService: SubheaderService,) { 
+    private subheaderService: SubheaderService,
+    @Inject(MAT_DIALOG_DATA) private data: string
+    ) { 
+      
+      
       this.sp.setParameter();
       this.cs.setParameter();
       this.formCliente.addControl("identificacion", this.identificacion);
@@ -73,7 +84,6 @@ export class ClienteNegociacionComponent implements OnInit {
       this.formCliente.addControl("fpublicidad", this.fpublicidad);
 
       
-
   }
   
 
@@ -82,6 +92,7 @@ export class ClienteNegociacionComponent implements OnInit {
     this.loading = this.loadingSubject.asObservable();
     // Set title to page breadCrumbs
     this.subheaderService.setTitle('Negociación');
+    
   }
 
 ///Validaciones de errores
@@ -124,7 +135,6 @@ getErrorMessage(pfield: string) {
   
   if (pfield && pfield === 'telefonoDomicilio') {
     const input = this.formCliente.get('telefonoDomicilio');
-    console.log("telefonoDocimicilio", this.formCliente.get('telefonoDomicilio'))
     return input.hasError('required')
       ? errorRequerido
       : input.hasError('pattern')
@@ -209,6 +219,7 @@ numberOnly(event): boolean {
      
       if (respuesta)
       console.log("Estoy aqui ");
+     
 
     });
 
@@ -280,24 +291,7 @@ numberOnly(event): boolean {
  * Si no existe pide que se suba la autorizacion de equifax.
  */
   buscarCliente() {
-    this.loadingSubject.next(true);
-    this.cs.findClienteByCedulaQusqui(this.tipoIdentificacion = "C", this.identificacion.value).subscribe((data: any) => {
-
-      this.loadingSubject.next(false);
-      if (data.entidad.datoscliente.nombrescompletos) {
-        console.log('cliente quski ', data.entidad);
-        this.nombresCompletos.setValue(data.entidad.datoscliente.nombrescompletos);
-        this.fechaNacimiento.setValue(data.entidad.datoscliente.fechanacimiento);
-        this.edad.setValue(data.entidad.datoscliente.edad);
-        this.nacionalidad.setValue(data.entidad.datoscliente.nacionalidad);
-        this.movil.setValue(data.entidad.datoscliente.telefonomovil);
-        this.telefonoDomicilio.setValue(data.entidad.datoscliente.telefonofijo);
-        this.fpublicidad.setValue(data.entidad.datoscliente.publicidad);
-        this.correoElectronico.setValue(data.entidad.datoscliente.correoelectronico);
-        this.campania.setValue(data.entidad.datoscliente.codigocampania);
-        this.loadingSubject.next(false);
-        this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE CALCULADORA QUSKI", 'success');
-      } else {
+  
         console.log('Estamos aqui');
         console.log('identificacion ', this.identificacion.value);
         this.loadingSubject.next(true);
@@ -308,17 +302,20 @@ numberOnly(event): boolean {
           this.loadingSubject.next(false);
           if (data.list) {
             this.loadingSubject.next(false);
+            this.nombresCompletos.setValue(data.list[0].firstName);
+            console.log("Nombres completos",data.list[0].firstName)
+            this.movil.setValue(data.list[0].phoneMobile);
+            this.telefonoDomicilio.setValue(data.list[0].phoneHome);
+            this.correoElectronico.setValue(data.list[0].emailAddress);
             this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE DEL CRM", 'success');
           } else {
-            this.sinNoticeService.setNotice("Usuario no registrado ", 'error');
+            this.sinNoticeService.setNotice("USUARIO NO REGISTRADO ", 'error');
             this.seleccionarEditar();
           }
         },
         );
       }
-    },
-    );
-  }
+   
 
 ///Abrir el POPUP de la solicitud de equifax
   seleccionarEditar() {
@@ -333,13 +330,71 @@ numberOnly(event): boolean {
     });
 
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
+      data: this.identificacion.value;
+      console.log(">>><<<<<<<<<<<<<<< DATA arreglo" + JSON.stringify(this.data));
+      console.log("jxjkxf" , )
       console.log("envio de datos ");
       if (respuesta)
-      console.log("aqui");
+      this.loadingSubject.next(true);
+      this.cs.findClienteByCedulaQusqui(this.tipoIdentificacion = "C", this.identificacion.value).subscribe((data: any) => {
+  
+        this.loadingSubject.next(false);
+        if (data.entidad.datoscliente) {
+          console.log('Equifax ', data.entidad);
+          this.nombresCompletos.setValue(data.entidad.datoscliente.nombrescompletos);
+          this.fechaNacimiento.setValue(data.entidad.datoscliente.fechanacimiento);
+          this.edad.setValue(data.entidad.datoscliente.edad);
+          this.nacionalidad.setValue(data.entidad.datoscliente.nacionalidad);
+          this.movil.setValue(data.entidad.datoscliente.telefonomovil);
+          this.telefonoDomicilio.setValue(data.entidad.datoscliente.telefonofijo);
+          this.fpublicidad.setValue(data.entidad.datoscliente.publicidad);
+          this.correoElectronico.setValue(data.entidad.datoscliente.correoelectronico);
+          this.campania.setValue(data.entidad.datoscliente.codigocampania);
+          this.loadingSubject.next(false);
+          this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE CALCULADORA QUSKI", 'success');
+        } else {
+              this.sinNoticeService.setNotice("USUARIO NO REGISTRADO ", 'error');
+              this.seleccionarEditar();
+            }
+          
+       
+      },
+      );
 
     });
 
 
+
+  }
+  public cadena="";
+  public cadena1;
+  ////Registro del prospecto en el CRM////
+  registrarProspecto(){
+   
+    if(this.identificacion.value!=""&&this.nombresCompletos.value!=""&&this.correoElectronico.value!=""){
+   
+    this.clienteCRM=new ClienteCRM();
+    this.clienteCRM.firstName=this.nombresCompletos.value;
+    this.clienteCRM.phoneHome=this.telefonoDomicilio.value;
+    this.clienteCRM.phoneMobile=this.movil.value;
+    this.clienteCRM.cedulaC=this.identificacion.value;
+    this.clienteCRM.emailAddress=this.correoElectronico.value;
+    this.cadena =this.correoElectronico.value;
+    this.cadena1 = this.cadena.toUpperCase();
+    this.clienteCRM.emailAddressCaps=this.cadena1;
+    this.sinNoticeService.setNotice("REGISTRO CORRECTO DEL PROSPECTO", 'success');
+    this.cs.guardarProspectoCRM(this.clienteCRM).subscribe((data: any) => {
+    console.log("datos de envio: " + JSON.stringify(this.clienteCRM));
+  }, error => {
+    console.log("error al guardar el cliente en el CRM: " + error);
+    console.log("------------manageurl errorsss : " + JSON.stringify(error));
+    this.sinNoticeService.setNotice("NO SE PUEDE GUARDAR", 'error');
+    //  this.loadingSubject.next(false);
+  });
+}  
+  else{
+    this.sinNoticeService.setNotice("DEBE COMPLETAR LA INFORMACION ", 'error');
+  }
 
   }
 
