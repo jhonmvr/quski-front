@@ -43,15 +43,11 @@ import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPermissionsModule } from 'ngx-permissions';
 
 // Component
-import { ClienteNegociacionComponent } from './cliente-negociacion/cliente-negociacion.component';
 import { NegociacionComponent } from './negociacion.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
-import { VariablesCrediticiasComponent } from './variables-crediticias/variables-crediticias.component';
-import { VercotizacionComponent } from './cliente-negociacion/vercotizacion/vercotizacion.component';
-import { RiesgoAcumuladoComponent } from './riesgo-acumulado/riesgo-acumulado.component';
 import { GestionNegociacionComponent } from './gestion-negociacion/gestion-negociacion.component';
-import { TasacionComponent } from './tasacion/tasacion.component';
+import { VercotizacionComponent } from './gestion-negociacion/vercotizacion/vercotizacion.component';
 
 const routes: Routes = [
 	{
@@ -67,17 +63,6 @@ const routes: Routes = [
 			},{
 				path: 'gestion-negociacion',
 				component: GestionNegociacionComponent
-			},{
-				path: 'cliente-negociacion',
-				component: ClienteNegociacionComponent
-			}
-			,{
-				path: 'variables-crediticia',
-				component: VariablesCrediticiasComponent
-			}
-			,{
-				path: 'riesgo-acumulado',
-				component: RiesgoAcumuladoComponent
 			}
 
 		]
@@ -136,12 +121,8 @@ const routes: Routes = [
 	declarations: [
 		GestionNegociacionComponent,
 		NegociacionComponent,
-		ClienteNegociacionComponent,
 		VercotizacionComponent,
-		VariablesCrediticiasComponent,
-		RiesgoAcumuladoComponent,
-		GestionNegociacionComponent,
-		TasacionComponent
+		GestionNegociacionComponent
 	],
 	entryComponents: [	
 		VercotizacionComponent
