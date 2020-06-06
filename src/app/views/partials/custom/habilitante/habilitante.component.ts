@@ -267,66 +267,32 @@ export class HabilitanteComponent implements OnInit {
       console.log("================>error: " + JSON.stringify(error));
       this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
     });
-    /*this.dh.downloadHabilitante(row.id,this.codigoContrato,this.joya,this.abono,this.idVentaLote).subscribe(
-        (data: any) => {
-          console.log("descargarNotificacion datos xx " + data);
-          console.log("descargarNotificacion datos " + JSON.stringify(data));
-          if (data) {
-            this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
-            saveAs(data, row.descripcion + ".pdf");
-          } else {
-            this.sinNoticeService.setNotice(
-              "NO SE ENCONTRO REGISTRO PARA DESCARGA",
-              "error"
-            );
-          }
-        },
-        error => {
-          console.log("================>error: " + JSON.stringify(error));
-          this.sinNoticeService.setNotice(
-            "ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO",
-            "error"
-          );
-        }
-      );*/
-
-    //console.log("descargarNotificacion");
   }
 
-  descargarPlantillaHabilitante() {
+  descargarPlantillaHabilitante(row:HabilitanteWrapper) {
     //console.log(      "<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>",      this.codigoContratoLocal    );
     //console.log("entra a submit var json " + row.id);
-    /*this.dw.downloadHabilitantePlantilla(
-        row.id,
-        this.codigoContrato,
-        this.joya,
-        this.abono,
-        this.idVentaLote,
-        this.idCorteCaja,
-        "PDF"
-      )
-      .subscribe(
-        (data: any) => {
+    this.dh.generatePlantillaHabilitantesByParams(
+        row.servicio,row.idReferencia?String(row.idReferencia):null,
+        row.idTipoDocumento?String(row.idTipoDocumento):null, row.proceso, 
+        row.estadoOperacion, 
+        row.idDocumentoHabilitante?String(row.idDocumentoHabilitante):null,"PDF"
+      ).subscribe((data: any) => {
           console.log("descargarNotificacion datos xx " + data);
-          console.log("descargarNotificacion datos " + JSON.stringify(data));
-          if (data) {
+          //console.log("descargarNotificacion datos " + JSON.stringify(data));
+          if (data) {            
+            let blob = new Blob([data], { type: 'application/pdf'});
+            saveAs(blob, row.descripcionTipoDocumento + ".pdf");
             this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
-            saveAs(data, row.descripcion + ".pdf");
           } else {
-            this.sinNoticeService.setNotice(
-              "NO SE ENCONTRO REGISTRO PARA DESCARGA",
-              "error"
-            );
+            this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA","error");
           }
         },
         error => {
           console.log("================>error: " + JSON.stringify(error));
-          this.sinNoticeService.setNotice(
-            "ERROR DESCARGA DE PLANTILLA HABILITANTE",
-            "error"
-          );
+          this.sinNoticeService.setNotice("ERROR DESCARGA DE PLANTILLA HABILITANTE","error");
         }
-      );*/
+      );
     //console.log("descargarNotificacion");
   }
 

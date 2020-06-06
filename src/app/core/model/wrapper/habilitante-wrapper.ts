@@ -8,6 +8,7 @@ export class HabilitanteWrapper{
 	estadoOperacion:string;
 	proceso:string;
 	pantilla:string;
+	servicio:string;
 	estaCargado:boolean;
 	objectId:string;
 	mimeType:string;

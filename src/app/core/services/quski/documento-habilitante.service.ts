@@ -318,6 +318,21 @@ export class DocumentoHabilitanteService extends BaseService {
     return this.http.get(serviceUrl, this.options);
 
   }
+
+
+  generatePlantillaHabilitantesByParams(serviceRef:string,idReferencia:string,idTipoDocumento:string,
+    proceso:string, estadoOperacion:string,idHabilitante:string, format:string) {
+    const serviceUrl =this.appResourcesUrl + serviceRef;
+    this.params = new HttpParams();
+    this.params = this.params.set("idHabilitante", idHabilitante);
+    this.params = this.params.set("idTipoDocumento", idTipoDocumento);
+    this.params = this.params.set("proceso", proceso);
+    this.params = this.params.set("estadoOperacion", estadoOperacion);
+    this.params = this.params.set("idReferencia", idReferencia);
+    this.params = this.params.set("format", format);
+    this.options = { responseType: 'arraybuffer',headers: this.headers,  params: this.params };
+    return this.http.post(serviceUrl,{}, this.options);
+  }
 }
 
 
