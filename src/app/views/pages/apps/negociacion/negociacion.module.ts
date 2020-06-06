@@ -43,10 +43,11 @@ import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPermissionsModule } from 'ngx-permissions';
 
 // Component
-import { ClienteNegociacionComponent } from './cliente-negociacion/cliente-negociacion.component';
 import { NegociacionComponent } from './negociacion.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
+import { GestionNegociacionComponent } from './gestion-negociacion/gestion-negociacion.component';
+import { VercotizacionComponent } from './gestion-negociacion/vercotizacion/vercotizacion.component';
 
 const routes: Routes = [
 	{
@@ -57,11 +58,11 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				redirectTo: 'cliente-negociacion',
+				redirectTo: 'gestion-negociacion',
 				pathMatch: 'full'
 			},{
-				path: 'cliente-negociacion',
-				component: ClienteNegociacionComponent
+				path: 'gestion-negociacion',
+				component: GestionNegociacionComponent
 			}
 
 		]
@@ -118,11 +119,13 @@ const routes: Routes = [
 		},
 	],
 	declarations: [
-NegociacionComponent,
-ClienteNegociacionComponent
+		GestionNegociacionComponent,
+		NegociacionComponent,
+		VercotizacionComponent,
+		GestionNegociacionComponent
 	],
 	entryComponents: [	
-
+		VercotizacionComponent
 	]
 })
 export class NegociacionModule { }

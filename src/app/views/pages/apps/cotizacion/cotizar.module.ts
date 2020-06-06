@@ -1,6 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -47,7 +47,6 @@ import { ListCotizarComponent } from './list-cotizar/list-cotizar.component';
 import { DetalleCotizacionComponent } from './detalle-cotizacion/detalle-cotizacion.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
-
 import { DialogCargarComponent } from './list-cotizar/dialog-solicitud-de-autorizacion/dialog-cargar/dialog-cargar.component'
 import { SolicitudAutorizacionDialogComponent } from '../../../../views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 const routes: Routes = [
@@ -81,6 +80,7 @@ const routes: Routes = [
 
 @NgModule({
 	imports: [
+		 
 		CommonModule,
 		RouterModule.forChild(routes),
 		MatDialogModule,
@@ -116,6 +116,7 @@ const routes: Routes = [
 	],
 	providers: [
 		ModuleGuard,
+		DatePipe,
 		{ provide: MatDialogRef, useValue: {} },
 		{
 			provide: MAT_DIALOG_DEFAULT_OPTIONS,
@@ -132,12 +133,13 @@ const routes: Routes = [
 		ListCotizarComponent,
 		DetalleCotizacionComponent,
 		
+
 		DialogCargarComponent,
 	],
 	entryComponents: [
 		AddFotoComponent,
-		
-		
+
+
 
 	]
 })
