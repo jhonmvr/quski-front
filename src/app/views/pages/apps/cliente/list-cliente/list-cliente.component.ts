@@ -22,6 +22,8 @@ export class ListClienteComponent implements OnInit {
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
 
+  proceso:string="CLIENTE";
+  idReferenciaHab:string="1";
 
   nombreCliente = new FormControl('', []);
   apellidoCliente = new FormControl('', []);
@@ -65,7 +67,7 @@ export class ListClienteComponent implements OnInit {
     this.sort.sortChange.subscribe(() => {
       console.log("sort changed "  );
       this.initiateTablePaginator();
-      this.buscar()
+      this.buscar();
     });
     
   }
@@ -155,6 +157,11 @@ export class ListClienteComponent implements OnInit {
     
     }]
 
+  }
+
+  test(){
+    console.log( "====> valor proceso " + this.identificacionCliente.value );
+    this.proceso=this.identificacionCliente.value;
   }
 
 }

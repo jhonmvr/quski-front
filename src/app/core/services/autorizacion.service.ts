@@ -110,8 +110,9 @@ export class AutorizacionService extends BaseService {
             //console.log( "++>ROLES FILTRADOS " + JSON.stringify(dataRolesFilter) ) ;
             if( dataRolesFilter ){
                 x.existLogin=true;
+                
                 dataRolesFilter.forEach(r=>{
-                    localStorage.setItem("reRol",r.id);
+                    localStorage.setItem(environment.rolKey,r.id);
                     localStorage.setItem("re1001",r.codigoRol);
                     x.roles.push( r.id );
                     x.roles.push( r.nombre );
@@ -283,7 +284,7 @@ export class AutorizacionService extends BaseService {
 		localStorage.removeItem("re1001");
     localStorage.removeItem("RE2000");
     localStorage.removeItem("RE2001");
-		localStorage.removeItem("reRol");
+		localStorage.removeItem(environment.rolKey);
 		localStorage.removeItem("setRE000"); 
 		localStorage.removeItem("authcekey"); 
 		for (var index = 1; index <= environment.paramsize; index++) {

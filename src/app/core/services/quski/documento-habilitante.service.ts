@@ -10,11 +10,9 @@ import { tap } from "rxjs/operators";
   providedIn: "root"
 })
 export class DocumentoHabilitanteService extends BaseService {
+
   constructor(
-    _http: HttpClient,
-   // private datePipe: DatePipe,
-    private ns: ReNoticeService
-  ) {
+    _http: HttpClient, private ns: ReNoticeService) {
     super();
     this.http = _http;
     this.setParameter();
@@ -83,6 +81,7 @@ export class DocumentoHabilitanteService extends BaseService {
     // params.append("codigo",codigoContrato).append("tipoDocumento",tipoDocumento);
     return this.findByParams(params, url);
   }
+
   /**
    * Encuentra un tipo de documento por codigo de contrato 
    * @param codigoContrato 
@@ -91,31 +90,47 @@ export class DocumentoHabilitanteService extends BaseService {
    * @param tipoDocumento 
    * @param p 
    */
-  public findByTipoDocumentoAndCodigoContrato(
-    codigoContrato: string,
-    idJoya: string,
-    idAbono: string,
-    tipoDocumento: string,
-    p: Page
-  ) {
-    const serviceUrl =
-      this.appResourcesUrl +
-      "tipoDocumentoRestController/getEntityByTipoDocumento";
+  public findByRolTipoDocumentoReferenciaProcesoEstadoOperacion(
+    idRol:string, idTipoDocumento: string,idReferencia: string,
+    proceso: string,estadoOperacion: string,p: Page) {
+    const serviceUrl =this.appResourcesUrl +"documentoHabilitanteExtendedRestController/loadHabilitantes";
     // this.params = new HttpParams();
     this.setSearchParams(p);
-    this.params = new HttpParams().set("tipoDocumento", tipoDocumento);
-    if (codigoContrato && codigoContrato !== "") {
-      this.params = this.params.set("codigo", codigoContrato);
+    this.params = new HttpParams().set("idRol", idRol);
+    this.params = new HttpParams().set("idTipoDocumento", idTipoDocumento);
+    if (idReferencia && idReferencia !== "") {
+      this.params = this.params.set("idReferencia", idReferencia);
     }
-    if (idJoya && idJoya !== "") {
-      this.params = this.params.set("idJoya", idJoya);
+    if (proceso && proceso !== "") {
+      this.params = this.params.set("proceso", proceso);
     }
-    if (idAbono && idAbono !== "") {
-      this.params = this.params.set("idAbono", idAbono);
+    if (estadoOperacion && estadoOperacion !== "") {
+      this.params = this.params.set("estadoOperacion", estadoOperacion);
     }
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
+
+  public findByRolTipoDocumentoProcesoEstadoOperacion(
+    idRol:string, idTipoDocumento: string,
+    proceso: string,estadoOperacion: string,p: Page) {
+    const serviceUrl =this.appResourcesUrl +"documentoHabilitanteExtendedRestController/getPermisoHabilitanteRol";
+    // this.params = new HttpParams();
+    this.setSearchParams(p);
+    this.params = new HttpParams().set("idRol", idRol);
+    this.params = new HttpParams().set("idTipoDocumento", idTipoDocumento);
+    
+    if (proceso && proceso !== "") {
+      this.params = this.params.set("proceso", proceso);
+    }
+    if (estadoOperacion && estadoOperacion !== "") {
+      this.params = this.params.set("estadoOperacion", estadoOperacion);
+    }
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+
+
   /**
    * Encuentra el habilitatne por el parametro 
    * @param p 
@@ -243,7 +258,7 @@ export class DocumentoHabilitanteService extends BaseService {
     this.options = {
       headers: this.headers,
       params: this.params,
-      responseType: 'blob' as 'json' 
+      responseType: 'blob' as 'json'
     };
     console.log(
       "downloadHabilitantePlantilla options " + JSON.stringify(this.options)
@@ -269,6 +284,7 @@ export class DocumentoHabilitanteService extends BaseService {
 
     return this.http.get(serviceUrl, this.options);
   }
+
   /**
    * Encuentra las ventas por lote
    * @param page 
@@ -285,6 +301,7 @@ export class DocumentoHabilitanteService extends BaseService {
     return this.http.get(serviceUrl, this.options);
 
   }
+
   /**
    * Encuentra la Venta vitrina
    * @param page 

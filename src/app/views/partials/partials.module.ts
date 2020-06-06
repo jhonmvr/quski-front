@@ -93,6 +93,8 @@ import { PortletBodyComponent } from './custom/portlet/portlet-body/portlet-body
 import { PortletFooterComponent } from './custom/portlet/portlet-footer/portlet-footer.component';
 
 import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component';
+import { HabilitanteComponent } from './custom/habilitante/habilitante.component';
+import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dialog/habilitante-dialog.component';
 
 
 
@@ -142,7 +144,9 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 		ArchivoUploadDialogComponent,
 		CargarFotoDialogComponent,
 		ArchivoComponent,
-		AddFotoComponent
+		AddFotoComponent,
+		HabilitanteComponent,
+		HabilitanteDialogComponent
 	],
 	exports: [
 		WidgetModule,
@@ -187,6 +191,8 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 		PortletBodyComponent,
 		PortletFooterComponent,
 		AuthDialogComponent,
+		HabilitanteComponent,
+		HabilitanteDialogComponent
 	],
 	imports: [
 		CommonModule,
@@ -236,6 +242,7 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 	],
 	entryComponents:[
 		AuthDialogComponent,
+		HabilitanteDialogComponent,
 		SolicitudAutorizacionDialogComponent,
 		VercotizacionComponent,
 		CargarFotoDialogComponent

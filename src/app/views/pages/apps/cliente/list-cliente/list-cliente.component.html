@@ -14,6 +14,11 @@
                 <mat-icon style="font-size: 24px" matTooltipPosition="above" class="blue-icon">control_point</mat-icon>
                 <span style="position: relative;top: -10px;margin-left: 5px;" class="blue-icon">Nuevo cliente</span>
             </a>
+
+            <a href="javascript:void(0);" matTooltip="Crear nuevo cliente" style="font-size: 12px; vertical-align: middle;" (click)="test()">
+                <mat-icon style="font-size: 24px" matTooltipPosition="above" class="blue-icon">control_point</mat-icon>
+                <span style="position: relative;top: -10px;margin-left: 5px;" class="blue-icon">Test</span>
+            </a>
         </ng-container>
     </re-portlet-header>
     <re-portlet-body>
@@ -126,6 +131,8 @@
             
         </div>
         <!--end MAT TABLE-->
+        <re-habilitante [proceso]="proceso" [useType]="'FORM'" [referencia]="idReferenciaHab" >
+        </re-habilitante>
     </re-portlet-body>    
     <re-portlet-footer></re-portlet-footer>
 </re-portlet>

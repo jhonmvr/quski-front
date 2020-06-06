@@ -11,13 +11,17 @@ export class TbMiDocumentoHabilitante {
     fechaCreacion: Date;
     fechaActualizacion: Date;
     tbMiTipoDocumento: TbMiTipoDocumento;
-    tbMiContrato: TbMiContrato;
-    tbMiJoya: TbMiJoya;
-    tbMiAbono: TbMiAbono;
+    proceso:string
+    idReferencia:string;
+    objectId;
+    estadoOperacion:string;
+    //tbMiContrato: TbMiContrato;
+    //tbMiJoya: TbMiJoya;
+    //tbMiAbono: TbMiAbono;
 
     constructor() {
-        this.tbMiContrato = null;
-        this.tbMiJoya = null;
-        this.tbMiAbono = null;
+        //this.tbMiContrato = null;
+        //this.tbMiJoya = null;
+        //this.tbMiAbono = null;
     }
 }
