@@ -46,7 +46,8 @@ import { ClienteComponent } from './cliente.component';
 import { ListClienteComponent } from './list-cliente/list-cliente.component';
 import { GestionClienteComponent } from './gestion-cliente/gestion-cliente.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
-import {PartialsModule} from '../../../partials/partials.module'
+import {PartialsModule} from '../../../partials/partials.module';
+
 const routes: Routes = [
 	{
 		path: '',
@@ -129,6 +130,7 @@ declarations: [
     ClienteComponent,
     ListClienteComponent,
     GestionClienteComponent,
+
   ],
   entryComponents: [
 	AddFotoComponent

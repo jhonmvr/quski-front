@@ -28,6 +28,10 @@ const routes: Routes = [
 				loadChildren: () => import('app/views/pages/user-management/user-management.module').then(m => m.UserManagementModule)
 			},
 			{
+				path: 'credito-nuevo',
+				loadChildren: () => import('app/views/pages/credito-nuevo/credito-nuevo.module').then(m => m.CreditoNuevoModule)
+			},
+			{
 				path: 'builder',
 				loadChildren: () => import('app/views/theme/content/builder/builder.module').then(m => m.BuilderModule)
 			},

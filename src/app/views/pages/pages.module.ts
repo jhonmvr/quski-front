@@ -11,6 +11,8 @@ import { CoreModule } from '../../core/core.module';
 import { UserManagementModule } from './user-management/user-management.module';
 
 import { ClienteModule } from './apps/cliente/cliente.module';
+import { CreditoNuevoModule } from './credito-nuevo/credito-nuevo.module';
+import { CreditoNuevoComponent } from './credito-nuevo/credito-nuevo.component';
 
 const RELATIVE_DATE_FORMATS = {
 	parse: {
@@ -34,6 +36,7 @@ const RELATIVE_DATE_FORMATS = {
 		FormsModule,
 		CoreModule,
 		PartialsModule,
+		CreditoNuevoModule,
 		//MailModule,
 		//ECommerceModule,
 		ClienteModule,

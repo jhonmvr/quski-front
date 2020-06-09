@@ -1,0 +1,61 @@
+<re-portlet>
+    <re-portlet-header [title]="'Generar Credito'" [class]="'kt-portlet__head--lg'">
+
+
+    </re-portlet-header>
+
+    <re-portlet-body>
+        <mat-vertical-stepper>
+            <mat-step label="Informaci&#243;n Operaci&#243;n">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">C&#243;digo operaci&#243;n:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="codigoOperacion" readonly>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Situacion:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="situacion" readonly>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Cedula:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="cedulaCliente" readonly>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Cliente:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="nombresCompletos" readonly>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="D&#237;a de pago" *ngIf="enableDiaPagoButton | async">
+            </mat-step>
+
+            <mat-step label="Datos Instruccion Operativa">
+
+            </mat-step>
+        </mat-vertical-stepper>
+
+    </re-portlet-body>
+
+</re-portlet>
