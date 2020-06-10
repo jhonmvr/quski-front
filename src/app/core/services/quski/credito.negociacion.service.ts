@@ -16,9 +16,10 @@ export class CreditoNegociacionService extends BaseService {
 
   public getCreditoNegociacionById(id) {
     this.setParameter();
-    const serviceUrl = this.appResourcesUrl + '/quski-oro-rest/resources/creditoNegociacionRestController/getEntity';
+    const serviceUrl = this.appResourcesUrl + 'creditoNegociacionRestController/getEntity';
     this.params = new HttpParams().set('id', id);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
+  
 }

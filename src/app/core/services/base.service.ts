@@ -86,9 +86,9 @@ export class BaseService {
   
 
   public getSystemDate() {
-    this.options = { headers: this.headers };
+    this.options = { headers: this.headers };      
     return this.http.get(
-      this.appResourcesUrl + 'parametroRestController/getSystemDate',
+      this.genericResourcesUrl + 'parametroRestController/getSystemDate',
       this.options
     );
   }

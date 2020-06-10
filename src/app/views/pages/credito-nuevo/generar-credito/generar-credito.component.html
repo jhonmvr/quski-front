@@ -49,9 +49,94 @@
                 </div>
             </mat-step>
             <mat-step label="D&#237;a de pago" *ngIf="enableDiaPagoButton | async">
+                <div class="col-md-4">
+                    <mat-form-field>
+                      <input [min]="fechaServer"  (dateChange)="validacionFecha()"
+                      matInput #inputFechaCuota [matDatepicker]="pickerFechaCuota"
+                        placeholder="Fecha de la Cuota" [formControl]="fechaCuota"
+                        />
+                      <mat-datepicker-toggle matSuffix [for]="pickerFechaCuota"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerFechaCuota></mat-datepicker>
+                    </mat-form-field>
+                  </div>
             </mat-step>
 
             <mat-step label="Datos Instruccion Operativa">
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-select placeholder="Tipo de cuenta" [formControl]="tipoCuenta">
+                                <mat-option *ngFor="let tipoCuenta of tiposCuentas" [value]="tipoCuenta">
+                                    {{tipoCuenta}}
+                                </mat-option>
+                            </mat-select>                     
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="numeroCuenta" placeholder="Numero de Cuenta">
+                        </mat-form-field>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-select placeholder="Tipo de Cliente" [formControl]="tipoCliente" (selectionChange)="validateTipoCliente($event.value)">
+                                    <mat-option *ngFor="let tipoCli of tiposClientes " [value]="tipoCli">
+                                        {{tipoCli}}
+                                    </mat-option>
+                                </mat-select>                     
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-select placeholder="Firmada operacion" [formControl]="firmadaOperacion">
+                                    <mat-option *ngFor="let firmadaOp of tiposClientes " [value]="firmadaOp">
+                                        {{firmadaOp}}
+                                    </mat-option>
+                                </mat-select>                     
+                            </mat-form-field>
+                        </div>
+                        </div>
+
+                        <div class="row" *ngIf="enableApoderadoButton | async">
+                            
+                            <div class="col-md-4">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (APODERADO)">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [formControl]="nombresCompletosApoderado" placeholder="Nombres Completos (APODERADO)">
+                                </mat-form-field>
+                            </div>
+                            </div>
+
+                            <div class="row" *ngIf="enableCodeudorButton | async">
+                            
+                                <div class="col-md-4">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (CODEUDOR)">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput [formControl]="nombresCompletosApoderado" placeholder="Nombres Completos (CODEUDOR)">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                      <input   (dateChange)="validateEdadCodeudor($event.value)"
+                                      matInput #inputFechaNacimientoCodeudor [matDatepicker]="pickerFechaNacimientoCodeudor"
+                                        placeholder="Fecha de la Cuota" [formControl]="fechaNacimientoCodeudor"
+                                        />
+                                      <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimientoCodeudor"></mat-datepicker-toggle>
+                                      <mat-datepicker #pickerFechaNacimientoCodeudor></mat-datepicker>
+                                      <mat-error *ngIf="validateEdadCodeudor(fechaNacimientoCodeudor.value)"> la edad tiene  ser menor a 65</mat-error>
+                                    </mat-form-field>
+                                  </div>
+                                </div>
 
             </mat-step>
         </mat-vertical-stepper>
