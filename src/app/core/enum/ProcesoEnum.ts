@@ -20,5 +20,10 @@ export enum ProcesoEnum {
   CREDITO_NUEVO = "CREDITO NUEVO",
   CREDITO_DEVUELTO = "CREDITO DEVUELTO",
   NOVACION = "NOVACION",
-  RETANQUEO = "RETANQUEO"
+  RETANQUEO = "RETANQUEO",
+
+
+  //Valores que se usan actualmente 9/Junio/2020 
+  //@Twelve
+  DATOS_CLIENTE ="DATOS CLIENTE"
 }

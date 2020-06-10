@@ -7,9 +7,10 @@ export class TbReferencia{
      direccion : string;
      telefonoMovil : string;
      estado: string;
-     tbQoCliente : TbQoCliente [];
+     tbQoCliente : TbQoCliente;
      telefonoFijo : string;
      
      constructor(){
+          this.tbQoCliente = new TbQoCliente();
      }
 }

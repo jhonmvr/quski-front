@@ -47,6 +47,13 @@ export class ClienteService extends BaseService {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
+  public crearClienteConRelaciones(cliente: TbQoCliente) {
+    const serviceUrl =
+      this.appResourcesUrl + 'clienteRestController/crearCliente';
+    const wrapper = { entidad: cliente };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
 
   public obtenerWrapperCliente() {
     let serviceUrl = this.appResourcesUrl + "clienteRestController/obtenerCliente";

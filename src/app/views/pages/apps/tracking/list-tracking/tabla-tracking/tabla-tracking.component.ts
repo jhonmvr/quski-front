@@ -114,11 +114,11 @@ export class TablaTrackingComponent implements OnInit {
         let minutes : number = 0;
         let segundo:  number = 0;
         for (let i = 0; i < this.dataSource.data.length; i++) {
-          let a = +this.dataSource.data[i].tiempoTotal.slice(0,2);
+          let a = +this.dataSource.data[i].totalTiempo.slice(0,2);
           hour = hour + a;
-          let b = +this.dataSource.data[i].tiempoTotal.slice(3,5);
+          let b = +this.dataSource.data[i].totalTiempo.slice(3,5);
           minutes = minutes + b;
-          let c = +this.dataSource.data[i].tiempoTotal.slice(6,8);
+          let c = +this.dataSource.data[i].totalTiempo.slice(6,8);
           segundo = segundo + c;
 
           if (minutes >= 60) {

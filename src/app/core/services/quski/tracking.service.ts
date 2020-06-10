@@ -27,6 +27,13 @@ export class TrackingService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
+  guardarTracking(track: TbQoTracking) {
+    const serviceUrl =
+      this.appResourcesUrl + 'trackingRestController/persistEntity';
+    const wrapper = { entidad: track };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
 
   constructor(_http: HttpClient) {
     super();

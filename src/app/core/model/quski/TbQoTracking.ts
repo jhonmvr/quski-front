@@ -1,18 +1,16 @@
 import { Time } from '@angular/common';
 
 export class TbQoTracking{
-    id: number;
+    id: string;
     codigoRegistro: string;
     actividad: string;
-    fechaInicio: Date;
-    fechaAsignacion: Date;
-    fechaInicioAtencion: Date;
-    fechaFin: Date;
+    fechaInicio: Number;
+    fechaAsignacion: Number;
+    fechaInicioAtencion: Number;
+    fechaFin: Number;
     estado: string;
     usuario: string;
-    tiempoTotal: string;
-    Observacion: string;
+    totalTiempo: string;
+    observacion: string;
     proceso: string;
-    total: Time;
-    
 }

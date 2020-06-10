@@ -1,4 +1,7 @@
 import { TbReferencia } from "./TbReferencia";
+import { TbQoDireccionCliente } from './TbQoDireccionCliente';
+import { TbQoPatrimonioCliente } from './TbQoPatrimonioCliente';
+import { TbQoIngresoEgresoCliente } from './TbQoIngresoEgresoCliente';
 
 export class TbQoCliente {
   id: string;
@@ -27,14 +30,30 @@ export class TbQoCliente {
   separacionBienes: string;
   telefonoFijo: string;
   telefonoMovil: string;
+  actividadEconomicaEmpresa: string;
+  cargo: string;
+  nombreEmpresa: string;
+  ocupacion : string;
+  origenIngreso : string;
+  profesion: string;
+  relacionDependencia: string; 
+  telefonoTrabajo: string;
+  telefonoAdicional: string;
+  
   tbQoArchivoClientes: null
   tbQoCotizadors: null
   tbQoDocumentoHabilitantes: null
   tbQoNegociacions: null
-  tbQoPatrimonios: null
-  tbQoReferenciaPersonals: null
+  tbQoDireccionClientes : TbQoDireccionCliente[];
+  tbQoPatrimonios: TbQoPatrimonioCliente[];
+  tbQoReferenciaPersonals: TbReferencia[];
+  tbQoIngresoEgresoClientes: TbQoIngresoEgresoCliente[];
   tbQoRiesgoAcumulados: null
   constructor() {
     // this.tbMiJoyaSims = new Array<TbMiJoyaSim>();
+    this.tbQoIngresoEgresoClientes = new Array<TbQoIngresoEgresoCliente>();
+    this.tbQoPatrimonios = new Array<TbQoPatrimonioCliente>();
+    this.tbQoReferenciaPersonals = new Array<TbReferencia>();
+    this.tbQoDireccionClientes = new Array<TbQoDireccionCliente>();
   }
 }
