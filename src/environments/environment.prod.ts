@@ -14,7 +14,9 @@ export const environment = {
     auditGlobalKey:"003",
     DATE_FORMAT:'dd/MM/yyyy',
     userKey:"RE2001",
+    rolKey:"re1002",
     rootKey:"/quski-front/",
+    mongoHabilitanteCollection:'documento-habilitante',
     //DESARROLLO
     //parametros
     app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL3F1c2tpLW9yby1yZXN0L3Jlc291cmNlcy9yZWxhdGl2ZS9nZXRSZWxhdGl2ZQ==',

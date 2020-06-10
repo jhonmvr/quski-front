@@ -861,7 +861,7 @@ export class ListCotizarComponent implements OnInit {
     //console.log('llega ');
     this.loadingSubject.next(true);
     if (this.cliente.cedulaCliente) {
-      this.os.findTipoOroByCedulaQuski(this.cliente.cedulaCliente, this.tipoOro.value.quilate, this.cliente.fechaNacimiento).subscribe((dataTipoOro: any) => {
+      /*this.os.findTipoOroByCedulaQuski(this.cliente.cedulaCliente, this.tipoOro.value.quilate, this.cliente.fechaNacimiento).subscribe((dataTipoOro: any) => {
         console.log("tipo de oro que responde>>>>>>>" + JSON.stringify(dataTipoOro.entidad));
         console.log("SACO EL VALOR DEL TIPO ORO")
         console.log('tipoOro >>>>>>>>>>>>>>', this.tipoOro.value);
@@ -890,7 +890,7 @@ export class ListCotizarComponent implements OnInit {
           this.sinNoticeService.setNotice("ERROR AL CARGAR", 'error');
         }
       }
-      );
+      );*/
     }
   }
 
