@@ -70,7 +70,8 @@ export class GenerarCreditoComponent implements OnInit {
   fechaServer;
   tiposCuentas = ['Cuenta de Ahorros', 'Cuenta Corriente']
   tiposClientes = ['Deudor', 'Codeudor', 'Apoderado']
-
+  tiposCarteras =['']
+  destinosOperaciones = ['']
   //observables
   enableDiaPagoButton;
   enableDiaPago = new BehaviorSubject<boolean>(false);
@@ -85,7 +86,8 @@ export class GenerarCreditoComponent implements OnInit {
    'pesoNeto', 'valorOro', 'valorAvaluo', 'valorComercial', 'valorRealizacion'];
  /**Obligatorio paginacion */
  p = new Page();
- //dataSource:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
+ dataSource
+ //:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
  @ViewChild(MatPaginator, { static: true }) 
  paginator: MatPaginator;
  totalResults: number;
@@ -110,6 +112,50 @@ export class GenerarCreditoComponent implements OnInit {
     this.enableApoderado.next(false);
     this.cargarDatosOperacion()
     
+  }
+
+ /**
+   * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
+   */
+  initiateTablePaginator(): void {
+    this.dataSource = new MatTableDataSource();
+    this.paginator.pageSize = 5;
+    this.paginator.pageIndex = 0;
+    this.totalResults = 0;
+    this.dataSource.paginator = this.paginator;
+  }
+
+     /**
+   * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
+   */
+  getPaginacion(ordenarPor: string, tipoOrden: string, paginado: string,pagina): Page {
+    const p = new Page();
+    p.pageNumber = pagina;
+    p.pageSize = this.paginator.pageSize;
+    p.sortFields = ordenarPor;
+    p.sortDirections = tipoOrden;
+    p.isPaginated = paginado;
+    //console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
+    return p;
+  }
+
+
+     /**
+   * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
+   */
+  paged() {
+    this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',this.paginator.pageIndex)
+    this.cargarDatosOperacion();
+  }
+
+  
+   /**
+   * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
+   */
+  buscar() {
+    this.initiateTablePaginator();
+    this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',0);
+    this.cargarDatosOperacion();
   }
 
   cargarDatosOperacion(){

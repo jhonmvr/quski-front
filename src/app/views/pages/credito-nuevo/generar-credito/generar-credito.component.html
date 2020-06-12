@@ -340,45 +340,65 @@
                                 </a>
                             </mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="cedula">
+                        <ng-container matColumnDef="numeroPiezas">
                         <mat-header-cell *matHeaderCellDef>Cedula</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.cedulaCliente}}</mat-cell>
                     </ng-container>
-                        <ng-container matColumnDef="primerNombre">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Nombres Completos</mat-header-cell>
+                        <ng-container matColumnDef="tipoOro">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Oro</mat-header-cell>
                             <mat-cell *matCellDef="let element"> {{element.primerNombre}} {{element.segundoNombre}} {{element.apellidoPaterno}} {{element.apellidoMaterno}}</mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="nivelEducacion">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Nivel de Educacion</mat-header-cell>
+                        <ng-container matColumnDef="tipoJoya">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Joya</mat-header-cell>
                             <mat-cell *matCellDef="let element">{{element.nivelEducacion}} </mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="genero">
-                            <mat-header-cell *matHeaderCellDef>Genero</mat-header-cell>
+                        <ng-container matColumnDef="estadoJoya">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Estado de Joya</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{element.nivelEducacion}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="descripcion">
+                            <mat-header-cell *matHeaderCellDef>Descripcion</mat-header-cell>
                             <mat-cell *matCellDef="let element">{{element.genero}} </mat-cell>
                         </ng-container>
                         
-                        <ng-container matColumnDef="estadoCivil">
-                            <mat-header-cell *matHeaderCellDef>Estado Civil</mat-header-cell>
+                        <ng-container matColumnDef="pesoBruto">
+                            <mat-header-cell *matHeaderCellDef>Peso Bruto (Gr)</mat-header-cell>
                             <mat-cell *matCellDef="let element">{{element.estadoCivil}} </mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="fechaNacimiento">
-                        <mat-header-cell *matHeaderCellDef>Fecha de Nacimiento</mat-header-cell>
+                        <ng-container matColumnDef="tieneDescuento">
+                        <mat-header-cell *matHeaderCellDef>Tiene descuentos</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="nacionalidad">
-                        <mat-header-cell *matHeaderCellDef>Nacionalidad</mat-header-cell>
+                    <ng-container matColumnDef="descripcionDescuentos">
+                        <mat-header-cell *matHeaderCellDef>Descripcion de descuentos </mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.nacionalidad}} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="edad">
-                            <mat-header-cell *matHeaderCellDef>Edad</mat-header-cell>
+                    <ng-container matColumnDef="descuentoPesoPiedra">
+                            <mat-header-cell *matHeaderCellDef>Descuento Peso Piedra</mat-header-cell>
                             <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
                         </ng-container>
-                    <ng-container matColumnDef="actividadEconomica">
-                        <mat-header-cell *matHeaderCellDef>Actividad Economica</mat-header-cell>
+                    <ng-container matColumnDef="descuentoSuelda">
+                        <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.actividadEconomica}} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="canalContacto">
-                        <mat-header-cell *matHeaderCellDef>Canal de Contacto</mat-header-cell>
+                    <ng-container matColumnDef="pesoNeto">
+                        <mat-header-cell *matHeaderCellDef>Peso Neto (Gr)</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorOro">
+                        <mat-header-cell *matHeaderCellDef>Valor oro</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorAvaluo">
+                        <mat-header-cell *matHeaderCellDef>Valor Avaluo</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorComercial">
+                        <mat-header-cell *matHeaderCellDef>Valor comercial</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorRealizacion">
+                        <mat-header-cell *matHeaderCellDef>Valor Realizacion</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
                     </ng-container>
                     
