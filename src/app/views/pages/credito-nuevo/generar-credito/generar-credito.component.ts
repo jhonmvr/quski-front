@@ -8,7 +8,8 @@ import { diferenciaEnDias } from '../../../../core/util/diferenciaEnDias';
 import { ReNoticeService } from '../../../../core/services/re-notice.service';
 import { DatePipe } from '@angular/common';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { Page } from 'src/app/core/model/page';
+import { Page } from '../../../../core/model/page';
+
 
 
 

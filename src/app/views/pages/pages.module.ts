@@ -14,6 +14,7 @@ import { ClienteModule } from './apps/cliente/cliente.module';
 import { TrackingModule } from './apps/tracking/tracking.module';
 import {CotizarModule} from './apps/cotizacion/cotizar.module';import { CreditoNuevoModule } from './credito-nuevo/credito-nuevo.module';
 import { CreditoNuevoComponent } from './credito-nuevo/credito-nuevo.component';
+import { NegociacionModule } from './apps/negociacion/negociacion.module';
 
 
 const RELATIVE_DATE_FORMATS = {
