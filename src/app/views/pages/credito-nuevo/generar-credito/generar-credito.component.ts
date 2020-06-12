@@ -84,7 +84,7 @@ export class GenerarCreditoComponent implements OnInit {
    'pesoNeto', 'valorOro', 'valorAvaluo', 'valorComercial', 'valorRealizacion'];
  /**Obligatorio paginacion */
  p = new Page();
- dataSource:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
+ //dataSource:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
  @ViewChild(MatPaginator, { static: true }) 
  paginator: MatPaginator;
  totalResults: number;
