@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { CreditoNegociacionService } from '../../../../core/services/quski/credito.negociacion.service';
@@ -7,6 +7,8 @@ import { TbQoCliente } from '../../../../core/model/quski/TbQoCliente';
 import { diferenciaEnDias } from '../../../../core/util/diferenciaEnDias';
 import { ReNoticeService } from '../../../../core/services/re-notice.service';
 import { DatePipe } from '@angular/common';
+import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { Page } from 'src/app/core/model/page';
 
 
 
@@ -39,7 +41,25 @@ export class GenerarCreditoComponent implements OnInit {
   public identificacionCodeudor = new FormControl('');
   public nombresCompletosCodeudor = new FormControl('');
   public fechaNacimientoCodeudor = new FormControl('');
-
+  // credito
+  public tipoCartera = new FormControl('');
+  public descripcionProducto = new FormControl('');
+  public destinoOperacion = new FormControl('');
+  public estadoOperacion = new FormControl('');
+  public tipoOperacion = new FormControl('');
+  public plazo = new FormControl('');
+  public fechaEfectiva = new FormControl('');
+  public fechaVencimiento = new FormControl('');
+  public montoFinanciado = new FormControl('');
+  public valorDesembolso = new FormControl('');
+  public totalInteres = new FormControl('');
+  public cuotas = new FormControl('');
+  public pagarCliente = new FormControl('');
+  public riesgoTotalCliente = new FormControl('');
+  public recibirCliente = new FormControl('');
+  public netoCliente = new FormControl('');
+  ///Monto
+  public montoSolicitado = new FormControl('');
 
   ///
   idCreditoNegociacion=96;
@@ -57,6 +77,23 @@ export class GenerarCreditoComponent implements OnInit {
   enableCodeudor = new BehaviorSubject<boolean>(false);
   enableApoderadoButton;
   enableApoderado = new BehaviorSubject<boolean>(false);
+
+  //TABLA
+  displayedColumns = ['numeroPiezas', 'tipoOro',  'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto',
+  'tieneDescuento', 'descripcionDescuentos', 'descuentoPesoPiedra',  'descuentoSuelda',
+   'pesoNeto', 'valorOro', 'valorAvaluo', 'valorComercial', 'valorRealizacion'];
+ /**Obligatorio paginacion */
+ p = new Page();
+ dataSource:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
+ @ViewChild(MatPaginator, { static: true }) 
+ paginator: MatPaginator;
+ totalResults: number;
+ pageSize = 5;
+ currentPage;
+
+ /**Obligatorio ordenamiento */
+ @ViewChild('sort1', {static: true}) sort: MatSort;
+
   constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService,) { 
     
     
@@ -94,7 +131,7 @@ export class GenerarCreditoComponent implements OnInit {
          }else{
           this.enableDiaPago.next(false);
          }
-         this.validacionEdad()
+        
 
       }
     })
@@ -104,17 +141,6 @@ export class GenerarCreditoComponent implements OnInit {
   getParams(){
 
   }
-
-  validacionEdad(){
-    console.log("===>"+this.tbQoCliente)
-    if(this.tbQoCliente.edad<=65){
-      console.log("es menor de 65")
-    }{
-      console.log("es mayor de 65")
-
-      }
-    }
-
 
   setFechaSistema(){
     this.cns.getSystemDate().subscribe((fechaSistema: any) => {
@@ -138,14 +164,13 @@ export class GenerarCreditoComponent implements OnInit {
  getEdad(fechaValue){
   this.fechaUtil = new diferenciaEnDias(new Date(fechaValue),new Date( this.fechaServer) )
   return this.fechaUtil.obtenerDias()/365
- 
-  
  }
 
  validateEdadCodeudor(fechaCodeudor){
     let edadCodeudor=this.getEdad(fechaCodeudor)
    if(edadCodeudor>=65){
     this.sinNoticeService.setNotice( "El CODEUDOR DEBE SER MENOR DE 65 AÑOS" , 'error');
+    
     return true;
   }else{
     return false;
@@ -153,18 +178,41 @@ export class GenerarCreditoComponent implements OnInit {
  }
   
  validateTipoCliente(valueTipoCliente){
+   let edadCliente = this.getEdad(this.tbQoCliente.fechaNacimiento)
+   console.log(edadCliente)
    console.log("=====> Execute Order 66", valueTipoCliente)
-   if(valueTipoCliente.toUpperCase() === "CODEUDOR"){
-
+   console.log("====> Hello there", this.tbQoCliente.edad )
+   if(valueTipoCliente.toUpperCase() === "DEUDOR"){
+    
     this.enableCodeudor.next(true);
     this.enableApoderado.next(false)
-   } else if (valueTipoCliente.toUpperCase()==="APODERADO"){
-    this.enableCodeudor.next(false);
-     this.enableApoderado.next(true)
+   } else if (valueTipoCliente.toUpperCase()==="APODERADO" ){
+    if(edadCliente<=65){
+      this.enableApoderado.next(true)
+      this.enableCodeudor.next(false);
+      
+    }else{
+      this.sinNoticeService.setNotice( "El CODEUDOR DEBE SER MENOR DE 65 AÑOS" , 'error');
+    }
 
    }else{
-    this.enableCodeudor.next(false);
-    this.enableApoderado.next(false)
+    if(edadCliente<=65){
+      this.enableCodeudor.next(false);
+      this.enableApoderado.next(false);
+
+    }else{
+      this.sinNoticeService.setNotice( "El CODEUDOR DEBE SER MENOR DE 65 AÑOS" , 'error');
+      this.enableCodeudor.next(false);
+      this.enableApoderado.next(false);
+    }
+  
    }
+ }
+ generarCreditos(){
+
+ }
+
+ getMontoSugerido(){
+
  }
 }
