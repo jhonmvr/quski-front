@@ -1,3 +1,4 @@
+import { ClienteCRM } from './../../model/quski/ClienteCRM';
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 // import { Http, Headers, Response, RequestOptions, URLSearchParams, ResponseContentType } from '@angular/http';
@@ -42,6 +43,13 @@ export class ClienteService extends BaseService {
   public guardarCliente(cliente: TbQoCliente) {
     const serviceUrl =
       this.appResourcesUrl + 'clienteRestController/persistEntity';
+    const wrapper = { entidad: cliente };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  public crearClienteConRelaciones(cliente: TbQoCliente) {
+    const serviceUrl =
+      this.appResourcesUrl + 'clienteRestController/crearCliente';
     const wrapper = { entidad: cliente };
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
@@ -166,5 +174,47 @@ export class ClienteService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
+
+  findClienteByCedulaCrm(cedula: any, ) {
+    console.log("***********INGRESA AL SERVICIO")
+    this.params = new HttpParams();
+    /*servicio para buscar la cedula en el crm*/
+    //let serviceUrl = this.segApiUrl + "/prospectoQuskiRestController/getProspectoByCedula?ced=" + cedula;
+    //console.log("IMPRIME LA VARIABLE " + serviceUrl);
+    /* if (cedula && cedula != null) {
+       this.params = this.params.set('cedula', cedula);
+     }
+     this.options = { headers: this.headers, params: this.params };
+     return this.http.get(serviceUrl, this.options);*/
+
+  }
+
+  public findClienteByCedulaQusqui(tipoIdentificacion: string, identificacion: string) {
+    const serviceUrl =
+      this.appResourcesUrl + 'integracionRestController/getInformacionPersona';
+    this.params = new HttpParams().set('tipoIdentificacion', tipoIdentificacion)
+      .set('identificacion', identificacion)
+      .set('tipoConsulta', "")
+      .set('calificacion', "");
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+
+  public findClienteByCedulaCRM(identificacion: string) {
+    const serviceUrl = this.crmResourcesUrl + 'prospectoQuskiRestController/getProspectoByCedula';
+    this.params = new HttpParams().set('ced', identificacion);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+
+  ///////Guardado del prospectoo en el CRM
+  public guardarProspectoCRM(ClienteCRM) {
+    let serviceUrl = this.crmResourcesUrl + "prospectoQuskiRestController/persistEntity";
+    let wrapper = { entidad: ClienteCRM }
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+
+
 
 }

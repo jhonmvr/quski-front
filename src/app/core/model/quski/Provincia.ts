@@ -1,10 +1,12 @@
+
 export class Provincia {
-    provinciaid: string;
-    provinciaestado: string;
-    provinciainfx: string;
-    provincianom: string;
-    cantons: any;
-    constructor() {
-        this.cantons = null;
+    id: string;
+    codigoProvincia: string;
+    estado: string;
+    nombreProvincia: string;
+    cantons : null;
+    tbQoAgencias: null;
+    constructor(){
+
     }
 }

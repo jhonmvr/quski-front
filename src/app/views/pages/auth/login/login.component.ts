@@ -103,14 +103,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 	 * Default params, validators
 	 */
 	initLoginForm() {
-		// demo message to show
-		/*if (!this.authNoticeService.onNoticeChanged$.getValue()) {
-			const initialNotice = `Use account
-			<strong>${DEMO_PARAMS.EMAIL}</strong> and password
-			<strong>${DEMO_PARAMS.PASSWORD}</strong> to continue.`;
-			this.authNoticeService.setNotice(initialNotice, 'info');
-		}*/
-
 		this.loginForm = this.fb.group({
 			email: [DEMO_PARAMS.EMAIL, Validators.compose([
 				Validators.required,
@@ -140,14 +132,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 			);
 			return;
 		}
-
 		this.loading = true;
-
 		const authData = {
 			email: controls.email.value,
 			password: controls.password.value
 		};
-		
 		
 		this.authRelative.serverLogin(authData).pipe( tap(
 			usuarioAuth => {
@@ -158,7 +147,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 						localStorage.setItem( environment.authKey, btoa( ""+ usuarioAuth.id) );
 						localStorage.setItem( environment.hashWebSocketKey,uuid.v4() )
 						this.store.dispatch(new Login({authToken: usuarioAuth.accessToken}));
-						//console.log("=socket ruta " + this.ws.appWebSocketUrl + localStorage.getItem( environment.hashWebSocketKey )+"?dummy=1" );
+						console.log("=socket ruta " + this.ws.appWebSocketUrl + localStorage.getItem( environment.hashWebSocketKey )+"?dummy=1" );
 						this.ws.setParameter();
 						this.ws.connect(this.ws.appWebSocketUrl + localStorage.getItem( environment.hashWebSocketKey )+"?dummy=1");
 						this.ws.messages.subscribe(msg => {			

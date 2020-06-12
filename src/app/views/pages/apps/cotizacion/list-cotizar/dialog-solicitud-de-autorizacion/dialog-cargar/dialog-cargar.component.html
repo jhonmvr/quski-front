@@ -1,0 +1,44 @@
+<re-portlet>
+  <re-portlet-header
+    style="font-style: solid; font-size: 15px;"
+    [title]="'Cargar'"
+    [class]="'kt-portlet__head--lg'"
+  >
+  </re-portlet-header>
+  <re-portlet-body>
+    <div class="row">
+      <div class="col-md-6 kt-margin-bottom-10-mobile">
+        <button mat-raised-button>
+          Seleccionar Archivo
+        </button>
+      </div>
+      <div class="col-md-6 kt-margin-bottom-10-mobile">
+        <button mat-raised-button>
+          Subir
+        </button>
+      </div>
+    </div>
+    <button mat-raised-button>
+      <input
+        type="file"
+        class="inputfile"
+        id="fileUpload"
+        (change)="onFileChance($event)"
+        #myInputFunda
+        value="Seleccione el archivo"
+      />
+    </button>
+
+    &nbsp; &nbsp;
+    <div class="row">
+      <div class="col-md-6 kt-margin-bottom-10-mobile">
+        <button mat-raised-button>
+          Consultar
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-1 col-md-4"></div>
+    </div>
+  </re-portlet-body>
+</re-portlet>

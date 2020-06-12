@@ -1,4 +1,4 @@
 export enum TipoOroEnum{
-    QUILATE18="18K",
-	QUILATE14="14K"
+    k18="18k",
+	k14="14k"
 }

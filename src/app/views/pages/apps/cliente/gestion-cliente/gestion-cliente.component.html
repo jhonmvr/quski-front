@@ -3,267 +3,194 @@
 </div>
 
 <re-portlet>
-  <re-portlet-header [title]="'Creacion/Actualizacion Clientes'" [class]="'kt-portlet__head--lg'">
-
+  <re-portlet-header
+    [title]="'Creacion/Actualizacion Clientes'"
+    [class]="'kt-portlet__head--lg'"
+  >
     <ng-container ktPortletTools>
       <a [routerLink]="['../../']" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon style="font-size: 24px" matTooltipPosition="above" matTooltip="" class="orange-icon">arrow_back</mat-icon>
-        <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Regresar</span>
-			</a>
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">arrow_back</mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+      </a>
       <a href="javascript:void(0);" matTooltip="Guardar" (click)="guardar()" style="font-size: 12px; vertical-align: middle;">
-        <mat-icon style="font-size: 24px" matTooltipPosition="above" matTooltip="" class="blue-icon">save</mat-icon>
-        <span style="position: relative;top: -10px;margin-left: 5px;" class="blue-icon">Guardar</span>
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save</mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Guardar</span>
       </a>
     </ng-container>
   </re-portlet-header>
   <re-portlet-body>
     <!--START FORMS-->
-      <mat-vertical-stepper> [formControl]
-      <mat-step label="Datos Personales Del Cliente" [stepControl]="formCliente">
+    <mat-vertical-stepper>
+      [formControl]
+      <mat-step
+        label="Datos Personales Del Cliente"
+        [stepControl]="formCliente">
         <form [formGroup]="formCliente">
-          <div class="row">
-            <div class="col-md-2">
-              <a href="javascript:void(0);" (click)="subirImagen(); $event.preventDefault() ">
-                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload
-                </mat-icon>
-                <span style="position: relative;top: -10px;margin-left: 5px;">Cedula: Carga frontal</span>
-              </a>
+          <div class="row mb-5">
+            <div class="offset-md-3 col-md-=4">
+              <button mat-button *ngIf="disableConsultar | async" (click)="descargarPlantillaHabilitante()">
+                Descargar Documentos Habilitantes
+              </button>
             </div>
-            <div class="col-md-3">
-              <img [src]="" [width]="300" [height]="200" style="border: 0;" />
-            </div>
-            <div class="col-md-2">
-              <a href="javascript:void(0);" (click)="subirImagen();">
-                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload
-                </mat-icon>
-                <span style="position: relative;top: -10px;margin-left: 5px;">Cedula: Carga posterior</span>
-              </a>
-            </div>
-            <div class="col-md-3">
-              <img [src]="" [width]="300" [height]="200" style="border: 0;" />
+            <div class="col-md-4">
+              <button mat-button *ngIf="disableConsultar | async" (click)=" seleccionarActualizar()">
+                Actualizar Documentos Habilitantes
+              </button>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-2">
-              <a href="javascript:void(0);" (click)="subirImagen();">
-                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload
-                </mat-icon>
-                <span style="position: relative;top: -10px;margin-left: 5px;">Papeleta: Carga frontal</span>
-              </a>
-            </div>
-            <div class="col-md-3">
-              <img [src]="" [width]="300" [height]="200" />
-            </div>
-            <div class="col-md-2">
-              <a href="javascript:void(0);" (click)="subirImagen();">
-                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload
-                </mat-icon>
-                <span style="position: relative;top: -10px;margin-left: 5px;">Servicio Basico</span>
-              </a>
-            </div>
-            <div class="col-md-3">
-              <img [src]="" [width]="300" [height]="200" />
-            </div>
-          </div>
-
           <div class="form-group row">
-            <div class="col-md-6">
+            <div class="col-md-6 col-sm-4">
               <mat-form-field>
-                <input matInput placeholder="Nombres Completos:" [formControl]="nombresCompletos">
+                <input matInput placeholder="Nombres Completos:" [formControl]="nombresCompletos" />
               </mat-form-field>
             </div>
             <div class="col-md-4">
-              <mat-form-field>
-                <input #ide matInput numeric numericType="number" type="text" placeholder="C.I "
-                  [formControl]="identificacion" />
+                <mat-form-field>
+                <input #ide matInput numeric numericType="number"  type="text"  placeholder="C.I " [formControl]="identificacion" required/>
                 <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
               </mat-form-field>
             </div>
-
           </div>
-
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Primer Nombre:" [formControl]="primerNombre">
+                <input matInput placeholder="Primer Nombre:" [formControl]="primerNombre" required/>
               </mat-form-field>
             </div>
 
-
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Segundo Nombre:" [formControl]="segundoNombre">
+                <input matInput placeholder="Segundo Nombre:" [formControl]="segundoNombre"/>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Nivel de Educación:" [formControl]="nivelEducacion">
+                <mat-select
+                  placeholder="Nivel de Educación:"
+                  [formControl]="nivelEducacion">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let nivelEducacion of listNivel" [value]="nivelEducacion">
+                  <mat-option *ngFor="let nivelEducacion of listNivel" [value]="nivelEducacion" required>
                     {{ nivelEducacion }}
                   </mat-option>
                 </mat-select>
-
               </mat-form-field>
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Apellido Materno:" [formControl]="apellidoMaterno" />
-                <mat-error>{{
-                            getErrorMessage("apellidoMaterno")
-                          }}</mat-error>
+                <input  matInput  placeholder="Apellido Materno:"  [formControl]="apellidoMaterno" />
+                <mat-error>{{ getErrorMessage("apellidoMaterno") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Apellido Paterno:" [formControl]="apellidoPaterno" />
-                <mat-error>{{
-                            getErrorMessage("apellidoPaterno")
-                          }}</mat-error>
+                <input matInput placeholder="Apellido Paterno:"  [formControl]="apellidoPaterno" required/>
+                <mat-error>{{ getErrorMessage("apellidoPaterno") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Género:" [formControl]="genero">
+                <mat-select  placeholder="Separación de Bienes:" [formControl]="separacionBienes" required>
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let separacionBienes of listSeparacionBienes"  [value]="separacionBienes">
+                    {{ separacionBienes }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-select placeholder="Género:" [formControl]="genero" required>
                   <mat-option>--</mat-option>
                   <mat-option *ngFor="let genero of listGenero" [value]="genero">
                     {{ genero }}
                   </mat-option>
                 </mat-select>
-                <mat-error>{{getErrorMessage("genero")}}</mat-error>
-
+                <mat-error>{{ getErrorMessage("genero") }}</mat-error>
               </mat-form-field>
             </div>
-          </div>
-          <div class="form-group row">
-
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Estado Civil:" [formControl]="estadoCivil"
-                  (selectionChange)="habilitarCampo()">
+                <mat-select placeholder="Estado Civil:" [formControl]="estadoCivil" (selectionChange)="habilitarCampo()" required>
                   <mat-option>--</mat-option>
                   <mat-option *ngFor="let estadoCivil of listEstadoCivil" [value]="estadoCivil">
                     {{ estadoCivil }}
                   </mat-option>
                 </mat-select>
-                <mat-error>{{getErrorMessage("estadoCivil")}}</mat-error>
+                <mat-error>{{ getErrorMessage("estadoCivil") }}</mat-error>
               </mat-form-field>
             </div>
+            
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Separación de Bienes:" [formControl]="separacionBienes">
-                  <mat-option>--</mat-option>
-                  <mat-option *ngFor="let separacionBienes of listSeparacionBienes" [value]="separacionBienes">
-                    {{ separacionBienes }}
-                  </mat-option>
-                </mat-select>
-
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <mat-select placeholder="Cargas Familiares:" [formControl]="cargaFamiliar">
+                <mat-select placeholder="Cargas Familiares:" [formControl]="cargaFamiliar" required>
                   <mat-option>--</mat-option>
                   <mat-option *ngFor="let cargaFamiliar of listCargaFamiliar" [value]="cargaFamiliar">
                     {{ cargaFamiliar }}
                   </mat-option>
                 </mat-select>
-                <mat-error>{{getErrorMessage("cargaFamiliar")}}</mat-error>
+                <mat-error>{{ getErrorMessage("cargaFamiliar") }}</mat-error>
               </mat-form-field>
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput #inputFechaNacimiento [matDatepicker]="pickerFechaNacimiento"
-                  placeholder="Fecha de Nacimiento" [formControl]="fechaNacimiento">
-                <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
+                <input matInput #inputFechaNacimiento [matDatepicker]="pickerFechaNacimiento" (dateChange)="onChangeFechaNacimiento()" placeholder="Fecha de Nacimiento" [formControl]="fechaNacimiento" required/>
+                <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento" ></mat-datepicker-toggle>
                 <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
-                <mat-error>{{getErrorMessage("fechaNacimiento")}}</mat-error>
-              </mat-form-field>
-
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput placeholder="Nacionalidad:" [formControl]="nacionalidad">
-                <mat-error>{{getErrorMessage("nacionalidad")}}</mat-error>
+                <mat-error>{{ getErrorMessage("fechaNacimiento") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Lugar de Nacimiento:" [formControl]="lugarNacimiento">
-                <mat-error>{{getErrorMessage("lugarNacimiento")}}</mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput placeholder="Edad:" [formControl]="edad" readonly>
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <mat-select placeholder="Actividad Económica:" [formControl]="actividadEconomica">
-                  <mat-option *ngFor="let actividadC of actividadeco" [value]="actividadEconomica">
-                    {{actividadC.nombreCatalogo}}
+                <mat-select placeholder="Nacionalidad:" [formControl]="nacionalidad" required>
+                  <mat-option> -- </mat-option>
+                  <mat-option *ngFor="let paises of listPaises" [value]="paises">
+                    {{ paises }}
                   </mat-option>
                 </mat-select>
-                <mat-error>{{getErrorMessage("actividadEconomica")}}</mat-error>
+                <mat-error>{{ getErrorMessage("nacionalidad") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Canal de Contacto:" [formControl]="canalContacto">
-                  <mat-option *ngFor="let canalC of canal" [value]="canalContacto">
-                    {{canalC.nombreCatalogo}}
+                <input matInput placeholder="Lugar de Nacimiento:" [formControl]="lugarNacimiento" required/>
+                <mat-error>{{ getErrorMessage("lugarNacimiento") }}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-4">
+              <mat-form-field>
+                <input  matInput placeholder="Edad:" [formControl]="edad"readonly/>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-select placeholder="Actividad Económica:" [formControl]="actividadEconomica" required>
+                  <mat-option> -- </mat-option>
+                  <mat-option *ngFor="let actividadC of actividadeco" [value]="actividadC">
+                    {{ actividadC }}
                   </mat-option>
                 </mat-select>
-                <mat-error>{{getErrorMessage("canalContacto")}}</mat-error>
+                <mat-error>{{ getErrorMessage("actividadEconomica") }}</mat-error>
               </mat-form-field>
-            </div>
-          </div>
-          <div class=" row">
-            <div class="col-md-4">
-              <span style="font-weight:bold">Apoderado</span>
-            </div>
-            <div class="col-md-1">
-              <mat-checkbox #ref (click)="onClick($event)"></mat-checkbox>
-            </div>
-            <div class="col-md-4">
-              <span style="font-weight:bold">Codeudor</span>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput placeholder="Nombres Completos:" [formControl]="nombresCompletosApoderado">
-              </mat-form-field>
-            </div>
-            <div class="col-md-1">
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Nombres Completos:" [formControl]="nombresCompletosCodeudor">
+                <mat-select placeholder="Canal de Contacto:" [formControl]="canalContacto" required>
+                  <mat-option> -- </mat-option>
+                  <mat-option *ngFor="let canalC of canal" [value]="canalC">
+                    {{ canalC }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>{{ getErrorMessage("canalContacto") }}</mat-error>
               </mat-form-field>
             </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput placeholder="Cédula:" [formControl]="cedulaApoderado">
-              </mat-form-field>
-            </div>
-            <div class="col-md-1">
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput placeholder="Cédula:" [formControl]="cedulaCodeudor">
-              </mat-form-field>
-            </div>
-
           </div>
         </form>
       </mat-step>
@@ -272,48 +199,34 @@
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput numeric numericType="number" type="text" placeholder="Tel&#233;fono"
-                  [formControl]="telefonoFijo" />
-                <mat-error>{{
-                        getErrorMessage("telefonoFijo")
-                      }}</mat-error>
+                <input matInput numeric numericType="number" type="text" placeholder="Tel&#233;fono Domicilio:" [formControl]="telefonoFijo"/>
+                <mat-error>{{ getErrorMessage("telefonoFijo") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput numeric numericType="number" type="text" placeholder="Télefono Adic.:"
-                  [formControl]="telefonoAdicional" />
-                <mat-error>{{
-                        getErrorMessage("telefonoAdicional")
-                      }}</mat-error>
+                <input matInput  numeric  numericType="number"  type="text"  placeholder="Télefono Adic.:" [formControl]="telefonoAdicional"/>
+                <mat-error>{{ getErrorMessage("telefonoAdicional") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput numeric numericType="number" type="text" placeholder="Télefono Móvil:"
-                  [formControl]="telefonoMovil" />
-                <mat-error>{{
-                    getErrorMessage("telefonoMovil")
-                  }}</mat-error>
+                <input matInput numeric numericType="number"  type="text" placeholder="Télefono Móvil:" [formControl]="telefonoMovil" required/>
+                <mat-error>{{ getErrorMessage("telefonoMovil") }}</mat-error>
               </mat-form-field>
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput numeric numericType="number" type="text" placeholder="Télefono Oficina/Otros:"
-                  [formControl]="telefonoOtro">
-                <mat-error>{{
-                      getErrorMessage("telefonoOtro")
-                    }}</mat-error>
+                <input matInput numeric numericType="number" type="text" placeholder="Télefono Oficina/Otros:" [formControl]="telefonoOtro" />
+                <mat-error>{{ getErrorMessage("telefonoOtro") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Correo electr&#243;nico" [formControl]="email" />
-                <mat-error>{{
-                  getErrorMessage("email")
-                }}</mat-error>
+                <input matInput placeholder="Correo electr&#243;nico" [formControl]="email" required/>
+                <mat-error>{{ getErrorMessage("email") }}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -323,160 +236,152 @@
         <form [formGroup]="formDatosDireccionDomicilio">
           <div class="form-group row">
             <div class="col-md-4">
-              <mat-checkbox>Es Dirección Legal</mat-checkbox>
+              <mat-checkbox [checked]="true" (change)="direccionLegalD()" [formControl]="drLgDo">Es Dirección Legal</mat-checkbox>
             </div>
             <div class="col-md-4">
-              <mat-checkbox>Es Dirección Envio Correspondencia</mat-checkbox>
+              <mat-checkbox [checked]="true" (change)="direccionCorreoD()" [formControl]="drCrDo">Es Dirección Envio Correspondencia</mat-checkbox>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-md-4">
+              <!-- <mat-form-field class="example-full-width">
+                <input type="text" placeholder="Parroquia / Canton / Provincia:" matInput [formControl]="ubicacion" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let parroquia of listNombreParroquia | async" [value]="parroquia">
+                    {{ parroquia }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error>{{ getErrorMessage("ubicacion") }}</mat-error>  (selectionChange)="crearUbicacion()"
+              </mat-form-field> -->
+              <mat-form-field>
+                <mat-select required placeholder="Provincia / Canton / Parroquia:" [formControl]="ubicacion" (selectionChange)="crearUbicacionDomicilio()">
+                  <mat-option>--</mat-option>
+                  <mat-option
+                    *ngFor="let parroquia of listNombreParroquia" [value]="parroquia">
+                    {{ parroquia }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>{{ getErrorMessage("parroquia") }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <input required matInput placeholder="Barrio:" [formControl]="barrio"/>
+                <mat-error>{{ getErrorMessage("barrio") }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-select required placeholder="Sector:" [formControl]="sector">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let sector of listSector" [value]="sector"> {{ sector }}</mat-option>
+                </mat-select>
+                <mat-error>{{ getErrorMessage("sector") }}</mat-error>
+              </mat-form-field>
             </div>
           </div>
 
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Parroquia/Canton/Provincia:" [formControl]="ubicacion"
-                  (keypress)="cargarCombo($event)" [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let parroquia of listaParroquias" [value]="parroquia">
-                    {{parroquia}}
-                  </mat-option>
-
-                </mat-autocomplete>
+                <input matInput required placeholder="Calle Principal:" [formControl]="callePrincipal"/>
+                <mat-error>{{ getErrorMessage("callePrincipal") }}</mat-error>
               </mat-form-field>
             </div>
-
-
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Tipo de Vivienda:" [formControl]="tipoVivienda">
+                <input matInput required placeholder="Numeración:"[formControl]="numeracion"/>
+                <mat-error>{{ getErrorMessage("numeracion") }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <input matInput placeholder="Calle Secundaria:" [formControl]="calleSecundaria"/>
+                <mat-error>{{ getErrorMessage("calleSecundaria") }}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-md-4">
+              <mat-form-field>
+                <input matInput required placeholder="Referencia Ubicación:" [formControl]="referenciaUbicacion"/>
+                <mat-error>{{ getErrorMessage("referenciaUbicacion")}}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-select placeholder="Tipo de Vivienda:" required [formControl]="tipoVivienda">
                   <mat-option>--</mat-option>
                   <mat-option *ngFor="let tipoVivienda of listTipoVivienda" [value]="tipoVivienda">
                     {{ tipoVivienda }}
                   </mat-option>
                 </mat-select>
-                <mat-error>{{
-                            getErrorMessage("tipoVivienda")
-                          }}</mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput placeholder="Calle Principal:" [formControl]="callePrincipal">
-                <mat-error>{{
-                                getErrorMessage("callePrincipal")
-                              }}</mat-error>
-              </mat-form-field>
-
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput placeholder="Numeración:" [formControl]="numeracion">
-                <mat-error>{{
-                                getErrorMessage("numeracion")
-                              }}</mat-error>
-              </mat-form-field>
-
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput placeholder="Calle Secundaria:" [formControl]="calleSecundaria">
-                <mat-error>{{
-                            getErrorMessage("calleSecundaria")
-                          }}</mat-error>
-              </mat-form-field>
-
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput placeholder="Referencia Ubicación:" [formControl]="referenciaUbicacion">
-                <mat-error>{{
-                            getErrorMessage("referenciaUbicacion")
-                          }}</mat-error>
-              </mat-form-field>
-
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <mat-select placeholder="Sector:" [formControl]="sector">
-                  <mat-option>--</mat-option>
-                  <mat-option *ngFor="let sector of listSector" [value]="sector">
-                    {{ sector }}
-                  </mat-option>
-                </mat-select>
-                <mat-error>{{
-                            getErrorMessage("sector")
-                          }}</mat-error>
+                <mat-error>{{ getErrorMessage("tipoVivienda") }}</mat-error>
               </mat-form-field>
             </div>
           </div>
         </form>
-
       </mat-step>
-      <mat-step label="Dirección Laboral" [stepControl]="formDatosDireccionLaboral">
+      <mat-step label="Dirección Laboral"  [stepControl]="formDatosDireccionLaboral">
         <form [formGroup]="formDatosDireccionLaboral">
           <div class="form-group row">
             <div class="col-md-4">
-              <mat-checkbox>Es Dirección Legal</mat-checkbox>
+              <mat-checkbox (change)="direccionLegalL()" [formControl]="drLgLb">Es Dirección Legal</mat-checkbox>
             </div>
             <div class="col-md-4">
-              <mat-checkbox>Es Dirección Envio Correspondencia</mat-checkbox>
+              <mat-checkbox (change)="direccionCorreoL()" [formControl]="drCrLb">Es Dirección Envio Correspondencia</mat-checkbox>
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Ubicación Provincia/Canton/Parroquia:" [formControl]="ubicacionO">
-                  <mat-option *ngFor="" [value]="">
+                <mat-select placeholder="Provincia / Canton / Parroquia:" required [formControl]="ubicacionO" (selectionChange)="crearUbicacionLaboral()">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let parroquia of listNombreParroquia" [value]="parroquia">
+                    {{ parroquia }}
                   </mat-option>
                 </mat-select>
-                <mat-error>{{
-                            getErrorMessage("ubicacionO")
-                          }}</mat-error>
+                <mat-error>{{ getErrorMessage("ubicacionO") }}</mat-error>
               </mat-form-field>
             </div>
-
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Sector:" [formControl]="sectorO">
+                <input  matInput required placeholder="Barrio:" [formControl]="barrioO"/>
+                <mat-error>{{ getErrorMessage("barrioO") }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-select required placeholder="Sector:" [formControl]="sectorO">
                   <mat-option>--</mat-option>
                   <mat-option *ngFor="let sectorO of listSector" [value]="sectorO">
                     {{ sectorO }}
                   </mat-option>
                 </mat-select>
-                <mat-error>{{
-                                getErrorMessage("sectorO")
-                              }}</mat-error>
+                <mat-error>{{ getErrorMessage("sectorO") }}</mat-error>
               </mat-form-field>
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Calle Principal:" [formControl]="callePrincipalO">
-                <mat-error>{{
-                                    getErrorMessage("callePrincipalO")
-                                  }}</mat-error>
+                <input matInput  required placeholder="Calle Principal:" [formControl]="callePrincipalO"/>
+                <mat-error>{{ getErrorMessage("callePrincipalO") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Numeración:" [formControl]="numeracionO">
-                <mat-error>{{
-                                    getErrorMessage("numeracionO")
-                                  }}</mat-error>
+                <input matInput
+                  placeholder="Numeración:" required [formControl]="numeracionO"/>
+                <mat-error>{{ getErrorMessage("numeracionO") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Calle Secundaria:" [formControl]="calleSecundariaO">
-                <mat-error>{{
-                                getErrorMessage("calleSecundariaO")
-                              }}</mat-error>
+                <input matInput  placeholder="Calle Secundaria:"  [formControl]="calleSecundariaO"  />
+                <mat-error>{{ getErrorMessage("calleSecundariaO") }}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -484,238 +389,343 @@
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Referencia Ubicación:" [formControl]="referenciaUbicacionO">
+                <input matInput placeholder="Referencia Ubicación:" required [formControl]="referenciaUbicacionO"/>
                 <mat-error>{{
-                                getErrorMessage("referenciaUbicacionO")
-                              }}</mat-error>
+                  getErrorMessage("referenciaUbicacionO")
+                }}</mat-error>
               </mat-form-field>
             </div>
+            
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Sector:" [formControl]="sectorO">
+                <mat-select placeholder="Tipo de Vivienda:" required [formControl]="tipoViviendaO">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let sectorO of listSector" [value]="sectorO">
-                    {{sectorO}}
+                  <mat-option *ngFor="let tipoViviendaO of listTipoVivienda" [value]="tipoViviendaO">
+                    {{ tipoViviendaO }}
                   </mat-option>
                 </mat-select>
-                <mat-error>{{
-                                getErrorMessage("sectorO")
-                              }}</mat-error>
+                <mat-error>{{ getErrorMessage("tipoViviendaO") }}</mat-error>
               </mat-form-field>
             </div>
           </div>
         </form>
-
       </mat-step>
       <mat-step label="Datos Económico Cliente " [stepControl]="formDatosEconomicos">
         <form [formGroup]="formDatosEconomicos">
           <div class="form-group row">
-
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Origen Ingreso:" [formControl]="origenIngresos"
-                  (selectionChange)="setRelacionDependencia()">
+                <mat-select placeholder="Origen Ingreso:" required [formControl]="origenIngresos" (selectionChange)="setRelacionDependencia()">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let origenIngresos of origen" [value]="origenIngresos">
-                    {{ origenIngresos.nombreCatalogo}}
+                  <mat-option *ngFor="let origenIngresos of listOrigenIngreso" [value]="origenIngresos">
+                    {{ origenIngresos }}
                   </mat-option>
                 </mat-select>
-                <mat-error>{{
-                                            getErrorMessage("origenIngresos")
-                                          }}</mat-error>
+                <mat-error>{{ getErrorMessage("origenIngresos") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Nombre de la empresa:" [formControl]="actividadEmpresa">
-                <mat-error>{{
-                                    getErrorMessage("actividadEmpresa")
-                                  }}</mat-error>
+                <input matInput placeholder="Nombre de la empresa:" required [formControl]="actividadEmpresa"/>
+                <mat-error>{{ getErrorMessage("actividadEmpresa") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Actividad Económica:" [formControl]="actividadCliente">
-                  <mat-option *ngFor="let actividadC of actividad" [value]="actividadCliente">
-                    {{actividadC.nombreCatalogo}}
+                <mat-select placeholder="Actividad Económica:" required [formControl]="actividadEconomicaEmpresa">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let actividadC of listParaDesarrolloEnum" [value]="actividadC">
+                    {{ actividadC }}
                   </mat-option>
                 </mat-select>
-
               </mat-form-field>
             </div>
-
           </div>
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Relación de Dependencia:" [formControl]="relacionDependencia">
+                <input
+                  matInput
+                  placeholder="Relación de Dependencia:"
+                  [formControl]="relacionDependencia"
+                />
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Cargo:" [formControl]="cargo">
-                <mat-error>{{
-                                getErrorMessage("cargo")
-                              }}</mat-error>
+                <input matInput placeholder="Cargo:" [formControl]="cargo" required />
+                <mat-error>{{ getErrorMessage("cargo") }}</mat-error>
               </mat-form-field>
             </div>
-
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Ocupación:" [formControl]="ocupacion">
-                  <mat-option *ngFor="let ocupacionC of ocupaciones" [value]="ocupacion">
-                    {{ocupacionC.nombreCatalogo}}
+                <mat-select placeholder="Profesión:" [formControl]="profesion" required>
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let profesion of listParaDesarrolloEnum" [value]="profesion">
+                    {{ profesion }}
                   </mat-option>
                 </mat-select>
-                <mat-error>{{
-                              getErrorMessage("ocupacion")
-                            }}</mat-error>
+                <mat-error>{{ getErrorMessage("profesion") }}</mat-error>
               </mat-form-field>
             </div>
-
           </div>
           <div class="form-group row">
             <div class="col-md-5">
               <mat-form-field>
-                <input matInput placeholder="Profesión:" [formControl]="profesion">
+                <mat-select placeholder="Ocupación:" [formControl]="ocupacion" required>
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let ocupacion of listParaDesarrolloEnum" [value]="ocupacion">
+                    {{ ocupacion }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>{{ getErrorMessage("ocupacion") }}</mat-error>
               </mat-form-field>
             </div>
           </div>
-
         </form>
       </mat-step>
-      <mat-step label="Patrimonio" [stepControl]="formDatosPatrimonio">
-        <form [formGroup]="formDatosPatrimonio">
-          <div class="form-group row">
-
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput placeholder="Activos:" autocomplete="off" [formControl]="activo" type="text">
-                <mat-error>{{getErrorMessage('activo')}}</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput placeholder="Avaluo:" autocomplete="off" [formControl]="avaluo">
-                <mat-error>{{getErrorMessage('avaluo')}}</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <button mat-button *ngIf="(disableConsultar  | async)" (click)="consultarPasivos()">Consultar Pasivos
-              </button>
-            </div>
+      <mat-step label="Ingresos / Egresos" [stepControl]="formDatosIngresoEgreso">
+        <div class="row">
+          <div class="col-md-6">
+            <form [formGroup]="formDatosIngreso">
+              <div class="form-group row">
+                <div class="col-md-12">
+                  <mat-form-field>
+                    <input matInput placeholder="Valor De Ingreso:" autocomplete="off"  [formControl]="valorIngreso"/>
+                    <mat-error>{{ getErrorMessage("valorIngreso") }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-md-12">
+                  <a href="javascript:void(0);"  (click)="nuevoIngreso()" matTooltip="Agregar " style="font-size: 12px; vertical-align: middle;">
+                    <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
+                    <span style="position: relative; top: -10px; margin-left: 5px;">Agregar Ingreso</span>
+                  </a>
+                </div>
+              </div>
+            </form>
           </div>
-          <div class="form-group row">
-            <div class="col-md-2">
-              <a href="javascript:void(0);" (click)="nuevo()" matTooltip="Agregar "
-                style="font-size: 12px; vertical-align: middle;">
-                <mat-icon style="font-size: 32px" matTooltipPosition="above">add_circle_outline</mat-icon>
-                <span style="position: relative;top: -10px;margin-left: 5px;">Agregar</span>
+          <div class="col-md-6">
+            <form [formGroup]="formDatosEgreso">
+              <div class="form-group row">
+                <div class="col-md-12">
+                  <mat-form-field>
+                    <input matInput placeholder="Valor De Egreso:" autocomplete="off"  [formControl]="valorEgreso"/>
+                    <mat-error>{{ getErrorMessage("valorIngreso") }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-md-12">
+                  <a href="javascript:void(0);"  (click)="nuevoEgreso()" matTooltip="Agregar " style="font-size: 12px; vertical-align: middle;">
+                    <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
+                    <span style="position: relative; top: -10px; margin-left: 5px;">Agregar Egreso</span>
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <mat-table  #table class="mat-elevation-z8"  [dataSource]="dataSourceIngresoEgreso" style="max-width: 760px;">
+          <ng-container matColumnDef="Accion">
+            <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <a (click)="deleteIngresoEgreso(element)">
+                <mat-icon matTooltip="Borrar">delete</mat-icon>
               </a>
-            </div>
+              <a (click)="editar(element)">
+                <mat-icon matTooltip="Editar">edit</mat-icon>
+              </a>
+            </mat-cell>
+            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+          </ng-container>
+          
+          <ng-container matColumnDef="Is">
+            <mat-header-cell *matHeaderCellDef> Actividad </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <ng-container *ngIf="element.esIngreso else elseTemplate">
+                Ingreso
+              </ng-container>
+              <ng-template #elseTemplate>
+                Egreso
+              </ng-template>
+            </mat-cell>
+            <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="Valor">
+            <mat-header-cell *matHeaderCellDef> Valor </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.valor | currency: "USD":true:"1.2" }}
+            </mat-cell>
+            <mat-footer-cell *matFooterCellDef>
+              {{ totalValorIngresoEgreso | currency: "USD":true:"1.2" }}
+            </mat-footer-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumnsII"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumnsII"></mat-row>
+          <mat-footer-row *matFooterRowDef="displayedColumnsII"></mat-footer-row>
+        </mat-table>
+      </mat-step> 
+      
+      
+      <mat-step label="Patrimonio">
+        <div class="row">
+          <div class="col-md-6">
+            <form [formGroup]="formDatosPatrimonioActivos">
+              <div class="form-group row">
+                <div class="ofset-md-1 col-md-5">
+                  <mat-form-field>
+                    <input  matInput placeholder="Activos:"  autocomplete="off" [formControl]="activo" type="text"/>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-5">
+                  <mat-form-field>
+                    <input matInput placeholder="Avaluo:" autocomplete="off"  [formControl]="avaluoActivo" type="text"/>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="offset-md-4 col-md-4">
+                  <a href="javascript:void(0);" (click)="nuevoActivo()" matTooltip="Agregar" style="font-size: 12px; vertical-align: middle;">
+                    <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
+                    <span style="position: relative; top: -10px; margin-left: 5px;">Agregar Activo</span>
+                  </a>
+                </div>
+              </div>
+            </form>
+
+
+            <mat-table  #table  class="mat-elevation-z8"  [dataSource]="dataSourcePatrimonioActivo"  style="max-width: 760px;">
+              <ng-container matColumnDef="Accion">
+                <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <a (click)="deleteActivo(element)"> <mat-icon matTooltip="Borrar">delete</mat-icon> </a>
+                  <a (click)="editarActivo(element)"> <mat-icon matTooltip="Editar">edit</mat-icon> </a>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="Activo">
+                <mat-header-cell *matHeaderCellDef> Activo </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.activos }} </mat-cell>
+                <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="Avaluo">
+                <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
+                <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
+              </ng-container>
+    
+              <mat-header-row
+                *matHeaderRowDef="displayedColumnsActivo"
+              ></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsActivo"></mat-row>
+              <mat-footer-row
+                *matFooterRowDef="displayedColumnsActivo; sticky: true"
+              ></mat-footer-row>
+            </mat-table>
+
           </div>
-
-
-          <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourcePatrimonio" style="max-width: 
-                     760px">
-
-            <ng-container matColumnDef="Accion">
-              <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
-              <mat-cell *matCellDef="let element">
-                <a (click)="delete(element)">
-                  <mat-icon matTooltip="Borrar">delete</mat-icon>
-                </a>
-                <a (click)="editar(element)">
-                  <mat-icon matTooltip="Editar">edit</mat-icon>
-                </a>
-              </mat-cell>
-              <td mat-footer-cell *matFooterCellDef></td>
-            </ng-container>
-
-            <ng-container matColumnDef="Activo">
-              <mat-header-cell *matHeaderCellDef> Activo </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.activo}} </mat-cell>
-              <td mat-footer-cell *matFooterCellDef> Total </td>
-            </ng-container>
-            <ng-container matColumnDef="Avaluo">
-              <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.avaluo |currency:'USD':true:'1.2' }} </mat-cell>
-              <td mat-footer-cell *matFooterCellDef> {{totalActivo |currency:'USD':true:'1.2'}} </td>
-              <td mat-footer-cell *matFooterCellDef> &#8212; </td>
-            </ng-container>
-
-            <ng-container matColumnDef="Pasivo">
-              <mat-header-cell *matHeaderCellDef> Pasivo </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.pasivo}} </mat-cell>
-              <td mat-footer-cell *matFooterCellDef> Total </td>
-            </ng-container>
-
-            <ng-container matColumnDef="Ifis">
-              <mat-header-cell *matHeaderCellDef> Ifis </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.ifis |currency:'USD':true:'1.2' }} </mat-cell>
-              <td mat-footer-cell *matFooterCellDef> {{totalIfis |currency:'USD':true:'1.2'}} </td>
-              <td mat-footer-cell *matFooterCellDef> &#8212; </td>
-            </ng-container>
-
-            <ng-container matColumnDef="Infocorp">
-              <mat-header-cell *matHeaderCellDef> Infocorp </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.infocorp |currency:'USD':true:'1.2' }} </mat-cell>
-              <td mat-footer-cell *matFooterCellDef> &#8212; </td>
-
-            </ng-container>
-
-            <mat-header-row *matHeaderRowDef="displayedColumnsI"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumnsI;"></mat-row>
-            <mat-footer-row *matFooterRowDef="displayedColumnsI; sticky: true"></mat-footer-row>
-
-          </mat-table>
-        </form>
+          <div class="col-md-6">
+            <form [formGroup]="formDatosPatrimonioPasivos">
+              <div class="form-group row">
+                <div class="offset-md-1 col-md-5">
+                  <mat-form-field>
+                    <input  matInput placeholder="Pasivo:"  autocomplete="off" [formControl]="pasivo" type="text"/>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-5">
+                  <mat-form-field>
+                    <input matInput placeholder="Avaluo:" autocomplete="off"  [formControl]="avaluoPasivo" type="text"/>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="offset-md-4 col-md-4">
+                  <a href="javascript:void(0);" (click)="nuevoPasivo()" matTooltip="Agregar" style="font-size: 12px; vertical-align: middle;">
+                    <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
+                    <span style="position: relative; top: -10px; margin-left: 5px;">Agregar Pasivo</span>
+                  </a>
+                </div>
+              </div>
+            </form>
+            <mat-table  #table  class="mat-elevation-z8"  [dataSource]="dataSourcePatrimonioPasivo"  style="max-width: 760px;">
+          
+              <ng-container matColumnDef="Accion">
+                <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <a (click)="deletePasivo(element)"> <mat-icon matTooltip="Borrar">delete</mat-icon> </a>
+                  <a (click)="editarPasivo(element)"> <mat-icon matTooltip="Editar">edit</mat-icon> </a>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="Pasivo">
+                <mat-header-cell *matHeaderCellDef> Pasivo </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.pasivos }}</mat-cell>
+                <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="Avaluo">
+                <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }}</mat-cell>
+                <mat-footer-cell *matFooterCellDef>  {{ totalPasivo | currency: "USD":true:"1.2" }} </mat-footer-cell>
+              </ng-container>
+    
+              <mat-header-row *matHeaderRowDef="displayedColumnsPasivo"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsPasivo"></mat-row>
+              <mat-footer-row *matFooterRowDef="displayedColumnsPasivo; sticky: true"></mat-footer-row>
+            </mat-table>
+          </div>
+        </div> 
       </mat-step>
-      <mat-step label="Referencias Personales  " [stepControl]="formDatosReferenciasPersonales">
+
+      <mat-step label="Referencias Personales" [stepControl]="formDatosReferenciasPersonales">
         <form [formGroup]="formDatosReferenciasPersonales">
           <div class="form-group row">
-
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Nombres Completos:" [formControl]="nombresCompletosR">
-                <mat-error>{{getErrorMessage('nombresCompletosR')}}</mat-error>
+                <input matInput placeholder="Nombres Completos:" [formControl]="nombresCompletosR"/>
+                <mat-error>{{ getErrorMessage("nombresCompletosR") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Parentesco:" [formControl]="parentescoR">
-                <mat-error>{{getErrorMessage('parentescoR')}}</mat-error>
+                <input  matInput placeholder="Parentesco:" [formControl]="parentescoR"/>
+                <mat-error>{{ getErrorMessage("parentescoR") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Dirección:" [formControl]="direccionR">
-                <mat-error>{{getErrorMessage('direccionR')}}</mat-error>
+                <input  matInput placeholder="Dirección:" [formControl]="direccionR"/>
+                <mat-error>{{ getErrorMessage("direccionR") }}</mat-error>
               </mat-form-field>
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput numeric numericType="number" type="text" placeholder="Teléfono Movil:"
-                  [formControl]="telefonoMovilR">
-                <mat-error>{{getErrorMessage('telefonoMovilR')}}</mat-error>
+                <input matInput numeric numericType="number" type="text" placeholder="Teléfono Movil:" [formControl]="telefonoMovilR"/>
+                <mat-error>{{ getErrorMessage("telefonoMovilR") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput numeric numericType="number" type="text" placeholder="Teléfono Fijo:"
-                  [formControl]="telefonoFijoR">
-                <mat-error>{{getErrorMessage('telefonoFijoR')}}</mat-error>
+                <input matInput numeric numericType="number" type="text" placeholder="Teléfono Fijo:" [formControl]="telefonoFijoR"/>
+                <mat-error>{{ getErrorMessage("telefonoFijoR") }}</mat-error>
               </mat-form-field>
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-2">
-              <a href="javascript:void(0);" (click)="nuevaReferencia()" matTooltip="Agregar"
-                style="font-size: 12px; vertical-align: middle;">
-                <mat-icon style="font-size: 32px" matTooltipPosition="above">add_circle_outline</mat-icon>
-                <span style="position: relative;top: -10px;margin-left: 5px;">Agregar</span>
+              <a  href="javascript:void(0);"  (click)="nuevaReferencia()" matTooltip="Agregar" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;">Agregar</span>
               </a>
             </div>
           </div>
@@ -723,46 +733,42 @@
             <ng-container matColumnDef="Accion">
               <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
               <mat-cell *matCellDef="let element">
-                <a (click)="deleteReferencia(element)">
-                  <mat-icon matTooltip="Borrar">delete</mat-icon>
-                </a>
-                <a (click)="editarReferencia(element)">
-                  <mat-icon matTooltip="Editar">edit</mat-icon>
-                </a>
+                <a (click)="deleteReferencia(element)"> <mat-icon matTooltip="Borrar">delete</mat-icon></a>
+                <a (click)="editarReferencia(element)"> <mat-icon matTooltip="Editar">edit</mat-icon></a>
               </mat-cell>
             </ng-container>
             <ng-container matColumnDef="N">
               <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
-              <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>
+              <mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="NombresCompletos">
               <mat-header-cell *matHeaderCellDef>Nombres Completos</mat-header-cell>
-              <mat-cell *matCellDef="let element">{{element.nombresCompletos }} </mat-cell>
+              <mat-cell *matCellDef="let element">{{ element.nombresCompletos }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="Parentesco">
               <mat-header-cell *matHeaderCellDef> Parentesco </mat-header-cell>
-              <mat-cell *matCellDef="let element">{{element.parentesco }} </mat-cell>
+              <mat-cell *matCellDef="let element">{{ element.parentesco }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="Direccion">
               <mat-header-cell *matHeaderCellDef> Dirección </mat-header-cell>
-              <mat-cell *matCellDef="let element">{{element.direccion }} </mat-cell>
+              <mat-cell *matCellDef="let element">{{ element.direccion }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="TelefonoMovil">
-              <mat-header-cell *matHeaderCellDef> Teléfono Movil</mat-header-cell>
-              <mat-cell *matCellDef="let element">{{element.telefonoMovil }} </mat-cell>
+              <mat-header-cell *matHeaderCellDef>Teléfono Movil</mat-header-cell>
+              <mat-cell *matCellDef="let element">{{ element.telefonoMovil }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="TelefonoFijo">
-              <mat-header-cell *matHeaderCellDef> Teléfono Fijo</mat-header-cell>
-              <mat-cell *matCellDef="let element">{{element.telefonoFijo }} </mat-cell>
+              <mat-header-cell *matHeaderCellDef>Teléfono Fijo</mat-header-cell>
+              <mat-cell *matCellDef="let element">{{ element.telefonoFijo }}</mat-cell>
             </ng-container>
+
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
           </mat-table>
         </form>
       </mat-step>
     </mat-vertical-stepper>
 
-    <!--end FORMS-->
   </re-portlet-body>
   <re-portlet-footer></re-portlet-footer>
 </re-portlet>

@@ -23,9 +23,8 @@ export class WebsocketUtilService extends  BaseService{
   public messages: ReplaySubject<Message>=new ReplaySubject<Message>();
 
 	constructor(private wsService: WebsocketService) {
-    
-    super();
-    
+		super();
+		this.setParameter();
 	}
 	
 	connect(_URL: string){

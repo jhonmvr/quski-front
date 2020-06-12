@@ -1,0 +1,46 @@
+ 
+  <mat-spinner class="spiner" *ngIf="loadingSubject.asObservable() | async"></mat-spinner>
+  <h1 mat-dialog-title>Lista de Cotizaciones</h1>
+<mat-dialog-content>
+  <mat-table (datoIdentificacion) ="identificacionPrueba($event)" #table class="mat-elevation-z8" [dataSource]="dataSource">
+    <ng-container matColumnDef="Accion">
+      <mat-header-cell style="max-width: 100px;" *matHeaderCellDef>Accion </mat-header-cell>
+      <mat-cell style="max-width: 100px;" *matCellDef="let row">
+        <a (click)="detalleCotizacion(row)" matTooltip="ver detalle" >
+          <mat-icon>remove_red_eye</mat-icon>
+        </a>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="nCotizacion">
+      <mat-header-cell *matHeaderCellDef> Numero cotizacion</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.id}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="fecha">
+      <mat-header-cell *matHeaderCellDef> Fecha</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.fechaCreacion}}</mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef="gradoInteres">
+      <mat-header-cell *matHeaderCellDef> Grado de interes</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.gradoInteres}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="identificacion">
+      <mat-header-cell *matHeaderCellDef> Identificacion</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.tbQoCliente.cedulaCliente}}</mat-cell>
+    </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true"
+    [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+    </mat-paginator>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-md-6 kt-margin-bottom-10-mobile">
+      <button mat-raised-button mat-dialog-close>
+         Cancelar
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

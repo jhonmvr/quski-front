@@ -20,15 +20,7 @@ export class ReFileUploadService extends BaseService {
       
       this.options = { headers: this.headers};
 
-        return this.http.post(serviceUrl, data,this.options);/*.pipe(
-                        map((response: Response) => {
-                  let entidad = response.json();
-                  return entidad;
-              },
-            error => {
-              //console.log("==>despues de buscar usuario error  " + JSON.stringify(error));
-              return error;
-            }));*/
+        return this.http.post(serviceUrl, data,this.options);
     }
 
     /*public uploadFileWithParams(serviceUrl,actor, hash, data){

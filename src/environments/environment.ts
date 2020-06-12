@@ -9,7 +9,7 @@ export const environment = {
     authKey: 'authcekey',
     prefix:'local',
     authprefix:'relative ',
-    paramsize:12,
+    paramsize:13,
     aplicacion:'1',
     wsProtocol:'ws',
     hashWebSocketKey:"RE2000",
@@ -18,7 +18,9 @@ export const environment = {
     auditGlobalKey:"003",
     DATE_FORMAT:'dd/MM/yyyy',
     userKey:"RE2001",
+    rolKey:"re1002",
     rootKey:"/quski-front/",
+    mongoHabilitanteCollection:'documento-habilitante',
     //DESARROLLO
     //parametros
     app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU=',
