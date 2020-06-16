@@ -45,8 +45,9 @@ import { ClienteComponent } from './cliente.component';
 import { ListClienteComponent } from './list-cliente/list-cliente.component';
 import { GestionClienteComponent } from './gestion-cliente/gestion-cliente.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
-import {PartialsModule} from '../../../partials/partials.module';
+import { PartialsModule } from '../../../partials/partials.module';
 import { DialogCargarHabilitanteComponent } from './gestion-cliente/dialog-cargar-habilitante/dialog-cargar-habilitante.component'
+
 const routes: Routes = [
 	{
 		path: '',
@@ -130,6 +131,7 @@ declarations: [
     ListClienteComponent,
     GestionClienteComponent,
     DialogCargarHabilitanteComponent,
+
   ],
   entryComponents: [
 	AddFotoComponent,
