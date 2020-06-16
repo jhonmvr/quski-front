@@ -19,7 +19,7 @@ export class TablaTrackingComponent implements OnInit {
   @Input() proceso : ProcesoTrackingEnum = ProcesoTrackingEnum.COTIZACION;
 
   displayedColumns = ['proceso', 'codigoRegistro', 'actividad',  'fechaInicio', 'fechaAsignacion', 'fechaInicioAtencion', 'fechaFin',
-   'estado', 'usuario', 'tiempoTotal',  'observacion'];
+   'situacion', 'usuario', 'tiempoTotal',  'observacion'];
   /**Obligatorio paginacion */
   p = new Page();
   dataSource:MatTableDataSource<TbQoTracking> = new MatTableDataSource<TbQoTracking>();

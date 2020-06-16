@@ -3,10 +3,7 @@
 </div>
 
 <re-portlet>
-  <re-portlet-header
-    [title]="'Creacion/Actualizacion Clientes'"
-    [class]="'kt-portlet__head--lg'"
-  >
+  <re-portlet-header [title]="'Creacion/Actualizacion Clientes'"[class]="'kt-portlet__head--lg'">
     <ng-container ktPortletTools>
       <a [routerLink]="['../../']" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
         <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">arrow_back</mat-icon>
@@ -21,20 +18,12 @@
   <re-portlet-body>
     <!--START FORMS-->
     <mat-vertical-stepper>
-      [formControl]
-      <mat-step
-        label="Datos Personales Del Cliente"
-        [stepControl]="formCliente">
+      <mat-step label="Datos Personales Del Cliente" [stepControl]="formCliente">
         <form [formGroup]="formCliente">
           <div class="row mb-5">
-            <div class="offset-md-3 col-md-=4">
-              <button mat-button *ngIf="disableConsultar | async" (click)="descargarPlantillaHabilitante()">
-                Descargar Documentos Habilitantes
-              </button>
-            </div>
-            <div class="col-md-4">
-              <button mat-button *ngIf="disableConsultar | async" (click)=" seleccionarActualizar()">
-                Actualizar Documentos Habilitantes
+            <div  class="offset-md-3 col-md-4" >
+              <button mat-button (click)=" cargarComponenteHabilitante()">
+                Documentos Habilitantes
               </button>
             </div>
           </div>
@@ -236,10 +225,10 @@
         <form [formGroup]="formDatosDireccionDomicilio">
           <div class="form-group row">
             <div class="col-md-4">
-              <mat-checkbox [checked]="true" (change)="direccionLegalD()" [formControl]="drLgDo">Es Dirección Legal</mat-checkbox>
+              <mat-checkbox (change)="direccionLegalD()" [formControl]="drLgDo">Es Dirección Legal</mat-checkbox>
             </div>
             <div class="col-md-4">
-              <mat-checkbox [checked]="true" (change)="direccionCorreoD()" [formControl]="drCrDo">Es Dirección Envio Correspondencia</mat-checkbox>
+              <mat-checkbox (change)="direccionCorreoD()" [formControl]="drCrDo">Es Dirección Envio Correspondencia</mat-checkbox>
             </div>
           </div>
 
@@ -248,7 +237,7 @@
               <!-- <mat-form-field class="example-full-width">
                 <input type="text" placeholder="Parroquia / Canton / Provincia:" matInput [formControl]="ubicacion" [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let parroquia of listNombreParroquia | async" [value]="parroquia">
+                  <mat-option *ngFor="let parroquia of parroquias | async" [value]="parroquia">
                     {{ parroquia }}
                   </mat-option>
                 </mat-autocomplete>
@@ -258,7 +247,7 @@
                 <mat-select required placeholder="Provincia / Canton / Parroquia:" [formControl]="ubicacion" (selectionChange)="crearUbicacionDomicilio()">
                   <mat-option>--</mat-option>
                   <mat-option
-                    *ngFor="let parroquia of listNombreParroquia" [value]="parroquia">
+                    *ngFor="let parroquia of parroquias" [value]="parroquia">
                     {{ parroquia }}
                   </mat-option>
                 </mat-select>
@@ -339,7 +328,7 @@
               <mat-form-field>
                 <mat-select placeholder="Provincia / Canton / Parroquia:" required [formControl]="ubicacionO" (selectionChange)="crearUbicacionLaboral()">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let parroquia of listNombreParroquia" [value]="parroquia">
+                  <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia">
                     {{ parroquia }}
                   </mat-option>
                 </mat-select>
