@@ -141,10 +141,10 @@ export class JoyaService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-  public findAllTipoOro(page: Page) {
+  public findAllTipoOro() {
     let serviceUrl = this.appResourcesUrl + "tipoOroRestController/listAllEntities";
 
-    if (page && page.sortFields && page.sortFields !== ""
+    /*if (page && page.sortFields && page.sortFields !== ""
       && page.sortDirections && page.sortDirections !== "") {
       this.params = new HttpParams()
         .set("sortFields", page.sortFields)
@@ -157,7 +157,7 @@ export class JoyaService extends BaseService {
         .set("page", "" + page.pageNumber)
         .set("pageSize", "" + page.size)
         .set("isPaginated", page.isPaginated);
-    }
+    }*/
 
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
