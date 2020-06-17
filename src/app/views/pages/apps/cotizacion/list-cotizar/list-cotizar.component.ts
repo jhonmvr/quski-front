@@ -3,13 +3,13 @@ import { BehaviorSubject } from 'rxjs';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { Page } from '../../../../../core/model/page';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatStepper } from '@angular/material';
- 
+
 import { TituloContratoService } from '../../../../../core/services/quski/titulo.contrato.service';
 import { CreditoService } from '../../../../../core/services/quski/credito.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { TbQoPrecioOro } from '../../../../../core/model/quski/TbQoPrecioOro';
- 
+
 import { TbQoVariableCrediticia } from '../../../../../core/model/quski/TbQoVariableCrediticia';
 import { TbCotizacion } from '../../../../../core/model/quski/TbCotizacion';
 import { SolicitudAutorizacionDialogComponent } from '../../../../../../app/views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
@@ -20,7 +20,7 @@ import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { CotizacionService } from '../../../../../core/services/quski/cotizacion.service';
 import { OroService } from '../../../../../core/services/quski/oro.service';
- 
+
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { EstadoQuskiEnum } from '../../../../../core/enum/EstadoQuskiEnum';
 import { CreditoVigenteDialogComponent } from '../../../../partials/custom/riesgo-acomulado-dialog/credito-vigente-dialog/credito-vigente-dialog.component';
@@ -31,6 +31,7 @@ import { DatePipe } from '@angular/common';
 import { TbQoVariablesCrediticias } from '../../../../../core/model/quski/TbQoVariablesCrediticias';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
+
 
 
 export interface User {
@@ -101,6 +102,7 @@ export class ListCotizarComponent implements OnInit {
   //VARIABLES PRECIO ORO/
   public totalPrecio: number = 0;
   public totalPeso: number = 0;
+  public precioOroSeleccionado: TbQoPrecioOro;
   public precioOro = new TbQoPrecioOro();
   public tipoOros = new TbQoTipoOro();
   public variableCrediticia = new TbQoVariableCrediticia();
@@ -182,7 +184,7 @@ export class ListCotizarComponent implements OnInit {
     public titulo: TituloContratoService,
     private os: OroService,
     private js: JoyaService,
-    
+
     private sinNoticeService: ReNoticeService,
     private subheaderService: SubheaderService,
     private clienteService: ClienteService,
@@ -190,7 +192,7 @@ export class ListCotizarComponent implements OnInit {
     private cs: CotizacionService,
     private dc: CreditoService,
     public dialog: MatDialog, private fb: FormBuilder) {
-   
+
     this.sp.setParameter();
     this.cs.setParameter();
     this.os.setParameter();
@@ -985,18 +987,41 @@ export class ListCotizarComponent implements OnInit {
    * @param element 
    */
   editar(element) {
-    if (element && element.id) {
+    
+    this.cs.seleccionarPrecioOro(element).subscribe((data: any) => {
+      
+   
+      //RECUPERO LA DATA EN LA PANTALLA
+      this.element = element;
+      console.log("VALOR DATA Seleccionar" + element);
+      const toSelectOro = this.listOros.find(p => p.id == data.entidad.tbQoTipoOro.id);
+      this.tipoOro.setValue(toSelectOro);
+      console.log("VALOR TO SELECT ORO  >>"+JSON.stringify(toSelectOro));
+      this.precio.setValue(data.entidad.precio);
+      this.pesoNetoEstimado.setValue(data.entidad.pesoNetoEstimado);
       this.precioOro.id = element.id;
-      console.log("PrecioOro EXISTE SE TOMA EL  Id+++++++>" + JSON.stringify(this.precioOro));
-      console.log("VALOR ELEMENT AL EDITAR >>>>>>" + JSON.stringify(element));
-    }
-    this.disableSimulaSubject.next(true);
-    this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
-    this.element = element;
-    const toSelectOro = this.listOros.find(p => p.id == element.tbQoTipoOro.id);
-    this.tipoOro.setValue(toSelectOro);
-    this.precio.setValue(element.precio);
-    this.pesoNetoEstimado.setValue(element.pesoNetoEstimado);
+      this.precioOroSeleccionado = data;
+
+
+      
+      this.disableSimulaSubject.next(true);
+      this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
+
+
+
+      
+
+    }, error => {
+      console.log("ERROR ACTUALIZAR PRECIO ORO ");
+      this.loadingSubject.next(false);
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice("ERROR AL REGISTRAR EL PRECIO ORO", 'error');
+      }
+    });
+
 
   }
   /**
@@ -1021,19 +1046,39 @@ export class ListCotizarComponent implements OnInit {
   nuevo() {
 
     if (this.formPrecioOro.valid) {
-      this.disableSimulaSubject.next(true);
+      this.disableSimulaSubject.next(true); 
       this.totalPeso = 0;
       this.totalPrecio = 0;
       this.tipoOros = this.tipoOro.value;
-      if (this.element && this.element.id) {
-        this.precioOro.id = this.element.id;
-        this.dataSourceI.data = null;
-      }
+      console.log("fuera EN EL IF PRECIO ORO ID " +this.element);
+      if (this.element ) {
+        console.log("INGRESA AL IF "+ JSON.stringify(this.precioOroSeleccionado));
+        if (this.element ) {
+         
+          console.log("pRECIO ORO SELECCION"+JSON.stringify(this.precioOroSeleccionado));
+          this.cliente.cedulaCliente = this.identificacion.value;
+          this.precioOroSeleccionado.tbQoTipoOro = this.tipoOro.value;
+          this.precioOroSeleccionado.precio = this.precio.value;
+          this.precioOroSeleccionado.pesoNetoEstimado = this.pesoNetoEstimado.value;
+          this.precioOro=this.precioOroSeleccionado;
+          console.log("PRECIO OROSELECCION valores cambiados " + JSON.stringify(this.precioOroSeleccionado));
+          console.log("PrecioOro EXISTE SE TOMA EL  Id+++++++>" + JSON.stringify(this.precioOro));
+          console.log("VALOR ELEMENT AL EDITAR >>>>>>" + JSON.stringify(this.element));
+        }
+        this.precioOro=new TbQoPrecioOro;
+        this.precioOro=this.precioOroSeleccionado;
+        console.log("ingresa al IF PRECIO ORO ID " +JSON.stringify(this.precioOro));
+        
+       // this.dataSourceI.data =null; 
+      }else{
+        
       this.precioOro.estado = EstadoQuskiEnum.ACT;
       this.precioOro.pesoNetoEstimado = this.pesoNetoEstimado.value;
       this.precioOro.precio = this.precio.value;
       this.precioOro.tbQoCotizador = this.cotizacion;
       this.precioOro.tbQoTipoOro = this.tipoOros;
+      console.log("ingresa al else " +JSON.stringify(this.precioOro));
+      }
       console.log("VALOR DE PRECIO ORO " + JSON.stringify(this.precioOro));
       if (this.precioOro) {
         this.cs.guardarPrecioOro(this.precioOro).subscribe((data: any) => {
@@ -1072,10 +1117,13 @@ export class ListCotizarComponent implements OnInit {
    * @param id 
    */
   eliminarPrecioOro(id) {
+    console.log("INGRESA A ELIMINTAR" + id);
     this.disableSimulaSubject.next(true);
     this.cs.eliminarPrecioOro(id).subscribe((data: any) => {
+      console.log("eliminarPrecioOro ELMINAR" + JSON.stringify(data));
       this.sinNoticeService.setNotice("SE ELIMINO EL PRECIO DE ORO SELECCIONADO", 'success');
       this.cs.findByIdCotizacion(this.cotizacion.id).subscribe((pos: any) => {
+        console.log("findByIdCotizacion" + JSON.stringify(pos));
         this.dataSourceI = new MatTableDataSource(pos.list);
       }, error => {
 

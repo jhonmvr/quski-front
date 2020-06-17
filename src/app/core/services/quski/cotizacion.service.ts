@@ -141,6 +141,13 @@ export class CotizacionService extends BaseService {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
+
+  editarPrecioOro(tbQoPrecioOro) {
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/persistEntity";
+    let wrapper = { entidad: tbQoPrecioOro };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
   seleccionarPrecioOro(idPrecioOro) {
     let serviceUrl = this.appResourcesUrl+ "precioOroRestController/getEntity";
     this.params= new HttpParams();
