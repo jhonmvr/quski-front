@@ -210,7 +210,7 @@
         </mat-step>
       </div>
 
-        <mat-step [stepControl]="formPrecioOro">
+        <mat-step [stepControl]="formPrecioOroStep">
           <ng-template matStepLabel>Precio Oro</ng-template>
 
           <form [formGroup]="formPrecioOro">
@@ -251,7 +251,8 @@
               </div>
             </div>
 
-            <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceI">
+  
+  <mat-table #table class="mat-elevation-z8" *ngIf="preciosOroAsyn | async" [dataSource]="dataSourceI">
 
               <ng-container matColumnDef="accion">
                 <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
@@ -259,7 +260,7 @@
                   <a (click)="eliminarPrecioOro(element.id)">
                     <mat-icon matTooltip="Eliminar">delete</mat-icon>
                   </a>
-                  <a (click)="editar(element.id)">
+                  <a (click)="editar(element)">
                     <mat-icon matTooltip="Editar">edit</mat-icon>
                   </a>
                 </mat-cell>

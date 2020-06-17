@@ -108,7 +108,7 @@ export class ListCotizarComponent implements OnInit {
   public variableCrediticia = new TbQoVariableCrediticia();
   public variableCrediticiaArray = new Array<TbQoVariableCrediticia>();
   public preciosArray = new Array<TbQoPrecioOro>();
-  public element;
+  public precioOroLocal;
   public opciones: string[] = ['Si', 'No'];
   public seleccion: string;
 
@@ -124,6 +124,11 @@ export class ListCotizarComponent implements OnInit {
   apellidoCliente = new FormControl('', []);
   //OPCIONES PRECIO ORO
   precioEstimado = new FormControl('', []);
+
+  preciosOroAsyn;
+  preciosOrodSubject:BehaviorSubject<boolean>= new BehaviorSubject<boolean>(false);
+
+
   //OPCIONES DE CREDITO
   plazo = new FormControl('', []);
   montoPreAprobado = new FormControl('', []);
@@ -221,6 +226,7 @@ export class ListCotizarComponent implements OnInit {
     this.getGradoInteres();
     this.getMotivoDesestimiento();
     this.sinNoticeService.setNotice(null);
+    this.precioOroLocal=null;
   }
   /**
    * CARGA DESPUES DEL CONSTRUCTOR
@@ -237,6 +243,7 @@ export class ListCotizarComponent implements OnInit {
     this.disableSimular = this.disableSimulaSubject.asObservable();
     this.disableVerPrecio = this.disableVerPrecioSubject.asObservable();
     this.subheaderService.setTitle('Cotización');
+    this.preciosOroAsyn=this.preciosOrodSubject.asObservable();
     //METODOS DEL PAGINADOR
     this.initiateTablePaginator();
     //Se ejecuta cuando se hace click en el ordenamiento en el mattable
@@ -909,8 +916,8 @@ export class ListCotizarComponent implements OnInit {
       this.disableSimulaSubject.next(true);
       this.totalPeso = 0;
       this.totalPrecio = 0;
-      if (this.element && this.element.id) {
-        this.precioOro.id = this.element.id;
+      if (this.precioOroLocal && this.precioOroLocal.id) {
+        this.precioOro.id = this.precioOroLocal.id;
         this.dataSourceI = null;
       }
 
@@ -921,10 +928,10 @@ export class ListCotizarComponent implements OnInit {
       this.precioOro.estado = "ACT"
       this.precioOro.pesoNetoEstimado = this.pesoNetoEstimado.value;
       console.log("precioOro  >>>><<<<" + JSON.stringify(this.precioOro));
-      console.log(" ELEMENTO" + JSON.stringify(this.element));
+      console.log(" ELEMENTO" + JSON.stringify(this.precioOroLocal));
 
       console.log("datos ingresos - egresos  >>>><<<<" + JSON.stringify(this.precioOro));
-      console.log("VALOR DE THIS ELEMENT>>>>>>>>>>" + this.element);
+      console.log("VALOR DE THIS ELEMENT>>>>>>>>>>" + this.precioOroLocal);
 
 
     } else {
@@ -987,30 +994,21 @@ export class ListCotizarComponent implements OnInit {
    * @param element 
    */
   editar(element) {
-    
-    this.cs.seleccionarPrecioOro(element).subscribe((data: any) => {
-      
-   
+    console.log("VALOR DATA Seleccionar" + JSON.stringify(element) );
+    this.precioOroLocal=null;
+    this.cs.seleccionarPrecioOro(element.id).subscribe((data: any) => {
       //RECUPERO LA DATA EN LA PANTALLA
-      this.element = element;
-      console.log("VALOR DATA Seleccionar" + element);
+      this.precioOroLocal = data.entidad;
+      
       const toSelectOro = this.listOros.find(p => p.id == data.entidad.tbQoTipoOro.id);
       this.tipoOro.setValue(toSelectOro);
       console.log("VALOR TO SELECT ORO  >>"+JSON.stringify(toSelectOro));
       this.precio.setValue(data.entidad.precio);
       this.pesoNetoEstimado.setValue(data.entidad.pesoNetoEstimado);
-      this.precioOro.id = element.id;
-      this.precioOroSeleccionado = data;
-
-
-      
+      //this.precioOro.id = element.id;
+      //this.precioOroSeleccionado = data;
       this.disableSimulaSubject.next(true);
       this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
-
-
-
-      
-
     }, error => {
       console.log("ERROR ACTUALIZAR PRECIO ORO ");
       this.loadingSubject.next(false);
@@ -1044,64 +1042,46 @@ export class ListCotizarComponent implements OnInit {
    * Agrega un nuevo precio oro al formulario
    * */
   nuevo() {
-
+    this.preciosOrodSubject.next(false);
     if (this.formPrecioOro.valid) {
+      this.precioOro=new TbQoPrecioOro;
       this.disableSimulaSubject.next(true); 
       this.totalPeso = 0;
       this.totalPrecio = 0;
       this.tipoOros = this.tipoOro.value;
-      console.log("fuera EN EL IF PRECIO ORO ID " +this.element);
-      if (this.element ) {
-        console.log("INGRESA AL IF "+ JSON.stringify(this.precioOroSeleccionado));
-        if (this.element ) {
-         
-          console.log("pRECIO ORO SELECCION"+JSON.stringify(this.precioOroSeleccionado));
-          this.cliente.cedulaCliente = this.identificacion.value;
-          this.precioOroSeleccionado.tbQoTipoOro = this.tipoOro.value;
-          this.precioOroSeleccionado.precio = this.precio.value;
-          this.precioOroSeleccionado.pesoNetoEstimado = this.pesoNetoEstimado.value;
-          this.precioOro=this.precioOroSeleccionado;
-          console.log("PRECIO OROSELECCION valores cambiados " + JSON.stringify(this.precioOroSeleccionado));
-          console.log("PrecioOro EXISTE SE TOMA EL  Id+++++++>" + JSON.stringify(this.precioOro));
-          console.log("VALOR ELEMENT AL EDITAR >>>>>>" + JSON.stringify(this.element));
-        }
-        this.precioOro=new TbQoPrecioOro;
-        this.precioOro=this.precioOroSeleccionado;
+      console.log("fuera EN EL IF PRECIO ORO ID " +this.precioOroLocal);
+      //solo aplica si es editar
+      if (this.precioOroLocal ) {
+        this.precioOro=this.precioOroLocal;
         console.log("ingresa al IF PRECIO ORO ID " +JSON.stringify(this.precioOro));
-        
-       // this.dataSourceI.data =null; 
-      }else{
-        
+      }
       this.precioOro.estado = EstadoQuskiEnum.ACT;
       this.precioOro.pesoNetoEstimado = this.pesoNetoEstimado.value;
       this.precioOro.precio = this.precio.value;
       this.precioOro.tbQoCotizador = this.cotizacion;
       this.precioOro.tbQoTipoOro = this.tipoOros;
       console.log("ingresa al else " +JSON.stringify(this.precioOro));
-      }
-      console.log("VALOR DE PRECIO ORO " + JSON.stringify(this.precioOro));
+
       if (this.precioOro) {
         this.cs.guardarPrecioOro(this.precioOro).subscribe((data: any) => {
           console.log("DATASOURCE" + JSON.stringify(data));
           console.log("DATASOURCE.ENTIDAD" + JSON.stringify(data.entidad));
-
           this.disableSimulaSubject.next(true);
-          this.preciosArray.push(data.entidad);
-          console.log("VALORES LISTA " + JSON.stringify(this.preciosArray));
-
-          console.log("******data GUARDAR PRECIO ORO****" + JSON.stringify(data));
-          if (data && data.entidad) {
-            this.dataSourceI = new MatTableDataSource(this.preciosArray);
-
-          }
-
-          console.log("la data guardada es" + JSON.stringify(data));
-
-          if (data && data.entidad) {
+          if( data && data.entidad ){
             console.log("VALOR DE DATA EN EL IF" + JSON.stringify(data));
-            this.sinNoticeService.setNotice("SE GUARDO EL PRECIO ORO", 'success');
-            console.log("VALOR DEL ID DE  LA COTIZACION QUE VA>>>>>>> " + this.cotizacion.id);
-          }
+            console.log("VALOR DEL ID DE  LA COTIZACION QUE VA>>>>>list>> " + this.cotizacion.id);
+            this.cs.loadPrecioOroByCotizacion(this.cotizacion.id).subscribe((pos: any)=>{
+              console.log("VALORES LISTA " + JSON.stringify(pos.list));
+              console.log("******data GUARDAR PRECIO ORO****" + JSON.stringify(data));
+              this.dataSourceI = new MatTableDataSource( pos.list );
+              this.preciosOrodSubject.next(true);
+              this.sinNoticeService.setNotice("SE GUARDO EL PRECIO ORO", 'success');
+            });
+            
+          }     
+          this.preciosOrodSubject.next(true);               
+        }, error=>{
+          this.preciosOrodSubject.next(true);
         });
 
       }

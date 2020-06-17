@@ -156,6 +156,14 @@ export class CotizacionService extends BaseService {
     return this.http.get(serviceUrl, this.options);
   }
 
+  loadPrecioOroByCotizacion(idCotizacion){
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/detalleCotizacionById";
+    this.params= new HttpParams();
+    this.params=this.params.set("id", idCotizacion);
+    this.options = { headers: this.headers, params: this.params};
+    return this.http.get(serviceUrl, this.options);        
+  }
+
 
   eliminarPrecioOro(idPrecioOro) {
     let serviceUrl = this.appResourcesUrl+ "precioOroRestController/removeEntity";
