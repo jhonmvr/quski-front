@@ -75,6 +75,7 @@ export class ListCotizarComponent implements OnInit {
   public formCliente: FormGroup = new FormGroup({});
   public formVariable: FormGroup = new FormGroup({});
   public formOpciones: FormGroup = new FormGroup({});
+  public formPrecioOroStep: FormGroup = new FormGroup({});
   //ATRIBUTOS DE CLIENTE
   public fpublicidad = new FormControl('', [Validators.required]);
   public identificacion = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
@@ -123,7 +124,7 @@ export class ListCotizarComponent implements OnInit {
   precioEstimado = new FormControl('', []);
 
   preciosOroAsyn;
-  preciosOrodSubject:BehaviorSubject<boolean>= new BehaviorSubject<boolean>(false);
+  preciosOrodSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 
   //OPCIONES DE CREDITO
@@ -223,7 +224,7 @@ export class ListCotizarComponent implements OnInit {
     this.getGradoInteres();
     this.getMotivoDesestimiento();
     this.sinNoticeService.setNotice(null);
-    this.precioOroLocal=null;
+    this.precioOroLocal = null;
   }
   /**
    * CARGA DESPUES DEL CONSTRUCTOR
@@ -240,7 +241,7 @@ export class ListCotizarComponent implements OnInit {
     this.disableSimular = this.disableSimulaSubject.asObservable();
     this.disableVerPrecio = this.disableVerPrecioSubject.asObservable();
     this.subheaderService.setTitle('Cotización');
-    this.preciosOroAsyn=this.preciosOrodSubject.asObservable();
+    this.preciosOroAsyn = this.preciosOrodSubject.asObservable();
     //METODOS DEL PAGINADOR
     this.initiateTablePaginator();
     //Se ejecuta cuando se hace click en el ordenamiento en el mattable
@@ -991,15 +992,15 @@ export class ListCotizarComponent implements OnInit {
    * @param element 
    */
   editar(element) {
-    console.log("VALOR DATA Seleccionar" + JSON.stringify(element) );
-    this.precioOroLocal=null;
+    console.log("VALOR DATA Seleccionar" + JSON.stringify(element));
+    this.precioOroLocal = null;
     this.cs.seleccionarPrecioOro(element.id).subscribe((data: any) => {
       //RECUPERO LA DATA EN LA PANTALLA
       this.precioOroLocal = data.entidad;
-      
+
       const toSelectOro = this.listOros.find(p => p.id == data.entidad.tbQoTipoOro.id);
       this.tipoOro.setValue(toSelectOro);
-      console.log("VALOR TO SELECT ORO  >>"+JSON.stringify(toSelectOro));
+      console.log("VALOR TO SELECT ORO  >>" + JSON.stringify(toSelectOro));
       this.precio.setValue(data.entidad.precio);
       this.pesoNetoEstimado.setValue(data.entidad.pesoNetoEstimado);
       //this.precioOro.id = element.id;
@@ -1041,43 +1042,43 @@ export class ListCotizarComponent implements OnInit {
   nuevo() {
     this.preciosOrodSubject.next(false);
     if (this.formPrecioOro.valid) {
-      this.precioOro=new TbQoPrecioOro;
-      this.disableSimulaSubject.next(true); 
+      this.precioOro = new TbQoPrecioOro;
+      this.disableSimulaSubject.next(true);
       this.totalPeso = 0;
       this.totalPrecio = 0;
       this.tipoOros = this.tipoOro.value;
-      console.log("fuera EN EL IF PRECIO ORO ID " +this.precioOroLocal);
+      console.log("fuera EN EL IF PRECIO ORO ID " + this.precioOroLocal);
       //solo aplica si es editar
-      if (this.precioOroLocal ) {
-        this.precioOro=this.precioOroLocal;
-        console.log("ingresa al IF PRECIO ORO ID " +JSON.stringify(this.precioOro));
+      if (this.precioOroLocal) {
+        this.precioOro = this.precioOroLocal;
+        console.log("ingresa al IF PRECIO ORO ID " + JSON.stringify(this.precioOro));
       }
       this.precioOro.estado = EstadoQuskiEnum.ACT;
       this.precioOro.pesoNetoEstimado = this.pesoNetoEstimado.value;
       this.precioOro.precio = this.precio.value;
       this.precioOro.tbQoCotizador = this.cotizacion;
       this.precioOro.tbQoTipoOro = this.tipoOros;
-      console.log("ingresa al else " +JSON.stringify(this.precioOro));
+      console.log("ingresa al else " + JSON.stringify(this.precioOro));
 
       if (this.precioOro) {
         this.cs.guardarPrecioOro(this.precioOro).subscribe((data: any) => {
           console.log("DATASOURCE" + JSON.stringify(data));
           console.log("DATASOURCE.ENTIDAD" + JSON.stringify(data.entidad));
           this.disableSimulaSubject.next(true);
-          if( data && data.entidad ){
+          if (data && data.entidad) {
             console.log("VALOR DE DATA EN EL IF" + JSON.stringify(data));
             console.log("VALOR DEL ID DE  LA COTIZACION QUE VA>>>>>list>> " + this.cotizacion.id);
-            this.cs.loadPrecioOroByCotizacion(this.cotizacion.id).subscribe((pos: any)=>{
+            this.cs.loadPrecioOroByCotizacion(this.cotizacion.id).subscribe((pos: any) => {
               console.log("VALORES LISTA " + JSON.stringify(pos.list));
               console.log("******data GUARDAR PRECIO ORO****" + JSON.stringify(data));
-              this.dataSourceI = new MatTableDataSource( pos.list );
+              this.dataSourceI = new MatTableDataSource(pos.list);
               this.preciosOrodSubject.next(true);
               this.sinNoticeService.setNotice("SE GUARDO EL PRECIO ORO", 'success');
             });
-            
-          }     
-          this.preciosOrodSubject.next(true);               
-        }, error=>{
+
+          }
+          this.preciosOrodSubject.next(true);
+        }, error => {
           this.preciosOrodSubject.next(true);
         });
 
