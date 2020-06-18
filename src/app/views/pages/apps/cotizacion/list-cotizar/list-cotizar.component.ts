@@ -143,7 +143,7 @@ export class ListCotizarComponent implements OnInit {
   //VISUALIZACION DE LAS COLUMNAS
   displayedColumnsVarCredi = ['orden', 'variable', 'valor'];
   displayedColumnsPrecioOro = ['accion', 'N', 'tipoOro', 'precio', 'pesoNetoEstimado'];
-  displayedColumnsCreditoNegociacion = ['plazo', 'montoPreAprobado', 'aRecibir', 'totalCostosOperacion', 'costoCustodia', 'costoTransporte', 'costoCredito', 'costoSeguro', 'costoResguardo', 'costoEstimado', 'valorCuota'];
+  displayedColumnsCreditoNegociacion = ['plazo', 'montoPreAprobado', 'aRecibir', 'totalCostosOperacion', 'costoCustodia', 'costoTransporte', 'costoSeguro', 'costoResguardo', 'costoEstimado', 'valorCuota'];
   /**Obligatorio paginacion */
   p = new Page();
   //DATASOURCE
@@ -1122,10 +1122,12 @@ export class ListCotizarComponent implements OnInit {
     this.totalPrecio;
     console.log("INICIA SIMULAR TOTAL PRECIO >>>>", this.totalPrecio);
     if (this.listOpciones) {
+      this.loadingSubject.next(false);
       this.dataSourceCredito = new MatTableDataSource(this.listOpciones);
       this.stepper.selectedIndex = 3;
     }
     else {
+      this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("NO SE ENCONTRAR REGISTROS", 'info');
     }
   }
