@@ -3,13 +3,11 @@ import { BehaviorSubject } from 'rxjs';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { Page } from '../../../../../core/model/page';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatStepper } from '@angular/material';
-
 import { TituloContratoService } from '../../../../../core/services/quski/titulo.contrato.service';
 import { CreditoService } from '../../../../../core/services/quski/credito.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { TbQoPrecioOro } from '../../../../../core/model/quski/TbQoPrecioOro';
-
 import { TbQoVariableCrediticia } from '../../../../../core/model/quski/TbQoVariableCrediticia';
 import { TbCotizacion } from '../../../../../core/model/quski/TbCotizacion';
 import { SolicitudAutorizacionDialogComponent } from '../../../../../../app/views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
@@ -20,7 +18,6 @@ import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { CotizacionService } from '../../../../../core/services/quski/cotizacion.service';
 import { OroService } from '../../../../../core/services/quski/oro.service';
-
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { EstadoQuskiEnum } from '../../../../../core/enum/EstadoQuskiEnum';
 import { CreditoVigenteDialogComponent } from '../../../../partials/custom/riesgo-acomulado-dialog/credito-vigente-dialog/credito-vigente-dialog.component';
