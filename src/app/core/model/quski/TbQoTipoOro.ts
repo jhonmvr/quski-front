@@ -1,5 +1,5 @@
 export class TbQoTipoOro {
-    id: number;
+    id: string;
     quilate: string;
     estado: string;
     precio:number;

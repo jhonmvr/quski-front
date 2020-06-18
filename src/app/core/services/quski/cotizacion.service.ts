@@ -4,6 +4,7 @@ import { BaseService } from '../base.service';
 import { ReNoticeService } from '../../services/re-notice.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from '../../../core/model/page';
+import { TbCotizacion } from '../../../core/model/quski/TbCotizacion';
 import { DatePipe } from '@angular/common';
 
 
@@ -24,9 +25,9 @@ export class CotizacionService extends BaseService {
 
 
 
-  updateCotizacion(tbMiCotizacion) {
-    let serviceUrl = this.appResourcesUrl + this.urlRest + "persistEntity";
-    let wrapper = { entidad: tbMiCotizacion }
+  updateCotizacion(tbCotizacion) {
+    let serviceUrl = this.appResourcesUrl+ "cotizadorRestController/persistEntity";
+    let wrapper = { entidad: tbCotizacion }
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
     /* .pipe(
@@ -41,10 +42,27 @@ export class CotizacionService extends BaseService {
 
   }
 
+  generarCotizacion(tbCotizacion) {
+    let serviceUrl = this.appResourcesUrl
+      + "cotizadorRestController/generarCotizacion";
+    let wrapper = { entidad: tbCotizacion }
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
 
-  findByIdCliente(idCotizador: string) {
-    let serviceUrl = this.appResourcesUrl+ "cotizadorRestController/cotizadorByCliente";
-    this.params = this.params.set('idCotizador', idCotizador);
+
+  caducarCotizacion(tbCotizacion) {
+    let serviceUrl = this.appResourcesUrl
+      + "cotizadorRestController/caducarCotizacion";
+    let wrapper = { entidad: tbCotizacion }
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+ 
+
+  findByIdCliente(cedulaCliente: string) {
+    let serviceUrl = this.appResourcesUrl + "cotizadorRestController/cotizadorByCliente";
+    this.params = this.params.set('cedulaCliente', cedulaCliente);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
@@ -96,20 +114,63 @@ export class CotizacionService extends BaseService {
 
 
 
-  guardarVariableCrediticia(tbQoVariableCrediticia) {
+  /**
+   * Metodo qu registraa la info,acion de cliente, cotizacion y variable crediticia,
+   * adicional cadcua cotizaciones
+   */
+  crearCotizacionClienteVariableCrediticia(cotizador:TbCotizacion) {
+    let serviceUrl = this.appResourcesUrl + "cotizadorRestController/crearCotizacionClienteVariableCrediticia";
+    let wrapper = { entidad: cotizador }
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  
+
+
+  crearVariableCrediticia(tbCotizacion) {
     let serviceUrl = this.appResourcesUrl
-      + "variableCrediticiaRestController/persistEntity";
-    let wrapper = { entidad: tbQoVariableCrediticia }
+      + "variableCrediticiaRestController/crearVariableCrediticia";
+    let wrapper = { entidad: tbCotizacion }
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
 
   guardarPrecioOro(tbQoPrecioOro) {
-    let serviceUrl = this.appResourcesUrl
-      + "precioOroRestController/persistEntity";
-    let wrapper = { entidad: tbQoPrecioOro }
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/crearPrecioOro";
+    let wrapper = { entidad: tbQoPrecioOro };
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
+  }
+
+  editarPrecioOro(tbQoPrecioOro) {
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/persistEntity";
+    let wrapper = { entidad: tbQoPrecioOro };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  seleccionarPrecioOro(idPrecioOro) {
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/getEntity";
+    this.params= new HttpParams();
+    this.params=this.params.set("id", idPrecioOro);
+    this.options = { headers: this.headers, params: this.params};
+    return this.http.get(serviceUrl, this.options);
+  }
+
+  loadPrecioOroByCotizacion(idCotizacion){
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/detalleCotizacionById";
+    this.params= new HttpParams();
+    this.params=this.params.set("id", idCotizacion);
+    this.options = { headers: this.headers, params: this.params};
+    return this.http.get(serviceUrl, this.options);        
+  }
+
+
+  eliminarPrecioOro(idPrecioOro) {
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/removeEntity";
+    this.params= new HttpParams();
+    this.params=this.params.set("id", idPrecioOro);
+    this.options = { headers: this.headers, params: this.params};
+    return this.http.get(serviceUrl, this.options);
   }
 
 
@@ -121,6 +182,7 @@ export class CotizacionService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
+
 
 
 
