@@ -17,7 +17,7 @@ import { CargaFamiliarEnum } from '../../../../../core/enum/CargaFamiliarEnum';
 import { RelacionDependenciaEnum } from '../../../../../core/enum/RelacionDependenciaEnum';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TbQoPatrimonioCliente } from '../../../../../core/model/quski/TbQoPatrimonioCliente';
 import { CatalogoService } from '../../../../../core/services/quski/catalogo.service';
 import { ReFileUploadService } from '../../../../../core/services/re-file-upload.service';
@@ -218,10 +218,10 @@ export class GestionClienteComponent implements OnInit {
   // FORM DE REFERENCIAS PERSONALES
   public telefonoMovilR = new FormControl('',[Validators.minLength(10), Validators.maxLength(10)]);
   public telefonoFijoR = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
-  public nombresCompletosR = new FormControl('', [Validators.maxLength(50)]);
+  public nombresCompletosR = new FormControl('', [Validators.minLength(3),Validators.maxLength(50)]);
   public formDatosReferenciasPersonales: FormGroup = new FormGroup({});
-  public parentescoR = new FormControl('', [Validators.maxLength(50)]);
-  public direccionR = new FormControl('', [Validators.maxLength(50)]);
+  public parentescoR = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
+  public direccionR = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
   //GLOBAL DATASOURCE
   public  element;
   //VARIABLES DE CALCULO INGRESO, EGRESO Y PATRIMONIO
@@ -254,6 +254,7 @@ export class GestionClienteComponent implements OnInit {
     private sinNoticeService: ReNoticeService,
     private sp: ParametroService,
     private route: ActivatedRoute,
+    private router: Router,
     private subheaderService: SubheaderService,
     private dh: DocumentoHabilitanteService,
     private pr: ParroquiaService,
@@ -345,6 +346,8 @@ export class GestionClienteComponent implements OnInit {
     //SET VALORES POR DEFECTO DE CHECKS
     this.drLgDo.setValue(true);
     this.drCrDo.setValue(true);
+    this.drLgLb.setValue(false);
+    this.drCrLb.setValue(false);
     //TRACKING
     this.tr.getSystemDate().subscribe( (hora: any) =>{
       if(hora.entidad){
@@ -1606,9 +1609,10 @@ export class GestionClienteComponent implements OnInit {
                     }
                     this.cliente.actividadEconomica = this.actividadEconomica.value;
                     this.cliente.actividadEconomicaEmpresa = this.actividadEconomicaEmpresa.value;
-                    this.cliente.apellidoMaterno = this.apellidoMaterno.value.toUpperCase();
+                    if (this.apellidoMaterno.value) {
+                      this.cliente.apellidoMaterno = this.apellidoMaterno.value.toUpperCase();
+                    }
                     this.cliente.apellidoPaterno = this.apellidoPaterno.value.toUpperCase();
-                    console.log('canalito ----> '+ this.canalContacto.value );
                     this.cliente.canalContacto = this.canalContacto.value.toUpperCase();
                     this.cliente.cargasFamiliares = this.cargaFamiliar.value;
                     this.cliente.cargo = this.cargo.value.toUpperCase();
@@ -1626,9 +1630,16 @@ export class GestionClienteComponent implements OnInit {
                     this.cliente.origenIngreso = this.origenIngresos.value.toUpperCase();
                     this.cliente.primerNombre = this.primerNombre.value.toUpperCase();
                     this.cliente.profesion = this.profesion.value.toUpperCase();
-                    this.cliente.relacionDependencia = this.relacionDependencia.value.toUpperCase();
-                    this.cliente.segundoNombre = this.segundoNombre.value.toUpperCase();
-                    this.cliente.separacionBienes = this.separacionBienes.value.toUpperCase();
+                    if(this.relacionDependencia.value){
+                      this.cliente.relacionDependencia = this.relacionDependencia.value.toUpperCase();
+                    }
+                    if(this.segundoNombre.value){
+                      this.cliente.segundoNombre = this.segundoNombre.value.toUpperCase();
+                    }
+                    if(this.separacionBienes.value){
+                      this.cliente.separacionBienes = this.separacionBienes.value.toUpperCase();
+                    }
+
                     this.cliente.telefonoAdicional = this.telefonoAdicional.value;
                     this.cliente.telefonoFijo = this.telefonoFijo.value;
                     this.cliente.telefonoMovil = this.telefonoMovil.value;
@@ -1729,6 +1740,7 @@ export class GestionClienteComponent implements OnInit {
                                 this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE", 'error');
                               }                              
                             }
+                            this.router.navigate(['../../credito-nuevo/generar-credito', this.id]);
                           });
                       }
                     }, error =>{
@@ -1794,17 +1806,16 @@ export class GestionClienteComponent implements OnInit {
                     ){
 
     let tracking : TbQoTracking = new TbQoTracking();
-    tracking.actividad = ActividadEnum.NEGOCIACION.toString();
+    tracking.actividad = ActividadEnum.NEGOCIACION.toString(); // Modulo en ProducBacklog
     tracking.proceso = ProcesoEnum.DATOS_CLIENTE;                
-      tracking.observacion = observacion.toString();
+      tracking.observacion = observacion.toString(); // Actividad en Produc Backlog
       tracking.codigoRegistro = codigoRegistro;
       tracking.situacion = situacion.toString();
       tracking.usuario = usuario.toString();
-      tracking.fechaInicio = fechaInicio
-      tracking.fechaAsignacion = fechaAsignacion
-      tracking.fechaInicioAtencion = fechaInicioAtencion
-      tracking.fechaFin = fechaFin
-      tracking.totalTiempo = null
+      tracking.fechaInicio = fechaInicio;
+      tracking.fechaAsignacion = fechaAsignacion;
+      tracking.fechaInicioAtencion = fechaInicioAtencion;
+      tracking.fechaFin = fechaFin;
       this.tr.guardarTracking(tracking).subscribe((data:any) =>{
         if (data.entidad) {
           if (observacion == TareaTrackingEnum.REGISTRO_DE_INFORMACION_DEL_CLIENTE) {

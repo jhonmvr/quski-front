@@ -13,6 +13,7 @@ export class DialogCargarHabilitanteComponent implements OnInit {
   private idRef
   private title :string = "HABILITANTES DEL CLIENTE";
   private useType : string = "FORM";
+  private estOperacion : string = "DISPONIBLE"
 
 
   constructor( @Inject(MAT_DIALOG_DATA) private data: string ) { }
