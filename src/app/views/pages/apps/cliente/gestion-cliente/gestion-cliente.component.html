@@ -21,7 +21,7 @@
       <mat-step label="Datos Personales Del Cliente" [stepControl]="formCliente">
         <form [formGroup]="formCliente">
           <div class="row mb-5">
-            <div  class="offset-md-3 col-md-4" >
+            <div  class="col-md-4" >
               <button mat-button (click)=" cargarComponenteHabilitante()">
                 Documentos Habilitantes
               </button>
@@ -685,7 +685,12 @@
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input  matInput placeholder="Parentesco:" [formControl]="parentescoR" required/>
+                <mat-select placeholder="Parentesco:" [formControl]="parentescoR"  required>
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let referencia of listReferencia" [value]="referencia">
+                    {{ referencia }}
+                  </mat-option>
+                </mat-select>
                 <mat-error>{{ getErrorMessage("parentescoR") }}</mat-error>
               </mat-form-field>
             </div>

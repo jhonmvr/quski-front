@@ -46,6 +46,7 @@ import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackin
 import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
 import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
+import { ReferenciaParentescoEnum } from '../../../../../core/enum/ReferenciaParentescoEnum';
 
 export interface User {
   name: string;
@@ -119,6 +120,7 @@ export class GestionClienteComponent implements OnInit {
   public horaFinal6       : any;
   public horaAsignacion3  : any;
   // ENUMS
+  public listReferencia          = Object.values(ReferenciaParentescoEnum);   
   public listRelacionDependencia = Object.keys(RelacionDependenciaEnum);
   public listSeparacionBienes    = Object.values(SeparacionBienesEnum);
   public listTipoVivienda        = Object.keys(OcupacionInmuebleEnum);
@@ -606,7 +608,7 @@ export class GestionClienteComponent implements OnInit {
         if( error.error.codError ){
           this.sinNoticeService.setNotice(error.error.codError + ' - ' + error.error.msgError  , 'error');
         } else {
-          this.sinNoticeService.setNotice("Error al cargar parametros de Canal de contacto"  , 'error');
+          this.sinNoticeService.setNotice("ERROR AL CARGAR LOS CANALES DE CONTACTO"  , 'error');
         }
 			} else if(  error.statusText && error.status==401 ){
 				this.dialog.open(AuthDialogComponent, {
@@ -872,73 +874,11 @@ export class GestionClienteComponent implements OnInit {
       const input = this.origenIngresos;
       return input.hasError('required') ? errorRequerido : '';
     }
-    //Datos referencias personales
-    /* if (pfield && pfield === 'nombresCompletosR') {
-      const input = this.nombresCompletosR;
-      return input.hasError('required') ? errorRequerido : '';
-    }
-    if (pfield && pfield === 'parentescoR') {
-      const input = this.parentescoR;
-      return input.hasError('required') ? errorRequerido : '';
-    }
-    if (pfield && pfield === 'direccionR') {
-      const input = this.direccionR;
-      return input.hasError('required') ? errorRequerido : '';
-    }
-    if (pfield && pfield === 'telefonoMovilR') {
-      const input = this.telefonoMovilR;
-      return input.hasError('pattern')
-        ? errorNumero
-        : input.hasError('maxlength')
-          ? errorLogitudExedida
-          : input.hasError('minlength')
-            ? errorInsuficiente
-            : '';
-    }
-    if (pfield && pfield === 'telefonoFijoR') {
-      const input = this.telefonoFijoR;
-      return input.hasError('pattern')
-        ? errorNumero
-        : input.hasError('maxlength')
-          ? errorLogitudExedida
-          : input.hasError('minlength')
-            ? errorInsuficiente
-            : '';
-    } */
   }
-  /* descargarPlantillaHabilitante() {
-    
-    this.dh.downloadAutorizacionPlantilla(1, "PDF", this.nombresCompletos.value, this.identificacion.value).subscribe(
-      (data: any) => {
-        if (data) {
-          saveAs(data, "Documento Habilitante" + ".pdf");
-          this.tr.getSystemDate().subscribe( (hora: any) =>{
-            if(hora.entidad){
-              //console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-              this.horaAsignacion3 = hora.entidad
-            }
-          });
-        } else {
-          this.sinNoticeService.setNotice(
-            "NO SE ENCONTRO REGISTRO PARA DESCARGA",
-            "error"
-          );
-        }
-      },
-      error => {
-        //console.log("================>error: " + JSON.stringify(error));
-        this.sinNoticeService.setNotice(
-          "ERROR DESCARGA DE PLANTILLA HABILITANTE",
-          "error"
-        );
-      }
-    );
-  } */
   cargarComponenteHabilitante() {
     if (this.id != null && this.id != "") {
       this.tr.getSystemDate().subscribe( (hora: any) =>{
         if(hora.entidad){
-          ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
           this.horaInicio3 = hora.entidad;
         }
       });
@@ -949,7 +889,6 @@ export class GestionClienteComponent implements OnInit {
         data: idReferenciaHab
       });
       dialogRef.afterClosed().subscribe(r => {
-        //console.log("===>>ertorno al cierre: " + JSON.stringify(r));
         if (r) {
           this.tr.getSystemDate().subscribe( (hora: any) =>{
             if(hora.entidad){
@@ -1277,11 +1216,16 @@ export class GestionClienteComponent implements OnInit {
         } else{
           if (element.esIngreso == false && element.esEgreso){
             this.totalValorIngresoEgreso = Number(this.totalValorIngresoEgreso) - Number(element.valor);
+            
           } else {
-            this.sinNoticeService.setNotice("Error de desarrollo", 'error');
+            this.sinNoticeService.setNotice("ERROR DE DESARROLLO", 'error');
           }
         }
+
       });
+      if (this.totalValorIngresoEgreso >= 5000){
+        this.sinNoticeService.setNotice("INGRESO NETO SOBREPASA LOS $5000", 'error');
+      }
     }
   }
   /**
@@ -1331,7 +1275,7 @@ export class GestionClienteComponent implements OnInit {
       if (element.esIngreso == false && element.esEgreso){
         this.valorEgreso.setValue(element.valor);
       } else {
-        this.sinNoticeService.setNotice("Error de desarrollo", 'error');
+        this.sinNoticeService.setNotice("ERROR DE DESARROLLO", 'error');
       }
     }
   }
@@ -1397,7 +1341,6 @@ export class GestionClienteComponent implements OnInit {
         this.horaInicio6 = hora.entidad;
       }
     });
-    this.sinNoticeService.setNotice(null);
     this.referencia = new TbReferencia;
     if (this.formDatosReferenciasPersonales.valid) {
       if (this.nombresCompletosR.value != null && this.nombresCompletosR.value != "") {

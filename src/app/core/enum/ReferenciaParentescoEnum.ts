@@ -1,0 +1,19 @@
+export enum ReferenciaParentescoEnum{
+    ABUELO = "ABUELO(A)",
+    AMIGO = "AMIGO(A)",
+    BISABUELO = "BISABUELO(A)",
+    BISNIETO = "BISNIETO(A)",
+    CONCUÑADO = "CONCUÑADO(A)",
+    CONYUGE = "CONYUGE",
+    CUÑADO = "CUÑADO(A)",
+    FAMILIAR = "FAMILIAR",
+    HERMANO = "HERMANO(A)",
+    HIJO = "HIJO(A)",
+    MADRE = "MADRE",
+    PADRE  = "PADRE",
+    PARIENTE  = "PARIENTE",
+    PRIMO = "PRIMO(A)",
+    SOBRINO = "SOBRINO(A)",
+    SUEGRO = "SUEGRO(A)",
+    TIO = "TIO(A)"
+}
