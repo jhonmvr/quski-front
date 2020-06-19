@@ -252,7 +252,7 @@
             </div>
 
 
-            <mat-table #table class="mat-elevation-z8" *ngIf="preciosOroAsyn | async" [dataSource]="dataSourceI">
+            <mat-table #table class="mat-elevation-z8" *ngIf="preciosOroAsyn | async" [dataSource]="dataSourcePrecioOro">
 
               <ng-container matColumnDef="accion">
                 <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>

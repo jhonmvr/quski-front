@@ -28,9 +28,7 @@ import { DatePipe } from '@angular/common';
 import { TbQoVariablesCrediticias } from '../../../../../core/model/quski/TbQoVariablesCrediticias';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
-
-
-
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 export interface User {
   name: string;
 }
@@ -43,7 +41,7 @@ export class ListCotizarComponent implements OnInit {
   //CREACION DEL STEPPER
   @ViewChild('stepper', { static: true })
   public stepper: MatStepper;
-  // STREPPER
+  // STREPPER FUNCIONALIDAD PARA QUE SEA DE UNO EN UNO 
   isLinear = false;
   //STANDARD VARIABLES
   public loading;
@@ -109,7 +107,6 @@ export class ListCotizarComponent implements OnInit {
   public precioOroLocal;
   public opciones: string[] = ['Si', 'No'];
   public seleccion: string;
-
   public primerNombre = '';
   public segundoNombre = '';
   public primerApellido = '';
@@ -122,7 +119,7 @@ export class ListCotizarComponent implements OnInit {
   apellidoCliente = new FormControl('', []);
   //OPCIONES PRECIO ORO
   precioEstimado = new FormControl('', []);
-
+  //OBSERVABLE PARA LA TABLA DE PRECIO ORO
   preciosOroAsyn;
   preciosOrodSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -140,14 +137,14 @@ export class ListCotizarComponent implements OnInit {
   costoResguardo = new FormControl('', []);
   costoEstimado = new FormControl('', []);
   valorCuota = new FormControl('', []);
-  //VISUALIZACION DE LAS COLUMNAS
+  //VISUALIZACION DE LAS COLUMNAS DE LAS TABLAS 
   displayedColumnsVarCredi = ['orden', 'variable', 'valor'];
   displayedColumnsPrecioOro = ['accion', 'N', 'tipoOro', 'precio', 'pesoNetoEstimado'];
   displayedColumnsCreditoNegociacion = ['plazo', 'montoPreAprobado', 'aRecibir', 'totalCostosOperacion', 'costoCustodia', 'costoTransporte', 'costoSeguro', 'costoResguardo', 'costoEstimado', 'valorCuota'];
   /**Obligatorio paginacion */
   p = new Page();
   //DATASOURCE
-  dataSourceI = new MatTableDataSource<any>();
+  //dataSourceI = new MatTableDataSource<any>();
   dataSourceVarCredi: MatTableDataSource<TbQoVariableCrediticia> = new MatTableDataSource<TbQoVariableCrediticia>();
   dataSourcePrecioOro: MatTableDataSource<TbQoPrecioOro> = new MatTableDataSource<TbQoPrecioOro>();
   dataSourceCredito: MatTableDataSource<TbQoCreditoNegociacion> = new MatTableDataSource<TbQoCreditoNegociacion>();
@@ -187,7 +184,7 @@ export class ListCotizarComponent implements OnInit {
     public titulo: TituloContratoService,
     private os: OroService,
     private js: JoyaService,
-
+    private tr: TrackingService,
     private sinNoticeService: ReNoticeService,
     private subheaderService: SubheaderService,
     private clienteService: ClienteService,
@@ -475,10 +472,9 @@ export class ListCotizarComponent implements OnInit {
     this.loadingSubject.next(true);
     console.log("INICIA BUSQUEDA EN CRM")
     this.clienteService.findClienteByCedulaCRM(this.identificacion.value).subscribe((data: any) => {
-      if (data && data.list) {
+        if (data && data.list) {
         //seteo valores en la vista 
         this.nombresCompletos.setValue(data.list[0].firstName);
-        console.log("Nombres completos CRM", data.list[0].firstName)
         this.movil.setValue(data.list[0].phoneMobile);
         this.telefonoDomicilio.setValue(data.list[0].phoneHome);
         this.correoElectronico.setValue(data.list[0].emailAddress);
@@ -489,13 +485,21 @@ export class ListCotizarComponent implements OnInit {
         this.cliente.telefonoFijo = data.list[0].phoneHome;
         this.cliente.telefonoMovil = data.list[0].phoneMobile;
         this.cliente.estado = EstadoQuskiEnum.ACT;
-
         //llamo al metodo de equifax
         this.llamarEquifax();
       } else {
         this.sinNoticeService.setNotice("USUARIO NO REGISTRADO ", 'error');
         //Llamo al popUp
         this.solicitarAutorizacion();
+      }
+    }, error => {
+      console.log("NO EXISTE EL USUARIO EN CRM BUSCA EN EQUIFAX");
+      this.loadingSubject.next(false);
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice("EL CLIENTE NO SE ENCUENTRA EN CRM", 'warning');
       }
     });
   }
@@ -588,6 +592,7 @@ export class ListCotizarComponent implements OnInit {
 
   /**POP UP SOLICITUD EQUIFAX */
   solicitarAutorizacion() {
+    this.loadingSubject.next(false);
 
     console.log(">>>INGRESA AL DIALOGO ><<<<<<");
     const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
@@ -599,6 +604,7 @@ export class ListCotizarComponent implements OnInit {
     });
 
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
+      this.loadingSubject.next(true);
       console.log("envio de RESP " + respuesta + " typeof respuesta " + typeof (respuesta));
 
       //
@@ -608,6 +614,7 @@ export class ListCotizarComponent implements OnInit {
       } else {
         console.log("envio de ELSE " + respuesta);
         this.sinNoticeService.setNotice("ACCIÓN CANCELADA ", 'error');
+        this.loadingSubject.next(false);
         this.limpiarCampos();
 
 
@@ -648,13 +655,12 @@ export class ListCotizarComponent implements OnInit {
 
 
   }
-
   /**ACCION DE BOTONES */
   /**
    * Metodo que realiza la accion del boton GUARDAR 
    */
   submit() {
-    this.loadingSubject.next(false);
+    this.loadingSubject.next(true);
     const cedula = this.identificacion.value;
     /**
      * Valores que tomo de la vista
@@ -911,12 +917,13 @@ export class ListCotizarComponent implements OnInit {
   nuevoPrecioOro() {
     this.sinNoticeService.setNotice(null);
     if (this.formPrecioOro.valid) {
-      this.disableSimulaSubject.next(true);
+      //TODO: COMENTO FUNCIONAMIENTO this.disableSimulaSubject.next(true);
       this.totalPeso = 0;
       this.totalPrecio = 0;
       if (this.precioOroLocal && this.precioOroLocal.id) {
         this.precioOro.id = this.precioOroLocal.id;
-        this.dataSourceI = null;
+        this.dataSourcePrecioOro = null;
+        // this.dataSourceI = null;
       }
 
 
@@ -1026,9 +1033,10 @@ export class ListCotizarComponent implements OnInit {
   calcular() {
     this.totalPeso = 0;
     this.totalPrecio = 0;
-    if (this.dataSourceI.data) {
-      console.log("<<<<<<<<<<Data source >>>>>>>>>> " + JSON.stringify(this.dataSourceI.data));
-      this.dataSourceI.data.forEach(element => {
+
+    if (this.dataSourcePrecioOro.data) {
+      console.log("<<<<<<<<<<Data source >>>>>>>>>> " + JSON.stringify(this.dataSourcePrecioOro.data));
+      this.dataSourcePrecioOro.data.forEach(element => {
         this.totalPeso = Number(this.totalPeso) + Number(element.pesoNetoEstimado);
         this.totalPrecio = Number(this.totalPrecio) + Number(element.precio);
       });
@@ -1071,7 +1079,7 @@ export class ListCotizarComponent implements OnInit {
             this.cs.loadPrecioOroByCotizacion(this.cotizacion.id).subscribe((pos: any) => {
               console.log("VALORES LISTA " + JSON.stringify(pos.list));
               console.log("******data GUARDAR PRECIO ORO****" + JSON.stringify(data));
-              this.dataSourceI = new MatTableDataSource(pos.list);
+              this.dataSourcePrecioOro = new MatTableDataSource(pos.list);
               this.preciosOrodSubject.next(true);
               this.sinNoticeService.setNotice("SE GUARDO EL PRECIO ORO", 'success');
             });
@@ -1085,7 +1093,7 @@ export class ListCotizarComponent implements OnInit {
       }
 
       this.limpiarCamposPrecioOro();
-      this.dataSourceI = null;
+      this.dataSourcePrecioOro = null;
     } else {
       this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'warning');
     }
@@ -1096,21 +1104,24 @@ export class ListCotizarComponent implements OnInit {
    */
   eliminarPrecioOro(id) {
     console.log("INGRESA A ELIMINTAR" + id);
-    this.disableSimulaSubject.next(true);
+    this.disableSimulaSubject.next(false);
+    this.preciosOrodSubject.next(true);
     this.cs.eliminarPrecioOro(id).subscribe((data: any) => {
       console.log("eliminarPrecioOro ELMINAR" + JSON.stringify(data));
-      this.sinNoticeService.setNotice("SE ELIMINO EL PRECIO DE ORO SELECCIONADO", 'success');
       this.cs.findByIdCotizacion(this.cotizacion.id).subscribe((pos: any) => {
+        this.sinNoticeService.setNotice("SE ELIMINO EL PRECIO DE ORO SELECCIONADO", 'success');
         console.log("findByIdCotizacion" + JSON.stringify(pos));
-        this.dataSourceI = new MatTableDataSource(pos.list);
+        this.dataSourcePrecioOro = new MatTableDataSource(pos.list);
       }, error => {
 
         console.log("NO HAY REGISTROS ");
-        this.disableSimulaSubject.next(false);
+        this.disableSimulaSubject.next(true);
+        this.preciosOrodSubject.next(false);
       });
     }, error => {
       console.log("NO HAY REGISTROS ");
-      this.disableSimulaSubject.next(false);
+      this.disableSimulaSubject.next(true);
+      this.preciosOrodSubject.next(false);
     });
   }
   /**
