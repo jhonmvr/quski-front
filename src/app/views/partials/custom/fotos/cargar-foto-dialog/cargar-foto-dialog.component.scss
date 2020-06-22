@@ -1,0 +1,172 @@
+ 
+.example-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    min-width: 300px;
+    position: relative;
+  }
+  .material-icons {
+    font-size: 31px !important;
+    height: 31px;
+    width: 34px;
+    color: gray;
+    text-align: center;
+  }
+  .mat-button .mat-button-wrapper > *,
+  .mat-fab .mat-button-wrapper > *,
+  .mat-flat-button .mat-button-wrapper > *,
+  .mat-icon-button .mat-button-wrapper > *,
+  .mat-mini-fab .mat-button-wrapper > *,
+  .mat-raised-button .mat-button-wrapper > *,
+  .mat-stroked-button .mat-button-wrapper > * {
+    vertical-align: baseline;
+  }
+  .mat-button,
+  .mat-flat-button,
+  .mat-icon-button,
+  .mat-stroked-button {
+    min-width: 28px;
+    height: fit-content;
+  }
+  example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+  
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .example-header {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    font-size: 20px;
+  }
+  
+  .example-table {
+    overflow: auto;
+    min-height: 300px;
+  }
+  
+  .mat-table-sticky {
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  
+  
+  .mat-footer-row {
+    font-weight: bold;
+    justify-content: start;
+  }
+  
+  
+  .mat-column-Accion {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+  
+  
+  .mat-column-Activo {
+    flex: 0 0 150px;
+    justify-content: start;
+  }
+  
+  
+  .mat-column-Avaluo {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+  
+  .mat-column-Pasivo {
+    flex: 0 0 150px;
+    justify-content: start;
+  }
+  .mat-column-Ifis {
+    flex: 0 0 150px;
+    justify-content: start;
+  }
+  .mat-column-Infocorp {
+    flex: 0 0 150px;
+    justify-content: start;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  .example-card {
+    max-width: 400px;
+  }
+  
+  .example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+  }
+  
+  .mat-column-primerNombre {
+    flex: 0 0 200px;
+    justify-content: start;
+  }
+  
+  .mat-column-Parentesco {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+  .mat-column-Direccion {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+  
+  
+  .mat-column-TelefonoMovil {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+    
+  .mat-column-TelefonoFijo {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+  
+  .white-icon {
+    color: white;
+  }
+  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  .white-icon svg {
+      fill: white;
+  }
+  
+  .blue-icon {
+    color:#3399ff;
+  }
+  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  .blue-icon svg {
+      fill: #3399ff;
+  }
+  
+  .orange-icon {
+    color:#ff9900;
+  }
+  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  .orange-icon svg {
+      fill: #ff9900;
+  }
+  
+  .green-icon {
+    color:#00cc00;
+  }
+  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  .green-icon svg {
+      fill: #00cc00;
+  }
+  
