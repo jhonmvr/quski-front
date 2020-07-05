@@ -61,9 +61,9 @@ export class ClienteService extends BaseService {
     return this.http.get(serviceUrl, this.options);
   }
 
-  public findClienteByIdentificacion(identificacion: string) {
+  public findClienteByIdentificacion(identificacion: string) { 
     const serviceUrl =
-      this.appResourcesUrl + 'clienteRestController/clienteByIdentificacion';
+      this.appResourcesUrl + 'clienteRestController/findclienteByIdentificacion';
     this.params = new HttpParams().set('identificacion', identificacion);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
@@ -72,7 +72,7 @@ export class ClienteService extends BaseService {
     const serviceUrl =
       this.appResourcesUrl + 'contratoRestController/validateContratoByIdCliente';
     this.params = new HttpParams().set('idCliente', idCliente);
-    this.options = { headers: this.headers, params: this.params };
+    this.options = { headers: this.headers, params: this.params }; 
     return this.http.get(serviceUrl, this.options);
   }
   public clienteByIdentificacionList(p: Page, identificacion: string) {
