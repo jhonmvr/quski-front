@@ -50,7 +50,6 @@ export class CotizacionService extends BaseService {
     return this.http.post(serviceUrl, wrapper, this.options);
   }
 
-
   caducarCotizacion(tbCotizacion) {
     let serviceUrl = this.appResourcesUrl
       + "cotizadorRestController/caducarCotizacion";
@@ -58,7 +57,16 @@ export class CotizacionService extends BaseService {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
- 
+ /**
+ * Método que devuelve la lista de cotizaciones 
+ * @param cedulaCliente Envia la cedula del cliente
+ */
+getCotizacionByCedula(cedulaCliente: string) {
+  let serviceUrl = this.appResourcesUrl + 'cotizadorRestController/getCotizacionWrapper';
+  this.params = this.params.set('cedulaCliente', cedulaCliente);
+  this.options = { headers: this.headers, params: this.params };
+  return this.http.get(serviceUrl, this.options);
+} 
 
   findByIdCliente(cedulaCliente: string) {
     let serviceUrl = this.appResourcesUrl + "cotizadorRestController/cotizadorByCliente";
@@ -69,7 +77,7 @@ export class CotizacionService extends BaseService {
 
 
 
-  findByIdCotizacion(id: string) {
+  findByIdCotizacion(id: string) { 
     let serviceUrl = this.appResourcesUrl
       + "precioOroRestController/detalleCotizacionById";
 
