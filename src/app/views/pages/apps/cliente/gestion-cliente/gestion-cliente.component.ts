@@ -41,12 +41,22 @@ import { element } from 'protractor';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
-import { TareaTrackingEnum } from '../../../../../core/enum/TareaTrackingEnum';
 import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
 import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
 import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
 import { ReferenciaParentescoEnum } from '../../../../../core/enum/ReferenciaParentescoEnum';
+import { CloudstudioService } from '../../../../../core/services/quski/cloudstudio.service';
+import { ConsultaCliente } from '../../../../../core/model/cloudstudio/ConsultaCliente';
+import { CrearCliente } from '../../../../../core/model/cloudstudio/CrearCliente';
+import { ActividadEconomicaCliente } from '../../../../../core/model/cloudstudio/ActividadEconomicaCliente';
+import { ContactosCliente } from '../../../../../core/model/cloudstudio/ContactosCliente';
+import { CuentasBancariasCliente } from '../../../../../core/model/cloudstudio/CuentasBancariasCliente';
+import { TelefonoCliente } from '../../../../../core/model/cloudstudio/TelefonoCliente';
+import { EditarCliente } from '../../../../../core/model/cloudstudio/EditarCliente';
+import { TablaAmortizacion } from '../../../../../core/model/cloudstudio/TablaAmortizacion';
+import { SimulacionPrecancelacion } from '../../../../../core/model/cloudstudio/SimulacionPrecancelacion';
+import { TablaPresuntivaDatos } from '../../../../../core/model/cloudstudio/TablaPresuntivaDatos';
 
 export interface User {
   name: string;
@@ -102,23 +112,11 @@ export class GestionClienteComponent implements OnInit {
   disableConsultar;
   disableConsultarSubject = new BehaviorSubject<boolean>(true);
   // VARIABLES DE TRACKING
-  public horaInicio1      : any;
-  public horaInicio2      : any;
-  public horaInicio3      : any;
-  public horaInicio4E     : any;
-  public horaInicio4I     : any;
-  public horaInicio5A     : any;
-  public horaInicio5P     : any;
-  public horaInicio6      : any;
-  public horaFinal1       : any;
-  public horaFinal2       : any;
-  public horaFinal3       : any;
-  public horaFinal4I      : any;
-  public horaFinal4E      : any;
-  public horaFinal5P      : any;  
-  public horaFinal5A      : any;
-  public horaFinal6       : any;
-  public horaAsignacion3  : any;
+  public horaInicio      : any;
+  public horaAsignacion  : any;
+  public horaAtencion    : any;
+  public horaFinal       : any;
+
   // ENUMS
   public listReferencia          = Object.values(ReferenciaParentescoEnum);   
   public listRelacionDependencia = Object.keys(RelacionDependenciaEnum);
@@ -250,6 +248,7 @@ export class GestionClienteComponent implements OnInit {
    * @param tr 
    */
   constructor(
+    private css : CloudstudioService,
     private cas: CatalogoService,
     private cs: ClienteService,
     public dialog: MatDialog,
@@ -345,6 +344,7 @@ export class GestionClienteComponent implements OnInit {
   ngOnInit() {
     this.habilitarBtActualizar  = false;
     this.disableConsultar = this.disableConsultarSubject.asObservable();
+    this.implementacionServiciosCloudstudioTEST();
     //SET VALORES POR DEFECTO DE CHECKS
     this.drLgDo.setValue(true);
     this.drCrDo.setValue(true);
@@ -354,7 +354,7 @@ export class GestionClienteComponent implements OnInit {
     this.tr.getSystemDate().subscribe( (hora: any) =>{
       if(hora.entidad){
         //console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-        this.horaInicio1 = hora.entidad
+        this.horaInicio = hora.entidad
       }
     });
     // BUSQUEDA DE CLIENTE POR NEGOCIACION
@@ -380,7 +380,8 @@ export class GestionClienteComponent implements OnInit {
               this.tr.getSystemDate().subscribe( (hora: any) =>{
                 if(hora.entidad){
                   ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-                  this.horaInicio2 = hora.entidad
+                  this.horaAsignacion = hora.entidad;
+                  this.horaAtencion = hora.entidad;
                 }
               });
             this.id = data.entidad.tbQoCliente.cedulaCliente;
@@ -458,24 +459,11 @@ export class GestionClienteComponent implements OnInit {
                         this.tr.getSystemDate().subscribe( (hora: any) =>{
                           if(hora.entidad){
                             ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-                            this.horaFinal2 = hora.entidad
-                            if (this.horaInicio2 != null && this.horaFinal2 != null ) {
-                              this.registrarTracking(
-                                TareaTrackingEnum.PRESENTAR_DATOS_DE_CLIENTE_EXISTENTE,
-                                this.id,
-                                SituacionTrackingEnum.FINALIZADO,
-                                UsuarioEnum.QUSKI_ORO,
-                                this.horaInicio2,
-                                this.horaInicio2,
-                                this.horaInicio2,
-                                this.horaFinal2
-                              );
-                            } else {
-                              this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE", 'error');
-                            }
+                            this.horaAsignacion = hora.entidad;
+                            this.horaAtencion = hora.entidad;
+
                           }
                         });
-
                         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
                         this.loadingSubject.next(false);
                       } else{
@@ -520,9 +508,24 @@ export class GestionClienteComponent implements OnInit {
                 this.sinNoticeService.setNotice("ERROR AL CARGAR", 'error');
               }
             });
+          } else {
+            this.tr.getSystemDate().subscribe( (hora: any) =>{
+              if(hora.entidad){
+                ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
+                this.horaAsignacion = hora.entidad;
+                this.horaAtencion = hora.entidad;
+              }
+            });
           }
-        }
-        );
+        });
+      } else {
+        this.tr.getSystemDate().subscribe( (hora: any) =>{
+          if(hora.entidad){
+            ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
+            this.horaAsignacion = hora.entidad;
+            this.horaAtencion = hora.entidad;
+          }
+        });
       }
     });
   }
@@ -877,11 +880,6 @@ export class GestionClienteComponent implements OnInit {
   }
   cargarComponenteHabilitante() {
     if (this.id != null && this.id != "") {
-      this.tr.getSystemDate().subscribe( (hora: any) =>{
-        if(hora.entidad){
-          this.horaInicio3 = hora.entidad;
-        }
-      });
       let idReferenciaHab = this.id;
       const dialogRef = this.dialog.open(DialogCargarHabilitanteComponent, {
         width: "auto-max",
@@ -890,25 +888,6 @@ export class GestionClienteComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if (r) {
-          this.tr.getSystemDate().subscribe( (hora: any) =>{
-            if(hora.entidad){
-              this.horaFinal3 = hora.entidad;
-              if (this.horaInicio3 != null && this.horaAsignacion3 != null&& this.horaFinal3 != null ) {
-                this.registrarTracking(
-                  TareaTrackingEnum.REGISTRO_DE_DOCUMENTOS_DEL_CLIENTE,
-                  this.id,
-                  SituacionTrackingEnum.FINALIZADO,
-                  UsuarioEnum.BPM,
-                  this.horaInicio3,
-                  this.horaAsignacion3,
-                  this.horaAsignacion3,
-                  this.horaFinal3
-                );
-              } else {
-                this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE", 'error');
-              }
-            }
-          });
           console.log("Data de subscribe ---> " + r);
         }
       });
@@ -955,12 +934,6 @@ export class GestionClienteComponent implements OnInit {
    * @description FUNCION EN BOTON QUE AGREGA UN NUEVO ACTIVO A LA TABLA DE PATRIMONIO ACTIVOS
    */
   nuevoActivo() {
-    this.tr.getSystemDate().subscribe( (hora: any) =>{
-      if(hora.entidad){
-        ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-        this.horaInicio5A = hora.entidad;
-      }
-    });
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
     this.patrimonioCliente = new TbQoPatrimonioCliente;
@@ -977,26 +950,6 @@ export class GestionClienteComponent implements OnInit {
         const data = this.dataSourcePatrimonioActivo.data;
         data.push(this.patrimonioCliente);
         this.dataSourcePatrimonioActivo.data = data;
-        this.tr.getSystemDate().subscribe( (hora: any) =>{
-          if(hora.entidad){
-            ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-            this.horaFinal5A = hora.entidad;
-            if (this.horaInicio5A != null && this.horaFinal5A != null ) {
-              this.registrarTracking(
-                TareaTrackingEnum.CALCULO_DE_PATRIMONIO_DEL_CLIENTE,
-                this.id,
-                SituacionTrackingEnum.FINALIZADO,
-                UsuarioEnum.BPM,
-                this.horaInicio5A,
-                this.horaInicio5A,
-                this.horaInicio5A,
-                this.horaFinal5A
-              );
-            } else {
-              this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE", 'error');
-            }
-          }
-        });
         this.element = null;
         this.calcularActivo();
         this.limpiarCampos();
@@ -1011,12 +964,7 @@ export class GestionClienteComponent implements OnInit {
    * @description FUNCION EN BOTON QUE AGREGA UN NUEVO PASIVO A LA TABLA DE PATRIMONIO PASIVOS
    */
   nuevoPasivo() {
-    this.tr.getSystemDate().subscribe( (hora: any) =>{
-      if(hora.entidad){
-        ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-        this.horaInicio5P = hora.entidad;
-      }
-    });
+
 
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
@@ -1034,26 +982,6 @@ export class GestionClienteComponent implements OnInit {
         const data = this.dataSourcePatrimonioPasivo.data;
         data.push(this.patrimonioCliente);
         this.dataSourcePatrimonioPasivo.data = data;
-        this.tr.getSystemDate().subscribe( (hora: any) =>{
-          if(hora.entidad){
-            ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-            this.horaFinal5P = hora.entidad;
-            if (this.horaInicio5P != null && this.horaFinal5P != null ) {
-              this.registrarTracking(
-                TareaTrackingEnum.CALCULO_DE_PATRIMONIO_DEL_CLIENTE,
-                this.id,
-                SituacionTrackingEnum.FINALIZADO,
-                UsuarioEnum.BPM,
-                this.horaInicio5A,
-                this.horaInicio5A,
-                this.horaInicio5A,
-                this.horaFinal5P
-              );
-            } else {
-              this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE", 'error');
-            }
-          }
-        });
         this.element = null;
         this.calcularPasivo();
         this.limpiarCampos();
@@ -1068,14 +996,6 @@ export class GestionClienteComponent implements OnInit {
    * @description FUNCION EN BOTON QUE AGREGA UN NUEVO INGRESO A LA TABLA DE INGRESOS / EGRESOS 
    */
   nuevoIngreso() {
-    this.tr.getSystemDate().subscribe( (hora: any) =>{
-      if(hora.entidad){
-        //console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-        this.horaInicio4I = hora.entidad
-      }
-    });
-
-  
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
     this.valorEgreso.setValue(null);
@@ -1095,26 +1015,6 @@ export class GestionClienteComponent implements OnInit {
         data.push(this.ingresoEgreso);
         this.dataSourceIngresoEgreso.data = data;
         this.element = null;
-        this.tr.getSystemDate().subscribe( (hora: any) =>{
-          if(hora.entidad){
-            ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-            this.horaFinal4I = hora.entidad;
-            if (this.horaInicio4I != null && this.horaFinal4I != null ) {
-              this.registrarTracking(
-                TareaTrackingEnum.CALCULO_DE_NIVEL_DE_ENDEUDAMIENTO_EN_INGRESOS_Y_EGRESOS,
-                this.id,
-                SituacionTrackingEnum.FINALIZADO,
-                UsuarioEnum.BPM,
-                this.horaInicio4I,
-                this.horaInicio4I,
-                this.horaInicio4I,
-                this.horaFinal4I
-              );
-            } else {
-              this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE", 'error');
-            }
-          }
-        });
         this.calcularIngresoEgreso();
         this.limpiarCampos();
       } else {
@@ -1128,12 +1028,6 @@ export class GestionClienteComponent implements OnInit {
    * @description FUNCION EN BOTON QUE AGREGA UN NUEVO EGRESO A LA TABLA DE INGRESOS / EGRESOS 
    */
   nuevoEgreso() {
-    this.tr.getSystemDate().subscribe( (hora: any) =>{
-      if(hora.entidad){
-        //console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-        this.horaInicio4E = hora.entidad
-      }
-    });
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
     this.valorIngreso.setValue(null);
@@ -1153,26 +1047,6 @@ export class GestionClienteComponent implements OnInit {
         data.push(this.ingresoEgreso);
         this.dataSourceIngresoEgreso.data = data;
         this.element = null;
-        this.tr.getSystemDate().subscribe( (hora: any) =>{
-          if(hora.entidad){
-            ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-            this.horaFinal4E = hora.entidad;
-            if (this.horaInicio4E != null && this.horaFinal4E != null ) {
-              this.registrarTracking(
-                TareaTrackingEnum.CALCULO_DE_NIVEL_DE_ENDEUDAMIENTO_EN_INGRESOS_Y_EGRESOS,
-                this.id,
-                SituacionTrackingEnum.FINALIZADO,
-                UsuarioEnum.BPM,
-                this.horaInicio4E,
-                this.horaInicio4E,
-                this.horaInicio4E,
-                this.horaFinal4E
-              );
-            } else {
-              this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE", 'error');
-            }
-          }
-        });
         this.calcularIngresoEgreso();
         this.limpiarCampos();
       } else {
@@ -1279,6 +1153,235 @@ export class GestionClienteComponent implements OnInit {
       }
     }
   }
+
+  /**
+   * 
+   */
+  implementacionServiciosCloudstudioTEST(){
+    let entidadConsultaCliente  = new ConsultaCliente();
+    entidadConsultaCliente.idTipoIdentificacion = 1;
+    entidadConsultaCliente.identificacion = "1311066441";
+    this.css.consultarClienteCS(entidadConsultaCliente).subscribe( data => {
+      if (data) {
+        console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
+      } else {
+        this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
+      }
+
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice("Error no fue cacturado en 'consultarClienteCS' :(", 'error');
+
+      }
+    });
+    this.css.consultarDireccionesTelefonosClienteCS(entidadConsultaCliente).subscribe(data => {
+      if(data){
+        console.log("Consulta de direcciones y telefonos del cliente ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarDireccionesTelefonosClienteCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("no se pudo capturar el error :c", 'error');
+      }
+    });
+    this.css.consultarIngresosEgresosClienteCS(entidadConsultaCliente).subscribe(data => {
+      if(data){
+        console.log("Consulta de Ingresos y egresos del cliente ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarIngresosEgresosClienteCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("no se pudo capturar el error :c", 'error');
+      }
+    });
+    this.css.consultarReferenciasClienteCS(entidadConsultaCliente).subscribe(data => {
+      if(data){
+        console.log("Consulta de Referencias del cliente ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarReferenciasClienteCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("no se pudo capturar el error :c", 'error');
+      }
+    }); 
+    let entidadCrearcliente = new CrearCliente();
+    let entidadActividadEconomica = new ActividadEconomicaCliente();
+    entidadActividadEconomica.idActividadEconomica = 2431;   // Se necesita catalogo
+    entidadCrearcliente.actividadEconomica = entidadActividadEconomica;
+    entidadCrearcliente.barrio = "Spingfield";
+    entidadCrearcliente.callePrincipal = "Av Siempre Viva 743";
+    entidadCrearcliente.calleSecundaria = "Desconocida";
+    entidadCrearcliente.codigoEducacion = "U";   // Se necesita catalogo
+    entidadCrearcliente.codigoEstadoCivil = "S"; // Se necesita catalogo
+    entidadCrearcliente.codigoProfesion = "336"; // Se necesita catalogo
+    entidadCrearcliente.codigoSectorVivienda = "R"; // Se necesita catalogo
+    entidadCrearcliente.codigoVivienda = "A"; // Se necesita catalogo
+    //Crear un array para pasarle los datos.
+    let listContactos = new ContactosCliente();
+    listContactos.activo = true;
+    listContactos.apellidos = "Doe";
+    listContactos.codigoTipoReferencia = "000" // Se necesita catalogo
+    listContactos.direccion = "Av Siempre Viva 742";
+    listContactos.nombres = "John";
+    listContactos.telefono = "0000000000";
+    listContactos.telefonoCelular = "9999999999";
+    entidadCrearcliente.contactosCliente.push(listContactos);
+    listContactos.activo = true
+    listContactos.apellidos = "Doe";
+    listContactos.codigoTipoReferencia = "000" // Se necesita catalogo
+    listContactos.direccion = "Av Siempre Viva 742";
+    listContactos.nombres = "Jane";
+    listContactos.telefono =  "1111111111";
+    listContactos.telefonoCelular = "8888888888";
+    entidadCrearcliente.contactosCliente.push(listContactos);
+    //Crear un array para pasarle los datos.
+    let listCuenta = new CuentasBancariasCliente();
+    listCuenta.activo = true;
+    listCuenta.cuenta = "123456789";
+    listCuenta.esTarjetaCredito = false;
+    listCuenta.idBanco = 171; // Se necesita catalogo 
+    entidadCrearcliente.cuentasBancariasCliente.push(listCuenta);
+    listCuenta.activo = true;
+    listCuenta.cuenta = "987654321";
+    listCuenta.esTarjetaCredito = false;
+    listCuenta.idBanco = 171; // Se necesita catalogo 
+    entidadCrearcliente.cuentasBancariasCliente.push( listCuenta );
+    entidadCrearcliente.email = "pvelez@cloudstudio.com.ec";
+    entidadCrearcliente.esMasculino = true;
+    entidadCrearcliente.fechaNacimiento = "1991-06-30";
+    entidadCrearcliente.idAgencia = 2; // Se necesita catalogo 
+    entidadCrearcliente.idLugarNacimiento = 1352; // Se necesita catalogo 
+    entidadCrearcliente.idPais = 52; // Se necesita catalogo 
+    entidadCrearcliente.idPaisNacimiento = 52; // Se necesita catalogo 
+    entidadCrearcliente.idResidencia = 1352; // Se necesita catalogo 
+    entidadCrearcliente.idTipoIdentificacion = 1;// Se necesita catalogo 
+    entidadCrearcliente.identificacion = "1311066441";
+    entidadCrearcliente.numeroCargasFamiliares = 0;
+    entidadCrearcliente.primerApellido = "Vélez";
+    entidadCrearcliente.primerNombre = "Pablo";
+    entidadCrearcliente.referencia = "Junto a la casa de Flanders";
+    entidadCrearcliente.segundoApellido =  "Franco";
+    entidadCrearcliente.segundoNombre =  "Rafael";    
+    //Crear un array para pasarle los datos.
+    let listTelefonos = new TelefonoCliente();
+    listTelefonos.esMovil = true
+    listTelefonos.esPrincipal = true
+    listTelefonos.numero = "0996553117";
+    entidadCrearcliente.telefonos.push( listTelefonos );
+    this.css.crearClienteCS(entidadCrearcliente).subscribe( ( data : any) => {
+      if(data){
+        console.log("creacion de cliente el cloud studio ---->" + JSON.stringify(data))
+      } else {
+        console.log("No me trajo data para creacion de cliente ----->" + JSON.stringify(data));
+      }
+    }, error => {
+      if(JSON.stringify(error).indexOf("codError") > 0 ){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      }else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+    let entidadEditarCliente = new EditarCliente();
+    entidadEditarCliente.email = "pvelez@cloudstudio.com.ec";
+    entidadEditarCliente.idTipoIdentificacion = 1
+    entidadEditarCliente.identificacion = "1311066441";
+    entidadEditarCliente.referencia = "Junto a la casa de Flanders"
+    this.css.editarClienteCS(entidadEditarCliente).subscribe( (data : any ) => {
+      if (data) {
+        console.log("edicion de cliente el cloud studio ---->" + JSON.stringify(data))
+      } else {
+        console.log("No me trajo data para creacion de cliente ----->" + JSON.stringify(data));
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+    this.css.consultarAgenciasCS().subscribe(data => {
+      if(data){
+        console.log("Consulta de catalogos de agencias ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarAgenciasCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+    let tabla = new TablaAmortizacion();
+    tabla.codigoProducto = "002"; // Se necesita catalogo
+    tabla.codigoTipoPrestamo = "001"; // Se necesita catalogo
+    tabla.direccion = "Av. Siempre Viva 742";
+    tabla.email = "pvelez@cloudstudio.com.ec";
+    tabla.fechaNacimiento = "1991-06-30";
+    tabla.idCliente = 0;
+    tabla.idResidencia = 1352; // Se necesita catalogo
+    tabla.identificacion = "1311066441";
+    tabla.montoSolicitado = 2000.0;
+    tabla.nombre = "Pablo Rafael Vélez Franco";
+    let tablaPresuntivaDatos = new TablaPresuntivaDatos();
+    tablaPresuntivaDatos.codigoFrecuenciaPago = "ME"; // Se necesita catalogo
+    tablaPresuntivaDatos.cuotas = 12;
+    tablaPresuntivaDatos.cuotasGracia = 0;
+    tablaPresuntivaDatos.diaFijo = false;
+    tablaPresuntivaDatos.idTipoTablaAmortizacion = 7; // Se necesita catalogo
+    tablaPresuntivaDatos.pagoDia = 12;
+    tabla.tablaPresuntivaDatos = tablaPresuntivaDatos
+    tabla.telefono = "0996553221";
+    this.css.simularTablaAmortizacionCS(tabla).subscribe( (data : any) => {
+      if (data) {
+        console.log("Simular la tabla de amortizacion ----->" + JSON.stringify(data));
+      } else {
+        this.sinNoticeService.setNotice("No me trajo data 'simularTablaAmortizacionCS' :'(", 'error');
+      }
+    }, error => {
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+    let precancelacion = new SimulacionPrecancelacion();
+    precancelacion.fechaPrecancelacion = "2020-06-16";
+    precancelacion.numeroPrestamo = "2020001967";
+    this.css.simularPrecancelacionCS(precancelacion).subscribe( (data: any) => {
+      if (data) {
+        console.log("Simular precancelacion ----->" + JSON.stringify(data));
+      } else {
+        this.sinNoticeService.setNotice("No me trajo data 'simularPrecancelacionCS' :'(", 'error');
+      }
+    }, error => {
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
   /**
    * @param element 
    * @description METODO QUE EDITA UN ACTIVO DE LA TABLA
@@ -1335,12 +1438,6 @@ export class GestionClienteComponent implements OnInit {
    * @description METODO QUE AGREGA UNA NUEVA REFERENCIA A LA TABLA DE REFERENCIA
    */
   nuevaReferencia() {
-    this.tr.getSystemDate().subscribe( (hora: any) =>{
-      if(hora.entidad){
-        ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-        this.horaInicio6 = hora.entidad;
-      }
-    });
     this.referencia = new TbReferencia;
     if (this.formDatosReferenciasPersonales.valid) {
       if (this.nombresCompletosR.value != null && this.nombresCompletosR.value != "") {
@@ -1368,29 +1465,7 @@ export class GestionClienteComponent implements OnInit {
               }
               const data = this.dataSource.data;
               data.push(this.referencia);
-              this.dataSource.data = data;
-              this.tr.getSystemDate().subscribe( (hora: any) =>{
-                if(hora.entidad){
-                  ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-                  this.horaFinal6 = hora.entidad;
-                  if (this.horaInicio6 != null && this.horaFinal6 != null ) {
-                    this.registrarTracking(
-                      TareaTrackingEnum.AGREGANDO_REFERENCIAS_PERSONALES_DEL_CLIENTE,
-                      this.id,
-                      SituacionTrackingEnum.FINALIZADO,
-                      UsuarioEnum.BPM,
-                      this.horaInicio6,
-                      this.horaInicio6,
-                      this.horaInicio6,
-                      this.horaFinal6
-                    );
-                    this.horaInicio6 = null;
-                    this.horaFinal6 = null;
-                  } else {
-                    this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE REFERENCIA EN GESTION CLIENTE", 'error');
-                  }
-                }
-              });          
+              this.dataSource.data = data;      
               this.element = null;
               this.limpiarCampos();
             } else {
@@ -1667,20 +1742,17 @@ export class GestionClienteComponent implements OnInit {
                         console.log(" JSON CLIENTE----->" + JSON.stringify(data.entidad))
                           this.tr.getSystemDate().subscribe( ( hora : any ) => {
                             if (hora.entidad) {
-                              this.horaFinal1 = hora.entidad
-                              if ( this.horaInicio1 != null && this.horaFinal1 != null ) {
+                              this.horaFinal = hora.entidad
+                              if ( this.idNegociacion != null ) {
                                 this.registrarTracking(
-                                  TareaTrackingEnum.REGISTRO_DE_INFORMACION_DEL_CLIENTE,
-                                  this.id,
-                                  SituacionTrackingEnum.FINALIZADO,
-                                  UsuarioEnum.ASESOR,
-                                  this.horaInicio1,
-                                  this.horaInicio1,
-                                  this.horaInicio1,
-                                  this.horaFinal1
+                                  this.idNegociacion,
+                                  this.horaInicio,
+                                  this.horaAsignacion,
+                                  this.horaAtencion,
+                                  this.horaFinal
                                 );
                               } else{
-                                this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE", 'error');
+                                this.sinNoticeService.setNotice("NO EXISTE NEGOCIACION PREVIA PARA HACER SEGUIMIENTO DE TRACKING", 'error');
                               }                              
                             }
                             this.router.navigate(['../../credito-nuevo/generar-credito', this.id]);
@@ -1738,49 +1810,29 @@ export class GestionClienteComponent implements OnInit {
    * @param fechaInicioAtencion Date
    * @param fechaFin Date
    */
-  public registrarTracking (  observacion : TareaTrackingEnum, 
+  public registrarTracking (  
                       codigoRegistro : string, 
-                      situacion : SituacionTrackingEnum, 
-                      usuario:UsuarioEnum, 
                       fechaInicio: Date,
                       fechaAsignacion: Date,
                       fechaInicioAtencion: Date,
                       fechaFin: Date,
                     ){
 
-    let tracking : TbQoTracking = new TbQoTracking();
-    tracking.actividad = ActividadEnum.NEGOCIACION.toString(); // Modulo en ProducBacklog
-    tracking.proceso = ProcesoEnum.DATOS_CLIENTE;                
-      tracking.observacion = observacion.toString(); // Actividad en Produc Backlog
-      tracking.codigoRegistro = codigoRegistro;
-      tracking.situacion = situacion.toString();
-      tracking.usuario = usuario.toString();
-      tracking.fechaInicio = fechaInicio;
-      tracking.fechaAsignacion = fechaAsignacion;
-      tracking.fechaInicioAtencion = fechaInicioAtencion;
-      tracking.fechaFin = fechaFin;
+      let tracking : TbQoTracking   = new TbQoTracking();
+      tracking.actividad            = ActividadEnum.NEGOCIACION; // Modulo en ProducBacklog
+      tracking.proceso              = ProcesoEnum.DATOS_CLIENTE;                
+      tracking.observacion          = "";
+      tracking.codigoRegistro       = codigoRegistro;
+      tracking.situacion            = SituacionTrackingEnum.EN_PROCESO;
+      tracking.usuario              = UsuarioEnum.ASESOR;
+      tracking.fechaInicio          = fechaInicio;
+      tracking.fechaAsignacion      = fechaAsignacion;
+      tracking.fechaInicioAtencion  = fechaInicioAtencion;
+      tracking.fechaFin             = fechaFin;
       this.tr.guardarTracking(tracking).subscribe((data:any) =>{
         if (data.entidad) {
-          if (observacion == TareaTrackingEnum.REGISTRO_DE_INFORMACION_DEL_CLIENTE) {
-            console.log(" Tracking 1 creado ------>" + JSON.stringify(data.entidad));
-          }
-          if (observacion == TareaTrackingEnum.REGISTRO_DE_DOCUMENTOS_DEL_CLIENTE) {
-            console.log(" Tracking 3 creado ------>" + JSON.stringify(data.entidad));
-          }
-          if (observacion == TareaTrackingEnum.PRESENTAR_DATOS_DE_CLIENTE_EXISTENTE) {
-            console.log(" Tracking 2 creado ------>" + JSON.stringify(data.entidad));
-          }
-          if (observacion == TareaTrackingEnum.CALCULO_DE_NIVEL_DE_ENDEUDAMIENTO_EN_INGRESOS_Y_EGRESOS) {
-            console.log(" Tracking 4 creado ------>" + JSON.stringify(data.entidad));
-          }
-          if (observacion == TareaTrackingEnum.CALCULO_DE_PATRIMONIO_DEL_CLIENTE) {
-            console.log(" Tracking 5 creado ------>" + JSON.stringify(data.entidad));
-          }
-          if (observacion == TareaTrackingEnum.AGREGANDO_REFERENCIAS_PERSONALES_DEL_CLIENTE) {
-            console.log(" Tracking 6 creado ------>" + JSON.stringify(data.entidad));
-          }
+          console.log(" Tracking creado ------>" + JSON.stringify(data.entidad));
           this.loadingSubject.next(false);
-
         } else {
         this.loadingSubject.next(false);
         this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE EN METODO", 'error');
