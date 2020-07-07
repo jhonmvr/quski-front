@@ -45,6 +45,8 @@ export class ListCotizarComponent implements OnInit {
   isLinear = false;
   // STANDARD VARIABLES
   public loading;
+  public isCheckSi: boolean = false;
+  public isCheckNo: boolean = false;
   disableGuardar;
   disableSimular;
   disableVerPrecio;
@@ -326,7 +328,12 @@ export class ListCotizarComponent implements OnInit {
     this.sp.findByNombreTipoOrdered('', 'PUB', 'Y').subscribe((wrapper: any) => {
       // console.log("retornos "+ JSON.stringify(wrapper)  );
       if (wrapper && wrapper.entidades) {
-        this.listPublicidad = wrapper.entidades;
+        // tslint:disable-next-line: prefer-for-of
+        for (let i = 0; i < wrapper.entidades.length; i++) {
+          this.listPublicidad.push(wrapper.entidades[i].valor.toUpperCase());
+          console.log('Valores de list publicidades --->' + this.listPublicidad);
+        }
+        //this.listPublicidad = wrapper.entidades.valor;
       }
     }, error => {
       if (error.error) {
@@ -472,6 +479,21 @@ export class ListCotizarComponent implements OnInit {
 
 
   }
+
+  validarMupi() {
+    console.log('INGRESO A VALIDAR');
+    if (this.aprobacionMupi.value == "SI") {
+      console.log('INGRESO A SI');
+      this.isCheckSi = true;
+      this.isCheckNo = false;
+    } else if (this.aprobacionMupi.value == "NO") {
+      console.log('INGRESO A ELSE');
+      this.isCheckSi = false;
+      this.isCheckNo = true;
+
+    }
+
+  }
   /*********METODOS DE LA FUNCIONALIDAD DE PROGRAMACION ***************************    */
   /**
  * Metodo buscarCliente en primera instancia busca en CloudStudio luego en en CRM Y finalmente la Calculadora Quski
@@ -517,15 +539,40 @@ export class ListCotizarComponent implements OnInit {
     });
   }
   /**
-   * Metodo que realiza la búsqueda de las cotizaciones anteriores
+   * Metodo que recupera en pantalla la cotizacion anterior activa
    */
-  /* buscarCotizacionAnterior() {
+  recuperarCotizacionAnterior() {
     console.log('INICIA VALIDACION COTIZACIONES ANTERIORES>>' + JSON.stringify(this.cliente.cedulaCliente));
+    this.clienteService.findClienteByIdentificacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
+      if (clienteData && clienteData.entidad) {
+        console.log('INGRESA AL IF recuperarCotizacionAnterior ');
+        this.limpiarCampos();
+        console.log('VALOR QUE RETORNA DE LA BUSQUEDA DE LA COTIZACION>>>> ' + JSON.stringify(clienteData.entidad));
+        this.sinNoticeService.setNotice('tiene cotizacion anteriro', 'error');
 
-    this.cs.getCotizacionByCedula(this.cliente.cedulaCliente).subscribe((dataCotizacion: any) => {
-      console.log('TIENE COTIZACION ANTERIOR ');
-      if (dataCotizacion && dataCotizacion.entidad) {
-        console.log('VALOR QUE RETORNA DE LA BUSQUEDA DE LA COTIZACION>>>> ' + JSON.stringify(dataCotizacion.entidad));
+        this.identificacion.setValue(clienteData.entidad.cedulaCliente);
+        this.nombresCompletos.setValue(clienteData.entidad.primerNombre);
+
+        this.fechaNacimiento.setValue(new Date(clienteData.entidad.fechaNacimiento));
+        console.log('FECHA DE NACIMIENTO DE LA DATA', JSON.stringify(new Date(clienteData.entidad.fechaNacimiento)));
+        this.edad.setValue(clienteData.entidad.edad);
+        this.nacionalidad.setValue(clienteData.entidad.nacionalidad);
+        this.movil.setValue(clienteData.entidad.telefonoMovil);
+        this.telefonoDomicilio.setValue(clienteData.entidad.telefonoFijo);
+        this.fpublicidad.setValue(clienteData.entidad.publicidad)
+
+
+          //console.log('VALOR DE LA LIST PUBLICLIDAD', JSON.stringify(this.listPublicidad));
+
+
+          ;
+        this.correoElectronico.setValue(clienteData.entidad.email);
+        this.campania.setValue(clienteData.entidad.campania);
+        //console.log('VALOR DE LA MUPI ---> ' + JSON.stringify(clienteData.entidad.tbQoCotizador[0].aprobacionMupi));
+        this.aprobacionMupi.setValue(clienteData.entidad.tbQoCotizador[0].aprobacionMupi);
+        console.log('ANTES DE LLAMAR A VALIDAR-->', this.aprobacionMupi.value);
+        this.validarMupi();
+
       }
     }, error => {
       if (error.error) {
@@ -541,10 +588,10 @@ export class ListCotizarComponent implements OnInit {
           }
         });
       } else {
-        this.sinNoticeService.setNotice('Error al cargar tipo oro', 'error');
+        this.sinNoticeService.setNotice('Error al cargar cotizacion', 'error');
       }
     });
-  } */
+  }
   /**
    * Metodo que ejecuta la llamada a equifax
    */
@@ -572,25 +619,30 @@ export class ListCotizarComponent implements OnInit {
       this.cliente.telefonoFijo = resp.entidad.datoscliente.telefonofijo;
       this.cliente.telefonoMovil = resp.entidad.datoscliente.telefonomovil;
       this.cliente.fechaNacimiento = this.fechaNacimiento.value;
+      this.cliente.edad = this.edad.value;
+      this.cliente.publicidad = this.fpublicidad.value;
+      this.cliente.campania = this.campania.value;
 
 
       // VALIDACION que la entidad no este null y las variables tambien no lo esten
       if (resp && resp.entidad && resp.entidad.xmlVariablesInternas && resp.entidad.xmlVariablesInternas.variablesInternas &&
         resp.entidad.xmlVariablesInternas.variablesInternas.variable) {
         const tmps = resp.entidad.xmlVariablesInternas.variablesInternas.variable;
-        console.log('VALOR DE TMPS' + JSON.stringify(tmps));
+        console.log('VALOR DE TMPS --> ' + JSON.stringify(tmps));
         // LLENO LA VARIABLE CREDITICIA
-        this.variableCrediticiaArray.push(tmps);
-        console.log('VALORES DE LA VAR CREDITICIA ANTES DEL FOR >>> ' + JSON.stringify(this.variableCrediticiaArray));
+        //this.variableCrediticiaArray.push(tmps);
+        console.log('VALORES DE LA VAR CREDITICIA ANTES DEL FOR 1 >>> ' + JSON.stringify(this.variableCrediticiaArray));
+        console.log('length ? ---> ' + tmps.length);
         for (let index = 0; index < tmps.length; index++) {
+          this.variableCrediticia = new TbQoVariableCrediticia();
           this.variableCrediticia.orden = tmps[index].orden;
           this.variableCrediticia.nombre = tmps[index].codigo;
           this.variableCrediticia.valor = tmps[index].valor;
           this.variableCrediticiaArray.push(this.variableCrediticia);
-
-          console.log('VARIABLE QUE SE ASIGNA A LA LISTA variableCrediticiaArray>> ' + JSON.stringify(this.variableCrediticiaArray));
+          console.log("index --> " + index);
+          console.log('VARIABLE QUE SE ASIGNA A LA LISTA variableCrediticiaArray 2 >> ' + JSON.stringify(this.variableCrediticiaArray));
         }
-        console.log('VALORES QUE SE ASIGNARON A LA VARIABLE CREDITICIA' + JSON.stringify(this.variableCrediticiaArray));
+        console.log('VALORES QUE SE ASIGNARON A LA VARIABLE CREDITICIA 3 ---> ' + JSON.stringify(this.variableCrediticiaArray));
         this.dataSourceVarCredi = new MatTableDataSource(tmps);
 
       }
@@ -629,7 +681,8 @@ export class ListCotizarComponent implements OnInit {
         this.cliente.id = clienteData.entidad.id;
         console.log('Cliente EXISTE SE TOMA EL  Id+++++++>' + JSON.stringify(this.cliente.id));
         console.log('=====LA DATA DEL CLIENTE ES LA SIGUIENTE=====' + JSON.stringify(clienteData));
-        // this.buscarCotizacionAnterior();
+        console.log('Lamo al metodo para que se cargue la cotizacion encontrada ');
+        this.recuperarCotizacionAnterior();
       } else {
         // ASIGNO LA COTIZACION AL CLIENTE
         this.cotizacion.tbQoCliente = this.cliente;
