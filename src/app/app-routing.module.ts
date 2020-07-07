@@ -42,6 +42,10 @@ const routes: Routes = [
 				loadChildren: () => import('../app/views/pages/credito-nuevo/credito-nuevo.module').then(m => m.CreditoNuevoModule)
 			},
 			{
+				path: 'excepciones',
+				loadChildren: () => import('../app/views/pages/apps/excepciones/excepciones.module').then(m => m.ExcepcionesModule)
+			},
+			{
 				path: 'builder',
 				loadChildren: () => import('../app/views/theme/content/builder/builder.module').then(m => m.BuilderModule)
 			},

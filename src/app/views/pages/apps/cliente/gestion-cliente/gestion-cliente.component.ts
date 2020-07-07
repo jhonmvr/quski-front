@@ -19,14 +19,11 @@ import { ClienteService } from '../../../../../core/services/quski/cliente.servi
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TbQoPatrimonioCliente } from '../../../../../core/model/quski/TbQoPatrimonioCliente';
-import { CatalogoService } from '../../../../../core/services/quski/catalogo.service';
-import { ReFileUploadService } from '../../../../../core/services/re-file-upload.service';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
-import { saveAs } from 'file-saver';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { PaisesEnum } from '../../../../../core/enum/PaisesEnum';
 import { ParroquiaService } from '../../../../../core/services/quski/parroquia.service';
@@ -57,6 +54,7 @@ import { EditarCliente } from '../../../../../core/model/cloudstudio/EditarClien
 import { TablaAmortizacion } from '../../../../../core/model/cloudstudio/TablaAmortizacion';
 import { SimulacionPrecancelacion } from '../../../../../core/model/cloudstudio/SimulacionPrecancelacion';
 import { TablaPresuntivaDatos } from '../../../../../core/model/cloudstudio/TablaPresuntivaDatos';
+import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 
 export interface User {
   name: string;
@@ -107,7 +105,6 @@ export class GestionClienteComponent implements OnInit {
   listPaises              = Object.values(PaisesEnum);
   // STANDARD VARIABLES
   private loadingSubject = new BehaviorSubject<boolean>(false);
-  public loading;
   public p = new Page();
   disableConsultar;
   disableConsultarSubject = new BehaviorSubject<boolean>(true);
@@ -234,7 +231,7 @@ export class GestionClienteComponent implements OnInit {
   /**
    * 
    * @param cas 
-   * @param cs 
+   * @param neg 
    * @param dialog 
    * @param sinNoticeService 
    * @param sp 
@@ -249,7 +246,7 @@ export class GestionClienteComponent implements OnInit {
    */
   constructor(
     private css : CloudstudioService,
-    private cas: CatalogoService,
+    private neg: NegociacionService,
     private cs: ClienteService,
     public dialog: MatDialog,
     private sinNoticeService: ReNoticeService,
@@ -375,7 +372,7 @@ export class GestionClienteComponent implements OnInit {
       if (data.params.id) {
         this.idNegociacion = data.params.id;
         //this.idNegociacion = "109";
-        this.cas.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
+        this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
               this.tr.getSystemDate().subscribe( (hora: any) =>{
                 if(hora.entidad){
@@ -1159,8 +1156,8 @@ export class GestionClienteComponent implements OnInit {
    */
   implementacionServiciosCloudstudioTEST(){
     let entidadConsultaCliente  = new ConsultaCliente();
-    entidadConsultaCliente.idTipoIdentificacion = 1;
     entidadConsultaCliente.identificacion = "1311066441";
+    entidadConsultaCliente.idTipoIdentificacion = 1;
     this.css.consultarClienteCS(entidadConsultaCliente).subscribe( data => {
       if (data) {
         console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
@@ -1177,7 +1174,7 @@ export class GestionClienteComponent implements OnInit {
 
       }
     });
-    this.css.consultarDireccionesTelefonosClienteCS(entidadConsultaCliente).subscribe(data => {
+    /* this.css.consultarDireccionesTelefonosClienteCS(entidadConsultaCliente).subscribe(data => {
       if(data){
         console.log("Consulta de direcciones y telefonos del cliente ----->" + JSON.stringify(data));
       } else{
@@ -1315,7 +1312,7 @@ export class GestionClienteComponent implements OnInit {
       } else {
         this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
       }
-    });
+    });*/
     this.css.consultarAgenciasCS().subscribe(data => {
       if(data){
         console.log("Consulta de catalogos de agencias ----->" + JSON.stringify(data));
@@ -1330,6 +1327,7 @@ export class GestionClienteComponent implements OnInit {
         this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
       }
     });
+    /**
     let tabla = new TablaAmortizacion();
     tabla.codigoProducto = "002"; // Se necesita catalogo
     tabla.codigoTipoPrestamo = "001"; // Se necesita catalogo
@@ -1380,7 +1378,7 @@ export class GestionClienteComponent implements OnInit {
       } else {
         this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
       }
-    });
+    }); */
   }
   /**
    * @param element 
