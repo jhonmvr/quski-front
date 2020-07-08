@@ -31,6 +31,7 @@ import { ClienteService } from '../../../../../core/services/quski/cliente.servi
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 export interface User {
   name: string;
+}
 /**
  * @description Clase se que realiza la administracion de la cotización
  * @author Kléber Guerra  - Relative Engine
@@ -40,10 +41,10 @@ export interface User {
  * @implements {OnInit}
  */
 @Component({
-    selector: 'kt-list-cotizar',
-    templateUrl: './list-cotizar.component.html',
-    styleUrls: ['./list-cotizar.component.scss']
-  })
+  selector: 'kt-list-cotizar',
+  templateUrl: './list-cotizar.component.html',
+  styleUrls: ['./list-cotizar.component.scss']
+})
 export class ListCotizarComponent implements OnInit {
   // CREACION DEL STEPPER
   @ViewChild('stepper', { static: true })
@@ -1209,15 +1210,15 @@ export class ListCotizarComponent implements OnInit {
       this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE EL FORMULARIO', 'warning');
     }
   }
- 
- /**
-  * @description Metodo que elimina un precio oro seleccionado
-  * @author Kléber Guerra  - Relative Engine
-  * @date 07/07/2020
-  * @param {*} id
-  * @memberof ListCotizarComponent
-  */
- eliminarPrecioOro(id) {
+
+  /**
+   * @description Metodo que elimina un precio oro seleccionado
+   * @author Kléber Guerra  - Relative Engine
+   * @date 07/07/2020
+   * @param {*} id
+   * @memberof ListCotizarComponent
+   */
+  eliminarPrecioOro(id) {
     // console.log('INGRESA A ELIMINTAR' + id);
     this.disableSimulaSubject.next(false);
     this.preciosOrodSubject.next(true);
@@ -1263,15 +1264,15 @@ export class ListCotizarComponent implements OnInit {
     }
   }
 
- /**
-  * @description Metodo que valida que solo se ingresen solo números
-  * @author Kléber Guerra  - Relative Engine
-  * @date 08/07/2020
-  * @param {*} event
-  * @returns {*}  {boolean}
-  * @memberof ListCotizarComponent
-  */
- numberOnly(event): boolean {
+  /**
+   * @description Metodo que valida que solo se ingresen solo números
+   * @author Kléber Guerra  - Relative Engine
+   * @date 08/07/2020
+   * @param {*} event
+   * @returns {*}  {boolean}
+   * @memberof ListCotizarComponent
+   */
+  numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       return false;
