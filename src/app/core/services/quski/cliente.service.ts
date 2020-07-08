@@ -70,7 +70,7 @@ export class ClienteService extends BaseService {
    */
   public findClienteByIdentificacion(identificacion: string) {
     const serviceUrl =
-      this.appResourcesUrl + 'clienteRestController/findclienteByIdentificacion';
+      this.appResourcesUrl + 'clienteRestController/clienteByIdentificacion';
     this.params = new HttpParams().set('identificacion', identificacion);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);

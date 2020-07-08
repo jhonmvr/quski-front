@@ -43,14 +43,14 @@ export class BaseService {
     this.params = new HttpParams();
     if (localStorage.getItem('reUser')) {
       const u = localStorage.getItem('reUser');
-    this.headers= new HttpHeaders({ 'Content-Type': 'application/json' });
-    if( localStorage.getItem( environment.authTokenKey ) ){
-      this.headers=new HttpHeaders({ 
-        'Authorization':environment.authprefix+ localStorage.getItem(environment.authTokenKey),
-        'Content-Type': 'application/json' }
-        );
-    }
-
+      this.headers= new HttpHeaders({ 'Content-Type': 'application/json' });
+      console.log("Hola, creaste los headers");
+      if( localStorage.getItem( environment.authTokenKey ) ){
+        this.headers=new HttpHeaders({ 
+          'Authorization':environment.authprefix+ localStorage.getItem(environment.authTokenKey),
+          'Content-Type': 'application/json' }
+          );
+      }
       this.options = {
           headers: this.headers,
       };
@@ -95,6 +95,13 @@ export class BaseService {
     );
   }
 
+  public setHeaderWithAccess() {
+    this.headers = new HttpHeaders({ 
+      'Content-Type': 'application/json',
+      Accept: '*/*',
+      'Access-Control-Allow-Origin': '*' 
+    });
+  }
   public setHeaderWithSegToken(token: string) {
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json',
