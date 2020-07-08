@@ -6,6 +6,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from '../../../core/model/page';
 import { TbCotizacion } from '../../../core/model/quski/TbCotizacion';
 import { DatePipe } from '@angular/common';
+import { BaseWrapper } from '../../model/basewrapper';
 
 
 @Injectable({
@@ -143,11 +144,16 @@ getCotizacionByCedula(cedulaCliente: string) {
     return this.http.post(serviceUrl, wrapper, this.options);
   }
 
+  
+
   guardarPrecioOro(tbQoPrecioOro) {
-    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/crearPrecioOro";
-    let wrapper = { entidad: tbQoPrecioOro };
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    
+    const serviceUrl = this.appResourcesUrl+ "precioOroRestController/crearPrecioOro";
+    const wrapper = new BaseWrapper();
+    wrapper.entidad= tbQoPrecioOro;
+    //this.options = { headers: this.headers };
+    //return this.http.post(serviceUrl, wrapper, this.options);
+    return this.manageGenericUrl( null,wrapper,serviceUrl);
   }
 
   editarPrecioOro(tbQoPrecioOro) {

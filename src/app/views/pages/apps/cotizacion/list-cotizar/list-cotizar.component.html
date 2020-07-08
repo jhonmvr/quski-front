@@ -154,11 +154,13 @@
                     Ver Riesgo Acumulado
                   </button>
                 </div>
-                <mat-form-field *ngIf="disableMensajeBloqueo | async" href="javascript:void(0);">
-                  <mat-label>Mensaje de Bloqueo</mat-label>
-                  <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-                    cdkAutosizeMaxRows="5"></textarea>
-                </mat-form-field>
+                <div>
+                  <mat-form-field *ngIf="disableMensajeBloqueo | async" href="javascript:void(0);">
+                    <mat-label>Mensaje de Bloqueo</mat-label>
+                    <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                      cdkAutosizeMaxRows="5"></textarea>
+                  </mat-form-field>
+                </div>
               </div>
               <!--START MAT TABLE-->
               <div class="mat-table__wrapper">
@@ -247,7 +249,7 @@
             <div class="row">
               <div class="col-md-2">
 
-                <a href="javascript:void(0);" class="blue-icon style=" (click)="nuevo()" matTooltip="Agregar"
+                <a href="javascript:void(0);" class="blue-icon style=" (click)="nuevoPrecioOro()" matTooltip="Agregar"
                   style="font-size: 12px; vertical-align: middle;">
                   <mat-icon style="font-size: 32px" matTooltipPosition="above" class="blue-icon style=">
                     add_circle_outline</mat-icon>
