@@ -266,7 +266,7 @@ export class ListCotizarComponent implements OnInit {
     });
     this.date = new Date();
     this.titulo.setNotice('GESTION DE COTIZACION');
-    // OBSERVABLES 
+    // OBSERVABLES
     this.loading = this.loadingSubject.asObservable();
     this.disableGuardar = this.disableGuardarSubject.asObservable();
     this.disableSimular = this.disableSimulaSubject.asObservable();
@@ -588,7 +588,7 @@ export class ListCotizarComponent implements OnInit {
         this.nacionalidad.setValue(clienteData.entidad.nacionalidad);
         this.movil.setValue(clienteData.entidad.telefonoMovil);
         this.telefonoDomicilio.setValue(clienteData.entidad.telefonoFijo);
-        this.fpublicidad.setValue(clienteData.entidad.publicidad)
+        this.fpublicidad.setValue(clienteData.entidad.publicidad);
         this.correoElectronico.setValue(clienteData.entidad.email);
         this.campania.setValue(clienteData.entidad.campania);
         this.aprobacionMupi.setValue(clienteData.entidad.tbQoCotizador[0].aprobacionMupi);
@@ -622,7 +622,9 @@ export class ListCotizarComponent implements OnInit {
    * @memberof ListCotizarComponent
    */
   llamarEquifax() {
+
     this.clienteService.findClienteByCedulaQusqui(this.tipoIdentificacion, this.identificacion.value).subscribe((resp: any) => {
+
       this.loadingSubject.next(true);
       if (resp && resp.entidad.mensaje !== '') {
         this.disableMensajeBloqueoSubject.next(true);
@@ -685,7 +687,9 @@ export class ListCotizarComponent implements OnInit {
    */
   guardarCliente() {
     this.loadingSubject.next(true);
+    console.log('ingresa a   guardarCliente');
     this.clienteService.findClienteByIdentificacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
+      console.log('VALOR DE  guardarCliente', JSON.stringify(clienteData));
       if (clienteData && clienteData.entidad) {
         this.cliente.id = clienteData.entidad.id;
         this.recuperarCotizacionAnterior();
@@ -788,7 +792,7 @@ export class ListCotizarComponent implements OnInit {
     if (this.identificacion.value !== null && this.nombresCompletos.value !== null && this.fpublicidad.value && this.aprobacionMupi.value && this.fechaNacimiento.value && this.edad.value && this.nacionalidad.value && this.movil.value && this.telefonoDomicilio.value && this.correoElectronico.value && + this.campania.value) {
       this.getTipoOro();
       this.sinNoticeService.setNotice('INFORMACION COMPLETA', 'success');
-      this.disableVerVariableSubject.next(false);
+      this.disableVerVariableSubject.next(true);
       this.stepper.selectedIndex = 2;
     } else {
       this.sinNoticeService.setNotice('POR FAVOR COMPLETE LA INFORMACION', 'warning');
@@ -845,7 +849,7 @@ export class ListCotizarComponent implements OnInit {
   }
   /** BOTON RIESGO ACUMULADO   */
   /**TODO: AL MOMENTO NO SE ENCUENTRA IMPLEMENTADO EL SERVICIO YA QUE NO ESTA
-   * 
+   *
    */
 
   /**
@@ -892,7 +896,7 @@ export class ListCotizarComponent implements OnInit {
    * @author Kléber Guerra  - Relative Engine
    * @date 07/07/2020
    * @param {string} pfield
-   * @returns {*}  
+   * @returns {*}
    * @memberof ListCotizarComponent
    */
   getErrorMessage(pfield: string) {
@@ -990,7 +994,7 @@ export class ListCotizarComponent implements OnInit {
     }
   }
   /**
-   * @description Metodo que realiza el calculo de la edad del cliente 
+   * @description Metodo que realiza el calculo de la edad del cliente
    * @author Kléber Guerra  - Relative Engine
    * @date 07/07/2020
    * @memberof ListCotizarComponent
@@ -1178,7 +1182,7 @@ export class ListCotizarComponent implements OnInit {
       this.totalPrecio = 0;
       this.tipoOros = this.tipoOro.value;
       if (this.precioOroLocal) {
-        console.log("==> precio oro local  " + this.precioOroLocal);
+        console.log('==> precio oro local  ' + this.precioOroLocal);
         this.precioOro = this.precioOroLocal;
       }
       this.precioOro.estado = EstadoQuskiEnum.ACT;
@@ -1187,7 +1191,7 @@ export class ListCotizarComponent implements OnInit {
       this.precioOro.tbQoCotizador = this.cotizacion;
       this.precioOro.tbQoTipoOro = this.tipoOros;
       if (this.precioOro) {
-        console.log("==><< precio oro " + JSON.stringify(this.precioOro));
+        console.log('==><< precio oro ' + JSON.stringify(this.precioOro));
         this.cs.guardarPrecioOro(this.precioOro).subscribe((data: any) => {
           this.disableSimulaSubject.next(true);
           if (data && data.entidad) {
@@ -1219,15 +1223,29 @@ export class ListCotizarComponent implements OnInit {
    * @memberof ListCotizarComponent
    */
   eliminarPrecioOro(id) {
-    // console.log('INGRESA A ELIMINTAR' + id);
+    console.log('INGRESA A ELIMINTAR', id);
+    this.loadingSubject.next(true);
     this.disableSimulaSubject.next(false);
     this.preciosOrodSubject.next(true);
     this.cs.eliminarPrecioOro(id).subscribe((data: any) => {
-      // console.log('eliminarPrecioOro ELMINAR' + JSON.stringify(data));
+      console.log('eliminarPrecioOro ELMINAR' + JSON.stringify(data));
       this.cs.findByIdCotizacion(this.cotizacion.id).subscribe((pos: any) => {
+        this.loadingSubject.next(false);
         this.sinNoticeService.setNotice('SE ELIMINO EL PRECIO DE ORO SELECCIONADO', 'success');
-        // console.log('findByIdCotizacion' + JSON.stringify(pos));
-        this.dataSourcePrecioOro = new MatTableDataSource(pos.list);
+        console.log('findByIdCotizacion' + JSON.stringify(pos));
+        for (let index = 0; index < pos.length; index++) {
+
+          if (pos[index].estado !== EstadoQuskiEnum.INA) {
+            this.precioOro = new TbQoPrecioOro();
+            this.precioOro.estado = pos[index].estado;
+            this.precioOro.precio = pos[index].precio;
+            this.precioOro.pesoNetoEstimado = pos[index].pesoNetoEstimado;
+            this.preciosArray.push(this.precioOro);
+          }
+
+
+        }
+        this.dataSourcePrecioOro = new MatTableDataSource(this.preciosArray);
       }, error => {
 
         // console.log('NO HAY REGISTROS ');
