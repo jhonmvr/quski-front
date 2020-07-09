@@ -224,7 +224,7 @@ findByIdCotizacion(id: string) {
      * @memberof CotizacionService
      */
     eliminarPrecioOro(idPrecioOro) {
-      let serviceUrl = this.appResourcesUrl + "precioOroRestController/removeEntity";
+      let serviceUrl = this.appResourcesUrl + "precioOroRestController/eliminarPrecioOro";
       this.params = new HttpParams();
       this.params = this.params.set("id", idPrecioOro);
       this.options = { headers: this.headers, params: this.params };
