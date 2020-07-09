@@ -576,7 +576,7 @@ export class ListCotizarComponent implements OnInit {
    * @memberof ListCotizarComponent
    */
   recuperarCotizacionAnterior() {
-    this.clienteService.findClienteByIdentificacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
+    this.clienteService.findClienteByIdentificacionWithCotizacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
       if (clienteData && clienteData.entidad) {
         console.log('INGRESA AL IF recuperarCotizacionAnterior ');
         this.limpiarCampos();
@@ -688,7 +688,7 @@ export class ListCotizarComponent implements OnInit {
   guardarCliente() {
     this.loadingSubject.next(true);
     console.log('ingresa a   guardarCliente');
-    this.clienteService.findClienteByIdentificacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
+    this.clienteService.findClienteByIdentificacionWithCotizacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
       console.log('VALOR DE  guardarCliente', JSON.stringify(clienteData));
       if (clienteData && clienteData.entidad) {
         this.cliente.id = clienteData.entidad.id;
