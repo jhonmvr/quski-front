@@ -147,15 +147,17 @@ export class ListCotizarComponent implements OnInit {
   totalCostosNuevaOperacion = new FormControl('', []);
   costoCustodia = new FormControl('', []);
   costoTransporte = new FormControl('', []);
+  costoValoracion = new FormControl('', []);
+  costoTasacion = new FormControl('', []);
   costoCredito = new FormControl('', []);
   costoSeguro = new FormControl('', []);
   costoResguardo = new FormControl('', []);
-  costoEstimado = new FormControl('', []);
+  solca = new FormControl('', []);
   valorCuota = new FormControl('', []);
   // VISUALIZACION DE LAS COLUMNAS DE LAS TABLAS
   displayedColumnsVarCredi = ['orden', 'variable', 'valor'];
   displayedColumnsPrecioOro = ['accion', 'N', 'tipoOro', 'precio', 'pesoNetoEstimado'];
-  displayedColumnsCreditoNegociacion = ['plazo', 'montoPreAprobado', 'aRecibir', 'totalCostosOperacion', 'costoCustodia', 'costoTransporte', 'costoSeguro', 'costoResguardo', 'costoEstimado', 'valorCuota'];
+  displayedColumnsCreditoNegociacion = ['plazo', 'montoPreAprobado', 'aRecibir', 'totalCostosOperacion', 'costoCustodia', 'costoTransporte', 'costoValoracion', 'costoTasacion', 'costoSeguro', 'costoResguardo', 'solca', 'valorCuota'];
   /**Obligatorio paginacion */
   p = new Page();
   // DATASOURCE
@@ -1259,7 +1261,7 @@ export class ListCotizarComponent implements OnInit {
     }, error => {
       // console.log('NO HAY REGISTROS ');
       this.disableSimulaSubject.next(true);
-       this.preciosOrodSubject.next(true);
+      this.preciosOrodSubject.next(true);
     });
   }
   /**
