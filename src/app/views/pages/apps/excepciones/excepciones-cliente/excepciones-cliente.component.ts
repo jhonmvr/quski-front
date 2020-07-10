@@ -152,7 +152,7 @@ export class ExcepcionesClienteComponent implements OnInit {
       }
     });
     this.clienteNegociacion();
-    this.subheaderService.setTitle("Gestion de Clientes");
+    this.subheaderService.setTitle("Excepciones de Negociacion");
   }
   /**
    * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION

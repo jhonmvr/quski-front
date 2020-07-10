@@ -31,31 +31,25 @@ export class CreditoService extends BaseService {
   }
 
 
-  buscarCreditoByParams(page: Page, fechaDesde: any, fechaHasta: any, codigoOperacion: any,
-    idProceso: any, identificacion: any, idAgencia: any) {
+  buscarCreditoByParams(page: Page, fechaDesde: any, fechaHasta: any,
+    identificacion: any, idAgencia: any) {
     let serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/creditoNegociacionByParams";
     this.setSearchParams(page);
     this.params = this.params.set('fechaDesde', fechaDesde);
     this.params = this.params.set('fechaHasta', fechaHasta);
-    this.params = this.params.set('codigoOperacion', codigoOperacion);
-    this.params = this.params.set('idProceso', idProceso);
     this.params = this.params.set('identificacion', identificacion);
     this.params = this.params.set('idAgencia', idAgencia);
     this.options = { headers: this.headers, params: this.params };
 
     return this.http.get(serviceUrl, this.options);
-
-
   }
 
-  buscarOperacionesPendientes(page: Page, codigoOperacion: any,
-    proceso: any, agencia: any, cedula: any) {
+  buscarOperacionesPendientes(page: Page,
+    agencia: any, cedula: any) {
     let serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/getOperacionesDevueltas";
     this.setSearchParams(page);
-    this.params = this.params.set('fechaDesde', codigoOperacion);
-    this.params = this.params.set('fechaHasta', proceso);
-    this.params = this.params.set('codigoOperacion', agencia);
-    this.params = this.params.set('idProceso', cedula);
+    this.params = this.params.set('agencia', agencia);
+    this.params = this.params.set('cedula', cedula);
     this.options = { headers: this.headers, params: this.params };
 
     return this.http.get(serviceUrl, this.options);
