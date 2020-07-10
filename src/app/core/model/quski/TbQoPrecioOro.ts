@@ -3,6 +3,7 @@ import { TbCotizacion } from "./TbCotizacion";
 
 export class TbQoPrecioOro  {
     //tipoOro: string;
+    id:string;
     precio: string;
     pesoNetoEstimado: string;
     estado : string;

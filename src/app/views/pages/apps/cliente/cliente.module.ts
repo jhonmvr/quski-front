@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-
 // Translate Module
 import { TranslateModule } from '@ngx-translate/core';
 // Auth
@@ -46,7 +45,8 @@ import { ClienteComponent } from './cliente.component';
 import { ListClienteComponent } from './list-cliente/list-cliente.component';
 import { GestionClienteComponent } from './gestion-cliente/gestion-cliente.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
-import {PartialsModule} from '../../../partials/partials.module';
+import { PartialsModule } from '../../../partials/partials.module';
+import { DialogCargarHabilitanteComponent } from './gestion-cliente/dialog-cargar-habilitante/dialog-cargar-habilitante.component'
 
 const routes: Routes = [
 	{
@@ -130,10 +130,12 @@ declarations: [
     ClienteComponent,
     ListClienteComponent,
     GestionClienteComponent,
+    DialogCargarHabilitanteComponent,
 
   ],
   entryComponents: [
-	AddFotoComponent
+	AddFotoComponent,
+	DialogCargarHabilitanteComponent
   ]
 })
 export class ClienteModule {}

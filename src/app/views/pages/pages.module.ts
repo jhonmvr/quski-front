@@ -12,9 +12,10 @@ import { UserManagementModule } from './user-management/user-management.module';
 
 import { ClienteModule } from './apps/cliente/cliente.module';
 import { TrackingModule } from './apps/tracking/tracking.module';
-import {CotizarModule} from './apps/cotizacion/cotizar.module';import { CreditoNuevoModule } from './credito-nuevo/credito-nuevo.module';
-import { CreditoNuevoComponent } from './credito-nuevo/credito-nuevo.component';
+import { CotizarModule} from './apps/cotizacion/cotizar.module';
+import { CreditoNuevoModule } from './credito-nuevo/credito-nuevo.module';
 import { NegociacionModule } from './apps/negociacion/negociacion.module';
+import { ExcepcionesModule } from './apps/excepciones/excepciones.module';
 
 
 const RELATIVE_DATE_FORMATS = {
@@ -46,6 +47,7 @@ const RELATIVE_DATE_FORMATS = {
 		TrackingModule,
 		CotizarModule,
 		NegociacionModule,
+		ExcepcionesModule,
 		UserManagementModule,
 	],
 	providers: []

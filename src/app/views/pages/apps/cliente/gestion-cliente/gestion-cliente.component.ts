@@ -17,17 +17,13 @@ import { CargaFamiliarEnum } from '../../../../../core/enum/CargaFamiliarEnum';
 import { RelacionDependenciaEnum } from '../../../../../core/enum/RelacionDependenciaEnum';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TbQoPatrimonioCliente } from '../../../../../core/model/quski/TbQoPatrimonioCliente';
-import { CatalogoService } from '../../../../../core/services/quski/catalogo.service';
-import { ReFileUploadService } from '../../../../../core/services/re-file-upload.service';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
-import { saveAs } from 'file-saver';
-import { CargarFotoDialogComponent } from '../../../../../views/partials/custom/fotos/cargar-foto-dialog/cargar-foto-dialog.component';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { PaisesEnum } from '../../../../../core/enum/PaisesEnum';
 import { ParroquiaService } from '../../../../../core/services/quski/parroquia.service';
@@ -42,10 +38,23 @@ import { element } from 'protractor';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
-import { TareaTrackingEnum } from '../../../../../core/enum/TareaTrackingEnum';
 import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
 import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
 import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
+import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
+import { ReferenciaParentescoEnum } from '../../../../../core/enum/ReferenciaParentescoEnum';
+import { CloudstudioService } from '../../../../../core/services/quski/cloudstudio.service';
+import { ConsultaCliente } from '../../../../../core/model/cloudstudio/ConsultaCliente';
+import { CrearCliente } from '../../../../../core/model/cloudstudio/CrearCliente';
+import { ActividadEconomicaCliente } from '../../../../../core/model/cloudstudio/ActividadEconomicaCliente';
+import { ContactosCliente } from '../../../../../core/model/cloudstudio/ContactosCliente';
+import { CuentasBancariasCliente } from '../../../../../core/model/cloudstudio/CuentasBancariasCliente';
+import { TelefonoCliente } from '../../../../../core/model/cloudstudio/TelefonoCliente';
+import { EditarCliente } from '../../../../../core/model/cloudstudio/EditarCliente';
+import { TablaAmortizacion } from '../../../../../core/model/cloudstudio/TablaAmortizacion';
+import { SimulacionPrecancelacion } from '../../../../../core/model/cloudstudio/SimulacionPrecancelacion';
+import { TablaPresuntivaDatos } from '../../../../../core/model/cloudstudio/TablaPresuntivaDatos';
+import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 
 export interface User {
   name: string;
@@ -57,198 +66,193 @@ export interface User {
   styleUrls: ['./gestion-cliente.component.scss']
 })
 export class GestionClienteComponent implements OnInit {
+  // VARIABLES DE BUSQUEDA EN NEGOCIACION
+  public habilitarBtActualizar : boolean;
+  public idDireccionDomicilio : string;
+  public idDireccionLaboral   : string;
+  private idNegociacion       : string;
+  public provinciaD           : string;
+  public parroquiaD           : string;
+  public parroquiaL           : string;
+  public provinciaL           : string;
+  public cantonD              : string;
+  public cantonL              : string;
+  public id                   : string;
 
-  public agrupacionEstado: Array<string> = ["-", "Mostrar existencias", "Mostrar joyas en custodia", "Mostrar vitrina"];
-  public agrupacionEstadoSelected: string;
-  public estadoSelected: string;
-  public id;
-  @ViewChild('ref', { static: true }) ref;
-  disableConsultar;
-  disableConsultarSubject = new BehaviorSubject<boolean>(true);
+
+
 
   // TABLA DE REFERENCIAS PERSONALES
   displayedColumns = ['Accion', 'N', 'NombresCompletos', 'Parentesco', 'Direccion', 'TelefonoMovil', 'TelefonoFijo'];
   dataSource = new MatTableDataSource<TbReferencia>();
-  //TABLA DE PATRIMONIO ACTIVO
+  // TABLA DE PATRIMONIO ACTIVO
   displayedColumnsActivo = ['Accion', 'Activo', 'Avaluo'];
   dataSourcePatrimonioActivo = new MatTableDataSource<TbQoPatrimonioCliente>();
-  //TABLA DE PATRIMONIO PASIVO
+  // TABLA DE PATRIMONIO PASIVO
   displayedColumnsPasivo = ['Accion', 'Pasivo', 'Avaluo'];
   dataSourcePatrimonioPasivo = new MatTableDataSource<TbQoPatrimonioCliente>();
-  //TABLA DE INGRESO EGRESO
+  // TABLA DE INGRESO EGRESO
   displayedColumnsII = ['Accion','Is', 'Valor'];
   dataSourceIngresoEgreso = new MatTableDataSource<TbQoIngresoEgresoCliente>();
-
-  public ingresoOrigen: Array<string> = [];
-  public pageSize = 5;
-  public currentPage = 0;
-  public totalSize = 0;
-  public totalResults = 0;
-  p = new Page();
-
-  canal =[];
-  actividadeco =[];
-  ocupaciones = null;
-  origen = null;
-
-
-  // STANDARD VARIABLES
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  public loading;
-  public lCreate;
-  idDireccionDomicilio: string;
-  idDireccionLaboral: string;
-  cantonD : string;
-  parroquiaD : string;
-  provinciaD : string;
-  cantonL : string;
-  parroquiaL: string;
-  provinciaL: string;
-
-  // STREPPER
-  isLinear = true;
-  //TRACKING
-  public idTotalTracking : string[];
-  public idTracking1 : any;
-  public idTracking2 : any;
-  public idTracking3 : any;
-  public idTracking4 : any;
-  public idTracking5 : any;
-  public idTracking6 : any;
-  public idTracking7 : any;
-
-  
-  // LISTAS & ENUMS
-  listSeparacionBienes    = Object.values(SeparacionBienesEnum);
-  listEstadoCivil         = Object.values(EstadoCivilEnum);
-  listNivel               = Object.values(NivelEstudioEnum);
-  listParaDesarrolloEnum  = Object.values(ParaDesarrolloEnum);
-  listSector              = Object.keys(SectorEnum);
-  listOrigenIngreso       = Object.values(OrigenIngresosEnum);
-  listTipoVivienda        = Object.keys(OcupacionInmuebleEnum);
-  listGenero              = Object.values(GeneroEnum)
-  listCargaFamiliar       = Object.values(CargaFamiliarEnum);
-  listRelacionDependencia = Object.keys(RelacionDependenciaEnum);
-
-
+  // ARRAY CARGADOS DE SOFTBANK <-------------> ESPERANDO WEB SERVICES <----------------->
+  public canal        = [];
+  public actividadeco = [];
+  public ocupaciones  = [];
+  public profesiones  = [];
+  public parroquias   = [];
+  // ENUM ESPERANDO WEB SERVICE DE SOFTBANK
   listProfesion           = Object.keys(ProfesionEnum);
   listPaises              = Object.values(PaisesEnum);
+  // STANDARD VARIABLES
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  public p = new Page();
+  disableConsultar;
+  disableConsultarSubject = new BehaviorSubject<boolean>(true);
+  // VARIABLES DE TRACKING
+  public horaInicio      : any;
+  public horaAsignacion  : any;
+  public horaAtencion    : any;
+  public horaFinal       : any;
 
-  listNombreParroquia = [];
-  cliente             : TbQoCliente;
-  direccionDomicilio : TbQoDireccionCliente;
-  direccionLaboral : TbQoDireccionCliente;
-  ingresoEgresoGuardado : TbQoIngresoEgresoCliente;
-  patrimonioActivo : TbQoPatrimonioCliente;
-  patrimonioPasivo : TbQoPatrimonioCliente;
-  referenciaGuardado : TbReferencia;
-  ubicacionEntity     : Parroquia[]   = new Array();
-  urlimage            : string;
-  
+  // ENUMS
+  public listReferencia          = Object.values(ReferenciaParentescoEnum);   
+  public listRelacionDependencia = Object.keys(RelacionDependenciaEnum);
+  public listSeparacionBienes    = Object.values(SeparacionBienesEnum);
+  public listTipoVivienda        = Object.keys(OcupacionInmuebleEnum);
+  public listParaDesarrolloEnum  = Object.values(ParaDesarrolloEnum);
+  public listOrigenIngreso       = Object.values(OrigenIngresosEnum);
+  public listCargaFamiliar       = Object.values(CargaFamiliarEnum);
+  public listNivel               = Object.values(NivelEstudioEnum);
+  public listEstadoCivil         = Object.values(EstadoCivilEnum);
+  public listGenero              = Object.values(GeneroEnum)
+  public listSector              = Object.keys(SectorEnum);
+  // OBJETOS DE ENTIDADES
+  public ubicacionEntity       : Parroquia[]   = new Array();
+  public ingresoEgresoGuardado : TbQoIngresoEgresoCliente;
+  public ingresoEgreso         : TbQoIngresoEgresoCliente;
+  public patrimonioActivo      : TbQoPatrimonioCliente;
+  public patrimonioPasivo      : TbQoPatrimonioCliente;
+  public patrimonioCliente     : TbQoPatrimonioCliente;
+  public direccionDomicilio    : TbQoDireccionCliente;
+  public direccionLaboral      : TbQoDireccionCliente;
+  public referenciaGuardado    : TbReferencia;
+  public cliente               : TbQoCliente;
+  public referencia            : TbReferencia;
   // FORM DATOS CLIENTES
   public formCliente: FormGroup = new FormGroup({});
-  public identificacion = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
-  public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public primerNombre = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public segundoNombre = new FormControl('', [Validators.maxLength(50)]);
-  public apellidoMaterno = new FormControl('', [Validators.maxLength(50)]);
-  public apellidoPaterno = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public genero = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public estadoCivil = new FormControl('', Validators.required);
-  public cargaFamiliar = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public fechaNacimiento = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public lugarNacimiento = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public nacionalidad = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public nivelEducacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public identificacion     = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public actividadEconomica = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public canalContacto = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public separacionBienes = new FormControl('', []);
-  public edad = new FormControl('', []);
+  public nombresCompletos   = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public apellidoPaterno    = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public fechaNacimiento    = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public lugarNacimiento    = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public nivelEducacion     = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public cargaFamiliar      = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public canalContacto      = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public primerNombre       = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public nacionalidad       = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public genero             = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public apellidoMaterno    = new FormControl('', [Validators.maxLength(50)]);
+  public segundoNombre      = new FormControl('', [Validators.maxLength(50)]);
+  public estadoCivil        = new FormControl('', Validators.required);
+  public separacionBienes   = new FormControl('', []);
+  public edad               = new FormControl('', []);
   // FORM DE CONTACTO  
+  public telefonoMovil      = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+  public email              = new FormControl('', [Validators.email, Validators.maxLength(100), Validators.required]);
+  public telefonoAdicional  = new FormControl('', [Validators.minLength(9), Validators.maxLength(10)]);
+  public telefonoOtro       = new FormControl('', [Validators.minLength(9), Validators.maxLength(10)]);
+  public telefonoFijo       = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
   public formDatosContacto: FormGroup = new FormGroup({});
-  public telefonoFijo = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
-  public telefonoAdicional = new FormControl('', [Validators.minLength(9), Validators.maxLength(10)]);
-  public telefonoMovil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
-  public telefonoOtro = new FormControl('', [Validators.minLength(9), Validators.maxLength(10)]);
-  public email = new FormControl('', [Validators.email, Validators.maxLength(100), Validators.required]);
   // FORM DE  DOMICILIO 
-  public formDatosDireccionDomicilio: FormGroup = new FormGroup({});
-  public ubicacion = new FormControl('', Validators.required);
-  public tipoVivienda = new FormControl('', Validators.required);
-  public callePrincipal = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public barrio = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public numeracion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public calleSecundaria = new FormControl('', [Validators.maxLength(50)]);
   public referenciaUbicacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public callePrincipal = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public numeracion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public barrio = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public calleSecundaria = new FormControl('', [Validators.maxLength(50)]);
+  public formDatosDireccionDomicilio: FormGroup = new FormGroup({});
+  public tipoVivienda = new FormControl('', Validators.required);
+  public ubicacion = new FormControl('', Validators.required);
   public sector = new FormControl('', Validators.required);
   public drLgDo = new FormControl('', []);
   public drCrDo = new FormControl('', []);
   // FORM DE  OFICINA 
-  public formDatosDireccionLaboral: FormGroup = new FormGroup({});
-  public barrioO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public ubicacionO = new FormControl('', Validators.required);
-  public sectorO = new FormControl('', Validators.required);
+  public referenciaUbicacionO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public callePrincipalO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public numeracionO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public barrioO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public calleSecundariaO = new FormControl('', [Validators.maxLength(50)]);
-  public referenciaUbicacionO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public tipoViviendaO = new FormControl('', Validators.required);
+  public formDatosDireccionLaboral: FormGroup = new FormGroup({});
+  public ubicacionO = new FormControl('', Validators.required);
+  public sectorO = new FormControl('', Validators.required);
   public drLgLb = new FormControl('', []);
   public drCrLb = new FormControl('', []);
 
   // FORM DE DATOS ECONOMICOS CLIENTE 
-  public formDatosEconomicos: FormGroup = new FormGroup({});
-  public relacionDependencia = new FormControl('');
-  public actividadEmpresa = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public actividadEconomicaEmpresa = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public actividadEmpresa = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public origenIngresos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public profesion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public ocupacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cargo = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public profesion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public origenIngresos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public formDatosEconomicos: FormGroup = new FormGroup({});
+  public relacionDependencia = new FormControl('');
   // FORM DE INGRESO  
+  public valorIngreso = new FormControl('',[Validators.maxLength(50)]);
    public formDatosIngreso: FormGroup = new FormGroup({});
-   public valorIngreso = new FormControl('',[Validators.maxLength(50)]);
   // FORM DE EGRESO 
-  public formDatosEgreso: FormGroup = new FormGroup({});
   public valorEgreso = new FormControl('',[Validators.maxLength(50)]);
+  public formDatosEgreso: FormGroup = new FormGroup({});
   // FORM DE PATRIMONIO ACTIVO
+  public avaluoActivo = new FormControl('',[Validators.maxLength(50)]);
   public formDatosPatrimonioActivos: FormGroup = new FormGroup({});
   public activo = new FormControl('',[Validators.maxLength(50)]);
-  public avaluoActivo = new FormControl('',[Validators.maxLength(50)]);
   // FORM DE PATRIMONIO PASIVO
+  public avaluoPasivo = new FormControl('',[Validators.maxLength(50)]);
   public formDatosPatrimonioPasivos: FormGroup = new FormGroup({});
   public pasivo = new FormControl('',[Validators.maxLength(50)]);
-  public avaluoPasivo = new FormControl('',[Validators.maxLength(50)]);
   // FORM DE REFERENCIAS PERSONALES
-  public formDatosReferenciasPersonales: FormGroup = new FormGroup({});
-  public nombresCompletosR = new FormControl('', [Validators.maxLength(50)]);
-  public parentescoR = new FormControl('', [Validators.maxLength(50)]);
-  public direccionR = new FormControl('', [Validators.maxLength(50)]);
   public telefonoMovilR = new FormControl('',[Validators.minLength(10), Validators.maxLength(10)]);
   public telefonoFijoR = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
-
-  // WRAPPERS Y ENTIDADES
-  patrimonioCliente : TbQoPatrimonioCliente;
-  ingresoEgreso     : TbQoIngresoEgresoCliente;
-  referencia        : TbReferencia;
+  public nombresCompletosR = new FormControl('', [Validators.minLength(3),Validators.maxLength(50)]);
+  public formDatosReferenciasPersonales: FormGroup = new FormGroup({});
+  public parentescoR = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
+  public direccionR = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
   //GLOBAL DATASOURCE
   public  element;
-  private idNegociacion;
-  private idCliente;
   //VARIABLES DE CALCULO INGRESO, EGRESO Y PATRIMONIO
   public totalActivo            : number = 0;
   public totalPasivo            : number = 0;
   public totalValorIngresoEgreso: number = 0;
   public valorValidacion        : number = 0;
+  
 
-
+  /**
+   * 
+   * @param cas 
+   * @param neg 
+   * @param dialog 
+   * @param sinNoticeService 
+   * @param sp 
+   * @param route 
+   * @param subheaderService 
+   * @param dh 
+   * @param pr 
+   * @param dc 
+   * @param pm 
+   * @param re 
+   * @param tr 
+   */
   constructor(
-    private cas: CatalogoService,
+    private css : CloudstudioService,
+    private neg: NegociacionService,
     private cs: ClienteService,
     public dialog: MatDialog,
     private sinNoticeService: ReNoticeService,
     private sp: ParametroService,
     private route: ActivatedRoute,
+    private router: Router,
     private subheaderService: SubheaderService,
     private dh: DocumentoHabilitanteService,
     private pr: ParroquiaService,
@@ -261,8 +265,9 @@ export class GestionClienteComponent implements OnInit {
     this.sp.setParameter();
     this.getActividadEconomica();
     this.getCanalDeContacto();
+    this.cargarUbicacion();
 
-    //DATOS CLIENTES
+    //FORM DATOS CLIENTES
     this.formCliente.addControl("identificacion"            , this.identificacion);
     this.formCliente.addControl("nombresCompletos "         , this.nombresCompletos);
     this.formCliente.addControl("primerNombre "             , this.primerNombre);
@@ -278,8 +283,6 @@ export class GestionClienteComponent implements OnInit {
     this.formCliente.addControl("actividadEconomica  "      , this.actividadEconomica);
     this.formCliente.addControl("separacionBienes  "        , this.separacionBienes);
     this.formCliente.addControl("canalContacto  "           , this.canalContacto);
-
-
     //FORM DE CONTACTO  
     this.formDatosContacto.addControl("telefonoFijo  "    , this.telefonoFijo);
     this.formDatosContacto.addControl("telefonoAdicional" , this.telefonoAdicional);
@@ -328,82 +331,60 @@ export class GestionClienteComponent implements OnInit {
     this.formDatosReferenciasPersonales.addControl("direccionR       ", this.direccionR);
     this.formDatosReferenciasPersonales.addControl("telefonoMovilR   ", this.telefonoMovilR);
     this.formDatosReferenciasPersonales.addControl("telefonoFijoR    ", this.telefonoFijoR);
-
-    //Disable
+    //CAMPOS DE LECTURA
     this.nombresCompletos.disable();
     this.separacionBienes.disable();
     this.relacionDependencia.disable();
     this.actividadEmpresa.disable();
     this.cargo.disable();
   }
-
   ngOnInit() {
-    this.registrarTracking( TareaTrackingEnum.REGISTRO_DE_INFORMACION_DEL_CLIENTE,
-                            null,
-                            null,
-                            SituacionTrackingEnum.EN_PROCESO, 
-                            UsuarioEnum.ASESOR, 
-                            true,
-                            true,
-                            true, 
-                            false )
+    this.habilitarBtActualizar  = false;
     this.disableConsultar = this.disableConsultarSubject.asObservable();
-    /* this.listNombreParroquia = this.ubicacion.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      ); */
+    this.implementacionServiciosCloudstudioTEST();
+    //SET VALORES POR DEFECTO DE CHECKS
+    this.drLgDo.setValue(true);
+    this.drCrDo.setValue(true);
+    this.drLgLb.setValue(false);
+    this.drCrLb.setValue(false);
+    //TRACKING
+    this.tr.getSystemDate().subscribe( (hora: any) =>{
+      if(hora.entidad){
+        //console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
+        this.horaInicio = hora.entidad
+      }
+    });
+    // BUSQUEDA DE CLIENTE POR NEGOCIACION
     this.clienteNegociacion();
-    this.cargarUbicacion();
-    //this.buscarCatalogobyTipo();
-    //this.loadActividad();
-    //this.loadActividadEco();
-    //this.loadOcupacion();
-    //this.loadOrigenIngresos();
     this.subheaderService.setTitle("Gestion de Clientes");
-    /* reader.result.split(',')[1] */
-
   }
-  /* private _filter(value: string): string[] {
-    const filterValue = value.toUpperCase();
-
-    return this.listNombreParroquia.filter(option => option.toLowerCase().includes(filterValue));
-  } */
-
-
+  // NO SE QUE HACE???
   displayFn(user?: User): string | undefined {
     return user ? user.name : undefined;
   }
-
+  /**
+   * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION
+   * @description PASADA POR this.route.paramMap
+   */
   clienteNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
-      //console.log("esta es la ruta q llega para el id de negociacion ", data);
-      //data.params.id
-      if (true) {
-        //console.log("id d negociacion ", data.params.id)
-        //this.idNegociacion = data.params.id;
-        this.idNegociacion = "109";
-        //console.log('idNegociacion ', this.idNegociacion);
-        this.cas.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
+      data.params.id
+      if (data.params.id) {
+        this.idNegociacion = data.params.id;
+        //this.idNegociacion = "109";
+        this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
-            this.registrarTracking( 
-              TareaTrackingEnum.PRESENTAR_DATOS_DE_CLIENTE_EXISTENTE,
-              null,
-              null,
-              SituacionTrackingEnum.EN_PROCESO, 
-              UsuarioEnum.QUSKI_ORO, 
-              true,
-              true,
-              true, 
-              false );
-            //console.log('cliente entidad ', data.entidad.tbQoCliente.cedulaCliente);
-            this.idCliente = data.entidad.tbQoCliente.cedulaCliente;
-            this.cs.findClienteByIdentificacion(this.idCliente).subscribe((data: any) => {
-              //console.log('identificacion ', this.idCliente);
+              this.tr.getSystemDate().subscribe( (hora: any) =>{
+                if(hora.entidad){
+                  ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
+                  this.horaAsignacion = hora.entidad;
+                  this.horaAtencion = hora.entidad;
+                }
+              });
+            this.id = data.entidad.tbQoCliente.cedulaCliente;
+            this.cs.findClienteByIdentificacion(this.id).subscribe((data: any) => {
               this.loadingSubject.next(false);
-              //console.log('cliente ', data.entidad);
               if (data.entidad) {
-                //console.log('cliente entidad ', data.entidad);
                 this.id = data.entidad.id;
                 this.nombresCompletos.setValue(data.entidad.primerNombre + ' ' + data.entidad.segundoNombre
                   + ' ' + data.entidad.apellidoPaterno + ' ' + data.entidad.apellidoMaterno);
@@ -427,7 +408,7 @@ export class GestionClienteComponent implements OnInit {
                 this.telefonoOtro.setValue(data.entidad.telefonoTrabajo);
                 this.canalContacto.setValue(data.entidad.canalContacto);
                 let email : string = data.entidad.email;
-                console.log("origenIngresos ===> "+ JSON.stringify(data.entidad));
+                //console.log("origenIngresos ===> "+ JSON.stringify(data.entidad));
                 this.origenIngresos.setValue(data.entidad.origenIngreso);
                 this.actividadEconomica.setValue(data.entidad.actividadEconomica);
                 this.actividadEmpresa.setValue(data.entidad.nombreEmpresa);
@@ -471,16 +452,15 @@ export class GestionClienteComponent implements OnInit {
                         this.calleSecundariaO.setValue(direccionO.calleSegundaria.toUpperCase());
                         this.referenciaUbicacionO.setValue(direccionO.referenciaUbicacion.toUpperCase());
                         this.sectorO.setValue(direccionO.sector.toUpperCase());
-                        this.registrarTracking( 
-                          TareaTrackingEnum.PRESENTAR_DATOS_DE_CLIENTE_EXISTENTE,
-                          this.id,
-                          this.idTracking3,
-                          SituacionTrackingEnum.FINALIZADO, 
-                          UsuarioEnum.QUSKI_ORO, 
-                          false,
-                          false,
-                          false, 
-                          true );
+                        this.habilitarBtActualizar = true;
+                        this.tr.getSystemDate().subscribe( (hora: any) =>{
+                          if(hora.entidad){
+                            ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
+                            this.horaAsignacion = hora.entidad;
+                            this.horaAtencion = hora.entidad;
+
+                          }
+                        });
                         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
                         this.loadingSubject.next(false);
                       } else{
@@ -525,15 +505,31 @@ export class GestionClienteComponent implements OnInit {
                 this.sinNoticeService.setNotice("ERROR AL CARGAR", 'error');
               }
             });
+          } else {
+            this.tr.getSystemDate().subscribe( (hora: any) =>{
+              if(hora.entidad){
+                ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
+                this.horaAsignacion = hora.entidad;
+                this.horaAtencion = hora.entidad;
+              }
+            });
           }
-        }
-        );
+        });
+      } else {
+        this.tr.getSystemDate().subscribe( (hora: any) =>{
+          if(hora.entidad){
+            ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
+            this.horaAsignacion = hora.entidad;
+            this.horaAtencion = hora.entidad;
+          }
+        });
       }
     });
   }
-  
-
-  
+  /**
+   * 
+   * @description METODO QUE CALCULA LA EDAD
+   */
   onChangeFechaNacimiento() {
     this.loadingSubject.next(true);
     //console.log("VALOR DE LA FECHA" + this.fechaNacimiento.value);
@@ -551,7 +547,13 @@ export class GestionClienteComponent implements OnInit {
       this.loadingSubject.next(false);
     }
   }
-
+ /**
+  * 
+  * @param fecha 
+  * @param format 
+  * @description CALCULA LA DIFERENCIA ENTRE LA FECHA PASADA Y LA ACTUAL.
+  * @description IMPLEMENTA UN SERVICIO DEL CORE ASINCRONO.
+  */
   getDiffFechas(fecha: Date, format: string) {
     this.loadingSubject.next(true);
     const convertFechas = new RelativeDateAdapter();
@@ -587,6 +589,10 @@ export class GestionClienteComponent implements OnInit {
         }
       );
   }
+  /**
+   * @description TRAE UNA LISTA DE CANALES DE CONTACTO DEL SERVIDOR.
+   * @description IMPLEMENTA UN METODO ASINCRONO
+   */
   getCanalDeContacto( ){
     this.sp.findByNombreTipoOrdered("","CANAL","Y").subscribe( (wrapper:any)=>{
       //console.log("retornos "+ JSON.stringify(wrapper)  );
@@ -597,22 +603,12 @@ export class GestionClienteComponent implements OnInit {
             //console.log("lista canal >>>>" + JSON.stringify( this.canal ));
           }
         }
-        /* if (element.list) {
-          //console.log("lista  >>>>" + JSON.stringify(element));
-          this.ubicacionEntity = element.list;
-          for (let i = 0; i < this.ubicacionEntity.length; i++) {
-            //console.log(">>>>>>>>>>>>>>>>>>>> Nombre Parroquia ", this.ubicacionEntity[i].canton.provincia);
-            this.listNombreParroquia.push(this.ubicacionEntity[i].nombreParroquia.toUpperCase());
-  
-            //console.log("lista Parroquia >>>>" + JSON.stringify(this.listNombreParroquia));
-          }
-        } */
     },error => {
       if(  error.error ){
         if( error.error.codError ){
           this.sinNoticeService.setNotice(error.error.codError + ' - ' + error.error.msgError  , 'error');
         } else {
-          this.sinNoticeService.setNotice("Error al cargar parametros de Canal de contacto"  , 'error');
+          this.sinNoticeService.setNotice("ERROR AL CARGAR LOS CANALES DE CONTACTO"  , 'error');
         }
 			} else if(  error.statusText && error.status==401 ){
 				this.dialog.open(AuthDialogComponent, {
@@ -625,6 +621,10 @@ export class GestionClienteComponent implements OnInit {
 			}
     } );
   }
+  /**
+   *  @description TRAE UNA LISTA DE ACTIVIDADES ECONOMICAS DEL SERVIDOR.
+   *  @description IMPLEMENTA UN METODO ASINCRONO
+   */
   getActividadEconomica(){
     this.sp.findByNombreTipoOrdered("","ACT-ECON","Y").subscribe( (wrapper:any)=>{
       //console.log("retornos "+ JSON.stringify(wrapper)  );
@@ -653,7 +653,11 @@ export class GestionClienteComponent implements OnInit {
 			}
     } );
   }
-  //Mensages
+  /**
+   * 
+   * @param pfield 
+   * @description MENSAJES DE ERRORES.
+   */
   getErrorMessage(pfield: string) {
     const errorRequerido = 'Ingresar valores';
     const errorEmail = 'Correo Incorrecto';
@@ -870,115 +874,28 @@ export class GestionClienteComponent implements OnInit {
       const input = this.origenIngresos;
       return input.hasError('required') ? errorRequerido : '';
     }
-    //Datos referencias personales
-    /* if (pfield && pfield === 'nombresCompletosR') {
-      const input = this.nombresCompletosR;
-      return input.hasError('required') ? errorRequerido : '';
-    }
-    if (pfield && pfield === 'parentescoR') {
-      const input = this.parentescoR;
-      return input.hasError('required') ? errorRequerido : '';
-    }
-    if (pfield && pfield === 'direccionR') {
-      const input = this.direccionR;
-      return input.hasError('required') ? errorRequerido : '';
-    }
-    if (pfield && pfield === 'telefonoMovilR') {
-      const input = this.telefonoMovilR;
-      return input.hasError('pattern')
-        ? errorNumero
-        : input.hasError('maxlength')
-          ? errorLogitudExedida
-          : input.hasError('minlength')
-            ? errorInsuficiente
-            : '';
-    }
-    if (pfield && pfield === 'telefonoFijoR') {
-      const input = this.telefonoFijoR;
-      return input.hasError('pattern')
-        ? errorNumero
-        : input.hasError('maxlength')
-          ? errorLogitudExedida
-          : input.hasError('minlength')
-            ? errorInsuficiente
-            : '';
-    } */
   }
-
-
-  descargarPlantillaHabilitante() {
-    this.registrarTracking( 
-      TareaTrackingEnum.REGISTRO_DE_DOCUMENTOS_DEL_CLIENTE,
-      null,
-      null,
-      SituacionTrackingEnum.EN_PROCESO, 
-      UsuarioEnum.BPM, 
-      true,
-      false,
-      false, 
-      false );
-    this.dh.downloadAutorizacionPlantilla(1, "PDF", this.nombresCompletos.value, this.identificacion.value).subscribe(
-      (data: any) => {
-        if (data) {
-          saveAs(data, "Documento Habilitante" + ".pdf");
-          this.registrarTracking( 
-            TareaTrackingEnum.REGISTRO_DE_DOCUMENTOS_DEL_CLIENTE,
-            null,
-            this.idTracking2,
-            SituacionTrackingEnum.EN_PROCESO, 
-            UsuarioEnum.BPM, 
-            false,
-            true,
-            true, 
-            false );
-        } else {
-          this.sinNoticeService.setNotice(
-            "NO SE ENCONTRO REGISTRO PARA DESCARGA",
-            "error"
-          );
+  cargarComponenteHabilitante() {
+    if (this.id != null && this.id != "") {
+      let idReferenciaHab = this.id;
+      const dialogRef = this.dialog.open(DialogCargarHabilitanteComponent, {
+        width: "auto-max",
+        height: "auto-max",
+        data: idReferenciaHab
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        if (r) {
+          console.log("Data de subscribe ---> " + r);
         }
-      },
-      error => {
-        //console.log("================>error: " + JSON.stringify(error));
-        this.sinNoticeService.setNotice(
-          "ERROR DESCARGA DE PLANTILLA HABILITANTE",
-          "error"
-        );
-      }
-    );
+      });
+    } else {
+      this.sinNoticeService.setNotice("ERROR NO HAY CLIENTE PARA ACTUALIZAR LOS HABILITANTES", 'error');
+    }
   }
-  seleccionarActualizar() {
-    let d = {
-      idTipoDocumento: 1,
-      identificacionCliente: this.identificacion.value,
-      data: this.identificacion.value
-    };
-    const dialogRef = this.dialog.open(CargarFotoDialogComponent, {
-      width: "auto",
-      height: "auto",
-      data: d
-
-    });
-    dialogRef.afterClosed().subscribe(r => {
-      //console.log("===>>ertorno al cierre: " + JSON.stringify(r));
-      if (r) {
-        this.registrarTracking( 
-          TareaTrackingEnum.REGISTRO_DE_DOCUMENTOS_DEL_CLIENTE,
-          null,
-          this.idTracking2,
-          SituacionTrackingEnum.FINALIZADO, 
-          UsuarioEnum.BPM, 
-          false,
-          false,
-          false, 
-          true );
-        this.sinNoticeService.setNotice(
-          "METODO NO IMPLEMENTADO",
-          "error"
-        );
-      }
-    });
-  }
+  /**
+   * @description MEOTOD QUE SETEA VALORES EN CAMPOS DE:
+   * @description RELACION DE DEPENDENCIA, CARGO Y ACTIVIDAD EMPRESA.
+   */
   setRelacionDependencia() {
     this.cargo.enable();
     this.actividadEmpresa.enable();
@@ -996,7 +913,9 @@ export class GestionClienteComponent implements OnInit {
       this.actividadEmpresa.disable();
     }
   }
-
+  /**
+   * @description METODO QUE HABILITA CAMPOS DE SEPARACION DE BIENES. 
+   */
   habilitarCampo() {
     this.separacionBienes.setValue('');
     const estadoCivilIngresado = this.estadoCivil.value;
@@ -1008,22 +927,15 @@ export class GestionClienteComponent implements OnInit {
       this.separacionBienes.disable();
     }
   }
+  /**
+   * @description FUNCION EN BOTON QUE AGREGA UN NUEVO ACTIVO A LA TABLA DE PATRIMONIO ACTIVOS
+   */
   nuevoActivo() {
-    this.registrarTracking( 
-      TareaTrackingEnum.CALCULO_DE_PATRIMONIO_DEL_CLIENTE,
-      null,
-      null,
-      SituacionTrackingEnum.EN_PROCESO, 
-      UsuarioEnum.BPM, 
-      true,
-      true,
-      true, 
-      false );
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
     this.patrimonioCliente = new TbQoPatrimonioCliente;
-    if (this.formDatosPatrimonioActivos.valid) {
-      if (this.avaluoActivo.value > this.valorValidacion) {
+    if (this.formDatosPatrimonioActivos.valid ) {
+      if (this.avaluoActivo.value > this.valorValidacion && this.activo.value != "" && this.activo.value != null) {
         this.patrimonioCliente.avaluo = this.avaluoActivo.value;
         this.patrimonioCliente.activos = this.activo.value.toUpperCase();
         if (this.element) {
@@ -1035,43 +947,27 @@ export class GestionClienteComponent implements OnInit {
         const data = this.dataSourcePatrimonioActivo.data;
         data.push(this.patrimonioCliente);
         this.dataSourcePatrimonioActivo.data = data;
-        this.registrarTracking( 
-          TareaTrackingEnum.CALCULO_DE_PATRIMONIO_DEL_CLIENTE,
-          null,
-          this.idTracking5,
-          SituacionTrackingEnum.FINALIZADO, 
-          UsuarioEnum.BPM, 
-          false,
-          false,
-          false, 
-          true );
-          this.idTracking5 = null;
         this.element = null;
         this.calcularActivo();
         this.limpiarCampos();
       } else {
-        this.sinNoticeService.setNotice("VALOR DE ACTIVO INGRESADO EN AVALUO NO ES VALIDO", 'error');
+        this.sinNoticeService.setNotice("VALORES AGREAGADOS PARA UN NUEVO PASIVO NO ES VALIDO", 'error');
       }
     } else {
       this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'warning');
     }
   }
+  /**
+   * @description FUNCION EN BOTON QUE AGREGA UN NUEVO PASIVO A LA TABLA DE PATRIMONIO PASIVOS
+   */
   nuevoPasivo() {
-    this.registrarTracking( 
-      TareaTrackingEnum.CALCULO_DE_PATRIMONIO_DEL_CLIENTE,
-      null,
-      null,
-      SituacionTrackingEnum.EN_PROCESO, 
-      UsuarioEnum.BPM, 
-      true,
-      true,
-      true, 
-      false );
+
+
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
     this.patrimonioCliente = new TbQoPatrimonioCliente;
     if (this.formDatosPatrimonioPasivos.valid) {
-      if (this.avaluoPasivo.value > this.valorValidacion) {
+      if (this.avaluoPasivo.value > this.valorValidacion && this.pasivo.value != null && this.pasivo.value != "" ) {
         this.patrimonioCliente.avaluo = this.avaluoPasivo.value;
         this.patrimonioCliente.pasivos = this.pasivo.value.toUpperCase();
         if (this.element) {
@@ -1083,39 +979,20 @@ export class GestionClienteComponent implements OnInit {
         const data = this.dataSourcePatrimonioPasivo.data;
         data.push(this.patrimonioCliente);
         this.dataSourcePatrimonioPasivo.data = data;
-        this.registrarTracking( 
-          TareaTrackingEnum.CALCULO_DE_PATRIMONIO_DEL_CLIENTE,
-          null,
-          this.idTracking5,
-          SituacionTrackingEnum.FINALIZADO, 
-          UsuarioEnum.BPM, 
-          false,
-          false,
-          false, 
-          true );
-          this.idTracking5 = null;
         this.element = null;
         this.calcularPasivo();
         this.limpiarCampos();
       } else {
-        this.sinNoticeService.setNotice("VALOR DE PASIVO INGRESADO EN AVALUO NO ES VALIDO", 'error');
+        this.sinNoticeService.setNotice("VALORES AGREAGADOS PARA UN NUEVO PASIVO NO ES VALIDO", 'error');
       }
     } else {
       this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'error');
     }
   }
+  /**
+   * @description FUNCION EN BOTON QUE AGREGA UN NUEVO INGRESO A LA TABLA DE INGRESOS / EGRESOS 
+   */
   nuevoIngreso() {
-    this.registrarTracking( 
-      TareaTrackingEnum.CALCULO_DE_NIVEL_DE_ENDEUDAMIENTO_EN_INGRESOS_Y_EGRESOS,
-      null,
-      null,
-      SituacionTrackingEnum.EN_PROCESO, 
-      UsuarioEnum.BPM, 
-      true,
-      true,
-      true, 
-      false );
-  
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
     this.valorEgreso.setValue(null);
@@ -1135,17 +1012,6 @@ export class GestionClienteComponent implements OnInit {
         data.push(this.ingresoEgreso);
         this.dataSourceIngresoEgreso.data = data;
         this.element = null;
-        this.registrarTracking( 
-          TareaTrackingEnum.CALCULO_DE_NIVEL_DE_ENDEUDAMIENTO_EN_INGRESOS_Y_EGRESOS,
-          null,
-          this.idTracking4,
-          SituacionTrackingEnum.FINALIZADO, 
-          UsuarioEnum.BPM, 
-          false,
-          false,
-          false, 
-          true );
-          this.idTracking4 = null;
         this.calcularIngresoEgreso();
         this.limpiarCampos();
       } else {
@@ -1155,17 +1021,10 @@ export class GestionClienteComponent implements OnInit {
       this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'warning');
     }
   }
+  /**
+   * @description FUNCION EN BOTON QUE AGREGA UN NUEVO EGRESO A LA TABLA DE INGRESOS / EGRESOS 
+   */
   nuevoEgreso() {
-    this.registrarTracking( 
-      TareaTrackingEnum.CALCULO_DE_NIVEL_DE_ENDEUDAMIENTO_EN_INGRESOS_Y_EGRESOS,
-      null,
-      null,
-      SituacionTrackingEnum.EN_PROCESO, 
-      UsuarioEnum.BPM, 
-      true,
-      true,
-      true, 
-      false );
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
     this.valorIngreso.setValue(null);
@@ -1185,17 +1044,6 @@ export class GestionClienteComponent implements OnInit {
         data.push(this.ingresoEgreso);
         this.dataSourceIngresoEgreso.data = data;
         this.element = null;
-        this.registrarTracking( 
-          TareaTrackingEnum.CALCULO_DE_NIVEL_DE_ENDEUDAMIENTO_EN_INGRESOS_Y_EGRESOS,
-          null,
-          this.idTracking4,
-          SituacionTrackingEnum.FINALIZADO, 
-          UsuarioEnum.BPM, 
-          false,
-          false,
-          false, 
-          true );
-          this.idTracking4 = null;
         this.calcularIngresoEgreso();
         this.limpiarCampos();
       } else {
@@ -1205,6 +1053,9 @@ export class GestionClienteComponent implements OnInit {
       this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'error');
     }
   }
+  /**
+   * @description METODO QUE CALCULA EL NUEVO VALOR DEL ACTIVO TOTAL CUANDO SE AGREA A LA TABLA 
+   */
   calcularActivo() {
     this.totalActivo = 0;
     if (this.dataSourcePatrimonioActivo.data) {
@@ -1213,6 +1064,9 @@ export class GestionClienteComponent implements OnInit {
       });
     }
   }
+  /**
+   * @description METODO QUE CALCULA EL NUEVO VALOR DEL PASIVO TOTAL CUANDO SE AGREA A LA TABLA 
+   */
   calcularPasivo() {
     this.totalPasivo = 0;
     if (this.dataSourcePatrimonioPasivo.data) {
@@ -1221,6 +1075,9 @@ export class GestionClienteComponent implements OnInit {
       });
     }
   }
+  /**
+   * @description METODO QUE CALCULA EL NUEVO VALOR DEL INGRESO / EGRESO TOTAL CUANDO SE AGREA A LA TABLA 
+   */
   calcularIngresoEgreso() {
     this.totalValorIngresoEgreso = 0;
     if (this.dataSourceIngresoEgreso.data) {
@@ -1230,13 +1087,22 @@ export class GestionClienteComponent implements OnInit {
         } else{
           if (element.esIngreso == false && element.esEgreso){
             this.totalValorIngresoEgreso = Number(this.totalValorIngresoEgreso) - Number(element.valor);
+            
           } else {
-            this.sinNoticeService.setNotice("Error de desarrollo", 'error');
+            this.sinNoticeService.setNotice("ERROR DE DESARROLLO", 'error');
           }
         }
+
       });
+      if (this.totalValorIngresoEgreso >= 5000){
+        this.sinNoticeService.setNotice("INGRESO NETO SOBREPASA LOS $5000", 'error');
+      }
     }
   }
+  /**
+   * @param element 
+   * @description METODO QUE BORRA UN INGRESO O EGRESO DE LA TABLA
+   */
   deleteIngresoEgreso(element) {
     const index = this.dataSourceIngresoEgreso.data.indexOf(element);
     this.dataSourceIngresoEgreso.data.splice(index, 1);
@@ -1244,7 +1110,10 @@ export class GestionClienteComponent implements OnInit {
     this.dataSourceIngresoEgreso.data = data;
     this.calcularIngresoEgreso();
   }
-
+  /**
+   * @param element 
+   * @description METODO QUE BORRA UN ACTIVO DE LA TABLA
+   */
   deleteActivo(element) {
     const index = this.dataSourcePatrimonioActivo.data.indexOf(element);
     this.dataSourcePatrimonioActivo.data.splice(index, 1);
@@ -1252,6 +1121,10 @@ export class GestionClienteComponent implements OnInit {
     this.dataSourcePatrimonioActivo.data = data;
     this.calcularActivo();
   }
+  /**
+   * @param element 
+   * @description METODO QUE BORRA UN PASIVO O EGRESO DE LA TABLA
+   */
   deletePasivo(element) {
     const index = this.dataSourcePatrimonioPasivo.data.indexOf(element);
     this.dataSourcePatrimonioPasivo.data.splice(index, 1);
@@ -1259,8 +1132,10 @@ export class GestionClienteComponent implements OnInit {
     this.dataSourcePatrimonioPasivo.data = data;
     this.calcularPasivo();
   }
-
-
+  /**
+   * @param element 
+   * @description METODO QUE EDITA UN INGRESO O EGRESO DE LA TABLA
+   */
   editar(element) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
@@ -1271,24 +1146,263 @@ export class GestionClienteComponent implements OnInit {
       if (element.esIngreso == false && element.esEgreso){
         this.valorEgreso.setValue(element.valor);
       } else {
-        this.sinNoticeService.setNotice("Error de desarrollo", 'error');
+        this.sinNoticeService.setNotice("ERROR DE DESARROLLO", 'error');
       }
     }
   }
+
+  /**
+   * 
+   */
+  implementacionServiciosCloudstudioTEST(){
+    let entidadConsultaCliente  = new ConsultaCliente();
+    entidadConsultaCliente.identificacion = "1311066441";
+    entidadConsultaCliente.idTipoIdentificacion = 1;
+    this.css.consultarClienteCS(entidadConsultaCliente).subscribe( data => {
+      if (data) {
+        console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
+      } else {
+        this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
+      }
+
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice("Error no fue cacturado en 'consultarClienteCS' :(", 'error');
+
+      }
+    });
+    /* this.css.consultarDireccionesTelefonosClienteCS(entidadConsultaCliente).subscribe(data => {
+      if(data){
+        console.log("Consulta de direcciones y telefonos del cliente ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarDireccionesTelefonosClienteCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("no se pudo capturar el error :c", 'error');
+      }
+    });
+    this.css.consultarIngresosEgresosClienteCS(entidadConsultaCliente).subscribe(data => {
+      if(data){
+        console.log("Consulta de Ingresos y egresos del cliente ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarIngresosEgresosClienteCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("no se pudo capturar el error :c", 'error');
+      }
+    });
+    this.css.consultarReferenciasClienteCS(entidadConsultaCliente).subscribe(data => {
+      if(data){
+        console.log("Consulta de Referencias del cliente ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarReferenciasClienteCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("no se pudo capturar el error :c", 'error');
+      }
+    }); 
+    let entidadCrearcliente = new CrearCliente();
+    let entidadActividadEconomica = new ActividadEconomicaCliente();
+    entidadActividadEconomica.idActividadEconomica = 2431;   // Se necesita catalogo
+    entidadCrearcliente.actividadEconomica = entidadActividadEconomica;
+    entidadCrearcliente.barrio = "Spingfield";
+    entidadCrearcliente.callePrincipal = "Av Siempre Viva 743";
+    entidadCrearcliente.calleSecundaria = "Desconocida";
+    entidadCrearcliente.codigoEducacion = "U";   // Se necesita catalogo
+    entidadCrearcliente.codigoEstadoCivil = "S"; // Se necesita catalogo
+    entidadCrearcliente.codigoProfesion = "336"; // Se necesita catalogo
+    entidadCrearcliente.codigoSectorVivienda = "R"; // Se necesita catalogo
+    entidadCrearcliente.codigoVivienda = "A"; // Se necesita catalogo
+    //Crear un array para pasarle los datos.
+    let listContactos = new ContactosCliente();
+    listContactos.activo = true;
+    listContactos.apellidos = "Doe";
+    listContactos.codigoTipoReferencia = "000" // Se necesita catalogo
+    listContactos.direccion = "Av Siempre Viva 742";
+    listContactos.nombres = "John";
+    listContactos.telefono = "0000000000";
+    listContactos.telefonoCelular = "9999999999";
+    entidadCrearcliente.contactosCliente.push(listContactos);
+    listContactos.activo = true
+    listContactos.apellidos = "Doe";
+    listContactos.codigoTipoReferencia = "000" // Se necesita catalogo
+    listContactos.direccion = "Av Siempre Viva 742";
+    listContactos.nombres = "Jane";
+    listContactos.telefono =  "1111111111";
+    listContactos.telefonoCelular = "8888888888";
+    entidadCrearcliente.contactosCliente.push(listContactos);
+    //Crear un array para pasarle los datos.
+    let listCuenta = new CuentasBancariasCliente();
+    listCuenta.activo = true;
+    listCuenta.cuenta = "123456789";
+    listCuenta.esTarjetaCredito = false;
+    listCuenta.idBanco = 171; // Se necesita catalogo 
+    entidadCrearcliente.cuentasBancariasCliente.push(listCuenta);
+    listCuenta.activo = true;
+    listCuenta.cuenta = "987654321";
+    listCuenta.esTarjetaCredito = false;
+    listCuenta.idBanco = 171; // Se necesita catalogo 
+    entidadCrearcliente.cuentasBancariasCliente.push( listCuenta );
+    entidadCrearcliente.email = "pvelez@cloudstudio.com.ec";
+    entidadCrearcliente.esMasculino = true;
+    entidadCrearcliente.fechaNacimiento = "1991-06-30";
+    entidadCrearcliente.idAgencia = 2; // Se necesita catalogo 
+    entidadCrearcliente.idLugarNacimiento = 1352; // Se necesita catalogo 
+    entidadCrearcliente.idPais = 52; // Se necesita catalogo 
+    entidadCrearcliente.idPaisNacimiento = 52; // Se necesita catalogo 
+    entidadCrearcliente.idResidencia = 1352; // Se necesita catalogo 
+    entidadCrearcliente.idTipoIdentificacion = 1;// Se necesita catalogo 
+    entidadCrearcliente.identificacion = "1311066441";
+    entidadCrearcliente.numeroCargasFamiliares = 0;
+    entidadCrearcliente.primerApellido = "Vélez";
+    entidadCrearcliente.primerNombre = "Pablo";
+    entidadCrearcliente.referencia = "Junto a la casa de Flanders";
+    entidadCrearcliente.segundoApellido =  "Franco";
+    entidadCrearcliente.segundoNombre =  "Rafael";    
+    //Crear un array para pasarle los datos.
+    let listTelefonos = new TelefonoCliente();
+    listTelefonos.esMovil = true
+    listTelefonos.esPrincipal = true
+    listTelefonos.numero = "0996553117";
+    entidadCrearcliente.telefonos.push( listTelefonos );
+    this.css.crearClienteCS(entidadCrearcliente).subscribe( ( data : any) => {
+      if(data){
+        console.log("creacion de cliente el cloud studio ---->" + JSON.stringify(data))
+      } else {
+        console.log("No me trajo data para creacion de cliente ----->" + JSON.stringify(data));
+      }
+    }, error => {
+      if(JSON.stringify(error).indexOf("codError") > 0 ){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      }else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+    let entidadEditarCliente = new EditarCliente();
+    entidadEditarCliente.email = "pvelez@cloudstudio.com.ec";
+    entidadEditarCliente.idTipoIdentificacion = 1
+    entidadEditarCliente.identificacion = "1311066441";
+    entidadEditarCliente.referencia = "Junto a la casa de Flanders"
+    this.css.editarClienteCS(entidadEditarCliente).subscribe( (data : any ) => {
+      if (data) {
+        console.log("edicion de cliente el cloud studio ---->" + JSON.stringify(data))
+      } else {
+        console.log("No me trajo data para creacion de cliente ----->" + JSON.stringify(data));
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });*/
+    this.css.consultarAgenciasCS().subscribe(data => {
+      if(data){
+        console.log("Consulta de catalogos de agencias ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarAgenciasCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+    /**
+    let tabla = new TablaAmortizacion();
+    tabla.codigoProducto = "002"; // Se necesita catalogo
+    tabla.codigoTipoPrestamo = "001"; // Se necesita catalogo
+    tabla.direccion = "Av. Siempre Viva 742";
+    tabla.email = "pvelez@cloudstudio.com.ec";
+    tabla.fechaNacimiento = "1991-06-30";
+    tabla.idCliente = 0;
+    tabla.idResidencia = 1352; // Se necesita catalogo
+    tabla.identificacion = "1311066441";
+    tabla.montoSolicitado = 2000.0;
+    tabla.nombre = "Pablo Rafael Vélez Franco";
+    let tablaPresuntivaDatos = new TablaPresuntivaDatos();
+    tablaPresuntivaDatos.codigoFrecuenciaPago = "ME"; // Se necesita catalogo
+    tablaPresuntivaDatos.cuotas = 12;
+    tablaPresuntivaDatos.cuotasGracia = 0;
+    tablaPresuntivaDatos.diaFijo = false;
+    tablaPresuntivaDatos.idTipoTablaAmortizacion = 7; // Se necesita catalogo
+    tablaPresuntivaDatos.pagoDia = 12;
+    tabla.tablaPresuntivaDatos = tablaPresuntivaDatos
+    tabla.telefono = "0996553221";
+    this.css.simularTablaAmortizacionCS(tabla).subscribe( (data : any) => {
+      if (data) {
+        console.log("Simular la tabla de amortizacion ----->" + JSON.stringify(data));
+      } else {
+        this.sinNoticeService.setNotice("No me trajo data 'simularTablaAmortizacionCS' :'(", 'error');
+      }
+    }, error => {
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+    let precancelacion = new SimulacionPrecancelacion();
+    precancelacion.fechaPrecancelacion = "2020-06-16";
+    precancelacion.numeroPrestamo = "2020001967";
+    this.css.simularPrecancelacionCS(precancelacion).subscribe( (data: any) => {
+      if (data) {
+        console.log("Simular precancelacion ----->" + JSON.stringify(data));
+      } else {
+        this.sinNoticeService.setNotice("No me trajo data 'simularPrecancelacionCS' :'(", 'error');
+      }
+    }, error => {
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    }); */
+  }
+  /**
+   * @param element 
+   * @description METODO QUE EDITA UN ACTIVO DE LA TABLA
+   */
   editarActivo(element) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
     this.activo.setValue(element.activos);
     this.avaluoActivo.setValue(element.avaluo);
   }
+  /**
+   * @param element 
+   * @description METODO QUE EDITA UN PASIVO DE LA TABLA
+   */
   editarPasivo(element) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
     this.pasivo.setValue(element.pasivos);
     this.avaluoPasivo.setValue(element.avaluo);
   }
-
-
+  /**
+   * @description METODO INTERNO QUE LIMPIA LOS CAMPOS
+   */
   limpiarCampos() {
     Object.keys(this.formDatosPatrimonioActivos.controls).forEach((name) => {
       let control = this.formDatosPatrimonioActivos.controls[name];
@@ -1318,73 +1432,70 @@ export class GestionClienteComponent implements OnInit {
       control.updateValueAndValidity();
     });
   }
-
+  /**
+   * @description METODO QUE AGREGA UNA NUEVA REFERENCIA A LA TABLA DE REFERENCIA
+   */
   nuevaReferencia() {
-    this.registrarTracking( 
-      TareaTrackingEnum.AGREGANDO_REFERENCIAS_PERSONALES_DEL_CLIENTE,
-      null,
-      null,
-      SituacionTrackingEnum.EN_PROCESO, 
-      UsuarioEnum.BPM, 
-      true,
-      true,
-      true, 
-      false );
-    this.sinNoticeService.setNotice(null);
     this.referencia = new TbReferencia;
     if (this.formDatosReferenciasPersonales.valid) {
-      let a = 0;
-      let b = 0;
-      if (this.telefonoMovilR.value != null) {
-        a = Number(this.telefonoMovilR.value);
-      }
-      if (this.telefonoFijoR.value) {
-        b = Number(this.telefonoFijoR.value);
-      }
-
-      if (a >= 0 && b >= 0) {
-        this.referencia.nombresCompletos  = this.nombresCompletosR.value.toUpperCase();
-        this.referencia.parentesco        = this.parentescoR.value.toUpperCase();
-        this.referencia.direccion         = this.direccionR.value.toUpperCase();
-        this.referencia.telefonoMovil     = this.telefonoMovilR.value;
-        this.referencia.telefonoFijo      = this.telefonoFijoR.value;
-        if (this.element) {
-          const index = this.dataSource.data.indexOf(this.element);
-          this.dataSource.data.splice(index, 1);
-          const data = this.dataSource.data;
-          this.dataSource.data = data;
+      if (this.nombresCompletosR.value != null && this.nombresCompletosR.value != "") {
+        if (this.parentescoR.value != null && this.parentescoR.value != "" ) {
+          if (this.direccionR.value != null && this.direccionR.value != "") {
+            let a = 0;
+            let b = 0;
+            if (this.telefonoMovilR.value != null && this.telefonoMovilR.value != "") {
+              a = Number(this.telefonoMovilR.value);
+            }
+            if (this.telefonoFijoR.value && this.telefonoFijoR.value != "") {
+              b = Number(this.telefonoFijoR.value);
+            }
+            if (a > 0 && b > 0) {
+              this.referencia.nombresCompletos  = this.nombresCompletosR.value.toUpperCase();
+              this.referencia.parentesco        = this.parentescoR.value.toUpperCase();
+              this.referencia.direccion         = this.direccionR.value.toUpperCase();
+              this.referencia.telefonoMovil     = this.telefonoMovilR.value;
+              this.referencia.telefonoFijo      = this.telefonoFijoR.value;
+              if (this.element) {
+                const index = this.dataSource.data.indexOf(this.element);
+                this.dataSource.data.splice(index, 1);
+                const data = this.dataSource.data;
+                this.dataSource.data = data;
+              }
+              const data = this.dataSource.data;
+              data.push(this.referencia);
+              this.dataSource.data = data;      
+              this.element = null;
+              this.limpiarCampos();
+            } else {
+              this.sinNoticeService.setNotice("NUMERO DE TELEFONO NO VALIDO", 'error');
+            }
+          } else {
+            this.sinNoticeService.setNotice("DIRECCION NO VALIDA", 'error');
+          }
+        } else {
+          this.sinNoticeService.setNotice("PARENTESCO NO VALIDO", 'error');
         }
-        const data = this.dataSource.data;
-        data.push(this.referencia);
-        this.dataSource.data = data;
-        this.registrarTracking( 
-          TareaTrackingEnum.AGREGANDO_REFERENCIAS_PERSONALES_DEL_CLIENTE,
-          null,
-          this.idTracking6,
-          SituacionTrackingEnum.FINALIZADO, 
-          UsuarioEnum.BPM, 
-          false,
-          false,
-          false, 
-          true );
-          this.idTracking6 = null;
-        this.element = null;
-        this.limpiarCampos();
       } else {
-        this.sinNoticeService.setNotice("NUMERO DE TELEFONO NO VALIDO", 'warning');
+        this.sinNoticeService.setNotice("NOMBRE COMPLETO NO VALIDO", 'error');
       }
     } else {
-      this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'warning');
+      this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'error');
     }
   }
-
+  /**
+   * @description
+   * @param element 
+   */
   deleteReferencia(element) {
     const index = this.dataSource.data.indexOf(element);
     this.dataSource.data.splice(index, 1);
     const data = this.dataSource.data;
     this.dataSource.data = data;
   }
-
+  /**
+   * 
+   * @param element 
+   */
   editarReferencia(element) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
@@ -1394,17 +1505,15 @@ export class GestionClienteComponent implements OnInit {
     this.telefonoMovilR.setValue(element.telefonoMovil);
     this.telefonoFijoR.setValue(element.telefonoFijo);
   }
-
+  /**
+   * 
+   */
   cargarUbicacion(){
     this.pr.findAllEntities(this.p).subscribe((element : any) =>{
       if (element.list) {
-        //console.log("lista  >>>>" + JSON.stringify(element));
         this.ubicacionEntity = element.list;
         for (let i = 0; i < this.ubicacionEntity.length; i++) {
-          //console.log(">>>>>>>>>>>>>>>>>>>> Nombre Parroquia ", this.ubicacionEntity[i].canton.provincia);
-          this.listNombreParroquia.push(this.ubicacionEntity[i].nombreParroquia.toUpperCase());
-
-          //console.log("lista Parroquia >>>>" + JSON.stringify(this.listNombreParroquia));
+          this.parroquias.push(this.ubicacionEntity[i].nombreParroquia.toUpperCase());
         }
       }
     }, error => {
@@ -1417,6 +1526,9 @@ export class GestionClienteComponent implements OnInit {
     });
 
   }
+  /**
+   * 
+   */
   crearUbicacionDomicilio(){
     if (this.ubicacion.value) {
       for (let i = 0; i < this.ubicacionEntity.length; i++) {
@@ -1432,6 +1544,9 @@ export class GestionClienteComponent implements OnInit {
       }
     } 
   }
+  /**
+   * 
+   */
   crearUbicacionLaboral(){
     if (this.ubicacionO.value) {
       for (let i = 0; i < this.ubicacionEntity.length; i++) {
@@ -1447,6 +1562,9 @@ export class GestionClienteComponent implements OnInit {
       }
     } 
   }
+  /**
+   * 
+   */
   direccionLegalD(){
     if (this.drLgDo.value) {
       this.drLgLb.setValue(false);
@@ -1457,6 +1575,9 @@ export class GestionClienteComponent implements OnInit {
       this.drLgDo.setValue(false);
     }
   }
+  /**
+   * 
+   */
   direccionLegalL(){
     if (this.drLgLb.value) {
       this.drLgDo.setValue(false);
@@ -1464,6 +1585,9 @@ export class GestionClienteComponent implements OnInit {
       this.drLgDo.setValue(true);
     }
   }
+  /**
+   * 
+   */
   direccionCorreoD(){
     if (this.drCrDo.value){
       this.drCrLb.setValue(false);
@@ -1471,6 +1595,9 @@ export class GestionClienteComponent implements OnInit {
       this.drCrLb.setValue(true);
     }
   }
+  /**
+   * 
+   */
   direccionCorreoL(){
     if (this.drCrLb.value){
       this.drCrDo.setValue(false);
@@ -1478,6 +1605,9 @@ export class GestionClienteComponent implements OnInit {
       this.drCrDo.setValue(true);
     }
   }
+  /**
+   * 
+   */
   guardar(){
     this.loadingSubject.next(true);
     if (this.formCliente.valid) {
@@ -1495,9 +1625,10 @@ export class GestionClienteComponent implements OnInit {
                     }
                     this.cliente.actividadEconomica = this.actividadEconomica.value;
                     this.cliente.actividadEconomicaEmpresa = this.actividadEconomicaEmpresa.value;
-                    this.cliente.apellidoMaterno = this.apellidoMaterno.value.toUpperCase();
+                    if (this.apellidoMaterno.value) {
+                      this.cliente.apellidoMaterno = this.apellidoMaterno.value.toUpperCase();
+                    }
                     this.cliente.apellidoPaterno = this.apellidoPaterno.value.toUpperCase();
-                    console.log('canalito ----> '+ this.canalContacto.value );
                     this.cliente.canalContacto = this.canalContacto.value.toUpperCase();
                     this.cliente.cargasFamiliares = this.cargaFamiliar.value;
                     this.cliente.cargo = this.cargo.value.toUpperCase();
@@ -1515,9 +1646,16 @@ export class GestionClienteComponent implements OnInit {
                     this.cliente.origenIngreso = this.origenIngresos.value.toUpperCase();
                     this.cliente.primerNombre = this.primerNombre.value.toUpperCase();
                     this.cliente.profesion = this.profesion.value.toUpperCase();
-                    this.cliente.relacionDependencia = this.relacionDependencia.value.toUpperCase();
-                    this.cliente.segundoNombre = this.segundoNombre.value.toUpperCase();
-                    this.cliente.separacionBienes = this.separacionBienes.value.toUpperCase();
+                    if(this.relacionDependencia.value){
+                      this.cliente.relacionDependencia = this.relacionDependencia.value.toUpperCase();
+                    }
+                    if(this.segundoNombre.value){
+                      this.cliente.segundoNombre = this.segundoNombre.value.toUpperCase();
+                    }
+                    if(this.separacionBienes.value){
+                      this.cliente.separacionBienes = this.separacionBienes.value.toUpperCase();
+                    }
+
                     this.cliente.telefonoAdicional = this.telefonoAdicional.value;
                     this.cliente.telefonoFijo = this.telefonoFijo.value;
                     this.cliente.telefonoMovil = this.telefonoMovil.value;
@@ -1562,7 +1700,7 @@ export class GestionClienteComponent implements OnInit {
                     this.cliente.tbQoDireccionClientes.push(this.direccionLaboral);
                     // ******************* SET DE INGRESO EGRESO
                     this.dataSourceIngresoEgreso.data.forEach(element =>{
-                      this.ingresoEgresoGuardado = new TbQoIngresoEgresoCliente();
+                      this.ingresoEgresoGuardado          = new TbQoIngresoEgresoCliente();
                       this.ingresoEgresoGuardado.esEgreso = element.esEgreso;
                       this.ingresoEgresoGuardado.esIngreso= element.esIngreso;
                       this.ingresoEgresoGuardado.valor    = element.valor;
@@ -1594,25 +1732,29 @@ export class GestionClienteComponent implements OnInit {
                       this.referenciaGuardado.telefonoMovil = element.telefonoMovil;
                       this.cliente.tbQoReferenciaPersonals.push(this.referenciaGuardado);
                     });
-                    //console.log(" JSON----->" + JSON.stringify(this.cliente))
                     this.cs.crearClienteConRelaciones(this.cliente).subscribe((data:any) =>{
                       if(data.entidad){
+                        this.id = data.entidad.id
                         this.loadingSubject.next(false);
                         this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
-                        //console.log("Id de cliente creado ----->" + JSON.stringify( data.entidad) );
-                        this.registrarTracking( 
-                          TareaTrackingEnum.REGISTRO_DE_INFORMACION_DEL_CLIENTE,
-                          data.entidad.id,
-                          this.idTracking1,
-                          SituacionTrackingEnum.FINALIZADO, 
-                          UsuarioEnum.ASESOR, 
-                          false,
-                          false,
-                          false, 
-                          true );
-                        /* this.idTotalTracking.forEach(element => {
-                          this.registrarTracking(null, data.entidad.id, element, null,null,false,false,false,false);
-                        }); */
+                        console.log(" JSON CLIENTE----->" + JSON.stringify(data.entidad))
+                          this.tr.getSystemDate().subscribe( ( hora : any ) => {
+                            if (hora.entidad) {
+                              this.horaFinal = hora.entidad
+                              if ( this.idNegociacion != null ) {
+                                this.registrarTracking(
+                                  this.idNegociacion,
+                                  this.horaInicio,
+                                  this.horaAsignacion,
+                                  this.horaAtencion,
+                                  this.horaFinal
+                                );
+                              } else{
+                                this.sinNoticeService.setNotice("NO EXISTE NEGOCIACION PREVIA PARA HACER SEGUIMIENTO DE TRACKING", 'error');
+                              }                              
+                            }
+                            this.router.navigate(['../../credito-nuevo/generar-credito', this.id]);
+                          });
                       }
                     }, error =>{
                       this.loadingSubject.next(false);
@@ -1620,20 +1762,19 @@ export class GestionClienteComponent implements OnInit {
                         let b = error.error;
                         this.sinNoticeService.setNotice(b.msgError, 'error');
                       } else {
-                        this.sinNoticeService.setNotice("ERROR AL GUARDAR DATOS DEL CLIENTE", 'error');
                       }
                     });
                   } else {
                     this.loadingSubject.next(false);
-                    this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS PERSONALES", 'error');
+                    this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS EN  LA SECCION DE REFERENCIAS PERSONALES", 'error');
                   }
                 }else{
                   this.loadingSubject.next(false);
-                  this.sinNoticeService.setNotice("AGREGUE AL MENOS ALGUN PATRIMONIO", 'error');
+                  this.sinNoticeService.setNotice("AGREGUE AL MENOS UN PATRIMONIO ACTIVO O PASIVO", 'error');
                 }
               }else{
                 this.loadingSubject.next(false);
-                this.sinNoticeService.setNotice("AGREGUE AL MENOS ALGUN INGRESO O EGRESO", 'error');
+                this.sinNoticeService.setNotice("AGREGUE AL MENOS UN INGRESO O UN EGRESO", 'error');
               }
             }else{
               this.loadingSubject.next(false);
@@ -1653,133 +1794,56 @@ export class GestionClienteComponent implements OnInit {
       }
     }else { 
       this.loadingSubject.next(false);
-      this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS DEL CLIENTE", 'error');
+      this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS PERSONALES DEL CLIENTE", 'error');
     }
   }
   /**
    * 
-   * @param observacion string
+   * @param observacion TareaTrackingEnum
    * @param codigoRegistro string
-   * @param id string
-   * @param estado string
-   * @param usuario string
-   * @param fechaInicio    Boolean
-   * @param fechaAsignacion    Boolean
-   * @param fechaInicioAtencion    Boolean
-   * @param fechaFin    Boolean
-   * */
-  public registrarTracking (  observacion : TareaTrackingEnum, 
+   * @param situacion SituacionTrackingEnum
+   * @param usuario UsuarioEnum
+   * @param fechaInicio Date
+   * @param fechaAsignacion Date
+   * @param fechaInicioAtencion Date
+   * @param fechaFin Date
+   */
+  public registrarTracking (  
                       codigoRegistro : string, 
-                      id : string,
-                      estado : SituacionTrackingEnum, 
-                      usuario:UsuarioEnum, 
-                      fechaInicio: Boolean,
-                      fechaAsignacion: Boolean,
-                      fechaInicioAtencion: Boolean,
-                      fechaFin: Boolean,
+                      fechaInicio: Date,
+                      fechaAsignacion: Date,
+                      fechaInicioAtencion: Date,
+                      fechaFin: Date,
                     ){
 
-    let tracking : TbQoTracking = new TbQoTracking();
-    tracking.actividad = ActividadEnum.NEGOCIACION.toString();
-    tracking.proceso = ProcesoEnum.DATOS_CLIENTE;
-
-
-    if (id != null && id != "") {
-      tracking.id = id;
-    }else{
-      tracking.id = null
-    }
-    if (observacion != null) {
-      tracking.observacion = observacion.toString();
-    } else{
-      tracking.observacion = null;
-    }
-    if (codigoRegistro != null) {
-      tracking.codigoRegistro = codigoRegistro;
-    } else {
-      tracking.codigoRegistro = null;
-    }
-    if (estado != null) {
-      tracking.estado = estado.toString();
-    } else {
-      tracking.estado = null;
-    }
-    if (usuario != null) {
-      tracking.usuario = usuario.toString();
-    } else {
-      tracking.usuario = null;
-    }
-    if (fechaInicio) {
-      tracking.fechaInicio = Date.now();
-    }else{
-      tracking.fechaInicio = null;
-    }
-    if (fechaAsignacion) {
-      tracking.fechaAsignacion = Date.now();
-    }else{
-      tracking.fechaAsignacion = null;
-    }
-    if (fechaInicioAtencion) {
-      tracking.fechaInicioAtencion = Date.now();
-    }else{
-      tracking.fechaInicioAtencion = null;
-    }
-    if (fechaFin) {
-      tracking.fechaFin = Date.now();
-    }else{
-      tracking.fechaFin = null;
-    }
-    tracking.totalTiempo = null
-    this.tr.guardarTracking(tracking).subscribe((data:any) =>{
-      if (data.entidad) {
-        //let a = this.idTotalTracking.push(data.entidad.id);
-        //console.log("Numeros de trackin's creados ---->" + a +" / " + this.idTotalTracking)
-        console.log("Tracking creado ------>" + JSON.stringify(data.entidad));
-        if (observacion == TareaTrackingEnum.REGISTRO_DE_INFORMACION_DEL_CLIENTE) {
-          this.idTracking1 = data.entidad.id;
-          console.log("id registrado ------>" + this.idTracking1);
-
-        }
-        if (observacion == TareaTrackingEnum.REGISTRO_DE_DOCUMENTOS_DEL_CLIENTE) {
-          this.idTracking2 = data.entidad.id;
-          console.log("id registrado ------>" + this.idTracking2);
-
-        }
-        if (observacion == TareaTrackingEnum.PRESENTAR_DATOS_DE_CLIENTE_EXISTENTE) {
-          this.idTracking3 = data.entidad.id;
-          console.log("id registrado ------>" + this.idTracking3);
-
-        }
-        if (observacion == TareaTrackingEnum.CALCULO_DE_NIVEL_DE_ENDEUDAMIENTO_EN_INGRESOS_Y_EGRESOS) {
-          this.idTracking4 = data.entidad.id;
-          console.log("id registrado ------>" + this.idTracking4);
-
-        }
-        if (observacion == TareaTrackingEnum.CALCULO_DE_PATRIMONIO_DEL_CLIENTE) {
-          this.idTracking5 = data.entidad.id;
-          console.log("id registrado ------>" + this.idTracking5);
-
-        }
-        if (observacion == TareaTrackingEnum.AGREGANDO_REFERENCIAS_PERSONALES_DEL_CLIENTE) {
-          this.idTracking6 = data.entidad.id;
-          console.log("id registrado ------>" + this.idTracking6);
-
-        }
+      let tracking : TbQoTracking   = new TbQoTracking();
+      tracking.actividad            = ActividadEnum.NEGOCIACION; // Modulo en ProducBacklog
+      tracking.proceso              = ProcesoEnum.DATOS_CLIENTE;                
+      tracking.observacion          = "";
+      tracking.codigoRegistro       = codigoRegistro;
+      tracking.situacion            = SituacionTrackingEnum.EN_PROCESO;
+      tracking.usuario              = UsuarioEnum.ASESOR;
+      tracking.fechaInicio          = fechaInicio;
+      tracking.fechaAsignacion      = fechaAsignacion;
+      tracking.fechaInicioAtencion  = fechaInicioAtencion;
+      tracking.fechaFin             = fechaFin;
+      this.tr.guardarTracking(tracking).subscribe((data:any) =>{
+        if (data.entidad) {
+          console.log(" Tracking creado ------>" + JSON.stringify(data.entidad));
+          this.loadingSubject.next(false);
+        } else {
         this.loadingSubject.next(false);
-
-      } else {
-      this.loadingSubject.next(false);
-      this.sinNoticeService.setNotice("ERROR AL GUARDAR DATOS DEL CLIENTE", 'error');
-      }
-    }, error =>{
-      this.loadingSubject.next(false);
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("ERROR AL GUARDAR DATOS DEL CLIENTE", 'error');
-      }
-    });
+        this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE EN METODO", 'error');
+        }
+      }, error =>{
+        this.loadingSubject.next(false);
+        if (JSON.stringify(error).indexOf("codError") > 0) {
+          let b = error.error;
+          this.sinNoticeService.setNotice(b.msgError, 'error');
+        } else {
+          this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE EN METODO // ERROR CAPTURADO", 'error');
+        }
+      });
   }
 
 }

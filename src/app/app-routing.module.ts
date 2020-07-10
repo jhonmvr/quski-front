@@ -39,7 +39,11 @@ const routes: Routes = [
 			},
 			{
 				path: 'credito-nuevo',
-				loadChildren: () => import('app/views/pages/credito-nuevo/credito-nuevo.module').then(m => m.CreditoNuevoModule)
+				loadChildren: () => import('../app/views/pages/credito-nuevo/credito-nuevo.module').then(m => m.CreditoNuevoModule)
+			},
+			{
+				path: 'excepciones',
+				loadChildren: () => import('../app/views/pages/apps/excepciones/excepciones.module').then(m => m.ExcepcionesModule)
 			},
 			{
 				path: 'builder',

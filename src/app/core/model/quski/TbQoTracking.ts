@@ -4,11 +4,11 @@ export class TbQoTracking{
     id: string;
     codigoRegistro: string;
     actividad: string;
-    fechaInicio: Number;
-    fechaAsignacion: Number;
-    fechaInicioAtencion: Number;
-    fechaFin: Number;
-    estado: string;
+    fechaInicio: Date;
+    fechaAsignacion: Date;
+    fechaInicioAtencion: Date;
+    fechaFin: Date;
+    situacion: string;
     usuario: string;
     totalTiempo: string;
     observacion: string;

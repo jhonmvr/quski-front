@@ -1,7 +1,9 @@
-import { Component, OnInit, Inject } from "@angular/core";
+import { Component, OnInit, Inject, ViewChild, ElementRef, ViewChildren } from "@angular/core";
 import { ReFileUploadService } from "../../../../../core/services/re-file-upload.service";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { BehaviorSubject } from "rxjs";
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+
 import { DataUpload } from "../../../../../core/interfaces/data-upload";
 import { DialogDataHabilitante } from '../../../../../core/interfaces/dialog-data-habilitante';
 import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
@@ -20,10 +22,11 @@ export class HabilitanteDialogComponent implements OnInit {
   public dataUpload: DataUpload;
   isDisabledGuardar: any;
   element: any;
-
+  //@ViewChild("fileInput") fileInput: ElementRef;
   fileBase64:string;
 
   constructor(
+    private sinNoticeService: ReNoticeService,
     public dialogRef: MatDialogRef<HabilitanteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogDataHabilitante,
     private upload: ReFileUploadService, private os:ObjectStorageService
@@ -50,22 +53,45 @@ export class HabilitanteDialogComponent implements OnInit {
         
     let reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
-      let file = event.target.files[0];
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.uploadSubject.next(true);
-        //this.fileBase64= String(reader.result).split(",")[1];
-        this.dataUpload = {
-          name: file.name,
-          type: file.type,
-          process: this.data.proceso,
-          relatedId: this.data.documentoHabilitante?Number(this.data.documentoHabilitante):null,
-          relatedIdStr: this.data.referencia,
-          typeAction: this.data.tipoDocumento,
-          fileBase64: String(reader.result).split(",")[1],
-          objectId:""
-        };
-      };
+      let file = <File>event.target.files[0];
+      let mimeType = file.type;
+      let mimeSize = file.size;
+      if (mimeType.match('\.pdf') != null) {
+        if (mimeSize < 500000) {
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            this.uploadSubject.next(true);
+            //this.fileBase64= String(reader.result).split(",")[1];
+            this.dataUpload = {
+              name: file.name,
+              type: file.type,
+              process: this.data.proceso,
+              relatedId: this.data.documentoHabilitante?Number(this.data.documentoHabilitante):null,
+              relatedIdStr: this.data.referencia,
+              typeAction: this.data.tipoDocumento,
+              fileBase64: String(reader.result).split(",")[1],
+              objectId:""
+            };
+          };
+        } else {
+          //console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
+          //this.fileInput.nativeElement = null;
+          //document.getElementById("fileUpload").nodeValue = "";
+          //file = null
+          this.dataUpload =null;
+          this.uploadSubject.next(false);
+          this.sinNoticeService.setNotice("Tamaño de archivo no permitido.", 'error');
+        }
+        
+      } else {
+        //console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
+        //this.fileInput.nativeElement = null;
+        //document.getElementById("fileUpload").nodeValue = "";
+        //file = null
+        this.dataUpload =null;
+        this.uploadSubject.next(false);
+        this.sinNoticeService.setNotice("Formato no permitido. Ingrese un .PDF", 'error');
+      }
     } else {
       this.uploadSubject.next(false);
     }

@@ -7,6 +7,7 @@ import { TbMiCliente } from '../../model/quski/TbMiCliente';
 import { TbMiCotizacion } from '../../model/quski/TbMiCotizacion';
 import { Page } from '../../model/page';
 import { TbQoCliente } from "../../model/quski/TbQoCliente";
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -60,10 +61,31 @@ export class ClienteService extends BaseService {
     this.options = { Headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-
+  /**
+   * @description Método que llama al servicio rest del back busca el cliente por identificación con cotizacion
+   * @author Kléber Guerra  - Relative Engine
+   * @date 07/07/2020
+   * @param {string} identificacion
+   * @returns {*}  
+   * @memberof ClienteService
+   */
+  public findClienteByIdentificacionWithCotizacion(identificacion: string) {
+    const serviceUrl =
+      this.appResourcesUrl + 'clienteRestController/findClienteByIdentificacionWithCotizacion';
+    this.params = new HttpParams().set('identificacion', identificacion);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+    /**
+   * @description Busca cliente por identificacion 
+   * @author Jeroham Cadenas  - Relative Engine
+   * @date 09/07/2020
+   * @param {string} identificacion
+   * @returns {Observable : entidad}  
+   */
   public findClienteByIdentificacion(identificacion: string) {
     const serviceUrl =
-      this.appResourcesUrl + 'clienteRestController/clienteByIdentificacion';
+      this.appResourcesUrl + 'clienteRestController/findClienteByIdentificacion';
     this.params = new HttpParams().set('identificacion', identificacion);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
@@ -174,21 +196,15 @@ export class ClienteService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-
-  findClienteByCedulaCrm(cedula: any, ) {
-    console.log("***********INGRESA AL SERVICIO")
-    this.params = new HttpParams();
-    /*servicio para buscar la cedula en el crm*/
-    //let serviceUrl = this.segApiUrl + "/prospectoQuskiRestController/getProspectoByCedula?ced=" + cedula;
-    //console.log("IMPRIME LA VARIABLE " + serviceUrl);
-    /* if (cedula && cedula != null) {
-       this.params = this.params.set('cedula', cedula);
-     }
-     this.options = { headers: this.headers, params: this.params };
-     return this.http.get(serviceUrl, this.options);*/
-
-  }
-
+  /**
+   * @description METODO que realiza la busqueda del cliente en la calculadora Quski
+   * @author (Brayan Monge)
+   * @date 07/07/2020
+   * @param {string} tipoIdentificacion
+   * @param {string} identificacion
+   * @returns {*}  
+   * @memberof ClienteService
+   */
   public findClienteByCedulaQusqui(tipoIdentificacion: string, identificacion: string) {
     const serviceUrl =
       this.appResourcesUrl + 'integracionRestController/getInformacionPersona';

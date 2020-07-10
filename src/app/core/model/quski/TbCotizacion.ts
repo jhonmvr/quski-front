@@ -3,20 +3,26 @@ import { TbQoPrecioOro } from "./TbQoPrecioOro";
 import { TbQoCliente } from "./TbQoCliente";
 import { DetalleCreditoWrapper } from "./DetalleCreditoWrapper";
 import { TbQoVariableCrediticia } from "./TbQoVariableCrediticia";
+import { TbMiDocumentoHabilitante } from './TbMiDocumentoHabilitante';
 
 export class TbCotizacion {
     id: string;
-    gradoInteres: string;
-    motivoDesestimiento: string;
     aprobacionMupi: string;
     estado: string;
-    tbQoPrecioOro : TbQoPrecioOro [];
-    tbQoCliente : TbQoCliente [];
-    tbPrecioOro : TbQoPrecioOro [];
-    tbQoVariableCrediticia : TbQoVariableCrediticia [];
+    gradoInteres:string;
+    motivoDesestimiento: string;
+    
+   
+    
+   // tbQoPrecioOro : TbQoPrecioOro [];
+    tbQoCliente : TbQoCliente;
+    tbQoPrecioOro : TbQoPrecioOro[];
+    tbQoVariablesCrediticias : TbQoVariableCrediticia[];
     tbQoDetalleCredito : DetalleCreditoWrapper [];
+     tbQoDocumentoHabilitantes:TbMiDocumentoHabilitante[];
     constructor(){
       // this.tbMiJoyaSims = new Array<TbMiJoyaSim>();
+    this.tbQoVariablesCrediticias = new Array<TbQoVariableCrediticia>();
         
     }
 }

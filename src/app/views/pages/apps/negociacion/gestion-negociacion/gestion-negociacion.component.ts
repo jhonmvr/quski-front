@@ -59,10 +59,20 @@ export class GestionNegociacionComponent implements OnInit {
   roomsFilter: any;
 ///Columnas de las tablas 
 displayedColumnsVariablesCrediticias = ['orden', 'variable', 'valor'];
-displayedColumns = ['NumeroOperacion', 'TipoOferta', 'Vencimiento', 'Cuotas', 
+displayedColumnsRiesgoAcumulado = ['NumeroOperacion', 'TipoOferta', 'Vencimiento', 'Cuotas', 
   'CapitaInicial', 'SaldoCapital', 'Plazo', 'FechaAprobacion', 'FechaFinalCredito', 
   'DiasMora', 'ValorCuota', 'MotivoBloqueo', 'TotalCredito', 'CoberturaAnterior', 
   'CoverturaVigente', 'DeudaTotal','TotalSaldo','RiesgoTotalCliente'];
+  displayedColumnsTasacion = ['Accion', 'N', 'NumeroPiezas', 'TipoOro', 'TipoJoya', 'Estado', 'Descripcion'
+  , 'PesoBruto', 'DescuentoPiedra', 'DescuentoSuelda', 'PesoNeto', 'ValorAvaluo'
+  , 'ValorComercial', 'ValorRealizacion', 'ValorOro'];
+  displayedColumnsOpcionesCredito = ['Accion', 'Plazo', 'TipoOperacion', 'PeriodicidadPlazo', 'TipoOferta', 'MontoPreAprobado', 'ValorCouta'
+  , 'ARecibirCliente', 'APagarPorCliente', 'ValorAPagarNeto', 'ValoresCreditoAnterior', 'TotalCostosNuevaOpreacion'
+  , 'CostoCustodia', 'FormaPagoCustodia', 'CostoTransporte', 'FormaPagoTransporte', 'CostoValoracion', 'FormaPagoValoracion', 'CostoTasacion',
+   'FormaPagoTasacion', 'CostoSeguro', 'FormaPagoSeguro', 'CostoResguardo', 'FormaPagoResguardo', 'Solca', 'FormaPagoSolca', 'SaldoCapitaOpAnt'
+   , 'SaldoInteresOpAnt', 'FormaPagoInteres', 'SaldoMoraOpAnt', 'FormaPagoMora', 'GastosDeCobranzaOpAnt', 'FormaPagoGastoCobranza', 'CustodiaVencidaOptAnt', 
+   'FormaPagoCustodiaVencida', 'AbonoCapitaOpAnterior', 'FormaPagoAbonoCapital', 'MontoDesembolsoBallon', 'ProcentajeFlujoPlaneado'];
+   displayedColumnsOpt = new MatTableDataSource<any>();
   public pageSize = 5;
   public currentPage = 0;ic
   public totalSize = 0;

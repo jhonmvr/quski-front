@@ -36,30 +36,34 @@ export interface DialogData {
   styleUrls: ['./solicitud-autorizacion-dialog.component.scss']
 })
 export class SolicitudAutorizacionDialogComponent implements OnInit {
+  [x: string]: any;
   private uploadSubject = new BehaviorSubject<boolean>(false);
   public uploading;
   public validar;
   private identificacionClienteSubject = new BehaviorSubject<string>("");
 
-
+  public enableLoadArchivoButton;
+  public enableLoadArchivo = new BehaviorSubject<boolean>(false);
 
   //public dataUpload: DataUpload;
   isDisabledGuardar: any;
   element: any;
- tipoIdentificacion="";
+  tipoIdentificacion = "";
   equifax: String;
 
   constructor(private dh: DocumentoHabilitanteService, private sinNoticeService: ReNoticeService,
     public dialogRef: MatDialogRef<SolicitudAutorizacionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: string, public dialog: MatDialog, private upload: ReFileUploadService,
-    private cs: ClienteService ) {
+    private cs: ClienteService) {
     console.log(">>><<<<<<<<<<<<<<< DATA COTIZACION" + JSON.stringify(data));
     this.formDatosSolicitud.addControl("nombresCompletos", this.nombresCompletos);
     this.formDatosSolicitud.addControl("identificacion", this.identificacion);
-   
+
   }
 
   ngOnInit() {
+    this.enableLoadArchivoButton = this.enableLoadArchivo.asObservable();
+    this.enableLoadArchivo.next(false);
   }
   // FORM DE CONTACTO  
   public formDatosSolicitud: FormGroup = new FormGroup({});
@@ -95,6 +99,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
         //this.validateContratoByHabilitante('false');
       }
       //this.submit();
+      
     });
     /* } else {
       console.log("===>>errorrrr al cierre: ");
@@ -131,13 +136,13 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   }
 
   consultar() {
-    
+
     this.validar;
     console.log("llegaaaa", this.validar);
     if (this.validar == 'ACT') {
       this.dialogRef.close(this.validar);
-     this.equifax="Equifax";
-     
+      this.equifax = "Equifax";
+
     } else {
       this.sinNoticeService.setNotice("POR FAVOR DEBE CARGAR EL DOCUMENTO DE AUTORIZACION", 'warning');
     }
@@ -182,33 +187,34 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   descargarPlantillaHabilitante(row) {
 
     console.log("<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>", this.nombresCompletos.value, this.data);
-    if(this.nombresCompletos.value!=""){
+    if (this.nombresCompletos.value != "") {
 
-    this.dh.downloadAutorizacionPlantilla(1, "PDF", this.nombresCompletos.value, this.identificacion.value).subscribe(
-      (data: any) => {
-        //console.log("descargarNotificacion datos xx " + data.entidad);
-        //console.log("descargarNotificacion datos " + JSON.stringify(data));
-        if (data) {
-          //this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
-          //console.log("datos de salida",data);
-          saveAs(data, "Carta solicitud Autorizacion Buro" + ".pdf");
-        } else {
+      this.dh.downloadAutorizacionPlantilla(1, "PDF", this.nombresCompletos.value, this.identificacion.value).subscribe(
+        (data: any) => {
+          //console.log("descargarNotificacion datos xx " + data.entidad);
+          //console.log("descargarNotificacion datos " + JSON.stringify(data));
+          if (data) {
+            //this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
+            //console.log("datos de salida",data);
+            saveAs(data, "Carta solicitud Autorizacion Buro" + ".pdf");
+            this.enableLoadArchivo.next(true);
+          } else {
+            this.sinNoticeService.setNotice(
+              "NO SE ENCONTRO REGISTRO PARA DESCARGA",
+              "error"
+            );
+          }
+        },
+        error => {
+          console.log("================>error: " + JSON.stringify(error));
           this.sinNoticeService.setNotice(
-            "NO SE ENCONTRO REGISTRO PARA DESCARGA",
+            "ERROR DESCARGA DE PLANTILLA HABILITANTE",
             "error"
           );
         }
-      },
-      error => {
-        console.log("================>error: " + JSON.stringify(error));
-        this.sinNoticeService.setNotice(
-          "ERROR DESCARGA DE PLANTILLA HABILITANTE",
-          "error"
-        );
-      }
-    );
-  }else 
-  this.sinNoticeService.setNotice("INGRESA LOS NOMBRES COMPLETOS  ", 'error');
+      );
+    } else
+      this.sinNoticeService.setNotice("INGRESA LOS NOMBRES COMPLETOS  ", 'error');
   }
 
 
