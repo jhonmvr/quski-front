@@ -174,38 +174,38 @@ export class ExcepcionesCoberturaComponent implements OnInit {
             this.cedulaCliente = data.entidad.tbQoCliente.cedulaCliente;
             this.cli.findClienteByIdentificacion(this.cedulaCliente).subscribe((data: any) => {
               this.loadingSubject.next(false);
-              if (data.entidad) {
+              if (data) {
                 // FORM OPERACION
-                this.nombresCompletos.setValue(data.entidad.primerNombre + ' ' + data.entidad.segundoNombre
-                + ' ' + data.entidad.apellidoPaterno + ' ' + data.entidad.apellidoMaterno);
-                this.idCliente = data.entidad.id;
-                this.identificacion.setValue(data.entidad.cedulaCliente);
+                this.nombresCompletos.setValue(data.primerNombre + ' ' + data.segundoNombre
+                + ' ' + data.apellidoPaterno + ' ' + data.apellidoMaterno);
+                this.idCliente = data.id;
+                this.identificacion.setValue(data.cedulaCliente);
                 this.nombreProceso.setValue('');
                 // FORM CLIENTE
                 this.tipoIdentificacion.setValue(TipoIdentificacionEnum.CEDULA);
-                this.identificacionC.setValue(data.entidad.cedulaCliente);
-                this.aprobadoWebMupi.setValue(data.entidad.aprobadoWebMupi)
-                this.primerNombre.setValue(data.entidad.primerNombre);
-                this.segundoNombre.setValue(data.entidad.segundoNombre);
-                this.separacionDeBienes.setValue(data.entidad.separacionBienes);
-                this.apellidoPaterno.setValue(data.entidad.apellidoPaterno);
-                this.apellidoMaterno.setValue(data.entidad.apellidoMaterno);
-                this.cargaFamiliar.setValue(data.entidad.cargasFamiliares);
-                this.genero.setValue(data.entidad.genero);
-                this.estadoCivil.setValue(data.entidad.estadoCivil);
-                this.lugarDeNacimiento.setValue(data.entidad.lugarNacimiento);
-                this.fechaDeNacimiento.setValue(data.entidad.fechaNacimiento);
-                this.nacionalidad.setValue(data.entidad.nacionalidad);
-                this.edad.setValue(data.entidad.edad);
-                this.nivelDeEducacion.setValue(data.entidad.nivelEducacion);
-                this.actividadEconomica.setValue(data.entidad.actividadEconomica);
-                this.ultimaFechaDeActualizacionDeCliente.setValue(data.entidad.fechaActualizacion);
+                this.identificacionC.setValue(data.cedulaCliente);
+                this.aprobadoWebMupi.setValue(data.aprobadoWebMupi)
+                this.primerNombre.setValue(data.primerNombre);
+                this.segundoNombre.setValue(data.segundoNombre);
+                this.separacionDeBienes.setValue(data.separacionBienes);
+                this.apellidoPaterno.setValue(data.apellidoPaterno);
+                this.apellidoMaterno.setValue(data.apellidoMaterno);
+                this.cargaFamiliar.setValue(data.cargasFamiliares);
+                this.genero.setValue(data.genero);
+                this.estadoCivil.setValue(data.estadoCivil);
+                this.lugarDeNacimiento.setValue(data.lugarNacimiento);
+                this.fechaDeNacimiento.setValue(data.fechaNacimiento);
+                this.nacionalidad.setValue(data.nacionalidad);
+                this.edad.setValue(data.edad);
+                this.nivelDeEducacion.setValue(data.nivelEducacion);
+                this.actividadEconomica.setValue(data.actividadEconomica);
+                this.ultimaFechaDeActualizacionDeCliente.setValue(data.fechaActualizacion);
                 // FORM CONTACTO
-                this.telefonoDomicilio.setValue(data.entidad.telefonoFijo);
-                this.telefonoAdicional.setValue(data.entidad.telefonoAdicional);
-                this.telefonoMovil.setValue(data.entidad.telefonoMovil);
-                this.telefonoOficina.setValue(data.entidad.telefonoTrabajo);
-                this.correo.setValue(data.entidad.email);
+                this.telefonoDomicilio.setValue(data.telefonoFijo);
+                this.telefonoAdicional.setValue(data.telefonoAdicional);
+                this.telefonoMovil.setValue(data.telefonoMovil);
+                this.telefonoOficina.setValue(data.telefonoTrabajo);
+                this.correo.setValue(data.email);
               } else {
                 this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE', 'error');
               }

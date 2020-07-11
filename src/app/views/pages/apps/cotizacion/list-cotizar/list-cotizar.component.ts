@@ -577,7 +577,7 @@ export class ListCotizarComponent implements OnInit {
    */
   recuperarCotizacionAnterior() {
     this.clienteService.findClienteByIdentificacionWithCotizacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
-      if (clienteData && clienteData.entidad) {
+      if (clienteData.entidad && clienteData.entidad.tbQoCotizador[0]) {
         console.log('INGRESA AL IF recuperarCotizacionAnterior ');
         this.limpiarCampos();
         this.sinNoticeService.setNotice('Tiene cotizaciones anteriores', 'warning');
@@ -591,10 +591,25 @@ export class ListCotizarComponent implements OnInit {
         this.fpublicidad.setValue(clienteData.entidad.publicidad);
         this.correoElectronico.setValue(clienteData.entidad.email);
         this.campania.setValue(clienteData.entidad.campania);
-        this.aprobacionMupi.setValue(clienteData.entidad.tbQoCotizador[0].aprobacionMupi);
+        this.aprobacionMupi.setValue(clienteData.entidad.tbQoCotizador[0].aprobacionMupi); // Aprobacion mupi puede cambiar a cliente.
         this.cotizacion = clienteData.entidad.tbQoCotizador[0];
         this.validarMupi();
-
+      } else {
+        this.cotizacion.tbQoCliente = this.cliente;
+          this.cotizacion.tbQoVariablesCrediticias = this.variableCrediticiaArray;
+          this.cotizacion.estado = EstadoQuskiEnum.ACT;
+          this.cotizacion.aprobacionMupi = this.aprobacionMupi.value;
+          this.cs.crearCotizacionClienteVariableCrediticia(this.cotizacion).subscribe((data: any) => {
+            if (data && data.entidad && data.e) {
+              this.cotizacion = data.entidad;
+              this.nacionalidad.setValue(data.entidad.tbQoCliente.nacionalidad);
+              this.cotizacion.estado = EstadoQuskiEnum.ACT;
+              console.log('Cotizacion con Id GENERADA ----->' + JSON.stringify(this.cotizacion));
+              this.sinNoticeService.setNotice('SE REGISTRA LA COTIZACION', 'success');
+            } else {
+              this.sinNoticeService.setNotice('Error al registrar cotizacion', 'error');
+            }
+          });
       }
     }, error => {
       if (error.error) {
@@ -688,30 +703,12 @@ export class ListCotizarComponent implements OnInit {
   guardarCliente() {
     this.loadingSubject.next(true);
     console.log('ingresa a   guardarCliente');
-    this.clienteService.findClienteByIdentificacionWithCotizacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
+    this.clienteService.findClienteByIdentificacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
       console.log('VALOR DE  guardarCliente', JSON.stringify(clienteData));
-      if (clienteData && clienteData.entidad) {
-        this.cliente.id = clienteData.entidad.id;
+      if ( clienteData && clienteData.id ) {
+        this.cliente.id = clienteData.id;
         this.recuperarCotizacionAnterior();
-      } else {
-        this.cotizacion.tbQoCliente = this.cliente;
-        this.cotizacion.tbQoVariablesCrediticias = this.variableCrediticiaArray;
-        this.cotizacion.estado = EstadoQuskiEnum.ACT;
-        this.cotizacion.aprobacionMupi = this.aprobacionMupi.value;
-        this.cs.crearCotizacionClienteVariableCrediticia(this.cotizacion).subscribe((data: any) => {
-          if (data && data.entidad && data.e) {
-            this.cotizacion = data.entidad;
-            this.nacionalidad.setValue(data.entidad.tbQoCliente.nacionalidad);
-            this.cotizacion.estado = EstadoQuskiEnum.ACT;
-            console.log('Cotizacion con Id GENERADA+++++++>' + JSON.stringify(this.cotizacion));
-
-            this.sinNoticeService.setNotice('SE REGISTRA LA COTIZACION', 'success');
-          } else {
-
-            this.sinNoticeService.setNotice('Error al registrar cotizacion', 'error');
-          }
-        });
-      }
+      } 
     }, error => {
       if (error.error) {
         if (error.error.codError) {
