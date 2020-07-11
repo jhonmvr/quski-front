@@ -777,7 +777,7 @@ export class ListCotizarComponent implements OnInit {
 
 
   /**
-   * @descriptionMétodo para ver el precio de oro
+   * @description Método para visualizar el precio de oro se presenta luego de dar click en el botón Ver Precio
    * @author Kléber Guerra  - Relative Engine
    * @date 07/07/2020
    * @memberof ListCotizarComponent
@@ -785,14 +785,15 @@ export class ListCotizarComponent implements OnInit {
   verPrecio() {
 
 
-    // tslint:disable-next-line: max-line-length
     if (this.identificacion.value !== null && this.nombresCompletos.value !== null && this.fpublicidad.value && this.aprobacionMupi.value && this.fechaNacimiento.value && this.edad.value && this.nacionalidad.value && this.movil.value && this.telefonoDomicilio.value && this.correoElectronico.value && + this.campania.value) {
       this.getTipoOro();
+      this.loadingSubject.next(false);
       this.sinNoticeService.setNotice('INFORMACION COMPLETA', 'success');
       this.disableVerVariableSubject.next(true);
       this.stepper.selectedIndex = 2;
     } else {
       this.sinNoticeService.setNotice('POR FAVOR COMPLETE LA INFORMACION', 'warning');
+      this.loadingSubject.next(true);
       this.stepper.selectedIndex = 0;
       this.disableVerVariableSubject.next(true);
     }
@@ -1192,6 +1193,7 @@ export class ListCotizarComponent implements OnInit {
         this.cs.guardarPrecioOro(this.precioOro).subscribe((data: any) => {
           this.disableSimulaSubject.next(true);
           if (data && data.entidad) {
+            console.log("VLORO DEL ID", JSON.stringify(data.entidad.id));
             this.cs.loadPrecioOroByCotizacion(this.cotizacion.id).subscribe((pos: any) => {
               this.dataSourcePrecioOro = new MatTableDataSource(pos.list);
               this.preciosOrodSubject.next(true);
@@ -1222,21 +1224,23 @@ export class ListCotizarComponent implements OnInit {
   eliminarPrecioOro(id) {
     console.log('INGRESA A ELIMINTAR', id);
     this.loadingSubject.next(true);
-    this.disableSimulaSubject.next(false);
-    this.preciosOrodSubject.next(true);
+    this.disableSimulaSubject.next(true);
+    // this.preciosOrodSubject.next(true);
     this.cs.eliminarPrecioOro(id).subscribe((data: any) => {
       console.log('eliminarPrecioOro ELMINAR' + JSON.stringify(data));
       this.cs.findByIdCotizacion(this.cotizacion.id).subscribe((pos: any) => {
         this.loadingSubject.next(false);
         this.sinNoticeService.setNotice('SE ELIMINO EL PRECIO DE ORO SELECCIONADO', 'success');
-        console.log('findByIdCotizacion' + JSON.stringify(pos));
-        for (let index = 0; index < pos.length; index++) {
+        console.log('findByIdCotizacion' + JSON.stringify(pos.list));
+        for (let index = 0; index < pos.list.length; index++) {
+          console.log('dentro del for' + JSON.stringify(pos.list));
 
-          if (pos[index].estado !== EstadoQuskiEnum.INA) {
+          if (pos.list[index].estado !== EstadoQuskiEnum.INA) {
             this.precioOro = new TbQoPrecioOro();
-            this.precioOro.estado = pos[index].estado;
-            this.precioOro.precio = pos[index].precio;
-            this.precioOro.pesoNetoEstimado = pos[index].pesoNetoEstimado;
+            this.precioOro.id = pos.list[index].id;
+            this.precioOro.estado = pos.list[index].estado;
+            this.precioOro.precio = pos.list[index].precio;
+            this.precioOro.pesoNetoEstimado = pos.list[index].pesoNetoEstimado;
             this.preciosArray.push(this.precioOro);
           }
 
@@ -1247,12 +1251,12 @@ export class ListCotizarComponent implements OnInit {
 
         // console.log('NO HAY REGISTROS ');
         this.disableSimulaSubject.next(true);
-        this.preciosOrodSubject.next(false);
+        this.preciosOrodSubject.next(true);
       });
     }, error => {
       // console.log('NO HAY REGISTROS ');
       this.disableSimulaSubject.next(true);
-      this.preciosOrodSubject.next(false);
+       this.preciosOrodSubject.next(true);
     });
   }
   /**
