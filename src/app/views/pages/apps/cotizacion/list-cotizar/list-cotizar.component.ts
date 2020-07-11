@@ -600,10 +600,25 @@ export class ListCotizarComponent implements OnInit {
         this.fpublicidad.setValue(clienteData.entidad.publicidad);
         this.correoElectronico.setValue(clienteData.entidad.email);
         this.campania.setValue(clienteData.entidad.campania);
-        this.aprobacionMupi.setValue(clienteData.entidad.tbQoCotizador[0].aprobacionMupi);
+        this.aprobacionMupi.setValue(clienteData.entidad.tbQoCotizador[0].aprobacionMupi); // Aprobacion mupi puede cambiar a cliente.
         this.cotizacion = clienteData.entidad.tbQoCotizador[0];
         this.validarMupi();
-
+      } else {
+        this.cotizacion.tbQoCliente = this.cliente;
+          this.cotizacion.tbQoVariablesCrediticias = this.variableCrediticiaArray;
+          this.cotizacion.estado = EstadoQuskiEnum.ACT;
+          this.cotizacion.aprobacionMupi = this.aprobacionMupi.value;
+          this.cs.crearCotizacionClienteVariableCrediticia(this.cotizacion).subscribe((data: any) => {
+            if (data && data.entidad && data.e) {
+              this.cotizacion = data.entidad;
+              this.nacionalidad.setValue(data.entidad.tbQoCliente.nacionalidad);
+              this.cotizacion.estado = EstadoQuskiEnum.ACT;
+              console.log('Cotizacion con Id GENERADA ----->' + JSON.stringify(this.cotizacion));
+              this.sinNoticeService.setNotice('SE REGISTRA LA COTIZACION', 'success');
+            } else {
+              this.sinNoticeService.setNotice('Error al registrar cotizacion', 'error');
+            }
+          });
       }
     }, error => {
       if (error.error) {

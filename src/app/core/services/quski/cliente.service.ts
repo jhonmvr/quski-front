@@ -19,7 +19,7 @@ export class ClienteService extends BaseService {
     this.http = _http;
     this.setParameter();
   }
-  public findClienteByCodigoOperacion(codigoOperacion: string) {
+/*   public findClienteByCodigoOperacion(codigoOperacion: string) {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + '/quski-oro-rest/resources/clienteRestController/getClienteByCodigoOperacion';
     this.params = new HttpParams().set('codigoOperacion', codigoOperacion);
@@ -27,7 +27,7 @@ export class ClienteService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
 
     return this.http.get(serviceUrl, this.options);
-  }
+  } */
 
   public findByEstado(dataparam, estado: string, serviceUrl: string) {
     this.setParameter();
@@ -78,14 +78,14 @@ export class ClienteService extends BaseService {
   }
     /**
    * @description Busca cliente por identificacion 
-   * @author Jeroham Cadenas  - Relative Engine
-   * @date 09/07/2020
-   * @param {string} identificacion
-   * @returns {Observable : entidad}  
+   * @author  Jeroham Cadenas  - Relative Engine
+   * @date    09/07/2020
+   * @param   identificacion
+   * @returns Observable : entidad  
    */
   public findClienteByIdentificacion(identificacion: string) {
-    const serviceUrl =
-      this.appResourcesUrl + 'clienteRestController/findClienteByIdentificacion';
+    this.setParameter();
+    const serviceUrl = this.appResourcesUrl + 'clienteRestController/findClienteByIdentificacion';
     this.params = new HttpParams().set('identificacion', identificacion);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
@@ -223,14 +223,11 @@ export class ClienteService extends BaseService {
     return this.http.get(serviceUrl, this.options);
   }
 
-  ///////Guardado del prospectoo en el CRM
-  public guardarProspectoCRM(ClienteCRM) {
+  // ---------------> // Guardado del prospectoo en el CRM
+  public guardarProspectoCRM( ClienteCRM : ClienteCRM ) {
     let serviceUrl = this.crmResourcesUrl + "prospectoQuskiRestController/persistEntity";
-    let wrapper = { entidad: ClienteCRM }
+    let wrapper = { entidad: ClienteCRM };
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
-
-
-
 }
