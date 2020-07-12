@@ -13,6 +13,8 @@ import { TasacionService } from '../../../../core/services/quski/tasacion.servic
 import { HabilitanteComponent } from '../../../partials/custom/habilitante/habilitante.component';
 import { HabilitanteDialogComponent } from '../../../partials/custom/habilitante/habilitante-dialog/habilitante-dialog.component';
 import { DocumentoHabilitanteService } from '../../../../core/services/quski/documento-habilitante.service';
+import { environment } from '../../../../../environments/environment';
+import { ObjectStorageService } from '../../../../core/services/object-storage.service';
 
 
 
@@ -126,7 +128,7 @@ export class GenerarCreditoComponent implements OnInit {
  @ViewChild('sort1', {static: true}) sort: MatSort;
 
   constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, private tas: TasacionService,
-    public dialog: MatDialog, private dhs: DocumentoHabilitanteService) { 
+    public dialog: MatDialog, private dhs: DocumentoHabilitanteService, private os: ObjectStorageService) { 
     
     
   }
@@ -197,7 +199,7 @@ export class GenerarCreditoComponent implements OnInit {
         this.tbQoCliente = this.tbCreditoNegociacion.tbQoNegociacion.tbQoCliente
         console.log(this.tbQoCliente)
         console.log(this.tbCreditoNegociacion)
-        this.codigoOperacion.setValue(data.entidad.codigoOperacion)
+        this.codigoOperacion.setValue(data.entidad.tbQoNegociacion.codigoOperacion)
         this.cedulaCliente.setValue(data.entidad.tbQoNegociacion.tbQoCliente.cedulaCliente)
         this.nombresCompletos.setValue(data.entidad.tbQoNegociacion.tbQoCliente.apellidoPaterno.concat(" ",
          data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno == null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno, 
@@ -207,7 +209,7 @@ export class GenerarCreditoComponent implements OnInit {
          this.tipoCuenta.setValue("CUENTA DE AHORROS")
          this.validateEdadTipo();
          this.cargarFotoHabilitante();
-         if(data.entidad.tipo === "CUOTAS"){
+         if(data.entidad.tbQoNegociacion.tipoNegociacion === "CUOTAS"){
            console.log("deberia verse")
           this.enableDiaPago.next(true);
          }else{
@@ -349,6 +351,7 @@ validateEdadTipo(){
         //console.log("===>>va a recargar: " );
         this.buscar();
         this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE","success");
+        this.cargarFotoHabilitante();
         //this.validateContratoByHabilitante('false');
       }
       //this.submit();
@@ -366,7 +369,12 @@ cargarFotoHabilitante(){
   this.dhs.getHabilitanteByReferenciaTipoDocumentoProceso(this.joyaFoto.tipoDocumento,this.joyaFoto.proceso,this.joyaFoto.referencia,
   ).subscribe((data:any)=>{
     console.log("===========>",data.entidad)
-    this.srcJoya = data.entidad.objectId
+     
+    this.os.getObjectById( data.entidad.objectId,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+    console.log("data  del objeto", data)
+    this.srcJoya = data.entidad
+    console.log("aqui", this.srcJoya)
+    })
   })
 }
 }
