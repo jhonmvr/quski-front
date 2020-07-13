@@ -40,6 +40,8 @@ export class TbQoCliente {
   relacionDependencia: string;
   telefonoTrabajo: string;
   telefonoAdicional: string;
+  aprobacionMupi: string;
+
 
   tbQoArchivoClientes: null;
   tbQoCotizador: TbCotizacion[];
