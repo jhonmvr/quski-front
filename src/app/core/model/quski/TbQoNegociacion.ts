@@ -1,7 +1,7 @@
 
 import { TbQoPrecioOro } from "./TbQoPrecioOro";
 
-import { TbQoVariableCrediticia } from "./TbQoVariableCrediticia";
+import { TbQoVariablesCrediticia } from "./TbQoVariablesCrediticia";
 import { TbQoTasacion } from "./TbQoTasacion";
 import { TbQoCreditoNegociacion } from "./TbQoCreditoNegociacion";
 import { TbQoCliente } from "./TbQoCliente";
@@ -16,7 +16,7 @@ export class TbQoNegociacion {
     tbQoCliente : TbQoCliente [];
     tbQoTasacion : TbQoTasacion [];
     tbPrecioOro : TbQoPrecioOro [];
-    tbQoVariableCrediticia : TbQoVariableCrediticia [];
+    tbQoVariableCrediticia : TbQoVariablesCrediticia [];
     tbQoCreditoNegociacion : TbQoCreditoNegociacion [];
     constructor(){
        

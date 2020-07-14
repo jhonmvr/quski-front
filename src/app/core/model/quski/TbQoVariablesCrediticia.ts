@@ -1,7 +1,7 @@
 import { TbCotizacion } from "./TbCotizacion";
 import { TbQoNegociacion } from "./TbQoNegociacion";
 
-export class TbQoVariableCrediticia {
+export class TbQoVariablesCrediticia {
     id: number;
     nombre: string;
     valor: string;
