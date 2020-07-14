@@ -10,7 +10,7 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { TbQoPrecioOro } from '../../../../../core/model/quski/TbQoPrecioOro';
 
-import { TbQoVariableCrediticia } from '../../../../../core/model/quski/TbQoVariableCrediticia';
+import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { TbCotizacion } from '../../../../../core/model/quski/TbCotizacion';
 import { SolicitudAutorizacionDialogComponent } from '../../../../../../app/views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { ValidateCedula, ValidateCedulaNumber } from '../../../../../core/util/validate.util';
@@ -32,15 +32,24 @@ import { TbQoVariablesCrediticias } from '../../../../../core/model/quski/TbQoVa
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 
-
+/**
+ * @description IMPORTACION DEL INTERFACE DE USUARIO
+ * @author Kléber Guerra  - Relative Engine
+ * @date 2020-07-14
+ * @export
+ * @interface User
+ */
 export interface User {
   name: string;
 }
+
+
 @Component({
   selector: 'kt-list-cotizar',
   templateUrl: './list-cotizar.component.html',
   styleUrls: ['./list-cotizar.component.scss']
 })
+
 export class ListCotizarComponent implements OnInit {
   // CREACION DEL STEPPER
   @ViewChild('stepper', { static: true })
@@ -48,6 +57,9 @@ export class ListCotizarComponent implements OnInit {
   // STREPPER
   isLinear = false;
   // OBSERVABLE PARA LA TABLA DE PRECIO ORO
+
+
+
 
 
 
@@ -115,8 +127,8 @@ export class ListCotizarComponent implements OnInit {
   public totalPeso = 0;
   public precioOro = new TbQoPrecioOro();
   public tipoOros = new TbQoTipoOro();
-  public variableCrediticia = new TbQoVariableCrediticia();
-  public variableCrediticiaArray = new Array<TbQoVariableCrediticia>();
+  public variableCrediticia = new TbQoVariablesCrediticia();
+  public variableCrediticiaArray = new Array<TbQoVariablesCrediticia>();
   public preciosArray = new Array<TbQoPrecioOro>();
   public precioOroLocal;
   public element;
@@ -158,7 +170,7 @@ export class ListCotizarComponent implements OnInit {
   p = new Page();
   // DATASOURCE
   dataSourceI = new MatTableDataSource<any>();
-  dataSourceVarCredi: MatTableDataSource<TbQoVariableCrediticia> = new MatTableDataSource<TbQoVariableCrediticia>();
+  dataSourceVarCredi: MatTableDataSource<TbQoVariablesCrediticia> = new MatTableDataSource<TbQoVariablesCrediticia>();
   dataSourcePrecioOro: MatTableDataSource<TbQoPrecioOro> = new MatTableDataSource<TbQoPrecioOro>();
   dataSourceCredito: MatTableDataSource<TbQoCreditoNegociacion> = new MatTableDataSource<TbQoCreditoNegociacion>();
   dataSourceCliente: MatTableDataSource<TbQoCliente> = new MatTableDataSource<TbQoCliente>();
@@ -176,21 +188,24 @@ export class ListCotizarComponent implements OnInit {
   /**Obligatorio ordenamiento */
   @ViewChild('sort1', { static: true }) sort: MatSort;
   roomsFilter: any;
-
   /**
-   * Constructor de la clase
-   * @param datepipe
-   * @param titulo
-   * @param os
-   * @param js
-   * @param clienteService
-   * @param sinNoticeService
-   * @param subheaderService
-   * @param sp
-   * @param cs
-   * @param dc
-   * @param dialog
-   * @param fb
+   * CONSTRUCTOR DE LA CLASE
+   *
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-07-14
+   * @param {DatePipe} datepipe
+   * @param {TituloContratoService} titulo
+   * @param {OroService} os
+   * @param {JoyaService} js
+   * @param {ReNoticeService} sinNoticeService
+   * @param {SubheaderService} subheaderService
+   * @param {ClienteService} clienteService
+   * @param {ParametroService} sp
+   * @param {CotizacionService} cs
+   * @param {CreditoService} dc
+   * @param {MatDialog} dialog
+   * @param {FormBuilder} fb
+   * @memberof ListCotizarComponent
    */
   constructor(
     public datepipe: DatePipe,
@@ -238,7 +253,12 @@ export class ListCotizarComponent implements OnInit {
     this.precioOroLocal = null;
   }
   /**
-   * CARGA DESPUES DEL CONSTRUCTOR
+   * METODO ON INIT SE CARGA DESPUES DE ABRIR LA PAGINADOR
+   * INICIALIZA LOS OBSERVABLES
+   * @description
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-07-14
+   * @memberof ListCotizarComponent
    */
   ngOnInit() {
     this.limpiarCampos();
@@ -273,11 +293,18 @@ export class ListCotizarComponent implements OnInit {
   /**
    * Metodo que trae los motivos de desestimiento de la base de datos tabla parametros
    */
+  /**
+   * @description METODO QUE REALIZA LA CARGA DEL COMBO MOTIVO DE  CON LOS DIFERENTES MOTIVOS
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-07-14
+   * @memberof ListCotizarComponent
+   */
   getMotivoDesestimiento() {
     this.sp.findByNombreTipoOrdered('', 'DESEST', 'Y').subscribe((wrapper: any) => {
-      // // console.log("retornos "+ JSON.stringify(wrapper)  );
       if (wrapper && wrapper.entidades) {
-        this.listMotivoDesestimiento = wrapper.entidades;
+        for (let i = 0; i < wrapper.entidades.length; i++) {
+          this.listMotivoDesestimiento.push(wrapper.entidades[i].valor.toUpperCase());
+        }
       }
     }, error => {
       if (error.error) {
@@ -297,14 +324,20 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
+
   /**
-  * Metodo que trae los grados de interes de la base de datos tabla parametros
-  */
+   * @description METODO QUE CARGA EL COMBO DE GRADOS DE INTERES
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-07-14
+   * @memberof ListCotizarComponent
+   */
   getGradoInteres() {
     this.sp.findByNombreTipoOrdered('', 'GINT', 'Y').subscribe((wrapper: any) => {
-      // // console.log("retornos "+ JSON.stringify(wrapper)  );
+
       if (wrapper && wrapper.entidades) {
-        this.listGradosInteres = wrapper.entidades;
+        for (let i = 0; i < wrapper.entidades.length; i++) {
+          this.listGradosInteres.push(wrapper.entidades[i].valor.toUpperCase());
+        }
       }
     }, error => {
       if (error.error) {
@@ -324,19 +357,20 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
+
+
   /**
-    * Metodo que trae los tipos de publicidad de la base de datos tabla parametros
-    */
+   * @description METODO QUE CARGA EL COMBO DE PUBLICIDAD CON LOS TIPOS DE PUBLICIDAD 
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-07-14
+   * @memberof ListCotizarComponent
+   */
   getPublicidades() {
     this.sp.findByNombreTipoOrdered('', 'PUB', 'Y').subscribe((wrapper: any) => {
-      // //console.log("retornos "+ JSON.stringify(wrapper)  );
       if (wrapper && wrapper.entidades) {
-        // tslint:disable-next-line: prefer-for-of
         for (let i = 0; i < wrapper.entidades.length; i++) {
           this.listPublicidad.push(wrapper.entidades[i].valor.toUpperCase());
-          // //console.log('Valores de list publicidades --->' + this.listPublicidad);
         }
-        // this.listPublicidad = wrapper.entidades.valor;
       }
     }, error => {
       if (error.error) {
@@ -345,7 +379,7 @@ export class ListCotizarComponent implements OnInit {
         } else {
           this.sinNoticeService.setNotice('Error al cargar parametros de publicidad', 'error');
         }
-      } else if (error.statusText && error.status == 401) {
+      } else if (error.statusText && error.status === 401) {
         this.dialog.open(AuthDialogComponent, {
           data: {
             mensaje: 'Error ' + error.statusText + ' - ' + error.message
@@ -356,13 +390,16 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
-  /**
-   *  this.js.findAllTipoOro(this.p).subscribe((data: any) => {
-      // console.log("VALOR DE LOS TIPOS ORO " + JSON.stringify(data));
-    });
-   */
+
+
   /**
    * METODO DE QUE TRAE TODOS LOS TIPO ORO EJ 18K
+   */
+  /**
+   * @description METODO QUE CARGA LOS TIPOS DE ORO 
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-07-14
+   * @memberof ListCotizarComponent
    */
   getTipoOro() {
     this.p = new Page();
@@ -371,11 +408,12 @@ export class ListCotizarComponent implements OnInit {
     this.p.isPaginated = 'Y';
     this.p.size = 5;
     this.p.pageNumber = 0;
-    // console.log('ANTES DE INGRESAR AL TIPO ORO');
+
     this.js.findAllTipoOro().subscribe((wrapper: any) => {
-      // // console.log("retornos " + JSON.stringify(wrapper.list));
-      if (wrapper) {
-        this.listOros = wrapper.list;
+      if (wrapper && wrapper.entidades) {
+        for (let i = 0; i < wrapper.entidades.length; i++) {
+          this.listOros.push(wrapper.entidades[i].valor.toUpperCase());
+        }
       }
     }, error => {
       if (error.error) {
@@ -384,7 +422,7 @@ export class ListCotizarComponent implements OnInit {
         } else {
           this.sinNoticeService.setNotice('Error al cargar Tipo Oro', 'error');
         }
-      } else if (error.statusText && error.status == 401) {
+      } else if (error.statusText && error.status === 401) {
         this.dialog.open(AuthDialogComponent, {
           data: {
             mensaje: 'Error ' + error.statusText + ' - ' + error.message
@@ -402,32 +440,32 @@ export class ListCotizarComponent implements OnInit {
    * @param event
    */
   cambioSeleccionPublicidad(event) {
-    // console.log('evento ' + JSON.stringify(event.value));
-    // console.log('evento ' + JSON.stringify(this.fpublicidad.value));
+    console.log('evento ' + JSON.stringify(event.value));
+    console.log('evento ' + JSON.stringify(this.fpublicidad.value));
   }
   /**
    * Metodo que toma el valor del combo Grado de interes
    * @param event
    */
   cambioSeleccionGradoInteres(event) {
-    // console.log('evento ' + JSON.stringify(event.value));
-    // console.log('evento ' + JSON.stringify(this.fgradoInteres.value));
+    console.log('evento ' + JSON.stringify(event.value));
+    console.log('evento ' + JSON.stringify(this.fgradoInteres.value));
   }
   /**
    * Metodo que toma el valor del combo Motivo Desestimiento
    * @param event
    */
   cambioSeleccionMotivoDesestimiento(event) {
-    // console.log('evento ' + JSON.stringify(event.value));
-    // console.log('evento ' + JSON.stringify(this.fmotivoDesestimiento.value));
+    console.log('evento ' + JSON.stringify(event.value));
+    console.log('evento ' + JSON.stringify(this.fmotivoDesestimiento.value));
   }
   /**
-* Metodo que toma el valor del combo Tipo de Oro
+* Metodo que toma el valor del combo Tipo de Oro Y SETEO EL PRECIO ORO
 * @param event
 */
   cambioSeleccionTipoOro(event) {
-    // console.log('evento ' + JSON.stringify(event.value));
-    // console.log(' TOMA EL VALOR DEL EVENTO DEL ORO evento ' + JSON.stringify(this.tipoOro.value));
+    console.log('evento ' + JSON.stringify(event.value));
+    console.log(' TOMA EL VALOR DEL EVENTO DEL ORO evento ' + JSON.stringify(this.tipoOro.value));
     this.setPrecioOro();
   }
   /*********METODOS DEL PAGINATOR*****************************************    */
@@ -479,9 +517,15 @@ export class ListCotizarComponent implements OnInit {
     this.p.isPaginated = 'Y';
     this.p.size = 5;
     this.p.pageNumber = 0;
-
-
   }
+
+
+  /**
+   * @description METODO QUE REALIZA LA VALIDACION DEL VALOR SELECCIONADO EN APROBACION MUPI
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-07-14
+   * @memberof ListCotizarComponent
+   */
   validarMupi() {
 
     if (this.aprobacionMupi.value === 'SI') {
@@ -494,6 +538,7 @@ export class ListCotizarComponent implements OnInit {
   }
   /*********METODOS DE LA LOGICA DE PROGRAMACION ***************************    */
   /**
+ 
  * Metodo buscarCliente en primera instancia busca en CloudStudio luego en en CRM Y finalmente la Calculadora Quski
  *
  * Si no existe carga  pide que se suba la autorizacion de equifax.
@@ -566,7 +611,7 @@ export class ListCotizarComponent implements OnInit {
         // console.log('VALOR DE TMPS' + JSON.stringify(tmps));
         // LLENO LA VARIABLE CREDITICIA
         for (let index = 0; index < tmps.length; index++) {
-          this.variableCrediticia = new TbQoVariableCrediticia();
+          this.variableCrediticia = new TbQoVariablesCrediticia();
           this.variableCrediticia.orden = tmps[index].orden;
           this.variableCrediticia.nombre = tmps[index].codigo;
           this.variableCrediticia.valor = tmps[index].valor;
@@ -577,7 +622,7 @@ export class ListCotizarComponent implements OnInit {
 
 
       }
-     
+
       console.log('VARIABLE CREDITICIA EQUIFAX', JSON.stringify(this.variableCrediticiaArray));
       console.log('CLIENTE DESPUES DE EQUIFAX', JSON.stringify(this.cliente));
       this.guardarCliente();
@@ -614,11 +659,11 @@ export class ListCotizarComponent implements OnInit {
         this.cliente.aprobacionMupi = this.aprobacionMupi.value;
         this.cliente.nacionalidad = this.nacionalidad.value;
 
-        this.cotizacion.tbQoVariablesCrediticias = this.variableCrediticiaArray;
+
         this.cotizacion.estado = EstadoQuskiEnum.ACT;
         this.cotizacion.aprobacionMupi = this.aprobacionMupi.value;
         console.log('ELSE VALORES DEL CLIENTE---->  ', JSON.stringify(this.cliente.id));
-        console.log('ELSE VALORES DE LA COTIZACION---->  ', JSON.stringify(this.cotizacion));
+        console.log('ELSE VALORES DE LA COTIZACION VARIABLE CREDITICIA---->  ', JSON.stringify(this.cotizacion.tbQoVariablesCrediticias));
         this.cs.crearCotizacionClienteVariableCrediticia(this.cotizacion).subscribe((data: any) => {
           console.log('VALORES CREADOS DE LA COTIZAACION', JSON.stringify(data));
           if (data && data.entidad) {
@@ -747,7 +792,7 @@ export class ListCotizarComponent implements OnInit {
     // if (this.cliente.cedulaCliente) {
     // console.log('INICIA EL SUBMIT*****');
     // console.log('DATOS DE CLIENTE EN EL SUBMIT' + JSON.stringify(this.cliente));
-    //this.guardarCliente();
+    // this.guardarCliente();
     // console.log('DATOS QUE RESPONDE LUEGO DE LA VALIDACION++++++++>> ' + JSON.stringify(this.cliente));
   }
   /** BOTON RIESGO ACUMULADO   */
@@ -881,7 +926,7 @@ export class ListCotizarComponent implements OnInit {
     const input = this.identificacion;
     // // console.log("****VALOR DE LA IDENTIFICACION"+ this.formCliente.get("identificacion"));
     const cedulaValida = ValidateCedulaNumber(input.value);
-    if (cedulaValida && cedulaValida['cedulaIncorecta'] === true) {
+    if (cedulaValida && cedulaValida.cedulaIncorecta === true) {
       input.setErrors({ 'invalid-identification': true });
     }
   }
