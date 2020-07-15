@@ -219,6 +219,7 @@ export class ListCotizarComponent implements OnInit {
     private sp: ParametroService,
     private cs: CotizacionService,
     private dc: CreditoService,
+    private cl: ClienteService,
     public dialog: MatDialog, private fb: FormBuilder) {
 
     this.sp.setParameter();
@@ -360,7 +361,7 @@ export class ListCotizarComponent implements OnInit {
 
 
   /**
-   * @description METODO QUE CARGA EL COMBO DE PUBLICIDAD CON LOS TIPOS DE PUBLICIDAD 
+   * @description METODO QUE CARGA EL COMBO DE PUBLICIDAD CON LOS TIPOS DE PUBLICIDAD
    * @author Kléber Guerra  - Relative Engine
    * @date 2020-07-14
    * @memberof ListCotizarComponent
@@ -396,7 +397,7 @@ export class ListCotizarComponent implements OnInit {
    * METODO DE QUE TRAE TODOS LOS TIPO ORO EJ 18K
    */
   /**
-   * @description METODO QUE CARGA LOS TIPOS DE ORO 
+   * @description METODO QUE CARGA LOS TIPOS DE ORO
    * @author Kléber Guerra  - Relative Engine
    * @date 2020-07-14
    * @memberof ListCotizarComponent
@@ -538,7 +539,7 @@ export class ListCotizarComponent implements OnInit {
   }
   /*********METODOS DE LA LOGICA DE PROGRAMACION ***************************    */
   /**
- 
+
  * Metodo buscarCliente en primera instancia busca en CloudStudio luego en en CRM Y finalmente la Calculadora Quski
  *
  * Si no existe carga  pide que se suba la autorizacion de equifax.
@@ -608,7 +609,7 @@ export class ListCotizarComponent implements OnInit {
       if (resp && resp.entidad && resp.entidad.xmlVariablesInternas && resp.entidad.xmlVariablesInternas.variablesInternas &&
         resp.entidad.xmlVariablesInternas.variablesInternas.variable) {
         const tmps = resp.entidad.xmlVariablesInternas.variablesInternas.variable;
-        // console.log('VALOR DE TMPS' + JSON.stringify(tmps));
+
         // LLENO LA VARIABLE CREDITICIA
         for (let index = 0; index < tmps.length; index++) {
           this.variableCrediticia = new TbQoVariablesCrediticia();
@@ -616,7 +617,7 @@ export class ListCotizarComponent implements OnInit {
           this.variableCrediticia.nombre = tmps[index].codigo;
           this.variableCrediticia.valor = tmps[index].valor;
           this.variableCrediticiaArray.push(this.variableCrediticia);
-          // // console.log("VARIABLE QUE SE ASIGNA A LA LISTA " + JSON.stringify(this.variableCrediticiaArray[index]));
+
         }
         this.dataSourceVarCredi = new MatTableDataSource(this.variableCrediticiaArray);
 
@@ -625,6 +626,7 @@ export class ListCotizarComponent implements OnInit {
 
       console.log('VARIABLE CREDITICIA EQUIFAX', JSON.stringify(this.variableCrediticiaArray));
       console.log('CLIENTE DESPUES DE EQUIFAX', JSON.stringify(this.cliente));
+
       this.guardarCliente();
       this.loadingSubject.next(false);
       this.sinNoticeService.setNotice('INFORMACION CARGADA CORRECTAMENTE DEL CRM', 'success');
@@ -635,65 +637,66 @@ export class ListCotizarComponent implements OnInit {
    */
   guardarCliente() {
     this.loadingSubject.next(true);
-    console.log('INICIA GUARDAR CLIENTE');
-    // console.log('******* 1.- BUSCA EL CLIENTE EXISTENTE*****');
-    console.log('DATOS DE CLIENTE guardarCliente()' + JSON.stringify(this.cliente));
-    // Llamo al sevicio para buscar un cliente EXISTENTE
+
     this.clienteService.findClienteByIdentificacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
-      if (clienteData && clienteData.entidad) {
-        this.cliente.id = clienteData.entidad.id;
-        console.log('Cliente EXISTE SE TOMA EL  Id+++++++>' + JSON.stringify(this.cliente));
-      } else {
+      console.log('EL CLIENTE ES ', JSON.stringify(clienteData));
 
-        this.cotizacion.tbQoCliente = this.cliente;
-        this.cotizacion.tbQoVariablesCrediticias = this.variableCrediticiaArray;
-        this.cotizacion.estado = EstadoQuskiEnum.ACT;
-        this.cotizacion.aprobacionMupi = this.aprobacionMupi.value;
-        this.cotizacion.tbQoCliente = this.cliente;
-        this.cliente.fechaNacimiento = this.fechaNacimiento.value;
-        this.cliente.edad = this.edad.value;
-        this.cliente.publicidad = this.fpublicidad.value;
-        this.cliente.campania = this.campania.value;
-        this.cliente.telefonoFijo = this.telefonoDomicilio.value;
-        this.cliente.telefonoMovil = this.movil.value;
-        this.cliente.aprobacionMupi = this.aprobacionMupi.value;
-        this.cliente.nacionalidad = this.nacionalidad.value;
+      if (clienteData && clienteData.id) {
+        this.cliente.id = clienteData.id;
+        this.cs.findByIdCliente(this.cliente.cedulaCliente).subscribe((cotizacionData: any) => {
+          if (cotizacionData && cotizacionData.list) {
+            this.listCotizaciones = cotizacionData.list;
+            console.log('VALORES DE LAS COTIZACIONES-----> ', JSON.stringify(this.listCotizaciones[0]));
+            this.cs.caducarCotizacion(this.listCotizaciones[0]).subscribe((listCotizacionesData: any) => {
+              console.log('VALORES DE LAS COTIZACIONES', JSON.stringify(this.listCotizaciones));
 
+            });
 
-        this.cotizacion.estado = EstadoQuskiEnum.ACT;
-        this.cotizacion.aprobacionMupi = this.aprobacionMupi.value;
-        console.log('ELSE VALORES DEL CLIENTE---->  ', JSON.stringify(this.cliente.id));
-        console.log('ELSE VALORES DE LA COTIZACION VARIABLE CREDITICIA---->  ', JSON.stringify(this.cotizacion.tbQoVariablesCrediticias));
-        this.cs.crearCotizacionClienteVariableCrediticia(this.cotizacion).subscribe((data: any) => {
-          console.log('VALORES CREADOS DE LA COTIZAACION', JSON.stringify(data));
-          if (data && data.entidad) {
-
-            this.cotizacion = data.entidad;
-            this.cotizacion.estado = EstadoQuskiEnum.ACT;
-            console.log('Cotizacion con Id GENERADA+++++++>' + JSON.stringify(this.cotizacion));
-
-            this.sinNoticeService.setNotice('SE REGISTRA LA COTIZACION', 'success');
           }
+
+
+          this.crearClienteCotizacionNuevo();
         });
+      } else {
+        this.crearClienteCotizacionNuevo();
       }
-    }, error => {
-      if (error.error) {
-        if (error.error.codError) {
-          this.sinNoticeService.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice('Error al cargar Tipo Oro', 'error');
-        }
-      } else if (error.statusText && error.status === 401) {
-        this.dialog.open(AuthDialogComponent, {
-          data: {
-            mensaje: 'Error ' + error.statusText + ' - ' + error.message
-          }
-        });
-      } else {
-        this.sinNoticeService.setNotice('Error al cargar CLIENTE', 'error');
+    });
+
+
+  }
+
+  crearClienteCotizacionNuevo() {
+    console.log('INGRESA A CREAR CLIENTE NUEVO');
+    this.cotizacion = new TbCotizacion();
+    // SETEO LOS VALORES DEL CLIENTE NUEVO
+    this.cotizacion.tbQoCliente = this.cliente;
+    this.cotizacion.tbQoVariablesCrediticias = this.variableCrediticiaArray;
+    this.cotizacion.aprobacionMupi = this.aprobacionMupi.value;
+    this.cotizacion.tbQoCliente = this.cliente;
+    this.cotizacion.estado = EstadoQuskiEnum.ACT;
+    this.cliente.fechaNacimiento = this.fechaNacimiento.value;
+    this.cliente.edad = this.edad.value;
+    this.cliente.publicidad = this.fpublicidad.value;
+    this.cliente.campania = this.campania.value;
+    this.cliente.telefonoFijo = this.telefonoDomicilio.value;
+    this.cliente.telefonoMovil = this.movil.value;
+    this.cliente.aprobacionMupi = this.aprobacionMupi.value;
+    console.log('COTIZACION A CREAR---> ', JSON.stringify(this.cotizacion));
+
+    this.cs.crearCotizacionClienteVariableCrediticia(this.cotizacion).subscribe((data: any) => {
+      console.log('VALORES CREADOS DE LA COTIZAACION', JSON.stringify(data));
+      if (data && data.entidad) {
+        this.cotizacion = data.entidad;
+        console.log('COTIZACION ID ----> ', JSON.stringify(data.entidad.id));
+        console.log('Cotizacion con Id GENERADA+++++++>' + JSON.stringify(this.cotizacion));
+
+        this.sinNoticeService.setNotice('SE REGISTRA LA COTIZACION', 'success');
       }
     });
   }
+
+
+
 
 
 
@@ -921,20 +924,6 @@ export class ListCotizarComponent implements OnInit {
         : input.hasError('required');
     }
   }
-  /** TODO:VALIDACION DE NUMERO DE CEDULA NO VALE  */
-  blurIdentificacion() {
-    const input = this.identificacion;
-    // // console.log("****VALOR DE LA IDENTIFICACION"+ this.formCliente.get("identificacion"));
-    const cedulaValida = ValidateCedulaNumber(input.value);
-    if (cedulaValida && cedulaValida.cedulaIncorecta === true) {
-      input.setErrors({ 'invalid-identification': true });
-    }
-  }
-
-
-  /**SETEO EL PRECIO ORO */
-
-
 
   /**CALCULO DE LA EDAD */
   onChangeFechaNacimiento() {
@@ -995,9 +984,7 @@ export class ListCotizarComponent implements OnInit {
         }
       );
   }
-  /**
-   * Metodo que realiza la acción del botón VerPrecio
-   */
+
 
   /**
    * Metodo limpia los campos del formPrecioOro
