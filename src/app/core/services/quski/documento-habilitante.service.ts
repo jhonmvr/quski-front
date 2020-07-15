@@ -331,6 +331,22 @@ export class DocumentoHabilitanteService extends BaseService {
     this.options = { responseType: 'arraybuffer',headers: this.headers,  params: this.params };
     return this.http.post(serviceUrl,{}, this.options);
   }
+
+  
+  public getHabilitanteByReferenciaTipoDocumentoProceso(idTipoDocumento, proceso,  referencia) {
+    this.setParameter();
+    const serviceUrl = this.appResourcesUrl + 'documentoHabilitanteRestController/getByProcesoTipoDocumentoReferencia';
+    this.params = new HttpParams().set('idTipoDocumento', idTipoDocumento);
+    this.params = this.params = this.params.set("proceso", proceso);
+    this.params = this.params = this.params.set("referencia", referencia)
+
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+
+  public getFileFromMongo(){
+    
+  }
 }
 
 

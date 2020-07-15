@@ -56,7 +56,7 @@ export class HabilitanteDialogComponent implements OnInit {
       let file = <File>event.target.files[0];
       let mimeType = file.type;
       let mimeSize = file.size;
-      if (mimeType.match('\.pdf') != null) {
+      if (mimeType.match('\.pdf') != null   || mimeType.match('\.png') != null) {
         if (mimeSize < 500000) {
           reader.readAsDataURL(file);
           reader.onload = () => {
@@ -90,6 +90,7 @@ export class HabilitanteDialogComponent implements OnInit {
         //file = null
         this.dataUpload =null;
         this.uploadSubject.next(false);
+        console.log("entra aqui")
         this.sinNoticeService.setNotice("Formato no permitido. Ingrese un .PDF", 'error');
       }
     } else {

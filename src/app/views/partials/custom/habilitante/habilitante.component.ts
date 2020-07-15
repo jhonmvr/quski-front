@@ -296,28 +296,6 @@ export class HabilitanteComponent implements OnInit {
     //console.log("descargarNotificacion");
   }
 
-  validateContratoByHabilitante() {
-    
-
-  }
-  validateAnulacionContrato(){
-    
-  }
- 
-  anularContrato() {
-    
-  }
-
-  validateReversoRenovacion(){
-    
-  }
-
-  reversoRenovacion(){  
-  }
-
-  validateVolverTerminar(){
-  
-  }
     
   navigatetoList(){
     

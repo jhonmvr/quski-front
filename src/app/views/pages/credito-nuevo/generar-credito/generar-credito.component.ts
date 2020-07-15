@@ -7,10 +7,14 @@ import { TbQoCliente } from '../../../../core/model/quski/TbQoCliente';
 import { diferenciaEnDias } from '../../../../core/util/diferenciaEnDias';
 import { ReNoticeService } from '../../../../core/services/re-notice.service';
 import { DatePipe } from '@angular/common';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { Page } from '../../../../core/model/page';
-
-
+import { TasacionService } from '../../../../core/services/quski/tasacion.service';
+import { HabilitanteComponent } from '../../../partials/custom/habilitante/habilitante.component';
+import { HabilitanteDialogComponent } from '../../../partials/custom/habilitante/habilitante-dialog/habilitante-dialog.component';
+import { DocumentoHabilitanteService } from '../../../../core/services/quski/documento-habilitante.service';
+import { environment } from '../../../../../environments/environment';
+import { ObjectStorageService } from '../../../../core/services/object-storage.service';
 
 
 
@@ -62,14 +66,25 @@ export class GenerarCreditoComponent implements OnInit {
   ///Monto
   public montoSolicitado = new FormControl('');
 
+  // control funda
+  public pesoFunda = new FormControl('');
+  public numeroFunda = new FormControl('');
+  public totalPesoNeto = new FormControl('');
+  public totalPesoBruto = new FormControl('');
+  public totalPesoBrutoFunda = new FormControl('');
+  public totalValorRealizacion = new FormControl('');
+  public totalValorAvaluo = new FormControl('');
+  public totalValorComercial = new FormControl('');
+
   ///
   idCreditoNegociacion=96;
   tbCreditoNegociacion:TbQoCreditoNegociacion;
   edadCodeudor
   tbQoCliente;
   fechaServer;
-  tiposCuentas = ['Cuenta de Ahorros', 'Cuenta Corriente']
-  tiposClientes = ['Deudor', 'Codeudor', 'Apoderado']
+  pesosFundas = ['']
+  tiposCuentas = ['Cuenta de Ahorros']
+  tiposClientes = ['DEUDOR', 'CODEUDOR', 'APODERADO']
   tiposCarteras =['']
   destinosOperaciones = ['']
   //observables
@@ -79,7 +94,7 @@ export class GenerarCreditoComponent implements OnInit {
   enableCodeudor = new BehaviorSubject<boolean>(false);
   enableApoderadoButton;
   enableApoderado = new BehaviorSubject<boolean>(false);
-
+  srcJoya;
   //TABLA
   displayedColumns = ['numeroPiezas', 'tipoOro',  'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto',
   'tieneDescuento', 'descripcionDescuentos', 'descuentoPesoPiedra',  'descuentoSuelda',
@@ -88,16 +103,32 @@ export class GenerarCreditoComponent implements OnInit {
  p = new Page();
  dataSource
  //:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
+
+
+ ///////////////////////Objeto Joyas para foto
+ joyaFoto ={
+   idRol:"1",
+   proceso:"JOYA",
+   estadoOperacion:"",
+   referencia:"50",
+   tipoDocumento:"5",
+   //documentoHabilitante:element.idDocumentoHabilitante
+ }
+
+ ////////////////Objeto Funda para foto
+
+
  @ViewChild(MatPaginator, { static: true }) 
  paginator: MatPaginator;
  totalResults: number;
  pageSize = 5;
  currentPage;
-
+ proceso= "CREDITONUEVO"
  /**Obligatorio ordenamiento */
  @ViewChild('sort1', {static: true}) sort: MatSort;
 
-  constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService,) { 
+  constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, private tas: TasacionService,
+    public dialog: MatDialog, private dhs: DocumentoHabilitanteService, private os: ObjectStorageService) { 
     
     
   }
@@ -110,7 +141,10 @@ export class GenerarCreditoComponent implements OnInit {
     this.enableCodeudor.next(false);
     this.enableApoderadoButton = this.enableApoderado.asObservable();
     this.enableApoderado.next(false);
+    this.buscar();
     this.cargarDatosOperacion()
+    
+    this.getJoyas();
     
   }
 
@@ -165,14 +199,17 @@ export class GenerarCreditoComponent implements OnInit {
         this.tbQoCliente = this.tbCreditoNegociacion.tbQoNegociacion.tbQoCliente
         console.log(this.tbQoCliente)
         console.log(this.tbCreditoNegociacion)
-        this.codigoOperacion.setValue(data.entidad.codigoOperacion)
+        this.codigoOperacion.setValue(data.entidad.tbQoNegociacion.codigoOperacion)
         this.cedulaCliente.setValue(data.entidad.tbQoNegociacion.tbQoCliente.cedulaCliente)
         this.nombresCompletos.setValue(data.entidad.tbQoNegociacion.tbQoCliente.apellidoPaterno.concat(" ",
          data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno == null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno, 
           " ", data.entidad.tbQoNegociacion.tbQoCliente.primerNombre
          ," ", data.entidad.tbQoNegociacion.tbQoCliente.segundoApellido== null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.segundoApellido))
          this.situacion.setValue("APROBACIÓN Y AUTORIZACION DESEMBOLSO")
-         if(data.entidad.tipo === "CUOTAS"){
+         this.tipoCuenta.setValue("CUENTA DE AHORROS")
+         this.validateEdadTipo();
+         this.cargarFotoHabilitante();
+         if(data.entidad.tbQoNegociacion.tipoNegociacion === "CUOTAS"){
            console.log("deberia verse")
           this.enableDiaPago.next(true);
          }else{
@@ -224,36 +261,35 @@ export class GenerarCreditoComponent implements OnInit {
   }
  }
   
+validateEdadTipo(){
+  let edadCliente = this.getEdad(this.tbQoCliente.fechaNacimiento)
+  console.log(edadCliente)
+  if(edadCliente>65){
+
+    this.setTipoCliente("CODEUDOR")
+    console.log("entra pero no hace nada")
+    this.enableCodeudor.next(true);
+  }else {
+    this.setTipoCliente("DEUDOR")
+    console.log("entra en Deudor pero no hace nada")
+  }
+
+}
  validateTipoCliente(valueTipoCliente){
    let edadCliente = this.getEdad(this.tbQoCliente.fechaNacimiento)
    console.log(edadCliente)
    console.log("=====> Execute Order 66", valueTipoCliente)
-   console.log("====> Hello there", this.tbQoCliente.edad )
-   if(valueTipoCliente.toUpperCase() === "DEUDOR"){
-    
-    this.enableCodeudor.next(true);
+
+    if (valueTipoCliente.toUpperCase()==="APODERADO" ){
+        this.enableApoderado.next(true)
+        this.enableCodeudor.next(false);
+    } else if (valueTipoCliente.toUpperCase()==="DEUDOR" ){
+      this.enableApoderado.next(false)
+      this.enableCodeudor.next(false);
+  }else if (valueTipoCliente.toUpperCase()==="CODEUDOR" ){
     this.enableApoderado.next(false)
-   } else if (valueTipoCliente.toUpperCase()==="APODERADO" ){
-    if(edadCliente<=65){
-      this.enableApoderado.next(true)
-      this.enableCodeudor.next(false);
-      
-    }else{
-      this.sinNoticeService.setNotice( "El CODEUDOR DEBE SER MENOR DE 65 AÑOS" , 'error');
-    }
-
-   }else{
-    if(edadCliente<=65){
-      this.enableCodeudor.next(false);
-      this.enableApoderado.next(false);
-
-    }else{
-      this.sinNoticeService.setNotice( "El CODEUDOR DEBE SER MENOR DE 65 AÑOS" , 'error');
-      this.enableCodeudor.next(false);
-      this.enableApoderado.next(false);
-    }
-  
-   }
+    this.enableCodeudor.next(true);
+}
  }
  generarCreditos(){
 
@@ -262,4 +298,86 @@ export class GenerarCreditoComponent implements OnInit {
  getMontoSugerido(){
 
  }
+
+ getJoyas(){
+   this.tas.getTasacionByIdCredito(this.p,this.idCreditoNegociacion).subscribe((data:any)=>{
+     console.log("que pasa por la calle", data.list)
+     this.totalResults = data.totalResults;
+        this.dataSource = new MatTableDataSource<any>(data.list);
+        //this.dataSource.paginator=this.paginator;
+        this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'info');
+   }, error=> {
+    this.sinNoticeService.setNotice("ERROR CARGANDO LAS JOYAS", 'error');
+   })
+ }
+
+ setTipoCliente(tipo){
+   console.log(tipo)
+   console.log(this.tiposClientes.find(p=>p==tipo))
+  this.tipoCliente.setValue( this.tiposClientes.find(p=>p==tipo))
+ }
+
+ hello(){
+  let habilitante = new HabilitanteComponent(null,null,null,null);
+  //habilitante.loadArchivoCliente();
+ }
+
+ cargarFotoJoya(){
+   this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.joyaFoto.referencia, this.joyaFoto.tipoDocumento)
+ }
+
+ cargarFotoFunda(){
+  this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.joyaFoto.referencia, this.joyaFoto.tipoDocumento)
 }
+
+ loadArchivoCliente(procesoS, estadoOperacionS, referenciaS,idTipoDocumentoS) {
+  let envioModel={
+    proceso:procesoS,
+    estadoOperacion:estadoOperacionS,
+    referencia:referenciaS,
+    tipoDocumento:idTipoDocumentoS,
+  };
+
+  if (envioModel.referencia) {
+    const dialogRef = this.dialog.open(HabilitanteDialogComponent, {
+      width: "auto",
+      height: "auto",
+      data: envioModel
+    });
+ 
+    dialogRef.afterClosed().subscribe(r => {
+      //console.log("===>>ertorno al cierre: " + JSON.stringify(r));
+      if (r) {
+        //console.log("===>>va a recargar: " );
+        this.buscar();
+        this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE","success");
+        this.cargarFotoHabilitante();
+        //this.validateContratoByHabilitante('false');
+      }
+      //this.submit();
+    });
+  } else {
+    console.log("===>>errorrrr al cierre: ");
+    this.sinNoticeService.setNotice("ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO","error");
+  }
+  
+}
+getPermiso(){
+  return true
+}
+cargarFotoHabilitante(){
+  this.dhs.getHabilitanteByReferenciaTipoDocumentoProceso(this.joyaFoto.tipoDocumento,this.joyaFoto.proceso,this.joyaFoto.referencia,
+  ).subscribe((data:any)=>{
+    console.log("===========>",data.entidad)
+     
+    this.os.getObjectById( data.entidad.objectId,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+    console.log("data  del objeto", data)
+    this.srcJoya = data.entidad
+    console.log("aqui", this.srcJoya)
+    })
+  })
+}
+}
+
+ 
+
