@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TbQoVariableCrediticia } from '../../../../../core/model/quski/TbQoVariableCrediticia';
+import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { MatTableDataSource } from '@angular/material';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
@@ -26,7 +26,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   // TABLA DE VARIABLES CREDITICIAS
   displayedColumnsVariablesCrediticias = ['orden', 'variable', 'valor'];
-  dataSourceVariablesCrediticias = new MatTableDataSource<TbQoVariableCrediticia>();
+  dataSourceVariablesCrediticias = new MatTableDataSource<TbQoVariablesCrediticia>();
   // TABLA RIESGO ACUMULADO
   displayedColumnsRiesgo = ['NumeroOperacion', 'TipoOferta', 'Vencimiento', 'Cuotas','CapitaInicial','SaldoCapital','Plazo','FechaAprobacion','FechaFinalCredito','DiasMora','ValorCuota','MotivoBloqueo','TotalCredito','CoberturaAnterior','CoverturaVigente','DeudaTotal','TotalSaldo','RiesgoTotalCliente'];
   dataSourceRiesgo = new MatTableDataSource<any>();
@@ -40,7 +40,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   // OBJETOS DE ENTIDADES
   public objCliente       : TbQoCliente;
   public objNegociacion   : TbQoNegociacion;
-  public objVariablesC    : TbQoVariableCrediticia;
+  public objVariablesC    : TbQoVariablesCrediticia;
 
   // FORM DATOS OPERACION
   public formDatosOperacion: FormGroup = new FormGroup({});
