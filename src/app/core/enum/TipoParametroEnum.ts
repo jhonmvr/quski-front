@@ -1,0 +1,24 @@
+/**
+ *  @description { ENUM DE PARAMETROS EXISTENTES EN TB_MI_PARAMETRO }
+ */
+export enum TipoParametroEnum {
+    CANAL_CONTACTO = "CANAL", // ESPERANDO SERVICIO DE CLOUDSTUDIO
+    ACTIVIDAD_ECONOMICA = "ACT-ECON", // ESPERANDO SERVICIO DE CLOUDSTUDIO
+    BPM = "BPM",
+    BRE = "BRE",
+    BRE_LABEL = "BRE-LABEL",
+    BRE_VAR ="BRE-VAR",
+    BRE_VAR_DETALLE = "BRE-VAR-DETALLE",
+    CAMPANA = "CAMPANA",
+    CONT_N = "CONT-N",
+    CONT_S = "CONT-S",
+    DESEST = "DESEST",
+    GINT = "GINT",
+    HAB = "HAB",
+    NOT = "NOT",
+    NUEVO = "NUEVO",
+    PUB = "PUB",
+    SYS = "SYS",
+    TIPO_EXCEPCION = "TIP-EXC"
+
+}

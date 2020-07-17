@@ -4,22 +4,13 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { ConsultaCliente } from '../../../core/model/cloudstudio/ConsultaCliente';
 import { CrearCliente } from '../../model/cloudstudio/CrearCliente';
 import { EditarCliente } from '../../model/cloudstudio/EditarCliente';
-import { TablaAmortizacion } from '../../model/cloudstudio/TablaAmortizacion';
 import { SimulacionPrecancelacion } from '../../model/cloudstudio/SimulacionPrecancelacion';
-
-export interface Operacion {
-  numeroOperacion: number;
-}
-export interface Cliente {
-  idTipoIdentificacion: number;
-  identificacion : number;
-}
-export interface Solca {
-  codigoTablaAmortizacionQuski: string;
-  montoSolicitado : number;
-  codigoTipoPrestamo : number;
-}
-
+import { OperacionCancelar } from '../../model/cloudstudio/OperacionCancelar';
+import { OperacionAbono } from '../../model/cloudstudio/OperacionAbono';
+import { OperacionCrear } from '../../model/cloudstudio/OperacionCrear';
+import { SimulacionTablaAmortizacion } from '../../model/cloudstudio/SimulacionTablaAmortizacion';
+import { ConsultaSolca } from '../../model/cloudstudio/ConsultaSolca';
+import { OperacionRenovar } from '../../model/cloudstudio/OperacionRenovar';
 
 @Injectable({
   providedIn: 'root'
@@ -38,40 +29,69 @@ export class CloudstudioService extends BaseService {
 
   }
 
-  // CLIENTES 
+  /**
+   * ******************************* @CLIENTES 
+   */
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Consultar cliente Cloudstudio
+   * @param ConsultaCliente
+   */
   consultarClienteCS( consultaCliente : ConsultaCliente ) {
-    this.setHeaderWithAccess();
     const serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + 'consultar';
-    const wrapper =  consultaCliente 
+    const wrapper = consultaCliente ;
     this.options = { headers: this.headers };
-    console.log(JSON.stringify( this.headers.keys() ) );
-    console.log(JSON.stringify( consultaCliente ))
     return this.http.post(serviceUrl,wrapper,this.options);
   } 
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Consultar referencias del cliente
+   * @param ConsultaCliente 
+   */
   consultarReferenciasClienteCS( consultaCliente : ConsultaCliente) {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + "referencia" ;
     let wrapper =  consultaCliente 
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Consultar ingresos y egresos del cliente
+   * @param ConsultaCliente 
+  */
   consultarIngresosEgresosClienteCS( consultaCliente : ConsultaCliente ) {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + "ingresosegresos" ;
     let wrapper =  consultaCliente 
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Consultar telefonos y direcciones del cliente
+   * @param ConsultaCliente 
+  */
   consultarDireccionesTelefonosClienteCS( consultaCliente : ConsultaCliente ) {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + "direcciontelefono" ;
     let wrapper =  consultaCliente 
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Crear cliente en cloudstudio.
+   * @param crearCliente 
+   */
   crearClienteCS( crearCliente : CrearCliente ) {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + "crear" ;
     let wrapper =  crearCliente 
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Editar cliente en cloudstudio.
+   * @param editarCliente 
+   */
   editarClienteCS( editarCliente : EditarCliente ) {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + "editar" ;
     let wrapper =  editarCliente 
@@ -79,98 +99,174 @@ export class CloudstudioService extends BaseService {
     return this.http.post(serviceUrl,wrapper,this.options);
   } 
 
-  //CATALOGOS
+  /**
+   *  ****************************** @CATALOGOS
+   */
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Agencias
+   */
   consultarAgenciasCS() {
-    this.setHeaderWithAccess();
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "agencia" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   } 
-  consultarAsesoresCS() {
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos de asesores por agencia
+   * @param idAgencia 
+   */
+  consultarAsesoresCS( idAgencia : number ) {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "asesor" ;
+    let wrapper =  {idAgencia};
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  } 
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Rubros de prestamos
+   */
+  consultarRubroPrestamosCS() {
+    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "rubro" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Actividad Economica
+   */
   consultarActividadEconomicaCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "actividadeconomica" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Educacion
+   */
   consultarEducacionCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "educacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Sector vivienda
+   */
   consultarSectorViviendaCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "sectorvivienda" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Estado Civil
+   */
   consultarEstadosCivilesCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "estadocivil" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Vivienda
+   */
   consultarViviendaCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "vivienda" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Profesiones
+   */
   consultarProfesionesCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "profesion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Tipo Identificacion
+   */
   consultarTipoIdentificacionCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "tipoidentificacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Bancos
+   */
   consultarBancosCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "bancos" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Tipo Referencia
+   */
   consultarTipoReferenciaCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "tiporeferencia" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Tipo Prestamo
+   */
   consultarTipoPrestamosCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "tipoprestamo" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Tipo de Carteras
+   */
   consultarTipoCarteraCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "tipocartera" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Tipos de tablas de amortizacion
+   */
   consultarTablaAmortizacionCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "tablaamortizacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Divisiones politicas
+   */
   consultarDivicionPoliticaCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "divisionpolitica" ;
-    let wrapper =  "";
+    let wrapper =  {};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos Diviciones politicas con relaciones
+   */
   consultarDivicionPoliticaConsolidadaCS() {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "divisionpoliticaconsolidado" ;
     let wrapper =  "";
@@ -178,80 +274,159 @@ export class CloudstudioService extends BaseService {
     return this.http.post(serviceUrl,wrapper,this.options);
   }
 
-  //PRESTAMOS
-  simularTablaAmortizacionCS( tablaAmortizacion : TablaAmortizacion ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "tablaamortizacionpresuntiva" ;
-    let wrapper =  tablaAmortizacion;
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
-  } 
-  consultaTablaAmortizacionOperacionAprobadaCS( numeroOperacion : number ) {
+  /**
+   * *******************************@PRESTAMOS
+   */
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Consulta de ta tabla de amortizacion de una operacion existente
+   * @param numeroOperacion 
+   */
+  consultaTablaAmortizacionOperacionAprobadaCS( numeroOperacion : string ) {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/tablaamortizacion" ;
-    let operacion : Operacion;
-    operacion.numeroOperacion = numeroOperacion;
-    let wrapper =  operacion;
+    let wrapper =  {numeroOperacion} ;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 
-  consultaOperacionCS( idTipoidentificacion : number, identificacion : number ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/consulta" ;
-    let cliente : Cliente;
-    cliente.idTipoIdentificacion = idTipoidentificacion;
-    cliente.identificacion = identificacion;
-    let wrapper =  cliente;
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
-  } 
-  consultaRiesgoAcumuladoCS( idTipoidentificacion : number, identificacion : number ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/riesgoacumulado" ;
-    let cliente : Cliente;
-    cliente.idTipoIdentificacion = idTipoidentificacion;
-    cliente.identificacion = identificacion;
-    let wrapper =  cliente;
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
-  } 
-  consultaRubrosCS( numeroOperacion : number ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/rubro" ;
-    let operacion : Operacion;
-    operacion.numeroOperacion = numeroOperacion;
-    let wrapper =  operacion;
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
-  } 
-  
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Simular una precancelacion de una operacion existente
+   * @param simulacionPrecancelacion 
+   */
   simularPrecancelacionCS( simulacionPrecancelacion : SimulacionPrecancelacion ) {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "simularprecancelacion" ;
     let wrapper =  simulacionPrecancelacion;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 
-  //CREDITOS
-  operacionAprobarCS( numeroOperacion : number ) {
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Cancela una operacion en proceso
+   * @param operacionCancelar 
+   */
+  operacionCancelarCS( operacionCancelar : OperacionCancelar ) {
+    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/cancelar" ;
+    let wrapper = operacionCancelar;
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Abona un monto a una operacion existente
+   * @param operacionAbono 
+   */
+  operacionAbonoCS( operacionAbono : OperacionAbono ) {
+    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/abono" ;
+    let wrapper = operacionAbono;
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  }
+  /**
+   * Consulta las operaciones activas del cliente
+   * @param consultaCliente 
+   */
+  operacionConsultaCS( consultaCliente : ConsultaCliente ) {
+    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/consulta" ;
+    let wrapper =  consultaCliente;
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  } 
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Consulta el riesgo acumulado del cliente
+   * @param consultaCliente 
+   */
+  consultaRiesgoAcumuladoCS( consultaCliente : ConsultaCliente ) {
+    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/riesgoacumulado" ;
+    let wrapper =  consultaCliente;
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  } 
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Consulta los rubros de una operacion.
+   * @param numeroOperacion 
+   */
+  consultaRubrosCS( numeroOperacion : string ) {
+    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/rubro" ;
+    let wrapper = {numeroOperacion};
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  } 
+  /** 
+   * ************************************* @CREDITOS_OPERACION
+   */
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Crea una operacion nueva.
+   * @param operacionCrear 
+   */
+  operacionCrearCS( operacionCrear : OperacionCrear ) {
+    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "operacion/crear" ;
+    let wrapper =  operacionCrear;
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  } 
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Renova una operacion existente.
+   * @param operacionRenovar 
+   */
+  operacionRenovarCS( operacionRenovar : OperacionRenovar ) {
+    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "operacion/renovar" ;
+    let wrapper =  operacionRenovar;
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  } 
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Aprueba una operacion pendiente de ser aprobada.
+   * @param numeroOperacion 
+   */
+  operacionAprobarCS( numeroOperacion : string ) {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "operacion/aprobar" ;
-    let operacion : Operacion;
-    operacion.numeroOperacion = numeroOperacion;
-    let wrapper =  operacion;
+    let wrapper =  {numeroOperacion};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 
-  operacionNegarCS( numeroOperacion : number ) {
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Niega una operacion pendiente de ser aprobada.
+   * @param numeroOperacion 
+   */
+  operacionNegarCS( numeroOperacion : string ) {
     let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "operacion/negar" ;
-    let operacion : Operacion;
-    operacion.numeroOperacion = numeroOperacion;
-    let wrapper =  operacion;
+    let wrapper =  {numeroOperacion};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 
-  calcularSolcaCS( codigoTablaAmortizacionQuski : string, montoSolicitado : number, codigoTipoPrestamo : number  ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "operacion/negar" ;
-    let solca : Solca;
-    solca.codigoTablaAmortizacionQuski = codigoTablaAmortizacionQuski;
-    solca.codigoTipoPrestamo = montoSolicitado;
-    solca.montoSolicitado = codigoTipoPrestamo
-    let wrapper =  solca;
+  /**
+   * ********************************@CREDITO_SIMULACION
+   */
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Simula una tabla de amortizacion
+   * @param simulacionTablaAmortizacion 
+   */
+  simularTablaAmortizacionCS( simulacionTablaAmortizacion : SimulacionTablaAmortizacion ) {
+    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "simulacion/tablaamortizacion" ;
+    let wrapper =  simulacionTablaAmortizacion;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 
+  /**
+   * ********************************@CREDITO_CONSULTA
+   */
 
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Consulta el impuesto solca
+   * @param consultaSolca 
+   */
+  calcularSolcaCS( consultaSolca : ConsultaSolca ) {
+    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "calcular/solca" ;
+    let wrapper =  consultaSolca;
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  } 
 }

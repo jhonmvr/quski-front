@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Input, SystemJsNgModuleLoader } from '@an
 import { Page } from '../../../../../../core/model/page';
 import { TbQoTracking } from "../../../../../../core/model/quski/TbQoTracking";
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
-import { ProcesoTrackingEnum } from '../../../../../../core/enum/ProcesoTrackingEnum';
+import { ProcesoEnum } from '../../../../../../core/enum/ProcesoEnum';
 import { TrackingService } from '../../../../../../core/services/quski/tracking.service';
 import { BehaviorSubject } from 'rxjs';
 import { ReNoticeService } from '../../../../../../core/services/re-notice.service';
@@ -16,7 +16,7 @@ import { AutorizacionService } from "../../../../../../core/services/autorizacio
 export class TablaTrackingComponent implements OnInit { 
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
-  @Input() proceso : ProcesoTrackingEnum = ProcesoTrackingEnum.COTIZACION;
+  @Input() proceso : ProcesoEnum = ProcesoEnum.COTIZACION;
 
   displayedColumns = ['proceso', 'codigoRegistro', 'actividad',  'fechaInicio', 'fechaAsignacion', 'fechaInicioAtencion', 'fechaFin',
    'situacion', 'usuario', 'tiempoTotal',  'observacion'];

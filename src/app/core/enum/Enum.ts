@@ -1,4 +1,4 @@
-export enum EstadoAprobacionEnum {
+export enum Enum {
     NIVEL_UNO= 'NIVEL_UNO',
     NIVEL_DOS= 'NIVEL_DOS',
     NIVEL_TRES= 'NIVEL_TRES',
