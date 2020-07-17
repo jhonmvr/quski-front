@@ -13,14 +13,13 @@ import { TbQoPrecioOro } from '../../../../../core/model/quski/TbQoPrecioOro';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { TbCotizacion } from '../../../../../core/model/quski/TbCotizacion';
 import { SolicitudAutorizacionDialogComponent } from '../../../../../../app/views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
-import { ValidateCedula, ValidateCedulaNumber } from '../../../../../core/util/validate.util';
+import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { CotizacionService } from '../../../../../core/services/quski/cotizacion.service';
 import { OroService } from '../../../../../core/services/quski/oro.service';
-
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { EstadoQuskiEnum } from '../../../../../core/enum/EstadoQuskiEnum';
 import { CreditoVigenteDialogComponent } from '../../../../partials/custom/riesgo-acomulado-dialog/credito-vigente-dialog/credito-vigente-dialog.component';
@@ -31,6 +30,14 @@ import { DatePipe } from '@angular/common';
 import { TbQoVariablesCrediticias } from '../../../../../core/model/quski/TbQoVariablesCrediticias';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
+import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
+import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
+import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
+import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
+import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 /**
  * @description IMPORTACION DEL INTERFACE DE USUARIO
@@ -134,11 +141,17 @@ export class ListCotizarComponent implements OnInit {
   public element;
   public opciones: string[] = ['Si', 'No'];
   public seleccion: string;
-
   public primerNombre = '';
   public segundoNombre = '';
   public primerApellido = '';
   public segundoApellido = '';
+  // VARIABLES DE TRACKING
+  public horaInicio: any;
+  public horaAsignacion: any;
+  public horaAtencion: any;
+  public horaFinal: any;
+  public op: string;
+  public idCotizacion: string;
 
   // CALCULADORA VARIABLES
   public tipoIdentificacion = 'C';
@@ -209,6 +222,7 @@ export class ListCotizarComponent implements OnInit {
    */
   constructor(
     public datepipe: DatePipe,
+    private router: Router,
     public titulo: TituloContratoService,
     private os: OroService,
     private js: JoyaService,
@@ -220,6 +234,7 @@ export class ListCotizarComponent implements OnInit {
     private cs: CotizacionService,
     private dc: CreditoService,
     private cl: ClienteService,
+    private tr: TrackingService,
     public dialog: MatDialog, private fb: FormBuilder) {
 
     this.sp.setParameter();
@@ -249,6 +264,9 @@ export class ListCotizarComponent implements OnInit {
     this.getPublicidades();
     this.getGradoInteres();
     this.getMotivoDesestimiento();
+
+
+
     this.sinNoticeService.setNotice(null);
     // VARIABLES
     this.precioOroLocal = null;
@@ -290,7 +308,7 @@ export class ListCotizarComponent implements OnInit {
     return user ? user.name : undefined;
   }
 
-  /** CARGA DE COMBOS  */
+  /******************************************** CARGA DE COMBOS  ***********************************************************/
   /**
    * Metodo que trae los motivos de desestimiento de la base de datos tabla parametros
    */
@@ -411,10 +429,11 @@ export class ListCotizarComponent implements OnInit {
     this.p.pageNumber = 0;
 
     this.js.findAllTipoOro().subscribe((wrapper: any) => {
-      if (wrapper && wrapper.entidades) {
-        for (let i = 0; i < wrapper.entidades.length; i++) {
-          this.listOros.push(wrapper.entidades[i].valor.toUpperCase());
-        }
+
+      if (wrapper && wrapper.list) {
+        this.listOros=wrapper.list;
+        console.log('INGRESA AL IF', JSON.stringify(wrapper.list.length));
+       
       }
     }, error => {
       if (error.error) {
@@ -435,7 +454,7 @@ export class ListCotizarComponent implements OnInit {
     });
   }
 
-  /*********METODOS PARA TOMAR LOS VALORES DE LOS COMBOS*********************    */
+  /***********************************************METODOS PARA TOMAR LOS VALORES DE LOS COMBOS*********************    */
   /**
    * Metodo que toma el valor del combo publicidad
    * @param event
@@ -469,7 +488,7 @@ export class ListCotizarComponent implements OnInit {
     console.log(' TOMA EL VALOR DEL EVENTO DEL ORO evento ' + JSON.stringify(this.tipoOro.value));
     this.setPrecioOro();
   }
-  /*********METODOS DEL PAGINATOR*****************************************    */
+  /*******************************************METODOS DEL PAGINATOR*****************************************************    */
   /**
    * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
    */
@@ -547,11 +566,26 @@ export class ListCotizarComponent implements OnInit {
   buscarCliente() {
     // TODO: AUMENTAR EL SOFTBANK CUANDO SE TENGA
     this.loadingSubject.next(true);
+
+
     console.log('INICIA BUSQUEDA EN CRM');
     this.clienteService.findClienteByCedulaCRM(this.identificacion.value).subscribe((data: any) => {
-
-      // console.log('Valores que llega de CRM-->', JSON.stringify(data));
+      console.log('Valores que llega de CRM-->', JSON.stringify(data));
       if (data && data.list) {
+        // IMPLEMENTACION DE TRACKING
+        this.tr.getSystemDate().subscribe((hora: any) => {
+          console.log('INICIA EL REGISTRO DE TRACKING EN PROSPECCION', JSON.stringify(hora));
+          if (hora.entidad) {
+            console.log('INICIA TRACKING COTIZACION Hora del core ----> ' + JSON.stringify(hora.entidad));
+            this.horaInicio = hora.entidad;
+            this.horaAsignacion = hora.entidad;
+            this.horaAtencion = hora.entidad;
+            this.sinNoticeService.setNotice('INCIA TRACKING', 'error');
+
+          }
+        });
+
+
         // seteo valores en la vista
         this.nombresCompletos.setValue(data.list[0].firstName);
         // console.log('Nombres completos CRM', data.list[0].firstName);
@@ -640,7 +674,6 @@ export class ListCotizarComponent implements OnInit {
 
     this.clienteService.findClienteByIdentificacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
       console.log('EL CLIENTE ES ', JSON.stringify(clienteData));
-
       if (clienteData && clienteData.id) {
         this.cliente.id = clienteData.id;
         this.cs.findByIdCliente(this.cliente.cedulaCliente).subscribe((cotizacionData: any) => {
@@ -649,22 +682,22 @@ export class ListCotizarComponent implements OnInit {
             console.log('VALORES DE LAS COTIZACIONES-----> ', JSON.stringify(this.listCotizaciones[0]));
             this.cs.caducarCotizacion(this.listCotizaciones[0]).subscribe((listCotizacionesData: any) => {
               console.log('VALORES DE LAS COTIZACIONES', JSON.stringify(this.listCotizaciones));
-
             });
-
+            this.crearClienteCotizacionNuevo();
           }
-
-
-          this.crearClienteCotizacionNuevo();
+         
         });
       } else {
         this.crearClienteCotizacionNuevo();
       }
     });
-
-
   }
-
+  /**
+   * @description METODO QUE CREA AL CLIENTE NUEVO Y SI ES ANTERIOR TAMBIEN CREA LA COTIZACION
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-07-15
+   * @memberof ListCotizarComponent
+   */
   crearClienteCotizacionNuevo() {
     console.log('INGRESA A CREAR CLIENTE NUEVO');
     this.cotizacion = new TbCotizacion();
@@ -682,13 +715,13 @@ export class ListCotizarComponent implements OnInit {
     this.cliente.telefonoMovil = this.movil.value;
     this.cliente.aprobacionMupi = this.aprobacionMupi.value;
     console.log('COTIZACION A CREAR---> ', JSON.stringify(this.cotizacion));
-
     this.cs.crearCotizacionClienteVariableCrediticia(this.cotizacion).subscribe((data: any) => {
       console.log('VALORES CREADOS DE LA COTIZAACION', JSON.stringify(data));
       if (data && data.entidad) {
         this.cotizacion = data.entidad;
         console.log('COTIZACION ID ----> ', JSON.stringify(data.entidad.id));
         console.log('Cotizacion con Id GENERADA+++++++>' + JSON.stringify(this.cotizacion));
+        this.idCotizacion = this.cotizacion.id;
 
         this.sinNoticeService.setNotice('SE REGISTRA LA COTIZACION', 'success');
       }
@@ -724,15 +757,8 @@ export class ListCotizarComponent implements OnInit {
         // console.log('envio de ELSE ' + respuesta);
         this.sinNoticeService.setNotice('ACCIÓN CANCELADA ', 'error');
         this.limpiarCampos();
-
-
       }
-
-
-
     });
-
-
   }
 
 
@@ -742,9 +768,40 @@ export class ListCotizarComponent implements OnInit {
 
 
     if (this.identificacion.value !== null && this.nombresCompletos.value !== null && this.fpublicidad.value && this.aprobacionMupi.value && this.fechaNacimiento.value && this.edad.value && this.nacionalidad.value && this.movil.value && this.telefonoDomicilio.value && this.correoElectronico.value && + this.campania.value) {
-      this.guardarCliente();
-      this.getTipoOro();
+      // IMPLEMENTACION DEL TRACKING
+      this.tr.getSystemDate().subscribe((hora: any) => {
+        console.log('Registro PROSPECCION final');
+        if (hora.entidad) {
+          this.horaFinal = hora.entidad;
+          if (this.idCotizacion != null) {
+            this.registroProspeccion(
+              this.idCotizacion,
+              this.horaInicio,
+              this.horaAsignacion,
+              this.horaAtencion,
+              this.horaFinal
+            );
+          } else {
+            this.sinNoticeService.setNotice('NO EXISTE COTIZACION PARA HACER SEGUIMIENTO DE TRACKING', 'error');
+          }
+        }
+
+      });
+
       this.loadingSubject.next(false);
+      this.tr.getSystemDate().subscribe((hora: any) => {
+        console.log('INICIA EL REGISTRO DE TRACKING EN TASACION', JSON.stringify(hora));
+        if (hora.entidad) {
+          console.log('INICIA TRACKING COTIZACION TASACION Hora del core ----> ' + JSON.stringify(hora.entidad));
+          this.horaInicio = hora.entidad;
+          this.horaAsignacion = hora.entidad;
+          this.horaAtencion = hora.entidad;
+          this.sinNoticeService.setNotice('INCIA TRACKING', 'error');
+
+        }
+      });
+     // this.guardarCliente();
+      this.getTipoOro();
       this.sinNoticeService.setNotice('INFORMACION COMPLETA', 'success');
       this.disableVerVariableSubject.next(true);
       this.stepper.selectedIndex = 2;
@@ -762,6 +819,24 @@ export class ListCotizarComponent implements OnInit {
    */
   submit() {
     this.loadingSubject.next(false);
+    this.tr.getSystemDate().subscribe((hora: any) => {
+      console.log('Registro cotizacion final');
+      if (hora.entidad) {
+        this.horaFinal = hora.entidad;
+        if (this.idCotizacion != null) {
+          this.registroTasación(
+            this.idCotizacion,
+            this.horaInicio,
+            this.horaAsignacion,
+            this.horaAtencion,
+            this.horaFinal
+          );
+        } else {
+          this.sinNoticeService.setNotice('NO EXISTE COTIZACION PARA HACER SEGUIMIENTO DE TRACKING', 'error');
+        }
+      }
+      this.router.navigate(['../../credito-nuevo/generar-credito', this.idCotizacion]);
+    });
     const cedula = this.identificacion.value;
     /**
      * Valores que tomo de la vista
@@ -1237,5 +1312,82 @@ export class ListCotizarComponent implements OnInit {
   }
 
 
+
+  public registroProspeccion(
+    codigoRegistro: string,
+    fechaInicio: Date,
+    fechaAsignacion: Date,
+    fechaInicioAtencion: Date,
+    fechaFin: Date,) {
+    const tracking: TbQoTracking = new TbQoTracking();
+    tracking.actividad = ActividadEnum.COTIZACION; // Modulo en ProducBacklog
+    tracking.proceso = ProcesoEnum.PROSPECCION;
+    tracking.observacion = '';
+    tracking.codigoRegistro = codigoRegistro;
+    tracking.situacion = SituacionTrackingEnum.EN_PROCESO;
+    tracking.usuario = UsuarioEnum.ASESOR;
+    tracking.fechaInicio = fechaInicio;
+    tracking.fechaAsignacion = fechaAsignacion;
+    tracking.fechaInicioAtencion = fechaInicioAtencion;
+    tracking.fechaFin = fechaFin;
+    console.log('TRACKING DE PROSPECCION--->', JSON.stringify(tracking));
+    this.tr.guardarTracking(tracking).subscribe((data: any) => {
+      if (data.entidad) {
+        console.log(' Tracking creado prospeccion ------>' + JSON.stringify(data.entidad));
+        this.loadingSubject.next(false);
+      } else {
+        this.loadingSubject.next(false);
+        this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING DE GESTION CLIENTE EN METODO', 'error');
+      }
+    }, error => {
+      this.loadingSubject.next(false);
+      if (JSON.stringify(error).indexOf('codError') > 0) {
+        const b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING DE GESTION CLIENTE EN METODO // ERROR CAPTURADO', 'error');
+      }
+    });
+
+  }
+
+  public registroTasación(
+    codigoRegistro: string,
+    fechaInicio: Date,
+    fechaAsignacion: Date,
+    fechaInicioAtencion: Date,
+    fechaFin: Date,) {
+    const tracking: TbQoTracking = new TbQoTracking();
+    tracking.actividad = ActividadEnum.COTIZACION; // Modulo en ProducBacklog
+    tracking.proceso = ProcesoEnum.TASACION;
+    tracking.observacion = '';
+    tracking.codigoRegistro = codigoRegistro;
+    tracking.situacion = SituacionTrackingEnum.EN_PROCESO;
+    tracking.usuario = UsuarioEnum.ASESOR;
+    tracking.fechaInicio = fechaInicio;
+    tracking.fechaAsignacion = fechaAsignacion;
+    tracking.fechaInicioAtencion = fechaInicioAtencion;
+    tracking.fechaFin = fechaFin;
+    console.log('LLAMO A REGISTRO TASACION');
+    this.tr.guardarTracking(tracking).subscribe((data: any) => {
+
+      if (data.entidad) {
+        console.log(' TRACKING TASACION ------>' + JSON.stringify(data.entidad));
+        this.loadingSubject.next(false);
+      } else {
+        this.loadingSubject.next(false);
+        this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING DE GESTION CLIENTE EN METODO', 'error');
+      }
+    }, error => {
+      this.loadingSubject.next(false);
+      if (JSON.stringify(error).indexOf('codError') > 0) {
+        const b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING DE GESTION CLIENTE EN METODO // ERROR CAPTURADO', 'error');
+      }
+    });
+
+  }
 
 }

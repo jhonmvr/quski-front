@@ -1,4 +1,5 @@
 export enum ActividadEnum {
-    NEGOCIACION = "NEGOCIACION"
+    NEGOCIACION = "NEGOCIACION",
+    COTIZACION="COTIZACION"
 	
 }

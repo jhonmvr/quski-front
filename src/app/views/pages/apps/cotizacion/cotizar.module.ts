@@ -66,6 +66,10 @@ const routes: Routes = [
 				component: ListCotizarComponent
 			},
 			{
+				path: 'lista-cotizacion/:id',
+				component: ListCotizarComponent
+			},
+			{
 				path: 'detalle-cotizacion',
 				component: DetalleCotizacionComponent
 			},
