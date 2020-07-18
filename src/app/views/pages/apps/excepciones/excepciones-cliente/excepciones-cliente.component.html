@@ -19,19 +19,19 @@
                 <ng-template matStepLabel>Datos de Operacion</ng-template>
                 <form [formGroup]="formDatosOperacion">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <mat-form-field>
                                 <input matInput [formControl]="nombresCompletos" placeholder="Nombres Completos "/>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <mat-form-field>
                                 <input [formControl]="identificacion" placeholder="C.I." matInput numeric numericType="number"  (keypress)="numberOnly($event)"/>
                             </mat-form-field>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <mat-form-field>
                                 <input matInput [formControl]="nombreProceso" placeholder="Proceso"/>
                             </mat-form-field>
@@ -197,7 +197,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <mat-form-field>
-                                    <input [formControl]="tipoProcesoNegociacion" placeholder="Tipo De Proceso: " matInput/>
+                                    <input [formControl]="tipoNegociacion" placeholder="Tipo De Negociacion: " matInput/>
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
@@ -224,30 +224,33 @@
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>Variables crediticias </ng-template>
-                
-                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceVariablesCrediticias" matSort #sort1="matSort"
-                        matSortActive="orden" matSortDirection="asc" matSortDisableClear>
-                        <ng-container matColumnDef="orden">
-                            <mat-header-cell *matHeaderCellDef>Orden</mat-header-cell>
-                            <mat-cell *matCellDef="let element">
-                                {{element.orden}}
-                            </mat-cell>
-                        </ng-container>
-                        <ng-container matColumnDef="variable">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Variable</mat-header-cell>
-                            <mat-cell *matCellDef="let element">
-                                {{element.nombre}}
-                            </mat-cell>
-                        </ng-container>
-                        <ng-container matColumnDef="valor">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Valor</mat-header-cell>
-                            <mat-cell *matCellDef="let element">
-                                {{element.valor}}
-                            </mat-cell>
-                        </ng-container>
-                        <mat-header-row *matHeaderRowDef="displayedColumnsVariablesCrediticias"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumnsVariablesCrediticias"></mat-row>
-                    </mat-table>
+                <div class="row">
+                    <div class="col-md-8">
+                        <mat-table #table class="mat-elevation-z8"  [dataSource]="dataSourceVariablesCrediticias" matSort #sort1="matSort"
+                            matSortActive="orden" matSortDirection="asc" matSortDisableClear>
+                            <ng-container matColumnDef="orden">
+                                <mat-header-cell  *matHeaderCellDef>Orden</mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    {{element.orden}}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="variable">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Variable</mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    {{element.nombre}}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="valor">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Valor</mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    {{element.valor}}
+                                </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="displayedColumnsVariablesCrediticias"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumnsVariablesCrediticias"></mat-row>
+                        </mat-table>
+                    </div>
+                </div>
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>Riesgo Acumulado </ng-template>
@@ -255,79 +258,79 @@
                     <div class="mat-table__wrapper">
                         <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceRiesgo">
                             <ng-container matColumnDef="numeroOperacion">
-                                <mat-header-cell *matHeaderCellDef> N. Operaciòn </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.numeroOperacion}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > N. Operaciòn </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.numeroOperacion}}</mat-cell>
                             </ng-container>
     
     
                             <ng-container matColumnDef="valorAlDia">
-                                <mat-header-cell *matHeaderCellDef> Valor Al Dia </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.valorAlDia}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Valor Al Dia </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.valorAlDia}}</mat-cell>
                             </ng-container>
     
                             <ng-container matColumnDef="valorAlDiaMasCuotaActual">
-                                <mat-header-cell *matHeaderCellDef> Valor Al Dia Mas Cuota Actual </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.valorAlDiaMasCuotaActual}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Valor Al Dia Mas Cuota Actual </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.valorAlDiaMasCuotaActual}}</mat-cell>
                             </ng-container>
                             
                             <ng-container matColumnDef="valorCancelaPrestamo">
-                                <mat-header-cell *matHeaderCellDef> Valor Cancela Prestamo </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.valorCancelaPrestamo}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Valor Cancela Prestamo </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.valorCancelaPrestamo}}</mat-cell>
                             </ng-container>
     
                             <ng-container matColumnDef="valorProyectadoCuotaActual">
-                                <mat-header-cell *matHeaderCellDef> Valor Proyectado Cuota Actual </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.valorProyectadoCuotaActual}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Valor Proyectado Cuota Actual </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.valorProyectadoCuotaActual}}</mat-cell>
                             </ng-container>
                             
                             <ng-container matColumnDef="diasMoraActual">
-                                <mat-header-cell *matHeaderCellDef> Dias Mora Actual </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.diasMoraActual}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Dias Mora Actual </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.diasMoraActual}}</mat-cell>
                             </ng-container>
                             
                             <ng-container matColumnDef="numeroCuotasTotales">
-                                <mat-header-cell *matHeaderCellDef> Numero Cuotas Totales </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.numeroCuotasTotales}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Numero Cuotas Totales </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.numeroCuotasTotales}}</mat-cell>
                             </ng-container>
     
                             <ng-container matColumnDef="numeroOperacionRelacionada">
-                                <mat-header-cell *matHeaderCellDef> Numero Operacion Relacionada </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.numeroOperacionRelacionada}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Numero Operacion Relacionada </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.numeroOperacionRelacionada}}</mat-cell>
                             </ng-container>
                             
                             <ng-container matColumnDef="nombreProducto">
-                                <mat-header-cell *matHeaderCellDef> Nombre Producto </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.nombreProducto}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Nombre Producto </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.nombreProducto}}</mat-cell>
                             </ng-container>
                             
                             <ng-container matColumnDef="numeroCuotasFaltantes">
-                                <mat-header-cell *matHeaderCellDef> Numero Cuotas Faltantes </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.numeroCuotasFaltantes}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Numero Cuotas Faltantes </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.numeroCuotasFaltantes}}</mat-cell>
                             </ng-container>
     
                             <ng-container matColumnDef="primeraCuotaVigente">
-                                <mat-header-cell *matHeaderCellDef> Primera Cuota Vigente </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.primeraCuotaVigente}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Primera Cuota Vigente </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.primeraCuotaVigente}}</mat-cell>
                             </ng-container>
     
                             <ng-container matColumnDef="estadoPrimeraCuotaVigente">
-                                <mat-header-cell *matHeaderCellDef> Estado Primera Cuota Vigente </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.estadoPrimeraCuotaVigente}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Estado Primera Cuota Vigente </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.estadoPrimeraCuotaVigente}}</mat-cell>
                             </ng-container>
     
                             <ng-container matColumnDef="numeroGarantiasReales">
-                                <mat-header-cell *matHeaderCellDef> Numero Garantias Reales </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.numeroGarantiasReales}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Numero Garantias Reales </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.numeroGarantiasReales}}</mat-cell>
                             </ng-container>
     
                             <ng-container matColumnDef="estadoOperacion">
-                                <mat-header-cell *matHeaderCellDef> Estado Operacion </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.estadoOperacion}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Estado Operacion </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.estadoOperacion}}</mat-cell>
                             </ng-container>
     
                             <ng-container matColumnDef="idMoneda">
-                                <mat-header-cell *matHeaderCellDef> Tipo De Moneda </mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.idMoneda}}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef class="text-align" > Tipo De Moneda </mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="text-align" >{{element.idMoneda}}</mat-cell>
                             </ng-container>
                             
                             <mat-header-row *matHeaderRowDef="displayedColumnsRiesgo"></mat-header-row>
@@ -341,8 +344,11 @@
                 <div class="kt-form">
                     <form [formGroup]="formDatosExcepcion">
                         <div class="row mt-3">
-                            <div class="col-md-8 ">
-                                <mat-card class="warning">{{ tipoExcepcion }}</mat-card>
+                            <div class="col-md-6">
+                                <mat-card class="warning"> 
+                                    <span class="material-icons warning-icons">report_problem</span>
+                                    {{ tipoExcepcionCliente }}
+                                </mat-card>
                             </div>
                         </div>
                         <div class="row mt-3">

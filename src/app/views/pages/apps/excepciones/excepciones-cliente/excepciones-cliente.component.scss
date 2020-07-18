@@ -13,6 +13,14 @@
     color: gray;
     text-align: center;
   }
+  .warning-icons {
+    font-size: 31px !important;
+    height: 31px;
+    width: 34px;
+    color: gray;
+    text-align: center;
+    vertical-align: middle;
+  }
   
   .mat-button .mat-button-wrapper > *,
   .mat-fab .mat-button-wrapper > *,
@@ -83,3 +91,7 @@
     border-color: white;
     font-weight: 400;
   }    
+  .text-align {   
+    justify-content: center;
+    font-size: smaller;
+  }

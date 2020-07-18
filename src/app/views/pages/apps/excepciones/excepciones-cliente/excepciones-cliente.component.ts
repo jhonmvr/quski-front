@@ -15,6 +15,7 @@ import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { VariablesCrediticiasService } from '../../../../../core/services/quski/variablesCrediticias.service';
 import { RiesgoAcumuladoService } from '../../../../../core/services/quski/riesgoAcumulado.service';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
+import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 
 @Component({
   selector: 'kt-excepciones-cliente',
@@ -23,13 +24,14 @@ import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoA
 })
 export class ExcepcionesClienteComponent implements OnInit {
   // STANDARD VARIABLES
+  public loading;
   // OBJETOS DE ENTIDADES
   private negociacion  : TbQoNegociacion;
   private cliente      : TbQoCliente;
   private excepcion    : TbQoExcepcione;
   private variablesCre : Array<TbQoVariablesCrediticia>;
   private riesgoAcumul : Array<TbQoRiesgoAcumulado>;
-
+  
   private loadingSubject = new BehaviorSubject<boolean>(false);
   // TABLA DE VARIABLES CREDITICIAS
   displayedColumnsVariablesCrediticias = ['orden', 'variable', 'valor'];
@@ -43,7 +45,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   public horaAsignacion  : any;
   public horaAtencion    : any;
   public horaFinal       : any;
-
+  
   // FORM DATOS OPERACION
   public formDatosOperacion: FormGroup = new FormGroup({});
   public nombresCompletos       = new FormControl('', []);
@@ -78,22 +80,24 @@ export class ExcepcionesClienteComponent implements OnInit {
   public correo              = new FormControl('', []);
   // FORM DATOS NEGOCIACION
   public formDatosNegociacion: FormGroup = new FormGroup({});
-  public tipoProcesoNegociacion                = new FormControl('', []);
+  public tipoNegociacion                       = new FormControl('', []);
   public estadoNegociacion                     = new FormControl('', []);
   public fechaDeCreacionNegociacion            = new FormControl('', []);
   public ultimaFechaDeActualizacionNegociacion = new FormControl('', []);
-
+  
   // FORM DATOS EXCEPCION
   public formDatosExcepcion: FormGroup = new FormGroup({});
+  public tipoExcepcionCliente : string;
   public observacionAsesor    = new FormControl('', []);
   public observacionAprobador = new FormControl('', []);
   public radioB             = new FormControl('', []);
-
+  
   constructor(
     private exc : ExcepcionService,
     private tra : TrackingService,
     private vcr : VariablesCrediticiasService,
     private rie : RiesgoAcumuladoService,
+    private int : IntegracionService,
     private route : ActivatedRoute,
     private router: Router,
     private subheaderService : SubheaderService,
@@ -129,7 +133,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.formDatosContacto.addControl("telefonoOficina"   , this.telefonoOficina);
     this.formDatosContacto.addControl("correo"            , this.correo);
     //FORM DATOS NEGOCIACION
-    this.formDatosNegociacion.addControl("tipoProcesoNegociacion"     , this.tipoProcesoNegociacion);
+    this.formDatosNegociacion.addControl("tipoNegociacion"            , this.tipoNegociacion);
     this.formDatosNegociacion.addControl("estadoNegociacion"          , this.estadoNegociacion);
     this.formDatosNegociacion.addControl("fechaDeCreacionNegociacion" , this.fechaDeCreacionNegociacion);
     this.formDatosNegociacion.addControl("ultimaFechaDeActualizacionNegociacion" , this.ultimaFechaDeActualizacionNegociacion);
@@ -156,6 +160,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     });
     this.validarRadio()
     this.buscarExcepcion();
+    this.loading = this.loadingSubject.asObservable();
     this.subheaderService.setTitle("Excepciones de Negociacion");
   }
   /**
@@ -177,12 +182,14 @@ export class ExcepcionesClienteComponent implements OnInit {
    * @description PASADA POR this.route.paramMap
    */
   buscarExcepcion() {
+    this.loadingSubject.next(true);
     this.route.paramMap.subscribe((json: any) => {
       json.params.id
       if (json.params.id) {
         this.exc.getEntity(json.params.id).subscribe( (json : any) =>{
           if(json.entidad){
             //TRACKING
+            this.loadingSubject.next(false);
             this.tra.getSystemDate().subscribe( (hora: any) =>{
               if(hora.entidad){
                 this.horaAsignacion = hora.entidad;
@@ -223,12 +230,31 @@ export class ExcepcionesClienteComponent implements OnInit {
               this.telefonoOficina.setValue(this.cliente.telefonoTrabajo);
               this.correo.setValue(this.cliente.email);
               // FORM DATOS NEGOCIACION
-              this.tipoProcesoNegociacion.setValue( this.negociacion.tipoNegociacion );
+              this.tipoNegociacion.setValue( this.negociacion.tipoNegociacion );
               this.estadoNegociacion.setValue( this.negociacion.estadoNegociacion );
               this.fechaDeCreacionNegociacion.setValue( this.negociacion.fechaCreacion );
               this.ultimaFechaDeActualizacionNegociacion.setValue( this.negociacion.fechaActualizacion );
               //FORM DATOS EXCEPCION
-              this.observacionAsesor.setValue(this.excepcion.observacionAsesor);
+              if(this.excepcion.observacionAsesor != ''){
+                this.observacionAsesor.setValue(this.excepcion.observacionAsesor.toUpperCase());
+              }
+              this.int.getInformacionPersonaCalculadora('C', this.cliente.cedulaCliente,'CC','N').subscribe( (data : any) =>{
+                if (data.entidad.codigoError == 3) {
+                  //console.log("codigoError -----> ", JSON.stringify(data.entidad.mensaje));
+                  this.tipoExcepcionCliente = data.entidad.mensaje.toUpperCase();
+                } else {
+                  this.sinNoticeService.setNotice('ERROR AL CARGAR LA EXCEPCION CALCULADORA ELSE', 'error');
+                }
+              }, error =>{
+                this.loadingSubject.next(false);
+                if (JSON.stringify(error).indexOf("codError") > 0) {
+                  let b = error.error;
+                  this.sinNoticeService.setNotice(b.msgError, 'error');
+                } else {
+                  this.sinNoticeService.setNotice('ERROR AL CARGAR LA EXCEPCION CALCULADORA', 'error');
+                }
+              });
+              // FORM DE VARIABLES CREDITICIAS
               this.vcr.variablesCrediticiaByIdNegociacion ( this.negociacion.id.toString() ).subscribe((data : any) =>{
                 if (data) {
                   this.variablesCre = new Array<TbQoVariablesCrediticia>(); 
@@ -237,9 +263,18 @@ export class ExcepcionesClienteComponent implements OnInit {
                   });
                   this.dataSourceVariablesCrediticias.data = this.variablesCre;
                 } else {
-                  this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LA EXCEPCION', 'error');
+                  this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LAS VARIABLES CREDITICIAS ELSE', 'error');
                 }
-              }, error =>{});
+              }, error =>{
+                this.loadingSubject.next(false);
+                if (JSON.stringify(error).indexOf("codError") > 0) {
+                  let b = error.error;
+                  this.sinNoticeService.setNotice(b.msgError, 'error');
+                } else {
+                  this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LAS VARIABLES CREDITICIAS', 'error');
+                }
+              });
+              // FORM DE RIESGO ACUMULADO
               this.rie.findRiesgoAcumuladoByIdCliente ( this.cliente.id.toString() ).subscribe((data : any) =>{
                 if (data) {
                   this.riesgoAcumul = new Array<TbQoRiesgoAcumulado>(); 
@@ -248,20 +283,35 @@ export class ExcepcionesClienteComponent implements OnInit {
                   });
                   this.dataSourceRiesgo.data = this.riesgoAcumul;
                 } else {
-                  this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LA EXCEPCION', 'error');
+                  this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DEL RIESGO ACUMULADO ELSE', 'error');
                 }
-              }, error =>{});
+              }, error =>{
+                this.loadingSubject.next(false);
+                if (JSON.stringify(error).indexOf("codError") > 0) {
+                  let b = error.error;
+                  this.sinNoticeService.setNotice(b.msgError, 'error');
+                } else {
+                  this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DEL RIESGO ACUMULADO', 'error');
+                }
+              });
             }else {
-              this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LA EXCEPCION', 'error');
+              this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LA EXCEPCION ELSE', 'error');
               this.tra.getSystemDate().subscribe( (hora: any) =>{
                 if(hora.entidad){
                   this.horaAsignacion = hora.entidad;
                 }
               });
+              this.loadingSubject.next(false);
             }
         }, error => {
           this.loadingSubject.next(false);
           if (JSON.stringify(error).indexOf("codError") > 0) {
+            this.tra.getSystemDate().subscribe( (hora: any) =>{
+              if(hora.entidad){
+                this.horaAsignacion = hora.entidad;
+              }
+            });
+            this.loadingSubject.next(false);
             let b = error.error;
             this.sinNoticeService.setNotice(b.msgError, 'error');
           } else {
@@ -270,5 +320,19 @@ export class ExcepcionesClienteComponent implements OnInit {
         }); 
       }            
     });
+  }
+  enviarRespuesta(){
+    this.loadingSubject.next(false);
+    if (this.radioB.value != "") {
+      if(this.observacionAprobador.value != ""){
+        this.loadingSubject.next(false);
+      } else{
+        this.loadingSubject.next(false);
+        this.sinNoticeService.setNotice('INGRESE UNA RAZON DE SU RESPUESTA', 'error');
+      }
+    } else {
+      this.loadingSubject.next(false);
+      this.sinNoticeService.setNotice('POR FAVOR MARQUE UNA OPCION CON SU RESPUESA', 'error');
+    }
   }
 }
