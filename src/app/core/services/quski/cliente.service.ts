@@ -56,11 +56,14 @@ export class ClienteService extends BaseService {
     return this.http.post(serviceUrl, wrapper, this.options);
   }
 
-  public obtenerWrapperCliente() {
-    let serviceUrl = this.appResourcesUrl + "clienteRestController/obtenerCliente";
-    this.options = { Headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
-  }
+
+  /*   public obtenerWrapperCliente() {
+      let serviceUrl = this.appResourcesUrl + "clienteRestController/obtenerCliente";
+      this.options = { Headers: this.headers, params: this.params };
+      return this.http.get(serviceUrl, this.options);
+    } 
+  */
+ 
   /**
    * @description Método que llama al servicio rest del back busca el cliente por identificación con cotizacion
    * @author Kléber Guerra  - Relative Engine

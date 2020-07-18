@@ -1,3 +1,6 @@
+/**
+ * @description { Enum inutilisado }
+ */
 export enum EstadoContratoEnum{
     ADQUIRIDO="ADQUIRIDO",
 	PENDIENTE_HABILITANTE="PENDIENTE_HABILITANTE",
