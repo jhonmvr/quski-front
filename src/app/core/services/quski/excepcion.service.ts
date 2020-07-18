@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -17,13 +17,11 @@ export class ExcepcionService extends BaseService {
    * @author Jeroham Cadenas
    * @date 14/Julio/2020
    * @description Busca excepcion por id { entidad }
-   * @param id : string
+   * @param id
    */
   public getEntity( id : string ) {
-    this.setParameter();
     const serviceUrl =  this.appResourcesUrl + this.restC +'getEntity';
-    this.params = new HttpParams();
-    this.params.set('id', id);
+    this.params = new HttpParams().set('id', id);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }

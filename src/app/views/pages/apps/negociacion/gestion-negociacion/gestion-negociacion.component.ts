@@ -308,7 +308,7 @@ numberOnly(event): boolean {
       );
   }
 /**
- * Metodo buscar cliente wn primera instancia busca en CloudStudio luego en la Calculadora Quski
+ * Metodo buscar cliente wn primera instancia busca en SOFTBANK luego en la Calculadora Quski
  * y  en CRM 
  * Si no existe pide que se suba la autorizacion de equifax.
  */

@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { ConsultaCliente } from '../../../core/model/cloudstudio/ConsultaCliente';
-import { CrearCliente } from '../../model/cloudstudio/CrearCliente';
-import { EditarCliente } from '../../model/cloudstudio/EditarCliente';
-import { SimulacionPrecancelacion } from '../../model/cloudstudio/SimulacionPrecancelacion';
-import { OperacionCancelar } from '../../model/cloudstudio/OperacionCancelar';
-import { OperacionAbono } from '../../model/cloudstudio/OperacionAbono';
-import { OperacionCrear } from '../../model/cloudstudio/OperacionCrear';
-import { SimulacionTablaAmortizacion } from '../../model/cloudstudio/SimulacionTablaAmortizacion';
-import { ConsultaSolca } from '../../model/cloudstudio/ConsultaSolca';
-import { OperacionRenovar } from '../../model/cloudstudio/OperacionRenovar';
+import { ConsultaCliente } from '../../model/softbank/ConsultaCliente';
+import { CrearCliente } from '../../model/softbank/CrearCliente';
+import { EditarCliente } from '../../model/softbank/EditarCliente';
+import { SimulacionPrecancelacion } from '../../model/softbank/SimulacionPrecancelacion';
+import { OperacionCancelar } from '../../model/softbank/OperacionCancelar';
+import { OperacionAbono } from '../../model/softbank/OperacionAbono';
+import { OperacionCrear } from '../../model/softbank/OperacionCrear';
+import { SimulacionTablaAmortizacion } from '../../model/softbank/SimulacionTablaAmortizacion';
+import { ConsultaSolca } from '../../model/softbank/ConsultaSolca';
+import { OperacionRenovar } from '../../model/softbank/OperacionRenovar';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CloudstudioService extends BaseService {
+export class SoftbankService extends BaseService {
 
   urlRestCliente  = "api/cliente/";
   urlRestPrestamo = "api/prestamo/";
@@ -34,7 +34,7 @@ export class CloudstudioService extends BaseService {
    */
   /**
    * @author Jeroham Cadenas - Developer Twelve
-   * @description Consultar cliente Cloudstudio
+   * @description Consultar cliente Softbank
    * @param ConsultaCliente
    */
   consultarClienteCS( consultaCliente : ConsultaCliente ) {
@@ -78,7 +78,7 @@ export class CloudstudioService extends BaseService {
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
-   * @description Crear cliente en cloudstudio.
+   * @description Crear cliente en Softbank.
    * @param crearCliente 
    */
   crearClienteCS( crearCliente : CrearCliente ) {
@@ -89,7 +89,7 @@ export class CloudstudioService extends BaseService {
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
-   * @description Editar cliente en cloudstudio.
+   * @description Editar cliente en Softbank.
    * @param editarCliente 
    */
   editarClienteCS( editarCliente : EditarCliente ) {
