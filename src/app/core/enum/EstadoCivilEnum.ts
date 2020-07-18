@@ -1,5 +1,5 @@
 /**
- * @description { CAMBIAR IMPEMENTACION A WS CLOUDSTUDIO }
+ * @description { CAMBIAR IMPEMENTACION A WS SOFTBANK }
  * @description { DEJAR DE USAR }
  */
 export enum EstadoCivilEnum {

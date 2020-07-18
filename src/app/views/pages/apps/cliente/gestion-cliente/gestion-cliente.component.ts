@@ -43,24 +43,24 @@ import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
 import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
 import { ReferenciaParentescoEnum } from '../../../../../core/enum/ReferenciaParentescoEnum';
-import { CloudstudioService } from '../../../../../core/services/quski/cloudstudio.service';
-import { ConsultaCliente } from '../../../../../core/model/cloudstudio/ConsultaCliente';
-import { CrearCliente } from '../../../../../core/model/cloudstudio/CrearCliente';
-import { ActividadEconomicaCliente } from '../../../../../core/model/cloudstudio/ActividadEconomicaCliente';
-import { ContactosCliente } from '../../../../../core/model/cloudstudio/ContactosCliente';
-import { CuentasBancariasCliente } from '../../../../../core/model/cloudstudio/CuentasBancariasCliente';
-import { TelefonoCliente } from '../../../../../core/model/cloudstudio/TelefonoCliente';
-import { EditarCliente } from '../../../../../core/model/cloudstudio/EditarCliente';
-import { SimulacionPrecancelacion } from '../../../../../core/model/cloudstudio/SimulacionPrecancelacion';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
+import { CrearCliente } from '../../../../../core/model/softbank/CrearCliente';
+import { ActividadEconomicaCliente } from '../../../../../core/model/softbank/ActividadEconomicaCliente';
+import { ContactosCliente } from '../../../../../core/model/softbank/ContactosCliente';
+import { CuentasBancariasCliente } from '../../../../../core/model/softbank/CuentasBancariasCliente';
+import { TelefonoCliente } from '../../../../../core/model/softbank/TelefonoCliente';
+import { EditarCliente } from '../../../../../core/model/softbank/EditarCliente';
+import { SimulacionPrecancelacion } from '../../../../../core/model/softbank/SimulacionPrecancelacion';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
-import { SimulacionTablaAmortizacion } from '../../../../../core/model/cloudstudio/SimulacionTablaAmortizacion';
-import { OperacionAbono } from '../../../../../core/model/cloudstudio/OperacionAbono';
-import { OperacionCancelar } from '../../../../../core/model/cloudstudio/OperacionCancelar';
-import { Rubros } from '../../../../../core/model/cloudstudio/Rubros';
-import { OperacionCrear } from '../../../../../core/model/cloudstudio/OperacionCrear';
-import { OperacionRenovar } from '../../../../../core/model/cloudstudio/OperacionRenovar';
-import { DatosImpCom } from '../../../../../core/model/cloudstudio/DatosImpCom';
-import { ConsultaSolca } from '../../../../../core/model/cloudstudio/ConsultaSolca';
+import { SimulacionTablaAmortizacion } from '../../../../../core/model/softbank/SimulacionTablaAmortizacion';
+import { OperacionAbono } from '../../../../../core/model/softbank/OperacionAbono';
+import { OperacionCancelar } from '../../../../../core/model/softbank/OperacionCancelar';
+import { Rubros } from '../../../../../core/model/softbank/Rubros';
+import { OperacionCrear } from '../../../../../core/model/softbank/OperacionCrear';
+import { OperacionRenovar } from '../../../../../core/model/softbank/OperacionRenovar';
+import { DatosImpCom } from '../../../../../core/model/softbank/DatosImpCom';
+import { ConsultaSolca } from '../../../../../core/model/softbank/ConsultaSolca';
 
 export interface User {
   name: string;
@@ -251,7 +251,7 @@ export class GestionClienteComponent implements OnInit {
    * @param tr 
    */
   constructor(
-    private css : CloudstudioService,
+    private css : SoftbankService,
     private neg: NegociacionService,
     private cs: ClienteService,
     public dialog: MatDialog,
@@ -347,7 +347,7 @@ export class GestionClienteComponent implements OnInit {
   ngOnInit() {
     this.habilitarBtActualizar  = false;
     this.disableConsultar = this.disableConsultarSubject.asObservable();
-    this.implementacionServiciosCloudstudioTEST();
+    this.implementacionServiciosSoftbankTEST();
     //SET VALORES POR DEFECTO DE CHECKS
     this.drLgDo.setValue(true);
     this.drCrDo.setValue(true);
@@ -1160,7 +1160,7 @@ export class GestionClienteComponent implements OnInit {
   /**
    * 
    */
-  implementacionServiciosCloudstudioTEST(){
+  implementacionServiciosSoftbankTEST(){
 
     //Cliente
     this.testConsultarClienteCS(); 
@@ -1216,10 +1216,10 @@ export class GestionClienteComponent implements OnInit {
     let entidadConsultaCliente  = new ConsultaCliente();
     entidadConsultaCliente.identificacion = "1311066441";
     entidadConsultaCliente.idTipoIdentificacion = 1;
-    this.css.consultarClienteCS(entidadConsultaCliente).subscribe( data => {
+    this.css.consultarClienteCS( entidadConsultaCliente ).subscribe( (data : any) => {
       if (data) {
-        console.log("consultarClienteCS --> Funciona");
-        //console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
+        //console.log("consultarClienteCS --> Funciona");
+        console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
       } else {
         this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
       }
@@ -2013,7 +2013,7 @@ export class GestionClienteComponent implements OnInit {
     });
   }
 
-  // FIN DE TESTING DE CLOUDSTUDIO.
+  // FIN DE TESTING DE SOFTBANK.
 
   /**
    * @param element 
@@ -2256,7 +2256,7 @@ export class GestionClienteComponent implements OnInit {
                     this.cliente    = new TbQoCliente;
                     // **************  SET DE DATOS DE CLIENTE 
                     if (this.id != null && this.id != "") {
-                      this.cliente.id = this.id;
+                      this.cliente.id = Number(this.id);
                     }
                     this.cliente.actividadEconomica = this.actividadEconomica.value;
                     this.cliente.actividadEconomicaEmpresa = this.actividadEconomicaEmpresa.value;

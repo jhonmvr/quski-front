@@ -560,7 +560,7 @@ export class ListCotizarComponent implements OnInit {
   /*********METODOS DE LA LOGICA DE PROGRAMACION ***************************    */
   /**
 
- * Metodo buscarCliente en primera instancia busca en CloudStudio luego en en CRM Y finalmente la Calculadora Quski
+ * Metodo buscarCliente en primera instancia busca en SOFTBANK luego en en CRM Y finalmente la Calculadora Quski
  *
  * Si no existe carga  pide que se suba la autorizacion de equifax.
  */
