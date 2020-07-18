@@ -431,9 +431,9 @@ export class ListCotizarComponent implements OnInit {
     this.js.findAllTipoOro().subscribe((wrapper: any) => {
 
       if (wrapper && wrapper.list) {
-        this.listOros=wrapper.list;
+        this.listOros = wrapper.list;
         console.log('INGRESA AL IF', JSON.stringify(wrapper.list.length));
-       
+
       }
     }, error => {
       if (error.error) {
@@ -566,8 +566,6 @@ export class ListCotizarComponent implements OnInit {
   buscarCliente() {
     // TODO: AUMENTAR EL SOFTBANK CUANDO SE TENGA
     this.loadingSubject.next(true);
-
-
     console.log('INICIA BUSQUEDA EN CRM');
     this.clienteService.findClienteByCedulaCRM(this.identificacion.value).subscribe((data: any) => {
       console.log('Valores que llega de CRM-->', JSON.stringify(data));
@@ -580,7 +578,7 @@ export class ListCotizarComponent implements OnInit {
             this.horaInicio = hora.entidad;
             this.horaAsignacion = hora.entidad;
             this.horaAtencion = hora.entidad;
-            this.sinNoticeService.setNotice('INCIA TRACKING', 'error');
+            this.sinNoticeService.setNotice('INCIA TRACKING PROSPECTO', 'error');
 
           }
         });
@@ -620,7 +618,11 @@ export class ListCotizarComponent implements OnInit {
       this.loadingSubject.next(true);
       console.log('RESPONSE QUSKI findClienteByCedulaQusqui:::::>' + JSON.stringify(resp));
       // SETEO LOS DATOS QUE VIENEN DEL SERVICIO
-      // console.log('INGRESA A EQUIFAX', JSON.stringify(resp));
+      console.log('INGRESA A EQUIFAX', JSON.stringify(resp));
+      if (resp.entidad.mensaje) {
+        this.sinNoticeService.setNotice(JSON.stringify(resp.entidad.mensaje), 'warning');
+      }
+
       this.loadingSubject.next(true);
 
       // SETEO LOS DATOS QUE VIENEN DEL SERVICIO
@@ -685,7 +687,7 @@ export class ListCotizarComponent implements OnInit {
             });
             this.crearClienteCotizacionNuevo();
           }
-         
+
         });
       } else {
         this.crearClienteCotizacionNuevo();
@@ -782,7 +784,7 @@ export class ListCotizarComponent implements OnInit {
               this.horaFinal
             );
           } else {
-            this.sinNoticeService.setNotice('NO EXISTE COTIZACION PARA HACER SEGUIMIENTO DE TRACKING', 'error');
+            this.sinNoticeService.setNotice('NO EXISTE COTIZACION PARA REGISTRAR EL TRACKING', 'error');
           }
         }
 
@@ -796,11 +798,11 @@ export class ListCotizarComponent implements OnInit {
           this.horaInicio = hora.entidad;
           this.horaAsignacion = hora.entidad;
           this.horaAtencion = hora.entidad;
-          this.sinNoticeService.setNotice('INCIA TRACKING', 'error');
+          this.sinNoticeService.setNotice('INCIA TRACKING TASACION', 'error');
 
         }
       });
-     // this.guardarCliente();
+      // this.guardarCliente();
       this.getTipoOro();
       this.sinNoticeService.setNotice('INFORMACION COMPLETA', 'success');
       this.disableVerVariableSubject.next(true);
@@ -832,10 +834,10 @@ export class ListCotizarComponent implements OnInit {
             this.horaFinal
           );
         } else {
-          this.sinNoticeService.setNotice('NO EXISTE COTIZACION PARA HACER SEGUIMIENTO DE TRACKING', 'error');
+          this.sinNoticeService.setNotice('NO EXISTE COTIZACION PARA REGISTRAR TRACKING', 'error');
         }
       }
-      this.router.navigate(['../../credito-nuevo/generar-credito', this.idCotizacion]);
+
     });
     const cedula = this.identificacion.value;
     /**
