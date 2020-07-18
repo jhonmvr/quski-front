@@ -133,7 +133,7 @@ getCotizacionByCedula(cedulaCliente: string) {
   }
   
 
-
+ 
   crearVariableCrediticia(tbCotizacion) {
     let serviceUrl = this.appResourcesUrl
       + "variableCrediticiaRestController/crearVariableCrediticia";
