@@ -1,4 +1,8 @@
+/**
+ * @description { Uso de tracking : Migrar a parametro }
+ */
 export enum ActividadEnum {
-    NEGOCIACION = "NEGOCIACION"
+    NEGOCIACION = "NEGOCIACION",
+    COTIZACION="COTIZACION"
 	
 }

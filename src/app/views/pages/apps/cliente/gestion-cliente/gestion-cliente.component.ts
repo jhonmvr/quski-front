@@ -43,18 +43,24 @@ import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
 import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
 import { ReferenciaParentescoEnum } from '../../../../../core/enum/ReferenciaParentescoEnum';
-import { CloudstudioService } from '../../../../../core/services/quski/cloudstudio.service';
-import { ConsultaCliente } from '../../../../../core/model/cloudstudio/ConsultaCliente';
-import { CrearCliente } from '../../../../../core/model/cloudstudio/CrearCliente';
-import { ActividadEconomicaCliente } from '../../../../../core/model/cloudstudio/ActividadEconomicaCliente';
-import { ContactosCliente } from '../../../../../core/model/cloudstudio/ContactosCliente';
-import { CuentasBancariasCliente } from '../../../../../core/model/cloudstudio/CuentasBancariasCliente';
-import { TelefonoCliente } from '../../../../../core/model/cloudstudio/TelefonoCliente';
-import { EditarCliente } from '../../../../../core/model/cloudstudio/EditarCliente';
-import { TablaAmortizacion } from '../../../../../core/model/cloudstudio/TablaAmortizacion';
-import { SimulacionPrecancelacion } from '../../../../../core/model/cloudstudio/SimulacionPrecancelacion';
-import { TablaPresuntivaDatos } from '../../../../../core/model/cloudstudio/TablaPresuntivaDatos';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
+import { CrearCliente } from '../../../../../core/model/softbank/CrearCliente';
+import { ActividadEconomicaCliente } from '../../../../../core/model/softbank/ActividadEconomicaCliente';
+import { ContactosCliente } from '../../../../../core/model/softbank/ContactosCliente';
+import { CuentasBancariasCliente } from '../../../../../core/model/softbank/CuentasBancariasCliente';
+import { TelefonoCliente } from '../../../../../core/model/softbank/TelefonoCliente';
+import { EditarCliente } from '../../../../../core/model/softbank/EditarCliente';
+import { SimulacionPrecancelacion } from '../../../../../core/model/softbank/SimulacionPrecancelacion';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
+import { SimulacionTablaAmortizacion } from '../../../../../core/model/softbank/SimulacionTablaAmortizacion';
+import { OperacionAbono } from '../../../../../core/model/softbank/OperacionAbono';
+import { OperacionCancelar } from '../../../../../core/model/softbank/OperacionCancelar';
+import { Rubros } from '../../../../../core/model/softbank/Rubros';
+import { OperacionCrear } from '../../../../../core/model/softbank/OperacionCrear';
+import { OperacionRenovar } from '../../../../../core/model/softbank/OperacionRenovar';
+import { DatosImpCom } from '../../../../../core/model/softbank/DatosImpCom';
+import { ConsultaSolca } from '../../../../../core/model/softbank/ConsultaSolca';
 
 export interface User {
   name: string;
@@ -245,7 +251,7 @@ export class GestionClienteComponent implements OnInit {
    * @param tr 
    */
   constructor(
-    private css : CloudstudioService,
+    private css : SoftbankService,
     private neg: NegociacionService,
     private cs: ClienteService,
     public dialog: MatDialog,
@@ -341,7 +347,7 @@ export class GestionClienteComponent implements OnInit {
   ngOnInit() {
     this.habilitarBtActualizar  = false;
     this.disableConsultar = this.disableConsultarSubject.asObservable();
-    this.implementacionServiciosCloudstudioTEST();
+    this.implementacionServiciosSoftbankTEST();
     //SET VALORES POR DEFECTO DE CHECKS
     this.drLgDo.setValue(true);
     this.drCrDo.setValue(true);
@@ -1154,12 +1160,65 @@ export class GestionClienteComponent implements OnInit {
   /**
    * 
    */
-  implementacionServiciosCloudstudioTEST(){
+  implementacionServiciosSoftbankTEST(){
+
+    //Cliente
+    this.testConsultarClienteCS(); 
+    this.testConsultarDireccionesTelefonosClienteCS(); 
+    this.testConsultarIngresosEgresosClienteCS(); 
+    this.testConsultarReferenciasClienteCS(); 
+    this.testCrearClienteCS();  
+    this.testEditarClienteCS(); 
+
+
+    //Catalogo
+    this.testConsultarAgenciasCS(); 
+    this.testConsultarAsesoresCS();
+    this.testConsultarActividadEconomicaCS(); 
+    this.testConsultarEducacionCS(); 
+    this.testConsultarRubroPrestamosCS(); 
+    this.testConsultarSectorViviendaCS(); 
+    this.testConsultarEstadosCivilesCS(); 
+    this.testConsultarViviendaCS(); 
+    this.testConsultarProfesionesCS(); 
+    this.testConsultarTipoIdentificacionCS(); 
+    this.testConsultarBancosCS(); 
+    this.testConsultarTipoReferenciaCS(); 
+    this.testConsultarTipoPrestamosCS(); 
+    this.testConsultarTipoCarteraCS(); 
+    this.testConsultarTablaAmortizacionCS(); 
+    this.testConsultarDivicionPoliticaCS();
+    this.testConsultarDivicionPoliticaConsolidadaCS(); 
+
+    // Prestamo
+    this.testConsultaTablaAmortizacionOperacionAprobadaCS(); 
+    this.testSimularPrecancelacionCS(); 
+    this.testOperacionCancelarCS(); 
+    this.testOperacionAbonoCS(); 
+    this.testOperacionConsultaCS(); 
+    this.testConsultaRiesgoAcumuladoCS(); 
+    this.testConsultaRubrosCS(); 
+
+    // Credito Operacion
+    this.testOperacionCrearCS(); 
+    this.testOperacionRenovarCS(); 
+    this.testOperacionAprobarCS();
+    this.testOperacionNegarCS();
+
+    //Credito Simulacion
+    this.testSimularTablaAmortizacionCS(); 
+
+    // Credito Consulta
+    this.testCalcularSolcaCS(); 
+  }
+  // CLIENTE
+  testConsultarClienteCS(){
     let entidadConsultaCliente  = new ConsultaCliente();
     entidadConsultaCliente.identificacion = "1311066441";
     entidadConsultaCliente.idTipoIdentificacion = 1;
-    this.css.consultarClienteCS(entidadConsultaCliente).subscribe( data => {
+    this.css.consultarClienteCS( entidadConsultaCliente ).subscribe( (data : any) => {
       if (data) {
+        //console.log("consultarClienteCS --> Funciona");
         console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
       } else {
         this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
@@ -1174,9 +1233,15 @@ export class GestionClienteComponent implements OnInit {
 
       }
     });
-    /* this.css.consultarDireccionesTelefonosClienteCS(entidadConsultaCliente).subscribe(data => {
+  }
+  testConsultarDireccionesTelefonosClienteCS(){
+    let entidadConsultaCliente  = new ConsultaCliente();
+    entidadConsultaCliente.identificacion = "1311066441";
+    entidadConsultaCliente.idTipoIdentificacion = 1;
+    this.css.consultarDireccionesTelefonosClienteCS(entidadConsultaCliente).subscribe(data => {
       if(data){
-        console.log("Consulta de direcciones y telefonos del cliente ----->" + JSON.stringify(data));
+        console.log("consultarDireccionesTelefonosClienteCS --> Funciona");
+        //console.log("Consulta de direcciones y telefonos del cliente ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarDireccionesTelefonosClienteCS' :'(", 'error');
       }
@@ -1188,9 +1253,15 @@ export class GestionClienteComponent implements OnInit {
         this.sinNoticeService.setNotice("no se pudo capturar el error :c", 'error');
       }
     });
+  }
+  testConsultarIngresosEgresosClienteCS(){
+    let entidadConsultaCliente  = new ConsultaCliente();
+    entidadConsultaCliente.identificacion = "1311066441";
+    entidadConsultaCliente.idTipoIdentificacion = 1;
     this.css.consultarIngresosEgresosClienteCS(entidadConsultaCliente).subscribe(data => {
       if(data){
-        console.log("Consulta de Ingresos y egresos del cliente ----->" + JSON.stringify(data));
+        console.log("consultarIngresosEgresosClienteCS --> Funciona");
+        //console.log("Consulta de Ingresos y egresos del cliente ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarIngresosEgresosClienteCS' :'(", 'error');
       }
@@ -1202,9 +1273,15 @@ export class GestionClienteComponent implements OnInit {
         this.sinNoticeService.setNotice("no se pudo capturar el error :c", 'error');
       }
     });
+  }
+  testConsultarReferenciasClienteCS(){
+    let entidadConsultaCliente  = new ConsultaCliente();
+    entidadConsultaCliente.identificacion = "1311066441";
+    entidadConsultaCliente.idTipoIdentificacion = 1;
     this.css.consultarReferenciasClienteCS(entidadConsultaCliente).subscribe(data => {
       if(data){
-        console.log("Consulta de Referencias del cliente ----->" + JSON.stringify(data));
+        console.log("consultarReferenciasClienteCS --> Funciona");
+        //console.log("Consulta de Referencias del cliente ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarReferenciasClienteCS' :'(", 'error');
       }
@@ -1216,6 +1293,8 @@ export class GestionClienteComponent implements OnInit {
         this.sinNoticeService.setNotice("no se pudo capturar el error :c", 'error');
       }
     }); 
+  }
+  testCrearClienteCS(){
     let entidadCrearcliente = new CrearCliente();
     let entidadActividadEconomica = new ActividadEconomicaCliente();
     entidadActividadEconomica.idActividadEconomica = 2431;   // Se necesita catalogo
@@ -1267,7 +1346,7 @@ export class GestionClienteComponent implements OnInit {
     entidadCrearcliente.idPaisNacimiento = 52; // Se necesita catalogo 
     entidadCrearcliente.idResidencia = 1352; // Se necesita catalogo 
     entidadCrearcliente.idTipoIdentificacion = 1;// Se necesita catalogo 
-    entidadCrearcliente.identificacion = "1311066441";
+    entidadCrearcliente.identificacion = "1311066442";
     entidadCrearcliente.numeroCargasFamiliares = 0;
     entidadCrearcliente.primerApellido = "Vélez";
     entidadCrearcliente.primerNombre = "Pablo";
@@ -1282,7 +1361,8 @@ export class GestionClienteComponent implements OnInit {
     entidadCrearcliente.telefonos.push( listTelefonos );
     this.css.crearClienteCS(entidadCrearcliente).subscribe( ( data : any) => {
       if(data){
-        console.log("creacion de cliente el cloud studio ---->" + JSON.stringify(data))
+        console.log("crearClienteCS --> Funciona");
+        //console.log("creacion de cliente el cloud studio ---->" + JSON.stringify(data))
       } else {
         console.log("No me trajo data para creacion de cliente ----->" + JSON.stringify(data));
       }
@@ -1294,6 +1374,8 @@ export class GestionClienteComponent implements OnInit {
         this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
       }
     });
+  }
+  testEditarClienteCS(){
     let entidadEditarCliente = new EditarCliente();
     entidadEditarCliente.email = "pvelez@cloudstudio.com.ec";
     entidadEditarCliente.idTipoIdentificacion = 1
@@ -1301,7 +1383,8 @@ export class GestionClienteComponent implements OnInit {
     entidadEditarCliente.referencia = "Junto a la casa de Flanders"
     this.css.editarClienteCS(entidadEditarCliente).subscribe( (data : any ) => {
       if (data) {
-        console.log("edicion de cliente el cloud studio ---->" + JSON.stringify(data))
+        console.log("editarClienteCS --> Funciona");
+        //console.log("edicion de cliente el cloud studio ---->" + JSON.stringify(data))
       } else {
         console.log("No me trajo data para creacion de cliente ----->" + JSON.stringify(data));
       }
@@ -1312,10 +1395,14 @@ export class GestionClienteComponent implements OnInit {
       } else {
         this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
       }
-    });*/
+    });
+  }
+  // CATALOGOS
+  testConsultarAgenciasCS(){
     this.css.consultarAgenciasCS().subscribe(data => {
       if(data){
-        console.log("Consulta de catalogos de agencias ----->" + JSON.stringify(data));
+        console.log("consultarAgenciasCS --> Funciona");
+        //console.log("Consulta de catalogos de agencias ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarAgenciasCS' :'(", 'error');
       }
@@ -1326,31 +1413,455 @@ export class GestionClienteComponent implements OnInit {
       } else {
         this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
       }
+    }); 
+  }
+  testConsultarActividadEconomicaCS(){
+    this.css.consultarActividadEconomicaCS().subscribe(data => {
+      if(data){
+        console.log("consultarActividadEconomicaCS --> Funciona");
+        //console.log("Consulta de catalogos de Actividad economica ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarActividadEconomicaCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
     });
-    /**
-    let tabla = new TablaAmortizacion();
-    tabla.codigoProducto = "002"; // Se necesita catalogo
-    tabla.codigoTipoPrestamo = "001"; // Se necesita catalogo
-    tabla.direccion = "Av. Siempre Viva 742";
-    tabla.email = "pvelez@cloudstudio.com.ec";
-    tabla.fechaNacimiento = "1991-06-30";
-    tabla.idCliente = 0;
-    tabla.idResidencia = 1352; // Se necesita catalogo
+  }
+  testConsultarAsesoresCS(){
+    let idAgencia = 2
+    this.css.consultarAsesoresCS( idAgencia ).subscribe(data => {
+      if(data){
+        console.log("consultarAsesoresCS --> Funciona");
+        // console.log("Consulta de catalogos de Asesores ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarAsesoresCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarEducacionCS(){
+    this.css.consultarEducacionCS().subscribe(data => {
+      if(data){
+        console.log("consultarEducacionCS --> Funciona");
+        //console.log("Consulta de catalogos de Educacion ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarActividadEconomicaCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarRubroPrestamosCS(){
+    this.css.consultarRubroPrestamosCS().subscribe(data => {
+      if(data){
+        console.log("consultarRubroPrestamosCS --> Funciona");
+        //console.log("Consulta de catalogos de Rubro Prestamos ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarRubroPrestamosCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarSectorViviendaCS(){
+    this.css.consultarSectorViviendaCS().subscribe(data => {
+      if(data){
+        console.log("consultarSectorViviendaCS --> Funciona");
+        //console.log("Consulta de catalogos de Sector Vivienda ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarSectorViviendaCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarEstadosCivilesCS(){
+    this.css.consultarEstadosCivilesCS().subscribe(data => {
+      if(data){
+        console.log("consultarEstadosCivilesCS --> Funciona");
+        //console.log("Consulta de catalogos de Estados Civiles ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarEstadosCivilesCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarViviendaCS(){
+    this.css.consultarViviendaCS().subscribe(data => {
+      if(data){
+        console.log("consultarViviendaCS --> Funciona");
+        //console.log("Consulta de catalogos de Vivienda ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarViviendaCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarProfesionesCS(){
+    this.css.consultarProfesionesCS().subscribe(data => {
+      if(data){
+        console.log("consultarProfesionesCS --> Funciona");
+        //console.log("Consulta de catalogos de Profesiones ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarProfesionesCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarTipoIdentificacionCS(){
+    this.css.consultarTipoIdentificacionCS().subscribe(data => {
+      if(data){
+        console.log("consultarTipoIdentificacionCS --> Funciona");
+        //console.log("Consulta de catalogos de Tipo Identificacion ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarTipoIdentificacionCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarBancosCS(){
+    this.css.consultarBancosCS().subscribe(data => {
+      if(data){
+        console.log("consultarBancosCS --> Funciona");
+        //console.log("Consulta de catalogos de Bancos ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarBancosCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarTipoReferenciaCS(){
+    this.css.consultarTipoReferenciaCS().subscribe(data => {
+      if(data){
+        console.log("consultarTipoReferenciaCS --> Funciona");
+        //console.log("Consulta de catalogos de Tipo Referencia ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarTipoReferenciaCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarTipoPrestamosCS(){
+    this.css.consultarTipoPrestamosCS().subscribe(data => {
+      if(data){
+        console.log("consultarTipoPrestamosCS --> Funciona");
+        //console.log("Consulta de catalogos de Tipo Prestamos ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarTipoPrestamosCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarTipoCarteraCS(){
+    this.css.consultarTipoCarteraCS().subscribe(data => {
+      if(data){
+        console.log("consultarTipoCarteraCS --> Funciona");
+        //console.log("Consulta de catalogos de Tipo Cartera ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarTipoCarteraCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarTablaAmortizacionCS(){
+    this.css.consultarTablaAmortizacionCS().subscribe(data => {
+      if(data){
+        console.log("consultarTablaAmortizacionCS --> Funciona");
+        //console.log("Consulta de catalogos de Tabla Amortizacion ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarTablaAmortizacionCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarDivicionPoliticaCS(){
+    this.css.consultarDivicionPoliticaCS().subscribe( (data : any)  => {
+      if(!data.existeError){
+        console.log("funciona -----> consultarDivicionPoliticaCS");
+        // console.log("Consulta de catalogos de Divicion Politica ----->" + JSON.stringify(data));
+      } else{
+        console.log("No me trajo data de catalogos de Divicion Politica ----->" + JSON.stringify(data));
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultarDivicionPoliticaConsolidadaCS(){
+    this.css.consultarDivicionPoliticaConsolidadaCS().subscribe(data => {
+      if(data){
+        console.log("consultarDivicionPoliticaConsolidadaCS --> Funciona");
+        //console.log("Consulta de catalogos de Divicion Politica Consolidada ----->" + JSON.stringify(data));
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data 'consultarDivicionPoliticaConsolidadaCS' :'(", 'error');
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+ 
+  // PRESTAMO
+  testSimularPrecancelacionCS(){
+    let precancelacion = new SimulacionPrecancelacion();
+    precancelacion.fechaPrecancelacion = "2020-06-16";
+    precancelacion.numeroPrestamo = "2020001967";
+    this.css.simularPrecancelacionCS(precancelacion).subscribe( (data: any) => {
+      if (data) {
+        console.log("Funciona ----->  simularPrecancelacionCS");
+        // console.log("Simular precancelacion ----->" + JSON.stringify(data));
+      } else {
+        this.sinNoticeService.setNotice("No me trajo data 'simularPrecancelacionCS' :'(", 'error');
+      }
+    }, error => {
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultaTablaAmortizacionOperacionAprobadaCS(){
+    const numeroOperacion = '2020001984';
+    this.css.consultaTablaAmortizacionOperacionAprobadaCS( numeroOperacion ).subscribe( data => {
+      if (data) {
+        // console.log("Simular tabla de amortizacion ----->" + JSON.stringify(data));
+        console.log("Funciona ----->  consultaTablaAmortizacionOperacionAprobadaCS");
+      } else {
+        this.sinNoticeService.setNotice("No me trajo data 'consultaTablaAmortizacionOperacionAprobadaCS' :'(", 'error');
+      }
+    },error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testOperacionCancelarCS(){
+    let operacion : OperacionCancelar = new OperacionCancelar();
+    operacion.codigoUsuario = "ADMIN";
+    operacion.numeroOperacion = "2020001985";
+    operacion.referencia = "QK-0000000001";
+    operacion.idAgencia = "2";
+    operacion.idTipoIdentificacion = 1;
+    operacion.identificacion = "1311066441";
+    operacion.fechaRegistro = "2020-01-24";
+    operacion.nombreCliente = "PABLO RAFAEL VÉLEZ FRANCO";
+    operacion.tipoTicket = "Cancelación y novacion";
+    operacion.valor = "1";
+    this.css.operacionCancelarCS( operacion ).subscribe( data =>{
+      if(data){
+        //console.log("Data de operacion cancelar -----> " + JSON.stringify( data ));
+        console.log("Funciona ---->.operacionCancelarCS()")
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data el .operacionCancelarCS() ", 'error');
+      }
+    },error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testOperacionAbonoCS(){
+    let operacion : OperacionAbono = new OperacionAbono();
+    operacion.numeroOperacion = "2020001984";
+    operacion.idAgencia = "2";
+    operacion.codigoUsuario = "ADMIN";
+    operacion.idTipoIdentificacion = 1;
+    operacion.identificacion = "1311066441";
+    operacion.nombreCliente = "PABLO RAFAEL VÉLEZ FRANCO";
+    let rubro = new Rubros();
+    rubro.idRubro = 1;
+    rubro.numeroCuota = 1;
+    rubro.valor = 50;
+    rubro.esAbono = false;
+    operacion.rubros.push( rubro );
+    this.css.operacionAbonoCS( operacion ).subscribe( data =>{
+      if(data){
+        // console.log("Data de operacion abono -----> " + JSON.stringify( data ));
+        console.log("Funciona ---->.OperacionAbonoCS()")
+      } else{
+        this.sinNoticeService.setNotice("No me trajo data el .OperacionAbonoCS() ", 'error');
+      }
+    },error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testOperacionConsultaCS(){
+    let consulta = new ConsultaCliente();
+    consulta.idTipoIdentificacion = 1;
+    consulta.identificacion = "1311066441";
+    this.css.operacionConsultaCS( consulta ).subscribe( data =>{
+      if(data){
+        // console.log(" data de operacionConsultaCS ------> ", JSON.stringify(data));
+        console.log("Funciona -----> operacionConsultaCS");
+      }else {
+        this.sinNoticeService.setNotice("no me trajo data operacionConsultaCS :C", "error");
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultaRiesgoAcumuladoCS(){
+    let consulta = new ConsultaCliente();
+    consulta.idTipoIdentificacion = 1;
+    consulta.identificacion = "1311066441";
+    this.css.consultaRiesgoAcumuladoCS( consulta ).subscribe(data =>{
+      if(data){
+        // console.log(" data de consultaRiesgoAcumuladoCS ------> ", JSON.stringify(data));
+        console.log("Funciona -----> consultaRiesgoAcumuladoCS");
+      }else {
+        this.sinNoticeService.setNotice("no me trajo data consultaRiesgoAcumuladoCS :C", "error");
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testConsultaRubrosCS(){
+    let numero = "2020001984";
+    this.css.consultaRubrosCS( numero ).subscribe(data =>{
+      if(data){
+        // console.log(" data de consultaRubrosCS ------> ", JSON.stringify(data));
+        console.log("Funciona -----> consultaRubrosCS");
+      }else {
+        this.sinNoticeService.setNotice("no me trajo data consultaRubrosCS :C", "error");
+      }
+    }, error =>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+
+  // CREDITO
+  testSimularTablaAmortizacionCS(){
+    let tabla = new SimulacionTablaAmortizacion();
+    tabla.idTipoIdentificacion = 1;
     tabla.identificacion = "1311066441";
-    tabla.montoSolicitado = 2000.0;
-    tabla.nombre = "Pablo Rafael Vélez Franco";
-    let tablaPresuntivaDatos = new TablaPresuntivaDatos();
-    tablaPresuntivaDatos.codigoFrecuenciaPago = "ME"; // Se necesita catalogo
-    tablaPresuntivaDatos.cuotas = 12;
-    tablaPresuntivaDatos.cuotasGracia = 0;
-    tablaPresuntivaDatos.diaFijo = false;
-    tablaPresuntivaDatos.idTipoTablaAmortizacion = 7; // Se necesita catalogo
-    tablaPresuntivaDatos.pagoDia = 12;
-    tabla.tablaPresuntivaDatos = tablaPresuntivaDatos
-    tabla.telefono = "0996553221";
+    tabla.nombreCliente = "Pablo Rafael Vélez Franco";
+    tabla.fechaNacimientoCliente = "1991-06-30";
+    tabla.fechaEfectiva = "2020-03-24";
+    tabla.codigoTablaAmortizacionQuski = "A107";
+    tabla.codigoTipoCarteraQuski = "MO3";
+    tabla.codigoTipoPrestamo = "001"; // Se necesita catalogo
+    tabla.montoSolicitado = 4100.0;
+    tabla.pagoDia = 24;
     this.css.simularTablaAmortizacionCS(tabla).subscribe( (data : any) => {
       if (data) {
-        console.log("Simular la tabla de amortizacion ----->" + JSON.stringify(data));
+        console.log(" Funciona ----> simularTablaAmortizacionCS")
+        // console.log("Simular la tabla de amortizacion ----->" + JSON.stringify(data));
       } else {
         this.sinNoticeService.setNotice("No me trajo data 'simularTablaAmortizacionCS' :'(", 'error');
       }
@@ -1362,24 +1873,148 @@ export class GestionClienteComponent implements OnInit {
         this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
       }
     });
-    let precancelacion = new SimulacionPrecancelacion();
-    precancelacion.fechaPrecancelacion = "2020-06-16";
-    precancelacion.numeroPrestamo = "2020001967";
-    this.css.simularPrecancelacionCS(precancelacion).subscribe( (data: any) => {
+  }
+  testOperacionCrearCS(){
+    let operacion = new OperacionCrear();
+    operacion.idTipoIdentificacion = 1;
+    operacion.identificacion = "1311066441";
+    operacion.nombreCliente = "Pablo Rafael Vélez Franco";
+    operacion.fechaNacimientoCliente = "1991-06-30";
+    operacion.fechaEfectiva = "2020-03-24";
+    operacion.codigoTablaAmortizacionQuski = "A107";
+    operacion.codigoTipoCarteraQuski = "MO3";
+    operacion.codigoTipoPrestamo = "001";
+    operacion.cupoPrestamo = 0.0;
+    operacion.montoSolicitado = 4000.0;
+    operacion.pagoDia = 24;
+    operacion.datosCaptacion = null;
+    operacion.datosEmision = null;
+    let datos = new DatosImpCom();
+    datos.codigo = "L";
+    datos.formaPago = "C";
+    datos.tasa = 0.5;
+    datos.valor = 0.0;
+    operacion.datosImpCom.push( datos );
+    operacion.datosReferencia = null;
+    operacion.datosCuentaDebito = null;
+    this.css.operacionCrearCS( operacion ).subscribe( data =>{
       if (data) {
-        console.log("Simular precancelacion ----->" + JSON.stringify(data));
+        // console.log("data de operacionCrearCS ----->" + JSON.stringify(data));
+        console.log(" Funciona ----> operacionCrearCS")
       } else {
-        this.sinNoticeService.setNotice("No me trajo data 'simularPrecancelacionCS' :'(", 'error');
+        this.sinNoticeService.setNotice("No me trajo data 'operacionCrearCS' :'(", 'error');
       }
-    }, error => {
+    }, error=>{
       if (JSON.stringify(error).indexOf("codError") > 0){
         let b = error.error;
         this.sinNoticeService.setNotice(b.setmsgError,'error');
       } else {
         this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
       }
-    }); */
+    });
   }
+  testOperacionRenovarCS(){
+    let operacion = new OperacionRenovar();
+    operacion.idTipoIdentificacion = 1;
+    operacion.identificacion = "1311066441";
+    operacion.nombreCliente = "Pablo Rafael Vélez Franco";
+    operacion.fechaNacimientoCliente = "1991-06-30";
+    operacion.fechaEfectiva = "2020-03-24";
+    operacion.numeroOperacionMadre = "2020001985";
+    operacion.codigoTablaAmortizacionQuski = "A107";
+    operacion.codigoTipoPrestamo = "001";
+    operacion.pagodia = 24;
+    operacion.cupoPrestamo = 0.0;
+    operacion.montoSolicitado = 5000.0;
+    operacion.datosCaptacion = null;
+    operacion.datosEmision = null;
+    let datos = new DatosImpCom();
+    datos.codigo = "L";
+    datos.formaPago = "C";
+    datos.tasa = 0;
+    datos.valor = 20.0;
+    datos.formaAmortizacion = null
+    operacion.datosImpCom.push( datos );
+    operacion.datosReferencia = null;
+    operacion.datosCuentaDebito = null
+    this.css.operacionRenovarCS( operacion ).subscribe( data =>{
+      if (data) {
+        // console.log("data de operacionRenovarCS ----->" + JSON.stringify(data));
+        console.log(" Funciona ----> operacionRenovarCS")
+      } else {
+        this.sinNoticeService.setNotice("No me trajo data 'operacionRenovarCS' :'(", 'error');
+        
+      }
+    }, error=>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testOperacionAprobarCS(){
+    let numero = "2020001980";
+    this.css.operacionAprobarCS( numero ).subscribe( data =>{
+      if (data) {
+        console.log(" Funciona ----> operacionAprobarCS")
+        // console.log("data de operacionAprobarCS ----->" + JSON.stringify(data));
+      } else {
+        this.sinNoticeService.setNotice("No me trajo data 'operacionAprobarCS' :'(", 'error');
+      }
+    }, error=>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testOperacionNegarCS(){
+    let numero = "2020001984";
+    this.css.operacionNegarCS( numero ).subscribe( data =>{
+      if (data) {
+        // console.log("data de operacionNegarCS ----->" + JSON.stringify(data));
+        console.log(" Funciona ----> operacionNegarCS")
+      } else {
+        this.sinNoticeService.setNotice("No me trajo data 'operacionNegarCS' :'(", 'error');
+      }
+    }, error=>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+  testCalcularSolcaCS(){
+    let solca = new ConsultaSolca();
+    solca.codigoTablaAmortizacionQuski = "A107";
+    solca.montoSolicitado = 4000;
+    solca.codigoTipoPrestamo = "001";
+    this.css.calcularSolcaCS( solca ).subscribe( data =>{
+      if (data) {
+        // console.log("data de calcularSolcaCS ----->" + JSON.stringify(data));
+        console.log(" Funciona ----> calcularSolcaCS")
+      } else {
+        this.sinNoticeService.setNotice("No me trajo data 'calcularSolcaCS' :'(", 'error');
+        
+      }
+    }, error=>{
+      if (JSON.stringify(error).indexOf("codError") > 0){
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.setmsgError,'error');
+      } else {
+        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+      }
+    });
+  }
+
+  // FIN DE TESTING DE SOFTBANK.
+
   /**
    * @param element 
    * @description METODO QUE EDITA UN ACTIVO DE LA TABLA
@@ -1621,7 +2256,7 @@ export class GestionClienteComponent implements OnInit {
                     this.cliente    = new TbQoCliente;
                     // **************  SET DE DATOS DE CLIENTE 
                     if (this.id != null && this.id != "") {
-                      this.cliente.id = this.id;
+                      this.cliente.id = Number(this.id);
                     }
                     this.cliente.actividadEconomica = this.actividadEconomica.value;
                     this.cliente.actividadEconomicaEmpresa = this.actividadEconomicaEmpresa.value;

@@ -39,7 +39,7 @@ export class OroService extends BaseService {
 
     }
 
-    public findTipoOroByCedulaQuski(identificacionCliente: string, kilotaje: string, fechaNacimiento: string) {
+    public findTipoOroByCedulaQuski(identificacionCliente: string, kilotaje: string, fechaNacimiento: Date) {
         let pipe = new DatePipe('en-US');
         let fdf = null;
         let fdff = new Date(fechaNacimiento);

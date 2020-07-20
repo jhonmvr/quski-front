@@ -94,14 +94,6 @@ export class BaseService {
       this.options
     );
   }
-
-  public setHeaderWithAccess() {
-    this.headers = new HttpHeaders({ 
-      'Content-Type': 'application/json',
-      Accept: '*/*',
-      'Access-Control-Allow-Origin': '*' 
-    });
-  }
   public setHeaderWithSegToken(token: string) {
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json',

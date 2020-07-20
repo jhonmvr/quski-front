@@ -1,3 +1,6 @@
+/**
+ * @description { Uso para cliente : Migrar a Parametro }
+ */
 export enum CargaFamiliarEnum{
     CERO= '0',
     UNO= '1',

@@ -1,3 +1,7 @@
+/**
+ * @description { CAMBIAR IMPEMENTACION A WS SOFTBANK }
+ * @description { DEJAR DE USAR }
+ */
 export enum EstadoCivilEnum {
     SOLTERO= 'SOLTERO(A)',
     CASADO= 'CASADO(A)',
