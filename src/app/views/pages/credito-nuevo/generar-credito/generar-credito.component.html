@@ -412,8 +412,8 @@
                     </div>
                     <div class="col-md-2">
                         <mat-form-field>
-                            <mat-select placeholder="Funda" [formControl]="pesoFunda">
-                                <mat-option *ngFor="let pesoFundas of pesosFundas" [value]="pesoFundas">
+                            <mat-select placeholder="Funda" [formControl]="pesoFunda" (selectionChange)="getFunda($event.value)">
+                                <mat-option *ngFor="let pesoFundas of listaPrecios" [value]="pesoFundas">
                                     {{pesoFundas}}
                                 </mat-option>
                             </mat-select>                     

@@ -15,6 +15,7 @@ import { HabilitanteDialogComponent } from '../../../partials/custom/habilitante
 import { DocumentoHabilitanteService } from '../../../../core/services/quski/documento-habilitante.service';
 import { environment } from '../../../../../environments/environment';
 import { ObjectStorageService } from '../../../../core/services/object-storage.service';
+import { FundaService } from '../../../../core/services/quski/funda.service';
 
 
 
@@ -76,6 +77,17 @@ export class GenerarCreditoComponent implements OnInit {
   public totalValorAvaluo = new FormControl('');
   public totalValorComercial = new FormControl('');
 
+  ///totalizado
+  totalMonto 
+  totalPesoN
+  totalPesoB
+  totalPBFunda
+  totalValorR
+  totalValorA
+  totalValorC
+  list=[]
+  listaPrecios=[2.50, 5.00, 10.00]
+
   ///
   idCreditoNegociacion=96;
   tbCreditoNegociacion:TbQoCreditoNegociacion;
@@ -128,7 +140,8 @@ export class GenerarCreditoComponent implements OnInit {
  @ViewChild('sort1', {static: true}) sort: MatSort;
 
   constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, private tas: TasacionService,
-    public dialog: MatDialog, private dhs: DocumentoHabilitanteService, private os: ObjectStorageService) { 
+    public dialog: MatDialog, private dhs: DocumentoHabilitanteService, private os: ObjectStorageService,
+    private fs: FundaService) { 
     
     
   }
@@ -304,7 +317,11 @@ validateEdadTipo(){
      console.log("que pasa por la calle", data.list)
      this.totalResults = data.totalResults;
         this.dataSource = new MatTableDataSource<any>(data.list);
-        //this.dataSource.paginator=this.paginator;
+        this.calcular()
+        /*   
+       
+        */
+  
         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'info');
    }, error=> {
     this.sinNoticeService.setNotice("ERROR CARGANDO LAS JOYAS", 'error');
@@ -377,6 +394,50 @@ cargarFotoHabilitante(){
     })
   })
 }
+calcular(){
+
+  this.totalPesoN =0;
+  this.totalPesoB =0;
+  this.totalPBFunda = 0
+  this.totalValorR = 0
+  this.totalValorA = 0
+  this.totalValorC = 0
+  let ind = 0;
+  if (this.dataSource.data) {
+    //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
+    this.list=[];
+    this.dataSource.data.forEach(element => {
+      
+      ind = ind + 1;
+      this.list.push(ind);
+      
+    
+    this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
+    this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
+    
+    this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
+    this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
+    this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
+    });
+    
+  }
+}
+
+
+getFunda(pesoFun){
+ 
+  this.fs.reservarFunda(pesoFun).subscribe((data:any)=>{
+    console.log(data)
+    this.pesoFunda.setValue(this.totalPesoN);
+    //this.numeroFunda.setValue(data.entidad.codigo);
+    this.totalPesoNeto.setValue(this.totalPBFunda);
+    this.totalPesoBruto.setValue(this.totalValorR);
+    this.totalPesoBrutoFunda.setValue(this.totalValorA);
+    this.totalValorRealizacion.setValue(this.totalValorC);
+  }
+  ) 
+}
+
 }
 
  
