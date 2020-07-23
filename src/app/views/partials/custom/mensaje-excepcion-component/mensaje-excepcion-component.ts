@@ -1,7 +1,7 @@
-import { ClienteService } from './../../../../core/services/quski/cliente.service';
+import { ClienteService } from '../../../../core/services/quski/cliente.service';
 import { Component, OnInit, Inject, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatDialog } from '@angular/material';
-import { CargarFotoDialogComponent } from '../../custom/fotos/cargar-foto-dialog/cargar-foto-dialog.component';
+import { CargarFotoDialogComponent } from '../fotos/cargar-foto-dialog/cargar-foto-dialog.component';
 import { ReNoticeService } from '../../../../core/services/re-notice.service';
 import { TbQoCliente } from '../../../../core/model/quski/TbQoCliente';
 import { ReFileUploadService } from '../../../../core/services/re-file-upload.service';
@@ -11,35 +11,17 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DocumentoHabilitanteService } from '../../../../core/services/quski/documento-habilitante.service';
 import { saveAs } from 'file-saver';
 
-export interface DataUpload {
-  name: string;
-  type: string;
-  process: string;
-  fileBase64: string;
-  relatedId: number;
-  typeAction: string;
-  relatedIdStr: string;
-}
-export interface DialogData {
-  idTipoDocumento: string;
-  tipo: string;
-  idCliente: number;
-  identificacion: string;
-  idCotizador: string;
-  idNegociacion: string;
-  nombresCompleto: string;
-}
-
 @Component({
-  selector: 'm-solicitud-autorizacion-dialog',
-  templateUrl: './solicitud-autorizacion-dialog.component.html',
-  styleUrls: ['./solicitud-autorizacion-dialog.component.scss']
+  selector: 'kt-mensaje-excepcion-component',
+  templateUrl: './mensaje-excepcion-component.html',
+  styleUrls: ['./mensaje-excepcion-component.scss']
 })
-export class SolicitudAutorizacionDialogComponent implements OnInit {
+export class MensajeExcepcionComponent implements OnInit {
+
   [x: string]: any;
 
   constructor(private dh: DocumentoHabilitanteService, private sinNoticeService: ReNoticeService,
-    public dialogRef: MatDialogRef<SolicitudAutorizacionDialogComponent>,
+    public dialogRef: MatDialogRef<MensajeExcepcionComponent>,
     @Inject(MAT_DIALOG_DATA) private data: string, public dialog: MatDialog, private upload: ReFileUploadService,
     private cs: ClienteService) {
     console.log(">>><<<<<<<<<<<<<<< DATA COTIZACION" + JSON.stringify(data));
@@ -80,7 +62,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
 
 
   loadArchivoCliente(element) {
-
+    
     console.log("===>>ingreso: ", this.nombresCompletos.value);
     let d = {
       idTipoDocumento: 1,

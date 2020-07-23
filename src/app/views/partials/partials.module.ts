@@ -97,11 +97,13 @@ import { PortletFooterComponent } from './custom/portlet/portlet-footer/portlet-
 import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component';
 import { HabilitanteComponent } from './custom/habilitante/habilitante.component';
 import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dialog/habilitante-dialog.component';
+import { MensajeExcepcionComponent } from './custom/mensaje-excepcion-component/mensaje-excepcion-component';
 
 
 
 @NgModule({
 	declarations: [
+		MensajeExcepcionComponent,
 		ScrollTopComponent,
 		NoticeComponent,
 		ActionNotificationComponent,
@@ -113,6 +115,7 @@ import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dia
 		// topbar components
 		ContextMenu2Component,
 		ContextMenuComponent,
+		
 		QuickPanelComponent,
 		ScrollTopComponent,
 		SearchResultComponent,
@@ -165,6 +168,7 @@ import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dia
 		// topbar components
 		ContextMenu2Component,
 		ContextMenuComponent,
+		
 		QuickPanelComponent,
 		ScrollTopComponent,
 		SearchResultComponent,
@@ -228,6 +232,7 @@ import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dia
 		MatTabsModule,
 		MatTooltipModule,
 		MatDialogModule,
+	
 
 
 		// ng-bootstrap modules
@@ -247,7 +252,7 @@ import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dia
 		HabilitanteDialogComponent,
 		SolicitudAutorizacionDialogComponent,
 		CreditoVigenteDialogComponent,
-
+		MensajeExcepcionComponent,
 		CargarFotoDialogComponent
 	]
 })

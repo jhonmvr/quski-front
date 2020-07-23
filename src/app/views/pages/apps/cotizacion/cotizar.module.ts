@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 // Auth
 import { ModuleGuard } from '../../../../core/auth';
-
+ 
 // Material
 import {
 	MatInputModule,
@@ -49,6 +49,9 @@ import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-fo
 import { PartialsModule } from '../../../partials/partials.module';
 import { DialogCargarComponent } from './list-cotizar/dialog-solicitud-de-autorizacion/dialog-cargar/dialog-cargar.component'
 import { SolicitudAutorizacionDialogComponent } from '../../../../views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
+// tslint:disable-next-line: max-line-length
+
+
 const routes: Routes = [
 	{
 		path: '',
@@ -84,7 +87,7 @@ const routes: Routes = [
 
 @NgModule({
 	imports: [
-		 
+	
 		CommonModule,
 		RouterModule.forChild(routes),
 		MatDialogModule,
@@ -136,12 +139,12 @@ const routes: Routes = [
 		CotizarComponent,
 		ListCotizarComponent,
 		DetalleCotizacionComponent,
-		
-
+	
 		DialogCargarComponent,
 	],
 	entryComponents: [
 		AddFotoComponent,
+
 
 
 
