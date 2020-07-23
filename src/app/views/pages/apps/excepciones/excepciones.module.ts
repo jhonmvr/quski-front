@@ -51,20 +51,16 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				redirectTo: 'excepcion-cliente',
+				redirectTo: 'excepciones',
 				pathMatch: 'full'
 			},
 			{
-				path: 'excepcion-cliente',
-				component: ExcepcionesClienteComponent
-      },
-      {
-				path: 'excepcion-cliente/:id',
-				component: ExcepcionesClienteComponent
+				path: 'excepciones',
+				component: ExcepcionesComponent
 			},
 			{
-				path: 'excepcion-cobertura',
-				component: ExcepcionesCoberturaComponent
+				path: 'excepcion-cliente/:id',
+				component: ExcepcionesClienteComponent
 			},
 			{
 				path: 'excepcion-cobertura/:id',

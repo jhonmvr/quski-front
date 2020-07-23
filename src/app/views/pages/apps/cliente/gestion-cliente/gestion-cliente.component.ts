@@ -346,7 +346,6 @@ export class GestionClienteComponent implements OnInit {
   }
   ngOnInit() {
     this.habilitarBtActualizar  = false;
-    this.disableConsultar = this.disableConsultarSubject.asObservable();
     this.implementacionServiciosSoftbankTEST();
     //SET VALORES POR DEFECTO DE CHECKS
     this.drLgDo.setValue(true);
@@ -2434,10 +2433,8 @@ export class GestionClienteComponent implements OnInit {
   }
   /**
    * 
-   * @param observacion TareaTrackingEnum
+   * @author Jeroham Cadenas - Developer Twuelve
    * @param codigoRegistro string
-   * @param situacion SituacionTrackingEnum
-   * @param usuario UsuarioEnum
    * @param fechaInicio Date
    * @param fechaAsignacion Date
    * @param fechaInicioAtencion Date
@@ -2457,7 +2454,7 @@ export class GestionClienteComponent implements OnInit {
       tracking.observacion          = "";
       tracking.codigoRegistro       = codigoRegistro;
       tracking.situacion            = SituacionTrackingEnum.EN_PROCESO;
-      tracking.usuario              = UsuarioEnum.ASESOR;
+      tracking.usuario              = UsuarioEnum.ASESOR; // Agregar id de usuario
       tracking.fechaInicio          = fechaInicio;
       tracking.fechaAsignacion      = fechaAsignacion;
       tracking.fechaInicioAtencion  = fechaInicioAtencion;
@@ -2480,5 +2477,4 @@ export class GestionClienteComponent implements OnInit {
         }
       });
   }
-
 }

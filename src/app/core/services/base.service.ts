@@ -37,7 +37,8 @@ export class BaseService {
   public idleStart: string;
   public idelTimeout: string;
   public versionFront: string;
-  
+
+  public softBaseBankUrl:string;  
 
   constructor() {
     this.params = new HttpParams();
@@ -81,6 +82,10 @@ export class BaseService {
            this.mongoAlertaColeccion = atob(localStorage.getItem( environment.prefix + 'RE010')).replace(this.keyUnencrypt, '');
            //parametros quski
            this.crmResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE012')).replace(this.keyUnencrypt, '');
+
+
+           //parametros cloudstudio
+           this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
            
   }
 

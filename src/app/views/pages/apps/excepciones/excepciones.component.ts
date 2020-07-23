@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { DashboardModule } from '../../dashboard/dashboard.module';
 
 @Component({
   selector: 'kt-excepciones',
@@ -7,7 +9,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExcepcionesComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit() {
   }
