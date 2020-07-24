@@ -24,7 +24,7 @@ import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
-import { OpcionesDeCredito } from 'src/app/core/model/calculadora/opcionesDeCredito';
+import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
 
 @Component({
   selector: 'kt-excepciones-cobertura',
