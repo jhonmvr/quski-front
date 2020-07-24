@@ -191,11 +191,9 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.par.findByNombreTipoOrdered("NEGOCIACION","ACTIVIDAD","Y").subscribe((data : any) =>{
       if (data.entidades) {
         this.actividad = data.entidades[0].nombre;
-        console.log('Mi ACTIVIDAD actual -----> ', data.entidades[0].nombre);
         this.par.findByNombreTipoOrdered("EXCEPCION","PROCESO","Y").subscribe((data : any) =>{
           if (data.entidades) {
             this.proceso = data.entidades[0].nombre;
-            console.log('Mi PROCESO actual -----> ', data.entidades[0].nombre);
           }
         });
       }
@@ -215,19 +213,19 @@ export class ExcepcionesClienteComponent implements OnInit {
             this.excepcion = json.entidad;
             this.negociacion = this.excepcion.tbQoNegociacion;
             this.cliente  = this.negociacion.tbQoCliente;
-            
-            // FORM OPERACION
-            this.nombreProceso.setValue(this.negociacion.procesoActualNegociacion);
-            this.nombresCompletos.setValue(this.cliente.primerNombre + ' ' + this.cliente.segundoNombre+ ' ' + this.cliente.apellidoPaterno + ' ' + this.cliente.apellidoMaterno);
-            this.identificacion.setValue(this.cliente.cedulaCliente);
-            
-            // FORM CLIENTE
-            this.tipoIdentificacion.setValue(TipoIdentificacionEnum.CEDULA);
-            this.identificacionC.setValue(this.cliente.cedulaCliente);
-            this.aprobadoWebMupi.setValue(this.cliente.aprobacionMupi);
-            this.primerNombre.setValue(this.cliente.primerNombre);
-            this.segundoNombre.setValue(this.cliente.segundoNombre);
-            this.separacionDeBienes.setValue(this.cliente.separacionBienes);
+            if (this.excepcion.tipoExcepcion == "EXCEPCION_CLIENTE") {
+              // FORM OPERACION
+              this.nombreProceso.setValue(this.negociacion.procesoActualNegociacion);
+              this.nombresCompletos.setValue(this.cliente.primerNombre + ' ' + this.cliente.segundoNombre+ ' ' + this.cliente.apellidoPaterno + ' ' + this.cliente.apellidoMaterno);
+              this.identificacion.setValue(this.cliente.cedulaCliente);
+              
+              // FORM CLIENTE
+              this.tipoIdentificacion.setValue(TipoIdentificacionEnum.CEDULA);
+              this.identificacionC.setValue(this.cliente.cedulaCliente);
+              this.aprobadoWebMupi.setValue(this.cliente.aprobacionMupi);
+              this.primerNombre.setValue(this.cliente.primerNombre);
+              this.segundoNombre.setValue(this.cliente.segundoNombre);
+              this.separacionDeBienes.setValue(this.cliente.separacionBienes);
               this.apellidoPaterno.setValue(this.cliente.apellidoPaterno);
               this.apellidoMaterno.setValue(this.cliente.apellidoMaterno);
               this.cargaFamiliar.setValue(this.cliente.cargasFamiliares);
@@ -350,15 +348,12 @@ export class ExcepcionesClienteComponent implements OnInit {
                   this.sinNoticeService.setNotice('ERROR AL CARGAR LA EXCEPCION CALCULADORA', 'error');
                 }
               });
-            }else {
-              this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LA EXCEPCION ELSE', 'error');
-              this.tra.getSystemDate().subscribe( (hora: any) =>{
-                if(hora.entidad){
-                  this.loadingSubject.next(false);
-                  this.horaAsignacion = hora.entidad;
-                }
-              });
+            } else {
+              this.router.navigate(['dashboard', ""]);
             }
+          }else {
+            this.router.navigate(['dashboard', ""]);              
+          }
         }, error => {
           this.tra.getSystemDate().subscribe( (hora: any) =>{
             if(hora.entidad){

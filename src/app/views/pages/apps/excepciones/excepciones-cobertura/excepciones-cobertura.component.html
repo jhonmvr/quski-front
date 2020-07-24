@@ -339,122 +339,227 @@
                     </div>
                 </mat-dialog-content>
             </mat-step>
-            <mat-step label="Tasaci&#243;n" [stepControl]="formTasacion">
-                <div class="form-group row">
+            <mat-step>
+                <ng-template matStepLabel>Tasacion</ng-template>
+                <div class="mat-table__wrapper">
                     <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceTasacion">
-
-                        <ng-container matColumnDef="N">
-                            <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
-                            <mat-cell *matCellDef="">  </mat-cell>
-                        </ng-container>
-
                         <ng-container matColumnDef="NumeroPiezas">
-                            <mat-header-cell *matHeaderCellDef>N. de piezas</mat-header-cell>
-                            <mat-cell *matCellDef=""> </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align">N. de piezas</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align"> {{element.numeroPiezas}} </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="TipoOro">
-                            <mat-header-cell *matHeaderCellDef> Tipo de oro </mat-header-cell>
-                            <mat-cell *matCellDef="">  </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align"> Tipo de oro </mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align"> {{ element.tbQoTipoOro.quilate }}  </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="TipoJoya">
-                            <mat-header-cell *matHeaderCellDef> Tipo de joya </mat-header-cell>
-                            <mat-cell *matCellDef="">  </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align"> Tipo de joya </mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align"> {{element.tipoJoya}} </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="Estado">
-                            <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-                            <mat-cell *matCellDef="">  </mat-cell>                        
+                            <mat-header-cell *matHeaderCellDef class="text-align">Estado</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align"> {{element.estadoJoya}} </mat-cell>                        
                         </ng-container>
 
                         <ng-container matColumnDef="Descripcion">
-                            <mat-header-cell *matHeaderCellDef>Descripci&#243;n</mat-header-cell>
-                            <mat-cell *matCellDef=""> </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align">Descripci&#243;n</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align"> {{element.descripcion}} </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="PesoBruto">
-                            <mat-header-cell *matHeaderCellDef>Peso bruto</mat-header-cell>
-                            <mat-cell *matCellDef="">  </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align">Peso bruto</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align"> {{ element.pesoBruto }} </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="DescuentoPiedra">
-                            <mat-header-cell *matHeaderCellDef>Descuento piedra</mat-header-cell>
-                            <mat-cell *matCellDef=""> </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align">Descuento piedra</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align"> {{ element.descuentoPesoPiedra}} </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="DescuentoSuelda">
-                            <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
-                            <mat-cell *matCellDef="">  </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align">Descuento suelda</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align"> {{ element.descuentoSuelda }} </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="PesoNeto">
-                            <mat-header-cell *matHeaderCellDef>Peso neto</mat-header-cell>
-                            <mat-cell *matCellDef="">  </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align">Peso neto</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align"> {{element.pesoNeto}} </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="ValorAvaluo">
-                            <mat-header-cell *matHeaderCellDef>Valor aval&#250;o</mat-header-cell>
-                            <mat-cell *matCellDef=""> </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align">Valor aval&#250;o</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align">{{ element.valorAvaluo }}</mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="ValorComercial">
-                            <mat-header-cell *matHeaderCellDef> Valor comercial</mat-header-cell>
-                            <mat-cell *matCellDef="">  </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align"> Valor comercial</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align">{{ element.valorComercial }}</mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="ValorRealizacion">
-                            <mat-header-cell *matHeaderCellDef>Valor realizaciòn</mat-header-cell>
-                            <mat-cell *matCellDef="">  </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align">Valor realizaciòn</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align">  {{element.valorRealizacion}} </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="ValorOro">
-                            <mat-header-cell *matHeaderCellDef>Valor oro</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> </mat-cell>
+                            <mat-header-cell *matHeaderCellDef class="text-align">Valor oro</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="text-align">{{ element.valorOro}} </mat-cell>
                         </ng-container>
 
                         <mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
                         <mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
-                </mat-table> 
+                    </mat-table> 
+                </div>
+            </mat-step>
+            <mat-step >
+                <ng-template matStepLabel>Opciones de Crédito</ng-template>
+                <!--START MAT TABLE-->
+                <div class="mat-table__wrapper">
+                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceCredito">
+                        <ng-container matColumnDef="plazo">
+                        <mat-header-cell *matHeaderCellDef  class="text-align">Plazo</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.plazo}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="montoPreAprobado">
+                        <mat-header-cell *matHeaderCellDef  class="text-align">Monto Preaprobado $</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.montoFinanciado}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="aRecibir">
+                        <mat-header-cell *matHeaderCellDef  class="text-align">A Recibir Cliente $</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorARecibir}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="totalCostosOperacion">
+                        <mat-header-cell *matHeaderCellDef  class="text-align">Total Costos Nueva Operación $</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.totalGastosNuevaOperacion}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="costoCustodia">
+                        <mat-header-cell *matHeaderCellDef  class="text-align">Costo Custodia $</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoCustodia}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="costoTransporte">
+                        <mat-header-cell *matHeaderCellDef  class="text-align">Costo transporte $</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoTransporte}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="costoValoracion">
+                        <mat-header-cell *matHeaderCellDef  class="text-align">Costo valoración $</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoValoracion}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="costoTasacion">
+                        <mat-header-cell *matHeaderCellDef  class="text-align">Costo tasación $</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoTasacion}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="costoSeguro">
+                        <mat-header-cell *matHeaderCellDef  class="text-align"> Costo Seguro $</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoSeguro}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="costoResguardo" >
+                        <mat-header-cell *matHeaderCellDef  class="text-align">Costo Resguardo $</mat-header-cell>  
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoFideicomiso}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="solca">
+                        <mat-header-cell *matHeaderCellDef  class="text-align">Solca $</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.impuestoSolca}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="valorCuota">
+                        <mat-header-cell *matHeaderCellDef  class="text-align">Cuota Estimada $</mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="text-align"> {{element.cuota}} </mat-cell>
+                        </ng-container>
+        
+                        <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>
+                    </mat-table>
+                </div>
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>Excepcion</ng-template>
                 <div class="kt-form">
                     <form [formGroup]="formDatosExcepcion">
                         <div class="row mt-3">
-                            <div class="col-md-6">
-                                <mat-card class="warning"> 
-                                    <span class="material-icons warning-icons">report_problem</span>
-                                    {{ tipoExcepcionCliente }}
-                                </mat-card>
+                            <div class="col">
+                                <mat-form-field class="example-full-width"> 
+                                    <mat-label> Observacion Del Asesor:  </mat-label> 
+                                    <textarea class="form-control border" rows="3" [formControl]="observacionAsesor" placeholder="Observacion Del Asesor: " matInput> {{ observacionAsesor }}</textarea>
+                                </mat-form-field>
                             </div>
                         </div>
                         <div class="row mt-3">
+                            <div class=" offset-sm-4 col-sm-4">
+                                <mat-radio-group [formControl]="radioB" (change)="capturaHoraAtencion()">
+                                    <mat-radio-button value="Aprobabo">Aprobar Excepcion</mat-radio-button>
+                                    <mat-radio-button value="Negado">Negar Excepcion</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="camposDinamicos">
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <input [formControl]="cobertura" placeholder="Porcentaje de Cobertura" matInput numeric numericType="number"/>
+                                        <span matPrefix></span>
+                                        <span matSuffix>&#37;</span>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <button mat-raised-button (click)="consultarCobertura()">Consultar nuevas opciones de Credito</button>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="mat-table__wrapper">
+                                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceCobertura">
+                                        
+                                        <ng-container matColumnDef="plazo">
+                                            <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
+                                            <mat-cell *matCellDef=""> </mat-cell>
+                                        </ng-container>
+                
+                                        <ng-container matColumnDef="montoCredito">
+                                            <mat-header-cell *matHeaderCellDef> Monto Credito </mat-header-cell>
+                                            <mat-cell *matCellDef="">  </mat-cell>
+                                        </ng-container>
+                
+                                        <ng-container matColumnDef="cuota">
+                                            <mat-header-cell *matHeaderCellDef> cuota </mat-header-cell>
+                                            <mat-cell *matCellDef="">  </mat-cell>
+                                        </ng-container>
+                
+                                        <ng-container matColumnDef="aRecibirCliente">
+                                            <mat-header-cell *matHeaderCellDef>A Recibir Cliente</mat-header-cell>
+                                            <mat-cell *matCellDef="">  </mat-cell>                        
+                                        </ng-container>
+                
+                                        <ng-container matColumnDef="aPagarCliente">
+                                            <mat-header-cell *matHeaderCellDef>A Pagar Cliente</mat-header-cell>
+                                            <mat-cell *matCellDef=""> </mat-cell>
+                                        </ng-container>
+                
+                                        <ng-container matColumnDef="valorDeDesembolso">
+                                            <mat-header-cell *matHeaderCellDef>Valor De Desembolso</mat-header-cell>
+                                            <mat-cell *matCellDef="">  </mat-cell>
+                                        </ng-container>
+                
+                                        <ng-container matColumnDef="riesgoAcumulado">
+                                            <mat-header-cell *matHeaderCellDef>riesgo Acumulado</mat-header-cell>
+                                            <mat-cell *matCellDef=""> </mat-cell>
+                                        </ng-container>
+                
+                                        <mat-header-row *matHeaderRowDef="displayedColumnsCobertura"></mat-header-row>
+                                        <mat-row *matRowDef="let row; columns: displayedColumnsCobertura;"></mat-row>
+                                    </mat-table> 
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div class="row mt-3">
                             <div class="col-md-8">
-                                <mat-label> Observacion Del Asesor:  </mat-label> 
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-xl-8">
-                                <textarea class="form-control border" rows="3" [formControl]="observacionAsesor" placeholder="Observacion Del Asesor: " matInput> {{ observacionAsesor }}</textarea>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-8">
-                                <mat-label> Observacion Del Asesor:  </mat-label> 
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-xl-8">
-                                <textarea class="form-control border" [formControl]="observacionAprobador" rows="5" placeholder="Observacion Del Aprobador: " matInput></textarea>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class=" offset-3 offset-lg-2 col-xl-8">
-                              <mat-radio-group [formControl]="radioB" (change)="capturaHoraAtencion()">
-                                <mat-radio-button value="Aprobabo">Aprobar Excepcion</mat-radio-button>
-                                <mat-radio-button value="Negado">Negar Excepcion</mat-radio-button>
-                              </mat-radio-group>
+                                <mat-form-field class="example-full-width">
+                                    <mat-label> Observacion Del Aprobador:  </mat-label> 
+                                    <textarea class="form-control border" [formControl]="observacionAprobador" rows="5" placeholder="Observacion Del Aprobador: " matInput></textarea>
+                                  </mat-form-field>
                             </div>
                         </div>
                     </form>
