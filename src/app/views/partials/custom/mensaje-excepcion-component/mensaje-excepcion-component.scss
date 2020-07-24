@@ -43,6 +43,8 @@
   
   .example-full-width {
     width: 100%;
+    align-items: center;
+    text-align: center;
   }
   
   
@@ -118,6 +120,12 @@
     background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
     background-size: cover;
   }
+  .textarea{
+    font-size: 18px; 
+    color: red; 
+    align-self: auto;
+
+  }
   
   .mat-column-primerNombre {
     flex: 0 0 200px;
@@ -175,4 +183,5 @@
   .green-icon svg {
       fill: #00cc00;
   }
+
   
