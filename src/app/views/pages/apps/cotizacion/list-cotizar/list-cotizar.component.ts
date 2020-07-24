@@ -35,6 +35,7 @@ import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
 import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../../../../../../src/environments/environment';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { MensajeExcepcionComponent } from '../../../../partials/custom/mensaje-excepcion-component/mensaje-excepcion-component';
 
@@ -284,7 +285,10 @@ export class ListCotizarComponent implements OnInit {
    */
   ngOnInit() {
     this.limpiarCampos();
+    localStorage.getItem(atob(environment.userKey))
+    this.subheaderService.setTitle("GESTION DE COTIZACION");
     this.formCliente = this.fb.group({
+      
 
 
     });

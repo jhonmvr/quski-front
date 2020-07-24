@@ -3,23 +3,24 @@ import { TbQoTipoOro } from "./TbQoTipoOro";
 import { TbQoCreditoNegociacion } from "./TbQoCreditoNegociacion";
 
 export class TbQoTasacion{
-    tbQoTipoOro :  TbQoTipoOro; 
-    pesoBruto : string;
-    numeroPiezas : string;
-    tipoJoya : string;
-    estadoJoya : string;
+    id : number;
     descripcion : string;
-    descuentoSuelda : string;
-    pesoNeto: string;
-    valorOro: string;
-    valorAvaluo : string;
-    descuentoPesoPiedra : string;
-    valorComercial : string;
-    valorRealizacion : string;
-    //tbQoNegociacion : TbQoNegociacion;
+    descuentoPesoPiedra : number;
+    descuentoSuelda : number;
+    estadoJoya : string;
+    fechaActualizacion : Date;
+    fechaCreacion : Date;
+    numeroPiezas : number;
+    pesoBruto : number;
+    pesoNeto: number;
+    tipoJoya : string;
+    valorAvaluo : number;
+    valorComercial : number;
+    valorOro: number;
+    valorRealizacion : number;
+    tbQoTipoOro :  TbQoTipoOro; 
     tbQoCreditoNegociacion : TbQoCreditoNegociacion;
     constructor(){
-       // this.tbQoNegociacion = new TbQoNegociacion();
         this.tbQoCreditoNegociacion = new TbQoCreditoNegociacion();
         this.tbQoTipoOro = new TbQoTipoOro();
     } 

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { TbQoExcepcione } from '../../model/quski/TbQoExcepcione';
 
 @Injectable({
   providedIn: 'root'
@@ -86,6 +87,19 @@ export class ExcepcionService extends BaseService {
     this.params.set('idNegociacion', idNegociacion);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
+  }
+  /**
+   * 
+   * @author Jeroham Cadenas
+   * @date 21/Julio/2020
+   * @description Guarda o actualiza una excepcion { entidad }
+   * @param tbQoExcepcione TbQoExcepcione
+   */
+  public persistEntity( tbQoExcepcione : TbQoExcepcione ) {
+    let serviceUrl = this.appResourcesUrl + this.restC + "persistEntity";
+    let wrapper = { entidad: tbQoExcepcione };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
   }
   
 
