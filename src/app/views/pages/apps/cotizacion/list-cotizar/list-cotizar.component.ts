@@ -288,7 +288,7 @@ export class ListCotizarComponent implements OnInit {
     localStorage.getItem(atob(environment.userKey))
     this.subheaderService.setTitle("GESTION DE COTIZACION");
     this.formCliente = this.fb.group({
-      
+
 
 
     });
@@ -429,7 +429,7 @@ export class ListCotizarComponent implements OnInit {
 
       if (wrapper && wrapper.list) {
         this.listOros = wrapper.list;
-        console.log('INGRESA AL IF', JSON.stringify(wrapper.list.length));
+        console.log('getTipoOro--->BUSCA TODOS LOS TIPOS OROR INGRESA AL IF CARGA LA EXTENSION DEL ARREGLO', JSON.stringify(wrapper.list.length));
 
       }
     }, error => {
@@ -576,6 +576,7 @@ export class ListCotizarComponent implements OnInit {
   buscarCliente() {
     // TODO: AUMENTAR EL SOFTBANK CUANDO SE TENGA
     this.loadingSubject.next(true);
+    //this.llamarEquifax();
     console.log('INICIA BUSQUEDA EN CRM');
     this.clienteService.findClienteByCedulaCRM(this.identificacion.value).subscribe((data: any) => {
       console.log('Valores que llega de CRM-->', JSON.stringify(data));
@@ -625,7 +626,7 @@ export class ListCotizarComponent implements OnInit {
     console.log('IDENTIFICAICON ----->' + this.identificacion.value);
     this.is.getInformacionPersonaCalculadora('C', this.identificacion.value, 'CC', 'N').subscribe((resp: any) => {
       // this.loadingSubject.next(true);
-      console.log('RESPONSE QUSKI getInformacionPersonaCalculadora:::::>' + JSON.stringify(resp));
+      console.log('RESPUESTA EQUIFAX getInformacionPersonaCalculadora:::::>' + JSON.stringify(resp));
       // SETEO LOS DATOS QUE VIENEN DEL SERVICIO
       this.loadingSubject.next(true);
 
@@ -646,15 +647,21 @@ export class ListCotizarComponent implements OnInit {
       this.nacionalidad.setValue(resp.entidad.datoscliente.nacionalidad);
       this.cliente.campania = resp.entidad.datoscliente.campania;
       this.campania.setValue(resp.entidad.datoscliente.codigocampania);
+      this.correoElectronico.setValue(resp.entidad.datoscliente.correoelectronico);
       this.cliente.cedulaCliente = resp.entidad.identificacion;
       this.cliente.primerNombre = resp.entidad.datoscliente.nombrescompletos;
       this.cliente.nacionalidad = resp.entidad.datoscliente.nacionalidad;
       this.cliente.telefonoFijo = resp.entidad.datoscliente.telefonofijo;
       this.cliente.telefonoMovil = resp.entidad.datoscliente.telefonomovil;
+
       this.cliente.fechaNacimiento = this.fechaNacimiento.value;
       this.cliente.edad = this.edad.value;
       this.cliente.publicidad = this.fpublicidad.value;
       this.cliente.campania = this.campania.value;
+      this.cliente.email = this.correoElectronico.value;
+      this.cliente.telefonoMovil = this.movil.value;
+      this.cliente.telefonoFijo = this.telefonoDomicilio.value;
+      this.cliente.aprobacionMupi = this.aprobacionMupi.value;
 
       // VALIDACION que la entidad no este null y las variables tambien no lo esten
       if (resp && resp.entidad && resp.entidad.xmlVariablesInternas && resp.entidad.xmlVariablesInternas.variablesInternas &&
@@ -718,7 +725,7 @@ export class ListCotizarComponent implements OnInit {
         }
       });
     } else {
-      console.log('CREA UN NUEVO CLIENTE ----->', JSON.stringify(this.cliente));
+      console.log('CREA UN NUEVO CLIENTE ELSE GUARDAR CLIENTE  ----->', JSON.stringify(this.cliente));
       this.crearClienteCotizacionNuevo();
     }
   }
@@ -729,7 +736,7 @@ export class ListCotizarComponent implements OnInit {
    * @memberof ListCotizarComponent
    */
   crearClienteCotizacionNuevo() {
-    console.log('INGRESA A CREAR CLIENTE crearClienteCotizacionNuevo-------> ', JSON.stringify(this.cliente.id));
+
     this.cotizacion = new TbCotizacion();
     // SETEO LOS VALORES DEL CLIENTE NUEVO
     this.cotizacion.tbQoCliente = this.cliente;
@@ -744,8 +751,10 @@ export class ListCotizarComponent implements OnInit {
     this.cliente.telefonoFijo = this.telefonoDomicilio.value;
     this.cliente.telefonoMovil = this.movil.value;
     this.cliente.aprobacionMupi = this.aprobacionMupi.value;
+    this.cliente.email = this.correoElectronico.value;
 
-    console.log('COTIZACION A CREAR---> ', JSON.stringify(this.cotizacion));
+
+    console.log('COTIZACION A CREAR --->idCotizacion  ', JSON.stringify(this.cotizacion));
     this.cs.crearCotizacionClienteVariableCrediticia(this.cotizacion).subscribe((data: any) => {
       console.log('VALORES CREADOS DE LA COTIZAACION', JSON.stringify(data));
       if (data && data.entidad) {
@@ -865,6 +874,7 @@ export class ListCotizarComponent implements OnInit {
       this.sinNoticeService.setNotice('INFORMACION COMPLETA', 'success');
       this.disableVerVariableSubject.next(true);
       this.stepper.selectedIndex = 2;
+      console.log('VALOR DE LA COTIZACION===>', JSON.stringify(this.cotizacion));
     } else {
       this.sinNoticeService.setNotice('POR FAVOR COMPLETE LA INFORMACION', 'warning');
       this.loadingSubject.next(true);
@@ -1159,7 +1169,16 @@ export class ListCotizarComponent implements OnInit {
       this.precioOro.estado = EstadoQuskiEnum.ACT;
       this.precioOro.pesoNetoEstimado = this.pesoNetoEstimado.value;
       this.precioOro.precio = this.precio.value;
-      console.log('NUEVO PRECIO ORO COTIZADOR', JSON.stringify(this.cotizacion));
+      console.log('CEDULA A BUSCAR  a ', JSON.stringify(this.cliente.cedulaCliente));
+      this.cs.getCotizacionByCedula(this.cliente.cedulaCliente).subscribe((data: any) => {
+        console.log('COTIZACION RECUPERADA ES ', JSON.stringify(data));
+        if (data && data.entidad) {
+          this.cotizacion = data.entidad;
+
+        }
+
+      });
+      console.log('NUEVO PRECIO ORO COTIZADOR', JSON.stringify(this.cotizacion.id));
       this.precioOro.tbQoCotizador = this.cotizacion;
       this.precioOro.tbQoTipoOro = this.tipoOros;
       if (this.precioOro) {
