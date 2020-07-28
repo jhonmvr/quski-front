@@ -700,13 +700,13 @@ export class ListCotizarComponent implements OnInit {
 
   guardarCliente() {
     this.loadingSubject.next(true);
-    if (this.cliente.id) {
+    if (this.cliente) {
       this.clienteService.findClienteByIdentificacionCotizacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
         console.log('1.- *****EL CLIENTE nuevo es  ES*****    -------> ', JSON.stringify(clienteData));
         if (clienteData) {
           //SSI EL CLIENTE EXISTE
           this.cliente.id = clienteData.entidad.id;
-          console.log('2.- ****Id cliente   -------> ', this.cliente.id);
+          console.log('2.- ****Id cliente EXISTE   -------> ', this.cliente.id);
           //MANDA A BUSCAR LAS COTIZACIONES DEL CLIENTE
           this.cs.findByIdCliente(this.cliente.cedulaCliente).subscribe((cotizacionData: any) => {
             console.log('3.- ****COTIZACION ENCONTRADA --------> ', JSON.stringify(cotizacionData));
