@@ -958,10 +958,11 @@ export class ListCotizarComponent implements OnInit {
    * Metodo que llama al popUp de creditos vigentes a
    */
   goRiesgoAcumulado() {
+    console.log('VALOR DE LA CEDULA A CONSULTAR RIESGO ACUMULADO', this.cliente.cedulaCliente);
     const dialogRef = this.dialog.open(CreditoVigenteDialogComponent, {
       width: 'auto',
       height: 'auto',
-      // data: this.dataSource.data
+      data: this.cliente.cedulaCliente
     });
     dialogRef.afterClosed().subscribe(() => {
       //
