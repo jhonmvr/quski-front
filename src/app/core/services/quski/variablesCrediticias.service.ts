@@ -22,10 +22,17 @@ export class VariablesCrediticiasService extends BaseService {
    * @param  idNegociacion : string 
    * @description Buscar variables crediticias en funcion del id de negociacion.
    */
-  variablesCrediticiaByIdNegociacion( idNegociacion : string ) {
+  variablesCrediticiaByIdNegociacion( idNegociacion : number ) {
     let serviceUrl = this.appResourcesUrl + this.urlRest +"variablesCrediticiaByIdNegociacion";
-    this.params = this.params.set('idNegociacion', idNegociacion);
+    this.params = this.params.set('idNegociacion', idNegociacion.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
+  }
+
+  variablesCrediticiabyIdCotizador( idcotizador : number ){
+    const serviceUrl = this.appResourcesUrl = this.urlRest + "variablesCrediticiaByIdCotizacion";
+    this.params = this.params.set('idCotizador', idcotizador.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options); 
   }
 }

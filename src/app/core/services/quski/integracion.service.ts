@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import { PersonaConsulta } from '../../model/calculadora/personaConsulta';
 
 @Injectable({
   providedIn: 'root'
@@ -26,12 +27,12 @@ export class IntegracionService extends BaseService {
    * @param calificacion 
    */
 
-  public getInformacionPersonaCalculadora(tipoIdentificacion: string, identificacion: string, tipoConsulta: string, calificacion: string ) {
+  public getInformacionPersonaCalculadora( consulta : PersonaConsulta ) {
     const serviceUrl =  this.appResourcesUrl + this.urlRest +'getInformacionPersona';
-    this.params = new HttpParams().set('tipoIdentificacion', tipoIdentificacion)
-      .set('identificacion', identificacion)
-      .set('tipoConsulta', tipoConsulta)
-      .set('calificacion', calificacion);
+    this.params = new HttpParams().set('tipoIdentificacion', consulta.tipoIdentificacion)
+      .set('identificacion', consulta.identificacion)
+      .set('tipoConsulta', consulta.tipoConsulta)
+      .set('calificacion', consulta.calificacion);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }

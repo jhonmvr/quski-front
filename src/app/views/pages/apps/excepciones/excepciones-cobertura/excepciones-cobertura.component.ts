@@ -24,7 +24,7 @@ import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
-import { OpcionesDeCredito } from 'src/app/core/model/calculadora/opcionesDeCredito';
+import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
 
 @Component({
   selector: 'kt-excepciones-cobertura',
@@ -308,7 +308,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
             if(this.excepcion.observacionAsesor != ''){
               this.observacionAsesor.setValue(this.excepcion.observacionAsesor.toUpperCase());
             }
-            this.vcr.variablesCrediticiaByIdNegociacion ( this.negociacion.id.toString() ).subscribe((data : any) =>{
+            this.vcr.variablesCrediticiaByIdNegociacion ( this.negociacion.id ).subscribe((data : any) =>{
               if (data) {
                 this.variablesCre = new Array<TbQoVariablesCrediticia>(); 
                 data.forEach(vCre => {

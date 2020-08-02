@@ -16,7 +16,9 @@ export class DialogCargarHabilitanteComponent implements OnInit {
   private estOperacion : string = "DISPONIBLE"
 
 
-  constructor( @Inject(MAT_DIALOG_DATA) private data: string ) { }
+  constructor( @Inject(MAT_DIALOG_DATA) private data: string ) { 
+    
+  }
   ngOnInit(): void {
     this.idRef = this.data;
   }
