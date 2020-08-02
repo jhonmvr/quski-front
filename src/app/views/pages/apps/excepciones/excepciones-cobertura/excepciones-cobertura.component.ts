@@ -308,7 +308,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
             if(this.excepcion.observacionAsesor != ''){
               this.observacionAsesor.setValue(this.excepcion.observacionAsesor.toUpperCase());
             }
-            this.vcr.variablesCrediticiaByIdNegociacion ( this.negociacion.id.toString() ).subscribe((data : any) =>{
+            this.vcr.variablesCrediticiaByIdNegociacion ( this.negociacion.id ).subscribe((data : any) =>{
               if (data) {
                 this.variablesCre = new Array<TbQoVariablesCrediticia>(); 
                 data.forEach(vCre => {

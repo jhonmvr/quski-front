@@ -1811,7 +1811,7 @@ export class GestionClienteComponent implements OnInit {
     consulta.identificacion = "1311066441";
     this.css.consultaRiesgoAcumuladoCS( consulta ).subscribe(data =>{
       if(data){
-        // console.log(" data de consultaRiesgoAcumuladoCS ------> ", JSON.stringify(data));
+        console.log(" data de consultaRiesgoAcumuladoCS ------> ", JSON.stringify(data));
         console.log("Funciona -----> consultaRiesgoAcumuladoCS");
       }else {
         this.sinNoticeService.setNotice("no me trajo data consultaRiesgoAcumuladoCS :C", "error");
@@ -2387,7 +2387,7 @@ export class GestionClienteComponent implements OnInit {
                                 this.sinNoticeService.setNotice("NO EXISTE NEGOCIACION PREVIA PARA HACER SEGUIMIENTO DE TRACKING", 'error');
                               }                              
                             }
-                            this.router.navigate(['../../credito-nuevo/generar-credito', this.id]);
+                            this.router.navigate(['', this.idNegociacion]);
                           });
                       }
                     }, error =>{

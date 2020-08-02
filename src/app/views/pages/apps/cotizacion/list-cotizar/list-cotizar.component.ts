@@ -38,6 +38,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../../../../../src/environments/environment';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { MensajeExcepcionComponent } from '../../../../partials/custom/mensaje-excepcion-component/mensaje-excepcion-component';
+import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 
 
 /**
@@ -624,7 +625,12 @@ export class ListCotizarComponent implements OnInit {
     this.loadingSubject.next(true);
     console.log('INICIA EQUIFAX');
     console.log('IDENTIFICAICON ----->' + this.identificacion.value);
-    this.is.getInformacionPersonaCalculadora('C', this.identificacion.value, 'CC', 'N').subscribe((resp: any) => {
+    let consulta = new PersonaConsulta();
+    consulta.identificacion = this.identificacion.value;
+    consulta.tipoConsulta = "CC";
+    consulta.tipoIdentificacion = "C";
+    consulta.calificacion = "N"
+    this.is.getInformacionPersonaCalculadora( consulta ).subscribe((resp: any) => {
       // this.loadingSubject.next(true);
       console.log('RESPUESTA EQUIFAX getInformacionPersonaCalculadora:::::>' + JSON.stringify(resp));
       // SETEO LOS DATOS QUE VIENEN DEL SERVICIO

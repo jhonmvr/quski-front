@@ -181,18 +181,6 @@ getCotizacionByCedula(cedulaCliente: string) {
   }
 
 
-  findByIdentificacionCliente(idCotizador: string) {
-    let serviceUrl = this.appResourcesUrl
-      + "precioOroRestController/precioOroByIdCotizador";
-
-    this.params = this.params.set('idCotizador', idCotizador);
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
-  }
-
-
-
-
   guardarJoyaSim(tbMijoyaSim) {
     let serviceUrl = this.appResourcesUrl
       + "joyaSimRestController/persistEntity";

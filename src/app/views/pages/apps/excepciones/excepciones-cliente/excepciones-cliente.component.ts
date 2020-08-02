@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatDialog } from '@angular/material';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
@@ -24,6 +24,8 @@ import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
 import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
+import { ErrorCargaInicialComponent } from '../../../../partials/content/general/error-carga-inicial/error-carga-inicial.component';
+import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 
 @Component({
   selector: 'kt-excepciones-cliente',
@@ -110,6 +112,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     private vcr : VariablesCrediticiasService,
     private rie : RiesgoAcumuladoService,
     private int : IntegracionService,
+    public dialog : MatDialog,
     private route : ActivatedRoute,
     private router: Router,
     private subheaderService : SubheaderService,
@@ -166,211 +169,190 @@ export class ExcepcionesClienteComponent implements OnInit {
   ngOnInit() {
     this.usuario = localStorage.getItem(atob(environment.userKey));
     console.log('El usuario es ----> ',localStorage.getItem(atob(environment.userKey)));
+
     this.subheaderService.setTitle("Excepciones de Negociacion");
     this.loading = this.loadingSubject.asObservable();
-    this.buscoDatosFlujo();
-    //TRACKING
-    this.tra.getSystemDate().subscribe( (hora: any) =>{if(hora.entidad){ this.horaInicio = hora.entidad;}});
-    this.buscarExcepcion();
+    this.iniciarOperacion();
   }
   /**
+   * ************************************************** @COMPONENTES
+  */
+
+  /**
    * @author Jeroham Cadenas - Developer Twelve
-   * @description Metodo de Tracking llamado desde .html
+   * @param mensaje Mensaje del componente
    */
-  private capturaHoraAtencion(){
-    if( this.horaAtencion == null ){
-      this.tra.getSystemDate().subscribe( (hora: any) =>{
-        if(hora.entidad){
-          this.horaAtencion = hora.entidad;
-        }
-      });
-    }
+  salirDeGestion( mensaje : string ){
+    const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+      width: "auto-max",
+      height: "auto-max",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+        this.router.navigate(['dashboard', ""]);  
+    });
   }
-  private buscoDatosFlujo(){
-    this.loadingSubject.next(true);
-    this.par.findByNombreTipoOrdered("NEGOCIACION","ACTIVIDAD","Y").subscribe((data : any) =>{
-      if (data.entidades) {
-        this.actividad = data.entidades[0].nombre;
-        this.par.findByNombreTipoOrdered("EXCEPCION","PROCESO","Y").subscribe((data : any) =>{
-          if (data.entidades) {
-            this.proceso = data.entidades[0].nombre;
+
+
+  /** 
+   * ****************************************************@GESTION
+  */
+
+   /**
+    * @author Jeroham Cadenas - Devepoler Twelve
+    * @description Metodo que valida que la gestion fue llamada correctamente y carga los valores para proceder
+    */
+  iniciarOperacion() {
+    this.capturaDatosTraking();
+    this.route.paramMap.subscribe((json: any) => {
+      if (json.params.id) {
+        this.exc.getEntity(json.params.id).subscribe( (data : any) =>{
+          if (data.entidad) {
+            this.excepcion = data.entidad;
+            if (this.excepcion.tipoExcepcion == "EXCEPCION_CLIENTE") {
+              if (this.excepcion.estadoExcepcion == "PENDIENTE") {
+                this.capturaHoraInicio();
+                this.cargarValores();
+              } else {
+                let mensaje = "ERROR: LA EXCEPCION YA FUE APROBADA O NEGADA ANTERIORMENTE";
+                this.salirDeGestion( mensaje );
+              }
+            } else {
+              let mensaje = "ERROR: EL ID NO ES UNA EXCEPCION DE CLIENTE";
+              this.salirDeGestion( mensaje );
+            }
+          } else {
+            let mensaje = "ERROR DESCONOCIDO AL BUSCAR DATOS DE LA EXCEPCION";
+            this.salirDeGestion( mensaje );
           }
-        });
+        }, error => {
+          let mensaje = "ERROR DESCONOCIDO AL CARGAR DATOS DE LA EXCEPCION";
+          this.salirDeGestion( mensaje );
+        }); 
+ 
+
+
+      } else{
+        let mensaje = "NINGUN ID EXCEPCION SELECCIONADO";
+        this.salirDeGestion( mensaje );
       }
     });
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
-   * @description Busca dota la informacion relacionada a la excepcion y la imprime en las distintas seciones.
+   * @description Setea la informacion y la imprime en las distintas seciones.
    */
-  buscarExcepcion() {
-    this.loadingSubject.next(true);
-    this.route.paramMap.subscribe((json: any) => {
-      json.params.id
-      if (json.params.id) {
-        this.exc.getEntity(json.params.id).subscribe( (json : any) =>{
-          if(json.entidad){
-            this.excepcion = json.entidad;
-            this.negociacion = this.excepcion.tbQoNegociacion;
-            this.cliente  = this.negociacion.tbQoCliente;
-            if (this.excepcion.tipoExcepcion == "EXCEPCION_CLIENTE") {
-              // FORM OPERACION
-              this.nombreProceso.setValue(this.negociacion.procesoActualNegociacion);
-              this.nombresCompletos.setValue(this.cliente.primerNombre + ' ' + this.cliente.segundoNombre+ ' ' + this.cliente.apellidoPaterno + ' ' + this.cliente.apellidoMaterno);
-              this.identificacion.setValue(this.cliente.cedulaCliente);
-              
-              // FORM CLIENTE
-              this.tipoIdentificacion.setValue(TipoIdentificacionEnum.CEDULA);
-              this.identificacionC.setValue(this.cliente.cedulaCliente);
-              this.aprobadoWebMupi.setValue(this.cliente.aprobacionMupi);
-              this.primerNombre.setValue(this.cliente.primerNombre);
-              this.segundoNombre.setValue(this.cliente.segundoNombre);
-              this.separacionDeBienes.setValue(this.cliente.separacionBienes);
-              this.apellidoPaterno.setValue(this.cliente.apellidoPaterno);
-              this.apellidoMaterno.setValue(this.cliente.apellidoMaterno);
-              this.cargaFamiliar.setValue(this.cliente.cargasFamiliares);
-              this.genero.setValue(this.cliente.genero);
-              this.estadoCivil.setValue(this.cliente.estadoCivil);
-              this.lugarDeNacimiento.setValue(this.cliente.lugarNacimiento);
-              this.fechaDeNacimiento.setValue(this.cliente.fechaNacimiento);
-              this.nacionalidad.setValue(this.cliente.nacionalidad);
-              this.edad.setValue(this.cliente.edad);
-              this.nivelDeEducacion.setValue(this.cliente.nivelEducacion);
-              this.actividadEconomica.setValue(this.cliente.actividadEconomica);
-              this.ultimaFechaDeActualizacionDeCliente.setValue(this.cliente.fechaActualizacion);
-              // FORM CONTACTO
-              this.telefonoAdicional.setValue(this.cliente.telefonoAdicional);
-              this.telefonoDomicilio.setValue(this.cliente.telefonoFijo);
-              this.telefonoMovil.setValue(this.cliente.telefonoMovil);
-              this.telefonoOficina.setValue(this.cliente.telefonoTrabajo);
-              this.correo.setValue(this.cliente.email);
-              // FORM DATOS NEGOCIACION
-              this.tipoNegociacion.setValue( this.negociacion.tipoNegociacion );
-              this.estadoNegociacion.setValue( this.negociacion.estadoNegociacion );
-              this.fechaDeCreacionNegociacion.setValue( this.negociacion.fechaCreacion );
-              this.ultimaFechaDeActualizacionNegociacion.setValue( this.negociacion.fechaActualizacion );
-              //FORM DATOS EXCEPCION
-              if(this.excepcion.observacionAsesor != ''){
-                this.observacionAsesor.setValue(this.excepcion.observacionAsesor.toUpperCase());
-              }
-              this.int.getInformacionPersonaCalculadora('C', this.cliente.cedulaCliente,'CC','N').subscribe( (data : any) =>{
-                if (data.entidad.codigoError == 3) {
-                  // console.log("codigoError -----> ", JSON.stringify(data.entidad.mensaje));
-                  this.tipoExcepcionCliente = data.entidad.mensaje.toUpperCase();
-                  // FORM DE VARIABLES CREDITICIAS
-                  this.vcr.variablesCrediticiaByIdNegociacion ( this.negociacion.id.toString() ).subscribe((data : any) =>{
-                    if (data) {
-                      this.variablesCre = new Array<TbQoVariablesCrediticia>(); 
-                      data.forEach(vCre => {
-                        this.variablesCre.push( vCre);
-                      });
-                      this.dataSourceVariablesCrediticias.data = this.variablesCre;
-                      // FORM DE RIESGO ACUMULADO
-                      this.rie.findRiesgoAcumuladoByIdCliente ( this.cliente.id.toString() ).subscribe((data : any) =>{
-                        if (data) {
-                          this.riesgoAcumul = new Array<TbQoRiesgoAcumulado>(); 
-                          data.forEach(rAcu => {
-                            this.riesgoAcumul.push( rAcu);
-                          });
-                          this.dataSourceRiesgo.data = this.riesgoAcumul;
-                          this.tra.getSystemDate().subscribe( (hora: any) =>{
-                            if(hora.entidad){
-                              this.loadingSubject.next(false);
-                              this.horaAsignacion = hora.entidad;
-                            }
-                          });
-                        } else {
-                          this.tra.getSystemDate().subscribe( (hora: any) =>{
-                            if(hora.entidad){
-                              this.loadingSubject.next(false);
-                              this.horaAsignacion = hora.entidad;
-                            }
-                          });
-                          this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DEL RIESGO ACUMULADO ELSE', 'error');
-                        }
-                      }, error =>{
-                        this.tra.getSystemDate().subscribe( (hora: any) =>{
-                          if(hora.entidad){
-                            this.loadingSubject.next(false);
-                            this.horaAsignacion = hora.entidad;
-                          }
-                        });
-                        if (JSON.stringify(error).indexOf("codError") > 0) {
-                          let b = error.error;
-                          this.sinNoticeService.setNotice(b.msgError, 'error');
-                        } else {
-                          this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DEL RIESGO ACUMULADO', 'error');
-                        }
-                      });
-                    } else {
-                      this.tra.getSystemDate().subscribe( (hora: any) =>{
-                        if(hora.entidad){
-                          this.loadingSubject.next(false);
-                          this.horaAsignacion = hora.entidad;
-                        }
-                      });
-                      this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LAS VARIABLES CREDITICIAS ELSE', 'error');
-                    }
-                  }, error =>{
-                    this.tra.getSystemDate().subscribe( (hora: any) =>{
-                      if(hora.entidad){
-                        this.loadingSubject.next(false);
-                        this.horaAsignacion = hora.entidad;
-                      }
-                    });
-                    if (JSON.stringify(error).indexOf("codError") > 0) {
-                      let b = error.error;
-                      this.sinNoticeService.setNotice(b.msgError, 'error');
-                    } else {
-                      this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LAS VARIABLES CREDITICIAS', 'error');
-                    }
-                  });
-                } else {
-                  this.tra.getSystemDate().subscribe( (hora: any) =>{
-                    if(hora.entidad){
-                      this.loadingSubject.next(false);
-                      this.horaAsignacion = hora.entidad;
-                    }
-                  });
-                  this.sinNoticeService.setNotice('ERROR AL CARGAR LA EXCEPCION CALCULADORA ELSE', 'error');
-                }
-              }, error =>{
-                this.tra.getSystemDate().subscribe( (hora: any) =>{
-                  if(hora.entidad){
-                    this.loadingSubject.next(false);
-                    this.horaAsignacion = hora.entidad;
-                  }
+  cargarValores() {
+    this.negociacion  = this.excepcion.tbQoNegociacion;
+    this.cliente      = this.negociacion.tbQoCliente;
+
+    // FORM OPERACION
+    this.nombreProceso.setValue(this.negociacion.procesoActualNegociacion);
+    this.nombresCompletos.setValue(this.cliente.primerNombre + ' ' + this.cliente.segundoNombre+ ' ' + this.cliente.apellidoPaterno + ' ' + this.cliente.apellidoMaterno);
+    this.identificacion.setValue(this.cliente.cedulaCliente);
+      
+    // FORM CLIENTE
+    this.tipoIdentificacion.setValue(TipoIdentificacionEnum.CEDULA);
+    this.identificacionC.setValue(this.cliente.cedulaCliente);
+    this.aprobadoWebMupi.setValue(this.cliente.aprobacionMupi);
+    this.primerNombre.setValue(this.cliente.primerNombre);
+    this.segundoNombre.setValue(this.cliente.segundoNombre);
+    this.separacionDeBienes.setValue(this.cliente.separacionBienes);
+    this.apellidoPaterno.setValue(this.cliente.apellidoPaterno);
+    this.apellidoMaterno.setValue(this.cliente.apellidoMaterno);
+    this.cargaFamiliar.setValue(this.cliente.cargasFamiliares);
+    this.genero.setValue(this.cliente.genero);
+    this.estadoCivil.setValue(this.cliente.estadoCivil);
+    this.lugarDeNacimiento.setValue(this.cliente.lugarNacimiento);
+    this.fechaDeNacimiento.setValue(this.cliente.fechaNacimiento);
+    this.nacionalidad.setValue(this.cliente.nacionalidad);
+    this.edad.setValue(this.cliente.edad);
+    this.nivelDeEducacion.setValue(this.cliente.nivelEducacion);
+    this.actividadEconomica.setValue(this.cliente.actividadEconomica);
+    this.ultimaFechaDeActualizacionDeCliente.setValue(this.cliente.fechaActualizacion);
+
+    // FORM CONTACTO
+    this.telefonoAdicional.setValue(this.cliente.telefonoAdicional);
+    this.telefonoDomicilio.setValue(this.cliente.telefonoFijo);
+    this.telefonoMovil.setValue(this.cliente.telefonoMovil);
+    this.telefonoOficina.setValue(this.cliente.telefonoTrabajo);
+    this.correo.setValue(this.cliente.email);
+    // FORM DATOS NEGOCIACION
+    this.tipoNegociacion.setValue( this.negociacion.tipoNegociacion );
+    this.estadoNegociacion.setValue( this.negociacion.estadoNegociacion );
+    this.fechaDeCreacionNegociacion.setValue( this.negociacion.fechaCreacion );
+    this.ultimaFechaDeActualizacionNegociacion.setValue( this.negociacion.fechaActualizacion );
+    //FORM DATOS EXCEPCION
+    this.observacionAsesor.setValue(this.excepcion.observacionAsesor);
+    let consulta = new PersonaConsulta();
+    consulta.identificacion = this.cliente.cedulaCliente;
+    consulta.tipoConsulta = "CC";
+    consulta.tipoIdentificacion = "C";
+    consulta.calificacion = "N"
+    this.int.getInformacionPersonaCalculadora( consulta ).subscribe( (data : any) =>{
+      if (data.entidad.codigoError == 3) {
+        this.tipoExcepcionCliente = data.entidad.mensaje.toUpperCase();
+        // FORM DE VARIABLES CREDITICIAS
+        this.vcr.variablesCrediticiaByIdNegociacion ( this.negociacion.id ).subscribe((data : any) =>{
+          if (data) {
+            this.variablesCre = new Array<TbQoVariablesCrediticia>(); 
+            data.forEach(vCre => {
+              this.variablesCre.push( vCre);
+            });
+            this.dataSourceVariablesCrediticias.data = this.variablesCre;
+            // FORM DE RIESGO ACUMULADO
+            this.rie.findRiesgoAcumuladoByIdCliente ( this.cliente.id.toString() ).subscribe((data : any) =>{
+              if (data) {
+                this.riesgoAcumul = new Array<TbQoRiesgoAcumulado>(); 
+                data.forEach(rAcu => {
+                  this.riesgoAcumul.push( rAcu);
                 });
-                if (JSON.stringify(error).indexOf("codError") > 0) {
-                  let b = error.error;
-                  this.sinNoticeService.setNotice(b.msgError, 'error');
-                } else {
-                  this.sinNoticeService.setNotice('ERROR AL CARGAR LA EXCEPCION CALCULADORA', 'error');
-                }
-              });
-            } else {
-              this.router.navigate(['dashboard', ""]);
-            }
-          }else {
-            this.router.navigate(['dashboard', ""]);              
+                this.dataSourceRiesgo.data = this.riesgoAcumul;
+                this.capturaHoraAsignacion();
+              } else {
+                this.capturaHoraAsignacion();
+                this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DEL RIESGO ACUMULADO ELSE', 'error');
+              }
+            }, error =>{
+              this.capturaHoraAsignacion();
+              if (JSON.stringify(error).indexOf("codError") > 0) {
+                let b = error.error;
+                this.sinNoticeService.setNotice(b.msgError, 'error');
+              } else {
+                this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DEL RIESGO ACUMULADO', 'error');
+              }
+            });
+          } else {
+            this.capturaHoraAsignacion();
+            this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LAS VARIABLES CREDITICIAS ELSE', 'error');
           }
-        }, error => {
-          this.tra.getSystemDate().subscribe( (hora: any) =>{
-            if(hora.entidad){
-              this.horaAsignacion = hora.entidad;
-              this.loadingSubject.next(false);
-            }
-          });
+        }, error =>{
+          this.capturaHoraAsignacion();
           if (JSON.stringify(error).indexOf("codError") > 0) {
             let b = error.error;
             this.sinNoticeService.setNotice(b.msgError, 'error');
           } else {
-            this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LA EXCEPCION', 'error');
+            this.sinNoticeService.setNotice('ERROR AL CARGAR DATOS DE LAS VARIABLES CREDITICIAS', 'error');
           }
-        }); 
-      }            
+        });
+      } else {
+        this.capturaHoraAsignacion();
+        this.sinNoticeService.setNotice('ERROR AL CARGAR LA EXCEPCION CALCULADORA ELSE', 'error');
+      }
+    }, error =>{
+      this.capturaHoraAsignacion();
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice('ERROR AL CARGAR LA EXCEPCION CALCULADORA', 'error');
+      }
     });
   }
+  /**
+   * @author Jeroham Cadenas - developer Twelve.
+   * @description Realiza todas las validaciones necesarias y luego guarda la desicion del aprobador
+   */
   enviarRespuesta(){
     this.loadingSubject.next(false);
     if (this.radioB.value != "") {
@@ -394,23 +376,9 @@ export class ExcepcionesClienteComponent implements OnInit {
 
         this.exc.persistEntity ( entidad ).subscribe((data : any) =>{
           this.loadingSubject.next(false);
-          console.log("Esto me esta guardando en base ----> ", data);
-          this.tra.getSystemDate().subscribe( (hora: any) =>{
-            if(hora.entidad){
-              this.horaFinal = hora.entidad
-              if ( this.negociacion.id != null ) {
-                this.registrarTracking(
-                  this.negociacion.id,
-                  this.horaInicio,
-                  this.horaAsignacion,
-                  this.horaAtencion,
-                  this.horaFinal
-                );
-              } else{
-                this.sinNoticeService.setNotice("NO EXISTE NEGOCIACION PREVIA PARA HACER SEGUIMIENTO DE TRACKING", 'error');
-              }   
-            }
-          });
+          this.capturaHoraAtencion(); // Unicamente para validar la hora de atencion; 
+          this.capturaHoraFinalAndResgistraTracking( this.negociacion.id );
+          
           // falta envio de notificacion
           // Falta redireccion a pantalla principal de excepciones
           // this.router.navigate(['cliente/gestion-cliente', this.negociacion.id]);
@@ -433,16 +401,102 @@ export class ExcepcionesClienteComponent implements OnInit {
       this.sinNoticeService.setNotice('POR FAVOR MARQUE UNA OPCION CON SU RESPUESA', 'error');
     }
   }
+
+
+  /**
+   * *************************************************** @TRACKING
+  */
+
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Captura la hora de inicio de Tracking
+   */
+  private capturaHoraInicio(){
+    this.tra.getSystemDate().subscribe( (hora: any) =>{
+      if(hora.entidad){ 
+        this.horaInicio = hora.entidad;
+      }
+    });
+  }
     /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Captura la hora de Asignacion de Tracking
+   */
+  private capturaHoraAsignacion(){
+    this.tra.getSystemDate().subscribe( (hora: any) =>{
+      if(hora.entidad){
+        this.horaAsignacion = hora.entidad;
+      }
+    });
+  }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Tracking llamado desde .html captura la hora de atencion
+   */
+  private capturaHoraAtencion(){
+    if( this.horaAtencion == null ){
+      this.tra.getSystemDate().subscribe( (hora: any) =>{
+        if(hora.entidad){
+          this.horaAtencion = hora.entidad;
+        }
+      });
+    }
+  }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Captura la hora de fin de Tracking y registra.
+   * @param idNegociacion number
+   */
+  private capturaHoraFinalAndResgistraTracking(  idNegociacion: number ){
+    this.tra.getSystemDate().subscribe( (hora: any) =>{
+      if(hora.entidad){
+        this.horaFinal = hora.entidad
+        if ( idNegociacion != null ) {
+          this.registrarTracking(
+            idNegociacion,
+            this.horaInicio,
+            this.horaAsignacion,
+            this.horaAtencion,
+            this.horaFinal
+          );
+        } else{
+          this.sinNoticeService.setNotice("NO EXISTE NEGOCIACION PREVIA PARA HACER SEGUIMIENTO DE TRACKING", 'error');
+        }   
+      }
+    });
+  }
+    /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Trae La actividad y proceso Actual
+   */
+  private capturaDatosTraking(){
+    this.par.findByNombreTipoOrdered("NEGOCIACION","ACTIVIDAD","Y").subscribe((data : any) =>{
+      if (data.entidades) {
+        this.actividad = data.entidades[0].nombre;
+        this.par.findByNombreTipoOrdered("EXCEPCION","PROCESO","Y").subscribe((data : any) =>{
+          if (data.entidades) {
+            this.proceso = data.entidades[0].nombre;
+          }
+        });
+      }
+    });
+  }
+  /**
    * 
    * @author Jeroham Cadenas - Developer Twuelve
+   * @description Registra el tracking
    * @param codigoRegistro number
    * @param fechaInicio Date
    * @param fechaAsignacion Date
    * @param fechaInicioAtencion Date
    * @param fechaFin Date
-   */
-  public registrarTracking (codigoRegistro: number, fechaInicio: Date, fechaAsignacion: Date, fechaInicioAtencion: Date, fechaFin: Date){
+  */
+  public registrarTracking (
+    codigoRegistro: number, 
+    fechaInicio: Date, 
+    fechaAsignacion: Date, 
+    fechaInicioAtencion: Date, 
+    fechaFin: Date){
     this.loadingSubject.next(true);
     let tracking : TbQoTracking   = new TbQoTracking();
     tracking.actividad            = this.actividad; // Modulo en ProducBacklog

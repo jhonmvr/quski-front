@@ -98,6 +98,11 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 import { HabilitanteComponent } from './custom/habilitante/habilitante.component';
 import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dialog/habilitante-dialog.component';
 import { MensajeExcepcionComponent } from './custom/mensaje-excepcion-component/mensaje-excepcion-component';
+import { ErrorCargaInicialComponent } from './content/general/error-carga-inicial/error-carga-inicial.component';
+import { VerCotizacionesComponent } from './content/general/ver-cotizaciones/ver-cotizaciones.component';
+import { DetallesComponent } from './content/general/ver-cotizaciones/detalles/detalles.component';
+import { TablaOpcionesCreditoComponent } from './content/general/tabla-opciones-credito/tabla-opciones-credito.component';
+import { TablaVariablesCrediticiasComponent } from './content/general/tabla-variables-crediticias/tabla-variables-crediticias.component';
 
 
 
@@ -151,7 +156,12 @@ import { MensajeExcepcionComponent } from './custom/mensaje-excepcion-component/
 		ArchivoComponent,
 		AddFotoComponent,
 		HabilitanteComponent,
-		HabilitanteDialogComponent
+		HabilitanteDialogComponent,
+		ErrorCargaInicialComponent,
+		VerCotizacionesComponent,
+		DetallesComponent,
+		TablaOpcionesCreditoComponent,
+		TablaVariablesCrediticiasComponent
 	],
 	exports: [
 		WidgetModule,
@@ -198,7 +208,8 @@ import { MensajeExcepcionComponent } from './custom/mensaje-excepcion-component/
 		PortletFooterComponent,
 		AuthDialogComponent,
 		HabilitanteComponent,
-		HabilitanteDialogComponent
+		HabilitanteDialogComponent,
+		ErrorCargaInicialComponent
 	],
 	imports: [
 		CommonModule,

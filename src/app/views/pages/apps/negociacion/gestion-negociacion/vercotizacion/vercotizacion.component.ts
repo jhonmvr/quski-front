@@ -23,7 +23,8 @@ export class VercotizacionComponent implements OnInit {
   dataSource = new MatTableDataSource<TbCotizacion>();
 
   constructor(public dialogRefGuardar: MatDialogRef<DetalleCotizacionComponent>,
-     @Inject(MAT_DIALOG_DATA) private data:TbCotizacion,public dialogGuardar: MatDialog, private cs:CotizacionService,
+     @Inject(MAT_DIALOG_DATA) private data:TbCotizacion,
+     public dialogGuardar: MatDialog, private cs:CotizacionService,
      private noticeService: ReNoticeService, 
      private subheaderService: SubheaderService) { }
   
