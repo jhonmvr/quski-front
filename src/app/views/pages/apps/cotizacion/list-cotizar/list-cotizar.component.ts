@@ -307,7 +307,7 @@ export class ListCotizarComponent implements OnInit {
     this.initiateTablePaginator();
     // Se ejecuta cuando se hace click en el ordenamiento en el mattable
     this.sort.sortChange.subscribe(() => {
-      // console.log('sort changed ');
+      console.log('sort changed ');
       this.initiateTablePaginator();
       this.buscar();
     });
@@ -526,7 +526,7 @@ export class ListCotizarComponent implements OnInit {
     p.sortFields = ordenarPor;
     p.sortDirections = tipoOrden;
     p.isPaginated = paginado;
-    // // console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
+    // console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
     return p;
   }
 
@@ -595,7 +595,7 @@ export class ListCotizarComponent implements OnInit {
 
         // seteo valores en la vista
         this.nombresCompletos.setValue(data.list[0].firstName);
-        // console.log('Nombres completos CRM', data.list[0].firstName);
+        console.log('Nombres completos CRM', data.list[0].firstName);
         this.movil.setValue(data.list[0].phoneMobile);
         this.telefonoDomicilio.setValue(data.list[0].phoneHome);
         this.correoElectronico.setValue(data.list[0].emailAddress);
@@ -700,34 +700,33 @@ export class ListCotizarComponent implements OnInit {
 
   guardarCliente() {
     this.loadingSubject.next(true);
-    if (this.cliente) {
-      this.clienteService.findClienteByIdentificacionCotizacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
-        console.log('1.- *****EL CLIENTE nuevo es  ES*****    -------> ', JSON.stringify(clienteData));
-        if (clienteData) {
-          //SSI EL CLIENTE EXISTE
-          this.cliente.id = clienteData.entidad.id;
-          console.log('2.- ****Id cliente EXISTE   -------> ', this.cliente.id);
-          //MANDA A BUSCAR LAS COTIZACIONES DEL CLIENTE
-          this.cs.findByIdCliente(this.cliente.cedulaCliente).subscribe((cotizacionData: any) => {
-            console.log('3.- ****COTIZACION ENCONTRADA --------> ', JSON.stringify(cotizacionData));
+    this.clienteService.findClienteByIdentificacion(this.cliente.cedulaCliente).subscribe((clienteData: any) => {
+      console.log('1.- *****EL CLIENTE nuevo es  ES*****    -------> ', JSON.stringify(clienteData));
+      if (clienteData) {
+        //SSI EL CLIENTE EXISTE
+        this.cliente.id = clienteData.id;
+        console.log('2.- ****Id cliente EXISTE   -------> ', this.cliente.id);
+        //MANDA A BUSCAR LAS COTIZACIONES DEL CLIENTE
+        this.cs.findByIdCliente(this.cliente.cedulaCliente).subscribe((cotizacionData: any) => {
+          console.log('3.- ****COTIZACION ENCONTRADA --------> ', JSON.stringify(cotizacionData));
 
-            if (cotizacionData && cotizacionData.list !== null) {
-              this.listCotizaciones = cotizacionData.list;
-              console.log('4.- ****VALORES DE LAS COTIZACIONES -----> ', JSON.stringify(this.listCotizaciones[0]));
-              this.cs.caducarCotizacion(this.listCotizaciones[0]).subscribe((listCotizacionesData: any) => {
-                console.log('5.- *****VALOR CADUCA COTIZACION   ----->', JSON.stringify(this.listCotizaciones));
-              });
-              console.log('INGRESA A CREAR CLIENTE COTIZACION NUEVO ----->');
-              this.crearClienteCotizacionNuevo();
-            }
+          if (cotizacionData && cotizacionData.list != null) {
+            this.listCotizaciones = cotizacionData.list;
+            console.log('4.- ****VALORES DE LAS COTIZACIONES -----> ', JSON.stringify(this.listCotizaciones[0]));
+            this.cs.caducarCotizacion(this.listCotizaciones[0]).subscribe((listCotizacionesData: any) => {
+              console.log('5.- *****VALOR CADUCA COTIZACION   ----->', JSON.stringify(this.listCotizaciones));
+            });
+            console.log('INGRESA A CREAR CLIENTE COTIZACION NUEVO ----->');
+            this.crearClienteCotizacionNuevo();
+          }
+          this.crearClienteCotizacionNuevo();
 
-          });
-        }
-      });
-    } else {
-      console.log('CREA UN NUEVO CLIENTE ELSE GUARDAR CLIENTE  ----->', JSON.stringify(this.cliente));
-      this.crearClienteCotizacionNuevo();
-    }
+
+        });
+      }this.crearClienteCotizacionNuevo();
+    });
+
+
   }
   /**
    * @description METODO QUE CREA AL CLIENTE NUEVO Y SI ES ANTERIOR TAMBIEN CREA LA COTIZACION
@@ -755,15 +754,22 @@ export class ListCotizarComponent implements OnInit {
 
 
     console.log('COTIZACION A CREAR --->idCotizacion  ', JSON.stringify(this.cotizacion));
-    this.cs.crearCotizacionClienteVariableCrediticia(this.cotizacion).subscribe((data: any) => {
-      console.log('VALORES CREADOS DE LA COTIZAACION', JSON.stringify(data));
-      if (data && data.entidad) {
-        this.cotizacion = data.entidad;
-        console.log('COTIZACION ID ----> ', JSON.stringify(data.entidad.id));
-        console.log('Cotizacion con Id GENERADA+++++++>' + JSON.stringify(this.cotizacion));
-        this.idCotizacion = this.cotizacion.id;
+    this.cs.guardaCotizacion(this.cotizacion).subscribe((data: any) => {
+      console.log('valor de la data que retorna===> ', JSON.stringify(data));
+      if (data.entidad) {
+        console.log('VARIABLE CREDITICIA', this.cotizacion.tbQoVariablesCrediticias);
+        this.cotizacion.id = data.entidad.id;
+        this.cs.crearCotizacionClienteVariableCrediticia(this.cotizacion).subscribe((data: any) => {
+          console.log('VALORES CREADOS DE LA COTIZAACION', JSON.stringify(data));
+          if (data && data.entidad) {
+            this.cotizacion = data.entidad;
+            console.log('COTIZACION ID ----> ', JSON.stringify(data.entidad.id));
+            console.log('Cotizacion con Id GENERADA+++++++>' + JSON.stringify(this.cotizacion));
+            this.idCotizacion = this.cotizacion.id;
 
-        this.sinNoticeService.setNotice('SE REGISTRA LA COTIZACION', 'success');
+            this.sinNoticeService.setNotice('SE REGISTRA LA COTIZACION', 'success');
+          }
+        });
       }
     });
   }
@@ -778,7 +784,7 @@ export class ListCotizarComponent implements OnInit {
   solicitarAutorizacion() {
     this.loadingSubject.next(false);
 
-    // console.log('>>>INGRESA AL DIALOGO ><<<<<<');
+    console.log('>>>INGRESA AL DIALOGO ><<<<<<');
     const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
       width: '600px',
       height: 'auto',
@@ -788,14 +794,14 @@ export class ListCotizarComponent implements OnInit {
     });
 
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
-      // console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
+      console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
 
       //
       if (respuesta !== null && respuesta !== undefined) {
-        // console.log('al cerrar el dialogo ' + JSON.stringify(respuesta));
+        console.log('al cerrar el dialogo ' + JSON.stringify(respuesta));
         this.llamarEquifax();
       } else {
-        // console.log('envio de ELSE ' + respuesta);
+        console.log('envio de ELSE ' + respuesta);
         this.sinNoticeService.setNotice('ACCIÓN CANCELADA ', 'error');
         this.limpiarCampos();
       }
@@ -810,7 +816,7 @@ export class ListCotizarComponent implements OnInit {
     console.log('VALORES DE MENSAJE QUE ENVIO---> ', this.mensaje);
     this.loadingSubject.next(false);
 
-    // console.log('>>>INGRESA AL DIALOGO ><<<<<<');
+    console.log('>>>INGRESA AL DIALOGO ><<<<<<');
     const dialogRefGuardar = this.dialog.open(MensajeExcepcionComponent, {
       width: '600px',
       height: 'auto',
@@ -820,11 +826,11 @@ export class ListCotizarComponent implements OnInit {
     });
 
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
-      // console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
+      console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
 
       //
       if (respuesta !== null && respuesta !== undefined) {
-        // console.log('al cerrar el dialogo ' + JSON.stringify(respuesta));
+        console.log('al cerrar el dialogo ' + JSON.stringify(respuesta));
         this.llamarEquifax();
       }
     });
@@ -859,9 +865,9 @@ export class ListCotizarComponent implements OnInit {
 
       this.loadingSubject.next(false);
       this.tr.getSystemDate().subscribe((hora: any) => {
-        // console.log('INICIA EL REGISTRO DE TRACKING EN TASACION', JSON.stringify(hora));
+        console.log('INICIA EL REGISTRO DE TRACKING EN TASACION', JSON.stringify(hora));
         if (hora.entidad) {
-          // console.log('INICIA TRACKING COTIZACION TASACION Hora del core ----> ' + JSON.stringify(hora.entidad));
+          console.log('INICIA TRACKING COTIZACION TASACION Hora del core ----> ' + JSON.stringify(hora.entidad));
           this.horaInicio = hora.entidad;
           this.horaAsignacion = hora.entidad;
           this.horaAtencion = hora.entidad;
@@ -943,15 +949,15 @@ export class ListCotizarComponent implements OnInit {
     this.cliente.telefonoFijo = this.telefonoDomicilio.value;
     this.cliente.telefonoMovil = this.movil.value;
     this.cliente.estado = EstadoQuskiEnum.ACT;
-    // console.log('DATOS DEL CLIENTE CAMPOS TOMADOS' + JSON.stringify(this.cliente));
+    console.log('DATOS DEL CLIENTE CAMPOS TOMADOS' + JSON.stringify(this.cliente));
     /**
      * INICIA EL GUARDADO DEL CLIENTE EN LA BASE
      */
     // if (this.cliente.cedulaCliente) {
-    // console.log('INICIA EL SUBMIT*****');
-    // console.log('DATOS DE CLIENTE EN EL SUBMIT' + JSON.stringify(this.cliente));
+    console.log('INICIA EL SUBMIT*****');
+    console.log('DATOS DE CLIENTE EN EL SUBMIT' + JSON.stringify(this.cliente));
     // this.guardarCliente();
-    // console.log('DATOS QUE RESPONDE LUEGO DE LA VALIDACION++++++++>> ' + JSON.stringify(this.cliente));
+    console.log('DATOS QUE RESPONDE LUEGO DE LA VALIDACION++++++++>> ' + JSON.stringify(this.cliente));
   }
   /** BOTON RIESGO ACUMULADO   */
   /**TODO: AL MOMENTO NO SE ENCUENTRA IMPLEMENTADO EL SERVICIO YA QUE NO ESTA
@@ -977,7 +983,7 @@ export class ListCotizarComponent implements OnInit {
    */
   limpiarCampos() {
     Object.keys(this.formCliente.controls).forEach((name) => {
-      // // console.log( "==limpiando " + name )
+      // console.log( "==limpiando " + name )
       const control = this.formCliente.controls[name];
       control.setErrors(null);
       control.setValue(null);
@@ -1037,7 +1043,7 @@ export class ListCotizarComponent implements OnInit {
      */
     if (pfield && pfield === 'telefonoDomicilio') {
       const input = this.formCliente.get('telefonoDomicilio');
-      // console.log('telefonoDocimicilio', this.formCliente.get('telefonoDomicilio'));
+      console.log('telefonoDocimicilio', this.formCliente.get('telefonoDomicilio'));
       return input.hasError('required')
         ? errorRequerido
         : input.hasError('pattern')
@@ -1085,11 +1091,11 @@ export class ListCotizarComponent implements OnInit {
   onChangeFechaNacimiento() {
 
     this.loadingSubject.next(true);
-    // console.log('VALOR DE LA FECHA' + this.fechaNacimiento.value);
+    console.log('VALOR DE LA FECHA' + this.fechaNacimiento.value);
     const fechaSeleccionada = new Date(
       this.fechaNacimiento.value
     );
-    // console.log('FECHA SELECCIONADA' + fechaSeleccionada);
+    console.log('FECHA SELECCIONADA' + fechaSeleccionada);
     if (fechaSeleccionada) {
       this.getDiffFechas(fechaSeleccionada, 'dd/MM/yyy');
     } else {
@@ -1113,7 +1119,7 @@ export class ListCotizarComponent implements OnInit {
         (rDiff: any) => {
           const diff: YearMonthDay = rDiff.entidad;
           this.edad.setValue(diff.year);
-          // console.log('La edad es ' + this.edad.value);
+          console.log('La edad es ' + this.edad.value);
 
           // this.edad.get("edad").setValue(diff.year);
           // Validacion para que la edad sea mayor a 18 años
@@ -1134,7 +1140,7 @@ export class ListCotizarComponent implements OnInit {
               'Error obtener diferencia de fechas',
               'error'
             );
-            // console.log(error);
+            console.log(error);
           }
           this.loadingSubject.next(false);
         }
@@ -1171,7 +1177,7 @@ export class ListCotizarComponent implements OnInit {
       this.precioOro.pesoNetoEstimado = this.pesoNetoEstimado.value;
       this.precioOro.precio = this.precio.value;
       console.log('CEDULA A BUSCAR  a ', JSON.stringify(this.cliente.cedulaCliente));
-      this.cs.getCotizacionByCedula(this.cliente.cedulaCliente).subscribe((data: any) => {
+      this.cs.findByIdCliente(this.cliente.cedulaCliente).subscribe((data: any) => {
         console.log('COTIZACION RECUPERADA ES ', JSON.stringify(data));
         if (data && data.entidad) {
           this.cotizacion = data.entidad;
@@ -1216,28 +1222,25 @@ export class ListCotizarComponent implements OnInit {
    */
   setPrecioOro() {
     this.precio.setValue('');
-    // TOMO LOS VALORES QUE VOY A ENVIAR AL SERVICIO PARA CONSULTAR
-    // console.log('LA CEDULA DEL CLIENTE ES LA SIGUIENTE:::::::::::::::::::::::::::::::::: ' + JSON.stringify(this.cliente.cedulaCliente));
-    // console.log('LA FECHA DE NACIMIENTO_____:::::::::::::::::::::::::::::::::::::' + JSON.stringify(this.cliente.fechaNacimiento));
-    // console.log('EL VALOR SELECCIONADO PARA EL TIPO ORO ES:::::::::::::::::::::::' + JSON.stringify(this.tipoOro.value.quilate));
 
-    // // console.log('llega ');
+
+
     this.loadingSubject.next(true);
     if (this.cliente.cedulaCliente) {
       this.os.findTipoOroByCedulaQuski(this.cliente.cedulaCliente, this.tipoOro.value.quilate, this.cliente.fechaNacimiento).subscribe((dataTipoOro: any) => {
-        // console.log('tipo de oro que responde>>>>>>>' + JSON.stringify(dataTipoOro));
-        // console.log('SACO EL VALOR DEL TIPO ORO');
-        // console.log('tipoOro >>>>>>>>>>>>>>', this.tipoOro.value);
+        console.log('tipo de oro que responde>>>>>>>' + JSON.stringify(dataTipoOro));
+        console.log('SACO EL VALOR DEL TIPO ORO');
+        console.log('tipoOro >>>>>>>>>>>>>>', this.tipoOro.value);
         this.loadingSubject.next(false);
-        // console.log('cliente >>>>>>>>>>>', dataTipoOro.entidad);
+        console.log('cliente >>>>>>>>>>>', dataTipoOro.entidad);
         if (dataTipoOro.entidad) {
-          // console.log('oro entidad >>>>>>>>>>', dataTipoOro.entidad);
+          console.log('oro entidad >>>>>>>>>>', dataTipoOro.entidad);
           this.precio.setValue(dataTipoOro.entidad.simularResult.xmlGarantias.garantias.garantia.valorOro);
           // validdo que no venga valor null
           if ((dataTipoOro.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion != null) && (dataTipoOro.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion)) {
             // Cargo la lista de variables para la tabla de opciones de credito
             this.listOpciones = dataTipoOro.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
-            // console.log('VALORES DE MI LISTA DE OPCIONES RENOVACION' + JSON.stringify(this.listOpciones));
+            console.log('VALORES DE MI LISTA DE OPCIONES RENOVACION' + JSON.stringify(this.listOpciones));
             // Asigno la informacion al datasource para que cargue las opciones de credito
             this.dataSourceCredito = new MatTableDataSource(this.listOpciones);
             this.precioOro = new TbQoPrecioOro;
@@ -1292,7 +1295,7 @@ export class ListCotizarComponent implements OnInit {
     this.totalPeso = 0;
     this.totalPrecio = 0;
     if (this.dataSourceI.data) {
-      // console.log('<<<<<<<<<<Data source >>>>>>>>>> ' + JSON.stringify(this.dataSourceI.data));
+      console.log('<<<<<<<<<<Data source >>>>>>>>>> ' + JSON.stringify(this.dataSourceI.data));
       this.dataSourceI.data.forEach(element => {
         this.totalPeso = Number(this.totalPeso) + Number(element.pesoNetoEstimado);
         this.totalPrecio = Number(this.totalPrecio) + Number(element.precio);
@@ -1321,7 +1324,7 @@ export class ListCotizarComponent implements OnInit {
       console.log('GUARDAR PRECIO ORO COTIZAONON    ------> ', JSON.stringify(this.cotizacion));
       this.precioOro.tbQoCotizador = this.cotizacion;
       this.precioOro.tbQoTipoOro = this.tipoOros;
-      // console.log('VALOR DE PRECIO ORO ' + JSON.stringify(this.precioOro));
+      console.log('VALOR DE PRECIO ORO ' + JSON.stringify(this.precioOro));
       if (this.precioOro) {
         this.cs.guardarPrecioOro(this.precioOro).subscribe((data: any) => {
           console.log('VALOR  GUARDAR PRECIO ORO' + JSON.stringify(data));
@@ -1337,12 +1340,12 @@ export class ListCotizarComponent implements OnInit {
 
           }
 
-          // console.log('la data guardada es' + JSON.stringify(data));
+          console.log('la data guardada es' + JSON.stringify(data));
 
           if (data && data.entidad) {
-            // console.log('VALOR DE DATA EN EL IF' + JSON.stringify(data));
+            console.log('VALOR DE DATA EN EL IF' + JSON.stringify(data));
             this.sinNoticeService.setNotice('SE GUARDO EL PRECIO ORO', 'success');
-            // console.log('VALOR DEL ID DE  LA COTIZACION QUE VA>>>>>>> ' + this.cotizacion.id);
+            console.log('VALOR DEL ID DE  LA COTIZACION QUE VA>>>>>>> ' + this.cotizacion.id);
           }
         });
 
@@ -1366,11 +1369,11 @@ export class ListCotizarComponent implements OnInit {
         this.dataSourceI = new MatTableDataSource(pos.list);
       }, error => {
 
-        // console.log('NO HAY REGISTROS ');
+        console.log('NO HAY REGISTROS ');
         this.disableSimulaSubject.next(false);
       });
     }, error => {
-      // console.log('NO HAY REGISTROS ');
+      console.log('NO HAY REGISTROS ');
       this.disableSimulaSubject.next(false);
     });
   }
@@ -1381,7 +1384,7 @@ export class ListCotizarComponent implements OnInit {
 
     this.loadingSubject.next(true);
     this.totalPrecio;
-    // console.log('INICIA SIMULAR TOTAL PRECIO >>>>', this.totalPrecio);
+    console.log('INICIA SIMULAR TOTAL PRECIO >>>>', this.totalPrecio);
     if (this.listOpciones) {
       this.dataSourceCredito = new MatTableDataSource(this.listOpciones);
       this.stepper.selectedIndex = 3;
@@ -1410,7 +1413,7 @@ export class ListCotizarComponent implements OnInit {
     fechaInicio: Date,
     fechaAsignacion: Date,
     fechaInicioAtencion: Date,
-    fechaFin: Date,) {
+    fechaFin: Date) {
     const tracking: TbQoTracking = new TbQoTracking();
     tracking.actividad = ActividadEnum.COTIZACION; // Modulo en ProducBacklog
     tracking.proceso = ProcesoEnum.PROSPECCION;
@@ -1448,7 +1451,7 @@ export class ListCotizarComponent implements OnInit {
     fechaInicio: Date,
     fechaAsignacion: Date,
     fechaInicioAtencion: Date,
-    fechaFin: Date,) {
+    fechaFin: Date) {
     const tracking: TbQoTracking = new TbQoTracking();
     tracking.actividad = ActividadEnum.COTIZACION; // Modulo en ProducBacklog
     tracking.proceso = ProcesoEnum.TASACION;

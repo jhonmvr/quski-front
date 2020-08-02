@@ -41,9 +41,9 @@ export class CotizacionService extends BaseService {
           })); */
   }
 
-  generarCotizacion(tbCotizacion) {
+  guardaCotizacion(tbCotizacion) {
     let serviceUrl = this.appResourcesUrl
-      + "cotizadorRestController/generarCotizacion";
+      + "cotizadorRestController/persistEntity";
     let wrapper = { entidad: tbCotizacion }
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
