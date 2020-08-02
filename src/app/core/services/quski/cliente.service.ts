@@ -19,16 +19,16 @@ export class ClienteService extends BaseService {
     this.http = _http;
     this.setParameter();
   }
-/*   public findClienteByCodigoOperacion(codigoOperacion: string) {
-    this.setParameter();
-    const serviceUrl = this.appResourcesUrl + '/quski-oro-rest/resources/clienteRestController/getClienteByCodigoOperacion';
-    this.params = new HttpParams().set('codigoOperacion', codigoOperacion);
-    console.log("Codigin --> " + codigoOperacion);
-    this.options = { headers: this.headers, params: this.params };
-
-    return this.http.get(serviceUrl, this.options);
-  } */
-
+  /*   public findClienteByCodigoOperacion(codigoOperacion: string) {
+      this.setParameter();
+      const serviceUrl = this.appResourcesUrl + '/quski-oro-rest/resources/clienteRestController/getClienteByCodigoOperacion';
+      this.params = new HttpParams().set('codigoOperacion', codigoOperacion);
+      console.log("Codigin --> " + codigoOperacion);
+      this.options = { headers: this.headers, params: this.params };
+  
+      return this.http.get(serviceUrl, this.options);
+    } */
+ 
   public findByEstado(dataparam, estado: string, serviceUrl: string) {
     this.setParameter();
     serviceUrl =
@@ -41,7 +41,7 @@ export class ClienteService extends BaseService {
     return this.http.get(serviceUrl, this.options);
   }
 
-  public guardarCliente(cliente: TbQoCliente) {
+  public  guardarCliente(cliente: TbQoCliente) {
     const serviceUrl =
       this.appResourcesUrl + 'clienteRestController/persistEntity';
     const wrapper = { entidad: cliente };
@@ -63,7 +63,7 @@ export class ClienteService extends BaseService {
       return this.http.get(serviceUrl, this.options);
     } 
   */
- 
+
   /**
    * @description Método que llama al servicio rest del back busca el cliente por identificación con cotizacion
    * @author Kléber Guerra  - Relative Engine
@@ -72,20 +72,21 @@ export class ClienteService extends BaseService {
    * @returns {*}  
    * @memberof ClienteService
    */
-  public findClienteByIdentificacionWithCotizacion(identificacion: string) {
+  //public findClienteByIdentificacionWithCotizacion(identificacion: string) {
+  public findClienteByIdentificacionCotizacion(identificacion: string) {
     const serviceUrl =
-      this.appResourcesUrl + 'clienteRestController/findClienteByIdentificacionWithCotizacion';
+      this.appResourcesUrl + 'clienteRestController/findClienteByIdentificacionCotizacion';
     this.params = new HttpParams().set('identificacion', identificacion);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-    /**
-   * @description Busca cliente por identificacion 
-   * @author  Jeroham Cadenas  - Relative Engine
-   * @date    09/07/2020
-   * @param   identificacion
-   * @returns Observable : entidad  
-   */
+  /**
+ * @description Busca cliente por identificacion 
+ * @author  Jeroham Cadenas  - Relative Engine
+ * @date    09/07/2020
+ * @param   identificacion
+ * @returns Observable : entidad  
+ */
   public findClienteByIdentificacion(identificacion: string) {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + 'clienteRestController/findClienteByIdentificacion';
@@ -227,7 +228,7 @@ export class ClienteService extends BaseService {
   }
 
   // ---------------> // Guardado del prospectoo en el CRM
-  public guardarProspectoCRM( ClienteCRM : ClienteCRM ) {
+  public guardarProspectoCRM(ClienteCRM: ClienteCRM) {
     let serviceUrl = this.crmResourcesUrl + "prospectoQuskiRestController/persistEntity";
     let wrapper = { entidad: ClienteCRM };
     this.options = { headers: this.headers };

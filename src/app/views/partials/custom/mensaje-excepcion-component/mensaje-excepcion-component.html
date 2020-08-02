@@ -1,57 +1,15 @@
-<h1 mat-dialog-title>Solicitud de autorizaci&#243;n</h1>
-<mat-dialog-content>
-  <p class="red-icon">
-    Cargue la autorización de buró para proceder la búsqueda en Equifax y
-    prospecto CRM.
-  </p>
-  <form [formGroup]="formDatosSolicitud">
-    <div class="col-md-4">
-      <mat-form-field>
-        <input matInput placeholder="Identificacion:" [formControl]="identificacion" />
-      </mat-form-field>
-    </div>
-
-    <div class="col-md-4">
-      <mat-form-field>
-        <input matInput placeholder="Nombres completos:" [formControl]="nombresCompletos" />
-      </mat-form-field>
-    </div>
-  </form>
-</mat-dialog-content>
+<h1 mat-dialog-title style="font-size: 24px; color: red;">Bloqueos:</h1>
+<mat-card class="orange-icon" style="font-size: 12px; vertical-align: middle; font-weight: bold;">
+  <span class="material-icons warning-icons" style="color:orange;">report_problem</span>
+  {{ mensaje }}
+</mat-card>
 
 <mat-dialog-actions>
-  <div class="row">
-    <div class="col-md-3" *ngIf="enableDownLoadrPlantillaButton | async">
-      <mat-cell *matCellDef="let element"></mat-cell>
-      <a href="javascript:void(0);" (click)="descargarPlantillaHabilitante(element)" class="blue-icon">
-        <mat-icon style="font-size: 32px;" matTooltipPosition="above" matTooltip="Descarga archivo" class="blue-icon">
-          cloud_download</mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Descarga Plantilla</span>
-      </a>
-    </div>
-    <div class="col-md-3" *ngIf="enableLoadArchivoButton | async">
-      <a href="javascript:void(0);" (click)="loadArchivoCliente(element); $event.preventDefault()" > 
-        <mat-icon   style="font-size: 32px;" matTooltipPosition="above" matTooltip="Subir Archivo" class="blue-icon">
-          cloud_upload</mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Carga Archivo</span>
-      </a>
-    </div>
-
-
-    <div class="col-md-3" *ngIf="enableConsultarButton | async">
-      <a href="javascript:void(0);" (click)="consultar()" matTooltip="Consultar"
-        style="font-size: 12px; vertical-align: middle;" class="blue-icon">
-        <mat-icon style="font-size: 32px;" matTooltipPosition="above" class="blue-icon">search</mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Consultar</span>
-      </a>
-    </div>
-
-    <div class="col-md-3">
-      <a href="javascript:void(0);" (click)="salir()" matTooltip="Cancelar"
-        style="font-size: 12px; vertical-align: middle;" class="orange-icon">
-        <mat-icon style="font-size: 32px;" matTooltipPosition="above" class="orange-icon">cancel</mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Cancelar</span>
-      </a>
-    </div>
+  <div class="col-md-3">
+    <a href="javascript:void(0);" (click)="salir()" matTooltip="Cancelar"
+      style="font-size: 12px; vertical-align: middle;" class="orange-icon">
+      <mat-icon style="font-size: 32px;" matTooltipPosition="above" class="orange-icon">cancel</mat-icon>
+      <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Cerrar</span>
+    </a>
   </div>
 </mat-dialog-actions>
