@@ -2,7 +2,7 @@ import { SubheaderService } from './../../../../../../core/_base/layout/services
 import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
 import { CotizacionService } from './../../../../../../core/services/quski/cotizacion.service';
 import { DetalleCotizacionComponent } from './../../../cotizacion/detalle-cotizacion/detalle-cotizacion.component';
-import { TbCotizacion } from './../../../../../../core/model/quski/TbCotizacion';
+import { TbQoCotizador } from './../../../../../../core/model/quski/TbQoCotizador';
 
 import { Page } from './../../../../../../core/model/page';
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
@@ -20,10 +20,10 @@ export class VercotizacionComponent implements OnInit {
   
  public identificacion;
   displayedColumns = ['Accion','fecha','gradoInteres','identificacion'];
-  dataSource = new MatTableDataSource<TbCotizacion>();
+  dataSource = new MatTableDataSource<TbQoCotizador>();
 
   constructor(public dialogRefGuardar: MatDialogRef<DetalleCotizacionComponent>,
-     @Inject(MAT_DIALOG_DATA) private data:TbCotizacion,
+     @Inject(MAT_DIALOG_DATA) private data:TbQoCotizador,
      public dialogGuardar: MatDialog, private cs:CotizacionService,
      private noticeService: ReNoticeService, 
      private subheaderService: SubheaderService) { }
@@ -101,7 +101,7 @@ detalleCotizacion(cotizacion) {
       this.loadingSubject.next(false);
       if(data.list){
         this.totalResults = data.totalResults;
-        this.dataSource = new MatTableDataSource<TbCotizacion>(data.list);
+        this.dataSource = new MatTableDataSource<TbQoCotizador>(data.list);
        //console.log("data>>>>>>>>>>>>>>>>>" + JSON.stringify( this.dataSource));
        console.log("data cotizacion ",data.list);  
     }else{

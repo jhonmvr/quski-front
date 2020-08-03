@@ -1,16 +1,15 @@
 import { TbQoCliente } from "./TbQoCliente";
 
 export class TbQoCotizador {
-  id: string
-  gradoInteres:string
-  motivoDeDesestimiento: string
-  fechaCreacion: Date
-  fechaActualizacion: Date
-  estado: string
-  aprobacionMupi: string;
-  tbQoCliente : TbQoCliente;
-  codigoCotizacion
-  constructor(){
-    this.tbQoCliente = new TbQoCliente();
-  }
+    id: string;
+    codigoCotizacion: string
+    estado: string;
+    fechaActualizacion: Date
+    fechaCreacion: Date
+    gradoInteres: string;
+    motivoDeDesestimiento: string;
+    tbQoCliente : TbQoCliente;
+    constructor(){
+      this.tbQoCliente = new TbQoCliente();
+    }
 }

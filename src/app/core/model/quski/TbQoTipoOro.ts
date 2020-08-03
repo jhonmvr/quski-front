@@ -1,11 +1,9 @@
 export class TbQoTipoOro {
-    id: string;
-    quilate: string;
+    id: number;
     estado: string;
-    precio:number;
-    
-  
-    constructor(){
-
-    }
+    fechaActualizacion : Date
+    fechaCreacion: Date
+    precio: number;
+    quilate: string;
+    constructor(){ }
 }

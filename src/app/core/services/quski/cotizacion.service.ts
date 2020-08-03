@@ -4,8 +4,8 @@ import { BaseService } from '../base.service';
 import { ReNoticeService } from '../../services/re-notice.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from '../../../core/model/page';
-import { TbCotizacion } from '../../../core/model/quski/TbCotizacion';
 import { DatePipe } from '@angular/common';
+import { TbQoCotizador } from '../../model/quski/TbQoCotizador';
 
 
 @Injectable({
@@ -25,20 +25,11 @@ export class CotizacionService extends BaseService {
 
 
 
-  updateCotizacion(tbCotizacion) {
+  persistEntity( data: TbQoCotizador ) {
     let serviceUrl = this.appResourcesUrl+ "cotizadorRestController/persistEntity";
-    let wrapper = { entidad: tbCotizacion }
+    let wrapper = { entidad: data }
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
-    /* .pipe(
-        map((response: Response) => {
-          let entidad = response.json();
-          return entidad;
-        },
-          error => {
-            //console.log("==>despues de buscar usuario error  " + JSON.stringify(error));
-            return error;
-          })); */
   }
 
   guardaCotizacion(tbCotizacion) {
@@ -125,7 +116,7 @@ getCotizacionByCedula(cedulaCliente: string) {
    * Metodo qu registraa la info,acion de cliente, cotizacion y variable crediticia,
    * adicional cadcua cotizaciones
    */
-  crearCotizacionClienteVariableCrediticia(cotizador:TbCotizacion) {
+  crearCotizacionClienteVariableCrediticia(cotizador: TbQoCotizador) {
     let serviceUrl = this.appResourcesUrl + "cotizadorRestController/crearCotizacionClienteVariableCrediticia";
     let wrapper = { entidad: cotizador }
     this.options = { headers: this.headers };
@@ -142,43 +133,9 @@ getCotizacionByCedula(cedulaCliente: string) {
     return this.http.post(serviceUrl, wrapper, this.options);
   }
 
-  guardarPrecioOro(tbQoPrecioOro) {
-    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/crearPrecioOro";
-    let wrapper = { entidad: tbQoPrecioOro };
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
-  }
-
-  editarPrecioOro(tbQoPrecioOro) {
-    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/persistEntity";
-    let wrapper = { entidad: tbQoPrecioOro };
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
-  }
-  seleccionarPrecioOro(idPrecioOro) {
-    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/getEntity";
-    this.params= new HttpParams();
-    this.params=this.params.set("id", idPrecioOro);
-    this.options = { headers: this.headers, params: this.params};
-    return this.http.get(serviceUrl, this.options);
-  }
-
-  loadPrecioOroByCotizacion(idCotizacion){
-    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/detalleCotizacionById";
-    this.params= new HttpParams();
-    this.params=this.params.set("id", idCotizacion);
-    this.options = { headers: this.headers, params: this.params};
-    return this.http.get(serviceUrl, this.options);        
-  }
 
 
-  eliminarPrecioOro(idPrecioOro) {
-    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/removeEntity";
-    this.params= new HttpParams();
-    this.params=this.params.set("id", idPrecioOro);
-    this.options = { headers: this.headers, params: this.params};
-    return this.http.get(serviceUrl, this.options);
-  }
+ 
 
 
   guardarJoyaSim(tbMijoyaSim) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TbQoDetalleCredito } from 'src/app/core/model/quski/TbQoDetalleCredito';
+import { TbQoDetalleCredito } from '../../../../../core/model/quski/TbQoDetalleCredito';
 import { MatTableDataSource } from '@angular/material';
 
 @Component({

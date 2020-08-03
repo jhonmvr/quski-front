@@ -2,44 +2,40 @@ import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 //import { Http, Headers, Response,RequestOptions,HttpParams,ResponseContentType } from '@angular/http';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { TbQoTipoOro } from '../../model/quski//TbQoTipoOro';
+import { TbQoTipoOro } from '../../model/quski/TbQoTipoOro';
 import { DatePipe } from '@angular/common';
 
 
 @Injectable({
     providedIn: 'root'
 })
-export class OroService extends BaseService {
+export class TipoOroService extends BaseService {
 
     constructor(_http: HttpClient) {
         super();
         this.http = _http;
         this.setParameter();
         //this.config =_config;
-
     }
-
-
-    public guardarOro(oro: TbQoTipoOro) {
+    public persistEntity(oro: TbQoTipoOro) {
         let serviceUrl = this.appResourcesUrl + "tipoOroRestController/persistEntity";
         let wrapper = { entidad: oro }
         this.options = { headers: this.headers };
         return this.http.post(serviceUrl, wrapper, this.options);
     }
-
-    updateTipoOro(tbMiTipoOro) {
-        let serviceUrl = this.appResourcesUrl + "tipoOroRestController/persistEntity";
-        let wrapper = { entidad: tbMiTipoOro }
-        this.options = { headers: this.headers };
-        return this.http.post(serviceUrl, wrapper, this.options);
-
+    public listAllEntities() {
+        let serviceUrl = this.appResourcesUrl + "tipoOroRestController/listAllEntities";
+        this.options = { headers: this.headers, params: this.params };
+        return this.http.get(serviceUrl, this.options);
     }
 
-    public listAllBanco() {
 
-    }
 
-    public findTipoOroByCedulaQuski(identificacionCliente: string, kilotaje: string, fechaNacimiento: Date) {
+
+
+
+
+    /* public findTipoOroByCedulaQuski(identificacionCliente: string, kilotaje: string, fechaNacimiento: Date) {
         let pipe = new DatePipe('en-US');
         let fdf = null;
         let fdff = new Date(fechaNacimiento);
@@ -74,21 +70,11 @@ export class OroService extends BaseService {
             .set('descuentoSuelda', "0.00");
         this.options = { headers: this.headers, params: this.params };
         return this.http.get(serviceUrl, this.options);
-    }
+    } */
 
 
 
-    public findByEstado(dataparam, estado: string, serviceUrl: string) {
-        if (dataparam) {
-        }
-        this.setParameter();
-        serviceUrl = this.appResourcesUrl + "tipoOroRestController/getEntityByEstado";
-        this.params = new HttpParams()
-        this.params.set("estado", estado);
-        ////console.log("==> parametros obtenidos " +  this.params.toString() );
-        this.options = { headers: this.headers, params: this.params };
-        return this.http.get(serviceUrl, this.options);
-    }
+   
 
 
 

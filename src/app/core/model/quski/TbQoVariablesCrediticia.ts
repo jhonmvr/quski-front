@@ -1,5 +1,5 @@
-import { TbCotizacion } from "./TbCotizacion";
 import { TbQoNegociacion } from "./TbQoNegociacion";
+import { TbQoCotizador } from './TbQoCotizador';
 
 export class TbQoVariablesCrediticia {
     id: number
@@ -9,10 +9,10 @@ export class TbQoVariablesCrediticia {
     nombre: string
     orden:string
     valor: string
-    tbQoCotizador : TbCotizacion
+    tbQoCotizador : TbQoCotizador
     tbQoNegociacion : TbQoNegociacion
     constructor(){
-        this.tbQoCotizador = new TbCotizacion();
+        this.tbQoCotizador = new TbQoCotizador();
         this.tbQoNegociacion = new TbQoNegociacion();
     }
 }

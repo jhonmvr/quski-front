@@ -16,6 +16,7 @@ import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { Page } from './../../../../../core/model/page';
+import { CRMService } from './../../../../../core/services/quski/crm.service';
 
 @Component({
   selector: 'kt-gestion-negociacion',
@@ -85,6 +86,7 @@ displayedColumnsRiesgoAcumulado = ['NumeroOperacion', 'TipoOferta', 'Vencimiento
  constructor(private sinNoticeService: ReNoticeService, 
   private cs: ClienteService, 
   private sp: ParametroService, 
+  private crm: CRMService,
   public dialog: MatDialog, 
   private fb: FormBuilder, 
   private noticeService: ReNoticeService, 
@@ -317,7 +319,7 @@ numberOnly(event): boolean {
         console.log('Estamos aqui');
         console.log('identificacion ', this.identificacion.value);
         this.loadingSubject.next(true);
-        this.cs.findClienteByCedulaCRM(this.identificacion.value).subscribe((data: any) => {
+        this.crm.findClienteByCedulaCRM(this.identificacion.value).subscribe((data: any) => {
           console.log('===>entra aca ');
           console.log('==>cliente CRM ', data.list);
           console.log('==>identificacion ', this.identificacion.value);

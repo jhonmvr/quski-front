@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
-//import { Http, Headers, Response, RequestOptions, HttpParams, ResponseContentType } from '@angular/http';
 import { ReNoticeService } from '../re-notice.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from '../../model/page';
-import { TbCotizacion } from '../../model/quski/TbCotizacion';
 import { DatePipe } from '@angular/common';
+import { TbQoPrecioOro } from '../../model/quski/TbQoPrecioOro';
 
 
 @Injectable({
@@ -20,6 +19,36 @@ export class PrecioOroService extends BaseService {
     this.setParameter();
 
   }
+  public editarPrecioOro(tbQoPrecioOro) {
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/persistEntity";
+    let wrapper = { entidad: tbQoPrecioOro };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  public seleccionarPrecioOro(idPrecioOro) {
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/getEntity";
+    this.params= new HttpParams();
+    this.params=this.params.set("id", idPrecioOro);
+    this.options = { headers: this.headers, params: this.params};
+    return this.http.get(serviceUrl, this.options);
+  }
+
+  public loadPrecioOroByCotizacion(idCotizacion){
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/detalleCotizacionById";
+    this.params= new HttpParams();
+    this.params=this.params.set("id", idCotizacion);
+    this.options = { headers: this.headers, params: this.params};
+    return this.http.get(serviceUrl, this.options);        
+  }
+
+
+  public eliminarPrecioOro(idPrecioOro) {
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/removeEntity";
+    this.params= new HttpParams();
+    this.params=this.params.set("id", idPrecioOro);
+    this.options = { headers: this.headers, params: this.params};
+    return this.http.get(serviceUrl, this.options);
+  }
   public findByCedula(p: Page, cedula: string) {
     const serviceUrl = this.appResourcesUrl +
       'findByCedula';
@@ -27,6 +56,18 @@ export class PrecioOroService extends BaseService {
     this.params = this.params.append('identificacion', cedula);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
+  }
+  guardarPrecioOro(data: TbQoPrecioOro) {
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/crearPrecioOro";
+    let wrapper = { entidad: data };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  public persistEntity(data: TbQoPrecioOro) {
+    let serviceUrl = this.appResourcesUrl+ "precioOroRestController/persistEntity";
+    let wrapper = { entidad: data };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
   }
 
 }

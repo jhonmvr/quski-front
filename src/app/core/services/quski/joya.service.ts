@@ -9,7 +9,6 @@ import { Page } from '../../model/page';
 import { DatePipe } from '@angular/common';
 import {TbMiCliente}from '../../model/quski/TbMiCliente';
 
-import { TbMiCotizacion } from '../../model/quski/TbMiCotizacion';
 import { TbMiJoya } from '../../model/quski//TbMiJoya';
 import { TbMiLote } from '../../model/quski/TbMiLote';
 import { RelativeDateAdapter } from '../../util/relative.dateadapter';
@@ -141,27 +140,7 @@ export class JoyaService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-  public findAllTipoOro() {
-    let serviceUrl = this.appResourcesUrl + "tipoOroRestController/listAllEntities";
 
-    /*if (page && page.sortFields && page.sortFields !== ""
-      && page.sortDirections && page.sortDirections !== "") {
-      this.params = new HttpParams()
-        .set("sortFields", page.sortFields)
-        .set("page", "" + page.pageNumber)
-        .set("pageSize", "" + page.size)
-        .set("sortDirections", page.sortDirections)
-        .set("isPaginated", page.isPaginated);
-    } else {
-      this.params = new HttpParams()
-        .set("page", "" + page.pageNumber)
-        .set("pageSize", "" + page.size)
-        .set("isPaginated", page.isPaginated);
-    }*/
-
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
-  }
 
   public findLoteByEstado() {
     let serviceUrl = this.appResourcesUrl + "tipoOroRestController/listAllEntities";

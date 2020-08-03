@@ -5,6 +5,7 @@ import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from '../../model/page';
 import { DatePipe } from '@angular/common';
+import { TbQoVariablesCrediticia } from '../../model/quski/TbQoVariablesCrediticia';
 
 
 @Injectable({
@@ -27,6 +28,12 @@ export class VariablesCrediticiasService extends BaseService {
     this.params = this.params.set('idNegociacion', idNegociacion.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
+  }
+  persistEntity( data : Array<TbQoVariablesCrediticia> ) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest +"persistEntity";
+    let wrapper = { entidades: data };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
   }
 
   variablesCrediticiabyIdCotizador( idcotizador : number ){

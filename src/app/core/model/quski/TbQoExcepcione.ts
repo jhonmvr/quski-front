@@ -2,7 +2,7 @@ import { TbReferencia } from './TbReferencia';
 import { TbQoDireccionCliente } from './TbQoDireccionCliente';
 import { TbQoPatrimonioCliente } from './TbQoPatrimonioCliente';
 import { TbQoIngresoEgresoCliente } from './TbQoIngresoEgresoCliente';
-import { TbCotizacion } from './TbCotizacion';
+import { TbQoCotizador } from './TbQoCotizador';
 import { TbQoNegociacion } from './TbQoNegociacion';
 
 export class TbQoExcepcione {
