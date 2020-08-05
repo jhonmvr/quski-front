@@ -67,7 +67,7 @@ import {
 	UserProfileComponent,
 } from './layout';
 // General
-import { NoticeComponent } from './content/general/notice/notice.component';
+import { NoticeComponent } from './custom/notice/notice.component';
 import { PortletModule } from './content/general/portlet/portlet.module';
 // Errpr
 import { ErrorComponent } from './content/general/error/error.component';
@@ -84,7 +84,7 @@ import { AddFotoComponent } from './custom/fotos/add-foto/add-foto.component';
 import { ArchivoUploadDialogComponent } from './custom/archivo/archivo-upload-dialog/archivo-upload-dialog.component';
 import { CargarFotoDialogComponent } from './custom/fotos/cargar-foto-dialog/cargar-foto-dialog.component';
 import { SolicitudAutorizacionDialogComponent } from './custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
-import { CreditoVigenteDialogComponent } from './custom/riesgo-acomulado-dialog/credito-vigente-dialog/credito-vigente-dialog.component';
+import { CreditoVigenteDialogComponent } from './custom/popups/riesgo-acomulado-dialog/credito-vigente-dialog/credito-vigente-dialog.component';
 
 import { WebcamModule } from 'ngx-webcam';
 import { ReMessageComponent } from './custom/re-message/re-message.component';
@@ -98,11 +98,11 @@ import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component'
 import { HabilitanteComponent } from './custom/habilitante/habilitante.component';
 import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dialog/habilitante-dialog.component';
 import { MensajeExcepcionComponent } from './custom/mensaje-excepcion-component/mensaje-excepcion-component';
-import { ErrorCargaInicialComponent } from './content/general/error-carga-inicial/error-carga-inicial.component';
-import { VerCotizacionesComponent } from './content/general/ver-cotizaciones/ver-cotizaciones.component';
-import { DetallesComponent } from './content/general/ver-cotizaciones/detalles/detalles.component';
-import { TablaOpcionesCreditoComponent } from './content/general/tabla-opciones-credito/tabla-opciones-credito.component';
-import { TablaVariablesCrediticiasComponent } from './content/general/tabla-variables-crediticias/tabla-variables-crediticias.component';
+import { ErrorCargaInicialComponent } from './custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { VerCotizacionesComponent } from './custom/popups/ver-cotizaciones/ver-cotizaciones.component';
+import { DetallesComponent } from './custom/popups/ver-cotizaciones/detalles/detalles.component';
+import { TablaOpcionesCreditoComponent } from './custom/secciones-generales/tabla-opciones-credito/tabla-opciones-credito.component';
+import { TablaVariablesCrediticiasComponent } from './custom/secciones-generales/tabla-variables-crediticias/tabla-variables-crediticias.component';
 
 
 
@@ -209,7 +209,9 @@ import { TablaVariablesCrediticiasComponent } from './content/general/tabla-vari
 		AuthDialogComponent,
 		HabilitanteComponent,
 		HabilitanteDialogComponent,
-		ErrorCargaInicialComponent
+		ErrorCargaInicialComponent,
+		DetallesComponent
+		
 	],
 	imports: [
 		CommonModule,
@@ -264,7 +266,8 @@ import { TablaVariablesCrediticiasComponent } from './content/general/tabla-vari
 		SolicitudAutorizacionDialogComponent,
 		CreditoVigenteDialogComponent,
 		MensajeExcepcionComponent,
-		CargarFotoDialogComponent
+		CargarFotoDialogComponent,
+		DetallesComponent
 	]
 })
 export class PartialsModule {

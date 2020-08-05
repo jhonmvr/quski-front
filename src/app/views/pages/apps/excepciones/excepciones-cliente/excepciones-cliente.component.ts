@@ -19,12 +19,10 @@ import { IntegracionService } from '../../../../../core/services/quski/integraci
 import { environment } from '../../../../../../../src/environments/environment';
 import { EstadoExcepcionEnum } from '../../../../../core/enum/EstadoExcepcionEnum';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
-import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
 import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
-import { ErrorCargaInicialComponent } from '../../../../partials/content/general/error-carga-inicial/error-carga-inicial.component';
+import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 
 @Component({

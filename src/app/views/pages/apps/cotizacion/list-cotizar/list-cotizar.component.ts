@@ -19,7 +19,7 @@ import { CotizacionService } from '../../../../../core/services/quski/cotizacion
 import { TipoOroService } from '../../../../../core/services/quski/tipoOro.service';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { EstadoQuskiEnum } from '../../../../../core/enum/EstadoQuskiEnum';
-import { CreditoVigenteDialogComponent } from '../../../../partials/custom/riesgo-acomulado-dialog/credito-vigente-dialog/credito-vigente-dialog.component';
+import { CreditoVigenteDialogComponent } from '../../../../partials/custom/popups/riesgo-acomulado-dialog/credito-vigente-dialog/credito-vigente-dialog.component';
 import { JoyaService } from '../../../../../core/services/quski/joya.service';
 import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
 import { TbQoTipoOro } from '../../../../..//core/model/quski/TbQoTipoOro';

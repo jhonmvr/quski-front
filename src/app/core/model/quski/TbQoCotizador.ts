@@ -1,7 +1,7 @@
 import { TbQoCliente } from "./TbQoCliente";
 
 export class TbQoCotizador {
-    id: string;
+    id: number;
     codigoCotizacion: string
     estado: string;
     fechaActualizacion: Date

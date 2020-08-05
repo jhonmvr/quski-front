@@ -1,0 +1,49 @@
+<div class="spinner-container" *ngIf="loading | async"><mat-spinner class="spiner"></mat-spinner></div>
+<div class="row">
+    <ng-template matStepLabel>Variables crediticias </ng-template>
+    <div class="col">
+        <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourcePrecioOro" matSort #sort1="matSort"
+            matSortActive="FechaCreacion" matSortDirection="asc" matSortDisableClear>
+            <ng-container matColumnDef="Accion">
+                <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <a (click)="detalleCotizacion(row)" matTooltip="ver detalle">
+                        <mat-icon>remove_red_eye</mat-icon>
+                    </a>
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="CodigoCotizacion">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Codigo De Cotizacion</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.tbQoCotizador.codigoCotizacion}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="FechaCreacion">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Creacion</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaCreacion}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Precio">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.precio}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="PesoNetoEstimado">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Peso Neto Estimado</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.pesoNetoEstimado}}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumnsPrecioOro"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumnsPrecioOro"></mat-row>
+        </mat-table>
+        <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true"
+            [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+        </mat-paginator>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <button mat-raised-button mat-dialog-close>
+            Cancelar
+        </button>
+    </div>
+</div>
