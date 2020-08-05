@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-8">
+    <div class="col">
         <mat-table #table class="mat-elevation-z8"  [dataSource]="dataSourceVariablesCrediticias">
             <ng-container matColumnDef="orden">
                 <mat-header-cell  *matHeaderCellDef>Orden</mat-header-cell>
@@ -8,13 +8,13 @@
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="variable">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Variable</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>Variable</mat-header-cell>
                 <mat-cell *matCellDef="let element">
                     {{element.nombre}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="valor">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Valor</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>Valor</mat-header-cell>
                 <mat-cell *matCellDef="let element">
                     {{element.valor}}
                 </mat-cell>

@@ -1,10 +1,8 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatTableDataSource, MatDialogRef, MatPaginator, MAT_DIALOG_DATA } from '@angular/material';
-import { Page } from '../../../../../core/model/page';
-import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
-import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
-import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
+import { TbQoRiesgoAcumulado } from '../../../../../../core/model/quski/TbQoRiesgoAcumulado';
+import { SoftbankService } from '../../../../../../core/services/quski/softbank.service';
+import { ReNoticeService } from '../../../../../../core/services/re-notice.service';
 
 
 

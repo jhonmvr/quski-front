@@ -67,11 +67,11 @@ getCotizacionByCedula(cedulaCliente: string) {
 
 
 
-  findByIdCotizacion(id: string) { 
+  findByIdCotizacion(id: number) { 
     let serviceUrl = this.appResourcesUrl
       + "precioOroRestController/detalleCotizacionById";
 
-    this.params = this.params.set('id', id);
+    this.params = this.params.set('id', id.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }

@@ -1,9 +1,9 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatDialogRef, MatPaginator } from '@angular/material';
-import { Page } from '../../../../../core/model/page';
-import { RiesgoAcumuladoService } from '../../../../../core/services/quski/riesgoAcumulado.service';
-import { RiesgoAcumuladoWrapper } from '../../../../../core/model/quski/RiesgoAcumuladoWrapper';
+import { Page } from '../../../../../../core/model/page';
+import { RiesgoAcumuladoService } from '../../../../../../core/services/quski/riesgoAcumulado.service';
+import { RiesgoAcumuladoWrapper } from '../../../../../../core/model/quski/RiesgoAcumuladoWrapper';
 
 @Component({
   selector: 'm-credito-dialog',

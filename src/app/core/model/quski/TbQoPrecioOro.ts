@@ -3,7 +3,7 @@ import { TbQoCotizador } from "./TbQoCotizador";
 
 export class TbQoPrecioOro  {
     //tipoOro: string;
-    id:string;
+    id: number;
     precio: string;
     pesoNetoEstimado: string;
     estado : string;

@@ -1,10 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatTableDataSource, MatPaginator, MatDialogRef, MatDialog } from '@angular/material';
-import { TbQoCotizador } from '../../../../../core/model/quski/TbQoCotizador';
-import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { BehaviorSubject } from 'rxjs';
-import { CotizacionService } from '../../../../../core/services/quski/cotizacion.service';
 import { Page } from '../../../../../core/model/page';
 import { PrecioOroService } from '../../../../../core/services/quski/precioOro.service';
 import { TbQoPrecioOro } from '../../../../../core/model/quski/TbQoPrecioOro';
@@ -17,24 +13,27 @@ import { DetallesComponent } from './detalles/detalles.component';
 })
 export class VerCotizacionesComponent implements OnInit {
   // STANDARD VARIABLES
+  public loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
-  private loading;
   private  cedula;
+
   // ENTIDADES
   private preciosOros : Array<TbQoPrecioOro>;
 
   // PAGINACION 
+  @ViewChild(MatPaginator, { static: true })
   private paginator: MatPaginator;
+  private p: Page;
   public pageSize = 5;
   public currentPage = 0;
   public totalSize = 0;
   public totalResults = 0;
-  p = new Page();
 
   
   // TABLA PRECIOS ORO
-  displayedColumnsPrecioOro = ['Accion', 'FechaCreacion', 'Precio','PesoNetoEstimado'];
+  displayedColumnsPrecioOro = ['Accion', 'CodigoCotizacion', 'FechaCreacion', 'Precio','PesoNetoEstimado'];
   dataSourcePrecioOro = new MatTableDataSource<TbQoPrecioOro>();
+
   constructor(
     public dialogRefGuardar: MatDialogRef<any>,
     public dialogGuardar: MatDialog,
@@ -45,7 +44,6 @@ export class VerCotizacionesComponent implements OnInit {
   ngOnInit() {
     this.loading = this.loadingSubject.asObservable();
     if(this.data){
-      console.log("Cedula para busqueda ---->   ", this.data); 
       this.cedula = this.data;
       this.buscar();
     } 
@@ -57,18 +55,18 @@ export class VerCotizacionesComponent implements OnInit {
     this.p.isPaginated = "Y";
     this.p.size = 5;
     this.p.pageNumber = 0;
-    this.submit();
+    this.submit( this.cedula );
   }
   paged(){
     this.p.isPaginated = "Y";
     this.p.pageNumber = this.paginator.pageIndex;
     this.p.currentPage = this.paginator.pageIndex;
     this.p.size = this.paginator.pageSize;
-    this.submit();
+    this.submit( this.cedula );
   }
-  submit(){
+  submit(cedula: string){
     this.loadingSubject.next(true);
-    this.pre.findByCedula( this.p, this.cedula ).subscribe((data:any)=>{
+    this.pre.findByCedula( this.p, cedula ).subscribe((data:any)=>{
       if(data.list){
         this.loadingSubject.next(false);
         this.totalResults = data.totalResults;
@@ -77,17 +75,15 @@ export class VerCotizacionesComponent implements OnInit {
           this.preciosOros.push( pOro);
         });
         this.dataSourcePrecioOro.data = this.preciosOros;
-       console.log("data precios oro ------> ",data.list);  
       }else{
-        console.log("data precios oro ------> ",data);
+        this.loadingSubject.next(false);
       }
     });
   }
   salir(){
     this.dialogRefGuardar.close(false);
   }
-  detalleCotizacion( precioOro ) {
-    console.log("Precio oro ",precioOro)
+  detalleCotizacion( precioOro: TbQoPrecioOro ) {
     const dialogRefGuardar = this.dialogGuardar.open(DetallesComponent, {
       width: 'auto',
       height: 'auto',
@@ -96,7 +92,7 @@ export class VerCotizacionesComponent implements OnInit {
   
     dialogRefGuardar.afterClosed().subscribe((respuesta:any) => {
       if(respuesta)
-      this.submit();
+      this.submit( this.cedula);
     });
       
   }

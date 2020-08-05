@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
-
-//import { Http, Headers, Response, RequestOptions, HttpParams, ResponseContentType } from '@angular/http';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Page } from '../../model/page';
-import { DatePipe } from '@angular/common';
 import { TbQoVariablesCrediticia } from '../../model/quski/TbQoVariablesCrediticia';
 
 
@@ -37,7 +33,7 @@ export class VariablesCrediticiasService extends BaseService {
   }
 
   variablesCrediticiabyIdCotizador( idcotizador : number ){
-    const serviceUrl = this.appResourcesUrl = this.urlRest + "variablesCrediticiaByIdCotizacion";
+    const serviceUrl = this.appResourcesUrl + this.urlRest + "variablesCrediticiaByIdCotizacion";
     this.params = this.params.set('idCotizador', idcotizador.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options); 

@@ -1,22 +1,24 @@
-import { VercotizacionComponent } from './vercotizacion/vercotizacion.component';
-
 import { ClienteCRM } from './../../../../../core/model/quski/ClienteCRM';
 import { TbQoCliente } from './../../../../../core/model/quski/TbQoCliente';
-import { ValidateCedula, ValidateCedulaNumber } from '../../../../../core/util/validate.util';
+import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
 import { RelativeDateAdapter } from './../../../../../core/util/relative.dateadapter';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
 import { AuthDialogComponent } from './../../../../partials/custom/auth-dialog/auth-dialog.component';
-import { MatDialog, MatTableDataSource, MatPaginator, MatSort, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatTableDataSource,  MatSort, MAT_DIALOG_DATA } from '@angular/material';
 import { ParametroService } from './../../../../../core/services/quski/parametro.service';
 import { ClienteService } from './../../../../../core/services/quski/cliente.service';
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Page } from './../../../../../core/model/page';
 import { CRMService } from './../../../../../core/services/quski/crm.service';
+import { TrackingService } from './../../../../../core/services/quski/tracking.service';
+import { ErrorCargaInicialComponent } from './../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { VerCotizacionesComponent } from './../../../../partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
+
 
 @Component({
   selector: 'kt-gestion-negociacion',
@@ -28,8 +30,12 @@ export class GestionNegociacionComponent implements OnInit {
   //ENUMS 
   listPublicidad = []; //= Object.keys(PulicidadEnum);
   // ENUMERADORES
-  publicidad = new Array();
   public loading;
+    // VARIABLES DE TRACKING
+    public horaInicio      : any;
+    public horaAsignacion  : any;
+    public horaAtencion    : any = null;
+    public horaFinal       : any;
 
   // STANDARD VARIABLES
   public loadingSubject = new BehaviorSubject<boolean>(false);
@@ -43,17 +49,18 @@ export class GestionNegociacionComponent implements OnInit {
   ///Validaciones formulario cliente 
 
   public formCliente: FormGroup = new FormGroup({});
-  public fpublicidad = new FormControl( [Validators.required]);
+  public formBusqueda: FormGroup = new FormGroup({});
+  public formTasacion: FormGroup = new FormGroup({});
+  public publicidad = new FormControl( '',[Validators.required]);
   public identificacion = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
-  public fechaNacimiento = new FormControl();
+  public fechaDeNacimiento = new FormControl('', []);
   public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public edad = new FormControl('', []);
-  public nacionalidad = new FormControl();
+  public nacionalidad = new FormControl('', []);
   public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
-  public correoElectronico = new FormControl('', [Validators.required, Validators.email]);
-  public campania = new FormControl();
-  
+  public email = new FormControl('', [Validators.required, Validators.email]);
+  public campania = new FormControl('', []);
   public aprobacionMupi = new FormControl('', []);
   /**Obligatorio ordenamiento */
   @ViewChild('sort1', { static: true }) sort: MatSort;
@@ -86,27 +93,26 @@ displayedColumnsRiesgoAcumulado = ['NumeroOperacion', 'TipoOferta', 'Vencimiento
  constructor(private sinNoticeService: ReNoticeService, 
   private cs: ClienteService, 
   private sp: ParametroService, 
+  private tra : TrackingService,
   private crm: CRMService,
   public dialog: MatDialog, 
-  private fb: FormBuilder, 
   private noticeService: ReNoticeService, 
   private subheaderService: SubheaderService,
   @Inject(MAT_DIALOG_DATA) private data: string
   ) { 
-    
-    
-    this.sp.setParameter();
-    this.cs.setParameter();
-    this.formCliente.addControl("identificacion", this.identificacion);
-    this.formCliente.addControl("fechaNacimiento", this.fechaNacimiento);
+
+    this.formBusqueda.addControl("identificacion", this.identificacion);
+    this.formCliente.addControl("fechaNacimiento", this.fechaDeNacimiento);
     this.formCliente.addControl("nombresCompletos", this.nombresCompletos);
     this.formCliente.addControl("edad", this.edad);
     this.formCliente.addControl("nacionalidad", new FormControl('', Validators.required));
     this.formCliente.addControl("movil", this.movil);
     this.formCliente.addControl("telefonoDomicilio", this.telefonoDomicilio);
-    this.formCliente.addControl("correoElectronico", this.correoElectronico);
+    this.formCliente.addControl("email", this.email);
     this.formCliente.addControl("campania", this.campania);
-    this.formCliente.addControl("fpublicidad", this.fpublicidad);
+    this.formCliente.addControl("publicidad", this.publicidad);
+    this.formCliente.addControl("aprobacionMupi" , this.aprobacionMupi);
+
 
     
 }
@@ -128,7 +134,7 @@ getErrorMessage(pfield: string) {
   const errorLogitudExedida = 'La longitud sobrepasa el limite';
   const errorInsuficiente = 'La longitud es insuficiente';
   if (pfield && pfield === "identificacion") {
-    const input = this.formCliente.get("identificacion");
+    const input = this.formBusqueda.get("identificacion");
     return input.hasError("required")
       ? errorRequerido
       : input.hasError("pattern")
@@ -147,8 +153,8 @@ getErrorMessage(pfield: string) {
     return input.hasError('required') ? errorRequerido : '';
   }
  
-  if (pfield && pfield === 'fechaNacimiento') {
-    const input = this.fechaNacimiento;
+  if (pfield && pfield === 'fechaDeNacimiento') {
+    const input = this.fechaDeNacimiento;
     return input.hasError('required') ? errorRequerido : '';
   }
   
@@ -170,10 +176,10 @@ getErrorMessage(pfield: string) {
             : '';
   }
  
-  if (pfield && pfield == "correoElectronico") {
+  if (pfield && pfield == "email") {
 
-    return this.correoElectronico.hasError('required') ? errorRequerido : this.correoElectronico.hasError('email') ? 'E-mail no valido' : this.correoElectronico.hasError('maxlength') ? maximo
-      + this.correoElectronico.errors.maxlength.requiredLength : '';
+    return this.email.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo
+      + this.email.errors.maxlength.requiredLength : '';
 
   }
  
@@ -202,6 +208,19 @@ numberOnly(event): boolean {
 
 }
   
+/**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Tracking llamado desde .html captura la hora de atencion
+   */
+  private capturaHoraAtencion(){
+    if( this.horaAtencion == null ){
+      this.tra.getSystemDate().subscribe( (hora: any) =>{
+        if(hora.entidad){
+          this.horaAtencion = hora.entidad;
+        }
+      });
+    }
+  }
 
   getPublicidades() {
     this.sp.findByNombreTipoOrdered("", "PUB", "Y").subscribe((wrapper: any) => {
@@ -228,13 +247,12 @@ numberOnly(event): boolean {
     });
   }
 
-  ///Abre el PopuP para ver las cotizaciones 
-  abrirPopupVerCotizacion() {
+ private abrirPopupVerCotizacion() {
 
-    console.log("Abre POPUP");
-    const dialogRefGuardar = this.dialog.open(VercotizacionComponent, {
-      width: '600px',
+    const dialogRefGuardar = this.dialog.open(VerCotizacionesComponent, {
+      width: '900px',
       height: 'auto',
+      data: "1001574035"
 
 
     });
@@ -255,9 +273,9 @@ numberOnly(event): boolean {
   onChangeFechaNacimiento() {
 
     this.loadingSubject.next(true);
-    console.log("VALOR DE LA FECHA" + this.fechaNacimiento.value);
+    console.log("VALOR DE LA FECHA" + this.fechaDeNacimiento.value);
     const fechaSeleccionada = new Date(
-      this.fechaNacimiento.value
+      this.fechaDeNacimiento.value
     );
     console.log("FECHA SELECCIONADA" + fechaSeleccionada);
     if (fechaSeleccionada) {
@@ -330,7 +348,7 @@ numberOnly(event): boolean {
             console.log("Nombres completos",data.list[0].firstName)
             this.movil.setValue(data.list[0].phoneMobile);
             this.telefonoDomicilio.setValue(data.list[0].phoneHome);
-            this.correoElectronico.setValue(data.list[0].emailAddress);
+            this.email.setValue(data.list[0].emailAddress);
             this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE DEL CRM", 'success');
           } else {
             this.sinNoticeService.setNotice("USUARIO NO REGISTRADO ", 'error');
@@ -366,13 +384,13 @@ numberOnly(event): boolean {
         if (data.entidad.datoscliente) {
           console.log('Equifax ', data.entidad);
           this.nombresCompletos.setValue(data.entidad.datoscliente.nombrescompletos);
-          this.fechaNacimiento.setValue(data.entidad.datoscliente.fechanacimiento);
+          this.fechaDeNacimiento.setValue(data.entidad.datoscliente.fechanacimiento);
           this.edad.setValue(data.entidad.datoscliente.edad);
           this.nacionalidad.setValue(data.entidad.datoscliente.nacionalidad);
           this.movil.setValue(data.entidad.datoscliente.telefonomovil);
           this.telefonoDomicilio.setValue(data.entidad.datoscliente.telefonofijo);
-          this.fpublicidad.setValue(data.entidad.datoscliente.publicidad);
-          this.correoElectronico.setValue(data.entidad.datoscliente.correoelectronico);
+          this.publicidad.setValue(data.entidad.datoscliente.publicidad);
+          this.email.setValue(data.entidad.datoscliente.email);
           this.campania.setValue(data.entidad.datoscliente.codigocampania);
           this.loadingSubject.next(false);
           this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE CALCULADORA QUSKI", 'success');
@@ -395,15 +413,15 @@ numberOnly(event): boolean {
   ////Registro del prospecto en el CRM////
   registrarProspecto(){
    
-    if(this.identificacion.value!=""&&this.nombresCompletos.value!=""&&this.correoElectronico.value!=""){
+    if(this.identificacion.value!=""&&this.nombresCompletos.value!=""&&this.email.value!=""){
    
     this.clienteCRM=new ClienteCRM();
     this.clienteCRM.firstName=this.nombresCompletos.value;
     this.clienteCRM.phoneHome=this.telefonoDomicilio.value;
     this.clienteCRM.phoneMobile=this.movil.value;
     this.clienteCRM.cedulaC=this.identificacion.value;
-    this.clienteCRM.emailAddress=this.correoElectronico.value;
-    this.cadena =this.correoElectronico.value;
+    this.clienteCRM.emailAddress=this.email.value;
+    this.cadena =this.email.value;
     this.cadena1 = this.cadena.toUpperCase();
     this.clienteCRM.emailAddressCaps=this.cadena1;
     this.sinNoticeService.setNotice("REGISTRO CORRECTO DEL PROSPECTO", 'success');
