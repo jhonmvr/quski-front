@@ -1,4 +1,4 @@
-import { TbQoNegociacion } from './TbQoNegociacion';
+import { TbQoNegociacion } from "./TbQoNegociacion";
 import { TbQoCotizador } from './TbQoCotizador';
 
 export class TbQoVariablesCrediticia {

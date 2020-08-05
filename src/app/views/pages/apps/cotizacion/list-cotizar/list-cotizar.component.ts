@@ -220,7 +220,7 @@ export class ListCotizarComponent implements OnInit {
   dataSourceCliente: MatTableDataSource<TbQoCliente> = new MatTableDataSource<TbQoCliente>();
   dataSourceCotizacion: MatTableDataSource<TbQoCotizador> = new MatTableDataSource<TbQoCotizador>();
   dataSourceTipoOro: MatTableDataSource<TbQoTipoOro> = new MatTableDataSource<TbQoTipoOro>();
- 
+
   /**
    * Metodo para paginador
    */
@@ -359,6 +359,7 @@ export class ListCotizarComponent implements OnInit {
       if (wrapper && wrapper.list) {
         this.catTipoOro = new Array<TbQoTipoOro>();
         this.catTipoOro = wrapper.list;
+        console.log('TIPOS DE ORO', JSON.stringify(this.catTipoOro));
 
       } else {
         this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CATALOGO VACIO', 'error');
