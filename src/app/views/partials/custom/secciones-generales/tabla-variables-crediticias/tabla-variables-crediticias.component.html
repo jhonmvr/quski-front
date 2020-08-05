@@ -1,3 +1,5 @@
+<div class="spinner-container" *ngIf="loading | async"><mat-spinner class="spiner"></mat-spinner></div>
+
 <div class="row">
     <div class="col">
         <mat-table #table class="mat-elevation-z8"  [dataSource]="dataSourceVariablesCrediticias">

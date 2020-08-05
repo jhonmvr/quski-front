@@ -101,7 +101,7 @@ import { MensajeExcepcionComponent } from './custom/mensaje-excepcion-component/
 import { ErrorCargaInicialComponent } from './custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { VerCotizacionesComponent } from './custom/popups/ver-cotizaciones/ver-cotizaciones.component';
 import { DetallesComponent } from './custom/popups/ver-cotizaciones/detalles/detalles.component';
-import { TablaOpcionesCreditoComponent } from './custom/secciones-generales/tabla-opciones-credito/tabla-opciones-credito.component';
+import { TablaDetalleCreditoComponent } from './custom/secciones-generales/tabla-detalle-credito/tabla-detalle-credito.component';
 import { TablaVariablesCrediticiasComponent } from './custom/secciones-generales/tabla-variables-crediticias/tabla-variables-crediticias.component';
 
 
@@ -160,7 +160,7 @@ import { TablaVariablesCrediticiasComponent } from './custom/secciones-generales
 		ErrorCargaInicialComponent,
 		VerCotizacionesComponent,
 		DetallesComponent,
-		TablaOpcionesCreditoComponent,
+		TablaDetalleCreditoComponent,
 		TablaVariablesCrediticiasComponent
 	],
 	exports: [

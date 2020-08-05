@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { TbQoPrecioOro } from '../../../../../../core/model/quski/TbQoPrecioOro';
 import { DataPopup } from '../../../../../../core/model/wrapper/dataPopup';
 
@@ -9,8 +9,9 @@ import { DataPopup } from '../../../../../../core/model/wrapper/dataPopup';
   styleUrls: ['./detalles.component.scss']
 })
 export class DetallesComponent implements OnInit {
-  private dataPopup: DataPopup
+  private dataPopup: DataPopup;
   constructor(
+    public dialogRefGuardar: MatDialogRef<any>,
     @Inject(MAT_DIALOG_DATA) private data: TbQoPrecioOro,
   ) { }
 
@@ -21,6 +22,9 @@ export class DetallesComponent implements OnInit {
       this.dataPopup.isCotizacion = true;
       this.dataPopup.isNegociacion = false;
     } 
+  }
+  salir(){
+    this.dialogRefGuardar.close(false);
   }
 
 }
