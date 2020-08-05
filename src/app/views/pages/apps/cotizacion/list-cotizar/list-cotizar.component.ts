@@ -51,6 +51,7 @@ import { PersonaCalculadora } from '../../../../../core/model/calculadora/Person
 import { PrecioOroService } from '../../../../../core/services/quski/precioOro.service';
 
 
+
 /**
  * @description IMPORTACION DEL INTERFACE DE USUARIO
  * @author Kléber Guerra  - Relative Engine
@@ -85,23 +86,23 @@ export class ListCotizarComponent implements OnInit {
   private entidadPersonaCalculadora: PersonaCalculadora;
   private entidadesVariablesCrediticias: Array<TbQoVariablesCrediticia>;
   private entidadesRiesgoAcumulados: Array<TbQoRiesgoAcumulado>;
-  
+
   // CATALOGOS SOFTBANK
-  private catEducacion : Array<any>;
+  private catEducacion: Array<any>;
   // CATALOGOS QUSKI
   private catTipoOro: Array<TbQoTipoOro>;
   // LISTA PARAMETROS
-  private listGradosInteres : Array<any>;
+  private listGradosInteres: Array<any>;
   private listMotivoDesestimiento: Array<any>;
   // TABLA VARIABLES CREDITICIA
   displayedColumnsVarCredi = ['orden', 'variable', 'valor'];
-  dataSourceVarCredi: MatTableDataSource<TbQoVariablesCrediticia>;
+  dataSourceVarCredi: MatTableDataSource<TbQoVariablesCrediticia> = new MatTableDataSource<TbQoVariablesCrediticia>();
   // TABLA RIESGO ACUMULADO
   displayedColumnsRiesgoAcumulado = ['orden', 'variable', 'valor'];
   dataSourceRiesgoAcumulado: MatTableDataSource<TbQoRiesgoAcumulado>;
 
-  
-  
+
+
   // CREACION DEL STEPPER
   @ViewChild('stepper', { static: true })
   public stepper: MatStepper;
@@ -219,6 +220,7 @@ export class ListCotizarComponent implements OnInit {
   dataSourceCliente: MatTableDataSource<TbQoCliente> = new MatTableDataSource<TbQoCliente>();
   dataSourceCotizacion: MatTableDataSource<TbQoCotizador> = new MatTableDataSource<TbQoCotizador>();
   dataSourceTipoOro: MatTableDataSource<TbQoTipoOro> = new MatTableDataSource<TbQoTipoOro>();
+ 
   /**
    * Metodo para paginador
    */
@@ -329,14 +331,14 @@ export class ListCotizarComponent implements OnInit {
   /**
    * ******************************** @INCIO
   */
-   /******************************************** CARGA DE COMBOS  ***********************************************************/
-  public consultaCatalogos(){
-    this.sof.consultarEducacionCS().subscribe((data : any) =>{
-      if(!data.existeError){
+  /******************************************** CARGA DE COMBOS  ***********************************************************/
+  public consultaCatalogos() {
+    this.sof.consultarEducacionCS().subscribe((data: any) => {
+      if (!data.existeError) {
         this.catEducacion = data.nivelesEducacion;
         this.loadingSubject.next(false);
 
-      } else{
+      } else {
         this.sinNoticeService.setNotice('ERROR EN CORE SOFTBANK CATALOGO VACIO', 'error');
       }
     });
@@ -357,7 +359,8 @@ export class ListCotizarComponent implements OnInit {
       if (wrapper && wrapper.list) {
         this.catTipoOro = new Array<TbQoTipoOro>();
         this.catTipoOro = wrapper.list;
-      } else{
+
+      } else {
         this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CATALOGO VACIO', 'error');
       }
     }, error => {
@@ -369,18 +372,18 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
-    /**
-   * @description METODO QUE REALIZA LA CARGA LOS MOTIVIOS DE DESESTIMEINTO DE LA BASE 
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-07-14
-   */
+  /**
+ * @description METODO QUE REALIZA LA CARGA LOS MOTIVIOS DE DESESTIMEINTO DE LA BASE 
+ * @author Kléber Guerra  - Relative Engine
+ * @date 2020-07-14
+ */
   public getMotivoDesestimiento() {
     this.par.findByNombreTipoOrdered('', 'DESEST', 'Y').subscribe((wrapper: any) => {
       // //console.log("retornos "+ JSON.stringify(wrapper)  );
       if (wrapper && wrapper.entidades) {
         this.listMotivoDesestimiento = wrapper.entidades;
       }
-    }, error =>{
+    }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
         this.sinNoticeService.setNotice(b.msgError, 'error');
@@ -389,17 +392,17 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
-    /**
-   * @description METODO QUE CARGA LOS GRADOS DE INTERES DE LA BASE 
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-07-23
-   */
+  /**
+ * @description METODO QUE CARGA LOS GRADOS DE INTERES DE LA BASE 
+ * @author Kléber Guerra  - Relative Engine
+ * @date 2020-07-23
+ */
   public getGradoInteres() {
     this.par.findByNombreTipoOrdered('', 'GINT', 'Y').subscribe((wrapper: any) => {
       if (wrapper && wrapper.entidades) {
         this.listGradosInteres = wrapper.entidades;
       }
-    }, error =>{
+    }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
         this.sinNoticeService.setNotice(b.msgError, 'error');
@@ -420,7 +423,7 @@ export class ListCotizarComponent implements OnInit {
           this.listPublicidad.push(wrapper.entidades[i].valor.toUpperCase());
         }
       }
-    }, error =>{
+    }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
         this.sinNoticeService.setNotice(b.msgError, 'error');
@@ -429,7 +432,7 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
-  public llamarCatalogos(){
+  public llamarCatalogos() {
     this.loadingSubject.next(true);
 
     this.getGradoInteres();
@@ -562,9 +565,9 @@ export class ListCotizarComponent implements OnInit {
         : input.hasError('required');
     }
   }
-    /**
-   * CALCULO DE LA EDAD 
-   */
+  /**
+ * CALCULO DE LA EDAD 
+ */
   private onChangeFechaNacimiento() {
     this.loadingSubject.next(true);
     console.log('VALOR DE LA FECHA' + this.fechaNacimiento.value);
@@ -636,28 +639,29 @@ export class ListCotizarComponent implements OnInit {
   }
 
 
-  public buscarCliente(){
-    if( this.identificacion.value != ""){ // Jero: revisar validacion
+  public buscarCliente() {
+    if (this.identificacion.value != "") { // Jero: revisar validacion
       this.loadingSubject.next(true);
       let consulta = new ConsultaCliente();
       consulta.identificacion = this.identificacion.value;
 
-      this.sof.consultarClienteCS( consulta ).subscribe( (data:any) => {
+      this.sof.consultarClienteCS(consulta).subscribe((data: any) => {
         if (data.idCliente != 0) {
           this.entidadClientesoftbank = new clienteSoftbank();
           this.entidadClientesoftbank = data;
-          
-          this.inicioDeGestion( this.entidadClientesoftbank.identificacion );
+
+          this.inicioDeGestion(this.entidadClientesoftbank.identificacion);
         } else {
-          this.solicitarAutorizacion( consulta.identificacion );
+          this.solicitarAutorizacion(consulta.identificacion);
         }
       });
-    } else{
+    } else {
       this.sinNoticeService.setNotice('PRO FAVOR INGRESE UNA CEDULA VALIDA', 'error');
-    }   
+    }
   }
-  private busquedaEnCRM(identificacion: string){
-    this.crm.findClienteByCedulaCRM( identificacion ).subscribe((data: any) => {
+  private busquedaEnCRM(identificacion: string) {
+    this.crm.findClienteByCedulaCRM(identificacion).subscribe((data: any) => {
+      this.loadingSubject.next(true);
       let cliente = new TbQoCliente();
       if (data && data.list) {
         this.entidadProspectoCRM = data.list[0];
@@ -666,39 +670,43 @@ export class ListCotizarComponent implements OnInit {
         cliente.telefonoAdicional = this.entidadProspectoCRM.phoneOther;
         cliente.cedulaCliente = this.entidadProspectoCRM.cedulaC;
         cliente.email = this.entidadProspectoCRM.emailAddress;
-      } else{
+      } else {
         cliente.cedulaCliente = identificacion;
       }
-      this.guardarClienteCore( cliente );
+      this.guardarClienteCore(cliente);
     });
   }
-  private setearValores(){
-    if(this.entidadClientesoftbank == null){
-      if(this.entidadProspectoCRM){
+  private setearValores() {
+    this.loadingSubject.next(true);
+    if (this.entidadClientesoftbank == null) {
+      if (this.entidadProspectoCRM) {
         this.nombresCompletos.setValue(this.entidadProspectoCRM.firstName);
       }
-      if(this.entidadPersonaCalculadora){
+      if (this.entidadPersonaCalculadora) {
         this.campania.setValue(this.entidadCliente.campania);
         this.nombresCompletos.setValue(this.entidadPersonaCalculadora.nombrescompletos);
       }
     } else {
-      this.nombresCompletos.setValue(this.entidadCliente.primerNombre + ' ' + this.entidadCliente.segundoNombre+ ' ' + this.entidadCliente.apellidoPaterno + ' ' + this.entidadCliente.apellidoMaterno);
+      this.nombresCompletos.setValue(this.entidadCliente.primerNombre + ' ' + this.entidadCliente.segundoNombre + ' ' + this.entidadCliente.apellidoPaterno + ' ' + this.entidadCliente.apellidoMaterno);
     }
-    if(this.entidadCliente.nacionalidad){
+    if (this.entidadCliente.nacionalidad) {
       this.nacionalidad.setValue(this.entidadCliente.nacionalidad);
     }
     this.movil.setValue(this.entidadCliente.telefonoMovil);
     this.telefonoDomicilio.setValue(this.entidadCliente.telefonoFijo);
     this.correoElectronico.setValue(this.entidadCliente.email);
+    console.log('VARIABLES', JSON.stringify(this.entidadesVariablesCrediticias));
 
-    this.dataSourceVarCredi.data = this.entidadesVariablesCrediticias;
-    this.dataSourceRiesgoAcumulado.data = this.entidadesRiesgoAcumulados;
+
+
+    //TODO: COMENTO NO FUNCIONA EL SERVICE
+    //this.dataSourceRiesgoAcumulado.data = this.entidadesRiesgoAcumulados;
     this.loadingSubject.next(false);
 
   }
-  private inicioDeGestion(localIdentificacion: string){
-    this.cli.findClienteByIdentificacion( localIdentificacion ).subscribe( (data: any) =>{
-      if(data){
+  private inicioDeGestion(localIdentificacion: string) {
+    this.cli.findClienteByIdentificacion(localIdentificacion).subscribe((data: any) => {
+      if (data) {
         let cliente = new TbQoCliente();
         if (this.entidadClientesoftbank.esMasculino) {
           cliente.genero = GeneroEnum.MASCULINO;
@@ -706,39 +714,41 @@ export class ListCotizarComponent implements OnInit {
           cliente.genero = GeneroEnum.FEMENINO;
         }
         this.catEducacion.forEach(element => {
-          if(this.entidadClientesoftbank.codigoEducacion == element.codigo){
+          if (this.entidadClientesoftbank.codigoEducacion == element.codigo) {
             cliente.nivelEducacion = element.nombre;
           }
-        })
+        });
         // cliente.nacionalidad = this.entidadClientesoftbank.idPaisNacimiento 
-        if(data.entidad && data.entidad.id != null){
-          cliente.id = data.entidad.id
+        if (data.entidad && data.entidad.id != null) {
+          cliente.id = data.entidad.id;
         }
-        cliente.apellidoMaterno  = this.entidadClientesoftbank.segundoApellido;
-        cliente.apellidoPaterno  = this.entidadClientesoftbank.primerApellido;
+        cliente.apellidoMaterno = this.entidadClientesoftbank.segundoApellido;
+        cliente.apellidoPaterno = this.entidadClientesoftbank.primerApellido;
         cliente.cargasFamiliares = this.entidadClientesoftbank.numeroCargasFamiliares;
-        cliente.cedulaCliente    = this.entidadClientesoftbank.identificacion;
-        cliente.email            = this.entidadClientesoftbank.email;
-        cliente.fechaNacimiento  = this.entidadClientesoftbank.fechaNacimiento;
-        cliente.primerNombre     = this.entidadClientesoftbank.primerNombre;
-        cliente.segundoNombre    = this.entidadClientesoftbank.segundoNombre;
-        this.guardarClienteCore( cliente );
-      }else{
+        cliente.cedulaCliente = this.entidadClientesoftbank.identificacion;
+        cliente.email = this.entidadClientesoftbank.email;
+        cliente.fechaNacimiento = this.entidadClientesoftbank.fechaNacimiento;
+        cliente.primerNombre = this.entidadClientesoftbank.primerNombre;
+        cliente.segundoNombre = this.entidadClientesoftbank.segundoNombre;
+        console.log('2.- VALOR DEL CLIENTE CRM findClienteByCedulaCRM ==> ', JSON.stringify(cliente));
+        this.guardarClienteCore(cliente);
+      } else {
         this.sinNoticeService.setNotice('ERROR EN CORE INTERNO', 'error');
       }
     });
   }
-  private guardarClienteCore( cliente: TbQoCliente ){
-    this.cli.persistEntity( cliente ).subscribe( (data: any) =>{
+  private guardarClienteCore(cliente: TbQoCliente) {
+    console.log('3.- inicia  GuardarClienteCore ==> ', JSON.stringify(cliente));
+    this.cli.persistEntity(cliente).subscribe((data: any) => {
       if (data.entidad) {
         this.entidadCliente = data.entidad;
         let personaConsulta = new PersonaConsulta();
         personaConsulta.identificacion = this.entidadCliente.cedulaCliente;
-        this.llamarEquifax( personaConsulta );
+        this.llamarEquifax(personaConsulta);
       } else {
         this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CLIENTE', 'error');
       }
-    }, error =>{
+    }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
         this.sinNoticeService.setNotice(b.msgError, 'error');
@@ -750,77 +760,93 @@ export class ListCotizarComponent implements OnInit {
   private llamarEquifax(personaConsulta: PersonaConsulta) {
     let consulta = new ConsultaCliente();
     consulta.identificacion = personaConsulta.identificacion;
-    this.ing.getInformacionPersonaCalculadora( personaConsulta ).subscribe( (data: any ) =>{
-      if(this.entidadProspectoCRM != null){
-        if(data.entidad.datoscliente){
+    this.ing.getInformacionPersonaCalculadora(personaConsulta).subscribe((data: any) => {
+      this.loadingSubject.next(true);
+      if (this.entidadProspectoCRM != null) {
+        if (data.entidad.datoscliente) {
           this.entidadPersonaCalculadora = data.entidad.datoscliente;
           this.entidadCliente.fechaNacimiento = this.entidadPersonaCalculadora.fechanacimiento;
           this.entidadCliente.nacionalidad = this.entidadPersonaCalculadora.nacionalidad;
           this.entidadCliente.genero = this.entidadPersonaCalculadora.genero;
           this.entidadCliente.campania = this.entidadPersonaCalculadora.codigocampania.toString();
 
-          if(this.entidadCliente.email == null){
+          if (this.entidadCliente.email == null) {
             this.entidadCliente.email = this.entidadPersonaCalculadora.correoelectronico;
           }
-          if(this.entidadCliente.telefonoFijo == null){
+          if (this.entidadCliente.telefonoFijo == null) {
             this.entidadCliente.telefonoFijo = this.entidadPersonaCalculadora.telefonofijo;
           }
-          if(this.entidadCliente.telefonoMovil == null){
+          if (this.entidadCliente.telefonoMovil == null) {
             this.entidadCliente.telefonoMovil = this.entidadPersonaCalculadora.telefonomovil;
           }
-          this.actualizarCliente( this.entidadCliente );
+          this.actualizarCliente(this.entidadCliente);
         }
-      } else if(this.entidadProspectoCRM == null && this.entidadClientesoftbank == null){
-          this.entidadPersonaCalculadora = data.entidad.datoscliente;
-          this.entidadCliente.fechaNacimiento = this.entidadPersonaCalculadora.fechanacimiento;
-          this.entidadCliente.nacionalidad = this.entidadPersonaCalculadora.nacionalidad;
-          this.entidadCliente.genero = this.entidadPersonaCalculadora.genero;
-          this.entidadCliente.email = this.entidadPersonaCalculadora.correoelectronico;
-          this.entidadCliente.telefonoMovil = this.entidadPersonaCalculadora.telefonomovil;
-          this.entidadCliente.telefonoFijo = this.entidadPersonaCalculadora.telefonofijo;
-          this.entidadCliente.campania = this.entidadPersonaCalculadora.codigocampania.toString();
-          this.actualizarCliente( this.entidadCliente );
+      } else if (this.entidadProspectoCRM == null && this.entidadClientesoftbank == null) {
+        this.entidadPersonaCalculadora = data.entidad.datoscliente;
+        this.entidadCliente.fechaNacimiento = this.entidadPersonaCalculadora.fechanacimiento;
+        this.entidadCliente.nacionalidad = this.entidadPersonaCalculadora.nacionalidad;
+        this.entidadCliente.genero = this.entidadPersonaCalculadora.genero;
+        this.entidadCliente.email = this.entidadPersonaCalculadora.correoelectronico;
+        this.entidadCliente.telefonoMovil = this.entidadPersonaCalculadora.telefonomovil;
+        this.entidadCliente.telefonoFijo = this.entidadPersonaCalculadora.telefonofijo;
+        this.entidadCliente.campania = this.entidadPersonaCalculadora.codigocampania.toString();
+        this.actualizarCliente(this.entidadCliente);
       }
 
 
-      if (data.xmlVariablesInternas.variablesInternas.variable) {
-        this.entidadesVariablesCrediticias = data.xmlVariablesInternas.variablesInternas.variable;
-        this.sof.consultaRiesgoAcumuladoCS( consulta ).subscribe( (data: any) =>{
-          if (!data.existeError) {
+      if (data.entidad.xmlVariablesInternas.variablesInternas.variable != null) {
+
+        this.entidadesVariablesCrediticias = data.entidad.xmlVariablesInternas.variablesInternas.variable;
+        console.log('VALOR CONSULTA RIESGO ACUMULADO', JSON.stringify(consulta));
+        this.sof.consultaRiesgoAcumuladoCS(consulta).subscribe((data: any) => {
+          console.log('valores DATA', JSON.stringify(data));
+          if (data.existeError === false) {
             this.entidadesRiesgoAcumulados = data.operaciones;
             this.entidadCotizador = new TbQoCotizador();
-            this.entidadCotizador.tbQoCliente.id = this.entidadCliente.id
-            this.cot.persistEntity(this.entidadCotizador).subscribe((data: any) =>{
-              if( data.entidad ){
+            this.entidadCotizador.tbQoCliente.id = this.entidadCliente.id;
+            this.cot.persistEntity(this.entidadCotizador).subscribe((data: any) => {
+              if (data.entidad) {
                 this.entidadCotizador = data.entidad;
-                this.entidadesVariablesCrediticias.forEach( element =>{
+                this.entidadesVariablesCrediticias.forEach(element => {
+                  element.tbQoCotizador = new TbQoCotizador();
                   element.tbQoCotizador.id = this.entidadCotizador.id;
                 });
-                this.vac.persistEntity( this.entidadesVariablesCrediticias ).subscribe( (data: any) => {
-                  if( data.entidades ){
+
+                this.vac.persistEntity(this.entidadesVariablesCrediticias).subscribe((data: any) => {
+                  if (data.entidades) {
                     this.entidadesVariablesCrediticias = data.entidades;
-                    this.entidadesRiesgoAcumulados.forEach(element =>{
-                      element.tbQoCliente.id = this.entidadCliente.id;
-                    });
-                    this.rie.persistEntity( this.entidadesRiesgoAcumulados ).subscribe( (data: any) => {
-                      if (data.entidades) {
-                        this.entidadesRiesgoAcumulados = data.entidades;
-                        this.setearValores();
-                      } else {
-                        this.sinNoticeService.setNotice('ERROR EN LA CREACION DE RIESGOS ACUMULADOS', 'error');
-                      }
-                    }, error =>{
-                      if (JSON.stringify(error).indexOf("codError") > 0) {
-                        let b = error.error;
-                        this.sinNoticeService.setNotice(b.msgError, 'error');
-                      } else {
-                        this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CLIENTE, ERROR DESCONOCIDO', 'error');
-                      }
-                    });
-                  }else {
+                    if (this.entidadesVariablesCrediticias != null) {
+                      console.log('DATA entidadesVariablesCrediticias', JSON.stringify(this.entidadesVariablesCrediticias));
+                      this.dataSourceVarCredi.data = this.entidadesVariablesCrediticias;
+                      console.log(' dataSourceVarCredi', JSON.stringify(this.dataSourceVarCredi.data));
+                    }
+                    console.log('VARIABLES', JSON.stringify(this.entidadesVariablesCrediticias));
+
+                    /*  this.entidadesRiesgoAcumulados.forEach(element => {
+                        element.tbQoCliente.id = this.entidadCliente.id;
+                      });
+                      this.rie.persistEntity(this.entidadesRiesgoAcumulados).subscribe((data: any) => {
+                        if (data.entidades) {
+                          this.entidadesRiesgoAcumulados = data.entidades;
+                          this.setearValores();
+                        } else {
+                          this.sinNoticeService.setNotice('ERROR EN LA CREACION DE RIESGOS ACUMULADOS', 'error');
+                        }
+                      }, error => {
+                        if (JSON.stringify(error).indexOf("codError") > 0) {
+                          let b = error.error;
+                          this.sinNoticeService.setNotice(b.msgError, 'error');
+                        } else {
+                          this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CLIENTE, ERROR DESCONOCIDO', 'error');
+                        }
+                      });*/
+                    this.setearValores();
+                  }
+
+                  else {
                     this.sinNoticeService.setNotice('ERROR EN LA CREACION DE VARIABLES CREDITICIAS', 'error');
                   }
-                }, error =>{
+                }, error => {
                   if (JSON.stringify(error).indexOf("codError") > 0) {
                     let b = error.error;
                     this.sinNoticeService.setNotice(b.msgError, 'error');
@@ -828,10 +854,10 @@ export class ListCotizarComponent implements OnInit {
                     this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CLIENTE, ERROR DESCONOCIDO', 'error');
                   }
                 });
-              }else {
+              } else {
                 this.sinNoticeService.setNotice('ERROR EN LA CREACION DE COTIZADOR', 'error');
               }
-            }, error =>{
+            }, error => {
               if (JSON.stringify(error).indexOf("codError") > 0) {
                 let b = error.error;
                 this.sinNoticeService.setNotice(b.msgError, 'error');
@@ -847,17 +873,17 @@ export class ListCotizarComponent implements OnInit {
       } else {
         this.sinNoticeService.setNotice('ERROR EN CORE CALCULADORA QUSKI', 'error');
       }
-      
+
     });
   }
-  private actualizarCliente ( cliente: TbQoCliente ){
-    this.cli.persistEntity( cliente ).subscribe((data: any) => {
+  private actualizarCliente(cliente: TbQoCliente) {
+    this.cli.persistEntity(cliente).subscribe((data: any) => {
       if (data.entidad) {
         this.entidadCliente = data.entidad;
       } else {
         this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CLIENTE, NO SE ACTUALIZO CLIENTE', 'error');
       }
-    }, error =>{
+    }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
         this.sinNoticeService.setNotice(b.msgError, 'error');
@@ -880,7 +906,7 @@ export class ListCotizarComponent implements OnInit {
       //
       if (respuesta !== null && respuesta !== undefined) {
         console.log('al cerrar el dialogo ' + JSON.stringify(respuesta));
-        this.busquedaEnCRM( identificacion );
+        this.busquedaEnCRM(identificacion);
       } else {
         console.log('envio de ELSE ' + respuesta);
         this.sinNoticeService.setNotice('ACCIÓN CANCELADA ', 'error');
@@ -905,29 +931,29 @@ export class ListCotizarComponent implements OnInit {
       console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
     });
   }
-  
+
 
 
   /**
    * ********************************* @FIN
    */
 
-    /* const mensa = JSON.stringify(resp.entidad.mensaje).toUpperCase();
+  /* const mensa = JSON.stringify(resp.entidad.mensaje).toUpperCase();
 
-      if (resp.entidad.mensaje && resp.entidad.mensaje !== ' ') {
-        console.log('MENSAJE A EQUIFAX', JSON.stringify(resp.entidad.mensaje));
-        this.mensaje = JSON.stringify(resp.entidad.mensaje).toUpperCase();
-        this.verMensajes();
-        console.log('INGRESA A VER EL MSG', JSON.stringify(resp));
-      } */
+    if (resp.entidad.mensaje && resp.entidad.mensaje !== ' ') {
+      console.log('MENSAJE A EQUIFAX', JSON.stringify(resp.entidad.mensaje));
+      this.mensaje = JSON.stringify(resp.entidad.mensaje).toUpperCase();
+      this.verMensajes();
+      console.log('INGRESA A VER EL MSG', JSON.stringify(resp));
+    } */
 
   /**
    * Metodo que trae los motivos de desestimiento de la base de datos tabla parametros
    */
 
 
-  
-  
+
+
 
   /***********************************************METODOS PARA TOMAR LOS VALORES DE LOS COMBOS*********************    */
 
@@ -996,6 +1022,8 @@ export class ListCotizarComponent implements OnInit {
     this.loadingSubject.next(true);
 
     if (this.identificacion.value !== null && this.nombresCompletos.value !== null && this.fpublicidad.value && this.aprobacionMupi.value && this.fechaNacimiento.value && this.edad.value && this.nacionalidad.value && this.movil.value && this.telefonoDomicilio.value && this.correoElectronico.value && + this.campania.value) {
+
+      this.getTipoOro();
       // IMPLEMENTACION DEL TRACKING
       this.tr.getSystemDate().subscribe((hora: any) => {
         //console.log('Registro PROSPECCION final');
@@ -1167,7 +1195,7 @@ export class ListCotizarComponent implements OnInit {
     this.precio.setValue('');
     this.loadingSubject.next(true);
     if (this.entidadCliente.cedulaCliente) {
-      this.ing.getInformacionOferta(this.entidadCliente.cedulaCliente, this.tipoOro.value.quilate, this.entidadCliente.fechaNacimiento,"N",0).subscribe((dataTipoOro: any) => {
+      this.ing.getInformacionOferta(this.entidadCliente.cedulaCliente, this.tipoOro.value.quilate, this.entidadCliente.fechaNacimiento, "N", 0).subscribe((dataTipoOro: any) => {
         console.log('tipo de oro que responde>>>>>>>' + JSON.stringify(dataTipoOro));
         console.log('SACO EL VALOR DEL TIPO ORO');
         console.log('tipoOro >>>>>>>>>>>>>>', this.tipoOro.value);
