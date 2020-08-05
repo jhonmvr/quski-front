@@ -97,7 +97,7 @@ import { PortletFooterComponent } from './custom/portlet/portlet-footer/portlet-
 import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component';
 import { HabilitanteComponent } from './custom/habilitante/habilitante.component';
 import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dialog/habilitante-dialog.component';
-import { MensajeExcepcionComponent } from './custom/mensaje-excepcion-component/mensaje-excepcion-component';
+import { MensajeExcepcionComponent } from './custom/popups/mensaje-excepcion-component/mensaje-excepcion-component';
 import { ErrorCargaInicialComponent } from './custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { VerCotizacionesComponent } from './custom/popups/ver-cotizaciones/ver-cotizaciones.component';
 import { DetallesComponent } from './custom/popups/ver-cotizaciones/detalles/detalles.component';

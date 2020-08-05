@@ -5,6 +5,7 @@ import { Page } from '../../../../../core/model/page';
 import { PrecioOroService } from '../../../../../core/services/quski/precioOro.service';
 import { TbQoPrecioOro } from '../../../../../core/model/quski/TbQoPrecioOro';
 import { DetallesComponent } from './detalles/detalles.component';
+import { CotizacionService } from '../../../../../core/services/quski/cotizacion.service';
 
 @Component({
   selector: 'kt-ver-cotizaciones',
@@ -39,6 +40,8 @@ export class VerCotizacionesComponent implements OnInit {
     public dialogGuardar: MatDialog,
     @Inject(MAT_DIALOG_DATA) private data: string,
     private pre: PrecioOroService,
+    private cot: CotizacionService
+
   ) { }
 
   ngOnInit() {
@@ -66,6 +69,7 @@ export class VerCotizacionesComponent implements OnInit {
   }
   submit(cedula: string){
     this.loadingSubject.next(true);
+  
     this.pre.findByCedula( this.p, cedula ).subscribe((data:any)=>{
       if(data.list){
         this.loadingSubject.next(false);

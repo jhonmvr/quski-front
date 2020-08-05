@@ -41,6 +41,12 @@
                   <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Buscar
                     cliente</span>
                 </a>
+                <div class="offset-md-2 col-md-2">
+                  <button mat-raised-button (click)="abrirPopupVerCotizacion(identificacion)">
+                    <mat-icon style="font-size: 32px" matTooltipPosition="above">remove_red_eye</mat-icon>
+                    <span style="position: relative;top: -10px;margin-left: 5px;">Ver cotizacion</span>
+                  </button>
+                </div>
                 <div class="col-md-6 kt-margin-bottom-10-mobile">
                   <mat-form-field class="mat-form-field-fluid">
                     <input name="nombresCompletos" matInput [formControl]="nombresCompletos"
@@ -227,7 +233,7 @@
                   <mat-select placeholder="Tipo de oro" [formControl]="tipoOro"
                     (selectionChange)="cambioSeleccionTipoOro($event)">
                     <mat-option>--</mat-option>
-                    <mat-option *ngFor="let tipoOro of listOros" [value]="tipoOro">
+                    <mat-option *ngFor="let tipoOro of catTipoOro" [value]="tipoOro">
                       {{tipoOro.quilate}}
                     </mat-option>
                   </mat-select>
