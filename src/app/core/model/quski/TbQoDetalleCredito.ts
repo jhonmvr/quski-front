@@ -16,7 +16,8 @@ export class TbQoDetalleCredito {
     fechaActualizacion : Date      // null,
     fechaCreacion : Date           // "2020-01-16",
     montoPreaprobado : number      // 64.44,
-    plazoCredito : string          // "90",
+    plazo : number                 // 60,
+    periodoPlazo: string           // "Cuotas"
     recibirCliente : number        // 117.44,
     solca : number                 // null,
     valorCuota : number            // 84.55,

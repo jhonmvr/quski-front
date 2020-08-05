@@ -1,20 +1,25 @@
+<div class="spinner-container" *ngIf="loading | async"><mat-spinner class="spiner"></mat-spinner></div>
 <div class="mat-table__wrapper">
-    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceCredito">
+    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceDetalleCredito">
         <ng-container matColumnDef="plazo">
         <mat-header-cell *matHeaderCellDef  class="text-align">Plazo</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.plazo}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="montoPreAprobado">
+        <ng-container matColumnDef="periodoPlazo">
+            <mat-header-cell *matHeaderCellDef  class="text-align">Periodo Plazo $</mat-header-cell>
+            <mat-cell *matCellDef="let element" class="text-align"> {{element.periodoPlazo}} </mat-cell>
+            </ng-container>
+        <ng-container matColumnDef="montoPreaprobado">
         <mat-header-cell *matHeaderCellDef  class="text-align">Monto Preaprobado $</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.montoFinanciado}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.montoPreaprobado}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="aRecibir">
+        <ng-container matColumnDef="recibirCliente">
         <mat-header-cell *matHeaderCellDef  class="text-align">A Recibir Cliente $</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorARecibir}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.recibirCliente}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="totalCostosOperacion">
-        <mat-header-cell *matHeaderCellDef  class="text-align">Total Costos Nueva Operación $</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.totalGastosNuevaOperacion}} </mat-cell>
+        <ng-container matColumnDef="costoNuevaOperacion">
+        <mat-header-cell *matHeaderCellDef  class="text-align">Costos Nueva Operación $</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoNuevaOperacion}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="costoCustodia">
         <mat-header-cell *matHeaderCellDef  class="text-align">Costo Custodia $</mat-header-cell>
@@ -36,20 +41,20 @@
         <mat-header-cell *matHeaderCellDef  class="text-align"> Costo Seguro $</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.costoSeguro}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="costoResguardo" >
+        <ng-container matColumnDef="costoResguardado" >
         <mat-header-cell *matHeaderCellDef  class="text-align">Costo Resguardo $</mat-header-cell>  
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoFideicomiso}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoResguardado}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="solca">
         <mat-header-cell *matHeaderCellDef  class="text-align">Solca $</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.impuestoSolca}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.solca}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="valorCuota">
-        <mat-header-cell *matHeaderCellDef  class="text-align">Cuota Estimada $</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.cuota}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef  class="text-align">Valor De Cuota $</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorCuota}} </mat-cell>
         </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>
+        <mat-header-row *matHeaderRowDef="displayedColumnsDetalleCredito"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsDetalleCredito"></mat-row>
     </mat-table>
 </div>
