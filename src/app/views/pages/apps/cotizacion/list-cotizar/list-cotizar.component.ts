@@ -35,7 +35,7 @@ import { TrackingService } from '../../../../../core/services/quski/tracking.ser
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../../../../../src/environments/environment';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
-import { MensajeExcepcionComponent } from '../../../../partials/custom/mensaje-excepcion-component/mensaje-excepcion-component';
+import { MensajeExcepcionComponent } from '../../../../partials/custom/popups/mensaje-excepcion-component/mensaje-excepcion-component';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
@@ -49,6 +49,7 @@ import { CRMService } from '../../../../../core/services/quski/crm.service';
 import { ProspectoCRM } from '../../../../../core/model/crm/prospectoCRM';
 import { PersonaCalculadora } from '../../../../../core/model/calculadora/PersonaCalculadora';
 import { PrecioOroService } from '../../../../../core/services/quski/precioOro.service';
+import { VerCotizacionesComponent } from '../../../../partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
 
 
 
@@ -90,7 +91,7 @@ export class ListCotizarComponent implements OnInit {
   // CATALOGOS SOFTBANK
   private catEducacion: Array<any>;
   // CATALOGOS QUSKI
-  private catTipoOro: Array<TbQoTipoOro>;
+  public catTipoOro: Array<TbQoTipoOro>;
   // LISTA PARAMETROS
   private listGradosInteres: Array<any>;
   private listMotivoDesestimiento: Array<any>;
@@ -359,7 +360,7 @@ export class ListCotizarComponent implements OnInit {
       if (wrapper && wrapper.list) {
         this.catTipoOro = new Array<TbQoTipoOro>();
         this.catTipoOro = wrapper.list;
-        console.log('TIPOS DE ORO', JSON.stringify(this.catTipoOro));
+
 
       } else {
         this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CATALOGO VACIO', 'error');
@@ -677,7 +678,15 @@ export class ListCotizarComponent implements OnInit {
       this.guardarClienteCore(cliente);
     });
   }
+  private buscarCotizacionesAnteriores(identificacion :string){
+    this.cot.getCotizacionByCedula(identificacion).subscribe((data: any)=>{
+      console.log('data buscar', JSON.stringify(data));
+
+    });
+
+  }
   private setearValores() {
+    this.buscarCotizacionesAnteriores(this.entidadCliente.cedulaCliente);
     this.loadingSubject.next(true);
     if (this.entidadClientesoftbank == null) {
       if (this.entidadProspectoCRM) {
@@ -793,7 +802,10 @@ export class ListCotizarComponent implements OnInit {
         this.entidadCliente.campania = this.entidadPersonaCalculadora.codigocampania.toString();
         this.actualizarCliente(this.entidadCliente);
       }
-
+      if (data.entidad.mensaje && data.entidad.mensaje !== ' ') {
+        //   paramsconsole.log('MENSAJE A EQUIFAX', JSON.stringify(resp.entidad.mensaje));
+        this.mensaje = data.entidad.mensaje.toUpperCase();
+      }
 
       if (data.entidad.xmlVariablesInternas.variablesInternas.variable != null) {
 
@@ -913,12 +925,15 @@ export class ListCotizarComponent implements OnInit {
         this.sinNoticeService.setNotice('ACCIÓN CANCELADA ', 'error');
         this.limpiarCampos();
       }
+      if (this.mensaje != null) {
+        this.verMensajes(this.mensaje);
+      }
     });
   }
   /**
    * @description POP UP Mensaje de bloqueo
    */
-  private verMensajes() {
+  private verMensajes(mensaje: string) {
     console.log('VALORES DE MENSAJE QUE ENVIO---> ', this.mensaje);
     this.loadingSubject.next(false);
 
@@ -926,11 +941,29 @@ export class ListCotizarComponent implements OnInit {
     const dialogRefGuardar = this.dialog.open(MensajeExcepcionComponent, {
       width: '600px',
       height: 'auto',
-      data: this.mensaje
+      data: mensaje
     });
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
       console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
     });
+  }
+
+  private abrirPopupVerCotizacion(identificacion: string) {
+    const dialogRefGuardar = this.dialog.open(VerCotizacionesComponent, {
+      width: '900px',
+      height: 'auto',
+      data: identificacion
+    });
+
+    dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
+
+      if (respuesta)
+        console.log("Estoy aqui ");
+
+
+    });
+
+
   }
 
 
@@ -939,14 +972,11 @@ export class ListCotizarComponent implements OnInit {
    * ********************************* @FIN
    */
 
+
+
   /* const mensa = JSON.stringify(resp.entidad.mensaje).toUpperCase();
 
-    if (resp.entidad.mensaje && resp.entidad.mensaje !== ' ') {
-      console.log('MENSAJE A EQUIFAX', JSON.stringify(resp.entidad.mensaje));
-      this.mensaje = JSON.stringify(resp.entidad.mensaje).toUpperCase();
-      this.verMensajes();
-      console.log('INGRESA A VER EL MSG', JSON.stringify(resp));
-    } */
+    */
 
   /**
    * Metodo que trae los motivos de desestimiento de la base de datos tabla parametros
@@ -1060,6 +1090,7 @@ export class ListCotizarComponent implements OnInit {
       this.disableVerVariableSubject.next(true);
       this.stepper.selectedIndex = 2;
       console.log('VALOR DE LA COTIZACION===>', JSON.stringify(this.cotizacion));
+      console.log('DATASOURCE TIPO ORO', JSON.stringify(this.dataSourceTipoOro.data));
     } else {
       this.sinNoticeService.setNotice('POR FAVOR COMPLETE LA INFORMACION', 'warning');
       this.loadingSubject.next(false);
@@ -1168,9 +1199,10 @@ export class ListCotizarComponent implements OnInit {
         this.pre.persistEntity(this.precioOro).subscribe((data: any) => {
           console.log('==><< respuesta para precio oro ' + JSON.stringify(data));
           this.disableSimulaSubject.next(false);
+
           if (data && data.entidad) {
             console.log('VALOR DEL ID ANTES DE CARGAR EL PRECIO ORO', JSON.stringify(data.entidad.id));
-            this.pre.loadPrecioOroByCotizacion(this.cotizacion.id).subscribe((pos: any) => {
+            this.pre.loadPrecioOroByCotizacion(this.entidadCotizador.id).subscribe((pos: any) => {
               this.dataSourcePrecioOro = new MatTableDataSource(pos.list);
               this.preciosOrodSubject.next(true);
               this.sinNoticeService.setNotice('SE GUARDO EL PRECIO ORO', 'success');

@@ -1,0 +1,26 @@
+<div class="row justify-content-center">
+  <div class="col mt-5">
+    <h1 mat-dialog-title >Bloqueos:</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <mat-card class="orange-icon" style="font-size: 12px; vertical-align: middle; font-weight: bold;">
+      <span class="material-icons warning-icons" style="color:orange;">report_problem</span>
+      {{ mensaje }}
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <mat-dialog-actions>
+      <div class="col-md-3">
+        <a href="javascript:void(0);" (click)="salir()" matTooltip="Cancelar"
+          style="font-size: 12px; vertical-align: middle;" class="orange-icon">
+          <mat-icon style="font-size: 32px;" matTooltipPosition="above" class="orange-icon">cancel</mat-icon>
+          <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Cerrar</span>
+        </a>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</div> 
