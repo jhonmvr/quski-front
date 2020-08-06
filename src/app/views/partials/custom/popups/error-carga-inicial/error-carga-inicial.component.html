@@ -1,9 +1,20 @@
 
 <mat-card>
-    <mat-card-title>ERROR</mat-card-title>
-    <mat-card-content> {{ mensaje }} </mat-card-content>
-    <mat-card-footer>	
-        <button mat-raised-button color="warn" (click)="salir()"> SALIR </button>
-    </mat-card-footer>
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <mat-card-title>ERROR</mat-card-title>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <mat-card-content> {{ mensaje }} </mat-card-content>        
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-1">
+            <button mat-raised-button mat-dialog-close color="warn"> SALIR </button>
+        </div>
+    </div>
+    
 
 </mat-card>

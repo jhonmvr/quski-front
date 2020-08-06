@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Router } from '@angular/router';
 
 
@@ -13,13 +13,14 @@ export class ErrorCargaInicialComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: string,
-    private router: Router
+    public dialogRefGuardar: MatDialogRef<any>,
+
   ) { }
 
   ngOnInit(): void {
     this.mensaje = this.data;
   }
   salir(){
-    this.router.navigate(['dashboard', ""]);  
+    this.dialogRefGuardar.close(false);
   }
 }

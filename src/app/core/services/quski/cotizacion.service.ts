@@ -13,25 +13,29 @@ import { TbQoCotizador } from '../../model/quski/TbQoCotizador';
 })
 export class CotizacionService extends BaseService {
 
-  urlRest = "cotizacionRestController/";
+  urlRest = "cotizadorRestController/";
   constructor(_http: HttpClient, private ns: ReNoticeService) {
     super();
     this.http = _http;
     this.setParameter();
 
   }
-
-
-
-
-
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @param id number
+   */
+  getEntity(id: number) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest+ 'getEntity';
+    this.params = this.params.set('id', id.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  } 
   persistEntity( data: TbQoCotizador ) {
     let serviceUrl = this.appResourcesUrl+ "cotizadorRestController/persistEntity";
     let wrapper = { entidad: data }
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
-
   guardaCotizacion(tbCotizacion) {
     let serviceUrl = this.appResourcesUrl
       + "cotizadorRestController/persistEntity";
@@ -39,7 +43,6 @@ export class CotizacionService extends BaseService {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
-
   caducarCotizacion(tbCotizacion) {
     let serviceUrl = this.appResourcesUrl
       + "cotizadorRestController/caducarCotizacion";
@@ -47,26 +50,22 @@ export class CotizacionService extends BaseService {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
- /**
- * Método que devuelve la lista de cotizaciones 
- * @param cedulaCliente Envia la cedula del cliente
- */
-getCotizacionByCedula(cedulaCliente: string) {
-  let serviceUrl = this.appResourcesUrl + 'cotizadorRestController/getCotizacionWrapper';
-  this.params = this.params.set('cedulaCliente', cedulaCliente);
-  this.options = { headers: this.headers, params: this.params };
-  return this.http.get(serviceUrl, this.options);
-} 
-
+  /**
+   * Método que devuelve la lista de cotizaciones 
+   * @param cedulaCliente Envia la cedula del cliente
+   */
+  getCotizacionByCedula(cedulaCliente: string) {
+    let serviceUrl = this.appResourcesUrl + 'cotizadorRestController/getCotizacionWrapper';
+    this.params = this.params.set('cedulaCliente', cedulaCliente);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  } 
   findByIdCliente(cedulaCliente: string) {
     let serviceUrl = this.appResourcesUrl + "cotizadorRestController/cotizadorByCliente";
     this.params = this.params.set('cedulaCliente', cedulaCliente);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-
-
-
   findByIdCotizacion(id: number) { 
     let serviceUrl = this.appResourcesUrl
       + "precioOroRestController/detalleCotizacionById";
@@ -75,9 +74,6 @@ getCotizacionByCedula(cedulaCliente: string) {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-
-
-
   public findByEstado(estado: string, page: Page) {
     let serviceUrl = this.appResourcesUrl
       + this.urlRest + "getEntityByEstado";
@@ -90,18 +86,6 @@ getCotizacionByCedula(cedulaCliente: string) {
     return this.http.get(serviceUrl, this.options);
 
   }
-
-  public getEntity(id: string) {
-    this.params = new HttpParams().set('id', id);
-    //this.params = new HttpParams();
-    let serviceUrl = this.appResourcesUrl
-      + "joyaSimRestController/getEntityByidCotizacion";
-
-    console.log("==>despues de buscar idcotizacion error  " + JSON.stringify(id));
-    this.options = { Headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
-  }
-
   guardarCotizacion(tbCotizacion) {
     let serviceUrl = this.appResourcesUrl
       + "cotizadorRestController/persistEntity";
@@ -109,9 +93,6 @@ getCotizacionByCedula(cedulaCliente: string) {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
-
-
-
   /**
    * Metodo qu registraa la info,acion de cliente, cotizacion y variable crediticia,
    * adicional cadcua cotizaciones
@@ -122,9 +103,6 @@ getCotizacionByCedula(cedulaCliente: string) {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
-  
-
- 
   crearVariableCrediticia(tbCotizacion) {
     let serviceUrl = this.appResourcesUrl
       + "variableCrediticiaRestController/crearVariableCrediticia";
@@ -132,79 +110,11 @@ getCotizacionByCedula(cedulaCliente: string) {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
-
-
-
- 
-
-
   guardarJoyaSim(tbMijoyaSim) {
     let serviceUrl = this.appResourcesUrl
       + "joyaSimRestController/persistEntity";
     let wrapper = { entidad: tbMijoyaSim }
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
-    /* .pipe(
-        map((response: Response) => {
-          let entidad = response.json();
-          return entidad;
-        },
-          error => {
-            //console.log("==>despues de buscar usuario error  " + JSON.stringify(error));
-            return error;
-          })); */
-
   }
-
-  /*  public findByEstado (dataparam, estado:string, serviceUrl:string ) {
- 
-     //console.log("==>buscando canales  ") ;
-     if( dataparam){
-       //console.log("==>buscando canales con dataparam " + JSON.stringify( dataparam ) );
-     }
-    
-     this.setParameter();
-     //console.log("==>buscando canales this.appResourcesUrl
-" + this.appResourcesUrl
-);
-     serviceUrl=this.appResourcesUrl
-+"cotizacionRestController/getEntityByEstado";
-     //console.log("==>buscando canales this.appResourcesUrl
-" + serviceUrl  );
-       this.params = new HttpParams();
- 
-       this.params.set("estado", estado);
-         ////console.log("==> parametros obtenidos " +  this.params.toString() );
-         this.options = { headers: this.headers, params:this.params };
-         return this.http.get(serviceUrl, this.options).pipe(
-             map((response: Response) => {
-               
-                   let entidad = response.json();
-                   return entidad;
-               },
-             error => {
-               //console.log("==>despues de buscar inspector error  " + JSON.stringify(error));
-               return error;
-             }));
-   }
- 
-   public guardarCotizacion(cotizacion:TbMiCotizacion){
-     let serviceUrl = this.appResourcesUrl
-+ "cotizacionRestController/persistEntity";
-     let wrapper = {entidad:cotizacion}
-     this.options = { headers: this.headers});
-     return this.http.post(serviceUrl, 
-         wrapper
-         ,this.options).pipe(
-                 map((response: Response) => {
-           let entidad = response.json();
-           return entidad;
-       },
-     error => {
-       console.log("==>despues de buscar cotizacion error  " + JSON.stringify(error));
-       return error;
-     }));
-   } */
-
-
 }

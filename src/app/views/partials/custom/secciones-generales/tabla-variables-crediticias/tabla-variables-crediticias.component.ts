@@ -3,6 +3,8 @@ import { MatTableDataSource, MAT_DIALOG_DATA } from '@angular/material';
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { VariablesCrediticiasService } from '../../../../../core/services/quski/variablesCrediticias.service';
+import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
+import { PersonaConsulta } from 'src/app/core/model/calculadora/personaConsulta';
 
 @Component({
   selector: 'kt-tabla-variables-crediticias',
@@ -18,6 +20,7 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
   public idNegociacion : number;
   constructor(
     private vaC: VariablesCrediticiasService,
+    private cal: IntegracionService,
   ) { }
 
   ngOnInit() {
@@ -29,17 +32,18 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
    * @param data DataPopup
    */
   direccionDeFlujo( data : DataPopup ){
-    if (data.isCotizacion && !data.isNegociacion ) {
-      // this.idCotizador   = data.idBusqueda;
-      // this.idNegociacion = null;
+    if (data.isCotizacion) {
       this.iniciaBusquedaCotizacion( data.idBusqueda );
     } else {
-      if ( data.isNegociacion && !data.isCotizacion ){   
+      if ( data.isNegociacion){   
         // this.idCotizador   = null;
         // this.idNegociacion = data.idBusqueda;
         this.iniciaBusquedaNegociacion( data.idBusqueda );
       } else {
-        console.log("Error ----> Id de cotizacion no existe", data)  
+        if( data.isCalculadora ) 
+          this.iniciaBusquedaCalculadora( data.cedula );
+
+        console.log("Error ----> NO HAY DATOS DE ENTRADA ", data)  
       }
     }
   }
@@ -59,6 +63,22 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
       }
     } else {
       console.log("Error ----> Ingrese id de cotizador", id);
+    }
+  }
+  iniciaBusquedaCalculadora( cedula : string ){
+    if ( cedula != "" ) {
+      const consulta = new PersonaConsulta();
+      consulta.identificacion = cedula;
+      this.cal.getInformacionPersonaCalculadora( consulta ).subscribe( (data: any) =>{
+        if (data.entidad.xmlVariablesInternas.variablesInternas.variable != null) {
+          this.dataSourceVariablesCrediticias.data = data.entidad.xmlVariablesInternas.variablesInternas.variable;
+          console.log("data que me esta devolviendo ---> ", this.dataSourceVariablesCrediticias.data);
+        } else {
+          console.log("Error ----> Id de cotizacion no existe", cedula);
+        } 
+      });
+    } else {
+      console.log("Error ----> Ingrese id de cotizador", cedula);
     }
   }
   iniciaBusquedaNegociacion( id : number ){
