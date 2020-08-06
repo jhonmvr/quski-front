@@ -3,8 +3,8 @@ import { TelefonoCliente } from './TelefonoCliente'
 import { ContactosCliente } from './ContactosCliente'
 import { CuentasBancariasCliente } from './CuentasBancariasCliente'
 
-export class clienteSoftbank {
-  idCliente: number                         // 137970,
+export class ClienteSoftbank {
+ 
   idTipoIdentificacion: number              // 1,
   identificacion: string                    // "1311066442",
   primerApellido: string                    // "VÉLEZ",
