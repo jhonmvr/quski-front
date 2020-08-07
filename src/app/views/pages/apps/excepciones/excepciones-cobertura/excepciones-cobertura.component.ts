@@ -25,6 +25,7 @@ import { ParametroService } from '../../../../../core/services/quski/parametro.s
 import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
 import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
+import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOferta';
 
 @Component({
   selector: 'kt-excepciones-cobertura',
@@ -214,7 +215,12 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.loadingSubject.next(true);
     if (this.cobertura.value != null) {
       if ( this.cobertura.value >= this.minimoDeCobertura ) {
-        this.int.getInformacionOferta(this.cliente.cedulaCliente, this.tasacion[0].tbQoTipoOro.quilate, this.cliente.fechaNacimiento, "N",this.cobertura.value).subscribe((data : any) =>{
+        let consulta = new ConsultaOferta();
+        consulta.identificacionCliente = this.cliente.cedulaCliente;
+        consulta.tipoOroKilataje = this.tasacion[0].tbQoTipoOro.quilate
+        consulta.fechaNacimiento = this.cliente.fechaNacimiento;
+        consulta.coberturaExcepcionada = this.cobertura.value
+        this.int.getInformacionOferta( consulta ).subscribe((data : any) =>{
           if (data.entidad.simularResult) {
             this.opcExcepcionada = new Array<OpcionesDeCredito>();
             data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion.forEach(element => {
@@ -330,7 +336,12 @@ export class ExcepcionesCoberturaComponent implements OnInit {
                           this.tasacion.push( element);
                         });
                         this.dataSourceTasacion.data = this.tasacion;
-                        this.int.getInformacionOferta(this.cliente.cedulaCliente, this.tasacion[0].tbQoTipoOro.quilate, this.cliente.fechaNacimiento, "N",1).subscribe((data : any) =>{
+                        let consulta = new ConsultaOferta();
+                        consulta.identificacionCliente = this.cliente.cedulaCliente;
+                        consulta.tipoOroKilataje = this.tasacion[0].tbQoTipoOro.quilate
+                        consulta.fechaNacimiento = this.cliente.fechaNacimiento;
+                        consulta.coberturaExcepcionada = 1;
+                        this.int.getInformacionOferta( consulta ).subscribe((data : any) =>{
                           if (data.entidad.simularResult) {
                             this.opcCredito = new Array<OpcionesDeCredito>();
                             data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion.forEach(element => {

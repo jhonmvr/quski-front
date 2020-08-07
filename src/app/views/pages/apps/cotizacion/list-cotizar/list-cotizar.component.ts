@@ -50,6 +50,7 @@ import { ProspectoCRM } from '../../../../../core/model/crm/prospectoCRM';
 import { PersonaCalculadora } from '../../../../../core/model/calculadora/PersonaCalculadora';
 import { PrecioOroService } from '../../../../../core/services/quski/precioOro.service';
 import { VerCotizacionesComponent } from '../../../../partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
+import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOferta';
 
 
 
@@ -1228,7 +1229,11 @@ export class ListCotizarComponent implements OnInit {
     this.precio.setValue('');
     this.loadingSubject.next(true);
     if (this.entidadCliente.cedulaCliente) {
-      this.ing.getInformacionOferta(this.entidadCliente.cedulaCliente, this.tipoOro.value.quilate, this.entidadCliente.fechaNacimiento, "N", 0).subscribe((dataTipoOro: any) => {
+      let consulta = new ConsultaOferta();
+      consulta.identificacionCliente = this.entidadCliente.cedulaCliente;
+      consulta.tipoOroKilataje = this.tipoOro.value.quilate;
+      consulta.fechaNacimiento = this.entidadCliente.fechaNacimiento;
+      this.ing.getInformacionOferta( consulta ).subscribe((dataTipoOro: any) => {
         console.log('tipo de oro que responde>>>>>>>' + JSON.stringify(dataTipoOro));
         console.log('SACO EL VALOR DEL TIPO ORO');
         console.log('tipoOro >>>>>>>>>>>>>>', this.tipoOro.value);

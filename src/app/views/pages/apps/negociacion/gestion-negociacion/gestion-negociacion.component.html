@@ -26,9 +26,9 @@
 							</mat-form-field>
 						</div>
 						<div class=" offset-md-1 col-md-4">
-							<button mat-raised-button color="primary" (click)="buscarCliente()">
-								<mat-icon style="font-size: 24px;" class="orange-icon" matTooltipPosition="above">search</mat-icon>
-								<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Buscar cliente </span>
+							<button mat-raised-button color="primary" (click)="buscarCliente()" >
+								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search</mat-icon>
+								<span class="white-icon">Buscar cliente </span>
 							</button>
 						</div>
 					</div>
@@ -47,7 +47,7 @@
 						<div class="offset-md-2 col-md-2">
 							<button mat-raised-button (click)="abrirPopupVerCotizacion()">
 								<mat-icon style="font-size: 32px" matTooltipPosition="above">remove_red_eye</mat-icon>
-								<span style="position: relative;top: -10px;margin-left: 5px;">Ver cotizacion</span>
+								<span>Ver cotizacion</span>
 							</button>
 						</div>
 					</div>
@@ -129,36 +129,7 @@
 				</form>
 			</mat-step>
 			<mat-step>
-				<ng-template matStepLabel>Variables crediticias </ng-template>
-				<!-- <div class="mat-table__wrapper">
-					<mat-table #table class="mat-elevation-z8" [dataSource]="displayedColumnsVariablesCre" matSort
-						#sort1="matSort" matSortActive="orden" matSortDirection="asc" matSortDisableClear>
-						<ng-container matColumnDef="orden">
-							<mat-header-cell *matHeaderCellDef>Orden</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-						<ng-container matColumnDef="variable">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>Variable</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-						<ng-container matColumnDef="valor">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>Valor</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-						<mat-header-row *matHeaderRowDef="displayedColumnsVariablesCrediticias"></mat-header-row>
-						<mat-row *matRowDef="let row; columns: displayedColumnsVariablesCrediticias"></mat-row>
-					</mat-table>
-					<mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
-						[showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
-					</mat-paginator>
-				</div>
- -->
+				<kt-tabla-detalle-credito [dataPopup]='dataPopup'></kt-tabla-detalle-credito>
 			</mat-step>
 
 			<mat-step>

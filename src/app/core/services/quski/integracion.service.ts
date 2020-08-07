@@ -3,6 +3,7 @@ import { BaseService } from '../base.service';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { PersonaConsulta } from '../../model/calculadora/personaConsulta';
+import { ConsultaOferta } from '../../model/calculadora/consultaOferta';
 
 @Injectable({
   providedIn: 'root'
@@ -39,48 +40,41 @@ export class IntegracionService extends BaseService {
   /**
    * 
    * @author Jeroham Cadenas - Developer Twelve
-   * @param identificacionCliente string
-   * @param kilotaje string
-   * @param fechaNacimiento string
+   * @param consulta ConsultaOferta
    */
-  public getInformacionOferta(identificacionCliente: string, kilotaje: string, fechaNacimiento: Date, origenOperacion: string, coberturaExcepcionada: number) {
+  public getInformacionOferta(consulta: ConsultaOferta) {
     let pipe = new DatePipe('en-US');
     let fdf = null;
-    let fdff = new Date(fechaNacimiento);
+    let fdff = new Date(consulta.fechaNacimiento);
     fdff.setMinutes(fdff.getMinutes() + fdff.getTimezoneOffset());
     fdf = pipe.transform(fdff, 'dd/MM/yyyy');
     console.log("INGRESA AL SERVICIO LAFECHA ES " + fdf)
     const serviceUrl = this.appResourcesUrl + 'integracionRestController/getInformacionOferta';
 
-
-
-
-
     this.params = new HttpParams()
-        .set('perfilRiesgo', "1")
-        
-        .set('origenOperacion', origenOperacion)
-        .set('riesgoTotal', "0.00")
+        .set('perfilRiesgo', consulta.perfilRiesgo.toString())
+        .set('origenOperacion', consulta.origenOperacion)
+        .set('riesgoTotal', consulta.riesgoTotal.toString())
         .set('fechaNacimiento', fdf)
-        .set('perfilPreferencia', "B")
-        .set('agenciaOriginacion', "020")
-        .set('identificacionCliente', identificacionCliente)
-        .set('calificacionMupi', "S")
-        .set('coberturaExcepcionada', coberturaExcepcionada.toString())
-        .set('tipoJoya', "ANI")
-        .set('descripcion', "BUEN ESTADO")
-        .set('estadoJoya', "BUE")
-        .set('tipoOroKilataje', kilotaje)//tomo del combo
-        .set('pesoGr',"7.73")
-        .set('tienePiedras', "s")
-        .set('detallePiedras', "PIEDRAS")
-        .set('descuentoPesoPiedras', "0.73")
-        .set('pesoNeto', "7.00")
-        .set('precioOro', "263.72")
-        .set('valorAplicableCredito', "293.02")
-        .set('valorRealizacion', '232.07')
-        .set('numeroPiezas',"1")
-        .set('descuentoSuelda', "0.00");
+        .set('perfilPreferencia', consulta.perfilPreferencia)
+        .set('agenciaOriginacion', consulta.agenciaOriginacion)
+        .set('identificacionCliente', consulta.identificacionCliente)
+        .set('calificacionMupi', consulta.calificacionMupi)
+        .set('coberturaExcepcionada', consulta.coberturaExcepcionada.toString())
+        .set('tipoJoya', consulta.tipoJoya)
+        .set('descripcion', consulta.descripcion)
+        .set('estadoJoya', consulta.estadoJoya)
+        .set('tipoOroKilataje', consulta.tipoOroKilataje)//tomo del combo
+        .set('pesoGr', consulta.pesoGr.toString())
+        .set('tienePiedras', consulta.tienePiedras)
+        .set('detallePiedras', consulta.detallePiedras)
+        .set('descuentoPesoPiedras', consulta.descuentoPesoPiedras.toString())
+        .set('pesoNeto', consulta.pesoNeto.toString())
+        .set('precioOro', consulta.precioOro.toString())
+        .set('valorAplicableCredito', consulta.valorAplicableCredito.toString())
+        .set('valorRealizacion', consulta.valorRealizacion.toString())
+        .set('numeroPiezas', consulta.numeroPiezas.toString())
+        .set('descuentoSuelda', consulta.descuentoSuelda.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
 }
