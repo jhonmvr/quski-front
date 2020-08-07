@@ -176,6 +176,9 @@ import { TablaOfertaCalculadoraComponent } from './custom/secciones-generales/ta
 		FetchEntityDialogComponent,
 		UpdateStatusDialogComponent,
 		AlertComponent,
+		TablaDetalleCreditoComponent,
+		TablaVariablesCrediticiasComponent,
+		TablaOfertaCalculadoraComponent,
 
 		// topbar components
 		ContextMenu2Component,
@@ -269,7 +272,10 @@ import { TablaOfertaCalculadoraComponent } from './custom/secciones-generales/ta
 		CreditoVigenteDialogComponent,
 		MensajeExcepcionComponent,
 		CargarFotoDialogComponent,
-		DetallesComponent
+		DetallesComponent,
+		TablaDetalleCreditoComponent,
+		TablaVariablesCrediticiasComponent,
+		TablaOfertaCalculadoraComponent
 	]
 })
 export class PartialsModule {

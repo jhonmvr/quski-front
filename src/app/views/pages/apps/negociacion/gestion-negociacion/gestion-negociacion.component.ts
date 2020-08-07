@@ -20,7 +20,7 @@ import { ErrorCargaInicialComponent } from './../../../../partials/custom/popups
 import { VerCotizacionesComponent } from './../../../../partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
 import { ConsultaCliente } from './../../../../../core/model/softbank/ConsultaCliente';
 import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
-import { clienteSoftbank } from './../../../../../core/model/softbank/clienteSoftbank';
+import { ClienteSoftbank } from './../../../../../core/model/softbank/ClienteSoftbank';
 import { ProspectoCRM } from './../../../../../core/model/crm/prospectoCRM';
 import { TbQoCotizador } from './../../../../../core/model/quski/TbQoCotizador';
 import { PersonaCalculadora } from './../../../../../core/model/calculadora/PersonaCalculadora';
@@ -47,7 +47,7 @@ export class GestionNegociacionComponent implements OnInit {
   public loadingSubject = new BehaviorSubject<boolean>(false);
   // ENTIDADES
   private entidadProspectoCRM: ProspectoCRM;
-  private entidadClientesoftbank: clienteSoftbank;
+  private entidadClientesoftbank: ClienteSoftbank;
   private entidadCliente: TbQoCliente;
   private entidadCotizador: TbQoCotizador;
   private entidadPersonaCalculadora: PersonaCalculadora;
@@ -235,7 +235,7 @@ displayedColumnsRiesgoAcumulado = ['NumeroOperacion', 'TipoOferta', 'Vencimiento
         
         this.sof.consultarClienteCS(consulta).subscribe((data: any) => {
           if (data.idCliente != 0) {
-            this.entidadClientesoftbank = new clienteSoftbank();
+            this.entidadClientesoftbank = new ClienteSoftbank();
             this.entidadClientesoftbank = data;
             this.inicioDeGestion(this.entidadClientesoftbank.identificacion);
 

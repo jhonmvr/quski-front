@@ -40,10 +40,11 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
         // this.idNegociacion = data.idBusqueda;
         this.iniciaBusquedaNegociacion( data.idBusqueda );
       } else {
-        if( data.isCalculadora ) 
+        if( data.isCalculadora ) {
           this.iniciaBusquedaCalculadora( data.cedula );
-
-        console.log("Error ----> NO HAY DATOS DE ENTRADA ", data)  
+        }else{
+          console.log("Error ----> NO HAY DATOS DE ENTRADA ", data)  
+        }
       }
     }
   }

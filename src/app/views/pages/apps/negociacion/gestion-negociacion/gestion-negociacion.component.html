@@ -20,14 +20,16 @@
 					<div class="row">
 						<div class="col-md-6 ">
 							<mat-form-field class="mat-form-field-fluid">
-								<input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required="true" matInput numeric numericType="number"
+								<input [formControl]="identificacion" placeholder="C.I." autocomplete="off"
+									required="true" matInput numeric numericType="number"
 									(keypress)="numberOnly($event)" />
 								<mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
 							</mat-form-field>
 						</div>
 						<div class=" offset-md-1 col-md-4">
-							<button mat-raised-button color="primary" (click)="buscarCliente()" >
-								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search</mat-icon>
+							<button mat-raised-button color="primary" (click)="buscarCliente()">
+								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+								</mat-icon>
 								<span class="white-icon">Buscar cliente </span>
 							</button>
 						</div>
@@ -40,7 +42,8 @@
 					<div class="row">
 						<div class="col-md-8 ">
 							<mat-form-field class="mat-form-field-fluid">
-								<input name="nombresCompletos" matInput [formControl]="nombresCompletos" placeholder="Nombres Completos" required="true"/>
+								<input name="nombresCompletos" matInput [formControl]="nombresCompletos"
+									placeholder="Nombres Completos" required="true" />
 								<mat-error>{{ getErrorMessage("nombresCompletos") }}</mat-error>
 							</mat-form-field>
 						</div>
@@ -53,18 +56,18 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6 ">
-							<mat-form-field  class="mat-form-field-fluid">
+							<mat-form-field class="mat-form-field-fluid">
 								<mat-label>Fecha de nacimiento</mat-label>
 								<input (dateChange)="onChangeFechaNacimiento()" matInput #inputFechaNacimiento
 									[matDatepicker]="pickerFechaNacimiento" [formControl]="fechaDeNacimiento"
-									required="true"/>
+									required="true" />
 								<mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
 								<mat-datepicker #pickerFechaNacimiento></mat-datepicker>
 							</mat-form-field>
 						</div>
 						<div class="col-md-6 ">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="edad" placeholder="Edad"/>
+								<input matInput [formControl]="edad" placeholder="Edad" />
 							</mat-form-field>
 						</div>
 					</div>
@@ -72,14 +75,16 @@
 
 						<div class="col-md-6 ">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="nacionalidad" placeholder="Nacionalidad " required="true"/>
+								<input matInput [formControl]="nacionalidad" placeholder="Nacionalidad "
+									required="true" />
 								<mat-error>{{ getErrorMessage("nacionalidad") }}</mat-error>
 							</mat-form-field>
 						</div>
 
 						<div class="col-md-6 ">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput numeric numericType="number" [formControl]="movil" placeholder="Móvil" required="true" (keypress)="numberOnly($event)"/>
+								<input matInput numeric numericType="number" [formControl]="movil" placeholder="Móvil"
+									required="true" (keypress)="numberOnly($event)" />
 								<mat-error>{{ getErrorMessage("movil") }}</mat-error>
 							</mat-form-field>
 						</div>
@@ -88,21 +93,23 @@
 					<div class="row">
 						<div class="col-md-6 ">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="email" placeholder="Correo Eléctronico" required="true"/>
+								<input matInput [formControl]="email" placeholder="Correo Eléctronico"
+									required="true" />
 								<mat-error>{{getErrorMessage("email") }}</mat-error>
 							</mat-form-field>
 						</div>
 
 						<div class="col-md-6">
-							<mat-form-field  class="mat-form-field-fluid">
-								<input matInput [formControl]="telefonoDomicilio" placeholder="Teléfono Domicilio" required="true" (keypress)="numberOnly($event)">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput [formControl]="telefonoDomicilio" placeholder="Teléfono Domicilio"
+									required="true" (keypress)="numberOnly($event)">
 								<mat-error>{{ getErrorMessage("telefonoDomicilio") }}</mat-error>
 							</mat-form-field>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-6">
-							<mat-form-field  class="mat-form-field-fluid">
+							<mat-form-field class="mat-form-field-fluid">
 								<mat-select placeholder="Publicidad" [formControl]="publicidad" required="true">
 									<mat-option>--</mat-option>
 									<mat-option *ngFor="let publicidad of listPublicidad" [value]="publicidad">
@@ -114,22 +121,22 @@
 
 						<div class="col-md-6">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="campania" placeholder="Campaña"/>
+								<input matInput [formControl]="campania" placeholder="Campaña" />
 							</mat-form-field>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-6">
 							<mat-radio-group [formControl]="aprobacionMupi" (change)="capturaHoraAtencion()">
-							  	<mat-radio-button value="Si">SI</mat-radio-button>
-							  	<mat-radio-button value="No">NO</mat-radio-button>
+								<mat-radio-button value="Si">SI</mat-radio-button>
+								<mat-radio-button value="No">NO</mat-radio-button>
 							</mat-radio-group>
 						</div>
 					</div>
 				</form>
 			</mat-step>
 			<mat-step>
-				<kt-tabla-detalle-credito [dataPopup]='dataPopup'></kt-tabla-detalle-credito>
+				<kt-tabla-detalle-credito [idCotizador]='dataPopup'></kt-tabla-detalle-credito>
 			</mat-step>
 
 			<mat-step>
@@ -464,7 +471,7 @@
 			</mat-step>
 			<mat-step>
 				<ng-template matStepLabel>Detalle Opciones de crédito </ng-template>
-			<!-- 	<div class="mat-table__wrapper">
+				<!-- 	<div class="mat-table__wrapper">
 					<mat-table #table class="mat-elevation-z8" [dataSource]="displayedColumnsOpt" matSort #sort1="matSort"
 						matSortDisableClear>
 						<ng-container matColumnDef="Accion">

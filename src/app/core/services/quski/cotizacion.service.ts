@@ -66,14 +66,7 @@ export class CotizacionService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-  findByIdCotizacion(id: number) { 
-    let serviceUrl = this.appResourcesUrl
-      + "precioOroRestController/detalleCotizacionById";
 
-    this.params = this.params.set('id', id.toString());
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
-  }
   public findByEstado(estado: string, page: Page) {
     let serviceUrl = this.appResourcesUrl
       + this.urlRest + "getEntityByEstado";

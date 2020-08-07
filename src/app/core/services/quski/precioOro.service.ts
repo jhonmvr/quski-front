@@ -73,5 +73,11 @@ export class PrecioOroService extends BaseService {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
+  findByIdCotizacion(id: number) { 
+    let serviceUrl = this.appResourcesUrl+ this.urlRest + "/detalleCotizacionById";
+    this.params = this.params.set('id', id.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
 
 }
