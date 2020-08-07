@@ -103,6 +103,7 @@ import { VerCotizacionesComponent } from './custom/popups/ver-cotizaciones/ver-c
 import { DetallesComponent } from './custom/popups/ver-cotizaciones/detalles/detalles.component';
 import { TablaDetalleCreditoComponent } from './custom/secciones-generales/tabla-detalle-credito/tabla-detalle-credito.component';
 import { TablaVariablesCrediticiasComponent } from './custom/secciones-generales/tabla-variables-crediticias/tabla-variables-crediticias.component';
+import { TablaOfertaCalculadoraComponent } from './custom/secciones-generales/tabla-oferta-calculadora/tabla-oferta-calculadora.component';
 
 
 
@@ -161,7 +162,8 @@ import { TablaVariablesCrediticiasComponent } from './custom/secciones-generales
 		VerCotizacionesComponent,
 		DetallesComponent,
 		TablaDetalleCreditoComponent,
-		TablaVariablesCrediticiasComponent
+		TablaVariablesCrediticiasComponent,
+		TablaOfertaCalculadoraComponent
 	],
 	exports: [
 		WidgetModule,

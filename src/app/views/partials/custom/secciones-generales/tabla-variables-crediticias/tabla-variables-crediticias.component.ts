@@ -4,7 +4,7 @@ import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { VariablesCrediticiasService } from '../../../../../core/services/quski/variablesCrediticias.service';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
-import { PersonaConsulta } from 'src/app/core/model/calculadora/personaConsulta';
+import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 
 @Component({
   selector: 'kt-tabla-variables-crediticias',
