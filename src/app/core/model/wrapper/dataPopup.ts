@@ -6,7 +6,7 @@ export class DataPopup{
     isCalculadora: Boolean   // false
     cedula: string           // Solo si isCalculadora = true;
     constructor(){
-        this.isNegociacion = true;
+        this.isNegociacion = false;
         this.isCotizacion = false;
         this.isCalculadora = false;
     }

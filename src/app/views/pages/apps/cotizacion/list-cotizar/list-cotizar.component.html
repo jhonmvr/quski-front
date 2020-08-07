@@ -41,8 +41,8 @@
                   <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Buscar
                     cliente</span>
                 </a>
-                <div class="offset-md-2 col-md-2">
-                  <button mat-raised-button (click)="abrirPopupVerCotizacion(identificacion)">
+                <div *ngIf="entidadCliente" class="offset-md-2 col-md-2">
+                  <button mat-raised-button (click)="abrirPopupVerCotizacion(entidadCliente.cedulaCliente)">
                     <mat-icon style="font-size: 32px" matTooltipPosition="above">remove_red_eye</mat-icon>
                     <span style="position: relative;top: -10px;margin-left: 5px;">Ver cotizacion</span>
                   </button>
@@ -150,78 +150,38 @@
 
           </form>
         </mat-step>
-        <div class="row">
-          <mat-step [stepControl]="formVariable" completed="true">
-            <form no-validate [formGroup]="formVariable">
-              <ng-template matStepLabel>Variables crediticias </ng-template>
-              <div class="row">
-                <div class="col-md-12" style="text-align: right;">
-                  <button mat-button class="blue-icon" matTooltip="Ver Riesgo Acumulado" (click)="goRiesgoAcumulado()">
-                    Ver Riesgo Acumulado
-                  </button>
-                </div>
-                <div>
-                  <mat-form-field *ngIf="disableMensajeBloqueo | async" href="javascript:void(0);">
-                    <mat-label>Mensaje de Bloqueo</mat-label>
-                    <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-                      cdkAutosizeMaxRows="5"></textarea>
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--START MAT TABLE-->
-              <div class="mat-table__wrapper">
-                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceVarCredi" matSort #sort1="matSort"
-                  matSortActive="variable" matSortDirection="asc" matSortDisableClear *ngIf="disableVerVariable | async"
-                  href="javascript:void(0);">
-                  <ng-container matColumnDef="orden">
-                    <mat-header-cell *matHeaderCellDef>Orden</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                      {{element.orden}}
-                    </mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="variable">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Variable</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                      {{element.nombre}}
-                    </mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="valor">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Valor</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                      {{element.valor}}
-                    </mat-cell>
-                  </ng-container>
-                  <mat-header-row *matHeaderRowDef="displayedColumnsVarCredi"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumnsVarCredi"></mat-row>
-                </mat-table>
-                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
-                  [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
-                </mat-paginator>
-              </div>
-              <!--end MAT TABLE-->
+        <mat-step>
+          <ng-template matStepLabel>Variables crediticias </ng-template>
+          <div class="row">
+            <div class="col-md-12" style="text-align: right;">
+              <button mat-button class="blue-icon" matTooltip="Ver Riesgo Acumulado" (click)="goRiesgoAcumulado()">
+                Ver Riesgo Acumulado
+              </button>
+            </div>
+            <div>
+              <mat-form-field *ngIf="disableMensajeBloqueo | async" href="javascript:void(0);">
+                <mat-label>Mensaje de Bloqueo</mat-label>
+                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="5"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+          <kt-tabla-variables-crediticias [dataPopup]='dataPopup'></kt-tabla-variables-crediticias>
+          <div class="row">
+            <div class="col-md-5">
 
-              &nbsp;
-              &nbsp;
-
-              <div class="row">
-                <div class="col-md-5">
-
-
-
-                  <a href="javascript:void(0);" *ngIf="disableVerPrecio | async" href="javascript:void(0);"
-                    matTooltip="Ver Precios" style="font-size: 12px; vertical-align: middle;" class="blue-icon">
-                    <mat-icon style="font-size: 32px;" matTooltipPosition="above" matTooltip="Ver Precios"
-                      (click)="verPrecio()" class="blue-icon" mat-mat-button matStepperNext>
-                      remove_red_eye</mat-icon>
-                    <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon"
-                      (click)="verPrecio()">Ver Precios
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </form>
-          </mat-step>
-        </div>
+              <a href="javascript:void(0);" *ngIf="disableVerPrecio | async" href="javascript:void(0);"
+                matTooltip="Ver Precios" style="font-size: 12px; vertical-align: middle;" class="blue-icon">
+                <mat-icon style="font-size: 32px;" matTooltipPosition="above" matTooltip="Ver Precios"
+                  (click)="verPrecio()" class="blue-icon" mat-mat-button matStepperNext>
+                  remove_red_eye</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon"
+                  (click)="verPrecio()">Ver Precios
+                </span>
+              </a>
+            </div>
+          </div>
+        </mat-step>
 
         <mat-step [stepControl]="formPrecioOroStep">
           <ng-template matStepLabel>Precio Oro</ng-template>
