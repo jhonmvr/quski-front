@@ -43,19 +43,22 @@ export class IntegracionService extends BaseService {
    * @param consulta ConsultaOferta
    */
   public getInformacionOferta(consulta: ConsultaOferta) {
-    let pipe = new DatePipe('en-US');
-    let fdf = null;
-    let fdff = new Date(consulta.fechaNacimiento);
-    fdff.setMinutes(fdff.getMinutes() + fdff.getTimezoneOffset());
-    fdf = pipe.transform(fdff, 'dd/MM/yyyy');
-    console.log("INGRESA AL SERVICIO LAFECHA ES " + fdf)
+    console.log("INGRESA AL SERVICIO LA FECHA ES ----> " + consulta.fechaNacimiento)
+    const pipe = new DatePipe('en-US');
+    // let fdf = null;
+    // let fdff = new Date(consulta.fechaNacimiento);
+    // fdff.setMinutes(fdff.getMinutes() + fdff.getTimezoneOffset());
+    let fechaNacimiento = new Date(consulta.fechaNacimiento);
+    const strigFecha = pipe.transform(fechaNacimiento, 'dd/MM/yyyy');
+    console.log("INGRESA AL SERVICIO LA FECHA ES ----> " + strigFecha);
+
     const serviceUrl = this.appResourcesUrl + 'integracionRestController/getInformacionOferta';
 
     this.params = new HttpParams()
         .set('perfilRiesgo', consulta.perfilRiesgo.toString())
         .set('origenOperacion', consulta.origenOperacion)
         .set('riesgoTotal', consulta.riesgoTotal.toString())
-        .set('fechaNacimiento', fdf)
+        .set('fechaNacimiento', strigFecha)
         .set('perfilPreferencia', consulta.perfilPreferencia)
         .set('agenciaOriginacion', consulta.agenciaOriginacion)
         .set('identificacionCliente', consulta.identificacionCliente)

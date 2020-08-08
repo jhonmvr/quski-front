@@ -76,7 +76,7 @@ export class GestionClienteComponent implements OnInit {
   public habilitarBtActualizar : boolean;
   public idDireccionDomicilio : string;
   public idDireccionLaboral   : string;
-  private idNegociacion       : string;
+  private idNegociacion       : number;
   public provinciaD           : string;
   public parroquiaD           : string;
   public parroquiaL           : string;
@@ -376,12 +376,10 @@ export class GestionClienteComponent implements OnInit {
       data.params.id
       if (data.params.id) {
         this.idNegociacion = data.params.id;
-        //this.idNegociacion = "109";
         this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
               this.tr.getSystemDate().subscribe( (hora: any) =>{
                 if(hora.entidad){
-                  ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
                   this.horaAsignacion = hora.entidad;
                   this.horaAtencion = hora.entidad;
                 }
@@ -2387,7 +2385,7 @@ export class GestionClienteComponent implements OnInit {
                                 this.sinNoticeService.setNotice("NO EXISTE NEGOCIACION PREVIA PARA HACER SEGUIMIENTO DE TRACKING", 'error');
                               }                              
                             }
-                            this.router.navigate(['', this.idNegociacion]);
+                            this.router.navigate(['credito-nuevo/', this.idNegociacion]);
                           });
                       }
                     }, error =>{
@@ -2441,7 +2439,7 @@ export class GestionClienteComponent implements OnInit {
    * @param fechaFin Date
    */
   public registrarTracking (  
-                      codigoRegistro : string, 
+                      codigoRegistro : number, 
                       fechaInicio: Date,
                       fechaAsignacion: Date,
                       fechaInicioAtencion: Date,

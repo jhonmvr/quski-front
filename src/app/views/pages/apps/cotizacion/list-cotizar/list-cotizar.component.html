@@ -7,26 +7,37 @@
 
 <re-portlet>
   <re-portlet-header [title]="'Cotizar'" [class]="'kt-portlet__head--lg'">
-    <ng-container ktPortletTools>
-      <a href="javascript:void(0);" matTooltip="Guardar" (click)="submit()"
+    <ng-container class="d-flex justify-content-around" ktPortletTools>
+      <a href="javascript:void(0);" matTooltip="Guardar" (click)="submit('GUARDAR')"
         style="font-size: 12px; vertical-align: middle;">
-        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save</mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Guardar</span>
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">save</mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Guardar</span>
       </a>
     </ng-container>
+    <ng-container class="d-flex justify-content-around" ktPortletTools>
+      <a href="javascript:void(0);" matTooltip="Negociar" (click)="submit('NEGOCIAR')"
+        style="font-size: 12px; vertical-align: middle;">
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">business_center</mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Negociar</span>
+      </a>
+    </ng-container>
+    <button mat-button class="blue-icon" matTooltip="Negociar"
+                      [routerLink]="['../../negociacion/gestion-negociacion']" routerLinkActive="active">
+                      Negociar
+                    </button>
   </re-portlet-header>
   <re-portlet-body>
     <!-- start::FILTERS & GROUP ACTIONS -->
 
     <div class="kt-form">
 
-      <mat-vertical-stepper mat-vertical-stepper [linear]="isLinear" #stepper>
+      <mat-vertical-stepper mat-vertical-stepper [linear]="!isLinear">
         <mat-step [stepControl]="formCliente">
           <form [formGroup]="formCliente">
             <ng-template matStepLabel>Datos Cliente</ng-template>
             <div class="kt-form__filtration">
               <div class="row align-items-center">
-                <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <div class="col-md-6">
                   <mat-form-field class="mat-form-field-fluid">
                     <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required matInput
                       numeric numericType="number" (keypress)="numberOnly($event)" />
@@ -47,7 +58,7 @@
                     <span style="position: relative;top: -10px;margin-left: 5px;">Ver cotizacion</span>
                   </button>
                 </div>
-                <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <div class="col-md-6">
                   <mat-form-field class="mat-form-field-fluid">
                     <input name="nombresCompletos" matInput [formControl]="nombresCompletos"
                       placeholder="Nombres Completos " autocomplete="off" ng-pattern="patternNombre" required="true" />
@@ -59,7 +70,7 @@
               </div>
 
               <div class="row align-items-center">
-                <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <div class="col-md-6">
                   <mat-form-field>
                     <mat-label>Fecha de nacimiento</mat-label>
                     <input matInput #inputFechaNacimiento [matDatepicker]="pickerFechaNacimiento"
@@ -72,7 +83,7 @@
                   </mat-form-field>
                 </div>
 
-                <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <div class="col-md-6">
                   <mat-form-field class="mat-form-field-fluid">
                     <input matInput [formControl]="edad" placeholder="Edad " autocomplete="off" readonly />
                     <mat-error>{{
@@ -81,13 +92,13 @@
                   </mat-form-field>
                 </div>
 
-                <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <div class="col-md-6">
                   <mat-form-field class="mat-form-field-fluid">
                     <input matInput [formControl]="nacionalidad" placeholder="Nacionalidad " autocomplete="off" />
                   </mat-form-field>
                   <mat-error>{{ getErrorMessage("nacionalidad") }}</mat-error>
                 </div>
-                <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <div class="col-md-6">
                   <mat-form-field class="mat-form-field-fluid">
                     <input matInput numeric numericType="number" [formControl]="movil" placeholder="Móvil "
                       autocomplete="off" required="true" (keypress)="numberOnly($event)" />
@@ -104,7 +115,7 @@
                   </mat-error>
                 </div>
 
-                <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <div class="col-md-6">
                   <mat-form-field>
                     <mat-select matInput placeholder="Publicidad" [formControl]="fpublicidad" required="true"
                       (selectionChange)="cambioSeleccionPublicidad($event)">
@@ -117,7 +128,7 @@
                   </mat-form-field>
                   <mat-error>{{ getErrorMessage("fpublicidad") }}</mat-error>
                 </div>
-                <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <div class="col-md-6">
                   <mat-form-field class="mat-form-field-fluid">
                     <input matInput [formControl]="correoElectronico" placeholder="Correo Eléctronico"
                       autocomplete="off" required="true" />
@@ -126,7 +137,7 @@
                     getErrorMessage("correoElectronico")
                   }}</mat-error>
                 </div>
-                <div class="col-md-6 kt-margin-bottom-10-mobile">
+                <div class="col-md-6">
                   <mat-form-field class="mat-form-field-fluid">
                     <input matInput [formControl]="campania" placeholder="Campaña" autocomplete="off" />
                   </mat-form-field>
@@ -153,25 +164,19 @@
         <mat-step>
           <ng-template matStepLabel>Variables crediticias </ng-template>
           <div class="row">
-            <div class="col-md-12" style="text-align: right;">
-              <button mat-button class="blue-icon" matTooltip="Ver Riesgo Acumulado" (click)="goRiesgoAcumulado()">
+            <div class="col-md-8">
+              <ng-container *ngIf="dataPopup">
+                <kt-tabla-variables-crediticias [dataPopup]='dataPopup' (entidades)='traerEntidadesVariables($event)'></kt-tabla-variables-crediticias>
+              </ng-container>
+            </div>
+            <div class="col-md-2">
+              <button mat-stroked-button class="blue-icon" matTooltip="Ver Riesgo Acumulado" (click)="goRiesgoAcumulado()">
                 Ver Riesgo Acumulado
               </button>
             </div>
-            <div>
-              <mat-form-field *ngIf="disableMensajeBloqueo | async" href="javascript:void(0);">
-                <mat-label>Mensaje de Bloqueo</mat-label>
-                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="5"></textarea>
-              </mat-form-field>
-            </div>
           </div>
-          <ng-container *ngIf="dataPopup">
-            <kt-tabla-variables-crediticias [dataPopup]='dataPopup'></kt-tabla-variables-crediticias>
-          </ng-container>
-
           <div class="row">
-            <div class="col-md-5">
+            <div class="offset-md-5 col-md-2">
               <a (click)="verPrecio()" href="javascript:void(0);" *ngIf="disableVerPrecio | async"
                 href="javascript:void(0);" matTooltip="Ver Precios" style="font-size: 12px; vertical-align: middle;"
                 class="blue-icon">
@@ -213,7 +218,7 @@
               </div>
             </div>
             <div class="row mb-5">
-              <div class="col-md-2">
+              <div class="offset-md-5 col-md-2">
                 <a href="javascript:void(0);" class="blue-icon style=" (click)="nuevoPrecioOro()" matTooltip="Agregar"
                   style="font-size: 12px; vertical-align: middle;">
                   <mat-icon style="font-size: 32px" matTooltipPosition="above" class="blue-icon style=">
@@ -275,12 +280,6 @@
                 <span style="position: relative;top: -10px;margin-left: 5px;">Simular</span>
               </a>
             </div>
-            <div class="col-md-4" style="text-align: right;">
-              <button mat-button class="blue-icon" matTooltip="Negociar"
-                [routerLink]="['../../negociacion/gestion-negociacion']" routerLinkActive="active">
-                Negociar
-              </button>
-            </div>
           </div>
 
         </mat-step>
@@ -288,14 +287,14 @@
           <ng-template matStepLabel>Opciones de Crédito </ng-template>
           <div class="row">
             <div class="col">
-              <kt-tabla-oferta-calculadora *ngIf="consultaOferta" [consulta]='consultaOferta'></kt-tabla-oferta-calculadora>
+              <kt-tabla-oferta-calculadora *ngIf="consultaOferta" [consulta]='consultaOferta' (entidades)='traerEntidadesOpciones($event)'></kt-tabla-oferta-calculadora>
             </div>
           </div>
           <div class="row">
             <div class="col">
               <form [formGroup]="formOpciones">
                 <div class="row">
-                  <div class="col-md-6 kt-margin-bottom-10-mobile">
+                  <div class="col-md-6">
                     <mat-form-field>
                       <mat-select placeholder="Grado Interes" [formControl]="fgradoInteres" required="true"
                         (selectionChange)="cambioSeleccionGradoInteres($event)">
@@ -307,7 +306,7 @@
                     </mat-form-field>
                     <mat-error>{{ getErrorMessage("fgradoInteres") }}</mat-error>
                   </div>
-                  <div class="col-md-6 kt-margin-bottom-10-mobile">
+                  <div class="col-md-6">
                     <mat-form-field>
                       <mat-select placeholder="Motivo de Desestimiento" [formControl]="fmotivoDesestimiento"
                         required="true" (selectionChange)="cambioSeleccionMotivoDesestimiento($event)">
@@ -323,12 +322,9 @@
               </form>
             </div>
           </div>
-
         </mat-step>
       </mat-vertical-stepper>
-
     </div>
-
     <!-- END FILTERS -->
   </re-portlet-body>
   <re-portlet-footer></re-portlet-footer>

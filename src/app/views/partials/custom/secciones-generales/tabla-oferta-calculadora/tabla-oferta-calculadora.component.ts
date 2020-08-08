@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOferta';
 import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
@@ -10,7 +10,11 @@ import { MatTableDataSource } from '@angular/material';
   styleUrls: ['./tabla-oferta-calculadora.component.scss']
 })
 export class TablaOfertaCalculadoraComponent implements OnInit {
-  @Input() consulta: ConsultaOferta;
+  // VARIABLES ANIDADAS
+  @Input()  consulta: ConsultaOferta;
+  @Output() entidades: EventEmitter<Array<OpcionesDeCredito>> = new EventEmitter<Array<OpcionesDeCredito>>();
+  // ENTIDADES
+  private entidadesOpciones: Array<OpcionesDeCredito>;
   // TABLA DE CREDITO
   displayedColumnsOpcionesDeCredito = ['plazo','periodoPlazo','montoFinanciado', 'valorARecibir', 'totalGastosNuevaOperacion','costoCustodia', 'costoTransporte', 'costoValoracion', 'costoTasacion', 'costoSeguro', 'costoCustodia', 'impuestoSolca', 'valorAPagar'];
   dataSourceOpcionesDeCredito = new MatTableDataSource<OpcionesDeCredito>();
@@ -25,7 +29,9 @@ export class TablaOfertaCalculadoraComponent implements OnInit {
     if ( consulta != null ) {
       this.cal.getInformacionOferta( consulta ).subscribe( (data: any) =>{
         if (data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion != null) {
-          this.dataSourceOpcionesDeCredito.data = data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
+          this.entidadesOpciones = data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
+          this.dataSourceOpcionesDeCredito.data = this.entidadesOpciones;
+          this.enviarAlPadre( this.entidadesOpciones );
         } else {
           console.log("Error ----> Id de cotizacion no existe", consulta);
         } 
@@ -33,6 +39,10 @@ export class TablaOfertaCalculadoraComponent implements OnInit {
     } else {
       console.log("Error ----> Ingrese id de cotizador", consulta);
     }
+  }
+  private  enviarAlPadre( entidades: Array<OpcionesDeCredito> ){
+    console.log(" Esto estoy enviando al padre -----> ", entidades);
+    this.entidades.emit( entidades );
   }
 
 }

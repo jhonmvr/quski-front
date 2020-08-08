@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Input } from '@angular/core';
+import { Component, OnInit, Inject, Input, Output, EventEmitter} from '@angular/core';
 import { MatTableDataSource, MAT_DIALOG_DATA } from '@angular/material';
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
@@ -12,12 +12,14 @@ import { PersonaConsulta } from '../../../../../core/model/calculadora/personaCo
   styleUrls: ['./tabla-variables-crediticias.component.scss']
 })
 export class TablaVariablesCrediticiasComponent implements OnInit {
-  @Input() dataPopup: DataPopup;
+  // VARIABLES ANIDADAS
+  @Input()  dataPopup: DataPopup;
+  @Output() entidades:  EventEmitter<Array<TbQoVariablesCrediticia>> = new EventEmitter<Array<TbQoVariablesCrediticia>>();
+  // ENTIDADES
+  private entidadesVariablesCrediticias: Array<TbQoVariablesCrediticia>;
   // TABLA DE VARIABLES CREDITICIAS
-  displayedColumnsVariablesCrediticias = ['orden', 'variable', 'valor'];
-  dataSourceVariablesCrediticias = new MatTableDataSource<TbQoVariablesCrediticia>();
-  public idCotizador   : number;
-  public idNegociacion : number;
+  public displayedColumnsVariablesCrediticias = ['orden', 'variable', 'valor'];
+  public dataSourceVariablesCrediticias = new MatTableDataSource<TbQoVariablesCrediticia>();
   constructor(
     private vaC: VariablesCrediticiasService,
     private cal: IntegracionService,
@@ -25,19 +27,18 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
 
   ngOnInit() {
     this.direccionDeFlujo(this.dataPopup);
+
   }
   /**
    * @author Jeroham cadenas - Developer twelve
    * @description Define si se busca la variable crediticia por negociacion o por cotizacion
    * @param data DataPopup
    */
-  direccionDeFlujo( data : DataPopup ){
+  private direccionDeFlujo( data : DataPopup ){
     if (data.isCotizacion) {
       this.iniciaBusquedaCotizacion( data.idBusqueda );
     } else {
       if ( data.isNegociacion){   
-        // this.idCotizador   = null;
-        // this.idNegociacion = data.idBusqueda;
         this.iniciaBusquedaNegociacion( data.idBusqueda );
       } else {
         if( data.isCalculadora ) {
@@ -48,13 +49,14 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
       }
     }
   }
-  iniciaBusquedaCotizacion( id : number ){
+  private iniciaBusquedaCotizacion( id : number ){
     if ( id != null ) {
       if ( id > 0 ) {
         this.vaC.variablesCrediticiabyIdCotizador( id ).subscribe( (data: any) =>{
           if (data.list) {
-            this.dataSourceVariablesCrediticias.data = data.list;
-            console.log("data que me esta devolviendo ---> ", this.dataSourceVariablesCrediticias.data);
+            this.entidadesVariablesCrediticias = data.list;
+            this.dataSourceVariablesCrediticias.data = this.entidadesVariablesCrediticias;
+            this.enviarAlPadre( this.entidadesVariablesCrediticias );
           } else {
             console.log("Error ----> Id de cotizacion no existe", id);
           } 
@@ -66,14 +68,15 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
       console.log("Error ----> Ingrese id de cotizador", id);
     }
   }
-  iniciaBusquedaCalculadora( cedula : string ){
+  private iniciaBusquedaCalculadora( cedula : string ){
     if ( cedula != "" ) {
       const consulta = new PersonaConsulta();
       consulta.identificacion = cedula;
       this.cal.getInformacionPersonaCalculadora( consulta ).subscribe( (data: any) =>{
         if (data.entidad.xmlVariablesInternas.variablesInternas.variable != null) {
-          this.dataSourceVariablesCrediticias.data = data.entidad.xmlVariablesInternas.variablesInternas.variable;
-          console.log("data que me esta devolviendo ---> ", this.dataSourceVariablesCrediticias.data);
+          this.entidadesVariablesCrediticias = data.entidad.xmlVariablesInternas.variablesInternas.variable
+          this.dataSourceVariablesCrediticias.data = this.entidadesVariablesCrediticias;
+          this.enviarAlPadre( this.entidadesVariablesCrediticias );
         } else {
           console.log("Error ----> Id de cotizacion no existe", cedula);
         } 
@@ -82,14 +85,14 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
       console.log("Error ----> Ingrese id de cotizador", cedula);
     }
   }
-  iniciaBusquedaNegociacion( id : number ){
+  private iniciaBusquedaNegociacion( id : number ){
     if ( id != null ) {
       if ( id > 0 ) {
         this.vaC.variablesCrediticiaByIdNegociacion( id ).subscribe( (data: any) =>{
-          if (data) {
-            data.forEach(element => {
-            this.dataSourceVariablesCrediticias.data.push(element);
-            });
+          if (data.list) {
+            this.entidadesVariablesCrediticias = data.list;
+            this.dataSourceVariablesCrediticias.data = this.entidadesVariablesCrediticias;
+            this.enviarAlPadre( this.entidadesVariablesCrediticias );
           } else {
             console.log("Error ----> Id de cotizacion no existe", id);
           }
@@ -100,6 +103,10 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
     } else {
       console.log("Error ----> Ingrese id de cotizador", id);
     }
+  }
+  private enviarAlPadre(entidades: Array<TbQoVariablesCrediticia>){
+    console.log('Estoy enviando esto desde variables crediticias -----> ', entidades);
+    this.entidades.emit( entidades );
   }
 }
 

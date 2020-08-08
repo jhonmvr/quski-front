@@ -500,7 +500,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     tracking.actividad            = this.actividad; // Modulo en ProducBacklog
     tracking.proceso              = this.proceso              
     tracking.observacion          = "";
-    tracking.codigoRegistro       = codigoRegistro.toString();
+    tracking.codigoRegistro       = codigoRegistro;
     tracking.situacion            = SituacionTrackingEnum.EN_PROCESO;
     tracking.usuario              = UsuarioEnum.APROBADOR; // Cambiar a usuario actual.
     tracking.fechaInicio          = fechaInicio;

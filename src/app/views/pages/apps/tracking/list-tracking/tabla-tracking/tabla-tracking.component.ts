@@ -107,10 +107,10 @@ export class TablaTrackingComponent implements OnInit {
       if (data.list) {      
         this.totalResults = data.totalResults;
         this.dataSource = new MatTableDataSource<TbQoTracking>(data.list);
-        let hour :    number = 0;
+/*         let hour :    number = 0;
         let minutes : number = 0;
-        let segundo:  number = 0;
-        for (let i = 0; i < this.dataSource.data.length; i++) {
+        let segundo:  number = 0; */
+        /* for (let i = 0; i < this.dataSource.data.length; i++) {
           let a = +this.dataSource.data[i].totalTiempo.slice(0,2);
           hour = hour + a;
           let b = +this.dataSource.data[i].totalTiempo.slice(3,5);
@@ -126,8 +126,8 @@ export class TablaTrackingComponent implements OnInit {
             segundo = 0;
             minutes = minutes + 1;
           }
-        }
-        let hours
+        } */
+/*         let hours
         if (hour < 10) {
           hours = "0"+hour;
         }else{
@@ -145,7 +145,7 @@ export class TablaTrackingComponent implements OnInit {
         }else{
           segundos = segundo;
         }
-        this.total = hours+":"+minute+":"+segundos;  
+        this.total = hours+":"+minute+":"+segundos;   */
         this.dataSource.paginator=this.paginator;
         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
       } else {

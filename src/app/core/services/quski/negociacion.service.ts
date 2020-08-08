@@ -18,10 +18,10 @@ export class NegociacionService extends BaseService {
     this.setParameter();
 
   }
-  public findNegociacionById(id: string) {
+  public findNegociacionById(id: number) {
     const serviceUrl =
       this.appResourcesUrl + this.urlRest +'getEntity';
-    this.params = new HttpParams().set('id', id);
+    this.params = new HttpParams().set('id', id.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }

@@ -541,7 +541,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
    /**
    * 
    * @author Jeroham Cadenas - Developer Twuelve
-   * @param codigoRegistro string
+   * @param codigoRegistro number
    * @param fechaInicio Date
    * @param fechaAsignacion Date
    * @param fechaInicioAtencion Date
@@ -553,7 +553,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     tracking.actividad            = this.actividad; // Modulo en ProducBacklog
     tracking.proceso              = this.proceso              
     tracking.observacion          = "";
-    tracking.codigoRegistro       = codigoRegistro.toString();
+    tracking.codigoRegistro       = codigoRegistro;
     tracking.situacion            = SituacionTrackingEnum.EN_PROCESO;
     tracking.usuario              = UsuarioEnum.APROBADOR; // Cambiar a usuario actual.
     tracking.fechaInicio          = fechaInicio;
