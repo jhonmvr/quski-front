@@ -1352,9 +1352,9 @@ export class GestionClienteComponent implements OnInit {
     entidadCrearcliente.segundoNombre =  "Rafael";    
     //Crear un array para pasarle los datos.
     let listTelefonos = new TelefonoCliente();
-    listTelefonos.esMovil = true
-    listTelefonos.esPrincipal = true
-    listTelefonos.numero = "0996553117";
+    //listTelefonos.esMovil = true
+    //listTelefonos.esPrincipal = true
+    //listTelefonos.numero = "0996553117";
     entidadCrearcliente.telefonos.push( listTelefonos );
     this.css.crearClienteCS(entidadCrearcliente).subscribe( ( data : any) => {
       if(data){

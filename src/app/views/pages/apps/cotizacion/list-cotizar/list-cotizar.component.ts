@@ -218,20 +218,20 @@ export class ListCotizarComponent implements OnInit {
   /**
    * ******************************** @INCIO
   */
-/* public goRiesgoAcumulado() {
-    const dialogRef = this.dialog.open(RiesgoAcumuladoDialogComponent, {
-      width: 'auto',
-      height: 'auto',
-      data: this.entidadCliente.cedulaCliente
-    });
-    dialogRef.afterClosed().subscribe((respuesta: Array<TbQoRiesgoAcumulado>) => {
-      console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
-      this.rie.persistEntity(respuesta).subscribe((data: any) => {
-        console.log('data al cerrrar', JSON.stringify(data));
+  /* public goRiesgoAcumulado() {
+      const dialogRef = this.dialog.open(RiesgoAcumuladoDialogComponent, {
+        width: 'auto',
+        height: 'auto',
+        data: this.entidadCliente.cedulaCliente
       });
-    });
-  } */
-    /********************************************* @BUSQUEDA *********************    */
+      dialogRef.afterClosed().subscribe((respuesta: Array<TbQoRiesgoAcumulado>) => {
+        console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
+        this.rie.persistEntity(respuesta).subscribe((data: any) => {
+          console.log('data al cerrrar', JSON.stringify(data));
+        });
+      });
+    } */
+  /********************************************* @BUSQUEDA *********************    */
 
   public busquedaSoftbank(cedula: string) {
     this.loadingSubject.next(true);
@@ -245,12 +245,13 @@ export class ListCotizarComponent implements OnInit {
         this.entidadClientesoftbank = null;
       }
       this.contadorBusqueda++;
+      console.log('CONTADOR EN SOFTBANK----> ', this.contadorBusqueda);
       this.loadingSubject.next(false);
       this.busquedaCliente();
     });
   }
   public busquedaCliente() {
-    if(this.horaAsignacionProspeccion == null){
+    if (this.horaAsignacionProspeccion == null) {
       this.capturaHoraAsignacion("PROSPECCION");
     }
     console.log("Contador ---> " + this.contadorBusqueda);
@@ -267,7 +268,13 @@ export class ListCotizarComponent implements OnInit {
             this.sinNoticeService.setNotice('ERROR EN BUSQUEDA DE CLIENTE', 'error');
           }
         } else {
-          this.solicitarAutorizacion(this.identificacion.value);
+          if (this.entidadClientesoftbank != null) {
+            this.guardarClienteBusqueda(null, null, this.entidadClientesoftbank);
+
+          } else {
+            this.solicitarAutorizacion(this.identificacion.value);
+          }
+
         }
       }
     } else {
@@ -277,9 +284,12 @@ export class ListCotizarComponent implements OnInit {
   private busquedaEnCRM(cedula: string) {
     this.loadingSubject.next(true);
     this.crm.findClienteByCedulaCRM(cedula).subscribe((data: any) => {
-      this.contadorBusqueda++;
+
       if (data && data.list) {
+
         this.entidadProspectoCRM = data.list[0];
+      } else {
+        this.entidadProspectoCRM = null;
       }
       this.loadingSubject.next(false);
       this.busquedaEquifax(cedula);
@@ -292,6 +302,7 @@ export class ListCotizarComponent implements OnInit {
     this.ing.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
       console.log('VALOR DE DATA EN  findClienteByIdentificacion', JSON.stringify(data.entidad.datoscliente));
       if (data.entidad.datoscliente != null) {
+        this.contadorBusqueda++;
         this.entidadPersonaCalculadora = data.entidad.datoscliente;
       } else {
         this.entidadPersonaCalculadora = null;
@@ -319,6 +330,7 @@ export class ListCotizarComponent implements OnInit {
     this.movil.setValue(this.entidadCliente.telefonoMovil);
     this.telefonoDomicilio.setValue(this.entidadCliente.telefonoFijo);
     this.correoElectronico.setValue(this.entidadCliente.email);
+    this.fechaNacimiento.setValue(this.entidadCliente.fechaNacimiento);
     this.capturaHoraAtencion("PROSPECCION");
     this.loadingSubject.next(false);
     // INPUT VARIABLES CREDITICIAS
@@ -350,33 +362,54 @@ export class ListCotizarComponent implements OnInit {
       cliente.fechaNacimiento = softbank.fechaNacimiento;
       cliente.primerNombre = softbank.primerNombre;
       cliente.segundoNombre = softbank.segundoNombre;
+      if (softbank.telefonos != null) {
+        softbank.telefonos.forEach(element => {
+          if (element.codigoTipoTelefono === 'M') {
+            cliente.telefonoMovil = element.numero;
+          }
+
+
+        });
+      }
     } else {
       if (crm != null) {
         // setea crm y equifax
         cliente.telefonoAdicional = crm.phoneOther;
-        cliente.cedulaCliente = crm.cedulaC;
+
+        if (crm.cedulaC != null) {
+          cliente.cedulaCliente = crm.cedulaC;
+        }
+
         cliente.fechaNacimiento = equifax.fechanacimiento;
         cliente.nacionalidad = equifax.nacionalidad;
         cliente.genero = equifax.genero;
         cliente.campania = equifax.codigocampania.toString();
-        if (crm.emailAddress != null) {
+        if (crm.emailAddress != null && crm.emailAddress !== '') {
           cliente.email = crm.emailAddress;
+        } else {
+          if (equifax.correoelectronico != null && equifax.correoelectronico !== '') {
+            cliente.email = equifax.correoelectronico;
+          }
         }
-        if (equifax.correoelectronico != null) {
-          cliente.email = equifax.correoelectronico;
-        }
-        if (crm.phoneHome != null) {
+
+        if (crm.phoneHome != null && crm.phoneHome !== '') {
           cliente.telefonoFijo = crm.phoneHome;
+        } else {
+          if (equifax.telefonofijo != null && equifax.telefonofijo !== '') {
+            cliente.telefonoFijo = equifax.telefonofijo;
+          }
+
         }
-        if (equifax.telefonofijo != null) {
-          cliente.telefonoFijo = equifax.telefonofijo;
-        }
-        if (crm.phoneMobile != null) {
+
+
+        if (crm.phoneMobile != null && crm.phoneMobile !== '') {
           cliente.telefonoMovil = crm.phoneMobile;
+        } else {
+          if (equifax.telefonomovil != null && equifax.telefonomovil !== '') {
+            cliente.telefonoMovil = equifax.telefonomovil;
+          }
         }
-        if (equifax.telefonomovil != null) {
-          cliente.telefonoMovil = equifax.telefonomovil;
-        }
+
       } else {
         // setear equifax
         cliente.fechaNacimiento = equifax.fechanacimiento;
@@ -386,9 +419,10 @@ export class ListCotizarComponent implements OnInit {
         cliente.telefonoMovil = equifax.telefonomovil;
         cliente.telefonoFijo = equifax.telefonofijo;
         cliente.campania = equifax.codigocampania.toString();
+        cliente.cedulaCliente = equifax.identificacion.toString();
       }
     }
-    console.log("paso 2");
+    console.log("paso 2, CLIENTE--> ", cliente);
     this.cli.persistEntity(cliente).subscribe((data: any) => {
       if (data.entidad != null) {
         this.entidadCliente = new TbQoCliente();
@@ -562,7 +596,7 @@ export class ListCotizarComponent implements OnInit {
       if (this.precioOro) {
         this.pre.persistEntity(this.precioOro).subscribe((data: any) => {
           console.log('==><< respuesta para precio oro ' + JSON.stringify(data));
-          this.disableSimulaSubject.next(false);
+          this.disableSimulaSubject.next(true);
 
           if (data && data.entidad) {
             console.log('VALOR DEL ID ANTES DE CARGAR EL PRECIO ORO', JSON.stringify(data.entidad.id));
@@ -649,68 +683,68 @@ export class ListCotizarComponent implements OnInit {
     this.stepper.selectedIndex = 3;
   }
   /********************************************  @TRACKING  ***********************************************************/
-      /**
-   * @author Jeroham Cadenas - Developer Twelve
-   * @description Captura la hora de inicio de Tracking
-   */
-  private capturaHoraInicio(etapa: string){
-    this.tra.getSystemDate().subscribe( (hora: any) =>{
-      if(hora.entidad){ 
-        if(etapa == "PROSPECCION"){
+  /**
+* @author Jeroham Cadenas - Developer Twelve
+* @description Captura la hora de inicio de Tracking
+*/
+  private capturaHoraInicio(etapa: string) {
+    this.tra.getSystemDate().subscribe((hora: any) => {
+      if (hora.entidad) {
+        if (etapa == "PROSPECCION") {
           this.horaInicioProspeccion = hora.entidad;
         }
-        if(etapa == "TASACION"){
+        if (etapa == "TASACION") {
           this.horaInicioTasacion = hora.entidad;
         }
       }
     });
   }
-  private capturaHoraAsignacion(etapa: string){
-    this.tra.getSystemDate().subscribe( (hora: any) =>{
-      if(hora.entidad){
-        if(etapa == "PROSPECCION"){
+  private capturaHoraAsignacion(etapa: string) {
+    this.tra.getSystemDate().subscribe((hora: any) => {
+      if (hora.entidad) {
+        if (etapa == "PROSPECCION") {
           this.horaAsignacionProspeccion = hora.entidad;
         }
-        if(etapa == "TASACION"){
+        if (etapa == "TASACION") {
           this.horaAsignacionTasacion = hora.entidad;
         }
       }
     });
   }
-  private capturaHoraAtencion(etapa: string){
-      this.tra.getSystemDate().subscribe( (hora: any) =>{
-        if(hora.entidad){
-          if(etapa == "PROSPECCION"){
-            this.horaAtencionProspeccion = hora.entidad;
-          }
-          if(etapa == "TASACION"){
-            this.horaAtencionTasacion = hora.entidad;
-          }
+  private capturaHoraAtencion(etapa: string) {
+    this.tra.getSystemDate().subscribe((hora: any) => {
+      if (hora.entidad) {
+        if (etapa == "PROSPECCION") {
+          this.horaAtencionProspeccion = hora.entidad;
         }
-      });
-  }
-  private capturaHoraFinal(etapa: string){
-    this.tra.getSystemDate().subscribe( (hora: any) =>{
-      if(hora.entidad){
-        if(etapa == "PROSPECCION"){
-          this.horaFinalProspeccion = hora.entidad;
-          this.registroProspeccion(this.entidadCotizador.id, this.horaInicioProspeccion, this.horaAsignacionProspeccion, this.horaAtencionProspeccion, this.horaFinalProspeccion);
-        }
-        if(etapa == "TASACION"){
-          this.horaFinalTasacion = hora.entidad;
-          this.registroTasación(this.entidadCotizador.id, this.horaInicioTasacion, this.horaAsignacionTasacion,this.horaAtencionTasacion, this.horaFinalTasacion);
+        if (etapa == "TASACION") {
+          this.horaAtencionTasacion = hora.entidad;
         }
       }
     });
   }
-  private capturaDatosTraking(){
-    this.par.findByNombreTipoOrdered("COTIZACION","ACTIVIDAD","Y").subscribe((data : any) =>{
+  private capturaHoraFinal(etapa: string) {
+    this.tra.getSystemDate().subscribe((hora: any) => {
+      if (hora.entidad) {
+        if (etapa == "PROSPECCION") {
+          this.horaFinalProspeccion = hora.entidad;
+          this.registroProspeccion(this.entidadCotizador.id, this.horaInicioProspeccion, this.horaAsignacionProspeccion, this.horaAtencionProspeccion, this.horaFinalProspeccion);
+        }
+        if (etapa == "TASACION") {
+          this.horaFinalTasacion = hora.entidad;
+          this.registroTasación(this.entidadCotizador.id, this.horaInicioTasacion, this.horaAsignacionTasacion, this.horaAtencionTasacion, this.horaFinalTasacion);
+        }
+      }
+    });
+  }
+  private capturaDatosTraking() {
+    this.par.findByNombreTipoOrdered("COTIZACION", "ACTIVIDAD", "Y").subscribe((data: any) => {
       if (data.entidades) {
         this.actividad = data.entidades[0].nombre;
-        this.par.findByNombreTipoOrdered("PROSPECCION","PROCESO","Y").subscribe((data : any) =>{
+        this.par.findByNombreTipoOrdered("PROSPECCION", "PROCESO", "Y").subscribe((data: any) => {
           if (data.entidades) {
             this.procesoProspeccion = data.entidades[0].nombre;
-            this.par.findByNombreTipoOrdered("TASACION","PROCESO","Y").subscribe((data : any) =>{
+            this.par.findByNombreTipoOrdered("TASACION", "PROCESO", "Y").subscribe((data: any) => {
               if (data.entidades) {
                 this.procesoTasacion = data.entidades[0].nombre;
               }
@@ -720,7 +754,7 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
-  public registroProspeccion(codigoRegistro: number,fechaInicio: Date, fechaAsignacion: Date,fechaInicioAtencion: Date,fechaFin: Date) {
+  public registroProspeccion(codigoRegistro: number, fechaInicio: Date, fechaAsignacion: Date, fechaInicioAtencion: Date, fechaFin: Date) {
     const tracking: TbQoTracking = new TbQoTracking();
     this.loadingSubject.next(true);
     tracking.actividad = this.actividad;
@@ -752,15 +786,15 @@ export class ListCotizarComponent implements OnInit {
     });
 
   }
-  public registroTasación(codigoRegistro: number, fechaInicio: Date,fechaAsignacion: Date, fechaInicioAtencion: Date,fechaFin: Date) {
+  public registroTasación(codigoRegistro: number, fechaInicio: Date, fechaAsignacion: Date, fechaInicioAtencion: Date, fechaFin: Date) {
     const tracking: TbQoTracking = new TbQoTracking();
-    tracking.actividad = this.actividad   
+    tracking.actividad = this.actividad
     tracking.proceso = this.procesoTasacion
     tracking.observacion = '';
     tracking.codigoRegistro = codigoRegistro;
     tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
     tracking.usuario = UsuarioEnum.ASESOR;                 // Modificar al id del asesor
-    tracking.fechaInicio = fechaInicio;                    
+    tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
     tracking.fechaInicioAtencion = fechaInicioAtencion;
     tracking.fechaFin = fechaFin;
@@ -959,7 +993,7 @@ export class ListCotizarComponent implements OnInit {
   public consultaCatalogos() {
     this.sof.consultarEducacionCS().subscribe((data: any) => {
       if (data.existeError !== true) {
-        this.catEducacion = data.nivelesEducacion;
+        this.catEducacion = data.catalogo;
         this.loadingSubject.next(false);
 
       } else {
@@ -1042,29 +1076,29 @@ export class ListCotizarComponent implements OnInit {
 
   }
   /******************************************** @EVENT   *********************************************************/
-  public traerEntidadesVariables(event: Array<TbQoVariablesCrediticia> ){
+  public traerEntidadesVariables(event: Array<TbQoVariablesCrediticia>) {
     console.log('Muestrame lo que traes de variables -----> ', event);
-    this.guardarVariables( event );
+    this.guardarVariables(event);
   }
-  public traerEntidadesOpciones(event: Array<OpcionesDeCredito> ){
+  public traerEntidadesOpciones(event: Array<OpcionesDeCredito>) {
     this.entidadesOpcionesCreditos = new Array<OpcionesDeCredito>();
     console.log('Muestrame lo que traes de Opciones -----> ', event);
     this.entidadesOpcionesCreditos = event;
   }
   /******************************************** @GUARDAR  ********************************************************/
   // SIN USAR
-  private guardarRiesgoAcumulado( entidades: Array<TbQoRiesgoAcumulado> ){
-    entidades.forEach(e =>{
+  private guardarRiesgoAcumulado(entidades: Array<TbQoRiesgoAcumulado>) {
+    entidades.forEach(e => {
       e.tbQoCliente.id = this.entidadCliente.id
     });
-    this.rie.persistEntity( entidades ).subscribe( (data: any) =>{
-      if(data.entidades){
+    this.rie.persistEntity(entidades).subscribe((data: any) => {
+      if (data.entidades) {
         this.entidadesRiesgoAcumulados = data.entidades;
         console.log("Riesgo guardadas -----> ", data.entidades);
-      }else{
+      } else {
         console.log(' No se guardaron ---->', data);
       }
-    }, error =>{
+    }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
         this.sinNoticeService.setNotice(b.msgError, 'error');
@@ -1073,19 +1107,25 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
-  private guardarVariables( entidades: Array<TbQoVariablesCrediticia> ){
-    entidades.forEach(e =>{
+  private guardarVariables(entidades: Array<TbQoVariablesCrediticia>) {
+
+    console.log('VARIABLES', JSON.stringify(entidades));
+    console.log('ENTIDAD COTIZADOR', JSON.stringify(this.entidadCotizador));
+    entidades.forEach(e => {
+      e.tbQoCotizador = new TbQoCotizador();
       e.tbQoCotizador.id = this.entidadCotizador.id;
+
+
     });
-    this.vac.persistEntity( entidades ).subscribe( (data: any) =>{
-      if(data.entidades){
+    this.vac.persistEntity(entidades).subscribe((data: any) => {
+      if (data.entidades) {
         this.entidadesVariablesCrediticias = new Array<TbQoVariablesCrediticia>();
         this.entidadesVariablesCrediticias = data.entidades;
         console.log("Variables guardadas -----> ", data.entidades);
-      }else{
+      } else {
         console.log(' No se guardaron ---->', data);
       }
-    }, error =>{
+    }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
         this.sinNoticeService.setNotice(b.msgError, 'error');
@@ -1096,11 +1136,11 @@ export class ListCotizarComponent implements OnInit {
   }
   public submit(flujo: string) {
     console.log('mi entrada ----> ', flujo);
-    if(this.formCliente.valid){
+    if (this.formCliente.valid) {
       if (this.formOpciones.valid) {
         if (this.entidadCliente != null) {                      // 1re item (setear valores)
-          if(this.entidadCotizador != null){                    // 2do item (setear valores)
-            if(this.entidadesOpcionesCreditos != null){         // 3er item (llamar metodo )
+          if (this.entidadCotizador != null) {                    // 2do item (setear valores)
+            if (this.entidadesOpcionesCreditos != null) {         // 3er item (llamar metodo )
               this.loadingSubject.next(true);
               this.guardado(this.entidadCliente, this.entidadCotizador, this.entidadesOpcionesCreditos);
               if (flujo == "NEGOCIAR") {
@@ -1108,27 +1148,27 @@ export class ListCotizarComponent implements OnInit {
               } else {
                 this.router.navigate(['dashboard']);
               }
-            }else{
-            this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DE OPCIONES DE CREDITO', 'error'); 
+            } else {
+              this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DE OPCIONES DE CREDITO', 'error');
 
             }
-          }else{
-            this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DE COTIZADOR', 'error'); 
+          } else {
+            this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DE COTIZADOR', 'error');
           }
         } else {
-        this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DEL CLIENTE', 'error'); 
+          this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DEL CLIENTE', 'error');
         }
-        
+
       } else {
         this.sinNoticeService.setNotice('INGRESE TODOS LOS CAMPOS DE LA SECCION DE OPCIONES DE CREDITO', 'error');
       }
-    }else{
+    } else {
       this.sinNoticeService.setNotice('INGRESE TODOS LOS CAMPOS DE LA SECCION CLIENTE', 'error');
     }
-   
+
 
   }
-  private guardado(cliente: TbQoCliente, cotizador: TbQoCotizador, opcionesDeCredito: Array<OpcionesDeCredito>){
+  private guardado(cliente: TbQoCliente, cotizador: TbQoCotizador, opcionesDeCredito: Array<OpcionesDeCredito>) {
     // CLIENTE 
     cliente.primerNombre = this.nombresCompletos.value;
     cliente.campania = this.campania.value;
@@ -1147,8 +1187,8 @@ export class ListCotizarComponent implements OnInit {
     cotizador.tbQoCliente = cliente;
     // DETALLE DE CREDITO
     const listDetalleCredito = new Array<TbQoDetalleCredito>();
-    opcionesDeCredito.forEach(e =>{
-      const dcr = new TbQoDetalleCredito();      
+    opcionesDeCredito.forEach(e => {
+      const dcr = new TbQoDetalleCredito();
       dcr.costoResguardado = e.costoFideicomiso
       dcr.costoSeguro = e.costoSeguro
       dcr.costoCustodia = e.costoCustodia
@@ -1162,23 +1202,23 @@ export class ListCotizarComponent implements OnInit {
       dcr.recibirCliente = e.valorARecibir
       dcr.solca = e.impuestoSolca
       dcr.valorCuota = e.cuota
-      dcr.tbQoCotizador = cotizador 
-      listDetalleCredito.push( dcr ); 
+      dcr.tbQoCotizador = cotizador
+      listDetalleCredito.push(dcr);
     });
-    this.guardarGestion( listDetalleCredito );
+    this.guardarGestion(listDetalleCredito);
   }
-  private guardarGestion( entidades: Array<TbQoDetalleCredito> ){
-    
-    this.det.persistEntities( entidades ).subscribe( (data: any) =>{
-      if(data.entidades){
+  private guardarGestion(entidades: Array<TbQoDetalleCredito>) {
+
+    this.det.persistEntities(entidades).subscribe((data: any) => {
+      if (data.entidades) {
 
         console.log("TbQoDetalleCredito guardadas -----> ", data.entidades);
         this.entidadesDetalleCreditos = data.entidades;
         this.capturaHoraFinal("TASACION");
-      }else{
+      } else {
         console.log(' No se guardaron ---->', data);
       }
-    }, error =>{
+    }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
         this.sinNoticeService.setNotice(b.msgError, 'error');
