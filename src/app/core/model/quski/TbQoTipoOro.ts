@@ -3,7 +3,6 @@ export class TbQoTipoOro {
     estado: string;
     fechaActualizacion : Date
     fechaCreacion: Date
-    precio: number;
     quilate: string;
     constructor(){ }
 }

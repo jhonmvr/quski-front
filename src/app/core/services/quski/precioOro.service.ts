@@ -43,7 +43,7 @@ export class PrecioOroService extends BaseService {
 
 
   public eliminarPrecioOro(idPrecioOro) {
-    let serviceUrl = this.appResourcesUrl+ this.urlRest +"removeEntity";
+    let serviceUrl = this.appResourcesUrl+ this.urlRest +"eliminarPrecioOro";
     this.params= new HttpParams();
     this.params=this.params.set("id", idPrecioOro);
     this.options = { headers: this.headers, params: this.params};
