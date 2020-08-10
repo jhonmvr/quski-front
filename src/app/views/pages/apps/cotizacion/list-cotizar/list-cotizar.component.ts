@@ -57,7 +57,7 @@ export class ListCotizarComponent implements OnInit {
   // ENTIDADES
   private entidadProspectoCRM: ProspectoCRM = null;
   private entidadClientesoftbank: ClienteSoftbank = null;
-  private entidadCliente: TbQoCliente = null;
+  public entidadCliente: TbQoCliente = null;
   private entidadCotizador: TbQoCotizador = null;
   private entidadPersonaCalculadora: PersonaCalculadora = null;
   private entidadesOpcionesCreditos: Array<OpcionesDeCredito> = null;
@@ -579,7 +579,7 @@ export class ListCotizarComponent implements OnInit {
     this.preciosOrodSubject.next(false);
     if (this.formPrecioOro.valid) {
       this.precioOro = new TbQoPrecioOro();
-      this.disableSimulaSubject.next(true);
+      
       this.totalPeso = 0;
       this.totalPrecio = 0;
       this.tipoOros = this.tipoOro.value;
