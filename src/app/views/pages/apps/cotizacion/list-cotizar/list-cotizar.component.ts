@@ -57,7 +57,7 @@ export class ListCotizarComponent implements OnInit {
   // ENTIDADES
   private entidadProspectoCRM: ProspectoCRM = null;
   private entidadClientesoftbank: ClienteSoftbank = null;
-  public entidadCliente: TbQoCliente = null;
+  private entidadCliente: TbQoCliente = null;
   private entidadCotizador: TbQoCotizador = null;
   private entidadPersonaCalculadora: PersonaCalculadora = null;
   private entidadesOpcionesCreditos: Array<OpcionesDeCredito> = null;
@@ -522,16 +522,6 @@ export class ListCotizarComponent implements OnInit {
   }
   nuevoPrecioOro() {
     if (this.formPrecioOro.valid) {
-<<<<<<< HEAD
-      this.precioOro = new TbQoPrecioOro();
-      
-      this.totalPeso = 0;
-      this.totalPrecio = 0;
-      this.tipoOros = this.tipoOro.value;
-      if (this.precioOroLocal) {
-        console.log('==> precio oro local  ' + this.precioOroLocal);
-        this.precioOro = this.precioOroLocal;
-=======
       this.loadingSubject.next(true);
       const precioOro = new TbQoPrecioOro();
       precioOro.precio = this.precio.value;
@@ -543,7 +533,6 @@ export class ListCotizarComponent implements OnInit {
         const index = this.dataSourcePrecioOro.data.indexOf(this.elementPrecioOro);
         this.dataSourcePrecioOro.data.splice(index, 1);
         this.elementPrecioOro = null;
->>>>>>> 84c4abe387b8fa7400a34f399e700e6566d96f24
       }
       this.pre.persistEntity(precioOro).subscribe((data: any) => {
         if (data && data.entidad) {

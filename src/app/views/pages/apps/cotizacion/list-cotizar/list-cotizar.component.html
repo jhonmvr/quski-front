@@ -1,4 +1,4 @@
-<!-- comento los vertical para que salga 
+ <!-- comento los vertical para que salga 
       <mat-vertical-stepper>
         <mat-step> -->
 <div class="spinner-container" *ngIf="loading | async">
@@ -51,71 +51,16 @@
                 </div>
                 
               </div>
-
-              <div class="row align-items-center">
-                <div class="col-md-6">
-                  <mat-form-field>
-                    <mat-label>Fecha de nacimiento</mat-label>
-                    <input matInput #inputFechaNacimiento [matDatepicker]="pickerFechaNacimiento"
-                      (dateChange)="onChangeFechaNacimiento()" [formControl]="fechaNacimiento" />
-                    <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
-                    <mat-error>{{
-                      getErrorMessage("fechaNacimiento")
-                    }}</mat-error>
-                  </mat-form-field>
-                </div>
-
-                <div class="col-md-6">
-                  <mat-form-field class="mat-form-field-fluid">
-                    <input matInput [formControl]="edad" placeholder="Edad " autocomplete="off" readonly />
-                    <mat-error>{{
-                      getErrorMessage("edad")
-                    }}</mat-error>
-                  </mat-form-field>
-                </div>
-
-                <div class="col-md-6">
-                  <mat-form-field class="mat-form-field-fluid">
-                    <input matInput [formControl]="nacionalidad" placeholder="Nacionalidad " autocomplete="off" />
-                  </mat-form-field>
-                  <mat-error>{{ getErrorMessage("nacionalidad") }}</mat-error>
-                </div>
-                <div class="col-md-6">
-                  <mat-form-field class="mat-form-field-fluid">
-                    <input matInput numeric numericType="number" [formControl]="movil" placeholder="Móvil "
-                      autocomplete="off" required="true" (keypress)="numberOnly($event)" />
-                  </mat-form-field>
-                  <mat-error>{{ getErrorMessage("movil") }}</mat-error>
-                </div>
-                <div class="col-md-6">
-                  <mat-form-field>
-                    <input matInput [formControl]="telefonoDomicilio" placeholder="Teléfono Domicilio" required="true"
-                      (keypress)="numberOnly($event)">
-                  </mat-form-field>
-                  <mat-error *ngIf="telefonoDomicilio.invalid">
-                    Ingrese un telefono valido
-                  </mat-error>
-                </div>
-
-                <div class="col-md-6">
-                  <mat-form-field>
-                    <mat-select matInput placeholder="Publicidad" [formControl]="fpublicidad" required="true"
-                      (selectionChange)="getPublicidades($event)">
-                      <mat-option>--</mat-option>
-                      <mat-option *ngFor="let publicidad of listPublicidad" [value]="publicidad">
-                        {{ publicidad }}
-                      </mat-option>
-
-                    </mat-select>
-                  </mat-form-field>
-                  <mat-error>{{ getErrorMessage("fpublicidad") }}</mat-error>
-                </div>
-                <div class="col-md-6">
-                  <mat-form-field class="mat-form-field-fluid">
-                    <input matInput [formControl]="correoElectronico" placeholder="Correo Eléctronico"
-                      autocomplete="off" required="true" />
-                  </mat-form-field>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="formCliente">
+          <ng-template matStepLabel>Datos Cliente</ng-template>
+          <form [formGroup]="formCliente">
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input name="nombresCompletos" matInput [formControl]="nombresCompletos"
+                    placeholder="Nombres Completos " autocomplete="off" ng-pattern="patternNombre" required="true" />
                   <mat-error>{{
                     getErrorMessage("nombresCompletos")
                   }}</mat-error>
@@ -221,13 +166,11 @@
               </button>
             </div>
           </div>
-          <div class="row">
-            <div class="offset-md-5 col-md-4" >
-              <a (click)="verPrecio()" href="javascript:void(0);" *ngIf="disableVerPrecio | async"
-                href="javascript:void(0);" matTooltip="Ver Precios" style="font-size: 12px; vertical-align: middle;"
-                class="blue-icon">
-                <mat-icon style="font-size: 32px;" matTooltipPosition="above" matTooltip="Ver Precios" class="blue-icon"
-                  mat-mat-button matStepperNext>remove_red_eye</mat-icon>
+          <div class="row mt-2">
+            <div class="offset-md-2 col-md-2">
+              <input [formControl]="bloqueoPrecioOro"  type="hidden"/>
+              <button mat-button matTooltip="Ver Precios"  (click)="verPrecio()" (click)="stepper.next()">
+                <mat-icon matTooltipPosition="above" matTooltip="Ver Precios" class="blue-icon">remove_red_eye</mat-icon>
                 <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Ver Precios</span>
               </button>
             </div>
