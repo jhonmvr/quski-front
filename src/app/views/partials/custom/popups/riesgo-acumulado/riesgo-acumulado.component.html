@@ -1,0 +1,27 @@
+
+<mat-card>
+    <mat-card-title class="justify-content-center"> Riego acumulado </mat-card-title>
+    <mat-card-content class="justify-content-center">
+        <ng-container *ngIf="soft; then thenTemplate; else elseTemplate"></ng-container>
+        <ng-template #thenTemplate>
+            <kt-tabla-riesgo-acumulado [cedula]="identificacionLocal" [isGuardar]="isGuardarLocal"> </kt-tabla-riesgo-acumulado>
+        </ng-template>
+        <ng-template #elseTemplate>
+            <ng-container *ngIf="core; then thenTemplate; else elseTemplate"></ng-container>
+            <ng-template #thenTemplate>
+                <kt-tabla-riesgo-acumulado [idCliente]="idClienteLocal" [isGuardar]="isGuardarLocal" [isPaged]="isPagedLocal"> </kt-tabla-riesgo-acumulado>
+            </ng-template>
+            <ng-template #elseTemplate>
+                <mat-card-title-group>
+                    <mat-card-title> No existe riesgo acumulado para este cliente </mat-card-title>
+                </mat-card-title-group>
+            </ng-template>
+        </ng-template>
+        
+    </mat-card-content>        
+    <mat-card-footer>
+        <mat-card-actions class="justify-content-center">
+            <button mat-raised-button mat-dialog-close color="warn"> SALIR </button>
+        </mat-card-actions>
+    </mat-card-footer>
+</mat-card>

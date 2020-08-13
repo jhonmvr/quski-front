@@ -322,7 +322,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
                 });
                 this.dataSourceVariablesCrediticias.data = this.variablesCre;
                 // FORM DE RIESGO ACUMULADO
-                this.rie.findRiesgoAcumuladoByIdCliente ( this.cliente.id.toString() ).subscribe((data : any) =>{
+                this.rie.findRiesgoAcumuladoByIdCliente ( null, this.cliente.id).subscribe((data : any) =>{
                   if (data) {
                     this.riesgoAcumul = new Array<TbQoRiesgoAcumulado>(); 
                     data.forEach(rAcu => {

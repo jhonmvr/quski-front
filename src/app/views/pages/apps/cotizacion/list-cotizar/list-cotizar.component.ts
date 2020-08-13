@@ -691,6 +691,7 @@ export class ListCotizarComponent implements OnInit {
     tracking.fechaFin = fechaFin;
     this.tra.guardarTracking(tracking).subscribe((data: any) => {
       if (data.entidad) {
+        console.log("data de tracking para Prospeccion ----> ", data.entidad);
         this.loadingSubject.next(false);
       } else {
         this.loadingSubject.next(false);
@@ -1008,7 +1009,7 @@ export class ListCotizarComponent implements OnInit {
     entidades.forEach(e => {
       e.tbQoCliente.id = this.entidadCliente.id
     });
-    this.rie.persistEntity(entidades).subscribe((data: any) => {
+    this.rie.persistEntities(entidades).subscribe((data: any) => {
       if (data.entidades) {
         this.entidadesRiesgoAcumulados = data.entidades;
         console.log("Riesgo guardadas -----> ", data.entidades);

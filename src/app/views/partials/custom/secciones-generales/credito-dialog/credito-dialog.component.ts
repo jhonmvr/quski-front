@@ -1,15 +1,16 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatDialogRef, MatPaginator } from '@angular/material';
-import { Page } from '../../../../../../core/model/page';
-import { RiesgoAcumuladoService } from '../../../../../../core/services/quski/riesgoAcumulado.service';
-import { RiesgoAcumuladoWrapper } from '../../../../../../core/model/quski/RiesgoAcumuladoWrapper';
+import { RiesgoAcumuladoService } from '../../../../../core/services/quski/riesgoAcumulado.service';
+import { Page } from '../../../../../core/model/page';
 
 @Component({
   selector: 'm-credito-dialog',
   templateUrl: './credito-dialog.component.html',
   styleUrls: ['./credito-dialog.component.scss']
-})
+})  
+
+// COMPONENTE NO UTILIZADO
 export class CreditoDialogComponent implements OnInit {
   
 
@@ -58,7 +59,7 @@ export class CreditoDialogComponent implements OnInit {
         console.log("lista  >>>>" + JSON.stringify(data.list));
 
         this.totalResults = data.totalResults;
-        this.dataSourceCre = new MatTableDataSource<RiesgoAcumuladoWrapper>(data.list);
+        //this.dataSourceCre = new MatTableDataSource<>(data.list);
         //console.log("lista 2 >>>>" + JSON.stringify(this.dataSourceCre));
         this.element = null;
 

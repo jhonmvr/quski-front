@@ -73,6 +73,12 @@ export class ClienteService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
+
+
+
+
+
+  
   public validateContratoByIdCliente(idCliente: string) {
     const serviceUrl =
       this.appResourcesUrl + 'contratoRestController/validateContratoByIdCliente';
