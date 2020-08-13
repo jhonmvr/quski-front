@@ -1,4 +1,4 @@
- <!-- comento los vertical para que salga 
+<!-- comento los vertical para que salga 
       <mat-vertical-stepper>
         <mat-step> -->
 <div class="spinner-container" *ngIf="loading | async">
@@ -17,14 +17,15 @@
     <ng-container class="d-flex justify-content-around" ktPortletTools>
       <a href="javascript:void(0);" matTooltip="Negociar" (click)="submit('NEGOCIAR')"
         style="font-size: 12px; vertical-align: middle;">
-        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">business_center</mat-icon>
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">business_center
+        </mat-icon>
         <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Negociar</span>
       </a>
     </ng-container>
-    <button mat-button class="blue-icon" matTooltip="Negociar"
-                      [routerLink]="['../../negociacion/gestion-negociacion']" routerLinkActive="active">
-                      Negociar
-                    </button>
+    <button mat-button class="blue-icon" matTooltip="Negociar" [routerLink]="['../../negociacion/gestion-negociacion']"
+      routerLinkActive="active">
+      Negociar
+    </button>
   </re-portlet-header>
   <re-portlet-body>
     <!-- start::FILTERS & GROUP ACTIONS -->
@@ -34,23 +35,23 @@
         <mat-step [stepControl]="formBusqueda">
           <ng-template matStepLabel>Busqueda del Cliente</ng-template>
           <form [formGroup]="formBusqueda">
-              <div class="row">
-                <div class="col-md-6">
-                  <mat-form-field class="mat-form-field-fluid">
-                    <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required matInput
-                      numeric numericType="number" (keypress)="numberOnly($event)" />
-                    <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
-                  </mat-form-field>
-                </div>
-                <div class="col-md-6">
-                  <button mat-button matTooltip="Buscar Cliente" matStepperNext (click)="busquedaCliente()">
-                    <mat-icon style="font-size: 24px;" class="orange-icon" matTooltipPosition="above">search</mat-icon>
-                    <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Buscar
-                      cliente</span>
-                  </button>
-                </div>
-                
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required matInput
+                    [required]="true" numericType="number" (keypress)="numberOnly($event)" />
+                  <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
+                </mat-form-field>
               </div>
+              <div class="col-md-6">
+                <button mat-button matTooltip="Buscar Cliente" matStepperNext (click)="busquedaCliente()">
+                  <mat-icon style="font-size: 24px;" class="orange-icon" matTooltipPosition="above">search</mat-icon>
+                  <span class="orange-icon">Buscar
+                    cliente</span>
+                </button>
+              </div>
+
+            </div>
           </form>
         </mat-step>
         <mat-step [stepControl]="formCliente">
@@ -68,8 +69,9 @@
               </div>
               <div *ngIf="entidadCliente" class="offset-md-2 col-md-4">
                 <button mat-raised-button (click)="abrirPopupVerCotizacion(entidadCliente.cedulaCliente)">
-                  <mat-icon style="font-size: 32px" matTooltipPosition="above">remove_red_eye</mat-icon>
-                  <span style="position: relative;top: -10px;margin-left: 5px;">Ver cotizacion</span>
+                  <mat-icon style="font-size: 32px" matTooltipPosition="above" class="blue-icon">remove_red_eye
+                  </mat-icon>
+                  <span class="blue-icon">Ver cotizacion</span>
                 </button>
               </div>
             </div>
@@ -78,7 +80,7 @@
                 <mat-form-field class="mat-form-field-fluid">
                   <mat-label>Fecha de nacimiento</mat-label>
                   <input matInput #inputFechaNacimiento [matDatepicker]="pickerFechaNacimiento"
-                    (dateChange)="onChangeFechaNacimiento()" [formControl]="fechaNacimiento"/>
+                    (dateChange)="onChangeFechaNacimiento()" [formControl]="fechaNacimiento" required="true" />
                   <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
                   <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
                   <mat-error>{{getErrorMessage("fechaNacimiento")}}</mat-error>
@@ -94,7 +96,8 @@
             <div class="row">
               <div class="col-md-6">
                 <mat-form-field class="mat-form-field-fluid">
-                  <input matInput [formControl]="nacionalidad" placeholder="Nacionalidad " autocomplete="off" />
+                  <input matInput [formControl]="nacionalidad" placeholder="Nacionalidad " autocomplete="off"
+                    required="true" />
                   <mat-error>{{ getErrorMessage("nacionalidad") }}</mat-error>
                 </mat-form-field>
               </div>
@@ -102,15 +105,16 @@
                 <mat-form-field class="mat-form-field-fluid">
                   <input matInput numeric numericType="number" [formControl]="movil" placeholder="Móvil "
                     autocomplete="off" required="true" (keypress)="numberOnly($event)" />
-                    <mat-error>{{ getErrorMessage("movil") }}</mat-error>
+                  <mat-error>{{ getErrorMessage("movil") }}</mat-error>
                 </mat-form-field>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <mat-form-field class="mat-form-field-fluid">
-                  <input matInput [formControl]="telefonoDomicilio" placeholder="Teléfono Domicilio" required="true" (keypress)="numberOnly($event)">
-                    <mat-error>{{ getErrorMessage("movil") }}</mat-error>
+                  <input matInput [formControl]="telefonoDomicilio" placeholder="Teléfono Domicilio" required="true"
+                    (keypress)="numberOnly($event)">
+                  <mat-error>{{ getErrorMessage("telefonoDomicilio") }}</mat-error>
                 </mat-form-field>
               </div>
               <div class="col-md-6">
@@ -128,26 +132,26 @@
             <div class="row">
               <div class="col-md-6">
                 <mat-form-field class="mat-form-field-fluid">
-                  <input matInput [formControl]="correoElectronico" placeholder="Correo Eléctronico"
-                    autocomplete="off" required="true"/>
+                  <input matInput [formControl]="correoElectronico" placeholder="Correo Eléctronico" autocomplete="off"
+                    required="true" />
                   <mat-error>{{getErrorMessage("correoElectronico")}}</mat-error>
                 </mat-form-field>
               </div>
               <div class="col-md-6">
                 <mat-form-field class="mat-form-field-fluid">
                   <input matInput [formControl]="campania" placeholder="Campaña" autocomplete="off" />
-                  <mat-error>{{ getErrorMessage("campania") }}</mat-error>
+                  <mat-error *ngIf="campania.hasError('required')">{{ getErrorMessage("campania") }}</mat-error>
                 </mat-form-field>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
-                  <span>Aprobación Mupi</span>
-                  <mat-radio-group [formControl]="aprobacionMupi">
-                    <mat-radio-button [checked]='isCheckSi' value="SI">Si</mat-radio-button>
-                    <mat-radio-button [checked]='isCheckNo' value="NO">No</mat-radio-button>
-                  </mat-radio-group>
-                  <mat-error *ngIf="aprobacionMupi.hasError('required')"><strong>requerido</strong></mat-error>
+                <span>Aprobación Mupi</span>
+                <mat-radio-group [formControl]="aprobacionMupi">
+                  <mat-radio-button [checked]='isCheckSi' value="SI">Si</mat-radio-button>
+                  <mat-radio-button [checked]='isCheckNo' value="NO">No</mat-radio-button>
+                </mat-radio-group>
+                <mat-error *ngIf="aprobacionMupi.hasError('required')"><strong>requerido</strong></mat-error>
               </div>
             </div>
           </form>
@@ -157,21 +161,26 @@
           <div class="row mt-2">
             <div class="col-md-8">
               <ng-container *ngIf="dataPopup">
-                <kt-tabla-variables-crediticias [dataPopup]='dataPopup' (entidades)='traerEntidadesVariables($event)'></kt-tabla-variables-crediticias>
+                <kt-tabla-variables-crediticias [dataPopup]='dataPopup' (entidades)='traerEntidadesVariables($event)'>
+                </kt-tabla-variables-crediticias>
               </ng-container>
             </div>
+
             <div class="col-md-2">
-              <button mat-stroked-button class="blue-icon" matTooltip="Ver Riesgo Acumulado" (click)="goRiesgoAcumulado()">
+              <button mat-stroked-button class="blue-icon" matTooltip="Ver Riesgo Acumulado"
+                (click)="goRiesgoAcumulado()">
                 Ver Riesgo Acumulado
               </button>
             </div>
           </div>
-          <div class="row mt-2">
-            <div class="offset-md-2 col-md-2">
-              <input [formControl]="bloqueoPrecioOro"  type="hidden"/>
-              <button mat-button matTooltip="Ver Precios"  (click)="verPrecio()" (click)="stepper.next()">
-                <mat-icon matTooltipPosition="above" matTooltip="Ver Precios" class="blue-icon">remove_red_eye</mat-icon>
-                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Ver Precios</span>
+
+          <div class="row mt-4">
+            <div class="offset-md-5 col-md-12">
+              <input [formControl]="bloqueoPrecioOro" type="hidden" />
+              <button mat-button matTooltip="Ver Precios" (click)="verPrecio()" (click)="stepper.next()">
+                <mat-icon matTooltipPosition="above" matTooltip="Ver Precios" class="blue-icon">remove_red_eye
+                </mat-icon>
+                <span class="blue-icon">Ver Precios</span>
               </button>
             </div>
           </div>
@@ -216,8 +225,7 @@
                 </a>
               </div>
             </div>
-            <mat-table #table class="mat-elevation-z8" *ngIf="contadorPrecioOro"
-              [dataSource]="dataSourcePrecioOro">
+            <mat-table #table class="mat-elevation-z8" *ngIf="contadorPrecioOro" [dataSource]="dataSourcePrecioOro">
 
               <ng-container matColumnDef="accion">
                 <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
@@ -275,7 +283,8 @@
           <ng-template matStepLabel>Opciones de Crédito </ng-template>
           <div class="row">
             <div class="col">
-              <kt-tabla-oferta-calculadora *ngIf="consultaOferta" [consulta]='consultaOferta' (entidades)='traerEntidadesOpciones($event)'></kt-tabla-oferta-calculadora>
+              <kt-tabla-oferta-calculadora *ngIf="consultaOferta" [consulta]='consultaOferta'
+                (entidades)='traerEntidadesOpciones($event)'></kt-tabla-oferta-calculadora>
             </div>
           </div>
           <div class="row">
@@ -295,8 +304,7 @@
                   </div>
                   <div class="col-md-6">
                     <mat-form-field>
-                      <mat-select placeholder="Motivo de Desestimiento" [formControl]="fmotivoDesestimiento"
-                        required>
+                      <mat-select placeholder="Motivo de Desestimiento" [formControl]="fmotivoDesestimiento" required>
                         <mat-option>--</mat-option>
                         <mat-option *ngFor="let motivoDesestimiento of listMotivoDesestimiento"
                           [value]="motivoDesestimiento">

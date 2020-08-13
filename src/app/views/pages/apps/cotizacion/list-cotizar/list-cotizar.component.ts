@@ -300,7 +300,7 @@ export class ListCotizarComponent implements OnInit {
         this.mensaje = data.entidad.mensaje;
         this.verMensajes(this.mensaje);
       }
-    }); 
+    });
   }
   private setearValores() {
     this.loadingSubject.next(true);
@@ -773,6 +773,8 @@ export class ListCotizarComponent implements OnInit {
     const errorLogitudExedida = 'La longitud sobrepasa el limite';
     const errorInsuficiente = 'La longitud es insuficiente';
     const errorSeleccion = 'Seleccione una opcion';
+
+
     /**
      * Validaciones de cedula
      */
@@ -815,8 +817,7 @@ export class ListCotizarComponent implements OnInit {
      * Validacion de telefono domicilio
      */
     if (pfield && pfield === 'telefonoDomicilio') {
-      const input = this.formCliente.get('telefonoDomicilio');
-      console.log('telefonoDocimicilio', this.formCliente.get('telefonoDomicilio'));
+      const input = this.telefonoDomicilio;
       return input.hasError('required')
         ? errorRequerido
         : input.hasError('pattern')
@@ -832,8 +833,10 @@ export class ListCotizarComponent implements OnInit {
        */
     if (pfield && pfield == 'correoElectronico') {
 
-      return this.correoElectronico.hasError('required') ? errorRequerido : this.correoElectronico.hasError('email') ? 'E-mail no valido' : this.correoElectronico.hasError('maxlength') ? maximo
-        + this.correoElectronico.errors.maxlength.requiredLength : '';
+      return this.correoElectronico.hasError('required')
+        ? errorRequerido : this.correoElectronico.hasError('email')
+          ? 'E-mail no valido' : this.correoElectronico.hasError('maxlength')
+            ? maximo + this.correoElectronico.errors.maxlength.requiredLength : '';
 
     }
     /**
@@ -857,6 +860,19 @@ export class ListCotizarComponent implements OnInit {
       return input.hasError('required')
         ? errorSeleccion
         : input.hasError('required');
+    }
+    if (pfield && pfield === 'campania') {
+      const input = this.campania;
+      return input.hasError('required')
+        ? errorSeleccion
+        : input.hasError('required');
+    }
+
+    if (pfield && pfield === 'fpublicidad') {
+      const input = this.formCliente.get('fpublicidad');
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('errorSeleccion');
     }
   }
   private onChangeFechaNacimiento() {

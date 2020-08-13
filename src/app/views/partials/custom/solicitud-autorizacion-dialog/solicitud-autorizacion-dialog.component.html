@@ -1,57 +1,60 @@
-<h1 mat-dialog-title>Solicitud de autorizaci&#243;n</h1>
-<mat-dialog-content>
-  <p class="red-icon">
-    Cargue la autorización de buró para proceder la búsqueda en Equifax y
-    prospecto CRM.
-  </p>
-  <form [formGroup]="formDatosSolicitud">
-    <div class="col-md-4">
-      <mat-form-field>
-        <input matInput placeholder="Identificacion:" [formControl]="identificacion" />
-      </mat-form-field>
-    </div>
+<div class="row justify-content-center">
+  <h1 _ngcontent-pmm-5>Solicitud de autorizaci&#243;n</h1>
+  <mat-dialog-content class="mat-dialog-content">
+    <p class="red-icon">
+      Cargue la autorización de buró para proceder la búsqueda en Equifax y
+      prospecto CRM.
+    </p>
+    <form [formGroup]="formDatosSolicitud">
+      <div class="col">
+        <mat-form-field>
+          <input matInput placeholder="Identificacion:" [formControl]="identificacion" />
+        </mat-form-field>
+      </div>
 
-    <div class="col-md-4">
-      <mat-form-field>
-        <input matInput placeholder="Nombres completos:" [formControl]="nombresCompletos" />
-      </mat-form-field>
-    </div>
-  </form>
-</mat-dialog-content>
+      <div class="col">
+        <mat-form-field>
+          <input matInput placeholder="Nombres completos:" [formControl]="nombresCompletos" />
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
 
-<mat-dialog-actions>
-  <div class="row">
-    <div class="col-md-3" *ngIf="enableDownLoadrPlantillaButton | async">
-      <mat-cell *matCellDef="let element"></mat-cell>
-      <a href="javascript:void(0);" (click)="descargarPlantillaHabilitante(element)" class="blue-icon">
-        <mat-icon style="font-size: 32px;" matTooltipPosition="above" matTooltip="Descarga archivo" class="blue-icon">
-          cloud_download</mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Descarga Plantilla</span>
-      </a>
-    </div>
-    <div class="col-md-3" *ngIf="enableLoadArchivoButton | async">
-      <a href="javascript:void(0);" (click)="loadArchivoCliente(element); $event.preventDefault()" > 
-        <mat-icon   style="font-size: 32px;" matTooltipPosition="above" matTooltip="Subir Archivo" class="blue-icon">
-          cloud_upload</mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Carga Archivo</span>
-      </a>
-    </div>
+  <mat-dialog-actions>
+    <div class="row">
+      <div class="col-md-3" *ngIf="enableDownLoadrPlantillaButton | async">
+        <mat-cell *matCellDef="let element"></mat-cell>
+        <button (click)="descargarPlantillaHabilitante(element)" class="blue-icon">
+          <mat-icon matTooltipPosition="above" matTooltip="Descarga archivo" class="blue-icon">cloud_download
+          </mat-icon>
+          <span class="blue-icon">Descarga Plantilla</span>
+        </button>
+      </div>
+      <div class="col-md-3" *ngIf="enableLoadArchivoButton | async">
+        <button (click)="loadArchivoCliente(element); $event.preventDefault()">
+          <mat-icon matTooltipPosition="above" matTooltip="Subir Archivo" class="blue-icon">
+            cloud_upload
+          </mat-icon>
+          <span class="blue-icon">Carga Archivo</span>
+        </button>
+      </div>
 
 
-    <div class="col-md-3" *ngIf="enableConsultarButton | async">
-      <a href="javascript:void(0);" (click)="consultar()" matTooltip="Consultar"
-        style="font-size: 12px; vertical-align: middle;" class="blue-icon">
-        <mat-icon style="font-size: 32px;" matTooltipPosition="above" class="blue-icon">search</mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Consultar</span>
-      </a>
-    </div>
+      <div class="col-md-3" *ngIf="enableConsultarButton | async">
+        <a href="javascript:void(0);" (click)="consultar()" matTooltip="Consultar"
+          style="font-size: 12px; vertical-align: middle;" class="blue-icon">
+          <mat-icon style="font-size: 32px;" matTooltipPosition="above" class="blue-icon">search</mat-icon>
+          <span class="blue-icon">Consultar</span>
+        </a>
+      </div>
 
-    <div class="col-md-3">
-      <a href="javascript:void(0);" (click)="salir()" matTooltip="Cancelar"
-        style="font-size: 12px; vertical-align: middle;" class="orange-icon">
-        <mat-icon style="font-size: 32px;" matTooltipPosition="above" class="orange-icon">cancel</mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Cancelar</span>
-      </a>
+      <div class="col-md-3">
+        <a href="javascript:void(0);" (click)="salir()" matTooltip="Cancelar"
+          style="font-size: 12px; vertical-align: middle;" class="orange-icon">
+          <mat-icon style="font-size: 32px;" matTooltipPosition="above" class="orange-icon">cancel</mat-icon>
+          <span class="orange-icon">Cancelar</span>
+        </a>
+      </div>
     </div>
-  </div>
-</mat-dialog-actions>
+  </mat-dialog-actions>
+</div>
