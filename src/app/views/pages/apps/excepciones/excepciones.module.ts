@@ -43,6 +43,7 @@ import { ExcepcionesClienteComponent } from './excepciones-cliente/excepciones-c
 import { ExcepcionesCoberturaComponent } from './excepciones-cobertura/excepciones-cobertura.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { ExcepcionesComponent } from './excepciones.component';
+import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 
 const routes: Routes = [
 	{
@@ -51,20 +52,16 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				redirectTo: 'excepcion-cliente',
+				redirectTo: 'excepciones',
 				pathMatch: 'full'
 			},
 			{
-				path: 'excepcion-cliente',
-				component: ExcepcionesClienteComponent
-      },
-      {
-				path: 'excepcion-cliente/:id',
-				component: ExcepcionesClienteComponent
+				path: 'excepciones',
+				component: ExcepcionesComponent
 			},
 			{
-				path: 'excepcion-cobertura',
-				component: ExcepcionesCoberturaComponent
+				path: 'excepcion-cliente/:id',
+				component: ExcepcionesClienteComponent
 			},
 			{
 				path: 'excepcion-cobertura/:id',
@@ -75,6 +72,7 @@ const routes: Routes = [
 ];
 @NgModule({
   	imports: [
+		
 		CommonModule,
 		CommonModule,
 		RouterModule.forChild(routes),
@@ -127,6 +125,13 @@ const routes: Routes = [
 		ExcepcionesComponent,
 		ExcepcionesClienteComponent,
 		ExcepcionesCoberturaComponent,
+	],
+	entryComponents: [
+		ErrorCargaInicialComponent,
+
+
+
+
 	]
 })
 export class ExcepcionesModule {}

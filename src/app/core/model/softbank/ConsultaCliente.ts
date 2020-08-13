@@ -1,6 +1,8 @@
 
-export class ConsultaCliente  {
+export class ConsultaCliente {
+  idTipoIdentificacion: number;  // 1,
   identificacion: string;  // 1311066441,
-	idTipoIdentificacion: number;  // 1,
-  constructor(){}
+  constructor() {
+    this.idTipoIdentificacion = 1;
+   }
 }

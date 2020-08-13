@@ -36,6 +36,8 @@ import {
 	MatStepperModule,
 	MatDialogRef,
 	MatButtonToggleGroup,
+
+
 } from '@angular/material';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
@@ -49,6 +51,12 @@ import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-fo
 import { PartialsModule } from '../../../partials/partials.module';
 import { DialogCargarComponent } from './list-cotizar/dialog-solicitud-de-autorizacion/dialog-cargar/dialog-cargar.component'
 import { SolicitudAutorizacionDialogComponent } from '../../../../views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
+
+import { TablaVariablesCrediticiasComponent } from '../../../../views/partials/custom/secciones-generales/tabla-variables-crediticias/tabla-variables-crediticias.component';
+import { TablaOfertaCalculadoraComponent } from '../../../../views/partials/custom/secciones-generales/tabla-oferta-calculadora/tabla-oferta-calculadora.component';
+// tslint:disable-next-line: max-line-length
+
+
 const routes: Routes = [
 	{
 		path: '',
@@ -84,7 +92,7 @@ const routes: Routes = [
 
 @NgModule({
 	imports: [
-		 
+
 		CommonModule,
 		RouterModule.forChild(routes),
 		MatDialogModule,
@@ -116,7 +124,7 @@ const routes: Routes = [
 		MatButtonToggleModule,
 		NgbProgressbarModule,
 		MatStepperModule,
-		PartialsModule
+		PartialsModule,
 	],
 	providers: [
 		ModuleGuard,
@@ -136,15 +144,10 @@ const routes: Routes = [
 		CotizarComponent,
 		ListCotizarComponent,
 		DetalleCotizacionComponent,
-		
-
-		DialogCargarComponent,
+		DialogCargarComponent
 	],
 	entryComponents: [
 		AddFotoComponent,
-
-
-
 	]
 })
 export class CotizarModule { }

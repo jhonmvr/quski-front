@@ -1,6 +1,5 @@
-//import { TbMiTipoOro } from "./TbQoTipoOro";
 import { TbMiTipoJoya } from "./TbMiTipoJoya";
-import { TbMiCotizacion } from "./TbMiCotizacion";
+import { TbQoCotizador } from './TbQoCotizador';
 
 export  class TbMiJoyaSim {
     id: number;
@@ -18,12 +17,12 @@ export  class TbMiJoyaSim {
     estado : string;
     //idCotizacion
     
-    tbMiCotizacion :  TbMiCotizacion;
+    tbQoCotizador :  TbQoCotizador;
 
     constructor(){
        // this.tbMiTipoOro = new TbMiTipoOro();
         this.tbMiTipoJoya = new TbMiTipoJoya();
-        this.tbMiCotizacion = new TbMiCotizacion();
+        this.tbQoCotizador = new TbQoCotizador();
     }
 
 

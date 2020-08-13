@@ -44,10 +44,10 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 
 // Component
 import { NegociacionComponent } from './negociacion.component';
-import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { GestionNegociacionComponent } from './gestion-negociacion/gestion-negociacion.component';
-import { VercotizacionComponent } from './gestion-negociacion/vercotizacion/vercotizacion.component';
+import { ErrorCargaInicialComponent } from '../../../../views/partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { VerCotizacionesComponent } from '../../../../views/partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
 
 const routes: Routes = [
 	{
@@ -62,6 +62,10 @@ const routes: Routes = [
 				pathMatch: 'full'
 			},{
 				path: 'gestion-negociacion',
+				component: GestionNegociacionComponent
+			},
+			{
+				path: 'gestion-negociacion/:id',
 				component: GestionNegociacionComponent
 			}
 
@@ -121,11 +125,12 @@ const routes: Routes = [
 	declarations: [
 		GestionNegociacionComponent,
 		NegociacionComponent,
-		VercotizacionComponent,
 		GestionNegociacionComponent
 	],
 	entryComponents: [	
-		VercotizacionComponent
+		ErrorCargaInicialComponent,
+		VerCotizacionesComponent
+
 	]
 })
 export class NegociacionModule { }

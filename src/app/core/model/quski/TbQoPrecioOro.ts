@@ -1,18 +1,17 @@
 import { TbQoTipoOro } from "./TbQoTipoOro";
-import { TbCotizacion } from "./TbCotizacion";
+import { TbQoCotizador } from "./TbQoCotizador";
 
 export class TbQoPrecioOro  {
     //tipoOro: string;
-    id:string;
+    id: number;
     precio: string;
     pesoNetoEstimado: string;
     estado : string;
     tbQoTipoOro :  TbQoTipoOro;
-    tbQoCotizador : TbCotizacion;
+    tbQoCotizador : TbQoCotizador;
     
     constructor(){
         this.tbQoTipoOro = new TbQoTipoOro();
-     
-        this.tbQoCotizador = new TbCotizacion();
+        this.tbQoCotizador = new TbQoCotizador();
     }
 }

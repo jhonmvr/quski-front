@@ -67,7 +67,7 @@ import {
 	UserProfileComponent,
 } from './layout';
 // General
-import { NoticeComponent } from './content/general/notice/notice.component';
+import { NoticeComponent } from './custom/notice/notice.component';
 import { PortletModule } from './content/general/portlet/portlet.module';
 // Errpr
 import { ErrorComponent } from './content/general/error/error.component';
@@ -84,7 +84,6 @@ import { AddFotoComponent } from './custom/fotos/add-foto/add-foto.component';
 import { ArchivoUploadDialogComponent } from './custom/archivo/archivo-upload-dialog/archivo-upload-dialog.component';
 import { CargarFotoDialogComponent } from './custom/fotos/cargar-foto-dialog/cargar-foto-dialog.component';
 import { SolicitudAutorizacionDialogComponent } from './custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
-import { CreditoVigenteDialogComponent } from './custom/riesgo-acomulado-dialog/credito-vigente-dialog/credito-vigente-dialog.component';
 
 import { WebcamModule } from 'ngx-webcam';
 import { ReMessageComponent } from './custom/re-message/re-message.component';
@@ -97,11 +96,23 @@ import { PortletFooterComponent } from './custom/portlet/portlet-footer/portlet-
 import { AuthDialogComponent } from './custom/auth-dialog/auth-dialog.component';
 import { HabilitanteComponent } from './custom/habilitante/habilitante.component';
 import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dialog/habilitante-dialog.component';
+import { MensajeExcepcionComponent } from './custom/popups/mensaje-excepcion-component/mensaje-excepcion-component';
+import { ErrorCargaInicialComponent } from './custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { VerCotizacionesComponent } from './custom/popups/ver-cotizaciones/ver-cotizaciones.component';
+import { DetallesComponent } from './custom/popups/ver-cotizaciones/detalles/detalles.component';
+import { TablaDetalleCreditoComponent } from './custom/secciones-generales/tabla-detalle-credito/tabla-detalle-credito.component';
+import { TablaRiesgoAcumuladoComponent } from './custom/secciones-generales/tabla-riesgo-acumulado/tabla-riesgo-acumulado.component';
+
+import { TablaVariablesCrediticiasComponent } from './custom/secciones-generales/tabla-variables-crediticias/tabla-variables-crediticias.component';
+import { TablaOfertaCalculadoraComponent } from './custom/secciones-generales/tabla-oferta-calculadora/tabla-oferta-calculadora.component';
+import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesgo-acumulado.component';
+
 
 
 
 @NgModule({
 	declarations: [
+		MensajeExcepcionComponent,
 		ScrollTopComponent,
 		NoticeComponent,
 		ActionNotificationComponent,
@@ -113,6 +124,7 @@ import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dia
 		// topbar components
 		ContextMenu2Component,
 		ContextMenuComponent,
+		
 		QuickPanelComponent,
 		ScrollTopComponent,
 		SearchResultComponent,
@@ -142,13 +154,20 @@ import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dia
 		PortletFooterComponent,
 		AuthDialogComponent,
 		SolicitudAutorizacionDialogComponent,
-		CreditoVigenteDialogComponent,
 		ArchivoUploadDialogComponent,
 		CargarFotoDialogComponent,
 		ArchivoComponent,
 		AddFotoComponent,
 		HabilitanteComponent,
-		HabilitanteDialogComponent
+		HabilitanteDialogComponent,
+		ErrorCargaInicialComponent,
+		VerCotizacionesComponent,
+		DetallesComponent,
+		TablaDetalleCreditoComponent,
+		TablaVariablesCrediticiasComponent,
+		TablaOfertaCalculadoraComponent,
+		TablaRiesgoAcumuladoComponent,
+		RiesgoAcumuladoComponent
 	],
 	exports: [
 		WidgetModule,
@@ -161,10 +180,15 @@ import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dia
 		FetchEntityDialogComponent,
 		UpdateStatusDialogComponent,
 		AlertComponent,
+		TablaDetalleCreditoComponent,
+		TablaVariablesCrediticiasComponent,
+		TablaOfertaCalculadoraComponent,
+		TablaRiesgoAcumuladoComponent,
 
 		// topbar components
 		ContextMenu2Component,
 		ContextMenuComponent,
+		
 		QuickPanelComponent,
 		ScrollTopComponent,
 		SearchResultComponent,
@@ -194,7 +218,10 @@ import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dia
 		PortletFooterComponent,
 		AuthDialogComponent,
 		HabilitanteComponent,
-		HabilitanteDialogComponent
+		HabilitanteDialogComponent,
+		ErrorCargaInicialComponent,
+		DetallesComponent
+		
 	],
 	imports: [
 		CommonModule,
@@ -228,6 +255,7 @@ import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dia
 		MatTabsModule,
 		MatTooltipModule,
 		MatDialogModule,
+	
 
 
 		// ng-bootstrap modules
@@ -246,9 +274,13 @@ import { HabilitanteDialogComponent } from './custom/habilitante/habilitante-dia
 		AuthDialogComponent,
 		HabilitanteDialogComponent,
 		SolicitudAutorizacionDialogComponent,
-		CreditoVigenteDialogComponent,
-
-		CargarFotoDialogComponent
+		MensajeExcepcionComponent,
+		CargarFotoDialogComponent,
+		DetallesComponent,
+		TablaDetalleCreditoComponent,
+		TablaVariablesCrediticiasComponent,
+		TablaOfertaCalculadoraComponent,
+		TablaRiesgoAcumuladoComponent,
 	]
 })
 export class PartialsModule {

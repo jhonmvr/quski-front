@@ -2,7 +2,7 @@ import { TbReferencia } from './TbReferencia';
 import { TbQoDireccionCliente } from './TbQoDireccionCliente';
 import { TbQoPatrimonioCliente } from './TbQoPatrimonioCliente';
 import { TbQoIngresoEgresoCliente } from './TbQoIngresoEgresoCliente';
-import { TbCotizacion } from './TbCotizacion';
+import { TbQoCotizador } from './TbQoCotizador';
 
 export class TbQoCliente {
   id: number;
@@ -44,7 +44,7 @@ export class TbQoCliente {
 
 
   tbQoArchivoClientes: null;
-  tbQoCotizador: TbCotizacion[];
+  tbQoCotizador: TbQoCotizador[];
   tbQoDocumentoHabilitantes: null;
   tbQoNegociacions: null;
   tbQoDireccionClientes: TbQoDireccionCliente[];
@@ -53,7 +53,6 @@ export class TbQoCliente {
   tbQoIngresoEgresoClientes: TbQoIngresoEgresoCliente[];
   tbQoRiesgoAcumulados: null;
   constructor() {
-    // this.tbMiJoyaSims = new Array<TbMiJoyaSim>();
     this.tbQoIngresoEgresoClientes = new Array<TbQoIngresoEgresoCliente>();
     this.tbQoPatrimonios = new Array<TbQoPatrimonioCliente>();
     this.tbQoReferenciaPersonals = new Array<TbReferencia>();

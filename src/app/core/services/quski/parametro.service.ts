@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
 import{BaseService} from '../base.service';
-
-
-
 import { AppConfig } from '../../../app.config';
 import { Page } from '../../model/page';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -33,7 +30,12 @@ public findByNombre(nombre:string){
   this.options = { headers: this.headers, params:this.params };
   return this.http.get<any>(this.genericResourcesUrl  +"parametroRestController/getEntityByNombre", this.options);
 }
-
+  /** 
+   *  
+   * @param nombre String  
+   * @param tipo  String
+   * @param ordered  "Y", "N"
+   */ 
   public findByNombreTipoOrdered(nombre:string, tipo:string, ordered:string){
     this.params = new HttpParams();
     this.params=this.params.set("nombre", nombre);

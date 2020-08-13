@@ -21,7 +21,6 @@ export class SoftbankService extends BaseService {
   urlRestPrestamo = "api/prestamo/";
   urlRestCatalogo = "api/catalogo/";
   urlRestCredito = "api/credito/";
-  appResourcesUrlLocal = "http://201.183.238.73:1991/";
   constructor(_http: HttpClient) {
     super();
     this.http = _http;
@@ -38,7 +37,7 @@ export class SoftbankService extends BaseService {
    * @param ConsultaCliente
    */
   consultarClienteCS( consultaCliente : ConsultaCliente ) {
-    const serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + 'consultar';
+    const serviceUrl = this.softBaseBankUrl + this.urlRestCliente + 'consultar';
     const wrapper = consultaCliente ;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -49,7 +48,7 @@ export class SoftbankService extends BaseService {
    * @param ConsultaCliente 
    */
   consultarReferenciasClienteCS( consultaCliente : ConsultaCliente) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + "referencia" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCliente + "referencia" ;
     let wrapper =  consultaCliente 
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -60,7 +59,7 @@ export class SoftbankService extends BaseService {
    * @param ConsultaCliente 
   */
   consultarIngresosEgresosClienteCS( consultaCliente : ConsultaCliente ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + "ingresosegresos" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCliente + "ingresosegresos" ;
     let wrapper =  consultaCliente 
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -71,7 +70,7 @@ export class SoftbankService extends BaseService {
    * @param ConsultaCliente 
   */
   consultarDireccionesTelefonosClienteCS( consultaCliente : ConsultaCliente ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + "direcciontelefono" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCliente + "direcciontelefono" ;
     let wrapper =  consultaCliente 
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -82,7 +81,7 @@ export class SoftbankService extends BaseService {
    * @param crearCliente 
    */
   crearClienteCS( crearCliente : CrearCliente ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + "crear" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCliente + "crear" ;
     let wrapper =  crearCliente 
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -93,7 +92,7 @@ export class SoftbankService extends BaseService {
    * @param editarCliente 
    */
   editarClienteCS( editarCliente : EditarCliente ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCliente + "editar" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCliente + "editar" ;
     let wrapper =  editarCliente 
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -107,7 +106,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Agencias
    */
   consultarAgenciasCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "agencia" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "agencia" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
@@ -118,7 +117,7 @@ export class SoftbankService extends BaseService {
    * @param idAgencia 
    */
   consultarAsesoresCS( idAgencia : number ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "asesor" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "asesor" ;
     let wrapper =  {idAgencia};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -128,7 +127,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Rubros de prestamos
    */
   consultarRubroPrestamosCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "rubro" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "rubro" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -138,7 +137,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Actividad Economica
    */
   consultarActividadEconomicaCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "actividadeconomica" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "actividadeconomica" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -148,7 +147,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Educacion
    */
   consultarEducacionCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "educacion" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "educacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -158,7 +157,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Sector vivienda
    */
   consultarSectorViviendaCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "sectorvivienda" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "sectorvivienda" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -168,7 +167,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Estado Civil
    */
   consultarEstadosCivilesCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "estadocivil" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadocivil" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -178,7 +177,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Vivienda
    */
   consultarViviendaCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "vivienda" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "vivienda" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -188,7 +187,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Profesiones
    */
   consultarProfesionesCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "profesion" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "profesion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -198,7 +197,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Tipo Identificacion
    */
   consultarTipoIdentificacionCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "tipoidentificacion" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipoidentificacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -208,7 +207,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Bancos
    */
   consultarBancosCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "bancos" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "bancos" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -218,7 +217,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Tipo Referencia
    */
   consultarTipoReferenciaCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "tiporeferencia" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tiporeferencia" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -228,7 +227,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Tipo Prestamo
    */
   consultarTipoPrestamosCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "tipoprestamo" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipoprestamo" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -238,7 +237,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Tipo de Carteras
    */
   consultarTipoCarteraCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "tipocartera" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipocartera" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -248,7 +247,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Tipos de tablas de amortizacion
    */
   consultarTablaAmortizacionCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "tablaamortizacion" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tablaamortizacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -258,7 +257,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Divisiones politicas
    */
   consultarDivicionPoliticaCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "divisionpolitica" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "divisionpolitica" ;
     let wrapper =  {};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -268,7 +267,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Diviciones politicas con relaciones
    */
   consultarDivicionPoliticaConsolidadaCS() {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCatalogo + "divisionpoliticaconsolidado" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "divisionpoliticaconsolidado" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -283,7 +282,7 @@ export class SoftbankService extends BaseService {
    * @param numeroOperacion 
    */
   consultaTablaAmortizacionOperacionAprobadaCS( numeroOperacion : string ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/tablaamortizacion" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/tablaamortizacion" ;
     let wrapper =  {numeroOperacion} ;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -294,7 +293,7 @@ export class SoftbankService extends BaseService {
    * @param simulacionPrecancelacion 
    */
   simularPrecancelacionCS( simulacionPrecancelacion : SimulacionPrecancelacion ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "simularprecancelacion" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "simularprecancelacion" ;
     let wrapper =  simulacionPrecancelacion;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -305,7 +304,7 @@ export class SoftbankService extends BaseService {
    * @param operacionCancelar 
    */
   operacionCancelarCS( operacionCancelar : OperacionCancelar ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/cancelar" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/cancelar" ;
     let wrapper = operacionCancelar;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -316,7 +315,7 @@ export class SoftbankService extends BaseService {
    * @param operacionAbono 
    */
   operacionAbonoCS( operacionAbono : OperacionAbono ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/abono" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/abono" ;
     let wrapper = operacionAbono;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -326,7 +325,7 @@ export class SoftbankService extends BaseService {
    * @param consultaCliente 
    */
   operacionConsultaCS( consultaCliente : ConsultaCliente ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/consulta" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/consulta" ;
     let wrapper =  consultaCliente;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -337,7 +336,7 @@ export class SoftbankService extends BaseService {
    * @param consultaCliente 
    */
   consultaRiesgoAcumuladoCS( consultaCliente : ConsultaCliente ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/riesgoacumulado" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/riesgoacumulado" ;
     let wrapper =  consultaCliente;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -348,7 +347,7 @@ export class SoftbankService extends BaseService {
    * @param numeroOperacion 
    */
   consultaRubrosCS( numeroOperacion : string ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestPrestamo + "operacion/rubro" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/rubro" ;
     let wrapper = {numeroOperacion};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -362,7 +361,7 @@ export class SoftbankService extends BaseService {
    * @param operacionCrear 
    */
   operacionCrearCS( operacionCrear : OperacionCrear ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "operacion/crear" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "operacion/crear" ;
     let wrapper =  operacionCrear;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -373,7 +372,7 @@ export class SoftbankService extends BaseService {
    * @param operacionRenovar 
    */
   operacionRenovarCS( operacionRenovar : OperacionRenovar ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "operacion/renovar" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "operacion/renovar" ;
     let wrapper =  operacionRenovar;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -384,7 +383,7 @@ export class SoftbankService extends BaseService {
    * @param numeroOperacion 
    */
   operacionAprobarCS( numeroOperacion : string ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "operacion/aprobar" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "operacion/aprobar" ;
     let wrapper =  {numeroOperacion};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -395,7 +394,7 @@ export class SoftbankService extends BaseService {
    * @param numeroOperacion 
    */
   operacionNegarCS( numeroOperacion : string ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "operacion/negar" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "operacion/negar" ;
     let wrapper =  {numeroOperacion};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -409,7 +408,7 @@ export class SoftbankService extends BaseService {
    * @param simulacionTablaAmortizacion 
    */
   simularTablaAmortizacionCS( simulacionTablaAmortizacion : SimulacionTablaAmortizacion ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "simulacion/tablaamortizacion" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "simulacion/tablaamortizacion" ;
     let wrapper =  simulacionTablaAmortizacion;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -424,7 +423,7 @@ export class SoftbankService extends BaseService {
    * @param consultaSolca 
    */
   calcularSolcaCS( consultaSolca : ConsultaSolca ) {
-    let serviceUrl = this.appResourcesUrlLocal + this.urlRestCredito + "calcular/solca" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "calcular/solca" ;
     let wrapper =  consultaSolca;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);

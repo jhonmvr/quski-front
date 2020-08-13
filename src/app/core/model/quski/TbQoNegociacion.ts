@@ -24,7 +24,7 @@ export class TbQoNegociacion {
     tbQoVariablesCrediticias : TbQoVariablesCrediticia [];
     constructor(){
        this.tbQoCliente = new TbQoCliente();
-       this.tbQoCreditoNegociacions = new Array<TbQoCreditoNegociacion>();
+       this.tbQoCreditoNegociacions  = new Array<TbQoCreditoNegociacion>();
        this.tbQoVariablesCrediticias = new Array<TbQoVariablesCrediticia>();
 
     }

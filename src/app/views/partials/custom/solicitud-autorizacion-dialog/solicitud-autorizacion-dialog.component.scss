@@ -1,3 +1,7 @@
+:host /deep/ h1 {
+  font-size: 20px;
+  font-style: bold;
+}
  
 .example-container {
     display: flex;
@@ -169,4 +173,16 @@
   .green-icon svg {
       fill: #00cc00;
   }
+ button.blue-icon[_ngcontent-serverApp-c37] {
+
+    border-style: none;
+background-color: white;
+  
+}
+ button {
+
+    border-style: none;
+background-color: white;
+  
+}
   

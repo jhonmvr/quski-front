@@ -1,4 +1,14 @@
- 
+.spiner{
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 50%;
+  right: 50%; 
+}
+mat-dialog-content{
+  display: flex;
+  text-align: center;
+}
 .example-container {
     display: flex;
     flex-direction: column;
@@ -61,12 +71,19 @@
   .mat-table-sticky {
     border-top: 1px solid #e0e0e0;
   }
+
+  .body{
+    text-align: center;
+  }
   
   
   
   .mat-footer-row {
     font-weight: bold;
     justify-content: start;
+  }
+  .h1.mat-dialog-title{
+    text-align: center;
   }
   
   

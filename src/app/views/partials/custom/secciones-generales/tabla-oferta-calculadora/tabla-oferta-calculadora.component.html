@@ -1,0 +1,56 @@
+<div class="spinner-container" *ngIf="loading | async"><mat-spinner class="spiner"></mat-spinner></div>
+<div class="mat-table__wrapper">
+    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceOpcionesDeCredito">
+        <ng-container matColumnDef="plazo">
+        <mat-header-cell *matHeaderCellDef  class="text-align">Plazo</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.plazo}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="periodoPlazo">
+            <mat-header-cell *matHeaderCellDef  class="text-align">Periodo Plazo $</mat-header-cell>
+            <mat-cell *matCellDef="let element" class="text-align"> {{element.periodoPlazo}} </mat-cell>
+            </ng-container>
+        <ng-container matColumnDef="montoFinanciado">
+        <mat-header-cell *matHeaderCellDef  class="text-align">Monto Financiado $</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.montoFinanciado}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="valorARecibir">
+        <mat-header-cell *matHeaderCellDef  class="text-align">Valor A Recibir $</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorARecibir}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="totalGastosNuevaOperacion">
+        <mat-header-cell *matHeaderCellDef  class="text-align">Costos Nueva Operación $</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.totalGastosNuevaOperacion}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="costoTransporte">
+        <mat-header-cell *matHeaderCellDef  class="text-align">Costo transporte $</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoTransporte}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="costoValoracion">
+        <mat-header-cell *matHeaderCellDef  class="text-align">Costo valoración $</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoValoracion}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="costoTasacion">
+        <mat-header-cell *matHeaderCellDef  class="text-align">Costo tasación $</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoTasacion}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="costoSeguro">
+        <mat-header-cell *matHeaderCellDef  class="text-align"> Costo Seguro $</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoSeguro}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="costoCustodia" >
+        <mat-header-cell *matHeaderCellDef  class="text-align">Costo Custodia $</mat-header-cell>  
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.costoCustodia}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="impuestoSolca">
+        <mat-header-cell *matHeaderCellDef  class="text-align">Impuesto Solca $</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.impuestoSolca}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="valorAPagar">
+        <mat-header-cell *matHeaderCellDef  class="text-align">Valor A Pagar $</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorAPagar}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsOpcionesDeCredito"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsOpcionesDeCredito"></mat-row>
+    </mat-table>
+</div>

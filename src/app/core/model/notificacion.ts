@@ -1,9 +1,10 @@
 export class Notificacion{
     codigo:string;
+    subtitulo:string;
+    titulo: string;
     mensaje:string;
-    tipo:string;
-    hash:string;
-    sessionIdSender:string;
     fecha:string;
     url:string;
+    usuario:string;
+    estado:string;
 }

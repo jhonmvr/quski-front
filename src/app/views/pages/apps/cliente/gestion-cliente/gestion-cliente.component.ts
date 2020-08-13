@@ -76,7 +76,7 @@ export class GestionClienteComponent implements OnInit {
   public habilitarBtActualizar : boolean;
   public idDireccionDomicilio : string;
   public idDireccionLaboral   : string;
-  private idNegociacion       : string;
+  private idNegociacion       : number;
   public provinciaD           : string;
   public parroquiaD           : string;
   public parroquiaL           : string;
@@ -346,7 +346,6 @@ export class GestionClienteComponent implements OnInit {
   }
   ngOnInit() {
     this.habilitarBtActualizar  = false;
-    this.disableConsultar = this.disableConsultarSubject.asObservable();
     this.implementacionServiciosSoftbankTEST();
     //SET VALORES POR DEFECTO DE CHECKS
     this.drLgDo.setValue(true);
@@ -377,12 +376,10 @@ export class GestionClienteComponent implements OnInit {
       data.params.id
       if (data.params.id) {
         this.idNegociacion = data.params.id;
-        //this.idNegociacion = "109";
         this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
               this.tr.getSystemDate().subscribe( (hora: any) =>{
                 if(hora.entidad){
-                  ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
                   this.horaAsignacion = hora.entidad;
                   this.horaAtencion = hora.entidad;
                 }
@@ -1355,9 +1352,9 @@ export class GestionClienteComponent implements OnInit {
     entidadCrearcliente.segundoNombre =  "Rafael";    
     //Crear un array para pasarle los datos.
     let listTelefonos = new TelefonoCliente();
-    listTelefonos.esMovil = true
-    listTelefonos.esPrincipal = true
-    listTelefonos.numero = "0996553117";
+    //listTelefonos.esMovil = true
+    //listTelefonos.esPrincipal = true
+    //listTelefonos.numero = "0996553117";
     entidadCrearcliente.telefonos.push( listTelefonos );
     this.css.crearClienteCS(entidadCrearcliente).subscribe( ( data : any) => {
       if(data){
@@ -1812,7 +1809,7 @@ export class GestionClienteComponent implements OnInit {
     consulta.identificacion = "1311066441";
     this.css.consultaRiesgoAcumuladoCS( consulta ).subscribe(data =>{
       if(data){
-        // console.log(" data de consultaRiesgoAcumuladoCS ------> ", JSON.stringify(data));
+        console.log(" data de consultaRiesgoAcumuladoCS ------> ", JSON.stringify(data));
         console.log("Funciona -----> consultaRiesgoAcumuladoCS");
       }else {
         this.sinNoticeService.setNotice("no me trajo data consultaRiesgoAcumuladoCS :C", "error");
@@ -2388,7 +2385,7 @@ export class GestionClienteComponent implements OnInit {
                                 this.sinNoticeService.setNotice("NO EXISTE NEGOCIACION PREVIA PARA HACER SEGUIMIENTO DE TRACKING", 'error');
                               }                              
                             }
-                            this.router.navigate(['../../credito-nuevo/generar-credito', this.id]);
+                            this.router.navigate(['credito-nuevo/', this.idNegociacion]);
                           });
                       }
                     }, error =>{
@@ -2434,17 +2431,15 @@ export class GestionClienteComponent implements OnInit {
   }
   /**
    * 
-   * @param observacion TareaTrackingEnum
+   * @author Jeroham Cadenas - Developer Twuelve
    * @param codigoRegistro string
-   * @param situacion SituacionTrackingEnum
-   * @param usuario UsuarioEnum
    * @param fechaInicio Date
    * @param fechaAsignacion Date
    * @param fechaInicioAtencion Date
    * @param fechaFin Date
    */
   public registrarTracking (  
-                      codigoRegistro : string, 
+                      codigoRegistro : number, 
                       fechaInicio: Date,
                       fechaAsignacion: Date,
                       fechaInicioAtencion: Date,
@@ -2457,7 +2452,7 @@ export class GestionClienteComponent implements OnInit {
       tracking.observacion          = "";
       tracking.codigoRegistro       = codigoRegistro;
       tracking.situacion            = SituacionTrackingEnum.EN_PROCESO;
-      tracking.usuario              = UsuarioEnum.ASESOR;
+      tracking.usuario              = UsuarioEnum.ASESOR; // Agregar id de usuario
       tracking.fechaInicio          = fechaInicio;
       tracking.fechaAsignacion      = fechaAsignacion;
       tracking.fechaInicioAtencion  = fechaInicioAtencion;
@@ -2480,5 +2475,4 @@ export class GestionClienteComponent implements OnInit {
         }
       });
   }
-
 }
