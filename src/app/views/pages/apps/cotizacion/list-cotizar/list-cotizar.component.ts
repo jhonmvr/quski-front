@@ -64,7 +64,7 @@ export class ListCotizarComponent implements OnInit {
   private entidadesVariablesCrediticias: Array<TbQoVariablesCrediticia> = null;
   private entidadesDetalleCreditos: Array<TbQoDetalleCredito> = null;
   private entidadesRiesgoAcumulados: Array<TbQoRiesgoAcumulado> = null;
-    public entidadPrecioOro = new TbQoPrecioOro();
+  public entidadPrecioOro = new TbQoPrecioOro();
   // CATALOGOS SOFTBANK
   private catEducacion: Array<any>;
   // CATALOGOS QUSKI
@@ -250,6 +250,7 @@ export class ListCotizarComponent implements OnInit {
     }
   }
   private busquedaEnCRM(cedula: string) {
+
     this.loadingSubject.next(true);
     this.crm.findClienteByCedulaCRM(cedula).subscribe((data: any) => {
 
@@ -264,11 +265,20 @@ export class ListCotizarComponent implements OnInit {
     });
   }
   private busquedaEquifax(cedula: string) {
+
     this.loadingSubject.next(true);
     const consulta = new PersonaConsulta();
     consulta.identificacion = cedula;
     this.ing.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
+
       if (data.entidad.datoscliente != null) {
+        if (data.entidad.mensaje != "") {
+          console.log('DATA EQUIFAX', JSON.stringify(data));
+          this.mensaje = data.entidad.mensaje;
+          this.verMensajes(this.mensaje);
+
+        }
+
         this.contadorBusqueda++;
         this.entidadPersonaCalculadora = data.entidad.datoscliente;
       } else {
@@ -278,8 +288,23 @@ export class ListCotizarComponent implements OnInit {
       this.busquedaCliente();
     });
   }
+
+  private busquedaMensajeEquifax(cedula: string) {
+
+
+    const consulta = new PersonaConsulta();
+    consulta.identificacion = cedula;
+    this.ing.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
+      if (data.entidad.mensaje != "") {
+        console.log('DATA EQUIFAX', JSON.stringify(data));
+        this.mensaje = data.entidad.mensaje;
+        this.verMensajes(this.mensaje);
+      }
+    });
+  }
   private setearValores() {
     this.loadingSubject.next(true);
+    this.busquedaMensajeEquifax(this.entidadCliente.cedulaCliente);
     if (this.entidadClientesoftbank == null) {
       if (this.entidadProspectoCRM) {
         this.nombresCompletos.setValue(this.entidadProspectoCRM.firstName);
@@ -443,6 +468,7 @@ export class ListCotizarComponent implements OnInit {
     });
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
       console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
+      console.log('RESP--> ', JSON.stringify(respuesta));
       //
       if (respuesta !== null && respuesta !== undefined) {
         console.log('al cerrar el dialogo ' + JSON.stringify(respuesta));
@@ -453,15 +479,16 @@ export class ListCotizarComponent implements OnInit {
         this.limpiarCampos();
       }
       if (this.mensaje != null) {
+        console.log('INGRESA A MENSAJES', JSON.stringify(this.mensaje));
         this.verMensajes(this.mensaje);
       }
     });
   }
   private verMensajes(mensaje: string) {
-    console.log('VALORES DE MENSAJE QUE ENVIO---> ', this.mensaje);
-    this.loadingSubject.next(false);
+    console.log('VALORES DE MENSAJE QUE ENVIO---> ', mensaje);
+    // this.loadingSubject.next(false);
 
-    console.log('>>>INGRESA AL DIALOGO ><<<<<<');
+    console.log('>>>INGRESA AL DIALOGO ><<<<<<', this.mensaje);
     const dialogRefGuardar = this.dialog.open(MensajeExcepcionComponent, {
       width: '600px',
       height: 'auto',
@@ -513,7 +540,7 @@ export class ListCotizarComponent implements OnInit {
     }
   }
   verPrecio() {
-    if(this.horaFinalProspeccion == null){
+    if (this.horaFinalProspeccion == null) {
       this.capturaHoraFinal("PROSPECCION");
       this.capturaHoraInicio("TASACION");
       this.capturaHoraAsignacion("TASACION");
@@ -528,7 +555,7 @@ export class ListCotizarComponent implements OnInit {
       precioOro.pesoNetoEstimado = this.pesoNetoEstimado.value;
       precioOro.tbQoCotizador.id = this.entidadCotizador.id;
       precioOro.tbQoTipoOro = this.tipoOro.value;
-      if(this.elementPrecioOro != null ){
+      if (this.elementPrecioOro != null) {
         precioOro.id = this.elementPrecioOro.id;
         const index = this.dataSourcePrecioOro.data.indexOf(this.elementPrecioOro);
         this.dataSourcePrecioOro.data.splice(index, 1);
@@ -538,15 +565,15 @@ export class ListCotizarComponent implements OnInit {
         if (data && data.entidad) {
           const dataC = this.dataSourcePrecioOro.data;
           dataC.push(data.entidad);
-          this.dataSourcePrecioOro.data = dataC;   
+          this.dataSourcePrecioOro.data = dataC;
           this.contadorPrecioOro++;
           this.sinNoticeService.setNotice('SE GUARDO EL PRECIO ORO', 'success');
-        } else{
+        } else {
           this.sinNoticeService.setNotice('ERROR AL GUARDAR PRECIO ORO', 'success');
         }
         this.loadingSubject.next(false);
         this.limpiarCamposPrecioOro();
-        });
+      });
     } else {
       this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE EL FORMULARIO', 'warning');
     }
@@ -557,7 +584,7 @@ export class ListCotizarComponent implements OnInit {
     this.pesoNetoEstimado.setValue(element.pesoNetoEstimado);
     this.elementPrecioOro = element;
   }
-  eliminarPrecioOro(element: TbQoPrecioOro) {    
+  eliminarPrecioOro(element: TbQoPrecioOro) {
     this.loadingSubject.next(true);
     this.pre.eliminarPrecioOro(element.id).subscribe((data: any) => {
       if (data.entidad) {
@@ -565,7 +592,7 @@ export class ListCotizarComponent implements OnInit {
         this.dataSourcePrecioOro.data.splice(index, 1);
         const dataC = this.dataSourcePrecioOro.data;
         this.dataSourcePrecioOro.data = dataC
-        if(this.dataSourcePrecioOro.data.length < 1){
+        if (this.dataSourcePrecioOro.data.length < 1) {
           this.contadorPrecioOro = null;
         }
       } else {
@@ -588,16 +615,16 @@ export class ListCotizarComponent implements OnInit {
     this.consultaOferta.precioOro = 0;
     this.consultaOferta.pesoGr = 0;
     this.consultaOferta.pesoNeto = 0;
-    this.dataSourcePrecioOro.data.forEach(e =>{
+    this.dataSourcePrecioOro.data.forEach(e => {
       console.log(" dataSourcePrecioOro pesoGr ---> ", this.consultaOferta.pesoGr);
       console.log(" dataSourcePrecioOro pesoNeto ---> ", this.consultaOferta.pesoNeto);
       console.log(" dataSourcePrecioOro precioOro ---> ", this.consultaOferta.precioOro);
 
       this.consultaOferta.pesoGr += parseFloat(e.pesoNetoEstimado);
-      this.consultaOferta.pesoNeto +=parseFloat(e.pesoNetoEstimado);
-      this.consultaOferta.precioOro += parseFloat(e.precio); 
+      this.consultaOferta.pesoNeto += parseFloat(e.pesoNetoEstimado);
+      this.consultaOferta.precioOro += parseFloat(e.precio);
       this.consultaOferta.tipoOroKilataje = e.tbQoTipoOro.quilate;
-      
+
       console.log(" DATOS pesoGr ---> ", this.consultaOferta.pesoGr);
       console.log(" DATOS pesoNeto ---> ", this.consultaOferta.pesoNeto);
       console.log(" DATOS precioOro ---> ", this.consultaOferta.precioOro);
@@ -747,6 +774,8 @@ export class ListCotizarComponent implements OnInit {
     const errorLogitudExedida = 'La longitud sobrepasa el limite';
     const errorInsuficiente = 'La longitud es insuficiente';
     const errorSeleccion = 'Seleccione una opcion';
+
+
     /**
      * Validaciones de cedula
      */
@@ -789,8 +818,7 @@ export class ListCotizarComponent implements OnInit {
      * Validacion de telefono domicilio
      */
     if (pfield && pfield === 'telefonoDomicilio') {
-      const input = this.formCliente.get('telefonoDomicilio');
-      console.log('telefonoDocimicilio', this.formCliente.get('telefonoDomicilio'));
+      const input = this.telefonoDomicilio;
       return input.hasError('required')
         ? errorRequerido
         : input.hasError('pattern')
@@ -806,8 +834,10 @@ export class ListCotizarComponent implements OnInit {
        */
     if (pfield && pfield == 'correoElectronico') {
 
-      return this.correoElectronico.hasError('required') ? errorRequerido : this.correoElectronico.hasError('email') ? 'E-mail no valido' : this.correoElectronico.hasError('maxlength') ? maximo
-        + this.correoElectronico.errors.maxlength.requiredLength : '';
+      return this.correoElectronico.hasError('required')
+        ? errorRequerido : this.correoElectronico.hasError('email')
+          ? 'E-mail no valido' : this.correoElectronico.hasError('maxlength')
+            ? maximo + this.correoElectronico.errors.maxlength.requiredLength : '';
 
     }
     /**
@@ -831,6 +861,19 @@ export class ListCotizarComponent implements OnInit {
       return input.hasError('required')
         ? errorSeleccion
         : input.hasError('required');
+    }
+    if (pfield && pfield === 'campania') {
+      const input = this.campania;
+      return input.hasError('required')
+        ? errorSeleccion
+        : input.hasError('required');
+    }
+
+    if (pfield && pfield === 'fpublicidad') {
+      const input = this.formCliente.get('fpublicidad');
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('errorSeleccion');
     }
   }
   private onChangeFechaNacimiento() {

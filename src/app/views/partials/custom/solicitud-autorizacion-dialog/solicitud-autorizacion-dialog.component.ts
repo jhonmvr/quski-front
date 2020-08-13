@@ -42,15 +42,15 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<SolicitudAutorizacionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: string, public dialog: MatDialog, private upload: ReFileUploadService,
     private cs: ClienteService) {
-    console.log(">>><<<<<<<<<<<<<<< DATA COTIZACION" + JSON.stringify(data));
-    this.formDatosSolicitud.addControl("nombresCompletos", this.nombresCompletos);
-    this.formDatosSolicitud.addControl("identificacion", this.identificacion);
+    console.log('>>><<<<<<<<<<<<<<< DATA COTIZACION' + JSON.stringify(data));
+    this.formDatosSolicitud.addControl('nombresCompletos', this.nombresCompletos);
+    this.formDatosSolicitud.addControl('identificacion', this.identificacion);
 
   }
   private uploadSubject = new BehaviorSubject<boolean>(false);
   public uploading;
   public validar;
-  private identificacionClienteSubject = new BehaviorSubject<string>("");
+  private identificacionClienteSubject = new BehaviorSubject<string>('');
 
   public enableLoadArchivoButton;
   public enableLoadArchivo = new BehaviorSubject<boolean>(false);
@@ -62,7 +62,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   //public dataUpload: DataUpload;
   isDisabledGuardar: any;
   element: any;
-  tipoIdentificacion = "";
+  tipoIdentificacion = '';
   equifax: String;
   // FORM DE CONTACTO  
   public formDatosSolicitud: FormGroup = new FormGroup({});
@@ -81,7 +81,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
 
   loadArchivoCliente(element) {
 
-    console.log("===>>ingreso: ", this.nombresCompletos.value);
+    console.log('===>>ingreso: ', this.nombresCompletos.value);
     let d = {
       idTipoDocumento: 1,
       identificacionCliente: this.identificacion.value,
@@ -91,21 +91,21 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
       this.nombresCompletos.value 
     ) {  */
     const dialogRef = this.dialog.open(CargarFotoDialogComponent, {
-      width: "auto",
-      height: "auto",
+      width: '500px',
+      height: 'auto',
       data: d
 
     });
-    console.log("===>>envio data: ", this.data);
+    console.log('===>>envio data: ', this.data);
     dialogRef.afterClosed().subscribe(r => {
-      console.log("===>>ertorno al cierre: " + JSON.stringify(r));
+      console.log('===>>ertorno al cierre: ' + JSON.stringify(r));
       if (r) {
         this.validar = 'ACT';
         this.enableConsultar.next(true);
         this.enableLoadArchivo.next(false);
         this.sinNoticeService.setNotice(
-          "ARCHIVO CARGADO CORRECTAMENTE",
-          "success"
+          'ARCHIVO CARGADO CORRECTAMENTE',
+          'success'
         );
         //this.validateContratoByHabilitante('false');
       }
@@ -149,27 +149,27 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   consultar() {
 
     this.validar;
-    console.log("llegaaaa", this.validar);
+    console.log('llegaaaa', this.validar);
     if (this.validar == 'ACT') {
       this.dialogRef.close(this.validar);
-      this.equifax = "Equifax";
+      this.equifax = 'Equifax';
 
     } else {
-      this.sinNoticeService.setNotice("POR FAVOR DEBE CARGAR EL DOCUMENTO DE AUTORIZACION", 'warning');
+      this.sinNoticeService.setNotice('POR FAVOR DEBE CARGAR EL DOCUMENTO DE AUTORIZACION', 'warning');
     }
 
   }
 
   onFileChange(event) {
     console.log(
-      "===>contraro relate idContrato: " + JSON.stringify(this.data)
+      '===>contraro relate idContrato: ' + JSON.stringify(this.data)
     );
 
-    let relatedstr = "";
-    let process = "";
-    if (this.data !== "") {
+    let relatedstr = '';
+    let process = '';
+    if (this.data !== '') {
       relatedstr = this.data;
-      process = "CLIENTE";
+      process = 'CLIENTE';
 
       let reader = new FileReader();
       if (event.target.files && event.target.files.length > 0) {
@@ -197,48 +197,48 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
 
   descargarPlantillaHabilitante(row) {
 
-    console.log("<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>", this.nombresCompletos.value, this.data);
-    if (this.nombresCompletos.value != "") {
+    console.log('<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>', this.nombresCompletos.value, this.data);
+    if (this.nombresCompletos.value != '') {
 
-      this.dh.downloadAutorizacionPlantilla(1, "PDF", this.nombresCompletos.value, this.identificacion.value).subscribe(
+      this.dh.downloadAutorizacionPlantilla(1, 'PDF', this.nombresCompletos.value, this.identificacion.value).subscribe(
         (data: any) => {
           //console.log("descargarNotificacion datos xx " + data.entidad);
           //console.log("descargarNotificacion datos " + JSON.stringify(data));
           if (data) {
             //this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
             //console.log("datos de salida",data);
-            saveAs(data, "Carta solicitud Autorizacion Buro" + ".pdf");
+            saveAs(data, 'Carta solicitud Autorizacion Buro' + '.pdf');
             this.enableLoadArchivo.next(true);
             this.enableConsultar.next(false);
             this.enableDownload.next(false);
           } else {
             this.sinNoticeService.setNotice(
-              "NO SE ENCONTRO REGISTRO PARA DESCARGA",
-              "error"
+              'NO SE ENCONTRO REGISTRO PARA DESCARGA',
+              'error'
             );
           }
         },
         error => {
-          console.log("================>error: " + JSON.stringify(error));
+          console.log('================>error: ' + JSON.stringify(error));
           this.sinNoticeService.setNotice(
-            "ERROR DESCARGA DE PLANTILLA HABILITANTE",
-            "error"
+            'ERROR DESCARGA DE PLANTILLA HABILITANTE',
+            'error'
           );
         }
       );
     } else
-      this.sinNoticeService.setNotice("INGRESA LOS NOMBRES COMPLETOS  ", 'error');
+      this.sinNoticeService.setNotice('INGRESA LOS NOMBRES COMPLETOS  ', 'error');
   }
 
 
   public subirArchivoHabilitante() {
     console.log(
-      "===> subirArchivoHabilitantecontraro relate id: " +
+      '===> subirArchivoHabilitantecontraro relate id: ' +
       JSON.stringify(this.data)
     );
     this.enableLoadArchivo.next(false);
     this.enableConsultar.next(true);
-    this.sinNoticeService.setNotice("SE SUBIO EXITOSAMENTE ", 'success');
+    this.sinNoticeService.setNotice('SE SUBIO EXITOSAMENTE ', 'success');
     this.validar = 'ACT';
 
 
