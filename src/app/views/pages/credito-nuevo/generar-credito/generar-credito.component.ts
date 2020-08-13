@@ -16,8 +16,10 @@ import { DocumentoHabilitanteService } from '../../../../core/services/quski/doc
 import { environment } from '../../../../../environments/environment';
 import { ObjectStorageService } from '../../../../core/services/object-storage.service';
 import { FundaService } from '../../../../core/services/quski/funda.service';
-
-
+import { OperacionCrear } from '../../../../core/model/softbank/OperacionCrear';
+import { DatosImpCom } from '../../../../core/model/softbank/DatosImpCom';
+import { SoftbankService } from '../../../../core/services/quski/softbank.service';
+import { ConsultaCliente } from '../../../../core/model/softbank/ConsultaCliente';
 
 
 @Component({
@@ -107,6 +109,8 @@ export class GenerarCreditoComponent implements OnInit {
   enableApoderadoButton;
   enableApoderado = new BehaviorSubject<boolean>(false);
   srcJoya;
+  srcFunda;
+  srcTemporal;
   //TABLA
   displayedColumns = ['numeroPiezas', 'tipoOro',  'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto',
   'tieneDescuento', 'descripcionDescuentos', 'descuentoPesoPiedra',  'descuentoSuelda',
@@ -120,7 +124,7 @@ export class GenerarCreditoComponent implements OnInit {
  ///////////////////////Objeto Joyas para foto
  joyaFoto ={
    idRol:"1",
-   proceso:"JOYA",
+   proceso:"FUNDA",
    estadoOperacion:"",
    referencia:"50",
    tipoDocumento:"5",
@@ -128,7 +132,7 @@ export class GenerarCreditoComponent implements OnInit {
  }
 
  ////////////////Objeto Funda para foto
-
+operacion = new OperacionCrear()
 
  @ViewChild(MatPaginator, { static: true }) 
  paginator: MatPaginator;
@@ -141,7 +145,7 @@ export class GenerarCreditoComponent implements OnInit {
 
   constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, private tas: TasacionService,
     public dialog: MatDialog, private dhs: DocumentoHabilitanteService, private os: ObjectStorageService,
-    private fs: FundaService) { 
+    private fs: FundaService, private css: SoftbankService) { 
     
     
   }
@@ -210,18 +214,19 @@ export class GenerarCreditoComponent implements OnInit {
       if(data.entidad){
         this.tbCreditoNegociacion = data.entidad
         this.tbQoCliente = this.tbCreditoNegociacion.tbQoNegociacion.tbQoCliente
+        console.log("Pilas el data" , data.entidad)
         console.log(this.tbQoCliente)
         console.log(this.tbCreditoNegociacion)
-        this.codigoOperacion.setValue(data.entidad.tbQoNegociacion.codigoOperacion)
+        this.codigoOperacion.setValue(data.entidad.codigo)
         this.cedulaCliente.setValue(data.entidad.tbQoNegociacion.tbQoCliente.cedulaCliente)
         this.nombresCompletos.setValue(data.entidad.tbQoNegociacion.tbQoCliente.apellidoPaterno.concat(" ",
          data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno == null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno, 
           " ", data.entidad.tbQoNegociacion.tbQoCliente.primerNombre
-         ," ", data.entidad.tbQoNegociacion.tbQoCliente.segundoApellido== null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.segundoApellido))
-         this.situacion.setValue("APROBACIÓN Y AUTORIZACION DESEMBOLSO")
+         ," ", data.entidad.tbQoNegociacion.tbQoCliente.segundoNombre== null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.segundoNombre))
+         this.situacion.setValue(data.entidad.situacion == null ? "" : data.entidad.situacion)
          this.tipoCuenta.setValue("CUENTA DE AHORROS")
          this.validateEdadTipo();
-         this.cargarFotoHabilitante();
+        this.consultarClienteCS();
          if(data.entidad.tbQoNegociacion.tipoNegociacion === "CUOTAS"){
            console.log("deberia verse")
           this.enableDiaPago.next(true);
@@ -334,17 +339,20 @@ validateEdadTipo(){
   this.tipoCliente.setValue( this.tiposClientes.find(p=>p==tipo))
  }
 
- hello(){
-  let habilitante = new HabilitanteComponent(null,null,null,null);
-  //habilitante.loadArchivoCliente();
- }
+
 
  cargarFotoJoya(){
    this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.joyaFoto.referencia, this.joyaFoto.tipoDocumento)
- }
+  
+   this.srcJoya = this.srcTemporal
+   console.log("srcJoya"+this.srcJoya)
+  }
 
  cargarFotoFunda(){
-  this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.joyaFoto.referencia, this.joyaFoto.tipoDocumento)
+  
+  this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.joyaFoto.referencia, 6)
+  this.srcFunda= this.srcTemporal
+
 }
 
  loadArchivoCliente(procesoS, estadoOperacionS, referenciaS,idTipoDocumentoS) {
@@ -385,12 +393,14 @@ getPermiso(){
 cargarFotoHabilitante(){
   this.dhs.getHabilitanteByReferenciaTipoDocumentoProceso(this.joyaFoto.tipoDocumento,this.joyaFoto.proceso,this.joyaFoto.referencia,
   ).subscribe((data:any)=>{
+    
     console.log("===========>",data.entidad)
      
     this.os.getObjectById( data.entidad.objectId,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
     console.log("data  del objeto", data)
-    this.srcJoya = data.entidad
-    console.log("aqui", this.srcJoya)
+    this.srcTemporal = data.entidad
+    console.log(this.srcTemporal)
+  
     })
   })
 }
@@ -427,17 +437,140 @@ calcular(){
 getFunda(pesoFun){
  
   this.fs.reservarFunda(pesoFun).subscribe((data:any)=>{
-    console.log(data)
-    this.pesoFunda.setValue(this.totalPesoN);
-    //this.numeroFunda.setValue(data.entidad.codigo);
-    this.totalPesoNeto.setValue(this.totalPBFunda);
-    this.totalPesoBruto.setValue(this.totalValorR);
-    this.totalPesoBrutoFunda.setValue(this.totalValorA);
-    this.totalValorRealizacion.setValue(this.totalValorC);
+    if(data.entidad){
+      this.numeroFunda.setValue(data.entidad.codigo);
+      this.totalPesoNeto.setValue(this.totalPesoN);
+      this.totalPesoBruto.setValue(this.totalPesoB);
+      this.totalPesoBrutoFunda.setValue(Number(this.totalPesoB)+ Number(data.entidad.peso));
+      this.totalValorRealizacion.setValue(this.totalValorR);
+      this.joyaFoto.referencia = data.entidad.id
+      console.log(data)
+    }else{
+      this.sinNoticeService.setNotice("No se encontro fundas", 'warning');
+    }
+  
+    //this.pesoFunda.setValue(this.totalPesoN);
+  
   }
   ) 
 }
 
+
+generarCredito(){
+  
+  this.operacion.idTipoIdentificacion = 1;
+  this.operacion.identificacion = this.tbQoCliente.cedulaCliente;
+  this.operacion.nombreCliente =  this.tbQoCliente.primerNombre.concat(" ",
+  this.tbQoCliente.apellidoMaterno == null ? "" : this.tbQoCliente.apellidoMaterno, 
+   " ",this.tbQoCliente.apellidoPaterno," ",this.tbQoCliente.segundoApellido== null ? "" : this.tbQoCliente.segundoApellido)
+  this.operacion.fechaNacimientoCliente = this.tbQoCliente.fechaNacimiento
+  console.log( new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate()).toString())
+  this.operacion.fechaEfectiva = diferenciaEnDias.convertirFechaAString(new Date())
+ 
+  console.log(this.operacion.fechaEfectiva)
+  this.operacion.codigoTablaAmortizacionQuski = "A107";
+  this.operacion.codigoTipoCarteraQuski = "MO3";
+  this.operacion.codigoTipoPrestamo = "001";
+  this.operacion.cupoPrestamo = 0.0;
+  this.operacion.montoSolicitado = Number(this.tbCreditoNegociacion.montoPreaprobado);
+  this.operacion.pagoDia = 24;
+  this.operacion.datosCaptacion = null;
+  this.operacion.datosEmision = null;
+  let datos = new DatosImpCom();
+  datos.codigo = "L";
+  datos.formaPago = "C";
+  datos.tasa = 0.5;
+  datos.valor = 0.0;
+  this.operacion.datosImpCom.push( datos );
+  this.operacion.datosReferencia = null;
+  this.operacion.datosCuentaDebito = null;
+  /////////////////
+
+
+
+  this.css.operacionCrearCS( this.operacion ).subscribe( (data:any) =>{
+    if (data) {
+      console.log(data)
+      console.log("data de operacionCrearCS ----->" + JSON.stringify(data));
+    // this.tipoCartera = data.
+     this.descripcionProducto.setValue(data.entidad.producto)
+     console.log(data.entidad)
+     
+     this.destinoOperacion.setValue(data.entidad.producto)
+     this.estadoOperacion.setValue(data.entidad.estado)
+     this.tipoOperacion.setValue(data.entidad.estado)
+     this.plazo.setValue(data.entidad.plazo)
+     this.fechaEfectiva.setValue(this.operacion.fechaEfectiva);
+     this.fechaVencimiento.setValue("");
+     this.montoFinanciado.setValue(data.entidad.montoEntregar);
+   //  valorDesembolso = new FormControl('');
+     this.totalInteres.setValue(data.entidad.totalInteresVencimiento);
+     this.cuotas.setValue(data.entidad.valorCuota);
+  //   pagarCliente = new FormControl('');
+   //  riesgoTotalCliente = new FormControl('');
+ //    recibirCliente = new FormControl('');
+ //    netoCliente = new FormControl('');
+ 
+      console.log(" Funciona ----> operacionCrearCS")
+    } else {
+      this.sinNoticeService.setNotice("No me trajo data 'operacionCrearCS' :'(", 'error');
+    }
+  }, error=>{
+    if (JSON.stringify(error).indexOf("codError") > 0){
+      let b = error.error;
+      this.sinNoticeService.setNotice(b.setmsgError,'error');
+    } else {
+      this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+    }
+  });
+}
+
+
+generarCreditoMontoSugerido(){
+  this.operacion.montoSolicitado = this.montoSolicitado.value
+  this.css.operacionCrearCS( this.operacion ).subscribe( data =>{
+    if (data) {
+      console.log("data de operacionCrearCS ----->" + JSON.stringify(data));
+      
+      console.log(" Funciona ----> operacionCrearCS")
+    } else {
+      this.sinNoticeService.setNotice("No me trajo data 'operacionCrearCS' :'(", 'error');
+    }
+  }, error=>{
+    if (JSON.stringify(error).indexOf("codError") > 0){
+      let b = error.error;
+      this.sinNoticeService.setNotice(b.setmsgError,'error');
+    } else {
+      this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+    }
+  });
+}
+
+
+  consultarClienteCS(){
+  let entidadConsultaCliente  = new ConsultaCliente();
+  entidadConsultaCliente.identificacion = this.tbQoCliente.cedulaCliente;
+  entidadConsultaCliente.idTipoIdentificacion = 1;
+  this.css.consultarClienteCS( entidadConsultaCliente ).subscribe( (data : any) => {
+    if (data) {
+      //console.log("consultarClienteCS --> Funciona");
+      console.log("Pitufo", data.cuentasBancariasCliente[0].cuenta)
+      console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
+      this.numeroCuenta.setValue(data.cuentasBancariasCliente[0].cuenta== null ? "" : data.cuentasBancariasCliente[0].cuenta)
+    } else {
+      this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
+    }
+
+  }, error =>{
+    if (JSON.stringify(error).indexOf("codError") > 0) {
+      let b = error.error;
+      this.sinNoticeService.setNotice(b.msgError, 'error');
+    } else {
+      this.sinNoticeService.setNotice("Error no fue cacturado en 'consultarClienteCS' :(", 'error');
+
+    }
+  });
+}
 }
 
  

@@ -1861,7 +1861,7 @@ export class GestionClienteComponent implements OnInit {
     this.css.simularTablaAmortizacionCS(tabla).subscribe( (data : any) => {
       if (data) {
         console.log(" Funciona ----> simularTablaAmortizacionCS")
-        // console.log("Simular la tabla de amortizacion ----->" + JSON.stringify(data));
+        console.log("Simular la tabla de amortizacion ----->" + JSON.stringify(data));
       } else {
         this.sinNoticeService.setNotice("No me trajo data 'simularTablaAmortizacionCS' :'(", 'error');
       }
@@ -1899,7 +1899,7 @@ export class GestionClienteComponent implements OnInit {
     operacion.datosCuentaDebito = null;
     this.css.operacionCrearCS( operacion ).subscribe( data =>{
       if (data) {
-        // console.log("data de operacionCrearCS ----->" + JSON.stringify(data));
+        console.log("data de operacionCrearCS ----->" + JSON.stringify(data));
         console.log(" Funciona ----> operacionCrearCS")
       } else {
         this.sinNoticeService.setNotice("No me trajo data 'operacionCrearCS' :'(", 'error');

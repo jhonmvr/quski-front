@@ -60,250 +60,6 @@
                     </mat-form-field>
                   </div>
             </mat-step>
-
-            <mat-step label="Datos Instruccion Operativa">
-                <div class="row">
-                    <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="tipoCuenta" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="numeroCuenta" placeholder="Numero de Cuenta">
-                        </mat-form-field>
-                    </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <mat-form-field>
-                                <mat-select placeholder="" [formControl]="tipoCliente" (selectionChange)="validateTipoCliente($event.value)">
-                                    <mat-option *ngFor="let tipoCli of tiposClientes " [value]="tipoCli">
-                                        {{tipoCli}}
-                                    </mat-option>
-                                </mat-select>                     
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                            <mat-form-field>
-                                <mat-select placeholder="Firmada operacion" [formControl]="firmadaOperacion">
-                                    <mat-option *ngFor="let firmadaOp of tiposClientes " [value]="firmadaOp">
-                                        {{firmadaOp}}
-                                    </mat-option>
-                                </mat-select>                     
-                            </mat-form-field>
-                        </div>
-                        </div>
-
-                        <div class="row" *ngIf="enableApoderadoButton | async">
-                            
-                            <div class="col-md-4">
-                                <mat-form-field class="example-full-width">
-                                    <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (APODERADO)">
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field class="example-full-width">
-                                    <input matInput [formControl]="nombresCompletosApoderado" placeholder="Nombres Completos (APODERADO)">
-                                </mat-form-field>
-                            </div>
-                            </div>
-
-                            <div class="row" *ngIf="enableCodeudorButton | async">
-                            
-                                <div class="col-md-4">
-                                    <mat-form-field class="example-full-width">
-                                        <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (CODEUDOR)">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-4">
-                                    <mat-form-field class="example-full-width">
-                                        <input matInput [formControl]="nombresCompletosApoderado" placeholder="Nombres Completos (CODEUDOR)">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-4">
-                                    <mat-form-field>
-                                      <input   (dateChange)="validateEdadCodeudor($event.value)"
-                                      matInput #inputFechaNacimientoCodeudor [matDatepicker]="pickerFechaNacimientoCodeudor"
-                                        placeholder="Fecha de Nacimiento Codeudor" [formControl]="fechaNacimientoCodeudor"
-                                        />
-                                      <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimientoCodeudor"></mat-datepicker-toggle>
-                                      <mat-datepicker #pickerFechaNacimientoCodeudor></mat-datepicker>
-                                      <mat-error *ngIf="validateEdadCodeudor(fechaNacimientoCodeudor.value)"> la edad tiene  ser menor a 65</mat-error>
-                                    </mat-form-field>
-                                  </div>
-                                </div>
-
-                                <button mat-button  (click)="generarCreditos()">Generar Credito
-                                </button>
-            </mat-step>
-            <mat-step label="Datos del Credito nuevo">
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Tipo de Cartera:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field>
-                            <mat-select placeholder="Tipo de Cartera" [formControl]="tipoCartera">
-                                <mat-option *ngFor="let tipoCartera of tiposCarteras" [value]="tipoCuenta">
-                                    {{tipoCuenta}}
-                                </mat-option>
-                            </mat-select>                     
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Descripcion del producto</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="descripcionProducto" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Destino de la operacion:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field>
-                            <mat-select placeholder="Tipo de Cartera" [formControl]="destinoOperacion">
-                                <mat-option *ngFor="let destinoOperacion of destinosOperaciones" [value]="tipoCuenta">
-                                    {{destinoOperacion}}
-                                </mat-option>
-                            </mat-select>                     
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Estado de la operacion:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field>
-                            <mat-select placeholder="Estado de la Operacion" [formControl]="estadoOperacion">
-                                <mat-option *ngFor="let estadoOp of estadoOp" [value]="estadoOp">
-                                    {{estadoOp}}
-                                </mat-option>
-                            </mat-select>                     
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Tipo de Operacion:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field>
-                            <mat-select placeholder="Estado de la Operacion" [formControl]="estadoOperacion">
-                                <mat-option *ngFor="let estadoOp of estadoOp" [value]="estadoOp">
-                                    {{estadoOp}}
-                                </mat-option>
-                            </mat-select>                     
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Plazo:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="plazo" placeholder="">
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <mat-form-field>
-                          <input   (dateChange)="validacionFecha()"
-                          matInput #inputfechaEfectiva [matDatepicker]="pickerfechaEfectiva"
-                            placeholder="Fecha Efectiva" [formControl]="fechaEfectiva"
-                            />
-                          <mat-datepicker-toggle matSuffix [for]="pickerfechaEfectiva"></mat-datepicker-toggle>
-                          <mat-datepicker #pickerfechaEfectiva></mat-datepicker>
-                        </mat-form-field>
-                      </div>
-
-                      <div class="col-md-4">
-                        <mat-form-field>
-                          <input   (dateChange)="validacionFecha()"
-                          matInput #inputfechaVencimiento [matDatepicker]="pickerfechaVencimiento"
-                            placeholder="Fecha de Vencimiento" [formControl]="fechaVencimiento"
-                            />
-                          <mat-datepicker-toggle matSuffix [for]="pickerfechaVencimiento"></mat-datepicker-toggle>
-                          <mat-datepicker #pickerfechaVencimiento></mat-datepicker>
-                        </mat-form-field>
-                      </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Monto Financiado:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="montoFinanciado" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Valor Desembolso:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="valorDesembolso" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Total interes:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="totalInteres" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Cuotas:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="cuotas" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">A pagar por cliente:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="pagarCliente" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Riesgo Total Cliente:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="riesgoTotalCliente" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-1">
-                        <label style="font-weight:bold">A Recibir Cliente:</label>
-                    </div>
-                    <div class="col-md-1">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="recibirCliente" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-1">
-                        <label style="font-weight:bold">Neto Al Cliente:</label>
-                    </div>
-                    <div class="col-md-1">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="netoCliente" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    
-                </div>
-            </mat-step>
             <mat-step label="Monto Sugerido">
                 <div class="row">
                     <div class="col-md-2">
@@ -489,23 +245,274 @@
                         </a>
                         </div>
                         <div class= "col-md-2">
-                            <img src=[srcJoya]  width="200" height="200">
+                            <img  src="data:image/png;base64, {{srcJoya}}"
+                             class="img-responsive" style="width:400px !important; height:300px !important" alt="" />
+
+
                         </div>
+
+         
                  
                     <div class= "col-md-4">
-                        <a href="javascript:void(0);" *ngIf="getPermiso('CARGA_ARC')" (click)="loadArchivoCliente(); $event.preventDefault()">
+                        <a href="javascript:void(0);" *ngIf="getPermiso('CARGA_ARC')" (click)="cargarFotoFunda(); $event.preventDefault()">
                             <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
                             <span style="position: relative;top: -10px;margin-left: 5px;">Carga Foto</span>
                         </a>
                         </div>
                           <div class= "col-md-2">
-                            <img src=""  width="200" height="200">
+                            <img  src="data:image/png;base64, {{srcFunda}}"
+                            class="img-responsive" style="width:400px !important; height:300px !important" alt="" />
                         </div>
                     </div>
         
                   
              
             </mat-step>
+
+            <mat-step label="Datos Instruccion Operativa">
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="tipoCuenta" readonly>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="numeroCuenta" placeholder="Numero de Cuenta">
+                        </mat-form-field>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-select placeholder="" [formControl]="tipoCliente" (selectionChange)="validateTipoCliente($event.value)">
+                                    <mat-option *ngFor="let tipoCli of tiposClientes " [value]="tipoCli">
+                                        {{tipoCli}}
+                                    </mat-option>
+                                </mat-select>                     
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-select placeholder="Firmada operacion" [formControl]="firmadaOperacion">
+                                    <mat-option *ngFor="let firmadaOp of tiposClientes " [value]="firmadaOp">
+                                        {{firmadaOp}}
+                                    </mat-option>
+                                </mat-select>                     
+                            </mat-form-field>
+                        </div>
+                        </div>
+
+                        <div class="row" *ngIf="enableApoderadoButton | async">
+                            
+                            <div class="col-md-4">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (APODERADO)">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [formControl]="nombresCompletosApoderado" placeholder="Nombres Completos (APODERADO)">
+                                </mat-form-field>
+                            </div>
+                            </div>
+
+                            <div class="row" *ngIf="enableCodeudorButton | async">
+                            
+                                <div class="col-md-4">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (CODEUDOR)">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput [formControl]="nombresCompletosApoderado" placeholder="Nombres Completos (CODEUDOR)">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                      <input   (dateChange)="validateEdadCodeudor($event.value)"
+                                      matInput #inputFechaNacimientoCodeudor [matDatepicker]="pickerFechaNacimientoCodeudor"
+                                        placeholder="Fecha de Nacimiento Codeudor" [formControl]="fechaNacimientoCodeudor"
+                                        />
+                                      <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimientoCodeudor"></mat-datepicker-toggle>
+                                      <mat-datepicker #pickerFechaNacimientoCodeudor></mat-datepicker>
+                                      <mat-error *ngIf="validateEdadCodeudor(fechaNacimientoCodeudor.value)"> la edad tiene  ser menor a 65</mat-error>
+                                    </mat-form-field>
+                                  </div>
+                                </div>
+
+                                <button mat-button  (click)="generarCredito()">Generar Credito
+                                </button>
+            </mat-step>
+            <mat-step label="Datos del Credito nuevo">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Tipo de Cartera:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field>
+                            <mat-select placeholder="Tipo de Cartera" [formControl]="tipoCartera">
+                                <mat-option *ngFor="let tipoCartera of tiposCarteras" [value]="tipoCuenta">
+                                    {{tipoCuenta}}
+                                </mat-option>
+                            </mat-select>                     
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Descripcion del producto</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="descripcionProducto" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Destino de la operacion:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field>
+                            <mat-select placeholder="Tipo de Cartera" [formControl]="destinoOperacion">
+                                <mat-option *ngFor="let destinoOperacion of destinosOperaciones" [value]="tipoCuenta">
+                                    {{destinoOperacion}}
+                                </mat-option>
+                            </mat-select>                     
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Estado de la operacion:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field>
+                            <mat-select placeholder="Estado de la Operacion" [formControl]="estadoOperacion">
+                                <mat-option *ngFor="let estadoOp of estadoOp" [value]="estadoOp">
+                                    {{estadoOp}}
+                                </mat-option>
+                            </mat-select>                     
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Tipo de Operacion:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field>
+                            <mat-select placeholder="Estado de la Operacion" [formControl]="estadoOperacion">
+                                <mat-option *ngFor="let estadoOp of estadoOp" [value]="estadoOp">
+                                    {{estadoOp}}
+                                </mat-option>
+                            </mat-select>                     
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Plazo:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="plazo" placeholder="">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field>
+                          <input   (dateChange)="validacionFecha()"
+                          matInput #inputfechaEfectiva [matDatepicker]="pickerfechaEfectiva"
+                            placeholder="Fecha Efectiva" [formControl]="fechaEfectiva"
+                            />
+                          <mat-datepicker-toggle matSuffix [for]="pickerfechaEfectiva"></mat-datepicker-toggle>
+                          <mat-datepicker #pickerfechaEfectiva></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-md-4">
+                        <mat-form-field>
+                          <input   (dateChange)="validacionFecha()"
+                          matInput #inputfechaVencimiento [matDatepicker]="pickerfechaVencimiento"
+                            placeholder="Fecha de Vencimiento" [formControl]="fechaVencimiento"
+                            />
+                          <mat-datepicker-toggle matSuffix [for]="pickerfechaVencimiento"></mat-datepicker-toggle>
+                          <mat-datepicker #pickerfechaVencimiento></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Monto Financiado:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="montoFinanciado" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Valor Desembolso:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="valorDesembolso" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Total interes:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="totalInteres" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Cuotas:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="cuotas" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">A pagar por cliente:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="pagarCliente" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Riesgo Total Cliente:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="riesgoTotalCliente" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-1">
+                        <label style="font-weight:bold">A Recibir Cliente:</label>
+                    </div>
+                    <div class="col-md-1">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="recibirCliente" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-1">
+                        <label style="font-weight:bold">Neto Al Cliente:</label>
+                    </div>
+                    <div class="col-md-1">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="netoCliente" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+            </mat-step>
+            
             <mat-step label = "Documento Habilitantes">
                 <re-habilitante [proceso]="proceso" [useType]="'FORM'" [referencia]="'2'" [rol]="'1'">
                 </re-habilitante>

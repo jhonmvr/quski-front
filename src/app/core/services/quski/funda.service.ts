@@ -41,6 +41,7 @@ export class FundaService extends BaseService {
 
   public reservarFunda(peso) {
     this.params = new HttpParams()
+    this.params = this.params.set('peso', peso);
     const serviceUrl = this.appResourcesUrl + 'fundaRestController/reservarFunda';
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
