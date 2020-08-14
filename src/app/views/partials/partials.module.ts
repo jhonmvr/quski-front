@@ -271,6 +271,7 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 		{ provide: MAT_DIALOG_DATA, useValue: [] },
 	],
 	entryComponents: [
+		RiesgoAcumuladoComponent,
 		AuthDialogComponent,
 		HabilitanteDialogComponent,
 		SolicitudAutorizacionDialogComponent,

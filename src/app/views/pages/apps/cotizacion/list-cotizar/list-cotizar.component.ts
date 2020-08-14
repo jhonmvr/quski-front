@@ -46,6 +46,7 @@ import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOf
 import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
 import { DetalleCreditoService } from '../../../../../core/services/quski/detalle-credito.service';
 import { TbQoDetalleCredito } from '../../../../../core/model/quski/TbQoDetalleCredito';
+import { RiesgoAcumuladoComponent } from '../../../../partials/custom/popups/riesgo-acumulado/riesgo-acumulado.component';
 
 @Component({
   selector: 'kt-list-cotizar',
@@ -189,19 +190,21 @@ export class ListCotizarComponent implements OnInit {
   /**
    * ******************************** @INCIO
   */
-  /* public goRiesgoAcumulado() {
-      const dialogRef = this.dialog.open(RiesgoAcumuladoDialogComponent, {
+  // Riesgo acumulado de softbank que guarda directamente.
+  public goRiesgoAcumulado() {
+      const dialogRef = this.dialog.open(RiesgoAcumuladoComponent, {
         width: 'auto',
         height: 'auto',
-        data: this.entidadCliente.cedulaCliente
+        data: {
+          cedula: this.entidadClientesoftbank.identificacion,
+          isGuardar: true,
+        }
       });
       dialogRef.afterClosed().subscribe((respuesta: Array<TbQoRiesgoAcumulado>) => {
         console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
-        this.rie.persistEntity(respuesta).subscribe((data: any) => {
-          console.log('data al cerrrar', JSON.stringify(data));
-        });
+
       });
-    } */
+    }
   /********************************************* @BUSQUEDA *********************    */
 
   public busquedaSoftbank(cedula: string) {
@@ -1047,27 +1050,6 @@ export class ListCotizarComponent implements OnInit {
     this.entidadesOpcionesCreditos = event;
   }
   /******************************************** @GUARDAR  ********************************************************/
-  // SIN USAR
-  private guardarRiesgoAcumulado(entidades: Array<TbQoRiesgoAcumulado>) {
-    entidades.forEach(e => {
-      e.tbQoCliente.id = this.entidadCliente.id
-    });
-    this.rie.persistEntities(entidades).subscribe((data: any) => {
-      if (data.entidades) {
-        this.entidadesRiesgoAcumulados = data.entidades;
-        console.log("Riesgo guardadas -----> ", data.entidades);
-      } else {
-        console.log(' No se guardaron ---->', data);
-      }
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice('ERROR EN CORE INTERNO, ERROR DESCONOCIDO', 'error');
-      }
-    });
-  }
   private guardarVariables(entidades: Array<TbQoVariablesCrediticia>) {
     entidades.forEach(e => {
       e.tbQoCotizador = new TbQoCotizador();

@@ -7,37 +7,28 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
   styleUrls: ['./riesgo-acumulado.component.scss']
 })
 export class RiesgoAcumuladoComponent implements OnInit {
-  private identificacionLocal: string;
-  private idClienteLocal: number;
-  private isGuardarLocal: boolean;
-  private isPagedLocal  : boolean;
+  private identificacion: string  ;
+  private idCliente: number     ;
+  private isGuardar: boolean;
+  private isPaged  : boolean;
   public core: boolean = false;
   public soft: boolean = false;
   constructor(
-    @Inject(MAT_DIALOG_DATA) private identificacion: string,
-    @Inject(MAT_DIALOG_DATA) private idCliente: number,
-    @Inject(MAT_DIALOG_DATA) private isGuardar: boolean,
-    @Inject(MAT_DIALOG_DATA) private isPaged: boolean,
-    public dialogRefGuardar: MatDialogRef<any>,
+    @Inject(MAT_DIALOG_DATA) private data: any,
+    public dialogRef: MatDialogRef<RiesgoAcumuladoComponent>, 
   ) { }
 
   ngOnInit() {
-    this.isGuardarLocal = this.isGuardar;
-    if(this.identificacion != ""){
-      this.identificacionLocal =  this.identificacion;
-      this.soft = true;
-    } else {
-      if(this.idCliente != 0){
-        this.idClienteLocal = this.idCliente;
-        if(this.isPaged){
-          this.isPagedLocal = this.isPaged;
-        }
-        this.core = true;
-      } else{
-        console.log("Datos no ingresados --->", this.idCliente, this.identificacion);
-      }
-    }
+    this.isGuardar      = this.data.isGuardar != null? this.data.isGuardar  : false;
+    this.isPaged        = this.data.isPaged   != null? this.data.isPaged    : false;
+    this.identificacion = this.data.cedula    != null? this.data.cedula     : null; 
+    this.idCliente      = this.data.idCliente != null? this.data.idCliente  : null;
 
+    this.soft = this.identificacion != null? true : false;
+    this.core = this.idCliente      != null? true : false;
+  }
+  salir() {
+    this.dialogRef.close();
   }
 
 }

@@ -7,6 +7,8 @@ import { SoftbankService } from '../../../../../core/services/quski/softbank.ser
 import { BehaviorSubject } from 'rxjs';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { RiesgoAcumuladoService } from '../../../../../core/services/quski/riesgoAcumulado.service';
+import { ClienteService } from '../../../../../core/services/quski/cliente.service';
+import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 
 @Component({
   selector: 'kt-tabla-riesgo-acumulado',
@@ -38,6 +40,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   @Output() list: EventEmitter<Array<TbQoRiesgoAcumulado>> = new EventEmitter<Array<TbQoRiesgoAcumulado>>();
   // ENTIDADES  
   private entidadesRiesgo: Array<TbQoRiesgoAcumulado>;
+
   // VARIABLES STANDARS  
   private mensaje = "ERROR AL CARGAR RIESGO ACUMULADO";
   public loading;
@@ -47,6 +50,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   dataSourceRiesgoAcumulado = new MatTableDataSource<TbQoRiesgoAcumulado>();
   constructor(
     private sof: SoftbankService,
+    private cli: ClienteService,
     private rie: RiesgoAcumuladoService,
     private siN: ReNoticeService
   ) { }
@@ -100,6 +104,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
           this.entidadesRiesgo.forEach(e =>{
             e.idSoftbank = e.id;
             e.id = null;
+            
           });
           this.dataSourceRiesgoAcumulado.data = this.entidadesRiesgo;
           this.enviarAlPadre ( this.entidadesRiesgo );
@@ -125,23 +130,36 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   }
   private guardarCore(guardarCore: Array<TbQoRiesgoAcumulado>){
     this.loadingSubject.next(true);
-    this.rie.persistEntities(guardarCore).subscribe((data: any) =>{
-      if (data.entidades != null) {
-        console.log("Data guardada en base ---> ", data.entidades);
-        this.loadingSubject.next(false);
+    this.cli.findClienteByIdentificacion(this.cedula).subscribe((data: any) =>{
+      if (data.entidad) {
+        guardarCore.forEach(e =>{
+          e.tbQoCliente = new TbQoCliente();
+          e.tbQoCliente.id = data.entidad.id;
+
+        });
+        this.rie.persistEntities(guardarCore).subscribe((data: any) =>{
+          if (data.entidades != null) {
+            console.log("Data guardada en base ---> ", data.entidades);
+            this.loadingSubject.next(false);
+          } else {
+            this.loadingSubject.next(false);
+            this.siN.setNotice('ERROR AL GUARDAR RIESGOS ACUMULADOS', 'error');
+          }
+        }, error => {
+          this.loadingSubject.next(false);
+          if (JSON.stringify(error).indexOf("codError") > 0) {
+            let b = error.error;
+            this.siN.setNotice(b.msgError, 'error');
+          } else {
+            this.siN.setNotice('ERROR AL GUARDAR RIESGO ACUMULADO', 'error');
+          }
+        });
       } else {
-        this.loadingSubject.next(false);
-        this.siN.setNotice('ERROR AL GUARDAR RIESGOS ACUMULADOS', 'error');
-      }
-    }, error => {
-      this.loadingSubject.next(false);
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.siN.setNotice(b.msgError, 'error');
-      } else {
-        this.siN.setNotice('ERROR AL CARGAR CLIENTE 2', 'error');
+        this.siN.setNotice('ERROR AL GUARDAR RIESGO ACUMULADO', 'error');
+
       }
     });
+    
   }
   private  enviarAlPadre( entidades: Array<TbQoRiesgoAcumulado> ){
     console.log(" Esto estoy enviando al padre -----> ", entidades);
