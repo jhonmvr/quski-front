@@ -193,8 +193,8 @@
             <div class="row">
               <div class="col-md-4">
                 <mat-form-field>
-                  <mat-select placeholder="Tipo de oro" [formControl]="tipoOro"
-                    (selectionChange)="setPrecioOro($event)">
+                  <mat-select placeholder="Tipo de oro" [formControl]="tipoOro" (selectionChange)="setPrecioOro($event)"
+                    [(ngModel)]="seleccionadoOro" [compareWith]="compararNombres">
                     <mat-option>--</mat-option>
                     <mat-option *ngFor="let tipoOro of catTipoOro" [value]="tipoOro">
                       {{tipoOro.quilate}}

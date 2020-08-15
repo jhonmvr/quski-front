@@ -106,6 +106,7 @@ import { TablaRiesgoAcumuladoComponent } from './custom/secciones-generales/tabl
 import { TablaVariablesCrediticiasComponent } from './custom/secciones-generales/tabla-variables-crediticias/tabla-variables-crediticias.component';
 import { TablaOfertaCalculadoraComponent } from './custom/secciones-generales/tabla-oferta-calculadora/tabla-oferta-calculadora.component';
 import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesgo-acumulado.component';
+import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.component';
 
 
 
@@ -124,7 +125,7 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 		// topbar components
 		ContextMenu2Component,
 		ContextMenuComponent,
-		
+
 		QuickPanelComponent,
 		ScrollTopComponent,
 		SearchResultComponent,
@@ -167,7 +168,8 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 		TablaVariablesCrediticiasComponent,
 		TablaOfertaCalculadoraComponent,
 		TablaRiesgoAcumuladoComponent,
-		RiesgoAcumuladoComponent
+		RiesgoAcumuladoComponent,
+		MensajeEdadComponent
 	],
 	exports: [
 		WidgetModule,
@@ -184,11 +186,12 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 		TablaVariablesCrediticiasComponent,
 		TablaOfertaCalculadoraComponent,
 		TablaRiesgoAcumuladoComponent,
+		MensajeEdadComponent,
 
 		// topbar components
 		ContextMenu2Component,
 		ContextMenuComponent,
-		
+
 		QuickPanelComponent,
 		ScrollTopComponent,
 		SearchResultComponent,
@@ -221,7 +224,7 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 		HabilitanteDialogComponent,
 		ErrorCargaInicialComponent,
 		DetallesComponent
-		
+
 	],
 	imports: [
 		CommonModule,
@@ -255,7 +258,7 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 		MatTabsModule,
 		MatTooltipModule,
 		MatDialogModule,
-	
+
 
 
 		// ng-bootstrap modules
@@ -276,6 +279,7 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 		HabilitanteDialogComponent,
 		SolicitudAutorizacionDialogComponent,
 		MensajeExcepcionComponent,
+		MensajeEdadComponent,
 		CargarFotoDialogComponent,
 		DetallesComponent,
 		TablaDetalleCreditoComponent,
