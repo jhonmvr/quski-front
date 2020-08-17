@@ -210,7 +210,13 @@ export class ListCotizarComponent implements OnInit {
     });
   }
   /********************************************* @BUSQUEDA *********************    */
-
+  /**
+   * @description Metodo que realiza la busqueda del cliente en SOFTBANK
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @param {string} cedula
+   * @memberof ListCotizarComponent
+   */
   public busquedaSoftbank(cedula: string) {
     this.loadingSubject.next(true);
     let consulta = new ConsultaCliente();
@@ -227,6 +233,67 @@ export class ListCotizarComponent implements OnInit {
       this.busquedaCliente();
     });
   }
+  /**
+   * @description Método que realiza la búsqueda en CRM
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @param {string} cedula
+   * @memberof ListCotizarComponent
+   */
+  private busquedaEnCRM(cedula: string) {
+    this.loadingSubject.next(true);
+    this.crm.findClienteByCedulaCRM(cedula).subscribe((data: any) => {
+      if (data && data.list) {
+        console.log('DATA.LIST==> ', JSON.stringify(data.list));
+        this.entidadProspectoCRM = data.list[0];
+      } else {
+        this.entidadProspectoCRM = null;
+      }
+      this.loadingSubject.next(false);
+      this.busquedaEquifax(cedula);
+    });
+  }
+  /**
+   * @description Método que realiza la busqueda en la calculadora QUSKI
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @param {string} cedula
+   * @memberof ListCotizarComponent
+   */
+  private busquedaEquifax(cedula: string) {
+
+    this.loadingSubject.next(true);
+    const consulta = new PersonaConsulta();
+    consulta.identificacion = cedula;
+    this.ing.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
+
+      if (data.entidad.datoscliente != null) {
+        if (data.entidad.mensaje != '') {
+          console.log('DATA EQUIFAX', JSON.stringify(data));
+          this.mensaje = data.entidad.mensaje;
+          this.verMensajes(this.mensaje);
+          console.log('BUSCA EN PERSONA CALCULADORA');
+
+        }
+
+        this.contadorBusqueda++;
+        this.entidadPersonaCalculadora = data.entidad.datoscliente;
+
+      } else {
+        this.entidadPersonaCalculadora = null;
+      }
+      this.loadingSubject.next(false);
+      this.busquedaCliente();
+    });
+  }
+  /**
+   * @description Método que realiza la búsqueda del cliente en SOFTBANK,CRM Y EQUIFAX, tambien realiza el registro del tracking
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @memberof ListCotizarComponent
+   */
   public busquedaCliente() {
     if (this.horaAsignacionProspeccion == null) {
       this.capturaHoraAsignacion('PROSPECCION');
@@ -237,6 +304,8 @@ export class ListCotizarComponent implements OnInit {
       } else {
         if (this.contadorBusqueda > 1) {
           if (this.entidadPersonaCalculadora != null) {
+            console.log('ENTIDAD PROSPECTO EN busquedaCliente===> ', this.entidadProspectoCRM);
+
             this.guardarClienteBusqueda(this.entidadProspectoCRM, this.entidadPersonaCalculadora, null);
             this.sinNoticeService.setNotice('BUSQUEDA EXITOSA, VALORES CARGADOS', 'success');
           } else {
@@ -256,49 +325,16 @@ export class ListCotizarComponent implements OnInit {
       this.sinNoticeService.setNotice('INGRESE UN NUMERO DE CEDULA', 'error');
     }
   }
-  private busquedaEnCRM(cedula: string) {
 
-    this.loadingSubject.next(true);
-    this.crm.findClienteByCedulaCRM(cedula).subscribe((data: any) => {
-
-      if (data && data.list) {
-
-        this.entidadProspectoCRM = data.list[0];
-      } else {
-        this.entidadProspectoCRM = null;
-      }
-      this.loadingSubject.next(false);
-      this.busquedaEquifax(cedula);
-    });
-  }
-  private busquedaEquifax(cedula: string) {
-
-    this.loadingSubject.next(true);
-    const consulta = new PersonaConsulta();
-    consulta.identificacion = cedula;
-    this.ing.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
-
-      if (data.entidad.datoscliente != null) {
-        if (data.entidad.mensaje != '') {
-          console.log('DATA EQUIFAX', JSON.stringify(data));
-          this.mensaje = data.entidad.mensaje;
-          this.verMensajes(this.mensaje);
-
-        }
-
-        this.contadorBusqueda++;
-        this.entidadPersonaCalculadora = data.entidad.datoscliente;
-      } else {
-        this.entidadPersonaCalculadora = null;
-      }
-      this.loadingSubject.next(false);
-      this.busquedaCliente();
-    });
-  }
-
+  /**
+   * @description Método que realiza la búsqueda de los mensajes que retornen al consultar en EQUIFAX
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @param {string} cedula
+   * @memberof ListCotizarComponent
+   */
   private busquedaMensajeEquifax(cedula: string) {
-
-
     const consulta = new PersonaConsulta();
     consulta.identificacion = cedula;
     this.ing.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
@@ -309,6 +345,13 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
+  /**
+   * @description Método que realiza el seteo de los valores de las búsquedas del cliente 
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @memberof ListCotizarComponent
+   */
   private setearValores() {
     this.loadingSubject.next(true);
     this.busquedaMensajeEquifax(this.entidadCliente.cedulaCliente);
@@ -337,6 +380,16 @@ export class ListCotizarComponent implements OnInit {
     this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
     this.dataPopup.isCalculadora = true;
   }
+  /**
+   * @description Método que guarda el cliente previamente seteado
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @param {ProspectoCRM} crm
+   * @param {PersonaCalculadora} equifax
+   * @param {ClienteSoftbank} softbank
+   * @memberof ListCotizarComponent
+   */
   private guardarClienteBusqueda(crm: ProspectoCRM, equifax: PersonaCalculadora, softbank: ClienteSoftbank) {
     this.loadingSubject.next(true);
     let cliente = new TbQoCliente();
@@ -409,6 +462,7 @@ export class ListCotizarComponent implements OnInit {
           }
         }
 
+
       } else {
         // setear equifax
         cliente.fechaNacimiento = equifax.fechanacimiento;
@@ -419,6 +473,8 @@ export class ListCotizarComponent implements OnInit {
         cliente.telefonoFijo = equifax.telefonofijo;
         cliente.campania = equifax.codigocampania.toString();
         cliente.cedulaCliente = equifax.identificacion.toString();
+        this.mensaje = equifax.mensaje;
+        console.log('mensaje ====> ', this.mensaje);
       }
     }
     this.cli.persistEntity(cliente).subscribe((data: any) => {
@@ -428,10 +484,13 @@ export class ListCotizarComponent implements OnInit {
         this.loadingSubject.next(false);
         this.guardarCotizacion(null, this.entidadCliente.id);
         this.setearValores();
+
       } else {
         this.loadingSubject.next(false);
         this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CLIENTE', 'error');
       }
+
+
     }, error => {
       if (JSON.stringify(error).indexOf('codError') > 0) {
         let b = error.error;
@@ -441,7 +500,47 @@ export class ListCotizarComponent implements OnInit {
       }
       this.loadingSubject.next(false);
     });
+
   }
+
+  public guardarProspectoCRM() {
+    console.log('INCIA GUARDAR CRM');
+    console.log('VALORES DE PROSPECTO CRM', JSON.stringify(this.entidadProspectoCRM));
+    // 
+    console.log('this.cliente guardarClienteBusqueda==> ', this.entidadCliente);
+    if (this.entidadCliente != null) {
+      console.log('')
+      this.entidadProspectoCRM.firstName = this.entidadCliente.primerNombre;
+
+      this.entidadProspectoCRM.phoneHome = this.entidadCliente.telefonoFijo;
+      this.entidadProspectoCRM.phoneMobile = this.entidadCliente.telefonoMovil;
+      this.entidadProspectoCRM.leadSourceDescription = 'GESTION QUSKI';
+      this.entidadProspectoCRM.emailAddress = this.entidadCliente.email;
+      this.entidadProspectoCRM.emailAddressCaps = this.entidadCliente.email.toUpperCase();
+
+    }
+
+    this.crm.guardarProspectoCRM(this.entidadProspectoCRM).subscribe((data: any) => {
+      if (data) {
+        console.log('VALORES GUARDADOS guardarProspectoCRM ====> ', JSON.stringify(data));
+        console.log('GUARDA EL PROSPECTO');
+      } else {
+        console.log('NO GUARDO')
+      }
+    });
+
+
+  }
+
+
+  /**
+   * @description Método que guarda la cotizacion si existe actualiza caso contrario crea
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @param {TbQoCotizador} cotizador
+   * @param {number} idCliente
+   * @memberof ListCotizarComponent
+   */
   public guardarCotizacion(cotizador: TbQoCotizador, idCliente: number) {
     this.loadingSubject.next(true);
     if (cotizador == null) {
@@ -466,6 +565,16 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
+  /********************************************* @POPUP *********************    */
+
+  /**
+   * @description Método que llama al popup de SOLICITAR LA AUTORIZACION
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @param {string} cedula
+   * @memberof ListCotizarComponent
+   */
   private solicitarAutorizacion(cedula: string) {
     this.loadingSubject.next(false);
     const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
@@ -491,6 +600,14 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
+  /**
+   * @description Método que llama al popup de MENSAJES DE BLOQUEO
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @param {string} mensaje
+   * @memberof ListCotizarComponent
+   */
   private verMensajes(mensaje: string) {
     console.log('VALORES DE MENSAJE QUE ENVIO---> ', mensaje);
     // this.loadingSubject.next(false);
@@ -505,6 +622,13 @@ export class ListCotizarComponent implements OnInit {
       console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
     });
   }
+  /**
+   * @description Método que llama al popup para visualizar las cotizaciones
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @param {string} identificacion
+   * @memberof ListCotizarComponent
+   */
   public abrirPopupVerCotizacion(identificacion: string) {
     const dialogRefGuardar = this.dialog.open(VerCotizacionesComponent, {
       width: '900px',
@@ -515,13 +639,21 @@ export class ListCotizarComponent implements OnInit {
     });
   }
 
-
-  private validacionEdad(edad: string) {
-    console.log('VALORES EN EL METTODO validacionEdad ===>', edad); this.loadingSubject.next(false);
+  /**
+   * @description Método que llama al popup de validación de la edad
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @param {string} mensaje
+   * @memberof ListCotizarComponent
+   */
+  private validacionEdad(mensaje: string) {
+    console.log('VALORES EN EL METTODO validacionEdad ===>', mensaje);
+    this.loadingSubject.next(false);
     const dialogEdad = this.dialog.open(MensajeEdadComponent, {
       width: '600px',
       height: 'auto',
-      data: edad
+      data: mensaje
     });
     dialogEdad.afterClosed().subscribe((respuesta: any) => {
       console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
@@ -529,18 +661,39 @@ export class ListCotizarComponent implements OnInit {
 
     });
   }
+
   /********************************************* @PRECIOORO *********************    */
+  /**
+   * @description Método que realiza el seteo del precio oro busca el precio segun el tipo de oro seleccionado
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @param {*} event
+   * @memberof ListCotizarComponent
+   */
   setPrecioOro(event) {
-    this.capturaHoraAtencion('TASACION');
+
     if (this.entidadCliente != null) {
+
       this.loadingSubject.next(true);
       const consulta = new ConsultaOferta();
       consulta.identificacionCliente = this.entidadCliente.cedulaCliente;
-      consulta.tipoOroKilataje = event.value.quilate;
+      if (event != null) {
+        this.capturaHoraAtencion('TASACION');
+        consulta.tipoOroKilataje = event.value.quilate;
+      } else {
+        consulta.tipoOroKilataje = '18K';
+      }
       consulta.fechaNacimiento = this.entidadCliente.fechaNacimiento;
       this.ing.getInformacionOferta(consulta).subscribe((data: any) => {
         if (data.entidad.simularResult && data.entidad.simularResult.xmlGarantias.garantias.garantia) {
           this.precio.setValue(data.entidad.simularResult.xmlGarantias.garantias.garantia.valorOro);
+          if (event == null) {
+            this.catTipoOro.forEach(e => {
+              if (e.quilate === '18K') {
+                this.tipoOro.setValue(e);
+              }
+            });
+          }
           this.loadingSubject.next(false);
         } else {
           this.loadingSubject.next(false);
@@ -561,14 +714,30 @@ export class ListCotizarComponent implements OnInit {
       this.sinNoticeService.setNotice('POR FAVOR CONSULTE PRIMERO EL CLIENTE', 'error');
     }
   }
+  /**
+   * @description Método que registra el tracking para la captura de las hora final de la prospeccion y hora de inicio de la Tasacion ademas se desbloquea la seccion precio oro 
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @memberof ListCotizarComponent
+   */
   verPrecio() {
     if (this.horaFinalProspeccion == null) {
       this.capturaHoraFinal('PROSPECCION');
       this.capturaHoraInicio('TASACION');
       this.capturaHoraAsignacion('TASACION');
       this.bloqueoPrecioOro.setValue(true);
+      console.log('cliente verPrecio ', this.entidadCliente);
+      console.log('CRM verPrecio', this.entidadProspectoCRM);
+      this.guardarProspectoCRM();
+      this.setPrecioOro(null);
     }
   }
+  /**
+   * @description Método que crea un nuevo precio oro
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @memberof ListCotizarComponent
+   */
   nuevoPrecioOro() {
     if (this.formPrecioOro.valid) {
       this.loadingSubject.next(true);
@@ -600,12 +769,26 @@ export class ListCotizarComponent implements OnInit {
       this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE EL FORMULARIO', 'warning');
     }
   }
+  /**
+   * @description Método que realiza la edición de un precio oro seleccionado
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @param {TbQoPrecioOro} element
+   * @memberof ListCotizarComponent
+   */
   editar(element: TbQoPrecioOro) {
     this.tipoOro.setValue(element.tbQoTipoOro);
     this.precio.setValue(element.precio);
     this.pesoNetoEstimado.setValue(element.pesoNetoEstimado);
     this.elementPrecioOro = element;
   }
+  /**
+   * @description Método que elimina un precio oro
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @param {TbQoPrecioOro} element
+   * @memberof ListCotizarComponent
+   */
   eliminarPrecioOro(element: TbQoPrecioOro) {
     this.loadingSubject.next(true);
     this.pre.eliminarPrecioOro(element.id).subscribe((data: any) => {
@@ -631,6 +814,12 @@ export class ListCotizarComponent implements OnInit {
       this.loadingSubject.next(false);
     });
   }
+  /**
+   * @description Método que realiza la simulación de las ofertas
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @memberof ListCotizarComponent
+   */
   simular() {
     this.consultaOferta = new ConsultaOferta();
     this.consultaOferta.identificacionCliente = this.entidadCliente.cedulaCliente;
@@ -699,11 +888,13 @@ export class ListCotizarComponent implements OnInit {
       if (hora.entidad) {
         if (etapa == 'PROSPECCION') {
           this.horaFinalProspeccion = hora.entidad;
-          this.registroProspeccion(this.entidadCotizador.id, this.horaInicioProspeccion, this.horaAsignacionProspeccion, this.horaAtencionProspeccion, this.horaFinalProspeccion);
+          this.registroProspeccion(this.entidadCotizador.id, this.horaInicioProspeccion, this.horaAsignacionProspeccion,
+            this.horaAtencionProspeccion, this.horaFinalProspeccion);
         }
         if (etapa == 'TASACION') {
           this.horaFinalTasacion = hora.entidad;
-          this.registroTasación(this.entidadCotizador.id, this.horaInicioTasacion, this.horaAsignacionTasacion, this.horaAtencionTasacion, this.horaFinalTasacion);
+          this.registroTasación(this.entidadCotizador.id, this.horaInicioTasacion, this.horaAsignacionTasacion,
+            this.horaAtencionTasacion, this.horaFinalTasacion);
         }
       }
     });
@@ -787,7 +978,14 @@ export class ListCotizarComponent implements OnInit {
       }
     });
   }
-  /********************************************* @FUNCIONALIDAD  ***********************************************************/
+  /**
+   * @description Método que captura los errores en los diferentes campos
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @param {string} pfield
+   * @returns 
+   * @memberof ListCotizarComponent
+   */
   public getErrorMessage(pfield: string) {
     const errorRequerido = 'Ingresar valores';
     const errorNumero = 'Ingreso solo numeros';
@@ -898,15 +1096,23 @@ export class ListCotizarComponent implements OnInit {
         : input.hasError('errorSeleccion');
     }
   }
+  /**
+   * @description Método que se llama desde la pagina para realizar el calculo de la edad
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @memberof ListCotizarComponent
+   */
   private onChangeFechaNacimiento() {
     this.loadingSubject.next(true);
-    console.log('VALOR DE LA FECHA' + this.fechaNacimiento.value);
     const fechaSeleccionada = new Date(
       this.fechaNacimiento.value
     );
     console.log('FECHA SELECCIONADA' + fechaSeleccionada);
     if (fechaSeleccionada) {
       this.getDiffFechas(fechaSeleccionada, 'dd/MM/yyy');
+      this.validarEdad();
+      console.log('VALOR DE LA FECHA' + this.fechaNacimiento.value);
     } else {
       this.sinNoticeService.setNotice(
         'El valor de la fecha es nulo',
@@ -915,6 +1121,46 @@ export class ListCotizarComponent implements OnInit {
       this.loadingSubject.next(false);
     }
   }
+  /**
+   * @description Método que realiza la valida de la edad
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @memberof ListCotizarComponent
+   */
+  private validarEdad() {
+    console.log('INICIA VALIDAR EDAD');
+
+    const consulta = new ConsultaOferta();
+    consulta.identificacionCliente = this.identificacion.value;
+    consulta.tipoOroKilataje = '18K';
+    consulta.fechaNacimiento = this.fechaNacimiento.value;
+    this.ing.getInformacionOferta(consulta).subscribe((data: any) => {
+      if (data && data.entidad.simularResult.mensaje !== '') {
+        this.mensaje = data.entidad.simularResult.mensaje;
+        this.validacionEdad(this.mensaje);
+        this.loadingSubject.next(false);
+      } else {
+        this.loadingSubject.next(false);
+      }
+    }, error => {
+      this.loadingSubject.next(false);
+      this.sinNoticeService.setNotice('ERROR AL CARGAR VALIDACIONES', 'info');
+      if (JSON.stringify(error).indexOf('codError') > 0) {
+        const b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice('ERROR AL CARGAR', 'error');
+      }
+    });
+  }
+  /**
+   * @description Método que limpia los campos de la seccion de Precio oro
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @memberof ListCotizarComponent
+   */
   private limpiarCamposPrecioOro() {
     Object.keys(this.formPrecioOro.controls).forEach((name) => {
       const control = this.formPrecioOro.controls[name];
@@ -923,45 +1169,44 @@ export class ListCotizarComponent implements OnInit {
       control.reset();
     });
   }
+  /**
+   * @description
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-08-16
+   * @private
+   * @param {Date} fecha
+   * @param {string} format
+   * @memberof ListCotizarComponent
+   */
   private getDiffFechas(fecha: Date, format: string) {
     this.loadingSubject.next(true);
     const convertFechas = new RelativeDateAdapter();
-    this.par
-      .getDiffBetweenDateInicioActual(
-        convertFechas.format(fecha, 'input'),
-        format
-      )
-      .subscribe(
-        (rDiff: any) => {
-          const diff: YearMonthDay = rDiff.entidad;
-          this.edad.setValue(diff.year);
-          console.log('La edad es ' + this.edad.value);
-          if (this.edad.value > 75) {
-            this.validacionEdad(this.edad.value);
-          }
-          // this.edad.get("edad").setValue(diff.year);
-          // Validacion para que la edad sea mayor a 18 años
-          const edad = this.edad.value;
-          if (edad != undefined && edad != null && edad < 18) {
-            this.edad
-              .get('edad')
-              .setErrors({ 'server-error': 'error' });
-          }
-          this.loadingSubject.next(false);
-        },
-        error => {
-          if (JSON.stringify(error).indexOf('codError') > 0) {
-            const b = error.error;
-            this.sinNoticeService.setNotice(b.msgError, 'error');
-          } else {
-            this.sinNoticeService.setNotice(
-              'Error obtener diferencia de fechas',
-              'error'
-            );
-          }
-          this.loadingSubject.next(false);
+    this.par.getDiffBetweenDateInicioActual(convertFechas.format(fecha, 'input'), format).subscribe((rDiff: any) => {
+      console.log('RESPUESTA DE EDAD', JSON.stringify(rDiff));
+      const diff: YearMonthDay = rDiff.entidad;
+      this.edad.setValue(diff.year);
+      console.log('La edad es ' + this.edad.value);
+      const edad = this.edad.value;
+      if (edad != undefined && edad != null && edad < 18) {
+        this.edad
+          .get('edad')
+          .setErrors({ 'server-error': 'error' });
+      }
+      this.loadingSubject.next(false);
+    },
+      error => {
+        if (JSON.stringify(error).indexOf('codError') > 0) {
+          const b = error.error;
+          this.sinNoticeService.setNotice(b.msgError, 'error');
+        } else {
+          this.sinNoticeService.setNotice(
+            'Error obtener diferencia de fechas',
+            'error'
+          );
         }
-      );
+        this.loadingSubject.next(false);
+      }
+    );
   }
   private limpiarCampos() {
     Object.keys(this.formCliente.controls).forEach((name) => {

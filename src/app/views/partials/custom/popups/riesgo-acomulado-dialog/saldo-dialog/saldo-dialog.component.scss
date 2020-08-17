@@ -1,0 +1,76 @@
+.example-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    min-width: 300px;
+    position: relative;
+  }
+  .material-icons {
+    font-size: 31px !important;
+    height: 31px;
+    width: 34px;
+    color: gray;
+    text-align: center;
+  }
+  .mat-button .mat-button-wrapper > *,
+  .mat-fab .mat-button-wrapper > *,
+  .mat-flat-button .mat-button-wrapper > *,
+  .mat-icon-button .mat-button-wrapper > *,
+  .mat-mini-fab .mat-button-wrapper > *,
+  .mat-raised-button .mat-button-wrapper > *,
+  .mat-stroked-button .mat-button-wrapper > * {
+    vertical-align: baseline;
+  }
+  .mat-button,
+  .mat-flat-button,
+  .mat-icon-button,
+  .mat-stroked-button {
+    min-width: 28px;
+    height: fit-content;
+  }
+  example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+  
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .example-header {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    font-size: 20px;
+  }
+  
+  .example-table {
+    overflow: auto;
+    min-height: auto;
+  }
+  .mat-table-sticky {
+    border-top: 1px solid #e0e0e0;
+  }
+  .mat-table {
+    overflow: auto;
+    max-height: 300px;
+    width: 100%;
+  }
+  .mat-footer-row {
+    font-weight: bold;
+    justify-content: start;
+  }
+  .mat-column-DiasMora {
+    flex: 0 0 400px;
+    justify-content: flex-end;
+  }
+  
+

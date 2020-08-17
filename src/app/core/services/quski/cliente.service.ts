@@ -20,7 +20,7 @@ export class ClienteService extends BaseService {
     this.setParameter();
   }
 
-  public  persistEntity(cliente: TbQoCliente) {
+  public persistEntity(cliente: TbQoCliente) {
     const serviceUrl =
       this.appResourcesUrl + 'clienteRestController/persistEntity';
     const wrapper = { entidad: cliente };
@@ -78,7 +78,7 @@ export class ClienteService extends BaseService {
 
 
 
-  
+
   public validateContratoByIdCliente(idCliente: string) {
     const serviceUrl =
       this.appResourcesUrl + 'contratoRestController/validateContratoByIdCliente';
@@ -205,13 +205,6 @@ export class ClienteService extends BaseService {
     return this.http.get(serviceUrl, this.options);
   }
 
-  
 
-  // ---------------> // Guardado del prospectoo en el CRM
-  public guardarProspectoCRM(ClienteCRM: ClienteCRM) {
-    let serviceUrl = this.crmResourcesUrl + "prospectoQuskiRestController/persistEntity";
-    let wrapper = { entidad: ClienteCRM };
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
-  }
+
 }
