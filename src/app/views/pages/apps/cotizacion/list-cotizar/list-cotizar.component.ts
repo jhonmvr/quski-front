@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
@@ -48,6 +48,9 @@ import { DetalleCreditoService } from '../../../../../core/services/quski/detall
 import { TbQoDetalleCredito } from '../../../../../core/model/quski/TbQoDetalleCredito';
 import { RiesgoAcumuladoComponent } from '../../../../partials/custom/popups/riesgo-acumulado/riesgo-acumulado.component';
 import { MensajeEdadComponent } from '../../../../../../app/views/partials/custom/popups/mensaje-edad/mensaje-edad.component';
+import { GuardarProspectoCRM } from '../../../../../core/model/crm/guardarProspectoCRM';
+import { environment } from '../../../../../../environments/environment';
+
 
 @Component({
   selector: 'kt-list-cotizar',
@@ -67,6 +70,7 @@ export class ListCotizarComponent implements OnInit {
   private entidadesDetalleCreditos: Array<TbQoDetalleCredito> = null;
   private entidadesRiesgoAcumulados: Array<TbQoRiesgoAcumulado> = null;
   public entidadPrecioOro = new TbQoPrecioOro();
+
   // CATALOGOS SOFTBANK
   private catEducacion: Array<any>;
   // CATALOGOS QUSKI
@@ -192,7 +196,7 @@ export class ListCotizarComponent implements OnInit {
     this.disableMensajeBloqueo = this.disableMensajeBloqueoSubject.asObservable();
   }
   /**
-   * ******************************** @INCIO
+   * ******************************** @INCIO 
   */
   // Riesgo acumulado de softbank que guarda directamente.
   public goRiesgoAcumulado() {
@@ -200,7 +204,7 @@ export class ListCotizarComponent implements OnInit {
       width: 'auto',
       height: 'auto',
       data: {
-        cedula: this.entidadClientesoftbank.identificacion,
+        cedula: this.entidadCliente.cedulaCliente,
         isGuardar: true,
       }
     });
@@ -505,22 +509,23 @@ export class ListCotizarComponent implements OnInit {
 
   public guardarProspectoCRM() {
     console.log('INCIA GUARDAR CRM');
-    console.log('VALORES DE PROSPECTO CRM', JSON.stringify(this.entidadProspectoCRM));
-    // 
-    console.log('this.cliente guardarClienteBusqueda==> ', this.entidadCliente);
-    if (this.entidadCliente != null) {
-      console.log('')
-      this.entidadProspectoCRM.firstName = this.entidadCliente.primerNombre;
 
-      this.entidadProspectoCRM.phoneHome = this.entidadCliente.telefonoFijo;
-      this.entidadProspectoCRM.phoneMobile = this.entidadCliente.telefonoMovil;
-      this.entidadProspectoCRM.leadSourceDescription = 'GESTION QUSKI';
-      this.entidadProspectoCRM.emailAddress = this.entidadCliente.email;
-      this.entidadProspectoCRM.emailAddressCaps = this.entidadCliente.email.toUpperCase();
+    console.log('this.cliente guardarClienteBusqueda==> ', JSON.stringify(this.entidadCliente));
+    const entidadGuardarProspectoCRM = new GuardarProspectoCRM();
+    if (this.entidadCliente) {
+      entidadGuardarProspectoCRM.cedulaC = this.entidadCliente.cedulaCliente;
+      entidadGuardarProspectoCRM.firstName = this.entidadCliente.primerNombre;
+      entidadGuardarProspectoCRM.phoneHome = this.entidadCliente.telefonoFijo;
+      entidadGuardarProspectoCRM.phoneMobile = this.entidadCliente.telefonoMovil;
+      entidadGuardarProspectoCRM.leadSourceDescription = 'GESTION QUSKI';
+      entidadGuardarProspectoCRM.emailAddress = this.entidadCliente.email;
+      entidadGuardarProspectoCRM.emailAddressCaps = this.entidadCliente.email.toUpperCase();
+
+      console.log('VALORES DE LA ENTIDAD PROSPECTO CRM', JSON.stringify(this.entidadProspectoCRM));
 
     }
 
-    this.crm.guardarProspectoCRM(this.entidadProspectoCRM).subscribe((data: any) => {
+    this.crm.guardarProspectoCRM(entidadGuardarProspectoCRM).subscribe((data: any) => {
       if (data) {
         console.log('VALORES GUARDADOS guardarProspectoCRM ====> ', JSON.stringify(data));
         console.log('GUARDA EL PROSPECTO');
@@ -924,7 +929,7 @@ export class ListCotizarComponent implements OnInit {
     tracking.observacion = '';
     tracking.codigoRegistro = codigoRegistro;
     tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
-    tracking.usuario = UsuarioEnum.ASESOR; // Modificar al id del asesor
+    tracking.usuario = atob(localStorage.getItem(environment.userKey))
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
     tracking.fechaInicioAtencion = fechaInicioAtencion;
@@ -955,7 +960,7 @@ export class ListCotizarComponent implements OnInit {
     tracking.observacion = '';
     tracking.codigoRegistro = codigoRegistro;
     tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
-    tracking.usuario = UsuarioEnum.ASESOR;                 // Modificar al id del asesor
+    tracking.usuario = atob(localStorage.getItem(environment.userKey))
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
     tracking.fechaInicioAtencion = fechaInicioAtencion;

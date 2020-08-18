@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 import { ReNoticeService } from '../re-notice.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ProspectoCRM } from '../../model/crm/prospectoCRM';
+import { GuardarProspectoCRM } from '../../model/crm/guardarProspectoCRM';
 
 
 
@@ -24,7 +24,7 @@ export class CRMService extends BaseService {
   }
 
   // ---------------> // Guardado del prospectoo en el CRM
-  public guardarProspectoCRM(crm: ProspectoCRM) {
+  public guardarProspectoCRM(crm: GuardarProspectoCRM) {
     let serviceUrl = this.crmResourcesUrl + "prospectoQuskiRestController/persistEntity";
     let wrapper = { entidad: crm };
     this.options = { headers: this.headers };
