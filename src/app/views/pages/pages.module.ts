@@ -12,24 +12,26 @@ import { UserManagementModule } from './user-management/user-management.module';
 
 import { ClienteModule } from './apps/cliente/cliente.module';
 import { TrackingModule } from './apps/tracking/tracking.module';
-import { CotizarModule} from './apps/cotizacion/cotizar.module';
+import { CotizarModule } from './apps/cotizacion/cotizar.module';
 import { CreditoNuevoModule } from './credito-nuevo/credito-nuevo.module';
 import { NegociacionModule } from './apps/negociacion/negociacion.module';
 import { ExcepcionesModule } from './apps/excepciones/excepciones.module';
+import { AsesorModule } from './apps/asesor/asesor.module';
+
 
 
 const RELATIVE_DATE_FORMATS = {
 	parse: {
-	  dateInput: { month: 'short', year: 'numeric', day: 'numeric' }
+		dateInput: { month: 'short', year: 'numeric', day: 'numeric' }
 	},
 	display: {
-	  // dateInput: { month: 'short', year: 'numeric', day: 'numeric' },
-	  dateInput: 'input',
-	  monthYearLabel: { year: 'numeric', month: 'short' },
-	  dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
-	  monthYearA11yLabel: { year: 'numeric', month: 'long' }
+		// dateInput: { month: 'short', year: 'numeric', day: 'numeric' },
+		dateInput: 'input',
+		monthYearLabel: { year: 'numeric', month: 'short' },
+		dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
+		monthYearA11yLabel: { year: 'numeric', month: 'long' }
 	}
-  };
+};
 
 @NgModule({
 	declarations: [],
@@ -49,6 +51,7 @@ const RELATIVE_DATE_FORMATS = {
 		NegociacionModule,
 		ExcepcionesModule,
 		UserManagementModule,
+		AsesorModule
 	],
 	providers: []
 })
