@@ -47,7 +47,7 @@ import { GestionClienteComponent } from './gestion-cliente/gestion-cliente.compo
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { DialogCargarHabilitanteComponent } from './gestion-cliente/dialog-cargar-habilitante/dialog-cargar-habilitante.component';
-import { AutocompletComponent } from './gestion-cliente/Auto/autocomplet.component';
+
 
 
 const routes: Routes = [
@@ -78,10 +78,7 @@ const routes: Routes = [
 				path: 'gestion-cliente/:id',
 				component: GestionClienteComponent
 			},
-			{
-				path: 'gestion-cliente/Auto/autocomplet',
-				component: AutocompletComponent
-			},
+			
 		]
 	}
 ];
@@ -141,7 +138,7 @@ declarations: [
     ListClienteComponent,
     GestionClienteComponent,
     DialogCargarHabilitanteComponent,
-    AutocompletComponent,
+    
 
   ],
   entryComponents: [
