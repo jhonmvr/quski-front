@@ -1,4 +1,5 @@
 
+
 // Angular
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -170,6 +171,7 @@ import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.
 		TablaRiesgoAcumuladoComponent,
 		RiesgoAcumuladoComponent,
 		MensajeEdadComponent
+
 	],
 	exports: [
 		WidgetModule,
@@ -286,6 +288,7 @@ import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.
 		TablaVariablesCrediticiasComponent,
 		TablaOfertaCalculadoraComponent,
 		TablaRiesgoAcumuladoComponent,
+
 	]
 })
 export class PartialsModule {
