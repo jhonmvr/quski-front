@@ -1,0 +1,35 @@
+export class DatosClienteCRM {
+    id: string                        // "facb58b4-f0a0-4847-be9f-e511c6eaaff7",
+    assignedUserId: string                        // "1",
+    createdBy: string                        // "1",
+    dateEntered: number // 1555579009000,
+    dateModified: number // 1555579009000,
+    deleted: number // 0,
+    firstName: string                        // "GUERRA TORRES JORGE BAYARDO",
+    modifiedUserId: string                        // "",
+    phoneHome: string                        // "023804114",
+    phoneMobile: string                        // "0999039372",
+    phoneOther: string                        // "022959826",
+    phoneWork: string                        // "",
+    status: string                        // "New",
+    leadSource: string                        // "4",
+    leadSourceDescription: string                        // "",
+    idC: string                        // "facb58b4-f0a0-4847-be9f-e511c6eaaff7",
+    cedulaC: string                        // "1000700722",
+    estatusC: string                        // "ACTIVO",
+    idE: string                        // "facb58b4-f0a0-4847-be9f-e511c6eaaff7",
+    emailAddress: string                        // "jorgeguerratorres51@gmail.com",
+    emailAddressCaps: string                        // "JORGEGUERRATORRES51@GMAIL.COM",
+    dateCreatedE: number // 1555579009000,
+    dateModifiedE: number // 1555579009000,
+    idB: string                        // "facb58b4-f0a0-4847-be9f-e511c6eaaff7",
+    emailAddressId: string                        // "39545496-8902-49a1-b2b1-6c092701121c",
+    beanId: string                        // "facb58b4-f0a0-4847-be9f-e511c6eaaff7",
+    beanModule: string                        // "Leads",
+    primaryAddress: number // 0,
+    dateCreatedB: number // 1555579009000,
+    dateModifiedB: number // 1555579009000
+    constructor(){
+      
+    }
+}

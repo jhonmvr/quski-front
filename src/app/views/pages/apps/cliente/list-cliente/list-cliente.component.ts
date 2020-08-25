@@ -8,8 +8,9 @@ import { TbMiCliente } from '../../../../../core/model/quski/TbMiCliente';
 import { TituloContratoService } from '../../../../../core/services/quski/titulo.contrato.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { SubheaderService } from '../../../../../core/_base/layout';
-import { merge, tap } from 'rxjs/operators';
+
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
+
 
 
 @Component({
@@ -18,11 +19,16 @@ import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-d
   styleUrls: ['./list-cliente.component.scss']
 })
 export class ListClienteComponent implements OnInit {
-
+  
+  public date;
+  
+  
+  
+  // STANDARD VARIABLES
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
 
-  proceso:string="CLIENTE";
+  proceso:string="DATOSCLIENTE";
   idReferenciaHab:string="1";
 
   nombreCliente = new FormControl('', []);
@@ -48,12 +54,16 @@ export class ListClienteComponent implements OnInit {
   
   
 
-  constructor(public titulo: TituloContratoService,
+  constructor(
+    public titulo: TituloContratoService,
     private clienteService: ClienteService,
+   
     private sinNoticeService: ReNoticeService,
     private subheaderService: SubheaderService,
     private noticeService:ReNoticeService,
-		public dialog: MatDialog) {
+    public dialog: MatDialog) 
+    
+    {
       this.clienteService.setParameter();
      }
 
@@ -61,8 +71,9 @@ export class ListClienteComponent implements OnInit {
     //this.titulo.setNotice("GESTION DE CLIENTES")
     this.loading = this.loadingSubject.asObservable();
     // Set title to page breadCrumbs
-    this.subheaderService.setTitle('Gestion clientes');
+    this.subheaderService.setTitle('GESTION CLIENTE');
     this.initiateTablePaginator();
+
     //Se ejecuta cuando se hace click en el ordenamiento en el mattable
     this.sort.sortChange.subscribe(() => {
       console.log("sort changed "  );
@@ -126,7 +137,7 @@ export class ListClienteComponent implements OnInit {
       this.loadingSubject.next(false);
       //console.log("====> datos: " + JSON.stringify( data ));
       if (data.list) {
-       
+
         this.totalResults = data.totalResults;
         this.dataSource = new MatTableDataSource<TbMiCliente>(data.list);
         //this.dataSource.paginator=this.paginator;
@@ -160,8 +171,9 @@ export class ListClienteComponent implements OnInit {
   }
 
   test(){
-    console.log( "====> valor proceso " + this.identificacionCliente.value );
+    //console.log( "====> valor proceso " + this.identificacionCliente.value );
     this.proceso=this.identificacionCliente.value;
   }
 
 }
+  

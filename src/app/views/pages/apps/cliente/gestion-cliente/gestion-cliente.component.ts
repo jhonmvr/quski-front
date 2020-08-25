@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Input, Inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder} from '@angular/forms';
 import { MatTableDataSource, MatDialog} from '@angular/material';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { Page } from '../../../../../core/model/page';
@@ -34,13 +34,10 @@ import { TbQoDireccionCliente } from '../../../../../core/model/quski/TbQoDirecc
 import { PatrimonioService } from '../../../../../core/services/quski/patrimonio.service';
 import { ReferenciaPersonalService } from '../../../../../core/services/quski/referenciaPersonal.service';
 import { ParaDesarrolloEnum } from '../../../../../core/enum/ParaDesarrolloEnum';
-import { element } from 'protractor';
+import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
-import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
-import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
-import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
+
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
 import { ReferenciaParentescoEnum } from '../../../../../core/enum/ReferenciaParentescoEnum';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
@@ -61,6 +58,17 @@ import { OperacionCrear } from '../../../../../core/model/softbank/OperacionCrea
 import { OperacionRenovar } from '../../../../../core/model/softbank/OperacionRenovar';
 import { DatosImpCom } from '../../../../../core/model/softbank/DatosImpCom';
 import { ConsultaSolca } from '../../../../../core/model/softbank/ConsultaSolca';
+import { map, startWith } from 'rxjs/operators';
+import { environment } from '../../../../../../../src/environments/environment';
+import { TbQoNegociacion } from '../../../../../../../src/app/core/model/quski/TbQoNegociacion';
+//import { element } from 'protractor';
+//import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
+//import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
+//import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
+//import { User } from './../../../../../core/auth/_models/user.model';
+
+
+
 
 export interface User {
   name: string;
@@ -72,6 +80,16 @@ export interface User {
   styleUrls: ['./gestion-cliente.component.scss']
 })
 export class GestionClienteComponent implements OnInit {
+  [x: string]: any;
+  private entidadNegociacion: TbQoNegociacion ;
+  public date;
+  
+  
+  ubications :User[]; /////---------------->>>>>>>>>>>
+
+  filteredOptions: Observable<User[]>;
+
+
   // VARIABLES DE BUSQUEDA EN NEGOCIACION
   public habilitarBtActualizar : boolean;
   public idDireccionDomicilio : string;
@@ -106,19 +124,44 @@ export class GestionClienteComponent implements OnInit {
   public ocupaciones  = [];
   public profesiones  = [];
   public parroquias   = [];
+
+
+  //BUSQUEDA POR UBICACION  
+  public bParroqui     = [];
+  //public parroquia     = [];
+  public bCantons      = [];
+  //public cantones      = []; 
+  public bProvinces    = [];
+  //public provincias    = [];
+  public uubicacion    = [];
+  public bUbicaciones  = [];
+  public bNombre       = [];
+  public localizacion;
+
   // ENUM ESPERANDO WEB SERVICE DE SOFTBANK
   listProfesion           = Object.keys(ProfesionEnum);
   listPaises              = Object.values(PaisesEnum);
+
   // STANDARD VARIABLES
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public p = new Page();
   disableConsultar;
   disableConsultarSubject = new BehaviorSubject<boolean>(true);
+
   // VARIABLES DE TRACKING
-  public horaInicio      : any;
+  public horaInicioDatosCliente: Date;
+  public horaAsignacionDatosCliente: Date = null;
+  public horaAtencionDatosCliente: Date;
+  public horaFinalDatosCliente: Date = null;
+  public procesoDatosCliente: string;
+  public actividad: string;
+
+  
+
+  /*public horaInicio      : any;
   public horaAsignacion  : any;
   public horaAtencion    : any;
-  public horaFinal       : any;
+  public horaFinal       : any;*/
 
   // ENUMS
   public listReferencia          = Object.values(ReferenciaParentescoEnum);   
@@ -133,7 +176,7 @@ export class GestionClienteComponent implements OnInit {
   public listGenero              = Object.values(GeneroEnum)
   public listSector              = Object.keys(SectorEnum);
   // OBJETOS DE ENTIDADES
-  public ubicacionEntity       : Parroquia[]   = new Array();
+  public ubicacionEntity       : Parroquia[] = new Array() ;
   public ingresoEgresoGuardado : TbQoIngresoEgresoCliente;
   public ingresoEgreso         : TbQoIngresoEgresoCliente;
   public patrimonioActivo      : TbQoPatrimonioCliente;
@@ -152,6 +195,7 @@ export class GestionClienteComponent implements OnInit {
   public apellidoPaterno    = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public fechaNacimiento    = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public lugarNacimiento    = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  //public lugarNacimiento0   = new FormControl('', [Validators.required, Validators.maxLength(100)]);
   public nivelEducacion     = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cargaFamiliar      = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public canalContacto      = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -232,6 +276,7 @@ export class GestionClienteComponent implements OnInit {
   public totalPasivo            : number = 0;
   public totalValorIngresoEgreso: number = 0;
   public valorValidacion        : number = 0;
+ 
   
 
   /**
@@ -251,6 +296,10 @@ export class GestionClienteComponent implements OnInit {
    * @param tr 
    */
   constructor(
+    ///>>>>>>>>>
+    private _formBuilder: FormBuilder,
+    ///>>>>>>>>
+
     private css : SoftbankService,
     private neg: NegociacionService,
     private cs: ClienteService,
@@ -261,7 +310,7 @@ export class GestionClienteComponent implements OnInit {
     private router: Router,
     private subheaderService: SubheaderService,
     private dh: DocumentoHabilitanteService,
-    private pr: ParroquiaService,
+    //private pr: ParroquiaService,
     private dc: DireccionClienteService,
     private pm: PatrimonioService,
     private re: ReferenciaPersonalService,
@@ -271,7 +320,7 @@ export class GestionClienteComponent implements OnInit {
     this.sp.setParameter();
     this.getActividadEconomica();
     this.getCanalDeContacto();
-    this.cargarUbicacion();
+    //this.cargarUbicacion();
 
     //FORM DATOS CLIENTES
     this.formCliente.addControl("identificacion"            , this.identificacion);
@@ -344,7 +393,27 @@ export class GestionClienteComponent implements OnInit {
     this.actividadEmpresa.disable();
     this.cargo.disable();
   }
+  
+  displayFn(user: User): string {
+    return user && user.name ? user.name : '';
+  }
+
+  private _filter(name: string): User[] {
+    const filterValue = name.toLowerCase();
+
+    return this.ubications.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
+  }
+
   ngOnInit() {
+    this.filteredOptions =this.lugarNacimiento.valueChanges
+    .pipe(
+      startWith(''),
+      map(value=> typeof value === 'string' ? value:name),
+      map(name => name ? this._filter(name):this.ubications)
+    );
+
+
+    this.loading = this.loadingSubject.asObservable();
     this.habilitarBtActualizar  = false;
     this.implementacionServiciosSoftbankTEST();
     //SET VALORES POR DEFECTO DE CHECKS
@@ -352,21 +421,25 @@ export class GestionClienteComponent implements OnInit {
     this.drCrDo.setValue(true);
     this.drLgLb.setValue(false);
     this.drCrLb.setValue(false);
+    
+
+
     //TRACKING
-    this.tr.getSystemDate().subscribe( (hora: any) =>{
-      if(hora.entidad){
-        //console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-        this.horaInicio = hora.entidad
-      }
-    });
+   
+    this.capturaHoraInicio ();
+     
     // BUSQUEDA DE CLIENTE POR NEGOCIACION
+    this.llamarCatalogos();
     this.clienteNegociacion();
     this.subheaderService.setTitle("Gestion de Clientes");
   }
+
+ 
+
   // NO SE QUE HACE???
-  displayFn(user?: User): string | undefined {
+  /*displayFn(user?: User): string | undefined {
     return user ? user.name : undefined;
-  }
+  }*/
   /**
    * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION
    * @description PASADA POR this.route.paramMap
@@ -378,48 +451,46 @@ export class GestionClienteComponent implements OnInit {
         this.idNegociacion = data.params.id;
         this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
-              this.tr.getSystemDate().subscribe( (hora: any) =>{
-                if(hora.entidad){
-                  this.horaAsignacion = hora.entidad;
-                  this.horaAtencion = hora.entidad;
-                }
-              });
+              
+            this.capturaHoraAsignacion ();
+            this.capturaHoraAtencion()
+                
             this.id = data.entidad.tbQoCliente.cedulaCliente;
             this.cs.findClienteByIdentificacion(this.id).subscribe((data: any) => {
               this.loadingSubject.next(false);
-              if (data) {
-                this.id = data.id;
-                this.nombresCompletos.setValue(data.primerNombre + ' ' + data.segundoNombre
-                  + ' ' + data.apellidoPaterno + ' ' + data.apellidoMaterno);
-                this.identificacion.setValue(data.cedulaCliente);
-                this.primerNombre.setValue(data.primerNombre);
-                this.segundoNombre.setValue(data.segundoNombre);
-                this.nivelEducacion.setValue(data.nivelEducacion);
-                this.apellidoPaterno.setValue(data.apellidoPaterno);
-                this.apellidoMaterno.setValue(data.apellidoMaterno);
-                this.genero.setValue(data.genero);
-                this.estadoCivil.setValue(data.estadoCivil);
-                this.cargaFamiliar.setValue(data.cargasFamiliares);
-                this.fechaNacimiento.setValue(data.fechaNacimiento);
-                this.separacionBienes.setValue(data.separacionBienes);
-                this.nacionalidad.setValue(data.nacionalidad);
-                this.lugarNacimiento.setValue(data.lugarNacimiento);
-                this.edad.setValue(data.edad);
-                this.telefonoFijo.setValue(data.telefonoFijo);
-                this.telefonoMovil.setValue(data.telefonoMovil);
-                this.telefonoAdicional.setValue(data.telefonoAdicional);
-                this.telefonoOtro.setValue(data.telefonoTrabajo);
-                this.canalContacto.setValue(data.canalContacto);
-                let email : string = data.email;
-                //console.log("origenIngresos ===> "+ JSON.stringify(data));
-                this.origenIngresos.setValue(data.origenIngreso);
-                this.actividadEconomica.setValue(data.actividadEconomica);
-                this.actividadEmpresa.setValue(data.nombreEmpresa);
-                this.actividadEconomicaEmpresa.setValue(data.actividadEconomicaEmpresa);
-                this.relacionDependencia.setValue(data.relacionDependencia);
-                this.cargo.setValue(data.cargo);
-                this.profesion.setValue(data.profesion);
-                this.ocupacion.setValue(data.ocupacion);
+              if (data.entidad) {
+                this.id = data.entidad.id;
+                this.nombresCompletos.setValue(data.entidad.primerNombre + ' ' + data.entidad.segundoNombre
+                  + ' ' + data.entidad.apellidoPaterno + ' ' + data.entidad.apellidoMaterno);
+                this.identificacion.setValue(data.entidad.cedulaCliente);
+                this.primerNombre.setValue(data.entidad.primerNombre);
+                this.segundoNombre.setValue(data.entidad.segundoNombre);
+                this.nivelEducacion.setValue(data.entidad.nivelEducacion);
+                this.apellidoPaterno.setValue(data.entidad.apellidoPaterno);
+                this.apellidoMaterno.setValue(data.entidad.apellidoMaterno);
+                this.genero.setValue(data.entidad.genero);
+                this.estadoCivil.setValue(data.entidad.estadoCivil);
+                this.cargaFamiliar.setValue(data.entidad.cargasFamiliares);
+                this.fechaNacimiento.setValue(data.entidad.fechaNacimiento);
+                this.separacionBienes.setValue(data.entidad.separacionBienes);
+                this.nacionalidad.setValue(data.entidad.nacionalidad);
+                this.lugarNacimiento.setValue(data.entidad.lugarNacimiento);
+                this.edad.setValue(data.entidad.edad);
+                this.telefonoFijo.setValue(data.entidad.telefonoFijo);
+                this.telefonoMovil.setValue(data.entidad.telefonoMovil);
+                this.telefonoAdicional.setValue(data.entidad.telefonoAdicional);
+                this.telefonoOtro.setValue(data.entidad.telefonoTrabajo);
+                this.canalContacto.setValue(data.entidad.canalContacto);
+                let email : string = data.entidad.email;
+                //console.log("origenIngresos ===> "+ JSON.stringify(data.entidad));
+                this.origenIngresos.setValue(data.entidad.origenIngreso);
+                this.actividadEconomica.setValue(data.entidad.actividadEconomica);
+                this.actividadEmpresa.setValue(data.entidad.nombreEmpresa);
+                this.actividadEconomicaEmpresa.setValue(data.entidad.actividadEconomicaEmpresa);
+                this.relacionDependencia.setValue(data.entidad.relacionDependencia);
+                this.cargo.setValue(data.entidad.cargo);
+                this.profesion.setValue(data.entidad.profesion);
+                this.ocupacion.setValue(data.entidad.ocupacion);
                 email = email.toLocaleUpperCase();
                 //console.log("email formateado ===> ", email);
                 this.email.setValue(email);
@@ -456,14 +527,10 @@ export class GestionClienteComponent implements OnInit {
                         this.referenciaUbicacionO.setValue(direccionO.referenciaUbicacion.toUpperCase());
                         this.sectorO.setValue(direccionO.sector.toUpperCase());
                         this.habilitarBtActualizar = true;
-                        this.tr.getSystemDate().subscribe( (hora: any) =>{
-                          if(hora.entidad){
-                            ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-                            this.horaAsignacion = hora.entidad;
-                            this.horaAtencion = hora.entidad;
-
-                          }
-                        });
+                        
+                        this.capturaHoraAsignacion ();
+                        this.capturaHoraAtencion();
+                          
                         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
                         this.loadingSubject.next(false);
                       } else{
@@ -509,23 +576,13 @@ export class GestionClienteComponent implements OnInit {
               }
             });
           } else {
-            this.tr.getSystemDate().subscribe( (hora: any) =>{
-              if(hora.entidad){
-                ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-                this.horaAsignacion = hora.entidad;
-                this.horaAtencion = hora.entidad;
-              }
-            });
+            this.capturaHoraAsignacion ();
+            this.capturaHoraAtencion()
           }
         });
       } else {
-        this.tr.getSystemDate().subscribe( (hora: any) =>{
-          if(hora.entidad){
-            ////console.log("Hora del core ----> " + JSON.stringify(hora.entidad));
-            this.horaAsignacion = hora.entidad;
-            this.horaAtencion = hora.entidad;
-          }
-        });
+        this.capturaHoraAsignacion ();
+        this.capturaHoraAtencion()
       }
     });
   }
@@ -888,7 +945,7 @@ export class GestionClienteComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if (r) {
-          console.log("Data de subscribe ---> " + r);
+          //console.log("Data de subscribe ---> " + r);
         }
       });
     } else {
@@ -968,6 +1025,8 @@ export class GestionClienteComponent implements OnInit {
 
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
+
+
     this.patrimonioCliente = new TbQoPatrimonioCliente;
     if (this.formDatosPatrimonioPasivos.valid) {
       if (this.avaluoPasivo.value > this.valorValidacion && this.pasivo.value != null && this.pasivo.value != "" ) {
@@ -1016,6 +1075,7 @@ export class GestionClienteComponent implements OnInit {
         this.dataSourceIngresoEgreso.data = data;
         this.element = null;
         this.calcularIngresoEgreso();
+
         this.limpiarCampos();
       } else {
         this.sinNoticeService.setNotice("VALOR DEL INGRESO NO VALIDO", 'error');
@@ -1087,21 +1147,24 @@ export class GestionClienteComponent implements OnInit {
       this.dataSourceIngresoEgreso.data.forEach(element => {
         if (element.esIngreso && element.esEgreso == false) {
           this.totalValorIngresoEgreso = Number(this.totalValorIngresoEgreso) + Number(element.valor);
-        } else{
+          } else{
           if (element.esIngreso == false && element.esEgreso){
             this.totalValorIngresoEgreso = Number(this.totalValorIngresoEgreso) - Number(element.valor);
-            
+
           } else {
             this.sinNoticeService.setNotice("ERROR DE DESARROLLO", 'error');
           }
-        }
-
+          }
+          
       });
       if (this.totalValorIngresoEgreso >= 5000){
         this.sinNoticeService.setNotice("INGRESO NETO SOBREPASA LOS $5000", 'error');
+          
       }
+
     }
   }
+  
   /**
    * @param element 
    * @description METODO QUE BORRA UN INGRESO O EGRESO DE LA TABLA
@@ -1142,7 +1205,7 @@ export class GestionClienteComponent implements OnInit {
   editar(element) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
-    console.log(JSON.stringify(element));
+    //console.log(JSON.stringify(element));
     if (element.esIngreso && element.esEgreso == false) {
       this.valorIngreso.setValue(element.valor);
     } else{
@@ -1161,52 +1224,52 @@ export class GestionClienteComponent implements OnInit {
 
     //Cliente
     this.testConsultarClienteCS(); 
-    this.testConsultarDireccionesTelefonosClienteCS(); 
-    this.testConsultarIngresosEgresosClienteCS(); 
-    this.testConsultarReferenciasClienteCS(); 
-    this.testCrearClienteCS();  
-    this.testEditarClienteCS(); 
+    //this.testConsultarDireccionesTelefonosClienteCS(); 
+    //this.testConsultarIngresosEgresosClienteCS(); 
+    //this.testConsultarReferenciasClienteCS(); 
+    //this.testCrearClienteCS();  
+    //this.testEditarClienteCS(); 
 
 
     //Catalogo
-    this.testConsultarAgenciasCS(); 
-    this.testConsultarAsesoresCS();
-    this.testConsultarActividadEconomicaCS(); 
-    this.testConsultarEducacionCS(); 
-    this.testConsultarRubroPrestamosCS(); 
-    this.testConsultarSectorViviendaCS(); 
-    this.testConsultarEstadosCivilesCS(); 
-    this.testConsultarViviendaCS(); 
-    this.testConsultarProfesionesCS(); 
-    this.testConsultarTipoIdentificacionCS(); 
-    this.testConsultarBancosCS(); 
-    this.testConsultarTipoReferenciaCS(); 
-    this.testConsultarTipoPrestamosCS(); 
-    this.testConsultarTipoCarteraCS(); 
-    this.testConsultarTablaAmortizacionCS(); 
+    //this.testConsultarAgenciasCS(); 
+    //this.testConsultarAsesoresCS();
+    //this.testConsultarActividadEconomicaCS(); 
+    //this.testConsultarEducacionCS(); 
+    //this.testConsultarRubroPrestamosCS(); 
+    //this.testConsultarSectorViviendaCS(); 
+    //this.testConsultarEstadosCivilesCS(); 
+    //this.testConsultarViviendaCS(); 
+    //this.testConsultarProfesionesCS(); 
+    //this.testConsultarTipoIdentificacionCS(); 
+    //this.testConsultarBancosCS(); 
+    //this.testConsultarTipoReferenciaCS(); 
+    //this.testConsultarTipoPrestamosCS(); 
+    //this.testConsultarTipoCarteraCS(); 
+    //this.testConsultarTablaAmortizacionCS(); 
     this.testConsultarDivicionPoliticaCS();
-    this.testConsultarDivicionPoliticaConsolidadaCS(); 
+    //this.testConsultarDivicionPoliticaConsolidadaCS(//); 
 
     // Prestamo
-    this.testConsultaTablaAmortizacionOperacionAprobadaCS(); 
-    this.testSimularPrecancelacionCS(); 
-    this.testOperacionCancelarCS(); 
-    this.testOperacionAbonoCS(); 
-    this.testOperacionConsultaCS(); 
-    this.testConsultaRiesgoAcumuladoCS(); 
-    this.testConsultaRubrosCS(); 
+    //this.testConsultaTablaAmortizacionOperacionAprobadaCS(); 
+    //this.testSimularPrecancelacionCS(); 
+    //this.testOperacionCancelarCS(); 
+    //this.testOperacionAbonoCS(); 
+    //this.testOperacionConsultaCS(); 
+    //this.testConsultaRiesgoAcumuladoCS(); 
+    //this.testConsultaRubrosCS(); 
 
     // Credito Operacion
-    this.testOperacionCrearCS(); 
-    this.testOperacionRenovarCS(); 
-    this.testOperacionAprobarCS();
-    this.testOperacionNegarCS();
+    //this.testOperacionCrearCS(); 
+    //this.testOperacionRenovarCS(); 
+    //this.testOperacionAprobarCS();
+    //this.testOperacionNegarCS();
 
     //Credito Simulacion
-    this.testSimularTablaAmortizacionCS(); 
+    //this.testSimularTablaAmortizacionCS(); 
 
     // Credito Consulta
-    this.testCalcularSolcaCS(); 
+    //this.testCalcularSolcaCS(); 
   }
   // CLIENTE
   testConsultarClienteCS(){
@@ -1216,7 +1279,7 @@ export class GestionClienteComponent implements OnInit {
     this.css.consultarClienteCS( entidadConsultaCliente ).subscribe( (data : any) => {
       if (data) {
         //console.log("consultarClienteCS --> Funciona");
-        console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
+        //console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
       } else {
         this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
       }
@@ -1237,7 +1300,7 @@ export class GestionClienteComponent implements OnInit {
     entidadConsultaCliente.idTipoIdentificacion = 1;
     this.css.consultarDireccionesTelefonosClienteCS(entidadConsultaCliente).subscribe(data => {
       if(data){
-        console.log("consultarDireccionesTelefonosClienteCS --> Funciona");
+        //console.log("consultarDireccionesTelefonosClienteCS --> Funciona");
         //console.log("Consulta de direcciones y telefonos del cliente ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarDireccionesTelefonosClienteCS' :'(", 'error');
@@ -1257,7 +1320,7 @@ export class GestionClienteComponent implements OnInit {
     entidadConsultaCliente.idTipoIdentificacion = 1;
     this.css.consultarIngresosEgresosClienteCS(entidadConsultaCliente).subscribe(data => {
       if(data){
-        console.log("consultarIngresosEgresosClienteCS --> Funciona");
+        //console.log("consultarIngresosEgresosClienteCS --> Funciona");
         //console.log("Consulta de Ingresos y egresos del cliente ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarIngresosEgresosClienteCS' :'(", 'error');
@@ -1277,7 +1340,7 @@ export class GestionClienteComponent implements OnInit {
     entidadConsultaCliente.idTipoIdentificacion = 1;
     this.css.consultarReferenciasClienteCS(entidadConsultaCliente).subscribe(data => {
       if(data){
-        console.log("consultarReferenciasClienteCS --> Funciona");
+        //console.log("consultarReferenciasClienteCS --> Funciona");
         //console.log("Consulta de Referencias del cliente ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarReferenciasClienteCS' :'(", 'error');
@@ -1358,10 +1421,10 @@ export class GestionClienteComponent implements OnInit {
     entidadCrearcliente.telefonos.push( listTelefonos );
     this.css.crearClienteCS(entidadCrearcliente).subscribe( ( data : any) => {
       if(data){
-        console.log("crearClienteCS --> Funciona");
+        //console.log("crearClienteCS --> Funciona");
         //console.log("creacion de cliente el cloud studio ---->" + JSON.stringify(data))
       } else {
-        console.log("No me trajo data para creacion de cliente ----->" + JSON.stringify(data));
+        //console.log("No me trajo data para creacion de cliente ----->" + JSON.stringify(data));
       }
     }, error => {
       if(JSON.stringify(error).indexOf("codError") > 0 ){
@@ -1380,10 +1443,10 @@ export class GestionClienteComponent implements OnInit {
     entidadEditarCliente.referencia = "Junto a la casa de Flanders"
     this.css.editarClienteCS(entidadEditarCliente).subscribe( (data : any ) => {
       if (data) {
-        console.log("editarClienteCS --> Funciona");
+        //console.log("editarClienteCS --> Funciona");
         //console.log("edicion de cliente el cloud studio ---->" + JSON.stringify(data))
       } else {
-        console.log("No me trajo data para creacion de cliente ----->" + JSON.stringify(data));
+        //console.log("No me trajo data para creacion de cliente ----->" + JSON.stringify(data));
       }
     }, error =>{
       if (JSON.stringify(error).indexOf("codError") > 0){
@@ -1398,7 +1461,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarAgenciasCS(){
     this.css.consultarAgenciasCS().subscribe(data => {
       if(data){
-        console.log("consultarAgenciasCS --> Funciona");
+        //console.log("consultarAgenciasCS --> Funciona");
         //console.log("Consulta de catalogos de agencias ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarAgenciasCS' :'(", 'error');
@@ -1415,7 +1478,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarActividadEconomicaCS(){
     this.css.consultarActividadEconomicaCS().subscribe(data => {
       if(data){
-        console.log("consultarActividadEconomicaCS --> Funciona");
+        //.log("consultarActividadEconomicaCS --> Funciona");
         //console.log("Consulta de catalogos de Actividad economica ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarActividadEconomicaCS' :'(", 'error');
@@ -1433,7 +1496,7 @@ export class GestionClienteComponent implements OnInit {
     let idAgencia = 2
     this.css.consultarAsesoresCS( idAgencia ).subscribe(data => {
       if(data){
-        console.log("consultarAsesoresCS --> Funciona");
+        //console.log("consultarAsesoresCS --> Funciona");
         // console.log("Consulta de catalogos de Asesores ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarAsesoresCS' :'(", 'error');
@@ -1450,7 +1513,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarEducacionCS(){
     this.css.consultarEducacionCS().subscribe(data => {
       if(data){
-        console.log("consultarEducacionCS --> Funciona");
+        //console.log("consultarEducacionCS --> Funciona");
         //console.log("Consulta de catalogos de Educacion ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarActividadEconomicaCS' :'(", 'error');
@@ -1467,7 +1530,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarRubroPrestamosCS(){
     this.css.consultarRubroPrestamosCS().subscribe(data => {
       if(data){
-        console.log("consultarRubroPrestamosCS --> Funciona");
+        //console.log("consultarRubroPrestamosCS --> Funciona");
         //console.log("Consulta de catalogos de Rubro Prestamos ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarRubroPrestamosCS' :'(", 'error');
@@ -1484,7 +1547,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarSectorViviendaCS(){
     this.css.consultarSectorViviendaCS().subscribe(data => {
       if(data){
-        console.log("consultarSectorViviendaCS --> Funciona");
+        //console.log("consultarSectorViviendaCS --> Funciona");
         //console.log("Consulta de catalogos de Sector Vivienda ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarSectorViviendaCS' :'(", 'error');
@@ -1501,7 +1564,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarEstadosCivilesCS(){
     this.css.consultarEstadosCivilesCS().subscribe(data => {
       if(data){
-        console.log("consultarEstadosCivilesCS --> Funciona");
+        //console.log("consultarEstadosCivilesCS --> Funciona");
         //console.log("Consulta de catalogos de Estados Civiles ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarEstadosCivilesCS' :'(", 'error');
@@ -1518,7 +1581,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarViviendaCS(){
     this.css.consultarViviendaCS().subscribe(data => {
       if(data){
-        console.log("consultarViviendaCS --> Funciona");
+        //console.log("consultarViviendaCS --> Funciona");
         //console.log("Consulta de catalogos de Vivienda ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarViviendaCS' :'(", 'error');
@@ -1535,7 +1598,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarProfesionesCS(){
     this.css.consultarProfesionesCS().subscribe(data => {
       if(data){
-        console.log("consultarProfesionesCS --> Funciona");
+        //console.log("consultarProfesionesCS --> Funciona");
         //console.log("Consulta de catalogos de Profesiones ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarProfesionesCS' :'(", 'error');
@@ -1552,7 +1615,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarTipoIdentificacionCS(){
     this.css.consultarTipoIdentificacionCS().subscribe(data => {
       if(data){
-        console.log("consultarTipoIdentificacionCS --> Funciona");
+        //console.log("consultarTipoIdentificacionCS --> Funciona");
         //console.log("Consulta de catalogos de Tipo Identificacion ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarTipoIdentificacionCS' :'(", 'error');
@@ -1569,7 +1632,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarBancosCS(){
     this.css.consultarBancosCS().subscribe(data => {
       if(data){
-        console.log("consultarBancosCS --> Funciona");
+        //console.log("consultarBancosCS --> Funciona");
         //console.log("Consulta de catalogos de Bancos ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarBancosCS' :'(", 'error');
@@ -1586,7 +1649,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarTipoReferenciaCS(){
     this.css.consultarTipoReferenciaCS().subscribe(data => {
       if(data){
-        console.log("consultarTipoReferenciaCS --> Funciona");
+        //console.log("consultarTipoReferenciaCS --> Funciona");
         //console.log("Consulta de catalogos de Tipo Referencia ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarTipoReferenciaCS' :'(", 'error');
@@ -1603,7 +1666,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarTipoPrestamosCS(){
     this.css.consultarTipoPrestamosCS().subscribe(data => {
       if(data){
-        console.log("consultarTipoPrestamosCS --> Funciona");
+        //console.log("consultarTipoPrestamosCS --> Funciona");
         //console.log("Consulta de catalogos de Tipo Prestamos ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarTipoPrestamosCS' :'(", 'error');
@@ -1620,7 +1683,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarTipoCarteraCS(){
     this.css.consultarTipoCarteraCS().subscribe(data => {
       if(data){
-        console.log("consultarTipoCarteraCS --> Funciona");
+        //console.log("consultarTipoCarteraCS --> Funciona");
         //console.log("Consulta de catalogos de Tipo Cartera ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarTipoCarteraCS' :'(", 'error');
@@ -1637,7 +1700,7 @@ export class GestionClienteComponent implements OnInit {
   testConsultarTablaAmortizacionCS(){
     this.css.consultarTablaAmortizacionCS().subscribe(data => {
       if(data){
-        console.log("consultarTablaAmortizacionCS --> Funciona");
+        //.log("consultarTablaAmortizacionCS --> Funciona");
         //console.log("Consulta de catalogos de Tabla Amortizacion ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarTablaAmortizacionCS' :'(", 'error');
@@ -1651,27 +1714,77 @@ export class GestionClienteComponent implements OnInit {
       }
     });
   }
+  
   testConsultarDivicionPoliticaCS(){
+
     this.css.consultarDivicionPoliticaCS().subscribe( (data : any)  => {
-      if(!data.existeError){
-        console.log("funciona -----> consultarDivicionPoliticaCS");
-        // console.log("Consulta de catalogos de Divicion Politica ----->" + JSON.stringify(data));
-      } else{
-        console.log("No me trajo data de catalogos de Divicion Politica ----->" + JSON.stringify(data));
-      }
-    }, error =>{
+    
+        if(!data.existeError){
+          this.localizacion = data.catalogo;
+        //console.log(" desde aqui >>> ",this.localizacion)
+        this.bprovinces= this.localizacion.filter(e => e.tipoDivision == "PROVINCIA")
+        /*for (let i = 0; i < this.bprovinces.length; i++) {
+        this.provincias.push(this.bprovinces [i].nombre);
+        // console.log(" PROVINCIA >>>",this.provincias)
+        }*/
+
+          this.bCantons= this.localizacion.filter(e => e.tipoDivision == 'CANTON')
+          /*for (let j = 0; j < this.bCantons.length; j++) {
+          this.cantones.push(this.bCantons [j].nombre);
+          //console.log(" CANTON >>>",this.cantones)
+          }*/
+
+            this.bParroqui= this.localizacion.filter(e => e.tipoDivision == "PARROQUIA")
+            /*for (let x = 0; x < this.bParroqui.length; x++) {
+            this.parroquia.push(this.bParroqui [x].nombre);
+           // console.log(" PARROQUIAS >>>",this.parroquia)
+            }*/
+           
+            
+            let ubicacion = [];
+              ubicacion = this.bParroqui.map( parro =>{
+              const cant = this.bCantons.find( c=>c.id==parro.idPadre) || {};
+              const pro = this.bprovinces.find(p=>p.id==cant.idPadre)|| {};
+              
+              return {nombre:parro.nombre+" / "+cant.nombre+" / "+pro.nombre, idParroquia:parro.id,idCanton:cant.id,idProvincia:pro.id};      
+            }
+            );
+            this.uubicacion = ubicacion;
+            this.bNombre= this.uubicacion.filter(e => e.nombre)
+            for (let i = 0; i < this.bNombre.length; i++) {
+            this.bUbicaciones.push(this.bNombre [i].nombre);
+              
+            
+            
+            //console.log("<<<ubicaciones>>>>>>>",this.bUbicaciones);
+            };
+            this.ubications = new Array<User>();
+            this.bUbicaciones.forEach(e => {
+              let user = {} as User;
+              user.name=e;
+              this.ubications.push(user)
+            });
+       
+      
+        
+          //console.log("funciona -----> consultarDivicionPoliticaCS");
+          //console.log("Consulta de catalogos de Divicion Politica ----->" + JSON.stringify(data));
+        } else{
+          console.log("No me trajo data de catalogos de Divicion Politica ----->" + JSON.stringify(data));
+        } error =>{
       if (JSON.stringify(error).indexOf("codError") > 0){
         let b = error.error;
         this.sinNoticeService.setNotice(b.setmsgError,'error');
       } else {
         this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
       }
-    });
-  }
+    }
+  });
+}
   testConsultarDivicionPoliticaConsolidadaCS(){
     this.css.consultarDivicionPoliticaConsolidadaCS().subscribe(data => {
       if(data){
-        console.log("consultarDivicionPoliticaConsolidadaCS --> Funciona");
+        //console.log("consultarDivicionPoliticaConsolidadaCS --> Funciona");
         //console.log("Consulta de catalogos de Divicion Politica Consolidada ----->" + JSON.stringify(data));
       } else{
         this.sinNoticeService.setNotice("No me trajo data 'consultarDivicionPoliticaConsolidadaCS' :'(", 'error');
@@ -1693,7 +1806,7 @@ export class GestionClienteComponent implements OnInit {
     precancelacion.numeroPrestamo = "2020001967";
     this.css.simularPrecancelacionCS(precancelacion).subscribe( (data: any) => {
       if (data) {
-        console.log("Funciona ----->  simularPrecancelacionCS");
+       // console.log("Funciona ----->  simularPrecancelacionCS");
         // console.log("Simular precancelacion ----->" + JSON.stringify(data));
       } else {
         this.sinNoticeService.setNotice("No me trajo data 'simularPrecancelacionCS' :'(", 'error');
@@ -1712,7 +1825,7 @@ export class GestionClienteComponent implements OnInit {
     this.css.consultaTablaAmortizacionOperacionAprobadaCS( numeroOperacion ).subscribe( data => {
       if (data) {
         // console.log("Simular tabla de amortizacion ----->" + JSON.stringify(data));
-        console.log("Funciona ----->  consultaTablaAmortizacionOperacionAprobadaCS");
+        //console.log("Funciona ----->  consultaTablaAmortizacionOperacionAprobadaCS");
       } else {
         this.sinNoticeService.setNotice("No me trajo data 'consultaTablaAmortizacionOperacionAprobadaCS' :'(", 'error');
       }
@@ -1740,7 +1853,7 @@ export class GestionClienteComponent implements OnInit {
     this.css.operacionCancelarCS( operacion ).subscribe( data =>{
       if(data){
         //console.log("Data de operacion cancelar -----> " + JSON.stringify( data ));
-        console.log("Funciona ---->.operacionCancelarCS()")
+        //console.log("Funciona ---->.operacionCancelarCS()")
       } else{
         this.sinNoticeService.setNotice("No me trajo data el .operacionCancelarCS() ", 'error');
       }
@@ -1770,7 +1883,7 @@ export class GestionClienteComponent implements OnInit {
     this.css.operacionAbonoCS( operacion ).subscribe( data =>{
       if(data){
         // console.log("Data de operacion abono -----> " + JSON.stringify( data ));
-        console.log("Funciona ---->.OperacionAbonoCS()")
+        //console.log("Funciona ---->.OperacionAbonoCS()")
       } else{
         this.sinNoticeService.setNotice("No me trajo data el .OperacionAbonoCS() ", 'error');
       }
@@ -1790,7 +1903,7 @@ export class GestionClienteComponent implements OnInit {
     this.css.operacionConsultaCS( consulta ).subscribe( data =>{
       if(data){
         // console.log(" data de operacionConsultaCS ------> ", JSON.stringify(data));
-        console.log("Funciona -----> operacionConsultaCS");
+        //console.log("Funciona -----> operacionConsultaCS");
       }else {
         this.sinNoticeService.setNotice("no me trajo data operacionConsultaCS :C", "error");
       }
@@ -1809,8 +1922,8 @@ export class GestionClienteComponent implements OnInit {
     consulta.identificacion = "1311066441";
     this.css.consultaRiesgoAcumuladoCS( consulta ).subscribe(data =>{
       if(data){
-        console.log(" data de consultaRiesgoAcumuladoCS ------> ", JSON.stringify(data));
-        console.log("Funciona -----> consultaRiesgoAcumuladoCS");
+        //console.log(" data de consultaRiesgoAcumuladoCS ------> ", JSON.stringify(data));
+        //console.log("Funciona -----> consultaRiesgoAcumuladoCS");
       }else {
         this.sinNoticeService.setNotice("no me trajo data consultaRiesgoAcumuladoCS :C", "error");
       }
@@ -1828,7 +1941,7 @@ export class GestionClienteComponent implements OnInit {
     this.css.consultaRubrosCS( numero ).subscribe(data =>{
       if(data){
         // console.log(" data de consultaRubrosCS ------> ", JSON.stringify(data));
-        console.log("Funciona -----> consultaRubrosCS");
+        //console.log("Funciona -----> consultaRubrosCS");
       }else {
         this.sinNoticeService.setNotice("no me trajo data consultaRubrosCS :C", "error");
       }
@@ -1857,7 +1970,7 @@ export class GestionClienteComponent implements OnInit {
     tabla.pagoDia = 24;
     this.css.simularTablaAmortizacionCS(tabla).subscribe( (data : any) => {
       if (data) {
-        console.log(" Funciona ----> simularTablaAmortizacionCS")
+        //console.log(" Funciona ----> simularTablaAmortizacionCS")
         // console.log("Simular la tabla de amortizacion ----->" + JSON.stringify(data));
       } else {
         this.sinNoticeService.setNotice("No me trajo data 'simularTablaAmortizacionCS' :'(", 'error');
@@ -1897,7 +2010,7 @@ export class GestionClienteComponent implements OnInit {
     this.css.operacionCrearCS( operacion ).subscribe( data =>{
       if (data) {
         // console.log("data de operacionCrearCS ----->" + JSON.stringify(data));
-        console.log(" Funciona ----> operacionCrearCS")
+        //console.log(" Funciona ----> operacionCrearCS")
       } else {
         this.sinNoticeService.setNotice("No me trajo data 'operacionCrearCS' :'(", 'error');
       }
@@ -1937,7 +2050,7 @@ export class GestionClienteComponent implements OnInit {
     this.css.operacionRenovarCS( operacion ).subscribe( data =>{
       if (data) {
         // console.log("data de operacionRenovarCS ----->" + JSON.stringify(data));
-        console.log(" Funciona ----> operacionRenovarCS")
+        //console.log(" Funciona ----> operacionRenovarCS")
       } else {
         this.sinNoticeService.setNotice("No me trajo data 'operacionRenovarCS' :'(", 'error');
         
@@ -1955,7 +2068,7 @@ export class GestionClienteComponent implements OnInit {
     let numero = "2020001980";
     this.css.operacionAprobarCS( numero ).subscribe( data =>{
       if (data) {
-        console.log(" Funciona ----> operacionAprobarCS")
+        //console.log(" Funciona ----> operacionAprobarCS")
         // console.log("data de operacionAprobarCS ----->" + JSON.stringify(data));
       } else {
         this.sinNoticeService.setNotice("No me trajo data 'operacionAprobarCS' :'(", 'error');
@@ -1974,7 +2087,7 @@ export class GestionClienteComponent implements OnInit {
     this.css.operacionNegarCS( numero ).subscribe( data =>{
       if (data) {
         // console.log("data de operacionNegarCS ----->" + JSON.stringify(data));
-        console.log(" Funciona ----> operacionNegarCS")
+        //console.log(" Funciona ----> operacionNegarCS")
       } else {
         this.sinNoticeService.setNotice("No me trajo data 'operacionNegarCS' :'(", 'error');
       }
@@ -1995,7 +2108,7 @@ export class GestionClienteComponent implements OnInit {
     this.css.calcularSolcaCS( solca ).subscribe( data =>{
       if (data) {
         // console.log("data de calcularSolcaCS ----->" + JSON.stringify(data));
-        console.log(" Funciona ----> calcularSolcaCS")
+        //console.log(" Funciona ----> calcularSolcaCS")
       } else {
         this.sinNoticeService.setNotice("No me trajo data 'calcularSolcaCS' :'(", 'error');
         
@@ -2140,33 +2253,16 @@ export class GestionClienteComponent implements OnInit {
   /**
    * 
    */
-  cargarUbicacion(){
-    this.pr.findAllEntities(this.p).subscribe((element : any) =>{
-      if (element.list) {
-        this.ubicacionEntity = element.list;
-        for (let i = 0; i < this.ubicacionEntity.length; i++) {
-          this.parroquias.push(this.ubicacionEntity[i].nombreParroquia.toUpperCase());
-        }
-      }
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("ERROR AL CARGAR", 'error');
-      }
-    });
-
-  }
-  /**
-   * 
-   */
+  
+  
   crearUbicacionDomicilio(){
     if (this.ubicacion.value) {
       for (let i = 0; i < this.ubicacionEntity.length; i++) {
         
         if (this.ubicacionEntity[i].nombreParroquia.toUpperCase() == this.ubicacion.value) {
-          let value = this.ubicacionEntity[i].nombreParroquia.toUpperCase() + " / " + this.ubicacionEntity[i].canton.nombreCanton.toUpperCase() + " / " + this.ubicacionEntity[i].canton.provincia.nombreProvincia.toUpperCase();
+          let value = this.ubicacionEntity[i].nombreParroquia.toUpperCase() + " / " 
+          + this.ubicacionEntity[i].canton.nombreCanton.toUpperCase() + " / " 
+          + this.ubicacionEntity[i].canton.provincia.nombreProvincia.toUpperCase();
           //console.log(">>>>>>>>>>>>>>>>>>>> Ubicacion ", value);
           //console.log(">>>>>>>>>>>>>>>>>>>> Ubicacion form ", this.ubicacion.value);
           this.cantonD    = this.ubicacionEntity[i].canton.nombreCanton.toUpperCase();
@@ -2184,7 +2280,9 @@ export class GestionClienteComponent implements OnInit {
       for (let i = 0; i < this.ubicacionEntity.length; i++) {
         
         if (this.ubicacionEntity[i].nombreParroquia.toUpperCase() == this.ubicacion.value) {
-          let value = this.ubicacionEntity[i].nombreParroquia.toUpperCase() + " / " + this.ubicacionEntity[i].canton.nombreCanton.toUpperCase() + " / " + this.ubicacionEntity[i].canton.provincia.nombreProvincia.toUpperCase();
+          let value = this.ubicacionEntity[i].nombreParroquia.toUpperCase() + " / " 
+          + this.ubicacionEntity[i].canton.nombreCanton.toUpperCase() + " / " 
+          + this.ubicacionEntity[i].canton.provincia.nombreProvincia.toUpperCase();
           //console.log(">>>>>>>>>>>>>>>>>>>> Ubicacion ", value);
           //console.log(">>>>>>>>>>>>>>>>>>>> Ubicacion form ", this.ubicacion.value);
           this.cantonL    = this.ubicacionEntity[i].canton.nombreCanton.toUpperCase();
@@ -2369,24 +2467,10 @@ export class GestionClienteComponent implements OnInit {
                         this.id = data.entidad.id
                         this.loadingSubject.next(false);
                         this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
-                        console.log(" JSON CLIENTE----->" + JSON.stringify(data.entidad))
-                          this.tr.getSystemDate().subscribe( ( hora : any ) => {
-                            if (hora.entidad) {
-                              this.horaFinal = hora.entidad
-                              if ( this.idNegociacion != null ) {
-                                this.registrarTracking(
-                                  this.idNegociacion,
-                                  this.horaInicio,
-                                  this.horaAsignacion,
-                                  this.horaAtencion,
-                                  this.horaFinal
-                                );
-                              } else{
-                                this.sinNoticeService.setNotice("NO EXISTE NEGOCIACION PREVIA PARA HACER SEGUIMIENTO DE TRACKING", 'error');
-                              }                              
-                            }
-                            this.router.navigate(['credito-nuevo/', this.idNegociacion]);
-                          });
+                        this.capturaHoraFinal()
+                        this.router.navigate(['credito-nuevo/', this.idNegociacion]);
+                        //console.log(" JSON CLIENTE----->" + JSON.stringify(data.entidad))
+                          
                       }
                     }, error =>{
                       this.loadingSubject.next(false);
@@ -2429,50 +2513,91 @@ export class GestionClienteComponent implements OnInit {
       this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS PERSONALES DEL CLIENTE", 'error');
     }
   }
-  /**
-   * 
-   * @author Jeroham Cadenas - Developer Twuelve
-   * @param codigoRegistro string
-   * @param fechaInicio Date
-   * @param fechaAsignacion Date
-   * @param fechaInicioAtencion Date
-   * @param fechaFin Date
-   */
-  public registrarTracking (  
-                      codigoRegistro : number, 
-                      fechaInicio: Date,
-                      fechaAsignacion: Date,
-                      fechaInicioAtencion: Date,
-                      fechaFin: Date,
-                    ){
 
-      let tracking : TbQoTracking   = new TbQoTracking();
-      tracking.actividad            = ActividadEnum.NEGOCIACION; // Modulo en ProducBacklog
-      tracking.proceso              = ProcesoEnum.DATOS_CLIENTE;                
-      tracking.observacion          = "";
-      tracking.codigoRegistro       = codigoRegistro;
-      tracking.situacion            = SituacionTrackingEnum.EN_PROCESO;
-      tracking.usuario              = UsuarioEnum.ASESOR; // Agregar id de usuario
-      tracking.fechaInicio          = fechaInicio;
-      tracking.fechaAsignacion      = fechaAsignacion;
-      tracking.fechaInicioAtencion  = fechaInicioAtencion;
-      tracking.fechaFin             = fechaFin;
-      this.tr.guardarTracking(tracking).subscribe((data:any) =>{
-        if (data.entidad) {
-          console.log(" Tracking creado ------>" + JSON.stringify(data.entidad));
-          this.loadingSubject.next(false);
-        } else {
+  public llamarCatalogos() {
+    this.loadingSubject.next(true);
+    //this.consultaCatalogos();
+    this.capturaDatosTraking();
+
+  }
+
+/********************************************  @TRACKING  ***********************************************************/
+/**
+* @author Jeroham Cadenas - Developer Twelve
+* @description Captura la hora de inicio de Tracking
+*/
+
+  private capturaHoraInicio() {
+    this.tr.getSystemDate().subscribe((hora: any) => {
+      if (hora.entidad) {
+          this.horaInicioDatosCliente = hora.entidad;
+      }
+    });
+  }
+  private capturaHoraAsignacion() {
+    this.tr.getSystemDate().subscribe((hora: any) => {
+      if (hora.entidad) {
+          this.horaAsignacionDatosCliente = hora.entidad;
+      }
+    });
+  }
+  private capturaHoraAtencion() {
+    this.tr.getSystemDate().subscribe((hora: any) => {
+      if (hora.entidad) {
+          this.horaAtencionDatosCliente = hora.entidad;
+      }
+    });
+  }
+  private capturaHoraFinal() {
+    this.tr.getSystemDate().subscribe((hora: any) => {
+      if (hora.entidad) {
+          this.horaFinalDatosCliente = hora.entidad;
+          this.registroNegociacion(this.idNegociacion, this.horaInicioDatosCliente, this.horaAsignacionDatosCliente,
+            this.horaAtencionDatosCliente, this.horaFinalDatosCliente);
+      }
+    });
+  }
+  private capturaDatosTraking() {
+    this.sp.findByNombreTipoOrdered('NEGOCIACION', 'ACTIVIDAD', 'Y').subscribe((data: any) => {
+      if (data.entidades) {
+        this.actividad = data.entidades[0].nombre;
+        this.sp.findByNombreTipoOrdered('DATOS_CLIENTE', 'PROCESO', 'Y').subscribe((data: any) => {
+          if (data.entidades) {
+            this.procesoDatosCliente = data.entidades[0].nombre;
+          } 
+        });
+      }
+    });
+  }
+  public registroNegociacion(codigoRegistro: number, fechaInicio: Date, fechaAsignacion: Date, fechaInicioAtencion: Date, fechaFin: Date) {
+    const tracking: TbQoTracking = new TbQoTracking();
+    this.loadingSubject.next(true);
+    tracking.actividad = this.actividad;
+    tracking.proceso = this.procesoDatosCliente;
+    tracking.observacion = '';
+    tracking.codigoRegistro = codigoRegistro;
+    tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
+    tracking.usuario = atob(localStorage.getItem(environment.userKey)); // Modificar al id del asesor
+    tracking.fechaInicio = fechaInicio;
+    tracking.fechaAsignacion = fechaAsignacion;
+    tracking.fechaInicioAtencion = fechaInicioAtencion;
+    tracking.fechaFin = fechaFin;
+    this.tr.guardarTracking(tracking).subscribe((data: any) => {
+      if (data.entidad) {
+        console.log('data de tracking para Negociacion ----> ', data.entidad);
         this.loadingSubject.next(false);
-        this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE EN METODO", 'error');
-        }
-      }, error =>{
+      } else {
         this.loadingSubject.next(false);
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          let b = error.error;
-          this.sinNoticeService.setNotice(b.msgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice("ERROR AL GUARDAR TRACKING DE GESTION CLIENTE EN METODO // ERROR CAPTURADO", 'error');
-        }
-      });
+        this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING', 'error');
+      }
+    }, error => {
+      this.loadingSubject.next(false);
+      if (JSON.stringify(error).indexOf('codError') > 0) {
+        const b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING', 'error');
+      }
+    });
   }
 }
