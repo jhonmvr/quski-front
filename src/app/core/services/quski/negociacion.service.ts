@@ -10,6 +10,8 @@ import { DatePipe } from '@angular/common';
   providedIn: 'root'
 })
 export class NegociacionService extends BaseService {
+
+
   urlRest = "negociacionRestController/";
 
   constructor(_http: HttpClient) {
@@ -20,8 +22,23 @@ export class NegociacionService extends BaseService {
   }
   public findNegociacionById(id: number) {
     const serviceUrl =
-      this.appResourcesUrl + this.urlRest +'getEntity';
+      this.appResourcesUrl + this.urlRest + 'getEntity';
     this.params = new HttpParams().set('id', id.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+
+  findClienteById(id: number) {
+    const serviceUrl =
+      this.appResourcesUrl + 'clienteRestController/getEntity';
+    this.params = new HttpParams().set('id', id.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  findNegociacionByIdCliente(idNegociacion: number) {
+    const serviceUrl =
+      this.appResourcesUrl + 'negociacionRestController/findByIdCliente';
+    this.params = new HttpParams().set('id', idNegociacion.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
