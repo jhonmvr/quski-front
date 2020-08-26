@@ -61,11 +61,6 @@ import { ConsultaSolca } from '../../../../../core/model/softbank/ConsultaSolca'
 import { map, startWith } from 'rxjs/operators';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoNegociacion } from '../../../../../../../src/app/core/model/quski/TbQoNegociacion';
-//import { element } from 'protractor';
-//import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
-//import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
-//import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
-//import { User } from './../../../../../core/auth/_models/user.model';
 
 
 
@@ -157,11 +152,6 @@ export class GestionClienteComponent implements OnInit {
   public actividad: string;
 
 
-
-  /*public horaInicio      : any;
-  public horaAsignacion  : any;
-  public horaAtencion    : any;
-  public horaFinal       : any;*/
 
   // ENUMS
   public listReferencia = Object.values(ReferenciaParentescoEnum);
@@ -435,11 +425,6 @@ export class GestionClienteComponent implements OnInit {
   }
 
 
-
-  // NO SE QUE HACE???
-  /*displayFn(user?: User): string | undefined {
-    return user ? user.name : undefined;
-  }*/
   /**
    * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION
    * @description PASADA POR this.route.paramMap
@@ -1721,7 +1706,9 @@ export class GestionClienteComponent implements OnInit {
   testConsultarDivicionPoliticaCS() {
 
     this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
-
+      
+        //console.log("funciona -----> consultarDivicionPoliticaCS");
+        //console.log("Consulta de catalogos de Divicion Politica ----->" + JSON.stringify(data));
       if (!data.existeError) {
         this.localizacion = data.catalogo;
         //console.log(" desde aqui >>> ",this.localizacion)
@@ -1756,9 +1743,6 @@ export class GestionClienteComponent implements OnInit {
         this.bNombre = this.uubicacion.filter(e => e.nombre)
         for (let i = 0; i < this.bNombre.length; i++) {
           this.bUbicaciones.push(this.bNombre[i].nombre);
-
-
-
           //console.log("<<<ubicaciones>>>>>>>",this.bUbicaciones);
         };
         this.ubications = new Array<User>();
@@ -1767,11 +1751,6 @@ export class GestionClienteComponent implements OnInit {
           user.name = e;
           this.ubications.push(user)
         });
-
-
-
-        //console.log("funciona -----> consultarDivicionPoliticaCS");
-        //console.log("Consulta de catalogos de Divicion Politica ----->" + JSON.stringify(data));
       } else {
         console.log("No me trajo data de catalogos de Divicion Politica ----->" + JSON.stringify(data));
       } error => {
@@ -2479,7 +2458,7 @@ export class GestionClienteComponent implements OnInit {
                         this.router.navigate(['../../generar-credito/generar-credito'])
                       }
                       if(respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos >1){
-                        console.log("tiene q navegar a la pantalla principal ");
+                        console.log("tiene q navegar a la bandeja principal de asesores ");
                       }
                       this.id = respuesta.entidad.id
                       this.loadingSubject.next(false);
