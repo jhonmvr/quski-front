@@ -98,9 +98,6 @@ export class GestionClienteComponent implements OnInit {
   public cantonL: string;
   public id: string;
 
-
-
-
   // TABLA DE REFERENCIAS PERSONALES
   displayedColumns = ['Accion', 'N', 'NombresCompletos', 'Parentesco', 'Direccion', 'TelefonoMovil', 'TelefonoFijo'];
   dataSource = new MatTableDataSource<TbReferencia>();
@@ -2516,7 +2513,7 @@ export class GestionClienteComponent implements OnInit {
 
   /********************************************  @TRACKING  ***********************************************************/
   /**
-  * @author Jeroham Cadenas - Developer Twelve
+  * @author 
   * @description Captura la hora de inicio de Tracking
   */
 
