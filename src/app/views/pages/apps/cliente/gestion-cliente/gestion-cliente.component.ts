@@ -2436,7 +2436,9 @@ export class GestionClienteComponent implements OnInit {
                     this.patrimonioPasivo.avaluo = element.avaluo;
                     this.cliente.tbQoPatrimonios.push(this.patrimonioPasivo);
                   });
-                  // ******************* SET DE PATRIMONIO PASIVO
+                 
+                 
+                  // ******************* SET DE REFERENCIAS
                   this.dataSource.data.forEach(element => {
                     this.referenciaGuardado = new TbReferencia();
                     this.referenciaGuardado.direccion = element.direccion;
@@ -2446,6 +2448,8 @@ export class GestionClienteComponent implements OnInit {
                     this.referenciaGuardado.telefonoMovil = element.telefonoMovil;
                     this.cliente.tbQoReferenciaPersonals.push(this.referenciaGuardado);
                   });
+
+                  
                   this.cs.crearClienteConRelaciones(this.cliente,this.idNegociacion).subscribe((respuesta: any) => {
                     console.log('numero de creditos',respuesta.entidad.numeroCreditos);
                     if (respuesta.entidad) {
