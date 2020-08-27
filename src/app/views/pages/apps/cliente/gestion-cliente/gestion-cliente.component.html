@@ -148,8 +148,8 @@
             <div class="col-md-4">
               <form class="example-form">
                 <mat-form-field class= "example-full-width">
-                  <input placeholder="Lugar de Nacimiento:" type= "text" matInput [formControl]= "lugarNacimiento" [matAutocomplete]="auto2">
-                  <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">
+                  <input placeholder="Lugar de Nacimiento:" type= "text" matInput [formControl]= "lugarNacimiento" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                       {{option.name}}
                     </mat-option>
@@ -243,13 +243,13 @@
             <div class="col-md-4">
               <form class="example-form">
                 <mat-form-field class= "example-full-width">
-                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :"[matAutocomplete]="auto" [formControl]= "ubicacionO" (selectionChange)="crearUbicacionDomicilio()">
+                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :"[matAutocomplete]="auto" [formControl]= "lugarNacimiento" (selectionChange)="crearUbicacionDomicilio()">
                   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                      {{option.name}}
+                    <mat-option *ngFor="let Dd of filteredOptions2 | async" [value]="Dd">
+                      {{Dd.name}}
                     </mat-option>
                   </mat-autocomplete>
-                <mat-error>{{ getErrorMessage("parroquia") }}</mat-error>
+                <mat-error>{{ getErrorMessage("Parroquia / Canton / Provincia") }}</mat-error>
               </mat-form-field>
             </form>
             </div>
@@ -325,13 +325,13 @@
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field >
-                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :" required [formControl]= "ubicacionO" [matAutocomplete]="auto" (selectionChange)="crearUbicacionLaboral()">
+                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :" [matAutocomplete]="auto" required [formControl]= "lugarNacimiento"  (selectionChange)="crearUbicacionLaboral()">
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                    {{option.name}}
+                  <mat-option *ngFor="let asd of filteredOptions | async" [value]="asd">
+                    {{asd.name}}
                   </mat-option>
                 </mat-autocomplete>
-                <mat-error>{{ getErrorMessage("ubicacionO") }}</mat-error>
+                <mat-error>{{ getErrorMessage("Parroquia / Canton / Provincia") }}</mat-error>
             
               </mat-form-field>
                

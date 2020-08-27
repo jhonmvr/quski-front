@@ -83,6 +83,8 @@ export class GestionClienteComponent implements OnInit {
   ubications: User[]; /////---------------->>>>>>>>>>>
 
   filteredOptions: Observable<User[]>;
+  filteredOptions2: Observable<User[]>;
+  filteredOptions3: Observable<User[]>;
 
 
   // VARIABLES DE BUSQUEDA EN NEGOCIACION
@@ -389,7 +391,9 @@ export class GestionClienteComponent implements OnInit {
     const filterValue = name.toLowerCase();
 
     return this.ubications.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
+    return this.ubications.filter(Dd => Dd.name.toLowerCase().indexOf(filterValue) === 0);
   }
+  
 
   ngOnInit() {
     this.filteredOptions = this.lugarNacimiento.valueChanges
@@ -398,6 +402,18 @@ export class GestionClienteComponent implements OnInit {
         map(value => typeof value === 'string' ? value : name),
         map(name => name ? this._filter(name) : this.ubications)
       );
+    this.filteredOptions2 = this.lugarNacimiento.valueChanges
+    .pipe(
+      startWith(''),
+      map(value => typeof value === 'string' ? value : name),
+      map(name => name ? this._filter(name) : this.ubications)
+    );
+    this.filteredOptions3 = this.lugarNacimiento.valueChanges
+    .pipe(
+      startWith(''),
+      map(value => typeof value === 'string' ? value : name),
+      map(name => name ? this._filter(name) : this.ubications)
+    );
 
 
     this.loading = this.loadingSubject.asObservable();
@@ -2449,7 +2465,7 @@ export class GestionClienteComponent implements OnInit {
                     this.cliente.tbQoReferenciaPersonals.push(this.referenciaGuardado);
                   });
 
-                  
+
                   this.cs.crearClienteConRelaciones(this.cliente,this.idNegociacion).subscribe((respuesta: any) => {
                     console.log('numero de creditos',respuesta.entidad.numeroCreditos);
                     if (respuesta.entidad) {
