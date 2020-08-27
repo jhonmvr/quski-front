@@ -26,7 +26,6 @@ import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { PaisesEnum } from '../../../../../core/enum/PaisesEnum';
-import { ParroquiaService } from '../../../../../core/services/quski/parroquia.service';
 import { Parroquia } from '../../../../../core/model/quski/Parroquia';
 import { TbQoIngresoEgresoCliente } from '../../../../../core/model/quski/TbQoIngresoEgresoCliente';
 import { DireccionClienteService } from '../../../../../core/services/quski/direccion-cliente.service';
@@ -37,7 +36,6 @@ import { ParaDesarrolloEnum } from '../../../../../core/enum/ParaDesarrolloEnum'
 import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
 import { ReferenciaParentescoEnum } from '../../../../../core/enum/ReferenciaParentescoEnum';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
@@ -61,11 +59,6 @@ import { ConsultaSolca } from '../../../../../core/model/softbank/ConsultaSolca'
 import { map, startWith } from 'rxjs/operators';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoNegociacion } from '../../../../../../../src/app/core/model/quski/TbQoNegociacion';
-//import { element } from 'protractor';
-//import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
-//import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
-//import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
-//import { User } from './../../../../../core/auth/_models/user.model';
 
 
 
