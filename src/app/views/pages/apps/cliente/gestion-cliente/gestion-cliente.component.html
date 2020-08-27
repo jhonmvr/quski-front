@@ -148,12 +148,13 @@
             <div class="col-md-4">
               <form class="example-form">
                 <mat-form-field class= "example-full-width">
-                  <input placeholder="Lugar de Nacimiento:" type= "text" matInput [formControl]= "lugarNacimiento" [matAutocomplete]="auto">
-                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                  <input placeholder="Lugar de Nacimiento:" type= "text" matInput [formControl]= "lugarNacimiento" [matAutocomplete]="auto2">
+                  <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                       {{option.name}}
                     </mat-option>
                   </mat-autocomplete>
+                  <mat-error>{{ getErrorMessage("lugarNacimiento") }}</mat-error>
                 </mat-form-field>
               </form>
             </div>
@@ -238,20 +239,21 @@
             </div>
           </div>
 
-          <div class="form-group row">
+          <div >
             <div class="col-md-4">
-              <mat-form-field>
-                <mat-select required placeholder="Provincia / Canton / Parroquia:" [formControl]="ubicacion" (selectionChange)="crearUbicacionDomicilio()">
-                  <mat-option>--</mat-option>
-                  <mat-option
-                    *ngFor="let parroquia of parroquias" [value]="parroquia">
-                    {{ parroquia }}
-                  </mat-option>
-                </mat-select>
+              <form class="example-form">
+                <mat-form-field class= "example-full-width">
+                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :"[matAutocomplete]="auto" [formControl]= "ubicacionO" (selectionChange)="crearUbicacionDomicilio()">
+                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-autocomplete>
                 <mat-error>{{ getErrorMessage("parroquia") }}</mat-error>
               </mat-form-field>
+            </form>
             </div>
-            <div class="col-md-4">
+            <!--<div class="col-md-4">
               <mat-form-field>
                 <input required matInput placeholder="Barrio:" [formControl]="barrio"/>
                 <mat-error>{{ getErrorMessage("barrio") }}</mat-error>
@@ -265,7 +267,7 @@
                 </mat-select>
                 <mat-error>{{ getErrorMessage("sector") }}</mat-error>
               </mat-form-field>
-            </div>
+            </div>-->
           </div>
 
           <div class="form-group row">
@@ -322,15 +324,17 @@
           </div>
           <div class="form-group row">
             <div class="col-md-4">
-              <mat-form-field>
-                <mat-select placeholder="Provincia / Canton / Parroquia:" required [formControl]="ubicacionO" (selectionChange)="crearUbicacionLaboral()">
-                  <mat-option>--</mat-option>
-                  <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia">
-                    {{ parroquia }}
+              <mat-form-field >
+                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :" required [formControl]= "ubicacionO" [matAutocomplete]="auto" (selectionChange)="crearUbicacionLaboral()">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                    {{option.name}}
                   </mat-option>
-                </mat-select>
+                </mat-autocomplete>
                 <mat-error>{{ getErrorMessage("ubicacionO") }}</mat-error>
+            
               </mat-form-field>
+               
             </div>
             <div class="col-md-4">
               <mat-form-field>
