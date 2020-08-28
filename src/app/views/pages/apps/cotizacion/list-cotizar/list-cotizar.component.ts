@@ -399,7 +399,7 @@ export class ListCotizarComponent implements OnInit {
     let cliente = new TbQoCliente();
     if (softbank != null) {
       // setear soft
-      if (softbank.esMasculino) {
+      if (softbank.codigoSexo) {
         cliente.genero = GeneroEnum.MASCULINO;
       } else {
         cliente.genero = GeneroEnum.FEMENINO;

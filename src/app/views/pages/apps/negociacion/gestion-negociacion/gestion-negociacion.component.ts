@@ -254,7 +254,7 @@ displayedColumnsRiesgoAcumulado = ['NumeroOperacion', 'TipoOferta', 'Vencimiento
     this.cli.findClienteByIdentificacion(cedula).subscribe((data: any) => {
       if (data) {
         let cliente = new TbQoCliente();
-        if (this.entidadClientesoftbank.esMasculino) {
+        if (this.entidadClientesoftbank.codigoSexo) {
           cliente.genero = GeneroEnum.MASCULINO;
         } else {
           cliente.genero = GeneroEnum.FEMENINO;

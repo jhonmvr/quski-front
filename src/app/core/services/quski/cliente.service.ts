@@ -13,6 +13,7 @@ import { TbQoCotizador } from '../../model/quski/TbQoCotizador';
   providedIn: 'root'
 })
 export class ClienteService extends BaseService {
+ 
 
   constructor(_http: HttpClient) {
     super();
@@ -207,6 +208,11 @@ export class ClienteService extends BaseService {
     return this.http.get(serviceUrl, this.options);
   }
 
+  crearClienSoftBank(clienteSoftBank: any) {
+     const serviceUrl ='http://201.183.238.73:1991/api/cliente/crear';
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, clienteSoftBank, this.options);
+  }
 
 
 }

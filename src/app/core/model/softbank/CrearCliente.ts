@@ -1,5 +1,5 @@
 import { ActividadEconomicaCliente } from './ActividadEconomicaCliente';
-import { TelefonoCliente } from './TelefonoCliente';
+import { TelefonosCliente } from './TelefonosCliente';
 import { ContactosCliente } from './ContactosCliente';
 import { CuentasBancariasCliente } from './CuentasBancariasCliente';
 
@@ -19,7 +19,7 @@ export class CrearCliente  {
   fechaNacimiento: string;          // 1991-06-30,
   numeroCargasFamiliares: number;   // 0,
   actividadEconomica: ActividadEconomicaCliente;      // Se necesita catalogo {"idActividadEconomica": 2431},
-  telefonos: TelefonoCliente[];                       // [{"esMovil": true, "numero": "0996553117","esPrincipal": true}],
+  telefonos: TelefonosCliente[];                       // [{"esMovil": true, "numero": "0996553117","esPrincipal": true}],
   contactosCliente: ContactosCliente[];               // [{"nombres": "John","apellidos": "Doe","direccion": "Av Siempre Viva 742","telefono": "0000000000","codigoTipoReferencia": "000","telefonoCelular": "9999999999","activo": true},{"nombres": "Jane","apellidos": "Doe","direccion": "Av Siempre Viva 742","telefono": "1111111111","codigoTipoReferencia": "000","telefonoCelular": "8888888888","activo": true}],
   cuentasBancariasCliente: CuentasBancariasCliente[]; // [{"idBanco": 171,"cuenta": "123456789","activo": true,"esTarjetaCredito": false},{"idBanco": 171,"cuenta": "987654321","activo": true,"esTarjetaCredito": true}],
   idResidencia: number;   // 1352,
@@ -35,7 +35,7 @@ export class CrearCliente  {
   constructor(){
     this.idTipoIdentificacion = 1;
     this.actividadEconomica = new ActividadEconomicaCliente();
-    this.telefonos = new Array<TelefonoCliente>();
+    this.telefonos = new Array<TelefonosCliente>();
     this.contactosCliente = new Array<ContactosCliente>();
     this.cuentasBancariasCliente = new Array<CuentasBancariasCliente>();
   }
