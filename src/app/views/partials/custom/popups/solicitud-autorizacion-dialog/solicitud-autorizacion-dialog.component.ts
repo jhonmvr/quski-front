@@ -1,14 +1,14 @@
-import { ClienteService } from './../../../../core/services/quski/cliente.service';
+import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { Component, OnInit, Inject, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatDialog } from '@angular/material';
-import { CargarFotoDialogComponent } from '../../custom/fotos/cargar-foto-dialog/cargar-foto-dialog.component';
-import { ReNoticeService } from '../../../../core/services/re-notice.service';
-import { TbQoCliente } from '../../../../core/model/quski/TbQoCliente';
-import { ReFileUploadService } from '../../../../core/services/re-file-upload.service';
+import { CargarFotoDialogComponent } from '../../fotos/cargar-foto-dialog/cargar-foto-dialog.component';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
+import { ReFileUploadService } from '../../../../../core/services/re-file-upload.service';
 import { BehaviorSubject } from 'rxjs';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { DocumentoHabilitanteService } from '../../../../core/services/quski/documento-habilitante.service';
+import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { saveAs } from 'file-saver';
 
 export interface DataUpload {

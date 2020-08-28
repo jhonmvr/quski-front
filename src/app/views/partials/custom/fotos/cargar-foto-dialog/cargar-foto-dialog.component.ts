@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { ReFileUploadService } from '../../../../../core/services/re-file-upload.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
-import { DataUpload } from '../../solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
+import { DataUpload } from '../../popups/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 
 

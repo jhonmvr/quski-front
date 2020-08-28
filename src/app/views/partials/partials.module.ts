@@ -84,7 +84,7 @@ import { ArchivoComponent } from './custom/archivo/archivo.component';
 import { AddFotoComponent } from './custom/fotos/add-foto/add-foto.component';
 import { ArchivoUploadDialogComponent } from './custom/archivo/archivo-upload-dialog/archivo-upload-dialog.component';
 import { CargarFotoDialogComponent } from './custom/fotos/cargar-foto-dialog/cargar-foto-dialog.component';
-import { SolicitudAutorizacionDialogComponent } from './custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
+import { SolicitudAutorizacionDialogComponent } from './custom/popups/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 
 import { WebcamModule } from 'ngx-webcam';
 import { ReMessageComponent } from './custom/re-message/re-message.component';
