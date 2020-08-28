@@ -1654,8 +1654,10 @@ export class GestionClienteComponent implements OnInit {
   testConsultarDivicionPoliticaCS(){
     this.css.consultarDivicionPoliticaCS().subscribe( (data : any)  => {
       if(!data.existeError){
+        let listUbicacion = data.list[0]
         console.log("funciona -----> consultarDivicionPoliticaCS");
-        // console.log("Consulta de catalogos de Divicion Politica ----->" + JSON.stringify(data));
+        console.log("Pilas", data)
+        console.log("Consulta de catalogos de Divicion Politica ----->" + JSON.stringify(data));
       } else{
         console.log("No me trajo data de catalogos de Divicion Politica ----->" + JSON.stringify(data));
       }
@@ -2143,8 +2145,10 @@ export class GestionClienteComponent implements OnInit {
   cargarUbicacion(){
     this.pr.findAllEntities(this.p).subscribe((element : any) =>{
       if (element.list) {
+        console.log("Parroquias", element.list.canton)
         this.ubicacionEntity = element.list;
         for (let i = 0; i < this.ubicacionEntity.length; i++) {
+          console.log("Parroquias", element.list[i].canton.provincia.nombreProvincia)
           this.parroquias.push(this.ubicacionEntity[i].nombreParroquia.toUpperCase());
         }
       }

@@ -20,6 +20,8 @@ import { OperacionCrear } from '../../../../core/model/softbank/OperacionCrear';
 import { DatosImpCom } from '../../../../core/model/softbank/DatosImpCom';
 import { SoftbankService } from '../../../../core/services/quski/softbank.service';
 import { ConsultaCliente } from '../../../../core/model/softbank/ConsultaCliente';
+import { ExcepcionService } from '../../../../core/services/quski/excepcion.service';
+import { ConsultaOferta } from '../../../../core/model/calculadora/consultaOferta';
 
 
 @Component({
@@ -43,7 +45,7 @@ export class GenerarCreditoComponent implements OnInit {
   public tipoCuenta = new FormControl('');
   public numeroCuenta = new FormControl('');
   public tipoCliente = new FormControl('');
-  public firmadaOperacion  = new FormControl('');
+  public firmanteOperacion  = new FormControl('');
   public identificacionApoderado = new FormControl('');
   public nombresCompletosApoderado = new FormControl('');
   public identificacionCodeudor = new FormControl('');
@@ -91,6 +93,9 @@ export class GenerarCreditoComponent implements OnInit {
   listaPrecios=[2.50, 5.00, 10.00]
 
   ///
+  consulta: ConsultaOferta;
+
+  ///
   idCreditoNegociacion=96;
   tbCreditoNegociacion:TbQoCreditoNegociacion;
   edadCodeudor
@@ -108,6 +113,10 @@ export class GenerarCreditoComponent implements OnInit {
   enableCodeudor = new BehaviorSubject<boolean>(false);
   enableApoderadoButton;
   enableApoderado = new BehaviorSubject<boolean>(false);
+  enableTablaOfertaButton;
+  enableTablaOferta = new BehaviorSubject<boolean>(false);
+  
+  /// src 
   srcJoya;
   srcFunda;
   srcTemporal;
@@ -145,7 +154,7 @@ operacion = new OperacionCrear()
 
   constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, private tas: TasacionService,
     public dialog: MatDialog, private dhs: DocumentoHabilitanteService, private os: ObjectStorageService,
-    private fs: FundaService, private css: SoftbankService) { 
+    private fs: FundaService, private css: SoftbankService, private es: ExcepcionService) { 
     
     
   }
@@ -158,6 +167,8 @@ operacion = new OperacionCrear()
     this.enableCodeudor.next(false);
     this.enableApoderadoButton = this.enableApoderado.asObservable();
     this.enableApoderado.next(false);
+    this.enableTablaOfertaButton = this.enableTablaOferta.asObservable();
+    this.enableTablaOferta.next(false);
     this.buscar();
     this.cargarDatosOperacion()
     
@@ -216,7 +227,7 @@ operacion = new OperacionCrear()
         this.tbQoCliente = this.tbCreditoNegociacion.tbQoNegociacion.tbQoCliente
         console.log("Pilas el data" , data.entidad)
         console.log(this.tbQoCliente)
-        console.log(this.tbCreditoNegociacion)
+        console.log(this.tbCreditoNegociacion.tbQoNegociacion)
         this.codigoOperacion.setValue(data.entidad.codigo)
         this.cedulaCliente.setValue(data.entidad.tbQoNegociacion.tbQoCliente.cedulaCliente)
         this.nombresCompletos.setValue(data.entidad.tbQoNegociacion.tbQoCliente.apellidoPaterno.concat(" ",
@@ -226,8 +237,9 @@ operacion = new OperacionCrear()
          this.situacion.setValue(data.entidad.situacion == null ? "" : data.entidad.situacion)
          this.tipoCuenta.setValue("CUENTA DE AHORROS")
          this.validateEdadTipo();
+         this.buscarExcepcionEdad();
         this.consultarClienteCS();
-         if(data.entidad.tbQoNegociacion.tipoNegociacion === "CUOTAS"){
+         if(data.entidad.tipo === "CUOTAS"){
            console.log("deberia verse")
           this.enableDiaPago.next(true);
          }else{
@@ -314,7 +326,7 @@ validateEdadTipo(){
  }
 
  getMontoSugerido(){
-
+    this.enableTablaOferta.next(true)
  }
 
  getJoyas(){
@@ -571,6 +583,27 @@ generarCreditoMontoSugerido(){
     }
   });
 }
+buscarExcepcionEdad(){
+  console.log("Buscar excepcion",this.tbCreditoNegociacion.tbQoNegociacion.id)
+  this.es.findByTipoExcepcionAndIdNegociacionAndCaracteristica("EXCEPCION_CLIENTE",
+  this.tbCreditoNegociacion.tbQoNegociacion.id, "edad").subscribe((data:any)=>{
+    if(data){
+    console.log("se imprime",  data.list[0])
+      if(data.list[0].estadoExcepcion){
+        
+      }
+    }else{
+
+    }
+  })
+}
+
+anularFunda(){
+
+}
+
+
+
 }
 
  

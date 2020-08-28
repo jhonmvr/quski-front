@@ -60,23 +60,7 @@
                     </mat-form-field>
                   </div>
             </mat-step>
-            <mat-step label="Monto Sugerido">
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Monto Solicitado:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="montoSolicitado" placeholder="">
-                        </mat-form-field>
-                    </div>
-                </div>
-                
-                <button mat-button  (click)="getMontoSugerido()">Monto Solicitado 
-                </button>
-
-
-            </mat-step>
+         
             <mat-step label = "Asignacion de Funda">
                 <div class="mat-table__wrapper">
                     <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
@@ -235,6 +219,10 @@
                             <input matInput [formControl]="totalValorComercial" placeholder="">
                         </mat-form-field>
                     </div>
+                    <div class="col-md-2">
+                    <button mat-button  (click)="anularFunda()">Anular Funda 
+                    </button>
+                    </div>
           
                 </div>
                 <div class="row">
@@ -294,11 +282,7 @@
                         </div>
                         <div class="col-md-4">
                             <mat-form-field>
-                                <mat-select placeholder="Firmada operacion" [formControl]="firmadaOperacion">
-                                    <mat-option *ngFor="let firmadaOp of tiposClientes " [value]="firmadaOp">
-                                        {{firmadaOp}}
-                                    </mat-option>
-                                </mat-select>                     
+                                <input matInput [formControl]="firmanteOperacion" placeholder="Firmante Operacion">                 
                             </mat-form-field>
                         </div>
                         </div>
@@ -516,6 +500,10 @@
             <mat-step label = "Documento Habilitantes">
                 <re-habilitante [proceso]="proceso" [useType]="'FORM'" [referencia]="'2'" [rol]="'1'">
                 </re-habilitante>
+                <div>
+                    <button mat-button  (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
+                </div>
+                
             </mat-step>
         </mat-vertical-stepper>
 

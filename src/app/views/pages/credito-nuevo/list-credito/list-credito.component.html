@@ -97,7 +97,7 @@
                     </div>
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <mat-select placeholder="Asesor" formControlName="asesor" >
+                            <mat-select placeholder="Situacion" formControlName="asesor" >
                                 <mat-option>--</mat-option>
                                 <mat-option *ngFor="let ases of asesores" [value]="ases">
                                   {{ ases}}
@@ -118,7 +118,7 @@
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field>
                             <input matInput [matDatepicker]="pckFechaAprobaciontoFin" 
-                            formControlName="fechaAprobacionFin" placeholder="Fecha Vencimiento fin">
+                            formControlName="fechaAprobacionFin" placeholder="Fecha aprobacion fin">
                             <mat-datepicker-toggle matSuffix [for]="pckFechaVencimientoFin"></mat-datepicker-toggle>
                             <mat-datepicker #pckFechaVencimientoFin></mat-datepicker>
                         </mat-form-field>
@@ -190,6 +190,11 @@
                 </ng-container>
                 <ng-container matColumnDef="montoOperacion">
                 <mat-header-cell *matHeaderCellDef>Monto de la operacion</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                
+            </ng-container>
+            <ng-container matColumnDef="asesor">
+                <mat-header-cell *matHeaderCellDef>Asesor</mat-header-cell>
                 <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="proceso">

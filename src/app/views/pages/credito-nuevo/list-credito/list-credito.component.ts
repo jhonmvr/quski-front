@@ -33,7 +33,7 @@ export class ListCreditoComponent implements OnInit {
   cedulaCliente = new FormControl('', []);
 
   displayedColumns = ['detalles', 'cliente',  'cedulaCliente', 'codigoOperacion', 'fechaCreacion', 'fechaVencimiento',
-   'montoOperacion', 'proceso', 'estado'];
+   'montoOperacion', 'asesor', 'proceso', 'estado'];
   /**Obligatorio paginacion */
   p = new Page();
   dataSource:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();

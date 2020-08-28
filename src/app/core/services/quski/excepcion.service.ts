@@ -88,6 +88,18 @@ export class ExcepcionService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
+
+  public findByTipoExcepcionAndIdNegociacionAndCaracteristica( tipoExcepcion : string, idNegociacion : any, caracteristica: string ) {
+    this.setParameter();
+    const serviceUrl =  this.appResourcesUrl + this.restC +'findByTipoExcepcionAndIdNegociacionAndCaracteristica';
+    this.params = new HttpParams();
+    this.params = this.params.set('tipoExcepcion', tipoExcepcion);
+    this.params = this.params.set('idNegociacion', idNegociacion);
+    this.params = this.params.set('caracteristica', caracteristica);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+
   /**
    * 
    * @author Jeroham Cadenas

@@ -106,6 +106,7 @@ import { TablaRiesgoAcumuladoComponent } from './custom/secciones-generales/tabl
 import { TablaVariablesCrediticiasComponent } from './custom/secciones-generales/tabla-variables-crediticias/tabla-variables-crediticias.component';
 import { TablaOfertaCalculadoraComponent } from './custom/secciones-generales/tabla-oferta-calculadora/tabla-oferta-calculadora.component';
 import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesgo-acumulado.component';
+import { TablaOfertaCreditoComponent } from './custom/secciones-generales/tabla-oferta-credito/tabla-oferta-credito.component';
 
 
 
@@ -166,8 +167,10 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 		TablaDetalleCreditoComponent,
 		TablaVariablesCrediticiasComponent,
 		TablaOfertaCalculadoraComponent,
+		TablaOfertaCreditoComponent,
 		TablaRiesgoAcumuladoComponent,
-		RiesgoAcumuladoComponent
+		RiesgoAcumuladoComponent,
+		TablaOfertaCreditoComponent
 	],
 	exports: [
 		WidgetModule,
@@ -184,6 +187,7 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 		TablaVariablesCrediticiasComponent,
 		TablaOfertaCalculadoraComponent,
 		TablaRiesgoAcumuladoComponent,
+		TablaOfertaCreditoComponent,
 
 		// topbar components
 		ContextMenu2Component,
@@ -281,6 +285,7 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 		TablaVariablesCrediticiasComponent,
 		TablaOfertaCalculadoraComponent,
 		TablaRiesgoAcumuladoComponent,
+		TablaOfertaCreditoComponent
 	]
 })
 export class PartialsModule {

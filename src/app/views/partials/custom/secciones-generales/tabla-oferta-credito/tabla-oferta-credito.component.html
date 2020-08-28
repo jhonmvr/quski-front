@@ -1,0 +1,242 @@
+
+    <mat-table #table class="mat-elevation-z8" [dataSource]="displayedColumnsOpt" matSort #sort1="matSort"
+    matSortDisableClear>
+      <ng-container matColumnDef="Accion">
+        <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="Plazo">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Plazo</mat-header-cell>
+        <mat-cell *matCellDef="">
+        
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="TipoOperacion">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo Operacion</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="PeriodicidadPlazo">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Periodicidad Plazo</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="TipoOferta">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo Oferta</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="MontoPreAprobado">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Monto Pre-Aprobado</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="ValorCouta">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Valor Couta</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="ARecibirCliente">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>A Recibir Cliente</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="APagarPorCliente">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>A Pagar por Cliente</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="ValorAPagarNeto">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Valor a pagar neto</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="ValoresCreditoAnterior">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Valores Crédito Anterior</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="TotalCostosNuevaOpreacion">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Total costos nueva operacion</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="CostoCustodia">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Costo Custodia</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoCustodia">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma pago custodia</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="CostoTransporte">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Costo transporte</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoTransporte">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma Pago Transporte</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="CostoValoracion">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoValoracion">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="CostoTasacion">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Costo Tasacion</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoTasacion">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma Pago Tasacion</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="CostoSeguro">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Costo Seguro</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoSeguro">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma Pago Seguro</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="CostoResguardo">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Costo Resguardo</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoResguardo">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma Pago Resguardo</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="Solca">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Solca</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoSolca">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma Pago Solca</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="SaldoCapitaOpAnt">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo Capita Op. Ant</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="SaldoInteresOpAnt">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo Interes Op. Ant</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoInteres">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma Pago Interes</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="SaldoMoraOpAnt">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo Mora OpAnt</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoMora">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma Pago Mora</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="GastosDeCobranzaOpAnt">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Gastos De Cobranza Op. Ant</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoGastoCobranza">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma Pago Gasto Cobranza</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="CustodiaVencidaOptAnt">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Custodia Vencida Opt Ant</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoCustodiaVencida">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma Pago Custodia Vencida</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="AbonoCapitaOpAnterior">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Abono Capita Op. Anterior</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="FormaPagoAbonoCapital">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma Pago Abono Capital</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="MontoDesembolsoBallon">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Monto Desembolso Ballon</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="ProcentajeFlujoPlaneado">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Porcentaje Flujo Planeado</mat-header-cell>
+        <mat-cell *matCellDef="">
+         
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumnsOpcionesCredito"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumnsOpcionesCredito"></mat-row>
+    </mat-table>
+   
+ 
