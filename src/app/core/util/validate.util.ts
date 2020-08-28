@@ -155,11 +155,17 @@ export function ResiduoCedula(value) {
     }
     return null;
 }
+/**
+ * @argument calcularEdad('DD/MM/AAAA');
+ * @argument calcularEdad('AAAA/DD/MM');
+ * @argument calcularEdad('MM-DD-AAAA');
+ * @argument calcularEdad('AAAA-MM-DD');
 
-export function calcularEdad(birthday) { 
-
-    birthday=new Date(birthday.split('/').reverse().join('-'));
-    var ageDifMs = Date.now() - birthday.getTime();
-    var ageDate = new Date(ageDifMs); 
+ * @param birthday 
+ */
+export function calcularEdad(fechaNacimineto: string) : number{ 
+    let birthday = new Date(fechaNacimineto.split('/').reverse().join('-'));
+    let ageDifMs = Date.now() - birthday.getTime();
+    let ageDate = new Date(ageDifMs); 
     return Math.abs(ageDate.getUTCFullYear() - 1970);
 }

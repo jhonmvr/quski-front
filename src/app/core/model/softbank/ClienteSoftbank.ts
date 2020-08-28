@@ -102,7 +102,7 @@ export class ClienteSoftbank {
   fechaCreacion: any                        //  null,
   fechaRegistroLegal: any                   //  null,
   existeError: boolean                      // false,
-  error: string                             // null,
-  codigoError: string                       // "200",
+  mensaje: string                             // null,
+  codigoServicio: string                       // "200",
   validaciones: any                         // null
   */

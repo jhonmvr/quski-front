@@ -6,7 +6,7 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { TbQoPrecioOro } from '../../../../../core/model/quski/TbQoPrecioOro';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
-import { SolicitudAutorizacionDialogComponent } from '../../../../../../app/views/partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
+import { SolicitudAutorizacionDialogComponent } from '../../../../partials/custom/popups/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
