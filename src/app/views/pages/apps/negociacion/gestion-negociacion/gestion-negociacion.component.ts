@@ -140,135 +140,121 @@ export class GestionNegociacionComponent implements OnInit {
   ngOnInit() {
     this.consultaCatalogos();
     this.getPublicidades();
+
     this.loading = this.loadingSubject.asObservable();
     this.subheaderService.setTitle('Negociación');
     console.log("Esto calcula la edad? --> ",calcularEdad('1998-05-09'));
 ;    
   }
   /** ********************************************* @BUSQUEDA_CLIENTE ********************* **/
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @description Metodo principal de busqueda.
+   */
   public buscarCliente(){
     if(this.formBusqueda.valid){
-
+      // VALORES DE CONSULTA
+      this.entidadCliente = null;
+      const cedula = this.identificacion.value
+      const consultaSof = new ConsultaCliente(cedula);
+      let   clienteSof  = new ClienteSoftbank();
+      const consultaCor = cedula;
+      let   clienteCor  = new TbQoCliente(); 
+      this.sof.consultarClienteCS( consultaSof ).subscribe((data: any)=>{
+        clienteSof =  data.existeError? null: (data.identificacion == null)? null: data;
+        if(clienteSof){
+          clienteCor.cedulaCliente    = clienteSof.identificacion;
+          clienteCor.apellidoPaterno  = clienteSof.primerApellido;
+          clienteCor.apellidoMaterno  = clienteSof.segundoApellido;
+          clienteCor.primerNombre     = clienteSof.primerNombre;
+          clienteCor.segundoNombre    = clienteSof.segundoNombre;
+          clienteCor.fechaNacimiento  = clienteSof.fechaNacimiento;
+          clienteCor.cargasFamiliares = clienteSof.numeroCargasFamiliares;
+          clienteCor.email            = clienteSof.email; 
+          console.log("Cliente encontrado en sofbank")
+          this.guardarCliente(clienteCor);
+        } else{
+          console.log("No encontrado en softbank --> data:", data);
+          this.cli.findClienteByIdentificacion( consultaCor ).subscribe((data: any)=>{
+            clienteCor =  (data.entidad === null)? null: data.entidad;
+            if(clienteCor){
+              console.log("Cliente encontrado en Core");
+              this.guardarCliente(clienteCor);
+            } else{
+              console.log("Error en la consulta de Persona en core por lo siguiente: ");
+              console.log("Cliente en Core --> data.entidad: ", data.entidad);
+              this.abrirPopupDeAutorizacionYConsultaCliente(cedula);
+            }
+          });
+        }
+      });
     }else{
-      this.getErrorMessage
+      this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'error');    
     }
-  }
+  }  
   /**
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cedula string
-   * @returns TbQoCliente
    */
-  private buscarEnSoftbank( cedula: string ): any{
+  private buscarEnCrmYEquifax( cedula: string ){
     this.loadingSubject.next(true);
-    const consulta = new ConsultaCliente();
-    let clienteS  :  ClienteSoftbank
-    consulta.identificacion = cedula; 
-    this.sof.consultarClienteCS( consulta ).subscribe((data: any)=>{
-      clienteS =  data.existeError? null: (data.identificacion != null)? data: null;
-      let cliente = new TbQoCliente();
-      if(clienteS != null){
-        cliente.cedulaCliente = clienteS.identificacion;
-        cliente.apellidoPaterno = clienteS.primerApellido;
-        cliente.apellidoMaterno = clienteS.segundoApellido;
-        cliente.primerNombre = clienteS.primerNombre;
-        cliente.segundoNombre = clienteS.segundoNombre;
-        // @TODO: Esperando servicio de cloudstudio -> cliente.lugarNacimiento = clienteS 
-        // @TODO: Esperando servicio de cloudstudio -> cliente.actividadEconomica = clienteS 
-        // @TODO: Esperando servicio de cloudstudio -> cliente.actividadEconomicaEmpresa  = clienteS 
-        cliente.fechaNacimiento = clienteS.fechaNacimiento;
-        // @TODO: Esperando servicio de cloudstudio -> cliente.genero = clienteS 
-        // @TODO: Esperando servicio de cloudstudio -> cliente.profesion = clienteS 
-        // @TODO: Esperando servicio de cloudstudio -> cliente.estadoCivil = clienteS 
-        // @TODO: Esperando servicio de cloudstudio -> cliente.nivelEducacion = clienteS 
-        cliente.cargasFamiliares = clienteS.numeroCargasFamiliares;
-        cliente.email = clienteS.email; 
-        // @TODO: Esperando servicio de cloudstudio -> cliente.tbQoDireccionClientes = clienteS
-        // @TODO: Esperando servicio de cloudstudio -> cliente.telefonoAdicional = clienteS 
-        // @TODO: Esperando servicio de cloudstudio -> cliente.telefonoFijo = clienteS 
-        // @TODO: Esperando servicio de cloudstudio -> cliente.telefonoMovil = clienteS 
-        // @TODO: Esperando servicio de cloudstudio -> cliente.telefonoTrabajo = clienteS 
-        // @TODO: Esperando servicio de cloudstudio -> cliente.tbQoReferenciaPersonals = clienteS
-        // @TODO: Esperando servicio de cloudstudio -> cliente.tbQoPatrimonios
-        // @TODO: Esperando servicio de cloudstudio -> cliente.tbQoIngresoEgresoClientes
-        // @TODO: Conectar a metodo de edad -> cliente.edad = clienteS
-        // @TODO: Esperando servicio de cloudstudio -> cliente.nacionalidad = clienteS
-      } else{
-        console.log("Error en la consulta de  cliente de softbank por lo siguiente: ");
-        console.log("Cliente en softbank --> identificacion: ", data.identificacion);
-        console.log("Cliente en softbank --> existeError: ", data.existeError);
-        console.log("Cliente en softbank --> mensaje: ", data.mensaje);
-        console.log("Cliente en softbank --> codigoServicio: ", data.codigoServicio);
-        console.log("Cliente en softbank --> validaciones: ", data.validaciones);
-      }
-      this.loadingSubject.next( this.loadingSubject.getValue() ? false:false ); 
-      return (clienteS != null)? cliente:clienteS;
-    });
-  }
-  /**
-   * @author  Developer Twelve - Jeroham Cadenas
-   * @param   cedula string
-   * @returns TbQoCliente
-   */
-  private buscarEnCrm( cedula: string ): any{
-    this.loadingSubject.next(true);
-    let clienteC:  ProspectoCRM;  
+    let clienteCrm:  ProspectoCRM;  
+    let cliente   : TbQoCliente;
     this.crm.findClienteByCedulaCRM(cedula).subscribe((data: any)=>{
-      clienteC =  data.list === null? null: data.list[0];
-      let cliente = new TbQoCliente();
-      if(clienteC != null){
-        cliente.primerNombre = clienteC.firstName;
-        cliente.cedulaCliente = clienteC.cedulaC;
-        cliente.telefonoFijo = clienteC.phoneHome;
-        cliente.telefonoMovil = clienteC.phoneMobile;
-        cliente.telefonoAdicional = clienteC.phoneOther;
-        cliente.telefonoTrabajo = clienteC.phoneWork;
-        cliente.email = clienteC.emailAddress; 
+      
+      if(clienteCrm =  data.list? null: data.list[0]){
+        cliente = new TbQoCliente();
+        cliente.primerNombre = clienteCrm.firstName;
+        cliente.cedulaCliente = clienteCrm.cedulaC;
+        cliente.telefonoFijo = clienteCrm.phoneHome;
+        cliente.telefonoMovil = clienteCrm.phoneMobile;
+        cliente.telefonoAdicional = clienteCrm.phoneOther;
+        cliente.telefonoTrabajo = clienteCrm.phoneWork;
+        cliente.email = clienteCrm.emailAddress; 
       } else{
         console.log("Error en la consulta de Prospecto de CRM por lo siguiente: ");
         console.log("Prospecto de CRM --> data: ", data);
+        this.buscarEnEquifax( cedula );
       }
-      this.loadingSubject.next( this.loadingSubject.getValue() ? false:false ); 
-      return (clienteC != null)? cliente:clienteC;
+      this.loadingSubject.next(false); 
     });
   }
   /**
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cedula string
-   * @returns TbQoCliente
    */
-  private buscarEnEquifax( cedula: string ): any{
+  private buscarEnEquifax( cedula: string ){
     this.loadingSubject.next(true);
-    let clienteE :  PersonaCalculadora;  
-    let consulta = new PersonaConsulta();
-    consulta.identificacion = cedula;
+    let clienteInt:  PersonaCalculadora;  
+    let cliente   : TbQoCliente;
+    const consulta = new PersonaConsulta(cedula);
     this.ing.getInformacionPersonaCalculadora( consulta ).subscribe((data: any)=>{
-      clienteE =  (data.entidad.datoscliente === null)? null: data.entidad.datoscliente;
-      let cliente = new TbQoCliente();
-      if(clienteE != null){
-        cliente.fechaNacimiento = clienteE.fechanacimiento;
-        cliente.nacionalidad = (clienteE.nacionalidad === "EC")? "ECUADOR": null;
-        cliente.email = clienteE.correoelectronico;
-        cliente.relacionDependencia = (clienteE.relaciondependencia === "N")? "NO": (clienteE.relaciondependencia === "S")? "SI":null;
-        cliente.cargo = clienteE.cargo;
-        cliente.profesion = clienteE.profesion;
-        cliente.cargasFamiliares = clienteE.cargasfamiliares;
+      if(clienteInt =  (data.entidad.datoscliente)? null: data.entidad.datoscliente){
+        cliente.fechaNacimiento = clienteInt.fechanacimiento;
+        cliente.nacionalidad = (clienteInt.nacionalidad === "EC")? "ECUADOR": null;
+        cliente.email = clienteInt.correoelectronico;
+        cliente.relacionDependencia = (clienteInt.relaciondependencia === "N")? "NO": (clienteInt.relaciondependencia === "S")? "SI":null;
+        cliente.cargo = clienteInt.cargo;
+        cliente.profesion = clienteInt.profesion;
+        cliente.cargasFamiliares = clienteInt.cargasfamiliares;
+        cliente.cedulaCliente = clienteInt.identificacion.toString();
+        this.guardarCliente(cliente);
       } else{
         console.log("Error en la consulta de Persona en Equifax por lo siguiente: ");
         console.log("Cliente en Equifax --> identificacion: ", data.entidad.identificacion);
         console.log("Cliente en Equifax --> codigoError: ", data.entidad.codigoError);
         console.log("Cliente en Equifax --> mensaje: ", data.entidad.mensaje);
         console.log("Cliente en Equifax --> ejecucion: ", data.entidad.ejecucion);
+        this.sinNotSer.setNotice('CLIENTE NO ENCONTRADO', 'error');    
       }
-      this.loadingSubject.next( this.loadingSubject.getValue() ? false:false ); 
-      return (clienteE != null)? cliente:clienteE;
+      this.loadingSubject.next(false); 
     });
   }
   /**
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cliente TbQoCliente
-   * @returns boolean
   */
-  private guardarProspectoEnCrm( cliente: TbQoCliente): any{
+  private guardarProspectoEnCrm( cliente: TbQoCliente){
     this.loadingSubject.next(true);
     const prospecto = new GuardarProspectoCRM();
     prospecto.cedulaC = cliente.cedulaCliente;
@@ -279,50 +265,69 @@ export class GestionNegociacionComponent implements OnInit {
       prospecto.emailAddress = cliente.email;
       prospecto.emailAddressCaps = cliente.email.toUpperCase();
       this.crm.guardarProspectoCRM( prospecto ).subscribe((data: any)=>{
-        this.loadingSubject.next( this.loadingSubject.getValue() ? false:false ); 
-        return (data.entidades != null)? true: false;
+        data.entidades? console.log("Guardado en CRM"): this.sinNotSer.setNotice('ERROR GUARDANDO EN CRM', 'error');
+        this.loadingSubject.next(false); 
       }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
         this.sinNotSer.setNotice(b.msgError, 'error');
-        this.loadingSubject.next(false);
       } else {
-        this.sinNotSer.setNotice('ERROR EN CORE INTERNO CLIENTE, ERROR DESCONOCIDO', 'error');
+        this.sinNotSer.setNotice('ERROR GUARDANDO EN CRM', 'error');
       }
-      return false;
+      this.loadingSubject.next(false);
     });
   }
   /**
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cliente TbQoCliente
-   * @returns TbQoCliente
-   * @returns null
   */
-  private guardarClienteEnCore( cliente: TbQoCliente): any{
+  private guardarCliente( cliente: TbQoCliente){
     this.loadingSubject.next(true);
+    let error: boolean;
     this.cli.persistEntity(cliente).subscribe((data: any) => {
-      this.loadingSubject.next( this.loadingSubject.getValue() ? false:false ); 
-      return (data.entidad != null)? data.entidad: null;
+      if(data.entidad){
+        console.log("Guardado en Core");
+        this.entidadCliente = data.entidad;
+        this.guardarProspectoEnCrm(this.entidadCliente);
+        this.cargarValores(this.entidadCliente);
+      }else{
+        this.entidadCliente = null;
+        this.sinNotSer.setNotice('ERROR GUARDANDO CLIENTE EN CORE INTERNO', 'error');
+      }
+      this.loadingSubject.next(false); 
     }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
         this.sinNotSer.setNotice(b.msgError, 'error');
-        this.loadingSubject.next(false);
       } else {
         this.sinNotSer.setNotice('ERROR GUARDANDO CLIENTE EN CORE INTERNO', 'error');
       }
-      return null;
+      this.loadingSubject.next(false); 
     });
   }
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @param   cliente TbQoCliente
+   */
+  private cargarValores(cliente: TbQoCliente) {
+    this.loadingSubject.next(true);
+    this.nombresCompletos.setValue(cliente.primerNombre + ' ' + cliente.segundoNombre + ' ' + cliente.apellidoPaterno + ' ' + cliente.apellidoMaterno);
+    this.nacionalidad.setValue(cliente.nacionalidad);
+    this.movil.setValue(cliente.telefonoMovil);
+    this.telefonoDomicilio.setValue(cliente.telefonoFijo);
+    this.email.setValue(cliente.email);
+    this.fechaDeNacimiento.setValue( cliente.fechaNacimiento );
+    this.edad.setValue('');
+    this.sinNotSer.setNotice('CLIENTE ENCONTRADO',"success");
+    this.loadingSubject.next(false); 
 
-
-
+  }
   /** ********************************************* @POPUP ********************* **/
   /**
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cedula string
   */
-  private solicitarAutorizacion(cedula: string) {
+  private abrirPopupDeAutorizacionYConsultaCliente(cedula: string): any{
     const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
       width: '600px',
       height: 'auto',
@@ -331,10 +336,13 @@ export class GestionNegociacionComponent implements OnInit {
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
       console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
       // @TODO: Conectar al flujo de busqueda.
-      (respuesta !== null && respuesta !== undefined)? this.buscarEnCrm(cedula):(
-        this.sinNotSer.setNotice('BUSQUEDA CANCELADA', 'error'),
-        this.limpiarCamposBusqueda()
-      );
+      if(respuesta){ 
+        this.buscarEnCrmYEquifax(cedula);
+      }else{
+        this.sinNotSer.setNotice('BUSQUEDA CANCELADA', 'error');
+        this.limpiarCamposBusqueda();
+        this.entidadCliente = null;
+      }
     });
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
@@ -343,7 +351,7 @@ export class GestionNegociacionComponent implements OnInit {
   */
   private limpiarCamposBusqueda() {
     Object.keys(this.formBusqueda.controls).forEach((name) => {
-      const control = this.formDatosCliente.controls[name];
+      const control = this.formBusqueda.controls[name];
       control.reset();
       control.setErrors(null);
       control.setValue(null);
