@@ -1,3 +1,4 @@
+
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -8,7 +9,7 @@ import { ErrorPageComponent } from './views/theme/content/error-page/error-page.
 import { AuthGuard } from './core/auth';
 
 const routes: Routes = [
-	{path: 'auth', loadChildren: () => import('../app/views/pages/auth/auth.module').then(m => m.AuthModule)},
+	{ path: 'auth', loadChildren: () => import('../app/views/pages/auth/auth.module').then(m => m.AuthModule) },
 
 	{
 		path: '',
@@ -20,15 +21,19 @@ const routes: Routes = [
 				loadChildren: () => import('../app/views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
 			},
 			{
+				path: 'asesor',
+				loadChildren: () => import('../app/views/pages/apps/asesor/asesor.module').then(m => m.AsesorModule),
+			},
+			{
 				path: 'cliente',
 				loadChildren: () => import('../app/views/pages/apps/cliente/cliente.module').then(m => m.ClienteModule),
-			},{
-			path: 'cotizacion',
+			}, {
+				path: 'cotizacion',
 				loadChildren: () => import('../app/views/pages/apps/cotizacion/cotizar.module').then(m => m.CotizarModule),
-			},{
+			}, {
 				path: 'negociacion',
 				loadChildren: () => import('../app/views/pages/apps/negociacion/negociacion.module').then(m => m.NegociacionModule),
-				},
+			},
 			{
 				path: 'tracking',
 				loadChildren: () => import('../app/views/pages/apps/tracking/tracking.module').then(m => m.TrackingModule),
@@ -59,13 +64,13 @@ const routes: Routes = [
 					desc: 'Looks like you don\'t have permission to access for requested page.<br> Please, contact administrator'
 				}
 			},
-			{path: 'error/:type', component: ErrorPageComponent},
-			{path: '', redirectTo: 'dashboard', pathMatch: 'full'},
-			{path: '**', redirectTo: 'dashboard', pathMatch: 'full'}
+			{ path: 'error/:type', component: ErrorPageComponent },
+			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+			{ path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
 		]
 	},
 
-	{path: '**', redirectTo: 'error/403', pathMatch: 'full'},
+	{ path: '**', redirectTo: 'error/403', pathMatch: 'full' },
 ];
 
 @NgModule({

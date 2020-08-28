@@ -13,6 +13,7 @@ import { TbQoCotizador } from '../../model/quski/TbQoCotizador';
   providedIn: 'root'
 })
 export class ClienteService extends BaseService {
+ 
 
   constructor(_http: HttpClient) {
     super();
@@ -20,18 +21,20 @@ export class ClienteService extends BaseService {
     this.setParameter();
   }
 
-  public  persistEntity(cliente: TbQoCliente) {
+  public persistEntity(cliente: TbQoCliente) {
     const serviceUrl =
       this.appResourcesUrl + 'clienteRestController/persistEntity';
     const wrapper = { entidad: cliente };
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
-  public crearClienteConRelaciones(cliente: TbQoCliente) {
+  public crearClienteConRelaciones(cliente: TbQoCliente, idNegociacion) {
+    this.params = new HttpParams().set('idNegociacion', idNegociacion);
+    this.options = { headers: this.headers, params: this.params };
     const serviceUrl =
       this.appResourcesUrl + 'clienteRestController/crearCliente';
     const wrapper = { entidad: cliente };
-    this.options = { headers: this.headers };
+    this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
 
@@ -78,7 +81,7 @@ export class ClienteService extends BaseService {
 
 
 
-  
+
   public validateContratoByIdCliente(idCliente: string) {
     const serviceUrl =
       this.appResourcesUrl + 'contratoRestController/validateContratoByIdCliente';
@@ -205,13 +208,11 @@ export class ClienteService extends BaseService {
     return this.http.get(serviceUrl, this.options);
   }
 
-  
-
-  // ---------------> // Guardado del prospectoo en el CRM
-  public guardarProspectoCRM(ClienteCRM: ClienteCRM) {
-    let serviceUrl = this.crmResourcesUrl + "prospectoQuskiRestController/persistEntity";
-    let wrapper = { entidad: ClienteCRM };
+  crearClienSoftBank(clienteSoftBank: any) {
+     const serviceUrl ='http://201.183.238.73:1991/api/cliente/crear';
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, clienteSoftBank, this.options);
   }
+
+
 }

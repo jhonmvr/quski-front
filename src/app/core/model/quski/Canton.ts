@@ -8,6 +8,6 @@ export class Canton {
     nombreCanton: string;
     provincia: Provincia;
     constructor(){
-        //this.provincia = new Provincia()[];
+        //this.provincia = new Provincia();
     }
 }

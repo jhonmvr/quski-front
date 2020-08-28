@@ -1,8 +1,14 @@
-:host /deep/ h1 {
-  font-size: 20px;
-  font-style: bold;
+.spiner{
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 50%;
+  right: 50%; 
 }
- 
+mat-dialog-content{
+  display: flex;
+  text-align: center;
+}
 .example-container {
     display: flex;
     flex-direction: column;
@@ -65,12 +71,19 @@
   .mat-table-sticky {
     border-top: 1px solid #e0e0e0;
   }
+
+  .body{
+    text-align: center;
+  }
   
   
   
   .mat-footer-row {
     font-weight: bold;
     justify-content: start;
+  }
+  .h1.mat-dialog-title{
+    text-align: center;
   }
   
   
@@ -173,16 +186,38 @@
   .green-icon svg {
       fill: #00cc00;
   }
- button.blue-icon[_ngcontent-serverApp-c37] {
 
-    border-style: none;
-background-color: white;
-  
-}
- button {
 
-    border-style: none;
-background-color: white;
+  ::ng-deep snack-bar-container.success-snackbar {
+    color: white;
+    background-color: #00cc00;
+    border-color: white;
+    font-weight: 400;
+  }
   
-}
+  ::ng-deep snack-bar-container.warning-snackbar {
+    color: white;
+    background-color: #cc8b00;
+    border-color: white;
+    font-weight: 400;
+  }
+
+  ::ng-deep snack-bar-container.error-snackbar {
+    color: white;
+    background-color: red;
+    border-color: white;
+    font-weight: 400;
+  }    
+
+  ::ng-deep snack-bar-container.error-snackbar {
+    color: rgb(14, 0, 0);
+    background-color: rgb(197, 179, 13);
+    border-color: rgb(255, 251, 251);
+    font-weight: 400;
+  }
+
+
+  ::ng-deep .custom-class .mat-simple-snackbar {
+    color: green;
+  }
   

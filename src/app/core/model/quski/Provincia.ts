@@ -4,7 +4,7 @@ export class Provincia {
     codigoProvincia: string;
     estado: string;
     nombreProvincia: string;
-    cantons : null;
+    canton: string;
     tbQoAgencias: null;
     constructor(){
 

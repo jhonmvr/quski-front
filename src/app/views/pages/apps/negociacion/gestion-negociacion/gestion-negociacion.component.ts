@@ -1,7 +1,5 @@
-import { ClienteCRM } from './../../../../../core/model/quski/ClienteCRM';
 import { TbQoCliente } from './../../../../../core/model/quski/TbQoCliente';
-import { ValidateCedula } from '../../../../../core/util/validate.util';
-import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
+import { ValidateCedula, calcularEdad } from '../../../../../core/util/validate.util';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
 import { RelativeDateAdapter } from './../../../../../core/util/relative.dateadapter';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
@@ -22,7 +20,6 @@ import { ConsultaCliente } from './../../../../../core/model/softbank/ConsultaCl
 import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
 import { ClienteSoftbank } from './../../../../../core/model/softbank/ClienteSoftbank';
 import { ProspectoCRM } from './../../../../../core/model/crm/prospectoCRM';
-import { TbQoCotizador } from './../../../../../core/model/quski/TbQoCotizador';
 import { PersonaCalculadora } from './../../../../../core/model/calculadora/PersonaCalculadora';
 import { TbQoVariablesCrediticia } from './../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { TbQoRiesgoAcumulado } from './../../../../../core/model/quski/TbQoRiesgoAcumulado';
@@ -31,55 +28,58 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GeneroEnum } from './../../../../../core/enum/GeneroEnum';
 import { PersonaConsulta } from './../../../../../core/model/calculadora/personaConsulta';
 import { IntegracionService } from './../../../../../core/services/quski/integracion.service';
-import { VariablesCrediticiasService } from './../../../../../core/services/quski/variablesCrediticias.service';
 import { DataPopup } from './../../../../../core/model/wrapper/dataPopup';
+import { TbQoNegociacion } from './../../../../../core/model/quski/TbQoNegociacion';
+import { TbQoDireccionCliente } from './../../../../../core/model/quski/TbQoDireccionCliente';
+import { GuardarProspectoCRM } from './../../../../../core/model/crm/guardarProspectoCRM';
+import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/popups/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 
-
+export interface TimeTracking {
+  tasacion: Date;
+  oferta: Date;
+}
+export interface ParamTracking {
+  proceso : string
+  actividad : string
+}
 @Component({
   selector: 'kt-gestion-negociacion',
   templateUrl: './gestion-negociacion.component.html',
   styleUrls: ['./gestion-negociacion.component.scss']
 })
 export class GestionNegociacionComponent implements OnInit {
-  // VARIABLES ESTANDAR
+  // VARIABLES PUBLICAS
   public dataPopup: DataPopup;
   public loading;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   // ENTIDADES
+  private entidadPersonaCalculadora: PersonaCalculadora;
   private entidadProspectoCRM: ProspectoCRM;
   private entidadClientesoftbank: ClienteSoftbank;
   private entidadCliente: TbQoCliente;
-  private entidadCotizador: TbQoCotizador;
-  private entidadPersonaCalculadora: PersonaCalculadora;
+  private entidadNegociacion: TbQoNegociacion;
   private entidadesVariablesCrediticias: Array<TbQoVariablesCrediticia>;
   private entidadesRiesgoAcumulados: Array<TbQoRiesgoAcumulado>;
   // CATALOGOS
   private catEducacion: Array<any>;
-  public formDatosCliente: FormGroup = new FormGroup({});
-
-  //ENUMS 
-  listPublicidad = []; //= Object.keys(PulicidadEnum);
-  // ENUMERADORES
-    // VARIABLES DE TRACKING
-    public horaInicio      : any;
-    public horaAsignacion  : any;
-    public horaAtencion    : any = null;
-    public horaFinal       : any;
-
+  private catPublicidad: Array<any>;
+  private catTipoVivienda: Array<any>;
+  // VARIABLES DE TRACKING
+  private horaInicio:     TimeTracking;
+  private horaAsignacion: TimeTracking;
+  private horaAtencion:   TimeTracking;
+  private horaFinal:      TimeTracking;
+  private tasacion: ParamTracking;
+  private oferta:   ParamTracking;
   
-  clienteCRM: ClienteCRM;
-  public idCliente: TbQoCliente;
-
-
-  ///Validaciones formulario cliente 
-
-  public formCliente: FormGroup = new FormGroup({});
+  // FORMULARIO BUSQUEDA
   public formBusqueda: FormGroup = new FormGroup({});
-  public formTasacion: FormGroup = new FormGroup({});
-  public publicidad = new FormControl( '',[Validators.required]);
   public identificacion = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
-  public fechaDeNacimiento = new FormControl('', []);
+  // FORMULARIO CLIENTE
+  public formDatosCliente: FormGroup = new FormGroup({});
   public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public publicidad = new FormControl( '',[Validators.required]);
+  public fechaDeNacimiento = new FormControl('', []);
   public edad = new FormControl('', []);
   public nacionalidad = new FormControl('', []);
   public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
@@ -87,86 +87,305 @@ export class GestionNegociacionComponent implements OnInit {
   public email = new FormControl('', [Validators.required, Validators.email]);
   public campania = new FormControl('', []);
   public aprobacionMupi = new FormControl('', []);
+  // FORMULARIO TASACION
+  // ---- @TODO: Complear formulario
+  public formTasacion: FormGroup = new FormGroup({});
+
+  // TABLA DE TASACION
+  // ---- @TODO: Crear un data source para la tabla 
+  dataSourceTasacion = new MatTableDataSource<any>();
+  displayedColumnsTasacion = ['Accion', 'N', 'NumeroPiezas', 'TipoOro', 'TipoJoya', 'Estado', 'Descripcion'
+,'PesoBruto', 'DescuentoPiedra', 'DescuentoSuelda', 'PesoNeto', 'ValorAvaluo'
+  , 'ValorComercial', 'ValorRealizacion', 'ValorOro'];
+  
   /**Obligatorio ordenamiento */
   @ViewChild('sort1', { static: true }) sort: MatSort;
   roomsFilter: any;
-///Columnas de las tablas 
-displayedColumnsVariablesCrediticias = ['orden', 'variable', 'valor'];
-displayedColumnsRiesgoAcumulado = ['NumeroOperacion', 'TipoOferta', 'Vencimiento', 'Cuotas', 
-  'CapitaInicial', 'SaldoCapital', 'Plazo', 'FechaAprobacion', 'FechaFinalCredito', 
-  'DiasMora', 'ValorCuota', 'MotivoBloqueo', 'TotalCredito', 'CoberturaAnterior', 
-  'CoverturaVigente', 'DeudaTotal','TotalSaldo','RiesgoTotalCliente'];
-  displayedColumnsTasacion = ['Accion', 'N', 'NumeroPiezas', 'TipoOro', 'TipoJoya', 'Estado', 'Descripcion'
-  , 'PesoBruto', 'DescuentoPiedra', 'DescuentoSuelda', 'PesoNeto', 'ValorAvaluo'
-  , 'ValorComercial', 'ValorRealizacion', 'ValorOro'];
-  displayedColumnsOpcionesCredito = ['Accion', 'Plazo', 'TipoOperacion', 'PeriodicidadPlazo', 'TipoOferta', 'MontoPreAprobado', 'ValorCouta'
-  , 'ARecibirCliente', 'APagarPorCliente', 'ValorAPagarNeto', 'ValoresCreditoAnterior', 'TotalCostosNuevaOpreacion'
-  , 'CostoCustodia', 'FormaPagoCustodia', 'CostoTransporte', 'FormaPagoTransporte', 'CostoValoracion', 'FormaPagoValoracion', 'CostoTasacion',
-   'FormaPagoTasacion', 'CostoSeguro', 'FormaPagoSeguro', 'CostoResguardo', 'FormaPagoResguardo', 'Solca', 'FormaPagoSolca', 'SaldoCapitaOpAnt'
-   , 'SaldoInteresOpAnt', 'FormaPagoInteres', 'SaldoMoraOpAnt', 'FormaPagoMora', 'GastosDeCobranzaOpAnt', 'FormaPagoGastoCobranza', 'CustodiaVencidaOptAnt', 
-   'FormaPagoCustodiaVencida', 'AbonoCapitaOpAnterior', 'FormaPagoAbonoCapital', 'MontoDesembolsoBallon', 'ProcentajeFlujoPlaneado'];
-   displayedColumnsOpt = new MatTableDataSource<any>();
+  // Columnas de las tablas 
   public pageSize = 5;
-  public currentPage = 0;ic
+  public currentPage = 0;
   public totalSize = 0;
   public totalResults = 0;
- p = new Page ();
+  p = new Page ();
 
-
- ////CONSTRUCTOR DE LA CLASE 
 
  constructor(
   private sof: SoftbankService,
   private cot: CotizacionService,
   private cli: ClienteService, 
   private ing: IntegracionService,
-  private vac: VariablesCrediticiasService,
+  private par: ParametroService,
+  private tra: TrackingService,
+  private crm: CRMService,
   private route : ActivatedRoute,
   private router: Router,
-  private sinNoticeService: ReNoticeService, 
-  
-  private sp: ParametroService, 
-  private tra : TrackingService,
-  private crm: CRMService,
-  public dialog: MatDialog, 
+  private dialog: MatDialog, 
+  private sinNotSer: ReNoticeService, 
   private noticeService: ReNoticeService, 
   private subheaderService: SubheaderService,
-  @Inject(MAT_DIALOG_DATA) private data: string
   ) { 
-
     this.formBusqueda.addControl("identificacion", this.identificacion);
-    this.formCliente.addControl("fechaNacimiento", this.fechaDeNacimiento);
-    this.formCliente.addControl("nombresCompletos", this.nombresCompletos);
-    this.formCliente.addControl("edad", this.edad);
-    this.formCliente.addControl("nacionalidad", new FormControl('', Validators.required));
-    this.formCliente.addControl("movil", this.movil);
-    this.formCliente.addControl("telefonoDomicilio", this.telefonoDomicilio);
-    this.formCliente.addControl("email", this.email);
-    this.formCliente.addControl("campania", this.campania);
-    this.formCliente.addControl("publicidad", this.publicidad);
-    this.formCliente.addControl("aprobacionMupi" , this.aprobacionMupi);
-
-
-    
+    this.formDatosCliente.addControl("fechaNacimiento", this.fechaDeNacimiento);
+    this.formDatosCliente.addControl("nombresCompletos", this.nombresCompletos);
+    this.formDatosCliente.addControl("edad", this.edad);
+    this.formDatosCliente.addControl("nacionalidad", new FormControl('', Validators.required));
+    this.formDatosCliente.addControl("movil", this.movil);
+    this.formDatosCliente.addControl("telefonoDomicilio", this.telefonoDomicilio);
+    this.formDatosCliente.addControl("email", this.email);
+    this.formDatosCliente.addControl("campania", this.campania);
+    this.formDatosCliente.addControl("publicidad", this.publicidad);
+    this.formDatosCliente.addControl("aprobacionMupi" , this.aprobacionMupi);
 }
-
 
   ngOnInit() {
     this.consultaCatalogos();
     this.getPublicidades();
     this.loading = this.loadingSubject.asObservable();
     this.subheaderService.setTitle('Negociación');
-    
+    console.log("Esto calcula la edad? --> ",calcularEdad('1998-05-09'));
+;    
   }
-  public consultaCatalogos() {
-    this.sof.consultarEducacionCS().subscribe((data: any) => {
-      if (!data.existeError) {
-        this.catEducacion = data.nivelesEducacion;
-        this.loadingSubject.next(false);
+  /** ********************************************* @BUSQUEDA_CLIENTE ********************* **/
+  public buscarCliente(){
+    if(this.formBusqueda.valid){
 
-      } else {
-        this.sinNoticeService.setNotice('ERROR EN CORE SOFTBANK CATALOGO VACIO', 'error');
+    }else{
+      this.getErrorMessage
+    }
+  }
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @param   cedula string
+   * @returns TbQoCliente
+   */
+  private buscarEnSoftbank( cedula: string ): any{
+    this.loadingSubject.next(true);
+    const consulta = new ConsultaCliente();
+    let clienteS  :  ClienteSoftbank
+    consulta.identificacion = cedula; 
+    this.sof.consultarClienteCS( consulta ).subscribe((data: any)=>{
+      clienteS =  data.existeError? null: (data.identificacion != null)? data: null;
+      let cliente = new TbQoCliente();
+      if(clienteS != null){
+        cliente.cedulaCliente = clienteS.identificacion;
+        cliente.apellidoPaterno = clienteS.primerApellido;
+        cliente.apellidoMaterno = clienteS.segundoApellido;
+        cliente.primerNombre = clienteS.primerNombre;
+        cliente.segundoNombre = clienteS.segundoNombre;
+        // @TODO: Esperando servicio de cloudstudio -> cliente.lugarNacimiento = clienteS 
+        // @TODO: Esperando servicio de cloudstudio -> cliente.actividadEconomica = clienteS 
+        // @TODO: Esperando servicio de cloudstudio -> cliente.actividadEconomicaEmpresa  = clienteS 
+        cliente.fechaNacimiento = clienteS.fechaNacimiento;
+        // @TODO: Esperando servicio de cloudstudio -> cliente.genero = clienteS 
+        // @TODO: Esperando servicio de cloudstudio -> cliente.profesion = clienteS 
+        // @TODO: Esperando servicio de cloudstudio -> cliente.estadoCivil = clienteS 
+        // @TODO: Esperando servicio de cloudstudio -> cliente.nivelEducacion = clienteS 
+        cliente.cargasFamiliares = clienteS.numeroCargasFamiliares;
+        cliente.email = clienteS.email; 
+        // @TODO: Esperando servicio de cloudstudio -> cliente.tbQoDireccionClientes = clienteS
+        // @TODO: Esperando servicio de cloudstudio -> cliente.telefonoAdicional = clienteS 
+        // @TODO: Esperando servicio de cloudstudio -> cliente.telefonoFijo = clienteS 
+        // @TODO: Esperando servicio de cloudstudio -> cliente.telefonoMovil = clienteS 
+        // @TODO: Esperando servicio de cloudstudio -> cliente.telefonoTrabajo = clienteS 
+        // @TODO: Esperando servicio de cloudstudio -> cliente.tbQoReferenciaPersonals = clienteS
+        // @TODO: Esperando servicio de cloudstudio -> cliente.tbQoPatrimonios
+        // @TODO: Esperando servicio de cloudstudio -> cliente.tbQoIngresoEgresoClientes
+        // @TODO: Conectar a metodo de edad -> cliente.edad = clienteS
+        // @TODO: Esperando servicio de cloudstudio -> cliente.nacionalidad = clienteS
+      } else{
+        console.log("Error en la consulta de  cliente de softbank por lo siguiente: ");
+        console.log("Cliente en softbank --> identificacion: ", data.identificacion);
+        console.log("Cliente en softbank --> existeError: ", data.existeError);
+        console.log("Cliente en softbank --> mensaje: ", data.mensaje);
+        console.log("Cliente en softbank --> codigoServicio: ", data.codigoServicio);
+        console.log("Cliente en softbank --> validaciones: ", data.validaciones);
       }
+      this.loadingSubject.next( this.loadingSubject.getValue() ? false:false ); 
+      return (clienteS != null)? cliente:clienteS;
+    });
+  }
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @param   cedula string
+   * @returns TbQoCliente
+   */
+  private buscarEnCrm( cedula: string ): any{
+    this.loadingSubject.next(true);
+    let clienteC:  ProspectoCRM;  
+    this.crm.findClienteByCedulaCRM(cedula).subscribe((data: any)=>{
+      clienteC =  data.list === null? null: data.list[0];
+      let cliente = new TbQoCliente();
+      if(clienteC != null){
+        cliente.primerNombre = clienteC.firstName;
+        cliente.cedulaCliente = clienteC.cedulaC;
+        cliente.telefonoFijo = clienteC.phoneHome;
+        cliente.telefonoMovil = clienteC.phoneMobile;
+        cliente.telefonoAdicional = clienteC.phoneOther;
+        cliente.telefonoTrabajo = clienteC.phoneWork;
+        cliente.email = clienteC.emailAddress; 
+      } else{
+        console.log("Error en la consulta de Prospecto de CRM por lo siguiente: ");
+        console.log("Prospecto de CRM --> data: ", data);
+      }
+      this.loadingSubject.next( this.loadingSubject.getValue() ? false:false ); 
+      return (clienteC != null)? cliente:clienteC;
+    });
+  }
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @param   cedula string
+   * @returns TbQoCliente
+   */
+  private buscarEnEquifax( cedula: string ): any{
+    this.loadingSubject.next(true);
+    let clienteE :  PersonaCalculadora;  
+    let consulta = new PersonaConsulta();
+    consulta.identificacion = cedula;
+    this.ing.getInformacionPersonaCalculadora( consulta ).subscribe((data: any)=>{
+      clienteE =  (data.entidad.datoscliente === null)? null: data.entidad.datoscliente;
+      let cliente = new TbQoCliente();
+      if(clienteE != null){
+        cliente.fechaNacimiento = clienteE.fechanacimiento;
+        cliente.nacionalidad = (clienteE.nacionalidad === "EC")? "ECUADOR": null;
+        cliente.email = clienteE.correoelectronico;
+        cliente.relacionDependencia = (clienteE.relaciondependencia === "N")? "NO": (clienteE.relaciondependencia === "S")? "SI":null;
+        cliente.cargo = clienteE.cargo;
+        cliente.profesion = clienteE.profesion;
+        cliente.cargasFamiliares = clienteE.cargasfamiliares;
+      } else{
+        console.log("Error en la consulta de Persona en Equifax por lo siguiente: ");
+        console.log("Cliente en Equifax --> identificacion: ", data.entidad.identificacion);
+        console.log("Cliente en Equifax --> codigoError: ", data.entidad.codigoError);
+        console.log("Cliente en Equifax --> mensaje: ", data.entidad.mensaje);
+        console.log("Cliente en Equifax --> ejecucion: ", data.entidad.ejecucion);
+      }
+      this.loadingSubject.next( this.loadingSubject.getValue() ? false:false ); 
+      return (clienteE != null)? cliente:clienteE;
+    });
+  }
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @param   cliente TbQoCliente
+   * @returns boolean
+  */
+  private guardarProspectoEnCrm( cliente: TbQoCliente): any{
+    this.loadingSubject.next(true);
+    const prospecto = new GuardarProspectoCRM();
+    prospecto.cedulaC = cliente.cedulaCliente;
+      prospecto.firstName = cliente.primerNombre;
+      prospecto.phoneHome = cliente.telefonoFijo;
+      prospecto.phoneMobile = cliente.telefonoMovil;
+      prospecto.leadSourceDescription = 'GESTION QUSKI';
+      prospecto.emailAddress = cliente.email;
+      prospecto.emailAddressCaps = cliente.email.toUpperCase();
+      this.crm.guardarProspectoCRM( prospecto ).subscribe((data: any)=>{
+        this.loadingSubject.next( this.loadingSubject.getValue() ? false:false ); 
+        return (data.entidades != null)? true: false;
+      }, error => {
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNotSer.setNotice(b.msgError, 'error');
+        this.loadingSubject.next(false);
+      } else {
+        this.sinNotSer.setNotice('ERROR EN CORE INTERNO CLIENTE, ERROR DESCONOCIDO', 'error');
+      }
+      return false;
+    });
+  }
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @param   cliente TbQoCliente
+   * @returns TbQoCliente
+   * @returns null
+  */
+  private guardarClienteEnCore( cliente: TbQoCliente): any{
+    this.loadingSubject.next(true);
+    this.cli.persistEntity(cliente).subscribe((data: any) => {
+      this.loadingSubject.next( this.loadingSubject.getValue() ? false:false ); 
+      return (data.entidad != null)? data.entidad: null;
+    }, error => {
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNotSer.setNotice(b.msgError, 'error');
+        this.loadingSubject.next(false);
+      } else {
+        this.sinNotSer.setNotice('ERROR GUARDANDO CLIENTE EN CORE INTERNO', 'error');
+      }
+      return null;
+    });
+  }
+
+
+
+  /** ********************************************* @POPUP ********************* **/
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @param   cedula string
+  */
+  private solicitarAutorizacion(cedula: string) {
+    const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
+      width: '600px',
+      height: 'auto',
+      data: cedula
+    });
+    dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
+      console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
+      // @TODO: Conectar al flujo de busqueda.
+      (respuesta !== null && respuesta !== undefined)? this.buscarEnCrm(cedula):(
+        this.sinNotSer.setNotice('BUSQUEDA CANCELADA', 'error'),
+        this.limpiarCamposBusqueda()
+      );
+    });
+  }
+  /** ********************************************* @FUNCIONALIDAD ********************* **/
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+  */
+  private limpiarCamposBusqueda() {
+    Object.keys(this.formBusqueda.controls).forEach((name) => {
+      const control = this.formDatosCliente.controls[name];
+      control.reset();
+      control.setErrors(null);
+      control.setValue(null);
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  private consultaCatalogos() {
+    this.loadingSubject.next(true);
+    this.sof.consultarEducacionCS().subscribe((data: any) => {
+      this.catEducacion = data.existeError ? data.catalogo : "Error al cargar catalogo";
+      this.loadingSubject.next(this.loadingSubject.getValue() ? false:false); 
     });
   }
   inicioDeFlujo() {
@@ -175,10 +394,10 @@ displayedColumnsRiesgoAcumulado = ['NumeroOperacion', 'TipoOferta', 'Vencimiento
       if (json.params.id) {
         this.cot.getEntity(json.params.id).subscribe( (data : any) =>{
           if (data.entidad) {
-            this.entidadCotizador = data.entidad;
+            this.entidadNegociacion = data.entidad;
             //this.capturaHoraInicio();
             // @todo
-            this.buscarCliente( this.entidadCotizador.tbQoCliente.cedulaCliente );
+            // this.buscarCliente( this.entidadNegociacion.tbQoCliente.cedulaCliente );
           }
         }, error => {
           let mensaje = "ERROR DESCONOCIDO AL CARGAR DATOS DE LA COTIZACION";
@@ -190,10 +409,10 @@ displayedColumnsRiesgoAcumulado = ['NumeroOperacion', 'TipoOferta', 'Vencimiento
       }
     });
   }
-    /**
+  /**
    * @author Jeroham Cadenas - Developer Twelve
    * @param mensaje Mensaje del componente
-   */
+  */
   salirDeGestion( mensaje : string ){
     const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
       width: "auto-max",
@@ -204,147 +423,11 @@ displayedColumnsRiesgoAcumulado = ['NumeroOperacion', 'TipoOferta', 'Vencimiento
         this.router.navigate(['dashboard', ""]);  
     });
   }
-  /**
-   * busquedaSoftbank
-   */
-  public busquedaSoftbank(cedula: string) {
-    let consulta = new ConsultaCliente();
-    consulta.identificacion = cedula; 
-    this.loadingSubject.next(true);
-    this.sof.consultarClienteCS( consulta ).subscribe(( data: any )=>{
-      if(!data.existeError && data.identificacion != null){
-      }else{
-        this.entidadClientesoftbank = null;
-      }
-    });
-  }
-/*   public busquedaCliente(){
-    this.busquedaSofftbank();
-  } */
-  /**
-   * 
-   */
-  public buscarCliente( cedula: string ) {
-    if (cedula != null ) {
-      
-    } else {
-      if (this.identificacion.value) { 
-        this.loadingSubject.next(true);
-        let consulta = new ConsultaCliente();
-        consulta.identificacion = this.identificacion.value;
-        
-        this.sof.consultarClienteCS(consulta).subscribe((data: any) => {
-          if (data.idCliente != 0) {
-            this.entidadClientesoftbank = new ClienteSoftbank();
-            this.entidadClientesoftbank = data;
-            this.inicioDeGestion(this.entidadClientesoftbank.identificacion);
 
-          } else {
-            // this.solicitarAutorizacion(consulta.identificacion); 
-            // @todo
-          }
-        });
-      } else {
-        this.sinNoticeService.setNotice('PRO FAVOR INGRESE UNA CEDULA VALIDA', 'error');
-      }
-    }
-    
-  }
-  private inicioDeGestion(cedula: string) {
-    this.cli.findClienteByIdentificacion(cedula).subscribe((data: any) => {
-      if (data) {
-        let cliente = new TbQoCliente();
-        if (this.entidadClientesoftbank.esMasculino) {
-          cliente.genero = GeneroEnum.MASCULINO;
-        } else {
-          cliente.genero = GeneroEnum.FEMENINO;
-        }
-        this.catEducacion.forEach(element => {
-          if (this.entidadClientesoftbank.codigoEducacion == element.codigo) {
-            cliente.nivelEducacion = element.nombre;
-          }
-        });
-        // cliente.nacionalidad = this.entidadClientesoftbank.idPaisNacimiento 
-        if (data.entidad && data.entidad.id != null) {
-          cliente.id = data.entidad.id;
-        }
-        cliente.apellidoMaterno = this.entidadClientesoftbank.segundoApellido;
-        cliente.apellidoPaterno = this.entidadClientesoftbank.primerApellido;
-        cliente.cargasFamiliares = this.entidadClientesoftbank.numeroCargasFamiliares;
-        cliente.cedulaCliente = this.entidadClientesoftbank.identificacion;
-        cliente.email = this.entidadClientesoftbank.email;
-        cliente.fechaNacimiento = this.entidadClientesoftbank.fechaNacimiento;
-        cliente.primerNombre = this.entidadClientesoftbank.primerNombre;
-        cliente.segundoNombre = this.entidadClientesoftbank.segundoNombre;
-        console.log('2.- VALOR DEL CLIENTE CRM findClienteByCedulaCRM ==> ', JSON.stringify(cliente));
-        this.guardarClienteCore(cliente);
-      } else {
-        this.sinNoticeService.setNotice('ERROR EN CORE INTERNO', 'error');
-      }
-    });
-  }
-  private guardarClienteCore(cliente: TbQoCliente) {
-    this.cli.persistEntity(cliente).subscribe((data: any) => {
-      if (data.entidad) {
-        this.entidadCliente = data.entidad;
-        let personaConsulta = new PersonaConsulta();
-        personaConsulta.identificacion = this.entidadCliente.cedulaCliente;
-        this.loadingSubject.next(false);
-        this.llamarEquifax(personaConsulta);
-      } else {
-        this.loadingSubject.next(false);
+ 
+ 
+  
 
-        this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CLIENTE', 'error');
-      }
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-        this.loadingSubject.next(false);
-
-      } else {
-        this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CLIENTE, ERROR DESCONOCIDO', 'error');
-      }
-    });
-  }
-  private llamarEquifax(personaConsulta: PersonaConsulta) {
-    let consulta = new ConsultaCliente();
-    consulta.identificacion = personaConsulta.identificacion;
-    this.ing.getInformacionPersonaCalculadora(personaConsulta).subscribe((data: any) => {
-      this.loadingSubject.next(true);
-      if (this.entidadProspectoCRM != null) {
-        if (data.entidad.datoscliente) {
-          this.entidadPersonaCalculadora = data.entidad.datoscliente;
-          this.entidadCliente.fechaNacimiento = this.entidadPersonaCalculadora.fechanacimiento;
-          this.entidadCliente.nacionalidad = this.entidadPersonaCalculadora.nacionalidad;
-          this.entidadCliente.genero = this.entidadPersonaCalculadora.genero;
-          this.entidadCliente.campania = this.entidadPersonaCalculadora.codigocampania.toString();
-
-          if (this.entidadCliente.email == null) {
-            this.entidadCliente.email = this.entidadPersonaCalculadora.correoelectronico;
-          }
-          if (this.entidadCliente.telefonoFijo == null) {
-            this.entidadCliente.telefonoFijo = this.entidadPersonaCalculadora.telefonofijo;
-          }
-          if (this.entidadCliente.telefonoMovil == null) {
-            this.entidadCliente.telefonoMovil = this.entidadPersonaCalculadora.telefonomovil;
-          }
-          this.actualizarCliente(this.entidadCliente);
-        }
-      } else if (this.entidadProspectoCRM == null && this.entidadClientesoftbank == null) {
-        this.entidadPersonaCalculadora = data.entidad.datoscliente;
-        this.entidadCliente.fechaNacimiento = this.entidadPersonaCalculadora.fechanacimiento;
-        this.entidadCliente.nacionalidad = this.entidadPersonaCalculadora.nacionalidad;
-        this.entidadCliente.genero = this.entidadPersonaCalculadora.genero;
-        this.entidadCliente.email = this.entidadPersonaCalculadora.correoelectronico;
-        this.entidadCliente.telefonoMovil = this.entidadPersonaCalculadora.telefonomovil;
-        this.entidadCliente.telefonoFijo = this.entidadPersonaCalculadora.telefonofijo;
-        this.entidadCliente.campania = this.entidadPersonaCalculadora.codigocampania.toString();
-        this.actualizarCliente(this.entidadCliente);
-      }
-        this.setearValores();
-    });
-  }
   private setearValores() {
     this.loadingSubject.next(true);
     if (this.entidadClientesoftbank == null) {
@@ -378,17 +461,18 @@ displayedColumnsRiesgoAcumulado = ['NumeroOperacion', 'TipoOferta', 'Vencimiento
       if (data.entidad) {
         this.entidadCliente = data.entidad;
       } else {
-        this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CLIENTE, NO SE ACTUALIZO CLIENTE', 'error');
+        this.sinNotSer.setNotice('ERROR EN CORE INTERNO CLIENTE, NO SE ACTUALIZO CLIENTE', 'error');
       }
     }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
+        this.sinNotSer.setNotice(b.msgError, 'error');
       } else {
-        this.sinNoticeService.setNotice('ERROR EN CORE INTERNO CLIENTE, ERROR DESCONOCIDO', 'error');
+        this.sinNotSer.setNotice('ERROR EN CORE INTERNO CLIENTE, ERROR DESCONOCIDO', 'error');
       }
     });
   }
+  
 
 
 
@@ -426,12 +510,12 @@ displayedColumnsRiesgoAcumulado = ['NumeroOperacion', 'TipoOferta', 'Vencimiento
 
   ///Validaciones de errores
 getErrorMessage(pfield: string) {
-  const errorRequerido = 'Ingresar valores';
-  const errorNumero = 'Ingreso solo numeros';
-  let maximo = "El maximo de caracteres es: ";
+  const errorRequerido        = 'Ingresar valores';
+  const errorNumero           = 'Ingresar solo numeros';
+  const maximo                = "El maximo de caracteres es: ";
   const invalidIdentification = 'La identificacion no es valida';
-  const errorLogitudExedida = 'La longitud sobrepasa el limite';
-  const errorInsuficiente = 'La longitud es insuficiente';
+  const errorLogitudExedida   = 'La longitud sobrepasa el limite';
+  const errorInsuficiente     = 'La longitud es insuficiente';
   if (pfield && pfield === "identificacion") {
     const input = this.formBusqueda.get("identificacion");
     return input.hasError("required")
@@ -463,7 +547,7 @@ getErrorMessage(pfield: string) {
   }
   
   if (pfield && pfield === 'telefonoDomicilio') {
-    const input = this.formCliente.get('telefonoDomicilio');
+    const input = this.formDatosCliente.get('telefonoDomicilio');
     return input.hasError('required')
       ? errorRequerido
       : input.hasError('pattern')
@@ -522,17 +606,16 @@ numberOnly(event): boolean {
   }
 
   getPublicidades() {
-    this.sp.findByNombreTipoOrdered("", "PUB", "Y").subscribe((wrapper: any) => {
-      //console.log("retornos "+ JSON.stringify(wrapper)  );
+    this.par.findByNombreTipoOrdered("", "PUB", "Y").subscribe((wrapper: any) => {
       if (wrapper && wrapper.entidades) {
-        this.listPublicidad = wrapper.entidades;
+        this.catPublicidad = wrapper.entidades;
       }
     }, error => {
       if (error.error) {
         if (error.error.codError) {
-          this.sinNoticeService.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
+          this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
         } else {
-          this.sinNoticeService.setNotice("Error al cargar parametros de publicidad", 'error');
+          this.sinNotSer.setNotice("Error al cargar parametros de publicidad", 'error');
         }
       } else if (error.statusText && error.status == 401) {
         this.dialog.open(AuthDialogComponent, {
@@ -541,7 +624,7 @@ numberOnly(event): boolean {
           }
         });
       } else {
-        this.sinNoticeService.setNotice("Error al cargar publicidades", 'error');
+        this.sinNotSer.setNotice("Error al cargar publicidades", 'error');
       }
     });
   }
@@ -580,7 +663,7 @@ numberOnly(event): boolean {
     if (fechaSeleccionada) {
       this.getDiffFechas(fechaSeleccionada, "dd/MM/yyy");
     } else {
-      this.sinNoticeService.setNotice(
+      this.sinNotSer.setNotice(
         "El valor de la fecha es nulo",
         "warning"
       );
@@ -592,7 +675,7 @@ numberOnly(event): boolean {
   getDiffFechas(fecha: Date, format: string) {
     this.loadingSubject.next(true);
     const convertFechas = new RelativeDateAdapter();
-    this.sp
+    this.par
       .getDiffBetweenDateInicioActual(
         convertFechas.format(fecha, "input"),
         format
@@ -614,9 +697,9 @@ numberOnly(event): boolean {
         error => {
           if (JSON.stringify(error).indexOf("codError") > 0) {
             const b = error.error;
-            this.sinNoticeService.setNotice(b.msgError, "error");
+            this.sinNotSer.setNotice(b.msgError, "error");
           } else {
-            this.sinNoticeService.setNotice(
+            this.sinNotSer.setNotice(
               "Error obtener diferencia de fechas",
               "error"
             );
@@ -668,9 +751,9 @@ numberOnly(event): boolean {
           this.email.setValue(data.entidad.datoscliente.email);
           this.campania.setValue(data.entidad.datoscliente.codigocampania);
           this.loadingSubject.next(false);
-          this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE CALCULADORA QUSKI", 'success');
+          this.sinNotSer.setNotice("INFORMACION CARGADA CORRECTAMENTE CALCULADORA QUSKI", 'success');
         } else {
-              this.sinNoticeService.setNotice("USUARIO NO REGISTRADO ", 'error');
+              this.sinNotSer.setNotice("USUARIO NO REGISTRADO ", 'error');
               this.seleccionarEditar();
             }
           
@@ -699,18 +782,18 @@ numberOnly(event): boolean {
     this.cadena =this.email.value;
     this.cadena1 = this.cadena.toUpperCase();
     this.clienteCRM.emailAddressCaps=this.cadena1;
-    this.sinNoticeService.setNotice("REGISTRO CORRECTO DEL PROSPECTO", 'success');
+    this.sinNotSer.setNotice("REGISTRO CORRECTO DEL PROSPECTO", 'success');
     this.cs.guardarProspectoCRM(this.clienteCRM).subscribe((data: any) => {
     console.log("datos de envio: " + JSON.stringify(this.clienteCRM));
   }, error => {
     console.log("error al guardar el cliente en el CRM: " + error);
     console.log("------------manageurl errorsss : " + JSON.stringify(error));
-    this.sinNoticeService.setNotice("NO SE PUEDE GUARDAR", 'error');
+    this.sinNotSer.setNotice("NO SE PUEDE GUARDAR", 'error');
     //  this.loadingSubject.next(false);
   });
 }  
   else{
-    this.sinNoticeService.setNotice("DEBE COMPLETAR LA INFORMACION ", 'error');
+    this.sinNotSer.setNotice("DEBE COMPLETAR LA INFORMACION ", 'error');
   }
 
   } */
