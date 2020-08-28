@@ -1736,7 +1736,7 @@ export class GestionClienteComponent implements OnInit {
                       clienteSoftBank.activos = Number (this.activo)
                       clienteSoftBank.pasivos
                       clienteSoftBank.ingresos
-                      clienteSoftBank.egresos
+                      clienteSoftBank.egresos = Number(this.totalValorIngresoEgreso)
                       
                       if(this.situacion =='EN PROCESO' && respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos == 1){
                         console.log("tiene q navegar al generar credito ");
