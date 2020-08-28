@@ -27,11 +27,13 @@ export class ClienteService extends BaseService {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
-  public crearClienteConRelaciones(cliente: TbQoCliente) {
+  public crearClienteConRelaciones(cliente: TbQoCliente, idNegociacion) {
+    this.params = new HttpParams().set('idNegociacion', idNegociacion);
+    this.options = { headers: this.headers, params: this.params };
     const serviceUrl =
       this.appResourcesUrl + 'clienteRestController/crearCliente';
     const wrapper = { entidad: cliente };
-    this.options = { headers: this.headers };
+    this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
 
