@@ -1749,7 +1749,10 @@ export class GestionClienteComponent implements OnInit {
           const cant = this.bCantons.find(c => c.id == parro.idPadre) || {};
           const pro = this.bprovinces.find(p => p.id == cant.idPadre) || {};
 
-          return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, idParroquia: parro.id, idCanton: cant.id, idProvincia: pro.id };
+          return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, idParroquia: parro.id, idCanton: cant.id, idProvincia: pro.id, 
+                  parroquia: parro.nombre,
+                  canton:cant.nombre,
+                  provincia:pro.nombre};
         }
         );
         this.uubicacion = ubicacion;
@@ -2340,9 +2343,10 @@ export class GestionClienteComponent implements OnInit {
       this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS PERSONALES DEL CLIENTE", 'error');
       return;
     }
-
+    
     if (this.formDatosContacto.valid) {
       if (this.formDatosDireccionDomicilio.valid) {
+        console.log(" >>>>>>>> "+ this.formDatosDireccionDomicilio)
         if (this.formDatosDireccionLaboral.valid) {
           if (this.formDatosEconomicos.valid) {
             if (this.dataSourceIngresoEgreso.data.length > 0) {
@@ -2368,7 +2372,7 @@ export class GestionClienteComponent implements OnInit {
                   this.cliente.estadoCivil = this.estadoCivil.value.toUpperCase();
                   this.cliente.fechaNacimiento = this.fechaNacimiento.value;
                   this.cliente.genero = this.genero.value.toUpperCase();
-                  this.cliente.lugarNacimiento = this.lugarNacimiento.value.toUpperCase();
+                  this.cliente.lugarNacimiento = this.lugarNacimiento.value;
                   this.cliente.nacionalidad = this.nacionalidad.value.toUpperCase();
                   this.cliente.nivelEducacion = this.nivelEducacion.value.toUpperCase();
                   this.cliente.nombreEmpresa = this.actividadEmpresa.value.toUpperCase();
