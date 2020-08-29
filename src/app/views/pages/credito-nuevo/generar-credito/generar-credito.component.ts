@@ -475,7 +475,7 @@ generarCredito(){
   this.operacion.nombreCliente =  this.tbQoCliente.primerNombre.concat(" ",
   this.tbQoCliente.apellidoMaterno == null ? "" : this.tbQoCliente.apellidoMaterno, 
    " ",this.tbQoCliente.apellidoPaterno," ",this.tbQoCliente.segundoApellido== null ? "" : this.tbQoCliente.segundoApellido)
-  this.operacion.fechaNacimientoCliente = this.tbQoCliente.fechaNacimiento
+  //this.operacion.fechaNacimientoCliente = this.tbQoCliente.fechaNacimiento
   console.log( new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate()).toString())
   this.operacion.fechaEfectiva = diferenciaEnDias.convertirFechaAString(new Date())
  
@@ -483,19 +483,19 @@ generarCredito(){
   this.operacion.codigoTablaAmortizacionQuski = "A107";
   this.operacion.codigoTipoCarteraQuski = "MO3";
   this.operacion.codigoTipoPrestamo = "001";
-  this.operacion.cupoPrestamo = 0.0;
-  this.operacion.montoSolicitado = Number(this.tbCreditoNegociacion.montoPreaprobado);
+  //this.operacion.cupoPrestamo = 0.0;
+  //this.operacion.montoSolicitado = Number(this.tbCreditoNegociacion.montoPreaprobado);
   this.operacion.pagoDia = 24;
-  this.operacion.datosCaptacion = null;
-  this.operacion.datosEmision = null;
+  //this.operacion.datosCaptacion = null;
+  //this.operacion.datosEmision = null;
   let datos = new DatosImpCom();
   datos.codigo = "L";
-  datos.formaPago = "C";
-  datos.tasa = 0.5;
+  //datos.formaPago = "C";
+  //datos.tasa = 0.5;
   datos.valor = 0.0;
   this.operacion.datosImpCom.push( datos );
-  this.operacion.datosReferencia = null;
-  this.operacion.datosCuentaDebito = null;
+  //this.operacion.datosReferencia = null;
+  //this.operacion.datosCuentaDebito = null;
   /////////////////
 
 
@@ -539,7 +539,7 @@ generarCredito(){
 
 
 generarCreditoMontoSugerido(){
-  this.operacion.montoSolicitado = this.montoSolicitado.value
+  //this.operacion.montoSolicitado = this.montoSolicitado.value
   this.css.operacionCrearCS( this.operacion ).subscribe( data =>{
     if (data) {
       console.log("data de operacionCrearCS ----->" + JSON.stringify(data));
