@@ -107,6 +107,7 @@ import { TablaRiesgoAcumuladoComponent } from './custom/secciones-generales/tabl
 import { TablaVariablesCrediticiasComponent } from './custom/secciones-generales/tabla-variables-crediticias/tabla-variables-crediticias.component';
 import { TablaOfertaCalculadoraComponent } from './custom/secciones-generales/tabla-oferta-calculadora/tabla-oferta-calculadora.component';
 import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesgo-acumulado.component';
+import { TablaOfertaCreditoComponent } from './custom/secciones-generales/tabla-oferta-credito/tabla-oferta-credito.component';
 import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.component';
 
 
@@ -168,8 +169,10 @@ import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.
 		TablaDetalleCreditoComponent,
 		TablaVariablesCrediticiasComponent,
 		TablaOfertaCalculadoraComponent,
+		TablaOfertaCreditoComponent,
 		TablaRiesgoAcumuladoComponent,
 		RiesgoAcumuladoComponent,
+		TablaOfertaCreditoComponent,
 		MensajeEdadComponent
 
 	],
@@ -188,6 +191,7 @@ import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.
 		TablaVariablesCrediticiasComponent,
 		TablaOfertaCalculadoraComponent,
 		TablaRiesgoAcumuladoComponent,
+		TablaOfertaCreditoComponent,
 		MensajeEdadComponent,
 
 		// topbar components
@@ -288,6 +292,7 @@ import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.
 		TablaVariablesCrediticiasComponent,
 		TablaOfertaCalculadoraComponent,
 		TablaRiesgoAcumuladoComponent,
+		TablaOfertaCreditoComponent
 
 	]
 })

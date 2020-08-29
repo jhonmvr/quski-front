@@ -48,6 +48,8 @@ import { CreditoNuevoComponent } from './credito-nuevo.component';
 
 import { PartialsModule } from '../../partials/partials.module';
 import { GenerarCreditoComponent } from './generar-credito/generar-credito.component';
+import { GestionCreditoComponent } from './gestion-credito/gestion-credito.component';
+import { ListCreditoComponent } from './list-credito/list-credito.component';
 
 
 
@@ -68,11 +70,20 @@ const routes: Routes = [
 				component: GenerarCreditoComponent
 			},
 
+			{
+				path: 'lista-credito',
+				component: ListCreditoComponent
+			},
+			{
+				path: 'gestion-credito',
+				component: GestionCreditoComponent
+			},
+
 		]
 	}
 ];
 @NgModule({
-  declarations: [CreditoNuevoComponent, GenerarCreditoComponent],
+  declarations: [CreditoNuevoComponent, GenerarCreditoComponent, GestionCreditoComponent, ListCreditoComponent],
   
   imports: [
 	CommonModule,
