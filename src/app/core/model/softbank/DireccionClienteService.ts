@@ -1,14 +1,14 @@
 export class DireccionClienteService{
 
     id: number                                  //0, 
-    codigoTipoDireccion: string                 //"123", 
-    codigoVivienda: string                      //123, 
-    codigoSectorVivienda: string                //123, 
-    idUbicacion: number                         //123456, 
-    callePrincipal: string                      //puna, 
-    calleSecundaria: string                     //mexico, 
+    codigoTipoDireccion: string                 //"", 
+    codigoVivienda: string                      //" ", 
+    codigoSectorVivienda: string                //" ", 
+    idUbicacion: number                         //" ", 
+    callePrincipal: string                      //" ", 
+    calleSecundaria: string                     //" ", 
     numero: string                              //255, 
-    referencia: string                          //estadio, 
+    referencia: string                          //" ", 
     esDireccionLegal: boolean                   //false, 
     esDireccionEnvio: boolean                   //false, 
     activo: boolean                             //false 

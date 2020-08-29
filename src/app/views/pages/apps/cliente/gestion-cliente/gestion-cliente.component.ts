@@ -1713,30 +1713,30 @@ export class GestionClienteComponent implements OnInit {
                       let clienteSoftBank = new ClienteSoftbank();
                       this.cs.crearClienSoftBank(clienteSoftBank);
                       clienteSoftBank.nombreCompleto
-                      clienteSoftBank.primerNombre = String(this.primerNombre)
-                      clienteSoftBank.segundoApellido
-                      clienteSoftBank.primerApellido
-                      clienteSoftBank.segundoApellido
-                      clienteSoftBank.idPaisNacimiento
-                      clienteSoftBank.idLugarNacimiento
-                      //clienteSoftBank.actividadEconomica.idActividadEconomica = Number(this.cliente.actividadEconomica)
-                      clienteSoftBank.fechaNacimiento
-                      clienteSoftBank.codigoSexo
-                      clienteSoftBank.codigoProfesion
-                      clienteSoftBank.codigoEstadoCivil
-                      //clienteSoftBank.codigoEducacion = this.nivelEducacion
-                      clienteSoftBank.numeroCargasFamiliares
-                      clienteSoftBank.email
-                      clienteSoftBank.codigoUsuarioAsesor
-                      clienteSoftBank.direcciones
-                      clienteSoftBank.telefonos
-                      clienteSoftBank.cuentasBancariasCliente
-                      clienteSoftBank.contactosCliente
-                      clienteSoftBank.datosTrabajoCliente  
-                      clienteSoftBank.activos = Number (this.activo)
-                      clienteSoftBank.pasivos
-                      clienteSoftBank.ingresos
-                      clienteSoftBank.egresos = Number(this.totalValorIngresoEgreso)
+                      clienteSoftBank.primerNombre = this.primerNombre.value
+                      clienteSoftBank.segundoNombre = this.segundoNombre.value
+                      clienteSoftBank.primerApellido= this.apellidoPaterno.value
+                      clienteSoftBank.segundoApellido = this.apellidoMaterno.value
+                      clienteSoftBank.idPaisNacimiento = this.nacionalidad.value
+                      clienteSoftBank.idLugarNacimiento = this.lugarNacimiento.value
+                      clienteSoftBank.actividadEconomica.idActividadEconomica = Number(this.cliente.actividadEconomica)
+                      clienteSoftBank.fechaNacimiento = this.fechaNacimiento.value
+                      clienteSoftBank.codigoSexo = this.genero.value
+                      clienteSoftBank.codigoProfesion = this.profesion.value
+                      clienteSoftBank.codigoEstadoCivil = this.estadoCivil.value
+                      clienteSoftBank.codigoEducacion = this.nivelEducacion.value
+                      clienteSoftBank.numeroCargasFamiliares = this.cargaFamiliar.value
+                      clienteSoftBank.email = this.email.value
+                      //clienteSoftBank.codigoUsuarioAsesor 
+                      //clienteSoftBank.direcciones = this.direccionDomicilio
+                      //clienteSoftBank.telefonos = this.telefonoFijo.valueChanges
+                      //clienteSoftBank.cuentasBancariasCliente
+                      //clienteSoftBank.contactosCliente = this.referencia
+                      clienteSoftBank.datosTrabajoCliente = this.referenciaUbicacionO.value  
+                      clienteSoftBank.activos = this.activo.value
+                      clienteSoftBank.pasivos = this.pasivo.value
+                      //clienteSoftBank.ingresos = this.ingresoEgresoGuardado.esIngreso.values
+                      //clienteSoftBank.egresos = this.totalValorIngresoEgreso.valueOf
                       
                       if(this.situacion =='EN PROCESO' && respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos == 1){
                         console.log("tiene q navegar al generar credito ");
