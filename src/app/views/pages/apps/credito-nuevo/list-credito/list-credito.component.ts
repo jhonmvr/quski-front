@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { Page } from '../../../../core/model/page';
+import { Page } from '../../../../../core/model/page';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
-import { CreditoNegociacionService } from '../../../../core/services/quski/credito.negociacion.service';
-import { ReNoticeService } from '../../../../core/services/re-notice.service';
-import { SubheaderService } from '../../../../core/_base/layout';
-import { AuthDialogComponent } from '../../../../views/partials/custom/auth-dialog/auth-dialog.component';
-import { TbMiCliente } from '../../../../core/model/quski/TbMiCliente';
-import { ClienteService } from '../../../../core/services/quski/cliente.service';
+import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { SubheaderService } from '../../../../../core/_base/layout';
+import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
+import { TbMiCliente } from '../../../../../core/model/quski/TbMiCliente';
+import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 
 @Component({
   selector: 'kt-list-credito',

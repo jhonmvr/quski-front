@@ -46,7 +46,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 import { CreditoNuevoComponent } from './credito-nuevo.component';
 
 
-import { PartialsModule } from '../../partials/partials.module';
+import { PartialsModule } from '../../../partials/partials.module';
 import { GenerarCreditoComponent } from './generar-credito/generar-credito.component';
 import { GestionCreditoComponent } from './gestion-credito/gestion-credito.component';
 import { ListCreditoComponent } from './list-credito/list-credito.component';
