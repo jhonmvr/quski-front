@@ -17,6 +17,7 @@ export class TablaOfertaCalculadoraComponent implements OnInit {
   private entidadesOpciones: Array<OpcionesDeCredito>;
   // TABLA DE CREDITO
   displayedColumnsOpcionesDeCredito = ['plazo','periodoPlazo','montoFinanciado', 'valorARecibir', 'totalGastosNuevaOperacion','costoCustodia', 'costoTransporte', 'costoValoracion', 'costoTasacion', 'costoSeguro', 'costoCustodia', 'impuestoSolca', 'valorAPagar'];
+  displayedColumnsOpcionesDeCreditoAccion = ['accion', 'plazo','periodoPlazo','montoFinanciado', 'valorARecibir', 'totalGastosNuevaOperacion','costoCustodia', 'costoTransporte', 'costoValoracion', 'costoTasacion', 'costoSeguro', 'costoCustodia', 'impuestoSolca', 'valorAPagar'];
   dataSourceOpcionesDeCredito = new MatTableDataSource<OpcionesDeCredito>();
   constructor(
     private cal: IntegracionService
@@ -26,6 +27,7 @@ export class TablaOfertaCalculadoraComponent implements OnInit {
     this.iniciaBusqueda( this.consulta );
   }
   private iniciaBusqueda( consulta : ConsultaOferta ){
+    console.log("Consulta", this.consulta)
     if ( consulta != null ) {
       this.cal.getInformacionOferta( consulta ).subscribe( (data: any) =>{
         if (data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion != null) {

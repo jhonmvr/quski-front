@@ -1,12 +1,16 @@
+import { TelefonosContactoCliente } from './TelefonosContactoCliente'
 
 export class ContactosCliente  {
-  nombres: string;              // John
-  apellidos: string;            // Doe
-  direccion: string;            // Av Siempre Viva 742
-  telefono: string;             // 0000000000
-  codigoTipoReferencia: string; // 000
-  telefonoCelular: string;      // 9999999999
-  activo: Boolean;              // true
+  
+    id: number                            //16104,
+    codigoTipoReferencia: string          //000,
+    nombres: string                       //JOHN,
+    apellidos: string                     //DOE,
+    direccion: string                     //AV SIEMPRE VIVA 742,
+    telefonos: TelefonosContactoCliente []
+    activo: boolean                       //true
+
   constructor(){
+    this.telefonos = new Array<TelefonosContactoCliente>()
   }
 }

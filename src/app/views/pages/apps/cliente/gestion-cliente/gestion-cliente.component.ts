@@ -26,6 +26,7 @@ import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { PaisesEnum } from '../../../../../core/enum/PaisesEnum';
+import { ParroquiaService } from '../../../../../core/services/quski/parroquia.service';
 import { Parroquia } from '../../../../../core/model/quski/Parroquia';
 import { TbQoIngresoEgresoCliente } from '../../../../../core/model/quski/TbQoIngresoEgresoCliente';
 import { DireccionClienteService } from '../../../../../core/services/quski/direccion-cliente.service';
@@ -36,6 +37,7 @@ import { ParaDesarrolloEnum } from '../../../../../core/enum/ParaDesarrolloEnum'
 import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
+
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
 import { ReferenciaParentescoEnum } from '../../../../../core/enum/ReferenciaParentescoEnum';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
@@ -44,7 +46,7 @@ import { CrearCliente } from '../../../../../core/model/softbank/CrearCliente';
 import { ActividadEconomicaCliente } from '../../../../../core/model/softbank/ActividadEconomicaCliente';
 import { ContactosCliente } from '../../../../../core/model/softbank/ContactosCliente';
 import { CuentasBancariasCliente } from '../../../../../core/model/softbank/CuentasBancariasCliente';
-import { TelefonoCliente } from '../../../../../core/model/softbank/TelefonoCliente';
+import { TelefonosCliente } from '../../../../../core/model/softbank/TelefonosCliente';
 import { EditarCliente } from '../../../../../core/model/softbank/EditarCliente';
 import { SimulacionPrecancelacion } from '../../../../../core/model/softbank/SimulacionPrecancelacion';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
@@ -58,7 +60,8 @@ import { DatosImpCom } from '../../../../../core/model/softbank/DatosImpCom';
 import { ConsultaSolca } from '../../../../../core/model/softbank/ConsultaSolca';
 import { map, startWith } from 'rxjs/operators';
 import { environment } from '../../../../../../../src/environments/environment';
-import { TbQoNegociacion } from '../../../../../../../src/app/core/model/quski/TbQoNegociacion';
+import { ClienteSoftbank } from '../../../../../core/model/softbank/ClienteSoftbank';
+//import { TbQoNegociacion } from '../../../../../../../src/app/core/model/quski/TbQoNegociacion';
 
 
 
@@ -74,7 +77,7 @@ export interface User {
 })
 export class GestionClienteComponent implements OnInit {
   [x: string]: any;
-  private entidadNegociacion: TbQoNegociacion;
+  //private entidadNegociacion: TbQoNegociacion;
   public date;
 
 
@@ -456,7 +459,6 @@ export class GestionClienteComponent implements OnInit {
             this.cs.findClienteByIdentificacion(this.id).subscribe((data: any) => {
               this.loadingSubject.next(false);
               if (data.entidad) {
-
 
                 this.id = data.entidad.id;
                 this.nombresCompletos.setValue(data.entidad.primerNombre + ' ' + data.entidad.segundoNombre
@@ -1219,19 +1221,66 @@ export class GestionClienteComponent implements OnInit {
   /**
    * 
    */
-  implementacionServiciosSoftbankTEST(){
-    this.testConsultarClienteCS(); 
+  implementacionServiciosSoftbankTEST() {
+
+    //Cliente
+    //this.testConsultarClienteCS();
+    //this.testConsultarDireccionesTelefonosClienteCS(); 
+    //this.testConsultarIngresosEgresosClienteCS(); 
+    //this.testConsultarReferenciasClienteCS(); 
+    //this.testCrearClienteCS();  
+    //this.testEditarClienteCS(); 
+
+
+    //Catalogo
     this.testConsultarDivicionPoliticaCS();
+    //this.testConsultarAgenciasCS(); 
+    //this.testConsultarAsesoresCS();
+    //this.testConsultarActividadEconomicaCS(); 
+    //this.testConsultarEducacionCS(); 
+    //this.testConsultarRubroPrestamosCS(); 
+    //this.testConsultarSectorViviendaCS(); 
+    //this.testConsultarEstadosCivilesCS(); 
+    //this.testConsultarViviendaCS(); 
+    //this.testConsultarProfesionesCS(); 
+    //this.testConsultarTipoIdentificacionCS(); 
+    //this.testConsultarBancosCS(); 
+    //this.testConsultarTipoReferenciaCS(); 
+    //this.testConsultarTipoPrestamosCS(); 
+    //this.testConsultarTipoCarteraCS(); 
+    //this.testConsultarTablaAmortizacionCS(); 
+    //this.testConsultarDivicionPoliticaConsolidadaCS(); 
+
+    // Prestamo
+    //this.testConsultaTablaAmortizacionOperacionAprobadaCS(); 
+    //this.testSimularPrecancelacionCS(); 
+    //this.testOperacionCancelarCS(); 
+    //this.testOperacionAbonoCS(); 
+    //this.testOperacionConsultaCS(); 
+    //this.testConsultaRiesgoAcumuladoCS(); 
+    //this.testConsultaRubrosCS(); 
+
+    // Credito Operacion
+    //this.testOperacionCrearCS(); 
+    //this.testOperacionRenovarCS(); 
+    //this.testOperacionAprobarCS();
+    //this.testOperacionNegarCS();
+
+    //Credito Simulacion
+    //this.testSimularTablaAmortizacionCS(); 
+
+    // Credito Consulta
+    //this.testCalcularSolcaCS(); 
   }
   // CLIENTE
-  testConsultarClienteCS() {
+  /*testConsultarClienteCS() {
     let entidadConsultaCliente = new ConsultaCliente();
-    entidadConsultaCliente.identificacion = "1311066441";
-    entidadConsultaCliente.idTipoIdentificacion = 1;
+    //entidadConsultaCliente.identificacion = "1311066441";
+    //entidadConsultaCliente.idTipoIdentificacion = 1;
     this.css.consultarClienteCS(entidadConsultaCliente).subscribe((data: any) => {
       if (data) {
         //console.log("consultarClienteCS --> Funciona");
-        //console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
+        console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
       } else {
         this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
       }
@@ -1245,67 +1294,72 @@ export class GestionClienteComponent implements OnInit {
 
       }
     });
-  }
-  testConsultarDivicionPoliticaCS(){
-    this.css.consultarDivicionPoliticaCS().subscribe( (data : any)  => {
-        if(!data.existeError){
-          this.localizacion = data.catalogo;
+  }*/
+  
+  testConsultarDivicionPoliticaCS() {
+
+    this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
+      
+        //console.log("funciona -----> consultarDivicionPoliticaCS");
+        //console.log("Consulta de catalogos de Divicion Politica ----->" + JSON.stringify(data));
+      if (!data.existeError) {
+        this.localizacion = data.catalogo;
         //console.log(" desde aqui >>> ",this.localizacion)
         this.bprovinces = this.localizacion.filter(e => e.tipoDivision == "PROVINCIA")
         /*for (let i = 0; i < this.bprovinces.length; i++) {
         this.provincias.push(this.bprovinces [i].nombre);
         // console.log(" PROVINCIA >>>",this.provincias)
         }*/
-          this.bCantons= this.localizacion.filter(e => e.tipoDivision == 'CANTON')
-          /*for (let j = 0; j < this.bCantons.length; j++) {
-          this.cantones.push(this.bCantons [j].nombre);
-          //console.log(" CANTON >>>",this.cantones)
-          }*/
-            this.bParroqui= this.localizacion.filter(e => e.tipoDivision == "PARROQUIA")
-            /*for (let x = 0; x < this.bParroqui.length; x++) {
-            this.parroquia.push(this.bParroqui [x].nombre);
-           // console.log(" PARROQUIAS >>>",this.parroquia)
-            }*/
-            let ubicacion = [];
-              ubicacion = this.bParroqui.map( parro =>{
-              const cant = this.bCantons.find( c=>c.id==parro.idPadre) || {};
-              const pro = this.bprovinces.find(p=>p.id==cant.idPadre)|| {};
-              
-              return {nombre:parro.nombre+" / "+cant.nombre+" / "+pro.nombre, idParroquia:parro.id,idCanton:cant.id,idProvincia:pro.id};      
-            }
-            );
-            this.uubicacion = ubicacion;
-            this.bNombre= this.uubicacion.filter(e => e.nombre)
-            for (let i = 0; i < this.bNombre.length; i++) {
-            this.bUbicaciones.push(this.bNombre [i].nombre);
-              
-            
-            
-            //console.log("<<<ubicaciones>>>>>>>",this.bUbicaciones);
-            };
-            this.ubications = new Array<User>();
-            this.bUbicaciones.forEach(e => {
-              let user = {} as User;
-              user.name=e;
-              this.ubications.push(user)
-            });
-       
-      
-        
-          //console.log("funciona -----> consultarDivicionPoliticaCS");
-          //console.log("Consulta de catalogos de Divicion Politica ----->" + JSON.stringify(data));
-        } else{
-          console.log("No me trajo data de catalogos de Divicion Politica ----->" + JSON.stringify(data));
-        } error =>{
-          if (JSON.stringify(error).indexOf("codError") > 0){
-            let b = error.error;
-            this.sinNoticeService.setNotice(b.setmsgError,'error');
-          } else {
-            this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-          }
+
+        this.bCantons = this.localizacion.filter(e => e.tipoDivision == 'CANTON')
+        /*for (let j = 0; j < this.bCantons.length; j++) {
+        this.cantones.push(this.bCantons [j].nombre);
+        //console.log(" CANTON >>>",this.cantones)
+        }*/
+
+        this.bParroqui = this.localizacion.filter(e => e.tipoDivision == "PARROQUIA")
+        /*for (let x = 0; x < this.bParroqui.length; x++) {
+        this.parroquia.push(this.bParroqui [x].nombre);
+       // console.log(" PARROQUIAS >>>",this.parroquia)
+        }*/
+
+
+        let ubicacion = [];
+        ubicacion = this.bParroqui.map(parro => {
+          const cant = this.bCantons.find(c => c.id == parro.idPadre) || {};
+          const pro = this.bprovinces.find(p => p.id == cant.idPadre) || {};
+
+          return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, idParroquia: parro.id, idCanton: cant.id, idProvincia: pro.id, 
+                  parroquia: parro.nombre,
+                  canton:cant.nombre,
+                  provincia:pro.nombre};
         }
+        );
+        this.uubicacion = ubicacion;
+        this.bNombre = this.uubicacion.filter(e => e.nombre)
+        for (let i = 0; i < this.bNombre.length; i++) {
+          this.bUbicaciones.push(this.bNombre[i].nombre);
+          //console.log("<<<ubicaciones>>>>>>>",this.bUbicaciones);
+        };
+        this.ubications = new Array<User>();
+        this.bUbicaciones.forEach(e => {
+          let user = {} as User;
+          user.name = e;
+          this.ubications.push(user)
+        });
+      } else {
+        console.log("No me trajo data de catalogos de Divicion Politica ----->" + JSON.stringify(data));
+      } error => {
+        if (JSON.stringify(error).indexOf("codError") > 0) {
+          let b = error.error;
+          this.sinNoticeService.setNotice(b.setmsgError, 'error');
+        } else {
+          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+        }
+      }
     });
   }
+  
   /**
    * @param element 
    * @description METODO QUE EDITA UN ACTIVO DE LA TABLA
@@ -1656,7 +1710,34 @@ export class GestionClienteComponent implements OnInit {
                   this.cs.crearClienteConRelaciones(this.cliente,this.idNegociacion).subscribe((respuesta: any) => {
                     console.log('numero de creditos',respuesta.entidad.numeroCreditos);
                     if (respuesta.entidad) {
-                     
+                      let clienteSoftBank = new ClienteSoftbank();
+                      this.cs.crearClienSoftBank(clienteSoftBank);
+                      clienteSoftBank.nombreCompleto
+                      clienteSoftBank.primerNombre = this.primerNombre.value
+                      clienteSoftBank.segundoNombre = this.segundoNombre.value
+                      clienteSoftBank.primerApellido= this.apellidoPaterno.value
+                      clienteSoftBank.segundoApellido = this.apellidoMaterno.value
+                      clienteSoftBank.idPaisNacimiento = this.nacionalidad.value
+                      clienteSoftBank.idLugarNacimiento = this.lugarNacimiento.value
+                      clienteSoftBank.actividadEconomica.idActividadEconomica = Number(this.cliente.actividadEconomica)
+                      clienteSoftBank.fechaNacimiento = this.fechaNacimiento.value
+                      clienteSoftBank.codigoSexo = this.genero.value
+                      clienteSoftBank.codigoProfesion = this.profesion.value
+                      clienteSoftBank.codigoEstadoCivil = this.estadoCivil.value
+                      clienteSoftBank.codigoEducacion = this.nivelEducacion.value
+                      clienteSoftBank.numeroCargasFamiliares = this.cargaFamiliar.value
+                      clienteSoftBank.email = this.email.value
+                      //clienteSoftBank.codigoUsuarioAsesor 
+                      //clienteSoftBank.direcciones = this.direccionDomicilio
+                      //clienteSoftBank.telefonos = this.telefonoFijo.valueChanges
+                      //clienteSoftBank.cuentasBancariasCliente
+                      //clienteSoftBank.contactosCliente = this.referencia
+                      clienteSoftBank.datosTrabajoCliente = this.referenciaUbicacionO.value  
+                      clienteSoftBank.activos = this.activo.value
+                      clienteSoftBank.pasivos = this.pasivo.value
+                      //clienteSoftBank.ingresos = this.ingresoEgresoGuardado.esIngreso.values
+                      //clienteSoftBank.egresos = this.totalValorIngresoEgreso.valueOf
+                      
                       if(this.situacion =='EN PROCESO' && respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos == 1){
                         console.log("tiene q navegar al generar credito ");
                         this.router.navigate(['../../generar-credito/generar-credito'])

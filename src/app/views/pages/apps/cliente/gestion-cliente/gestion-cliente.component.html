@@ -57,7 +57,6 @@
                 <mat-select
                   placeholder="Nivel de Educación:"
                   [formControl]="nivelEducacion">
-                  <mat-option>--</mat-option>
                   <mat-option *ngFor="let nivelEducacion of listNivel" [value]="nivelEducacion" required>
                     {{ nivelEducacion }}
                   </mat-option>

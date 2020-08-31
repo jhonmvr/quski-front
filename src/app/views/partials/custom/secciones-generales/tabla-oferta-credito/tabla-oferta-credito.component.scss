@@ -1,0 +1,253 @@
+.example-table {
+    overflow: auto;
+    min-height: auto;
+  }
+  .mat-table-sticky {
+    border-top: 1px solid #e0e0e0;
+  }
+  .mat-table {
+    overflow: auto;
+    max-height: auto;
+    width: 100%;
+  }
+  .mat-footer-row {
+    font-weight: bold;
+    justify-content: start;
+  }
+
+  .mat-column-Accion {
+    flex: 0 0 100px;
+    justify-content: flex-start; 
+  }
+  .mat-column-Plazo {
+    flex: 0 0 100px;
+    justify-content: flex-start; 
+  }
+  
+  .mat-column-TipoOperacion {
+    flex: 0 0 150px;
+    justify-content: start;
+  }
+  
+  .mat-column-PeriodicidadPlazo {
+    flex: 0 0 100px;
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
+  
+  .mat-column-TipoOferta {
+    flex: 0 0 100px;
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
+  
+  .mat-column-MontoPreAprobado{
+    flex: 0 0 80px;
+    justify-content: flex-end;
+    padding-right: 15px;
+  }
+  
+  .mat-column-FechaAprobacion {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+   
+  .mat-column-ValorCuota {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-ARecibirCliente {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-APagarPorCliente {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-ValorAPagarNeto {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-ValoresCreditoAnterior {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-TotalCostosNuevaOpreacion {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-CostoCustodia {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-FormaPagoCustodia {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-CostoTransporte {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-FormaPagoTransporte {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-CostoValoracion {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-FormaPagoValoracion {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  .mat-column-CostoTasacion {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+  .mat-column-FormaPagoTasacion {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+  .mat-column-CostoSeguro {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+  .mat-column-FormaPagoSeguro {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+  .mat-column-CostoResguardo {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+  .mat-column-FormaPagoResguardo {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+
+  .mat-column-Solca {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+  
+  .mat-column-FormaPagoSolca {
+    flex: 0 0 110px;
+    justify-content: start;
+  }
+  .mat-column-SaldoCapitaOpAnt {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  .mat-column-SaldoInteresOpAnt {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  .mat-column-FormaPagoInteres {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+
+  .mat-column-SaldoMoraOpAnt {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  .mat-column-FormaPagoMora {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  .mat-column-GastosDeCobranzaOpAnt {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  .mat-column-FormaPagoGastoCobranza {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  .mat-column-CustodiaVencidaOptAnt {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  .mat-column-AbonoCapitaOpAnterior {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  .mat-column-FormaPagoAbonoCapital {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  .mat-column-MontoDesembolsoBallon {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+
+
+  .mat-column-EstatusCredito {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+  
+  .mat-column-ProcentajeFlujoPlaneado {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+  
+  .mat-column-DiasMora {
+    flex: 0 0 80px;
+    justify-content: flex-end;
+   
+  }
+  
+  .mat-column-EstadoMediacion {
+    flex: 0 0 120px;
+    justify-content: start;
+  }
+  
+  .mat-column-Retanqueo {
+    flex: 0 0 100px;
+    justify-content: start;
+  }
+  
+  .mat-column-Cuota {
+    flex: 0 0 80px;
+    justify-content: flex-end;
+
+  }
+  
+  .mat-column-CapitalCuotaAtrasada {
+    flex: 0 0 150px;
+    justify-content: flex-end;
+  }
+  .mat-column-InteresCuotaAtrasada {
+    flex: 0 0 150px;
+    justify-content: flex-end;
+  }
+  .mat-column-Mora {
+    flex: 0 0 80px;
+    justify-content: flex-end;
+  }
+  
+  .mat-column-GestionCobranza {
+    flex: 0 0 120px;
+    justify-content: flex-end;
+  }
+  
+  .mat-column-Custodia {
+    flex: 0 0 100px;
+    justify-content: flex-end;
+  }
+  
+  .mat-column-TotalDeuda {
+    flex: 0 0 80px;
+    justify-content: flex-end;
+  }
+  
+  .mat-column-NroCuotasImpagadas {
+    flex: 0 0 150px;
+    justify-content: flex-end;
+  }
+  
+  .mat-column-FormaPagoCustodiaVencida {
+    flex: 0 0 110px;
+    justify-content: flex-end;
+  }
+  

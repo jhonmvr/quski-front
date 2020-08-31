@@ -9,6 +9,7 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { RiesgoAcumuladoService } from '../../../../../core/services/quski/riesgoAcumulado.service';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
+import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 
 @Component({
   selector: 'kt-tabla-riesgo-acumulado',
@@ -16,24 +17,25 @@ import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
   styleUrls: ['./tabla-riesgo-acumulado.component.scss']
 })
 export class TablaRiesgoAcumuladoComponent implements OnInit {
+  @Input() dataPopupRiesgo: DataPopup;
   // INPUT BUSQUEDA CORE
-  @Input()  idCliente: number = null;
-  @Input()  isPaged: boolean = false;
+  @Input() idCliente: number = null;
+  @Input() isPaged: boolean = false;
   // INPUT BUSQUEDA SOFTBANK
-  @Input()  cedula: string = null;
+  @Input() cedula: string = null;
   // INPUT GENERAL
-  @Input()  isGuardar: boolean = false;
-  
+  @Input() isGuardar: boolean = false;
+
   /**Obligatorio paginacion */
-  public p: Page = new Page ();
+  public p: Page = new Page();
   public pageSize = 5;
   public currentPage = 0;
   public totalSize = 0;
   public totalResults = 0;
-  @ViewChild(MatPaginator, { static: true }) 
+  @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
   /**Obligatorio ordenamiento */
-  @ViewChild('sort1', {static: true}) sort: MatSort;
+  @ViewChild('sort1', { static: true }) sort: MatSort;
   total: string;
 
 
@@ -46,7 +48,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   public loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   // TABLA DE CREDITO
-  displayedColumnsRiesgoAcumulado = ['codigoCarteraQuski','diasMoraActual', 'estadoOperacion','estadoPrimeraCuotaVigente', 'fechaEfectiva', 'fechaVencimiento','interesMora','nombreProducto','numeroCuotasFaltantes', 'numeroCuotasTotales',  'primeraCuotaVigente', 'referencia', 'valorAlDia', 'valorCancelaPrestamo','saldo'];
+  displayedColumnsRiesgoAcumulado = ['codigoCarteraQuski', 'diasMoraActual', 'estadoOperacion', 'estadoPrimeraCuotaVigente', 'fechaEfectiva', 'fechaVencimiento', 'interesMora', 'nombreProducto', 'numeroCuotasFaltantes', 'numeroCuotasTotales', 'primeraCuotaVigente', 'referencia', 'valorAlDia', 'valorCancelaPrestamo', 'saldo'];
   dataSourceRiesgoAcumulado = new MatTableDataSource<TbQoRiesgoAcumulado>();
   constructor(
     private sof: SoftbankService,
@@ -57,28 +59,28 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
 
   ngOnInit() {
     this.loading = this.loadingSubject.asObservable();
-    if(this.idCliente != null && this.cedula == null){
+    if (this.idCliente != null && this.cedula == null) {
       this.initiateTablePaginator();
       this.busquedaCore();
-    }else{
-      if(this.cedula != null && this.idCliente == null){
+    } else {
+      if (this.cedula != null && this.idCliente == null) {
         this.busquedaSoftbank();
       }
     }
   }
-  public busquedaCore(){
-    if(this.idCliente != null){
+  public busquedaCore() {
+    if (this.idCliente != null) {
       this.loadingSubject.next(true);
-      this.rie.findRiesgoAcumuladoByIdCliente( this.p, this.idCliente ).subscribe((data: any) =>{
-        if(!data.list != null){
+      this.rie.findRiesgoAcumuladoByIdCliente(this.p, this.idCliente).subscribe((data: any) => {
+        if (!data.list != null) {
           this.entidadesRiesgo = data.list;
           this.dataSourceRiesgoAcumulado.data = this.entidadesRiesgo;
-          this.enviarAlPadre ( this.entidadesRiesgo );
+          this.enviarAlPadre(this.entidadesRiesgo);
           this.loadingSubject.next(false);
-          if(this.isGuardar){
-            this.guardarCore( this.entidadesRiesgo );
-          } 
-        }else{
+          if (this.isGuardar) {
+            this.guardarCore(this.entidadesRiesgo);
+          }
+        } else {
           this.loadingSubject.next(false);
           this.siN.setNotice("NO EXISTEN RIESGOS ACUMULADOS REGISTRADOS PARA ESTE CLIENTE", 'error');
         }
@@ -93,27 +95,27 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
       });
     }
   }
-  public busquedaSoftbank(){
-    if(this.cedula != ""){
+  public busquedaSoftbank() {
+    if (this.cedula != "") {
       this.loadingSubject.next(true);
       const consulta = new ConsultaCliente()
       consulta.identificacion = this.cedula;
-      this.sof.consultaRiesgoAcumuladoCS( consulta ).subscribe((data: any) =>{
-        if(!data.existeError && data.operaciones != null){
+      this.sof.consultaRiesgoAcumuladoCS(consulta).subscribe((data: any) => {
+        if (!data.existeError && data.operaciones != null) {
           this.entidadesRiesgo = data.operaciones;
-          this.entidadesRiesgo.forEach(e =>{
+          this.entidadesRiesgo.forEach(e => {
             e.idSoftbank = e.id;
             e.id = null;
-            
+
           });
           this.dataSourceRiesgoAcumulado.data = this.entidadesRiesgo;
-          this.enviarAlPadre ( this.entidadesRiesgo );
+          this.enviarAlPadre(this.entidadesRiesgo);
           this.loadingSubject.next(false);
-          if(this.isGuardar){
+          if (this.isGuardar) {
             this.guardarCore(this.entidadesRiesgo);
-          } 
-        }else{
-          this.mensaje += " existeError: "+data.mensaje;  
+          }
+        } else {
+          this.mensaje += " existeError: " + data.mensaje;
           this.siN.setNotice(this.mensaje, 'error');
           this.loadingSubject.next(false);
         }
@@ -128,16 +130,16 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
       });
     }
   }
-  private guardarCore(guardarCore: Array<TbQoRiesgoAcumulado>){
+  private guardarCore(guardarCore: Array<TbQoRiesgoAcumulado>) {
     this.loadingSubject.next(true);
-    this.cli.findClienteByIdentificacion(this.cedula).subscribe((data: any) =>{
+    this.cli.findClienteByIdentificacion(this.cedula).subscribe((data: any) => {
       if (data.entidad) {
-        guardarCore.forEach(e =>{
+        guardarCore.forEach(e => {
           e.tbQoCliente = new TbQoCliente();
           e.tbQoCliente.id = data.entidad.id;
 
         });
-        this.rie.persistEntities(guardarCore).subscribe((data: any) =>{
+        this.rie.persistEntities(guardarCore).subscribe((data: any) => {
           if (data.entidades != null) {
             console.log("Data guardada en base ---> ", data.entidades);
             this.loadingSubject.next(false);
@@ -159,11 +161,11 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
 
       }
     });
-    
+
   }
-  private  enviarAlPadre( entidades: Array<TbQoRiesgoAcumulado> ){
+  private enviarAlPadre(entidades: Array<TbQoRiesgoAcumulado>) {
     console.log(" Esto estoy enviando al padre -----> ", entidades);
-    this.list.emit( entidades );
+    this.list.emit(entidades);
   }
 
   /**
@@ -179,7 +181,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   /**
   * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
   */
-  getPaginacion(ordenarPor: string, tipoOrden: string, paginado: string,pagina): Page {
+  getPaginacion(ordenarPor: string, tipoOrden: string, paginado: string, pagina): Page {
     const p = new Page();
     p.pageNumber = pagina;
     p.pageSize = this.paginator.pageSize;
@@ -193,11 +195,11 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   */
   paged() {
     this.initiateTablePaginator();
-    this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',this.paginator.pageIndex)
-    if(this.idCliente != null && this.cedula == null){
+    this.p = this.getPaginacion(this.sort.active, this.sort.direction, 'Y', this.paginator.pageIndex)
+    if (this.idCliente != null && this.cedula == null) {
       this.busquedaCore();
-    }else{
-      if(this.cedula != null && this.idCliente == null){
+    } else {
+      if (this.cedula != null && this.idCliente == null) {
         this.busquedaSoftbank();
       }
     }
