@@ -1,0 +1,719 @@
+<re-portlet>
+    <re-portlet-header [title]="'Generar Credito'" [class]="'kt-portlet__head--lg'">
+
+
+    </re-portlet-header>
+
+    <re-portlet-body>
+        <mat-vertical-stepper>
+            <mat-step label="Informaci&#243;n del Contrato">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Fecha creacion:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="fechaCreacion" readonly>
+                        </mat-form-field>
+                    </div>
+        
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Fecha vencimiento:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="fechaVencimiento" readonly>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Cliente:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="cliente" readonly>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">CI:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="cedulaCliente" readonly>
+                        </mat-form-field>
+                    </div>
+                  
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Agencia Origen:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="agenciaOrigen" readonly>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+            </mat-step>
+            <mat-step label="Datos de Contacto" >
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Telefono Domicilio:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="telefonoDoc" readonly>
+                        </mat-form-field>
+                    </div>
+        
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Telefono Adic:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="telefonoAdic" readonly>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Telefono Movil:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="telefonoMov" readonly>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Telefono Oficina Otros:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="telefonoOfic" readonly>
+                        </mat-form-field>
+                    </div>
+        
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Correo Electronico:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="correoCliente" readonly>
+                        </mat-form-field>
+                    </div>
+                  
+                </div>
+            </mat-step>
+
+            <mat-step label="Oferta Seleccionada">
+                <div class="mat-table__wrapper">
+                    <mat-table #table class="mat-elevation-z8" [dataSource]="displayedColumnsOpt" matSort #sort1="matSort"
+                    matSortDisableClear>
+                      <ng-container matColumnDef="Accion">
+                        <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="Plazo">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Plazo</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                        
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="TipoOperacion">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="PeriodicidadPlazo">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="TipoOferta">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="MontoPreAprobado">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="ValorCouta">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="ARecibirCliente">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="APagarPorCliente">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="ValorAPagarNeto">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="ValoresCreditoAnterior">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="TotalCostosNuevaOpreacion">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="CostoCustodia">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoCustodia">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="CostoTransporte">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoTransporte">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="CostoValoracion">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoValoracion">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="CostoTasacion">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoTasacion">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="CostoSeguro">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoSeguro">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="CostoResguardo">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoResguardo">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="Solca">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoSolca">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="SaldoCapitaOpAnt">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="SaldoInteresOpAnt">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoInteres">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="SaldoMoraOpAnt">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoMora">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="GastosDeCobranzaOpAnt">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoGastoCobranza">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="CustodiaVencidaOptAnt">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoCustodiaVencida">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="AbonoCapitaOpAnterior">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="FormaPagoAbonoCapital">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="MontoDesembolsoBallon">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="ProcentajeFlujoPlaneado">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
+                        <mat-cell *matCellDef="">
+                         
+                        </mat-cell>
+                      </ng-container>
+                      <mat-header-row *matHeaderRowDef="displayedColumnsOpcionesCredito"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumnsOpcionesCredito"></mat-row>
+                    </mat-table>
+                    <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+                      [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+                    </mat-paginator>
+                  </div>
+            </mat-step>
+            <mat-step label="Costos calculados a la fecha">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Tipo de Cartera:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field>
+                            <mat-select placeholder="Tipo de Cartera" [formControl]="tipoCartera">
+                                <mat-option *ngFor="let tipoCartera of tiposCarteras" [value]="tipoCuenta">
+                                    {{tipoCuenta}}
+                                </mat-option>
+                            </mat-select>                     
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Descripcion del producto</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="descripcionProducto" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Destino de la operacion:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field>
+                            <mat-select placeholder="Tipo de Cartera" [formControl]="destinoOperacion">
+                                <mat-option *ngFor="let destinoOperacion of destinosOperaciones" [value]="tipoCuenta">
+                                    {{destinoOperacion}}
+                                </mat-option>
+                            </mat-select>                     
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Estado de la operacion:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field>
+                            <mat-select placeholder="Estado de la Operacion" [formControl]="estadoOperacion">
+                                <mat-option *ngFor="let estadoOp of estadoOp" [value]="estadoOp">
+                                    {{estadoOp}}
+                                </mat-option>
+                            </mat-select>                     
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Tipo de Operacion:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field>
+                            <mat-select placeholder="Estado de la Operacion" [formControl]="estadoOperacion">
+                                <mat-option *ngFor="let estadoOp of estadoOp" [value]="estadoOp">
+                                    {{estadoOp}}
+                                </mat-option>
+                            </mat-select>                     
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Plazo:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="plazo" placeholder="">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field>
+                          <input   (dateChange)="validacionFecha()"
+                          matInput #inputfechaEfectiva [matDatepicker]="pickerfechaEfectiva"
+                            placeholder="Fecha Efectiva" [formControl]="fechaEfectiva"
+                            />
+                          <mat-datepicker-toggle matSuffix [for]="pickerfechaEfectiva"></mat-datepicker-toggle>
+                          <mat-datepicker #pickerfechaEfectiva></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-md-4">
+                        <mat-form-field>
+                          <input   (dateChange)="validacionFecha()"
+                          matInput #inputfechaVencimiento [matDatepicker]="pickerfechaVencimiento"
+                            placeholder="Fecha de Vencimiento" [formControl]="fechaVencimiento"
+                            />
+                          <mat-datepicker-toggle matSuffix [for]="pickerfechaVencimiento"></mat-datepicker-toggle>
+                          <mat-datepicker #pickerfechaVencimiento></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Monto Financiado:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="montoFinanciado" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Valor Desembolso:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="valorDesembolso" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Total interes:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="totalInteres" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Cuotas:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="cuotas" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">A pagar por cliente:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="pagarCliente" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Riesgo Total Cliente:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="riesgoTotalCliente" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-1">
+                        <label style="font-weight:bold">A Recibir Cliente:</label>
+                    </div>
+                    <div class="col-md-1">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="recibirCliente" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-1">
+                        <label style="font-weight:bold">Neto Al Cliente:</label>
+                    </div>
+                    <div class="col-md-1">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="netoCliente" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+            </mat-step>
+       
+            <mat-step label = "Joyas">
+                <div class="mat-table__wrapper">
+                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
+                    matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
+                        <ng-container matColumnDef="accion">
+                            <mat-header-cell *matHeaderCellDef>
+                                Acciones
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row">
+                                <a href="javascript:void(0);" [routerLink]="['../gestion-cliente', row.id]" color="primary" [ngClass]="['primary']">
+                                    <mat-icon style="font-size: 16px;" class="green-icon"   matTooltipPosition="above" matTooltip="Editar cliente">remove_red_eye
+                                    </mat-icon>
+                                </a>
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="numeroPiezas">
+                        <mat-header-cell *matHeaderCellDef>Numero Piezas</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.numeroPiezas}}</mat-cell>
+                    </ng-container>
+                        <ng-container matColumnDef="tipoOro">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Oro</mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.tbQoTipoOro.quilate}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="tipoJoya">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Joya</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{element.tipoJoya}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="estadoJoya">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Estado de Joya</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{element.estadoJoya}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="descripcion">
+                            <mat-header-cell *matHeaderCellDef>Descripcion</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{element.descripcion}} </mat-cell>
+                        </ng-container>
+                        
+                        <ng-container matColumnDef="pesoBruto">
+                            <mat-header-cell *matHeaderCellDef>Peso Bruto (Gr)</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{element.pesoBruto}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="tieneDescuento">
+                        <mat-header-cell *matHeaderCellDef>Tiene descuentos</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="descripcionDescuentos">
+                        <mat-header-cell *matHeaderCellDef>Descripcion de descuentos </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.nacionalidad}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="descuentoPesoPiedra">
+                            <mat-header-cell *matHeaderCellDef>Descuento Peso Piedra</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+                        </ng-container>
+                    <ng-container matColumnDef="descuentoSuelda">
+                        <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.actividadEconomica}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="pesoNeto">
+                        <mat-header-cell *matHeaderCellDef>Peso Neto (Gr)</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.pesoNeto}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorOro">
+                        <mat-header-cell *matHeaderCellDef>Valor oro</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.valorOro}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorAvaluo">
+                        <mat-header-cell *matHeaderCellDef>Valor Avaluo</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.valorAvaluo}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorComercial">
+                        <mat-header-cell *matHeaderCellDef>Valor comercial</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.valorComercial}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorRealizacion">
+                        <mat-header-cell *matHeaderCellDef>Valor Realizacion</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.valorRealizacion}} </mat-cell>
+                    </ng-container>
+                    
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+                    <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" 
+                    [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+                    </mat-paginator>
+                    
+                </div>
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Numero Funda Nuevo</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="numeroFunda" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Peso De la Funda:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field>
+                            <input matInput [formControl]="pesoFunda" placeholder="">                 
+                        </mat-form-field>
+                    </div>
+              
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">PesoNeto:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="totalPesoNeto" placeholder="">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Total Peso Bruto Gr:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="totalPesoBruto" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Peso Bruto total (Con Funda) (GR)</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="totalPesoBrutoFunda" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Total valor de Realizacion:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="totalValorRealizacion" placeholder="">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Total Valor Avaluo:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="totalValorAvaluo" placeholder="">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-weight:bold">Total valor comercial</label>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="example-full-width">
+                            <input matInput [formControl]="totalValorComercial" placeholder="">
+                        </mat-form-field>
+                    </div>
+          
+                </div>
+                <div class="row">
+                    <div class= "col-md-4">
+                        <a href="javascript:void(0);" *ngIf="getPermiso('CARGA_ARC')" (click)="cargarFotoJoya(); $event.preventDefault()">
+                            <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
+                            <span style="position: relative;top: -10px;margin-left: 5px;">Carga Foto</span>
+                        </a>
+                        </div>
+                        <div class= "col-md-2">
+                            <img  src="data:image/png;base64, {{srcJoya}}"
+                             class="img-responsive" style="width:400px !important; height:300px !important" alt="" />
+
+
+                        </div>
+
+         
+                 
+                    <div class= "col-md-4">
+                        <a href="javascript:void(0);" *ngIf="getPermiso('CARGA_ARC')" (click)="cargarFotoFunda(); $event.preventDefault()">
+                            <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
+                            <span style="position: relative;top: -10px;margin-left: 5px;">Carga Foto</span>
+                        </a>
+                        </div>
+                          <div class= "col-md-2">
+                            <img  src="data:image/png;base64, {{srcFunda}}"
+                            class="img-responsive" style="width:400px !important; height:300px !important" alt="" />
+                        </div>
+                    </div>
+    
+            </mat-step>
+            <mat-step label = "Documento Habilitantes">
+                <re-habilitante [proceso]="proceso" [useType]="'FORM'" [referencia]="'2'" [rol]="'1'">
+                </re-habilitante>
+            </mat-step>
+        </mat-vertical-stepper>
+
+    </re-portlet-body>
+
+</re-portlet>

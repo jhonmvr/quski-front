@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DialogCargarComponent } from './dialog-cargar.component';
+import { GestionCreditoComponent } from './gestion-credito.component';
 
-describe('DialogCargarComponent', () => {
-  let component: DialogCargarComponent;
-  let fixture: ComponentFixture<DialogCargarComponent>;
+describe('GestionCreditoComponent', () => {
+  let component: GestionCreditoComponent;
+  let fixture: ComponentFixture<GestionCreditoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DialogCargarComponent ]
+      declarations: [ GestionCreditoComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DialogCargarComponent);
+    fixture = TestBed.createComponent(GestionCreditoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

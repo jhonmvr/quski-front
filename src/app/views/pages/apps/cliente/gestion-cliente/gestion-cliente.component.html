@@ -57,7 +57,6 @@
                 <mat-select
                   placeholder="Nivel de Educación:"
                   [formControl]="nivelEducacion">
-                  <mat-option>--</mat-option>
                   <mat-option *ngFor="let nivelEducacion of listNivel" [value]="nivelEducacion" required>
                     {{ nivelEducacion }}
                   </mat-option>
@@ -148,24 +147,15 @@
             <div class="col-md-4">
               <form class="example-form">
                 <mat-form-field class= "example-full-width">
-                  <input placeholder="Lugar de Nacimiento:" type= "text" matInput [formControl]= "lugarNacimiento" [matAutocomplete]="auto">
-                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                  <input placeholder="Lugar de Nacimiento:" type= "text" matInput required [formControl]= "lugarNacimiento" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                       {{option.name}}
                     </mat-option>
                   </mat-autocomplete>
+                  <mat-error>{{ getErrorMessage("lugarNacimiento") }}</mat-error>
                 </mat-form-field>
               </form>
-              <!--<mat-form-field>
-                <mat-select placeholder="Lugar de Nacimiento:" [formControl]="lugarNacimiento" required>
-                  <mat-option> -- </mat-option>
-                  <mat-option *ngFor="let nombre of bUbicaciones" [value]="nombre">
-                    {{ nombre }}
-                  </mat-option>
-                </mat-select>
-                <mat-error>{{ getErrorMessage("Lugar de Nacimiento") }}</mat-error>
-              </mat-form-field>-->
-
             </div>
           </div>
           <div class="form-group row">
@@ -248,29 +238,21 @@
             </div>
           </div>
 
-          <div class="form-group row">
+          <div >
             <div class="col-md-4">
-              <!-- <mat-form-field class="example-full-width">
-                <input type="text" placeholder="Parroquia / Canton / Provincia:" matInput [formControl]="ubicacion" [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let parroquia of parroquias | async" [value]="parroquia">
-                    {{ parroquia }}
-                  </mat-option>
-                </mat-autocomplete>
-                <mat-error>{{ getErrorMessage("ubicacion") }}</mat-error>  (selectionChange)="crearUbicacion()"
-              </mat-form-field> -->
-              <mat-form-field>
-                <mat-select required placeholder="Provincia / Canton / Parroquia:" [formControl]="ubicacion" (selectionChange)="crearUbicacionDomicilio()">
-                  <mat-option>--</mat-option>
-                  <mat-option
-                    *ngFor="let parroquia of parroquias" [value]="parroquia">
-                    {{ parroquia }}
-                  </mat-option>
-                </mat-select>
-                <mat-error>{{ getErrorMessage("parroquia") }}</mat-error>
+              <form class="example-form">
+                <mat-form-field class= "example-full-width">
+                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :"[matAutocomplete]="auto" [formControl]= "lugarNacimiento" (selectionChange)="crearUbicacionDomicilio()">
+                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let Dd of filteredOptions2 | async" [value]="Dd">
+                      {{Dd.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                <mat-error>{{ getErrorMessage("Parroquia / Canton / Provincia") }}</mat-error>
               </mat-form-field>
+            </form>
             </div>
-            <div class="col-md-4">
+            <!--<div class="col-md-4">
               <mat-form-field>
                 <input required matInput placeholder="Barrio:" [formControl]="barrio"/>
                 <mat-error>{{ getErrorMessage("barrio") }}</mat-error>
@@ -284,7 +266,7 @@
                 </mat-select>
                 <mat-error>{{ getErrorMessage("sector") }}</mat-error>
               </mat-form-field>
-            </div>
+            </div>-->
           </div>
 
           <div class="form-group row">
@@ -341,15 +323,17 @@
           </div>
           <div class="form-group row">
             <div class="col-md-4">
-              <mat-form-field>
-                <mat-select placeholder="Provincia / Canton / Parroquia:" required [formControl]="ubicacionO" (selectionChange)="crearUbicacionLaboral()">
-                  <mat-option>--</mat-option>
-                  <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia">
-                    {{ parroquia }}
+              <mat-form-field >
+                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :" [matAutocomplete]="auto" required [formControl]= "lugarNacimiento"  (selectionChange)="crearUbicacionLaboral()">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let asd of filteredOptions | async" [value]="asd">
+                    {{asd.name}}
                   </mat-option>
-                </mat-select>
-                <mat-error>{{ getErrorMessage("ubicacionO") }}</mat-error>
+                </mat-autocomplete>
+                <mat-error>{{ getErrorMessage("Parroquia / Canton / Provincia") }}</mat-error>
+            
               </mat-form-field>
+               
             </div>
             <div class="col-md-4">
               <mat-form-field>
