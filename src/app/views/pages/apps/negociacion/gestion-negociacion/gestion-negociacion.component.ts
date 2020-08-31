@@ -311,6 +311,9 @@ export class GestionNegociacionComponent implements OnInit {
    */
   private cargarValores(cliente: TbQoCliente) {
     this.loadingSubject.next(true);
+    this.dataPopup = new DataPopup();
+    this.dataPopup.isCalculadora = true;
+    this.dataPopup.cedula = cliente.cedulaCliente;
     this.nombresCompletos.setValue(cliente.primerNombre + ' ' + cliente.segundoNombre + ' ' + cliente.apellidoPaterno + ' ' + cliente.apellidoMaterno);
     this.nacionalidad.setValue(cliente.nacionalidad);
     this.movil.setValue(cliente.telefonoMovil);
@@ -363,32 +366,6 @@ export class GestionNegociacionComponent implements OnInit {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   private consultaCatalogos() {
     this.loadingSubject.next(true);
     this.sof.consultarEducacionCS().subscribe((data: any) => {
@@ -431,163 +408,76 @@ export class GestionNegociacionComponent implements OnInit {
         this.router.navigate(['dashboard', ""]);  
     });
   }
-
- 
- 
-  
-
-  private setearValores() {
-    this.loadingSubject.next(true);
-    if (this.entidadClientesoftbank == null) {
-      if (this.entidadProspectoCRM) {
-        this.nombresCompletos.setValue(this.entidadProspectoCRM.firstName);
-      }
-      if (this.entidadPersonaCalculadora) {
-        this.campania.setValue(this.entidadCliente.campania);
-        this.nombresCompletos.setValue(this.entidadPersonaCalculadora.nombrescompletos);
-      }
-    } else {
-      this.nombresCompletos.setValue(this.entidadCliente.primerNombre + ' ' + this.entidadCliente.segundoNombre + ' ' + this.entidadCliente.apellidoPaterno + ' ' + this.entidadCliente.apellidoMaterno);
+  getErrorMessage(pfield: string) {
+    const errorRequerido        = 'Ingresar valores';
+    const errorNumero           = 'Ingresar solo numeros';
+    const maximo                = "El maximo de caracteres es: ";
+    const invalidIdentification = 'La identificacion no es valida';
+    const errorLogitudExedida   = 'La longitud sobrepasa el limite';
+    const errorInsuficiente     = 'La longitud es insuficiente';
+    if (pfield && pfield === "identificacion") {
+      const input = this.formBusqueda.get("identificacion");
+      return input.hasError("required")
+        ? errorRequerido
+        : input.hasError("pattern")
+          ? errorNumero
+          : input.hasError("invalid-identification")
+            ? invalidIdentification
+            : input.hasError("maxlength")
+              ? errorLogitudExedida
+              : input.hasError("minlength")
+                ? errorInsuficiente
+                : "";
     }
-    if (this.entidadCliente.nacionalidad) {
-      this.nacionalidad.setValue(this.entidadCliente.nacionalidad);
+    if (pfield && pfield === 'nombresCompletos') {
+      const input = this.nombresCompletos;
+      return input.hasError('required') ? errorRequerido : '';
     }
-    this.movil.setValue(this.entidadCliente.telefonoMovil);
-    this.telefonoDomicilio.setValue(this.entidadCliente.telefonoFijo);
-    this.email.setValue(this.entidadCliente.email);
-    console.log('VARIABLES', JSON.stringify(this.entidadesVariablesCrediticias));
-
-
-
-    //TODO: COMENTO NO FUNCIONA EL SERVICE
-    //this.dataSourceRiesgoAcumulado.data = this.entidadesRiesgoAcumulados;
-    this.loadingSubject.next(false);
-
-  }
-  private actualizarCliente(cliente: TbQoCliente) {
-    this.cli.persistEntity(cliente).subscribe((data: any) => {
-      if (data.entidad) {
-        this.entidadCliente = data.entidad;
-      } else {
-        this.sinNotSer.setNotice('ERROR EN CORE INTERNO CLIENTE, NO SE ACTUALIZO CLIENTE', 'error');
-      }
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNotSer.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNotSer.setNotice('ERROR EN CORE INTERNO CLIENTE, ERROR DESCONOCIDO', 'error');
-      }
-    });
-  }
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  ///Validaciones de errores
-getErrorMessage(pfield: string) {
-  const errorRequerido        = 'Ingresar valores';
-  const errorNumero           = 'Ingresar solo numeros';
-  const maximo                = "El maximo de caracteres es: ";
-  const invalidIdentification = 'La identificacion no es valida';
-  const errorLogitudExedida   = 'La longitud sobrepasa el limite';
-  const errorInsuficiente     = 'La longitud es insuficiente';
-  if (pfield && pfield === "identificacion") {
-    const input = this.formBusqueda.get("identificacion");
-    return input.hasError("required")
-      ? errorRequerido
-      : input.hasError("pattern")
-        ? errorNumero
-        : input.hasError("invalid-identification")
-          ? invalidIdentification
-          : input.hasError("maxlength")
+    if (pfield && pfield === 'fechaDeNacimiento') {
+      const input = this.fechaDeNacimiento;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    
+    if (pfield && pfield === 'nacionalidad') {
+      const input = this.nacionalidad;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    
+    if (pfield && pfield === 'telefonoDomicilio') {
+      const input = this.formDatosCliente.get('telefonoDomicilio');
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('pattern')
+          ? errorNumero
+          : input.hasError('maxlength')
             ? errorLogitudExedida
-            : input.hasError("minlength")
+            : input.hasError('minlength')
               ? errorInsuficiente
-              : "";
-  }
-
-  if (pfield && pfield === 'nombresCompletos') {
-    const input = this.nombresCompletos;
-    return input.hasError('required') ? errorRequerido : '';
-  }
- 
-  if (pfield && pfield === 'fechaDeNacimiento') {
-    const input = this.fechaDeNacimiento;
-    return input.hasError('required') ? errorRequerido : '';
-  }
+              : '';
+    }
   
-  if (pfield && pfield === 'nacionalidad') {
-    const input = this.nacionalidad;
-    return input.hasError('required') ? errorRequerido : '';
-  }
+    if (pfield && pfield == "email") {
+
+      return this.email.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo
+        + this.email.errors.maxlength.requiredLength : '';
+
+    }
   
-  if (pfield && pfield === 'telefonoDomicilio') {
-    const input = this.formDatosCliente.get('telefonoDomicilio');
-    return input.hasError('required')
-      ? errorRequerido
-      : input.hasError('pattern')
-        ? errorNumero
-        : input.hasError('maxlength')
-          ? errorLogitudExedida
-          : input.hasError('minlength')
-            ? errorInsuficiente
-            : '';
-  }
- 
-  if (pfield && pfield == "email") {
 
-    return this.email.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo
-      + this.email.errors.maxlength.requiredLength : '';
-
+    if (pfield && pfield === 'movil') {
+      const input = this.movil;
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('pattern')
+          ? errorNumero
+          : input.hasError('maxlength')
+            ? errorLogitudExedida
+            : input.hasError('minlength')
+              ? errorInsuficiente
+              : '';
+    }
   }
- 
-
-  if (pfield && pfield === 'movil') {
-    const input = this.movil;
-    return input.hasError('required')
-      ? errorRequerido
-      : input.hasError('pattern')
-        ? errorNumero
-        : input.hasError('maxlength')
-          ? errorLogitudExedida
-          : input.hasError('minlength')
-            ? errorInsuficiente
-            : '';
-  }
-}
 
 ///Validar solo numeros
 numberOnly(event): boolean {

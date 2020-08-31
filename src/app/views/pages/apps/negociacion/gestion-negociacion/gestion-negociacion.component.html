@@ -136,9 +136,9 @@
 				</form>
 			</mat-step>
 			<mat-step>
-				<kt-tabla-detalle-credito [idCotizador]='dataPopup'></kt-tabla-detalle-credito>
+				<ng-template matStepLabel>Variables Crediticias</ng-template>
+				<kt-tabla-variables-crediticias [dataPopup]='dataPopup'></kt-tabla-variables-crediticias>
 			</mat-step>
-
 			<mat-step>
 				<ng-template matStepLabel>Riesgo Acumulado </ng-template>
 				<!-- <mat-dialog-content>
