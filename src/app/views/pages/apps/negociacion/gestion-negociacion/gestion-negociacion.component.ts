@@ -50,6 +50,7 @@ export interface ParamTracking {
 export class GestionNegociacionComponent implements OnInit {
   // VARIABLES PUBLICAS
   public dataPopup: DataPopup;
+  public existeRiesgo: boolean = false;
   public loading;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   // ENTIDADES
@@ -140,7 +141,6 @@ export class GestionNegociacionComponent implements OnInit {
   ngOnInit() {
     this.consultaCatalogos();
     this.getPublicidades();
-
     this.loading = this.loadingSubject.asObservable();
     this.subheaderService.setTitle('Negociación');
     console.log("Esto calcula la edad? --> ",calcularEdad('1998-05-09'));
@@ -311,9 +311,7 @@ export class GestionNegociacionComponent implements OnInit {
    */
   private cargarValores(cliente: TbQoCliente) {
     this.loadingSubject.next(true);
-    this.dataPopup = new DataPopup();
-    this.dataPopup.isCalculadora = true;
-    this.dataPopup.cedula = cliente.cedulaCliente;
+    this.cargarVariablesYRiesgo(cliente.cedulaCliente);
     this.nombresCompletos.setValue(cliente.primerNombre + ' ' + cliente.segundoNombre + ' ' + cliente.apellidoPaterno + ' ' + cliente.apellidoMaterno);
     this.nacionalidad.setValue(cliente.nacionalidad);
     this.movil.setValue(cliente.telefonoMovil);
@@ -323,6 +321,12 @@ export class GestionNegociacionComponent implements OnInit {
     this.edad.setValue('');
     this.sinNotSer.setNotice('CLIENTE ENCONTRADO',"success");
     this.loadingSubject.next(false); 
+  }
+  public cargarVariablesYRiesgo(cedula: string){
+    this.dataPopup = new DataPopup();
+    this.dataPopup.isCalculadora = true;
+    this.dataPopup.cedula = cedula;
+    this.existeRiesgo = true;
 
   }
   /** ********************************************* @POPUP ********************* **/
