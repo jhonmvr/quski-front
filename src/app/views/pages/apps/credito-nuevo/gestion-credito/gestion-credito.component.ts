@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { ConsultaCliente } from '../../../../core/model/softbank/ConsultaCliente';
-import { Page } from '../../../../core/model/page';
-import { CreditoNegociacionService } from '../../../../core/services/quski/credito.negociacion.service';
-import { DocumentoHabilitanteService } from '../../../../core/services/quski/documento-habilitante.service';
-import { SoftbankService } from '../../../../core/services/quski/softbank.service';
-import { TasacionService } from '../../../../core/services/quski/tasacion.service';
-import { ReNoticeService } from '../../../../core/services/re-notice.service';
-import { FundaService } from '../../../../core/services/quski/funda.service';
+import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
+import { Page } from '../../../../../core/model/page';
+import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
+import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { FundaService } from '../../../../../core/services/quski/funda.service';
 import { BehaviorSubject } from 'rxjs';
-import { TbQoCreditoNegociacion } from '../../../../core/model/quski/TbQoCreditoNegociacion';
+import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 
 @Component({
   selector: 'kt-gestion-credito',
