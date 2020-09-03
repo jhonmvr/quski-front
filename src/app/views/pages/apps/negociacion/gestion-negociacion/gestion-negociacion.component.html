@@ -324,6 +324,18 @@
 					<mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
 					<mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
 				</mat-table>
+				<form [formGroup]="formCombinacion">
+					<div class="row">
+						<div class="col-md-4 offset-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<mat-select placeholder="Combinacion de joyas" [formControl]="joyas" multiple>
+									<mat-option *ngFor="let joyas of listJoyas" [value]="joyas.id"> {{joyas.opcion}} </mat-option>
+								</mat-select>
+								<mat-error>{{ getErrorMessage('seleccion') }}</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+				</form>
 			</mat-step>
 			<mat-step>
 				<ng-template matStepLabel>Detalle Opciones de crédito</ng-template>

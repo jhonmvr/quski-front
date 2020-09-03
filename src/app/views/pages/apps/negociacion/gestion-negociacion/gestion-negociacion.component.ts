@@ -33,6 +33,7 @@ import { TbQoNegociacion } from './../../../../../core/model/quski/TbQoNegociaci
 import { TbQoDireccionCliente } from './../../../../../core/model/quski/TbQoDireccionCliente';
 import { GuardarProspectoCRM } from './../../../../../core/model/crm/guardarProspectoCRM';
 import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/popups/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
+import { TbQoTasacion } from 'src/app/core/model/quski/TbQoTasacion';
 
 export interface TimeTracking {
   tasacion: Date;
@@ -42,6 +43,10 @@ export interface ParamTracking {
   proceso : string
   actividad : string
 }
+export interface Combinacion {
+  id : Array<number>
+  opcion : string
+}
 @Component({
   selector: 'kt-gestion-negociacion',
   templateUrl: './gestion-negociacion.component.html',
@@ -50,9 +55,9 @@ export interface ParamTracking {
 export class GestionNegociacionComponent implements OnInit {
   // VARIABLES PUBLICAS
   public dataPopup: DataPopup;
-  public existeRiesgo: boolean;
   public loading;
   public loadingSubject = new BehaviorSubject<boolean>(false);
+  public listJoyas: Array<Combinacion> = new Array<Combinacion>();
   // ENTIDADES
   private entidadCliente: TbQoCliente;
   // CATALOGOS
@@ -94,6 +99,9 @@ export class GestionNegociacionComponent implements OnInit {
   public descripcion = new FormControl('', []);
   public pesoNeto = new FormControl('', []);
   public valorOro = new FormControl('', []);
+   // FORMULARIO COMBINACION
+   public formCombinacion: FormGroup = new FormGroup({});
+   public joyas = new FormControl('', []);
 
   // TABLA DE TASACION
   // ---- @TODO: Crear un data source para la tabla 
@@ -160,7 +168,12 @@ export class GestionNegociacionComponent implements OnInit {
     this.loading = this.loadingSubject.asObservable();
     this.subheaderService.setTitle('Negociación');
     console.log("Esto calcula la edad? --> ",calcularEdad('1998-05-09'));
-;    
+    this.listJoyas = new Array<Combinacion>();
+    const comb = {} as Combinacion;
+    comb.id = new Array<number>();
+    comb.id.push(0);
+    comb.opcion = "--"
+    this.listJoyas.push( comb );
   }
   /** ********************************************* @BUSQUEDA_CLIENTE ********************* **/
   /**
@@ -342,8 +355,6 @@ export class GestionNegociacionComponent implements OnInit {
     this.dataPopup = new DataPopup();
     this.dataPopup.isCalculadora = true;
     this.dataPopup.cedula = cedula;
-    this.existeRiesgo = true;
-
   }
   /** ********************************************* @POPUP ********************* **/
   /**
@@ -419,7 +430,6 @@ export class GestionNegociacionComponent implements OnInit {
    * obtenerTipoOro
    */
   public obtenerTipoOro() {
-    
   }
 
 
