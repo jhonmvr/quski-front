@@ -36,12 +36,15 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
    */
   private direccionDeFlujo( data : DataPopup ){
     if (data.isCotizacion) {
+      console.log("Buscando variable en cotizacion");
       this.iniciaBusquedaCotizacion( data.idBusqueda );
     } else {
       if ( data.isNegociacion){   
+        console.log("Buscando variable en negociacion");
         this.iniciaBusquedaNegociacion( data.idBusqueda );
       } else {
         if( data.isCalculadora ) {
+          console.log("Buscando variable en calculadora");
           this.iniciaBusquedaCalculadora( data.cedula );
         }else{
           console.log("Error ----> NO HAY DATOS DE ENTRADA ", data)  

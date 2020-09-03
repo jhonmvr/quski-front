@@ -50,20 +50,14 @@ export interface ParamTracking {
 export class GestionNegociacionComponent implements OnInit {
   // VARIABLES PUBLICAS
   public dataPopup: DataPopup;
-  public existeRiesgo: boolean = false;
+  public existeRiesgo: boolean;
   public loading;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   // ENTIDADES
-  private entidadPersonaCalculadora: PersonaCalculadora;
-  private entidadProspectoCRM: ProspectoCRM;
-  private entidadClientesoftbank: ClienteSoftbank;
   private entidadCliente: TbQoCliente;
-  private entidadNegociacion: TbQoNegociacion;
-  private entidadesVariablesCrediticias: Array<TbQoVariablesCrediticia>;
-  private entidadesRiesgoAcumulados: Array<TbQoRiesgoAcumulado>;
   // CATALOGOS
   private catEducacion: Array<any>;
-  private catPublicidad: Array<any>;
+  private catPublicidad: Array<any> = ["CARGANDO CATALOGO"];  
   private catTipoVivienda: Array<any>;
   // VARIABLES DE TRACKING
   private horaInicio:     TimeTracking;
@@ -89,8 +83,17 @@ export class GestionNegociacionComponent implements OnInit {
   public campania = new FormControl('', []);
   public aprobacionMupi = new FormControl('', []);
   // FORMULARIO TASACION
-  // ---- @TODO: Complear formulario
   public formTasacion: FormGroup = new FormGroup({});
+  public numeroPiezas = new FormControl('', []);
+  public tipoOro = new FormControl('', []);
+  public tipoJoya = new FormControl('', []);
+  public estado = new FormControl('', []);
+  public pesoBruto = new FormControl('', []);
+  public descuentoPiedra = new FormControl('', []);
+  public descuentoSuelda = new FormControl('', []);
+  public descripcion = new FormControl('', []);
+  public pesoNeto = new FormControl('', []);
+  public valorOro = new FormControl('', []);
 
   // TABLA DE TASACION
   // ---- @TODO: Crear un data source para la tabla 
@@ -125,7 +128,9 @@ export class GestionNegociacionComponent implements OnInit {
   private noticeService: ReNoticeService, 
   private subheaderService: SubheaderService,
   ) { 
+    //  RELACIONANDO FROMULARIO DE BUSQUEDA
     this.formBusqueda.addControl("identificacion", this.identificacion);
+    //  RELACIONANDO FROMULARIO DE CLIENTE
     this.formDatosCliente.addControl("fechaNacimiento", this.fechaDeNacimiento);
     this.formDatosCliente.addControl("nombresCompletos", this.nombresCompletos);
     this.formDatosCliente.addControl("edad", this.edad);
@@ -136,7 +141,18 @@ export class GestionNegociacionComponent implements OnInit {
     this.formDatosCliente.addControl("campania", this.campania);
     this.formDatosCliente.addControl("publicidad", this.publicidad);
     this.formDatosCliente.addControl("aprobacionMupi" , this.aprobacionMupi);
-}
+    //  RELACIONANDO FROMULARIO DE TASACION
+    this.formTasacion.addControl("numeroPiezas" , this.numeroPiezas);
+    this.formTasacion.addControl("tipoOro" , this.tipoOro);
+    this.formTasacion.addControl("tipoJoya" , this.tipoJoya);
+    this.formTasacion.addControl("estado" , this.estado);
+    this.formTasacion.addControl("pesoBruto" , this.pesoBruto);
+    this.formTasacion.addControl("descuentoPiedra" , this.descuentoPiedra);
+    this.formTasacion.addControl("descuentoSuelda" , this.descuentoSuelda);
+    this.formTasacion.addControl("descripcion" , this.descripcion);
+    this.formTasacion.addControl("pesoNeto" , this.pesoNeto);
+    this.formTasacion.addControl("valorOro" , this.valorOro);
+  }
 
   ngOnInit() {
     this.consultaCatalogos();
@@ -364,7 +380,47 @@ export class GestionNegociacionComponent implements OnInit {
       control.setValue(null);
     });
   }
-
+  /** ********************************************* @CATALOGOS ********************* **/
+  public traerEntidadesVariables(event: Array<TbQoVariablesCrediticia>) {
+    this.guardarVariables(event);
+  }
+  private guardarVariables(entidades: Array<TbQoVariablesCrediticia>) {
+    entidades.forEach(e => {
+      e.tbQoNegociacion = new TbQoNegociacion();
+      //e.tbQoNegociacion.id = this.entidadCotizador.id;
+    });
+  }
+  /** ********************************************* @CATALOGOS ********************* **/
+  getPublicidades() {
+    this.par.findByNombreTipoOrdered("", "PUB", "Y").subscribe((data: any) => {
+      this.catPublicidad = (data && data.entidades)? data.entidades: "CATALOGO NO CARGADO"
+      if (data && data.entidades) {
+        this.catPublicidad = data.entidades;
+      }
+    }, error => {
+      if (error.error) {
+        if (error.error.codError) {
+          this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
+        } else {
+          this.sinNotSer.setNotice("Error al cargar parametros de publicidad", 'error');
+        }
+      } else if (error.statusText && error.status == 401) {
+        this.dialog.open(AuthDialogComponent, {
+          data: {
+            mensaje: "Error " + error.statusText + " - " + error.message
+          }
+        });
+      } else {
+        this.sinNotSer.setNotice("Error al cargar publicidades", 'error');
+      }
+    });
+  }
+  /**
+   * obtenerTipoOro
+   */
+  public obtenerTipoOro() {
+    
+  }
 
 
 
@@ -383,7 +439,7 @@ export class GestionNegociacionComponent implements OnInit {
       if (json.params.id) {
         this.cot.getEntity(json.params.id).subscribe( (data : any) =>{
           if (data.entidad) {
-            this.entidadNegociacion = data.entidad;
+            // this.entidadNegociacion = data.entidad;
             //this.capturaHoraInicio();
             // @todo
             // this.buscarCliente( this.entidadNegociacion.tbQoCliente.cedulaCliente );
@@ -493,67 +549,7 @@ numberOnly(event): boolean {
 
 }
   
-/**
-   * @author Jeroham Cadenas - Developer Twelve
-   * @description Tracking llamado desde .html captura la hora de atencion
-   */
-  private capturaHoraAtencion(){
-    if( this.horaAtencion == null ){
-      this.tra.getSystemDate().subscribe( (hora: any) =>{
-        if(hora.entidad){
-          this.horaAtencion = hora.entidad;
-        }
-      });
-    }
-  }
-
-  getPublicidades() {
-    this.par.findByNombreTipoOrdered("", "PUB", "Y").subscribe((wrapper: any) => {
-      if (wrapper && wrapper.entidades) {
-        this.catPublicidad = wrapper.entidades;
-      }
-    }, error => {
-      if (error.error) {
-        if (error.error.codError) {
-          this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-        } else {
-          this.sinNotSer.setNotice("Error al cargar parametros de publicidad", 'error');
-        }
-      } else if (error.statusText && error.status == 401) {
-        this.dialog.open(AuthDialogComponent, {
-          data: {
-            mensaje: "Error " + error.statusText + " - " + error.message
-          }
-        });
-      } else {
-        this.sinNotSer.setNotice("Error al cargar publicidades", 'error');
-      }
-    });
-  }
-
- private abrirPopupVerCotizacion() {
-
-    const dialogRefGuardar = this.dialog.open(VerCotizacionesComponent, {
-      width: '900px',
-      height: 'auto',
-      data: "1001574035"
-
-
-    });
-
-    dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
-     
-      if (respuesta)
-      console.log("Estoy aqui ");
-     
-
-    });
-
-
-  }
-
-
-  ////Metodo de calculo de la fecha de nacimiento
+    ////Metodo de calculo de la fecha de nacimiento
   onChangeFechaNacimiento() {
 
     this.loadingSubject.next(true);
@@ -611,93 +607,6 @@ numberOnly(event): boolean {
         }
       );
   }
-/**
- * Metodo buscar cliente wn primera instancia busca en SOFTBANK luego en la Calculadora Quski
- * y  en CRM 
- * Si no existe pide que se suba la autorizacion de equifax.
- */
 
-   
-
-///Abrir el POPUP de la solicitud de equifax
-  /* seleccionarEditar() {
-
-    console.log(">>>INGRESA AL DIALOGO ><<<<<<");
-    const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
-      width: '600px',
-      height: 'auto',
-      data: this.identificacion.value
-
-
-    });
-
-    dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
-      data: this.identificacion.value;
-      console.log(">>><<<<<<<<<<<<<<< DATA arreglo" + JSON.stringify(this.data));
-      console.log("jxjkxf" , )
-      console.log("envio de datos ");
-      if (respuesta)
-      this.loadingSubject.next(true);
-      this.cs.findClienteByCedulaQusqui("C", this.identificacion.value).subscribe((data: any) => {
-  
-        this.loadingSubject.next(false);
-        if (data.entidad.datoscliente) {
-          console.log('Equifax ', data.entidad);
-          this.nombresCompletos.setValue(data.entidad.datoscliente.nombrescompletos);
-          this.fechaDeNacimiento.setValue(data.entidad.datoscliente.fechanacimiento);
-          this.edad.setValue(data.entidad.datoscliente.edad);
-          this.nacionalidad.setValue(data.entidad.datoscliente.nacionalidad);
-          this.movil.setValue(data.entidad.datoscliente.telefonomovil);
-          this.telefonoDomicilio.setValue(data.entidad.datoscliente.telefonofijo);
-          this.publicidad.setValue(data.entidad.datoscliente.publicidad);
-          this.email.setValue(data.entidad.datoscliente.email);
-          this.campania.setValue(data.entidad.datoscliente.codigocampania);
-          this.loadingSubject.next(false);
-          this.sinNotSer.setNotice("INFORMACION CARGADA CORRECTAMENTE CALCULADORA QUSKI", 'success');
-        } else {
-              this.sinNotSer.setNotice("USUARIO NO REGISTRADO ", 'error');
-              this.seleccionarEditar();
-            }
-          
-       
-      },
-      );
-
-    });
-
-
-
-  } */
-/*   public cadena="";
-  public cadena1;
-  ////Registro del prospecto en el CRM////
-  registrarProspecto(){
-   
-    if(this.identificacion.value!=""&&this.nombresCompletos.value!=""&&this.email.value!=""){
-   
-    this.clienteCRM=new ClienteCRM();
-    this.clienteCRM.firstName=this.nombresCompletos.value;
-    this.clienteCRM.phoneHome=this.telefonoDomicilio.value;
-    this.clienteCRM.phoneMobile=this.movil.value;
-    this.clienteCRM.cedulaC=this.identificacion.value;
-    this.clienteCRM.emailAddress=this.email.value;
-    this.cadena =this.email.value;
-    this.cadena1 = this.cadena.toUpperCase();
-    this.clienteCRM.emailAddressCaps=this.cadena1;
-    this.sinNotSer.setNotice("REGISTRO CORRECTO DEL PROSPECTO", 'success');
-    this.cs.guardarProspectoCRM(this.clienteCRM).subscribe((data: any) => {
-    console.log("datos de envio: " + JSON.stringify(this.clienteCRM));
-  }, error => {
-    console.log("error al guardar el cliente en el CRM: " + error);
-    console.log("------------manageurl errorsss : " + JSON.stringify(error));
-    this.sinNotSer.setNotice("NO SE PUEDE GUARDAR", 'error');
-    //  this.loadingSubject.next(false);
-  });
-}  
-  else{
-    this.sinNotSer.setNotice("DEBE COMPLETAR LA INFORMACION ", 'error');
-  }
-
-  } */
 
 }
