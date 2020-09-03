@@ -112,7 +112,7 @@
 							<mat-form-field class="mat-form-field-fluid">
 								<mat-select placeholder="Publicidad" [formControl]="publicidad" required="true">
 									<mat-option>--</mat-option>
-									<mat-option *ngFor="let publicidad of listPublicidad" [value]="publicidad">
+									<mat-option *ngFor="let publicidad of catPublicidad" [value]="publicidad">
 										{{ publicidad.valor }}
 									</mat-option>
 								</mat-select>
@@ -127,7 +127,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6">
-							<mat-radio-group [formControl]="aprobacionMupi" (change)="capturaHoraAtencion()">
+							<mat-radio-group [formControl]="aprobacionMupi">
 								<mat-radio-button value="Si">SI</mat-radio-button>
 								<mat-radio-button value="No">NO</mat-radio-button>
 							</mat-radio-group>
@@ -136,249 +136,107 @@
 				</form>
 			</mat-step>
 			<mat-step>
-				<kt-tabla-detalle-credito [idCotizador]='dataPopup'></kt-tabla-detalle-credito>
+				<ng-template matStepLabel>Variables Crediticias</ng-template>
+				<ng-container *ngIf="dataPopup">
+					<kt-tabla-variables-crediticias [dataPopup]="dataPopup"></kt-tabla-variables-crediticias>
+				</ng-container>
 			</mat-step>
-
 			<mat-step>
-				<ng-template matStepLabel>Riesgo Acumulado </ng-template>
-				<!-- <mat-dialog-content>
-					<mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceCre">
-						<ng-container matColumnDef="NumeroOperacion">
-							<mat-header-cell *matHeaderCellDef> N. Operaciòn </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-						<ng-container matColumnDef="TipoOferta">
-							<mat-header-cell *matHeaderCellDef> Tipo Oferta </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-						<ng-container matColumnDef="Vencimiento">
-							<mat-header-cell *matHeaderCellDef> Vencimiento </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-						<ng-container matColumnDef="Cuotas">
-							<mat-header-cell *matHeaderCellDef> Cuotas </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-						<ng-container matColumnDef="CapitaInicial">
-							<mat-header-cell *matHeaderCellDef> Capital Inicial </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-						<ng-container matColumnDef="SaldoCapital">
-							<mat-header-cell *matHeaderCellDef> Saldo Capital </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-						<ng-container matColumnDef="Plazo">
-							<mat-header-cell *matHeaderCellDef> Plazo </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-						<ng-container matColumnDef="FechaAprobacion">
-							<mat-header-cell *matHeaderCellDef> Fecha Aprobacion </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-						<ng-container matColumnDef="FechaFinalCredito">
-							<mat-header-cell *matHeaderCellDef> Fecha Final Crèdito </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-						<ng-container matColumnDef="DiasMora">
-							<mat-header-cell *matHeaderCellDef> Dias Mora </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-						<ng-container matColumnDef="ValorCuota">
-							<mat-header-cell *matHeaderCellDef> Valor Cuota </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-						<ng-container matColumnDef="MotivoBloqueo">
-							<mat-header-cell *matHeaderCellDef> Motivo Bloqueo </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-						<ng-container matColumnDef="TotalCredito">
-							<mat-header-cell *matHeaderCellDef> Total Credito </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-
-						<ng-container matColumnDef="CoberturaAnterior">
-							<mat-header-cell *matHeaderCellDef> Cobertura Anterior </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-						<ng-container matColumnDef="CoverturaVigente">
-							<mat-header-cell *matHeaderCellDef> Cobertura Vigente </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-						<ng-container matColumnDef="DeudaTotal">
-							<mat-header-cell *matHeaderCellDef> Deuda Total </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-						<ng-container matColumnDef="TotalSaldo">
-							<mat-header-cell *matHeaderCellDef> Deuda Total </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-						<ng-container matColumnDef="RiesgoTotalCliente">
-							<mat-header-cell *matHeaderCellDef> Riesgo Total Cliente </mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
-						</ng-container>
-
-
-
-						<mat-header-row *matHeaderRowDef="displayedColumnsRiesgoAcumulado"></mat-header-row>
-						<mat-row *matRowDef="let row; columns: displayedColumnsRiesgoAcumulado;"></mat-row>
-
-					</mat-table>
-
-					<mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
-						[showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
-					</mat-paginator>
-
-				</mat-dialog-content> -->
-
+				<ng-template matStepLabel>Riesgo Acumulado</ng-template>
+				<ng-container *ngIf="dataPopup">
+					<kt-tabla-riesgo-acumulado [cedula]="entidadCliente.cedulaCliente" [isGuardar]="true">
+					</kt-tabla-riesgo-acumulado>
+				</ng-container>
 			</mat-step>
-
-
 			<mat-step>
 				<ng-template matStepLabel> Tasación </ng-template>
-				<!-- <div class="form-group row">
-					<div class="col-md-4">
-						<mat-form-field>
-							<input matInput numeric numericType="number" type="text" placeholder="N&#250;mero de piezas:"
-								[formControl]="numeroPiezas">
-						</mat-form-field>
+				<form [formGroup]="formDatosCliente">
+					<div class="row">
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput numeric numericType="number" type="text"
+									placeholder="N&#250;mero de piezas:" [formControl]="numeroPiezas">
+							</mat-form-field>
+						</div>
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<mat-select placeholder="Tipo oro:" [formControl]="tipoOro">
+									<mat-option>--</mat-option>
+									<mat-option *ngFor="let tipoOro of listOros" [value]="tipoOro"></mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<mat-select placeholder="Tipo de joya:" [formControl]="tipoJoya">
+									<mat-option>--</mat-option>
+									<mat-option *ngFor="let tipoJoya of listTipoJoya" [value]="tipoJoya"></mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
 					</div>
-					<div class="col-md-4">
-
-
-
-						<mat-form-field>
-							<mat-select placeholder="Tipo oro:" [formControl]="tipoOro" (blur)="enviarParametrosCalculos()">
-								<mat-option>--</mat-option>
-								<mat-option *ngFor="let tipoOro of listOros" [value]="tipoOro">
-
-								</mat-option>
-							</mat-select>
-						</mat-form-field>
+					<div class="row">
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<mat-select placeholder="Estado" [formControl]="estado">
+									<mat-option>--</mat-option>
+									<mat-option *ngFor="let estado of estados" [value]="estado"> {{estado}} </mat-option>
+								</mat-select>
+								<mat-error></mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Peso bruto:" [formControl]="pesoBruto"
+									(blur)="enviarParametrosCalculos()">
+								<mat-error>{{getErrorMessage('pesoBruto')  }}</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra"
+									readonly>
+								<mat-error>{{getErrorMessage('descuentoPiedra')  }}</mat-error>
+							</mat-form-field>
+						</div>
 					</div>
-					<div class="col-md-4">
-						<mat-form-field>
-							<mat-select placeholder="Tipo de joya:" [formControl]="tipoJoya">
-								<mat-option>--</mat-option>
-								<mat-option *ngFor="let tipoJoya of listTipoJoya" [value]="tipoJoya">
-
-								</mat-option>
-							</mat-select>
-						</mat-form-field>
+					<div class="row">
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Descuento suelda:" [formControl]="descuentoSuelda" readonly>
+								<mat-error>{{getErrorMessage('descuentoSuelda')  }}</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Descripci&#243;n descuentos:" [formControl]="descripcion"
+									readonly>
+							</mat-form-field>
+						</div>
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
+							</mat-form-field>
+						</div>
 					</div>
-				</div>
-				<div class="form-group row">
-					<div class="col-md-4">
-						<mat-form-field>
-							<mat-select placeholder="Estado" [formControl]="estado">
-								<mat-option>--</mat-option>
-								<mat-option *ngFor="let estado of estados" [value]="estado">
-									{{estado}}
-								</mat-option>
-							</mat-select>
-							<mat-error></mat-error>
-						</mat-form-field>
+					<div class="row">
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Valor oro:" [formControl]="valorOro" readonly>
+							</mat-form-field>
+						</div>
 					</div>
-					<div class="col-md-4">
-						<mat-form-field>
-							<input matInput placeholder="Peso bruto:" [formControl]="pesoBruto"
-								(blur)="enviarParametrosCalculos()">
-							<mat-error>{{getErrorMessage('pesoBruto')  }}</mat-error>
-						</mat-form-field>
+					<div class="row">
+						<div class="col-md-2">
+							<a href="javascript:void(0);" (click)="buscar()" matTooltip="Agregar"
+								style="font-size: 12px; vertical-align: middle;">
+								<mat-icon style="font-size: 32px" matTooltipPosition="above">add_circle_outline</mat-icon>
+								<span style="position: relative;top: -10px;margin-left: 5px;">Agregar</span>
+							</a>
+						</div>
 					</div>
-					<div class="col-md-4">
-						<mat-form-field>
-							<input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra" readonly>
-							<mat-error>{{getErrorMessage('descuentoPiedra')  }}</mat-error>
-						</mat-form-field>
-					</div>
-				</div>
-				<div class="form-group row">
-
-					<div class="col-md-4">
-						<mat-form-field>
-							<input matInput placeholder="Descuento suelda:" [formControl]="descuentoSuelda" readonly>
-							<mat-error>{{getErrorMessage('descuentoSuelda')  }}</mat-error>
-						</mat-form-field>
-					</div>
-					<div class="col-md-4">
-						<mat-form-field>
-							<input matInput placeholder="Descripci&#243;n descuentos:" [formControl]="descripcion" readonly>
-						</mat-form-field>
-					</div>
-					<div class="col-md-4">
-						<mat-form-field>
-							<input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
-						</mat-form-field>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-4">
-						<mat-form-field>
-							<input matInput placeholder="Valor oro:" [formControl]="valorOro" readonly>
-
-						</mat-form-field>
-					</div>
-				</div>
-
-				<div class="form-group row" fxLayoutAlign="center start">
-					<div class="col-md-2">
-
-						<a href="javascript:void(0);" (click)="buscar()" matTooltip="Agregar"
-							style="font-size: 12px; vertical-align: middle;">
-							<mat-icon style="font-size: 32px" matTooltipPosition="above">add_circle_outline</mat-icon>
-							<span style="position: relative;top: -10px;margin-left: 5px;">Agregar</span>
-						</a>
-					</div>
-				</div>
-				<mat-table #table class="mat-elevation-z8" [dataSource]="displayedColumnsTas">
-
+				</form>
+				<mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceTasacion">
 					<ng-container matColumnDef="Accion">
 						<mat-header-cell *matHeaderCellDef>Acci&#243;n</mat-header-cell>
 						<mat-cell *matCellDef="">
@@ -465,15 +323,25 @@
 					<mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
 					<mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
 					<mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
-				</mat-table> -->
-
-
+				</mat-table>
+				<form [formGroup]="formCombinacion">
+					<div class="row">
+						<div class="col-md-4 offset-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<mat-select placeholder="Combinacion de joyas" [formControl]="joyas" multiple>
+									<mat-option *ngFor="let joyas of listJoyas" [value]="joyas.id"> {{joyas.opcion}} </mat-option>
+								</mat-select>
+								<mat-error>{{ getErrorMessage('seleccion') }}</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+				</form>
 			</mat-step>
 			<mat-step>
-				<ng-template matStepLabel>Detalle Opciones de crédito </ng-template>
-				<!-- 	<div class="mat-table__wrapper">
-					<mat-table #table class="mat-elevation-z8" [dataSource]="displayedColumnsOpt" matSort #sort1="matSort"
-						matSortDisableClear>
+				<ng-template matStepLabel>Detalle Opciones de crédito</ng-template>
+				<div class="mat-table__wrapper">
+					<mat-table #table class="mat-elevation-z8" [dataSource]="displayedColumnsOpt" matSort
+						#sort1="matSort" matSortDisableClear>
 						<ng-container matColumnDef="Accion">
 							<mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
 							<mat-cell *matCellDef="">
@@ -712,11 +580,14 @@
 						<mat-row *matRowDef="let row; columns: displayedColumnsOpcionesCredito"></mat-row>
 					</mat-table>
 					<mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
-						[showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+						[showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage"
+						(page)="paged()">
 					</mat-paginator>
-				</div> -->
-
+				</div>
 			</mat-step>
+			<mat-step>
+				<ng-template matStepLabel>Detalle Opciones de crédito</ng-template>
+				<lista </mat-step>
 		</mat-vertical-stepper>
 
 	</re-portlet-body>
