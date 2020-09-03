@@ -110,7 +110,237 @@ export class SoftbankService extends BaseService {
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos gradointeres
+   */
+  consultarGradoInteresCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "gradointeres" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos tipofunda
+   */
+  consultarTipoFundaCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipofunda" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+   /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos tipofunda
+   */
+  consultarEstadoOperacionQuskiCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadooperacionquski" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos pais
+   */
+  consultarPaisCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "pais" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
   } 
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos ocupacion
+   */
+  consultarOcupacionCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "ocupacion" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  } 
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos tipodireccion
+   */
+  consultarTipoDireccionCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipodireccion" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  } 
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos tipotelefono
+   */
+  consultarTipoTelefonoCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipotelefono" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos impcom
+   */
+  consultarImpComCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "impcom" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos tipojoya
+   */
+  consultarTipoJoyaCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipojoya" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos estadojoya
+   */
+  consultarEstadoJoyaCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadojoya" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos estadoproceso
+   */
+  consultarEstadoProcesoCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadoproceso" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos estadoubicacion
+   */
+  consultarEstadoUbicacionCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadoubicacion" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos tipooro
+   */
+  consultarTipoOroCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipooro" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos tipocobertura
+   */
+  consultarTipoCoberturaCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipocobertura" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos tipocliente
+   */
+  consultarTipoClienteCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipocliente" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }    
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos sexo
+   */
+  consultarGeneroCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "sexo" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos firmanteoperacion
+   */
+  consultarFirmanteOperacionCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "firmanteoperacion" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+   /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos tipovivienda
+   */
+  consultarTipoViviendaCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipovivienda" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos tipopago
+   */
+  consultarTipoPagoCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipopago" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos formapago
+   */
+  consultarFormaPagoCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "formapago" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  } 
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos motivodevolucionaprobacion
+   */
+  consultarMotivoDevolucionAprobacionCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "motivodevolucionaprobacion" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos actividadeconomicamupi
+   */
+  consultarActividadEconomicaMupiCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "actividadeconomicamupi" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  }
+   /**
+   * @author Oscar Romero - Developer five
+   * @description Catalogos motivodevoluciongarantia
+   */
+  consultarMotivoDevolucionGarantiaCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "motivodevoluciongarantia" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
   /**
    * @author Jeroham Cadenas - Developer Twelve
    * @description Catalogos de asesores por agencia
@@ -176,12 +406,12 @@ export class SoftbankService extends BaseService {
    * @author Jeroham Cadenas - Developer Twelve
    * @description Catalogos Vivienda
    */
-  consultarViviendaCS() {
+  /*consultarViviendaCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "vivienda" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
-  }
+  }*/
   /**
    * @author Jeroham Cadenas - Developer Twelve
    * @description Catalogos Profesiones
