@@ -1,27 +1,27 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { CreditoNegociacionService } from '../../../../core/services/quski/credito.negociacion.service';
-import { TbQoCreditoNegociacion } from '../../../../core/model/quski/TbQoCreditoNegociacion';
-import { TbQoCliente } from '../../../../core/model/quski/TbQoCliente';
-import { diferenciaEnDias } from '../../../../core/util/diferenciaEnDias';
-import { ReNoticeService } from '../../../../core/services/re-notice.service';
+import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
+import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
+import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
+import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { DatePipe } from '@angular/common';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
-import { Page } from '../../../../core/model/page';
-import { TasacionService } from '../../../../core/services/quski/tasacion.service';
-import { HabilitanteComponent } from '../../../partials/custom/habilitante/habilitante.component';
-import { HabilitanteDialogComponent } from '../../../partials/custom/habilitante/habilitante-dialog/habilitante-dialog.component';
-import { DocumentoHabilitanteService } from '../../../../core/services/quski/documento-habilitante.service';
-import { environment } from '../../../../../environments/environment';
-import { ObjectStorageService } from '../../../../core/services/object-storage.service';
-import { FundaService } from '../../../../core/services/quski/funda.service';
-import { OperacionCrear } from '../../../../core/model/softbank/OperacionCrear';
-import { DatosImpCom } from '../../../../core/model/softbank/DatosImpCom';
-import { SoftbankService } from '../../../../core/services/quski/softbank.service';
-import { ConsultaCliente } from '../../../../core/model/softbank/ConsultaCliente';
-import { ExcepcionService } from '../../../../core/services/quski/excepcion.service';
-import { ConsultaOferta } from '../../../../core/model/calculadora/consultaOferta';
+import { Page } from '../../../../../core/model/page';
+import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
+import { HabilitanteComponent } from '../../../../partials/custom/habilitante/habilitante.component';
+import { HabilitanteDialogComponent } from '../../../../partials/custom/habilitante/habilitante-dialog/habilitante-dialog.component';
+import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
+import { environment } from '../../../../../../environments/environment';
+import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
+import { FundaService } from '../../../../../core/services/quski/funda.service';
+import { OperacionCrear } from '../../../../../core/model/softbank/OperacionCrear';
+import { DatosImpCom } from '../../../../../core/model/softbank/DatosImpCom';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
+import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
+import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOferta';
 
 
 @Component({

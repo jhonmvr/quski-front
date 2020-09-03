@@ -21,6 +21,8 @@ import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackin
 import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
 import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
+import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
+import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 
 
 
@@ -43,6 +45,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   private cedulaCliente: string;
   private idCliente: number;
   private loadingSubject = new BehaviorSubject<boolean>(false);
+  public mensaje: any;
 
   // TABLA DE VARIABLES CREDITICIAS
   displayedColumnsVariablesCrediticias = ['orden', 'variable', 'valor'];
@@ -107,6 +110,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   constructor(
     private neg: NegociacionService,
     private cli: ClienteService,
+    private ing: IntegracionService,
     private tra: TrackingService,
     private route: ActivatedRoute,
     private par: ParametroService,
@@ -170,6 +174,22 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.subheaderService.setTitle("Excepciones de Negociación");
     this.capturaDatosTraking();
   }
+  private buscarMensaje() {
+    this.loadingSubject.next(true);
+    const consulta = new PersonaConsulta();
+    consulta.identificacion = this.entidadCliente.cedulaCliente;
+    this.ing.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
+
+      if (data.entidad.datoscliente != null) {
+        if (data.entidad.mensaje != '') {
+          console.log('DATA EQUIFAX', JSON.stringify(data));
+          this.mensaje = data.entidad.mensaje;
+          console.log('BUSCA EN PERSONA CALCULADORA', this.mensaje);
+        }
+      }
+      this.loadingSubject.next(false);
+    });
+  }
 
   /********************************************  @TRACKING  ***********************************************************/
   /**
@@ -215,13 +235,13 @@ export class ExcepcionesClienteComponent implements OnInit {
     });
   }
   private capturaDatosTraking() {
-    this.par.findByNombreTipoOrdered('NEGOCIACION', 'ACTIVIDAD', 'Y').subscribe((data: any) => {
+    this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
       if (data.entidades) {
         this.actividad = data.entidades[0].nombre;
-        this.par.findByNombreTipoOrdered('NEGOCIACION', 'PROCESO', 'Y').subscribe((data: any) => {
+        this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
           if (data.entidades) {
             this.procesoExcepcion = data.entidades[0].nombre;
-            this.par.findByNombreTipoOrdered('NEGOCIACION', 'PROCESO', 'Y').subscribe((data: any) => {
+            this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
               if (data.entidades) {
                 this.procesoExcepcion = data.entidades[0].nombre;
               }
@@ -285,18 +305,21 @@ export class ExcepcionesClienteComponent implements OnInit {
       data.params.id
       if (data.params.id) {
         this.idNegociacion = data.params.id;
-        console.log('PARAMETRO=====> ', this.idNegociacion);
+        // console.log('PARAMETRO=====> ', this.idNegociacion);
         this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
+          console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
 
           this.entidadNegociacion = data.entidad;
-          console.log('CONSULTA valor de la dataNegociacion', JSON.stringify(data));
+
           if (data.entidad) {
             //TRACKING
+            console.log('TRACKING', JSON.stringify(data));
             this.capturaHoraAsignacion('NEGOCIACION');
 
 
             this.cedulaCliente = data.entidad.tbQoCliente.cedulaCliente;
             this.cli.findClienteByIdentificacion(this.cedulaCliente).subscribe((data: any) => {
+              console.log('VALOR DE LA DATA==> findClienteByIdentificacion ', JSON.stringify(data));
               this.entidadCliente = data.entidad;
               this.loadingSubject.next(false);
               if (data) {
@@ -305,10 +328,10 @@ export class ExcepcionesClienteComponent implements OnInit {
                   + ' ' + this.entidadCliente.apellidoPaterno + ' ' + this.entidadCliente.apellidoMaterno);
                 this.idCliente = data.id;
                 this.identificacion.setValue(this.entidadCliente.cedulaCliente);
-                console.log('VALOR DE LA dataNegociacion====> ', JSON.stringify(this.entidadNegociacion));
-                console.log('VALOR DE LA ENTIDAD====> ', JSON.stringify(this.entidadNegociacion.procesoActual));
+                // console.log('VALOR DE LA dataNegociacion====> ', JSON.stringify(this.entidadNegociacion));
+                //console.log('VALOR DE LA ENTIDAD====> ', JSON.stringify(this.entidadNegociacion.procesoActual));
                 this.nombreProceso.setValue(this.entidadNegociacion.procesoActual);
-
+                this.buscarMensaje();
                 // FORM CLIENTE
                 this.tipoIdentificacion.setValue(TipoIdentificacionEnum.CEDULA);
                 this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
@@ -374,4 +397,5 @@ export class ExcepcionesClienteComponent implements OnInit {
       }
     });
   }
+
 }
