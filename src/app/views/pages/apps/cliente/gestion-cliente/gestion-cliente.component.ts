@@ -6,8 +6,14 @@ import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { Page } from '../../../../../core/model/page';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { SeparacionBienesEnum } from '../../../../../core/enum/SeparacionBienesEnum';
+import { ProfesionEnum } from '../../../../../core/enum/ProfesionEnum';
+import { EstadoCivilEnum } from '../../../../../core/enum/EstadoCivilEnum';
+import { NivelEstudioEnum } from '../../../../../core/enum/NivelEstudioEnum';
+import { SectorEnum } from '../../../../../core/enum/SectorEnum';
 import { OrigenIngresosEnum } from '../../../../../core/enum/OrigenIngresosEnum';
 import { OcupacionInmuebleEnum } from '../../../../../core/enum/OcupacionInmuebleEnum';
+import { GeneroEnum } from '../../../../../core/enum/GeneroEnum';
+import { CargaFamiliarEnum } from '../../../../../core/enum/CargaFamiliarEnum';
 import { RelacionDependenciaEnum } from '../../../../../core/enum/RelacionDependenciaEnum';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
@@ -19,7 +25,8 @@ import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapt
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
-import { Parroquia } from '../../../../../core/model/quski/Parroquia';
+import { PaisesEnum } from '../../../../../core/enum/PaisesEnum';
+import { ParroquiaService } from '../../../../../core/services/quski/parroquia.service';
 import { TbQoIngresoEgresoCliente } from '../../../../../core/model/quski/TbQoIngresoEgresoCliente';
 import { DireccionClienteService } from '../../../../../core/services/quski/direccion-cliente.service';
 import { TbQoDireccionCliente } from '../../../../../core/model/quski/TbQoDireccionCliente';
@@ -29,46 +36,37 @@ import { ParaDesarrolloEnum } from '../../../../../core/enum/ParaDesarrolloEnum'
 import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
+
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
 import { ReferenciaParentescoEnum } from '../../../../../core/enum/ReferenciaParentescoEnum';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
+import { CrearCliente } from '../../../../../core/model/softbank/CrearCliente';
+import { ActividadEconomicaCliente } from '../../../../../core/model/softbank/ActividadEconomicaCliente';
+import { ContactosCliente } from '../../../../../core/model/softbank/ContactosCliente';
+import { CuentasBancariasCliente } from '../../../../../core/model/softbank/CuentasBancariasCliente';
+import { TelefonosCliente } from '../../../../../core/model/softbank/TelefonosCliente';
+import { EditarCliente } from '../../../../../core/model/softbank/EditarCliente';
+import { SimulacionPrecancelacion } from '../../../../../core/model/softbank/SimulacionPrecancelacion';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
+import { SimulacionTablaAmortizacion } from '../../../../../core/model/softbank/SimulacionTablaAmortizacion';
+import { OperacionAbono } from '../../../../../core/model/softbank/OperacionAbono';
+import { OperacionCancelar } from '../../../../../core/model/softbank/OperacionCancelar';
+import { Rubros } from '../../../../../core/model/softbank/Rubros';
+import { OperacionCrear } from '../../../../../core/model/softbank/OperacionCrear';
+import { OperacionRenovar } from '../../../../../core/model/softbank/OperacionRenovar';
+import { DatosImpCom } from '../../../../../core/model/softbank/DatosImpCom';
+import { ConsultaSolca } from '../../../../../core/model/softbank/ConsultaSolca';
 import { map, startWith } from 'rxjs/operators';
 import { environment } from '../../../../../../../src/environments/environment';
 import { ClienteSoftbank } from '../../../../../core/model/softbank/ClienteSoftbank';
-import { FindValueSubscriber } from 'rxjs/internal/operators/find';
-//import { ProfesionEnum } from '../../../../../core/enum/ProfesionEnum';
-//import { EstadoCivilEnum } from '../../../../../core/enum/EstadoCivilEnum';
-//import { NivelEstudioEnum } from '../../../../../core/enum/NivelEstudioEnum';
-//import { SectorEnum } from '../../../../../core/enum/SectorEnum';
-//import { GeneroEnum } from '../../../../../core/enum/GeneroEnum';
-//import { CargaFamiliarEnum } from '../../../../../core/enum/CargaFamiliarEnum';
-//import { PaisesEnum } from '../../../../../core/enum/PaisesEnum';
-//import { ParroquiaService } from '../../../../../core/services/quski/parroquia.service';
-//import { CrearCliente } from '../../../../../core/model/softbank/CrearCliente';
-//import { ActividadEconomicaCliente } from '../../../../../core/model/softbank/ActividadEconomicaCliente';
-//import { ContactosCliente } from '../../../../../core/model/softbank/ContactosCliente';
-//import { CuentasBancariasCliente } from '../../../../../core/model/softbank/CuentasBancariasCliente';
-//import { TelefonosCliente } from '../../../../../core/model/softbank/TelefonosCliente';
-//import { EditarCliente } from '../../../../../core/model/softbank/EditarCliente';
-//import { SimulacionPrecancelacion } from '../../../../../core/model/softbank/SimulacionPrecancelacion';
-//import { SimulacionTablaAmortizacion } from '../../../../../core/model/softbank/SimulacionTablaAmortizacion';
-//import { OperacionAbono } from '../../../../../core/model/softbank/OperacionAbono';
-//import { OperacionCancelar } from '../../../../../core/model/softbank/OperacionCancelar';
-//import { Rubros } from '../../../../../core/model/softbank/Rubros';
-//import { OperacionCrear } from '../../../../../core/model/softbank/OperacionCrear';
-//import { OperacionRenovar } from '../../../../../core/model/softbank/OperacionRenovar';
-//import { DatosImpCom } from '../../../../../core/model/softbank/DatosImpCom';
-//import { ConsultaSolca } from '../../../../../core/model/softbank/ConsultaSolca';
-//import { ifError } from 'assert';
 //import { TbQoNegociacion } from '../../../../../../../src/app/core/model/quski/TbQoNegociacion';
 
 
 
 
 export interface User {
-  nombre: string;
+  name: string;
 }
 
 @Component({
@@ -82,11 +80,11 @@ export class GestionClienteComponent implements OnInit {
   public date;
 
 
-  ubication : User []; /////---------------->>>>>>>>>>>
-  Bubications = [];
+  ubications: User[]; /////---------------->>>>>>>>>>>
+
   filteredOptions: Observable<User[]>;
-  //filteredOptions2: Observable<User[]>;
-  //filteredOptions3: Observable<User[]>;
+  filteredOptions2: Observable<User[]>;
+  filteredOptions3: Observable<User[]>;
 
 
   // VARIABLES DE BUSQUEDA EN NEGOCIACION
@@ -114,47 +112,29 @@ export class GestionClienteComponent implements OnInit {
   // TABLA DE INGRESO EGRESO
   displayedColumnsII = ['Accion', 'Is', 'Valor'];
   dataSourceIngresoEgreso = new MatTableDataSource<TbQoIngresoEgresoCliente>();
+  // ARRAY CARGADOS DE SOFTBANK <-------------> ESPERANDO WEB SERVICES <----------------->
+  public canal = [];
+  public actividadeco = [];
+  public ocupaciones = [];
+  public profesiones = [];
+  public parroquias = [];
 
 
-  // <-------------> ESPERANDO WEB SERVICES <----------------->
-
-  //           <<------------CATALOGOS------------>>
-
-  listnombreEducacion = [];       //NIVEL EDUCACION WEB SERVICE DE SOFTBANK
-  consultarEducacion = [];
-  listActividadEconomica = [];    //ACTIVIDAD ECONOMICA WEB SERVICE DE SOFTBANK
-  listNombreProfesion = [];     // PROFESIONES WEB SERVICE DE SOFTBANK
-  listNombreOcupacion = [];   // OCUPACIONES WEB SERVICE DE SOFTBANK
-  listNombreGenero =[];   // GENERO WEB SERVICE DE SOFTBANK
-  consultaGenero =[];
-  listNombreTipoVivienda = [];    // TIPO VIVIENDA WEB SERVICE DE SOFTBANK
-  listNombrePais = [];    //LISTA DE PAISES WEB SERVICE DE SOFTBANK
-  listNombreSectorVivienda =[]; // Sector VIVIENDA WEB SERVICE DE SOFTBANK
-  listNombreTipoReferencia = []; // TIPO REFERENCIA WEB SERVICE DE SOFTBANK
-  //public canal = [];
-
-
-  //UBICACION  
+  //BUSQUEDA POR UBICACION  
   public bParroqui = [];
   //public parroquia     = [];
   public bCantons = [];
   //public cantones      = []; 
-  //public bProvinces = [];
+  public bProvinces = [];
   //public provincias    = [];
   public uubicacion = [];
   public bUbicaciones = [];
   public bNombre = [];
   public localizacion;
 
-  //ESTADO CIVIL WEB SERVICE DE SOFTBANK
-  public codigoEstadoCivil = [];
-  public codigooEstadoCivil = [];
-  public consultaCodigoEstadoCivil = []
-  listCodigoEstadoCivil = [];
-  public nombreEstadoCivil = [];
-  listNombreEstadoCivil = []
-
-  
+  // ENUM ESPERANDO WEB SERVICE DE SOFTBANK
+  listProfesion = Object.keys(ProfesionEnum);
+  listPaises = Object.values(PaisesEnum);
 
   // STANDARD VARIABLES
   private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -173,20 +153,19 @@ export class GestionClienteComponent implements OnInit {
 
 
   // ENUMS
-  //public listReferencia = Object.values(ReferenciaParentescoEnum);
+  public listReferencia = Object.values(ReferenciaParentescoEnum);
   public listRelacionDependencia = Object.keys(RelacionDependenciaEnum);
   public listSeparacionBienes = Object.values(SeparacionBienesEnum);
+  public listTipoVivienda = Object.keys(OcupacionInmuebleEnum);
   public listParaDesarrolloEnum = Object.values(ParaDesarrolloEnum);
   public listOrigenIngreso = Object.values(OrigenIngresosEnum);
-  //public listTipoVivienda = Object.keys(OcupacionInmuebleEnum);
-  //public listCargaFamiliar = Object.values(CargaFamiliarEnum);
-  //public listNivel = Object.values(NivelEstudioEnum);
-  //public listEstadoCivil = Object.values(EstadoCivilEnum);
-  //public listGenero = Object.values(GeneroEnum)
-  //public listSector = Object.keys(SectorEnum);
-
+  public listCargaFamiliar = Object.values(CargaFamiliarEnum);
+  public listNivel = Object.values(NivelEstudioEnum);
+  public listEstadoCivil = Object.values(EstadoCivilEnum);
+  public listGenero = Object.values(GeneroEnum)
+  public listSector = Object.keys(SectorEnum);
   // OBJETOS DE ENTIDADES
-  public ubicacionEntity: Parroquia[] = new Array();
+  public ubicacionEntity = new Array();
   public ingresoEgresoGuardado: TbQoIngresoEgresoCliente;
   public ingresoEgreso: TbQoIngresoEgresoCliente;
   public patrimonioActivo: TbQoPatrimonioCliente;
@@ -205,6 +184,7 @@ export class GestionClienteComponent implements OnInit {
   public apellidoPaterno = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public fechaNacimiento = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public lugarNacimiento = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  //public lugarNacimiento0   = new FormControl('', [Validators.required, Validators.maxLength(100)]);
   public nivelEducacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cargaFamiliar = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public canalContacto = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -224,7 +204,6 @@ export class GestionClienteComponent implements OnInit {
   public telefonoFijo = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
   public formDatosContacto: FormGroup = new FormGroup({});
   // FORM DE  DOMICILIO 
-  public ubicacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public referenciaUbicacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public callePrincipal = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public numeracion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -232,11 +211,11 @@ export class GestionClienteComponent implements OnInit {
   public calleSecundaria = new FormControl('', [Validators.maxLength(50)]);
   public formDatosDireccionDomicilio: FormGroup = new FormGroup({});
   public tipoVivienda = new FormControl('', Validators.required);
+  public ubicacion = new FormControl('', Validators.required);
   public sector = new FormControl('', Validators.required);
   public drLgDo = new FormControl('', []);
   public drCrDo = new FormControl('', []);
   // FORM DE  OFICINA 
-  public ubicacionO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public referenciaUbicacionO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public callePrincipalO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public numeracionO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -244,6 +223,7 @@ export class GestionClienteComponent implements OnInit {
   public calleSecundariaO = new FormControl('', [Validators.maxLength(50)]);
   public tipoViviendaO = new FormControl('', Validators.required);
   public formDatosDireccionLaboral: FormGroup = new FormGroup({});
+  public ubicacionO = new FormControl('', Validators.required);
   public sectorO = new FormControl('', Validators.required);
   public drLgLb = new FormControl('', []);
   public drCrLb = new FormControl('', []);
@@ -404,13 +384,14 @@ export class GestionClienteComponent implements OnInit {
   }
 
   displayFn(user: User): string {
-    return user && user.nombre ? user.nombre : '';
+    return user && user.name ? user.name : '';
   }
 
-  public _filter(nombre: string): User[] {
-    const filterValue = nombre.toLowerCase();
+  private _filter(name: string): User[] {
+    const filterValue = name.toLowerCase();
 
-    return this.ubication.filter(option => option.nombre.toLowerCase().indexOf(filterValue) === 0);
+    return this.ubications.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
+    return this.ubications.filter(Dd => Dd.name.toLowerCase().indexOf(filterValue) === 0);
   }
   
 
@@ -419,13 +400,25 @@ export class GestionClienteComponent implements OnInit {
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : name),
-        map(nombre => nombre ? this._filter(nombre) : this.ubication)
+        map(name => name ? this._filter(name) : this.ubications)
       );
-   
+    this.filteredOptions2 = this.lugarNacimiento.valueChanges
+    .pipe(
+      startWith(''),
+      map(value => typeof value === 'string' ? value : name),
+      map(name => name ? this._filter(name) : this.ubications)
+    );
+    this.filteredOptions3 = this.lugarNacimiento.valueChanges
+    .pipe(
+      startWith(''),
+      map(value => typeof value === 'string' ? value : name),
+      map(name => name ? this._filter(name) : this.ubications)
+    );
+
 
     this.loading = this.loadingSubject.asObservable();
     this.habilitarBtActualizar = false;
-
+    this.implementacionServiciosSoftbankTEST();
     //SET VALORES POR DEFECTO DE CHECKS
     this.drLgDo.setValue(true);
     this.drCrDo.setValue(true);
@@ -441,8 +434,6 @@ export class GestionClienteComponent implements OnInit {
     // BUSQUEDA DE CLIENTE POR NEGOCIACION
     this.llamarCatalogos();
     this.clienteNegociacion();
-    this.testConsultarDivicionPoliticaCS();
-    this.testConsultarActividadEconomicaCS();
     this.subheaderService.setTitle("Gestion de Clientes");
   }
 
@@ -472,7 +463,7 @@ export class GestionClienteComponent implements OnInit {
                 this.nombresCompletos.setValue(data.entidad.primerNombre + ' ' + data.entidad.segundoNombre
                   + ' ' + data.entidad.apellidoPaterno + ' ' + data.entidad.apellidoMaterno);
                 this.identificacion.setValue(data.entidad.cedulaCliente);
-                /*this.primerNombre.setValue(data.entidad.primerNombre);
+                this.primerNombre.setValue(data.entidad.primerNombre);
                 this.segundoNombre.setValue(data.entidad.segundoNombre);
                 this.nivelEducacion.setValue(data.entidad.nivelEducacion);
                 this.apellidoPaterno.setValue(data.entidad.apellidoPaterno);
@@ -502,10 +493,8 @@ export class GestionClienteComponent implements OnInit {
                 this.ocupacion.setValue(data.entidad.ocupacion);
                 email = email.toLocaleUpperCase();
                 //console.log("email formateado ===> ", email);
-                this.email.setValue(email);*/
+                this.email.setValue(email);
 
-
-                this.implementacionServiciosSoftbankTEST();
 
                 this.dc.findDireccionByIdCliente(this.id, "DOMICILIO").subscribe((data: any) => {
                   if (data.entidad) {
@@ -607,7 +596,7 @@ export class GestionClienteComponent implements OnInit {
     const fechaSeleccionada = new Date(
       this.fechaNacimiento.value
     );
-    console.log("FECHA SELECCIONADA" + fechaSeleccionada);
+    //console.log("FECHA SELECCIONADA" + fechaSeleccionada);
     if (fechaSeleccionada) {
       this.getDiffFechas(fechaSeleccionada, "dd/MM/yyy");
     } else {
@@ -670,7 +659,7 @@ export class GestionClienteComponent implements OnInit {
       if (wrapper && wrapper.entidades) {
         //console.log("lista  >>>>" + JSON.stringify( wrapper.entidades ));
         for (let i = 0; i < wrapper.entidades.length; i++) {
-          //this.canal.push(wrapper.entidades[i].valor.toUpperCase());
+          this.canal.push(wrapper.entidades[i].valor.toUpperCase());
           //console.log("lista canal >>>>" + JSON.stringify( this.canal ));
         }
       }
@@ -702,7 +691,7 @@ export class GestionClienteComponent implements OnInit {
       if (wrapper && wrapper.entidades) {
         //console.log("lista  >>>>" + JSON.stringify( wrapper.entidades ));
         for (let i = 0; i < wrapper.entidades.length; i++) {
-          //this.actividadeco.push(wrapper.entidades[i].valor.toUpperCase());
+          this.actividadeco.push(wrapper.entidades[i].valor.toUpperCase());
           //console.log("lista canal >>>>" + JSON.stringify( this.canal ));
         }
       }
@@ -987,18 +976,17 @@ export class GestionClienteComponent implements OnInit {
   /**
    * @description METODO QUE HABILITA CAMPOS DE SEPARACION DE BIENES. 
    */
-  /*habilitarCampo() {
+  habilitarCampo() {
     this.separacionBienes.setValue('');
     const estadoCivilIngresado = this.estadoCivil.value;
-    
-    if (estadoCivilIngresado ==(this.listNombreEstadoCivil.find(p=>p.codigo == this.codigoEstadoCivil).toString())) {
+    if (estadoCivilIngresado == EstadoCivilEnum.CASADO.toString()) {
       this.separacionBienes.setValidators([Validators.required]);
       this.separacionBienes.enable();
       this.sinNoticeService.setNotice("SELECCIONE LA OPCION DE SEPARACIÒN DE BIENES ", 'warning');
     } else {
       this.separacionBienes.disable();
     }
-  }*/
+  }
   /**
    * @description FUNCION EN BOTON QUE AGREGA UN NUEVO ACTIVO A LA TABLA DE PATRIMONIO ACTIVOS
    */
@@ -1033,6 +1021,8 @@ export class GestionClienteComponent implements OnInit {
    * @description FUNCION EN BOTON QUE AGREGA UN NUEVO PASIVO A LA TABLA DE PATRIMONIO PASIVOS
    */
   nuevoPasivo() {
+
+
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
 
@@ -1231,84 +1221,65 @@ export class GestionClienteComponent implements OnInit {
    * 
    */
   implementacionServiciosSoftbankTEST() {
-   
-    //Catalogo
-    this.testConsultarDivicionPoliticaCS();
-    this.testConsultarEstadosCivilesCS(); 
-    this.testConsultarEducacionCS(); 
-    this.testConsultarActividadEconomicaCS();
-    this.testConsultarPaisCS(); 
-    this.testConsultarProfesionesCS();
-    this.testConsultaOcupacionCS();
-    this.testConsultaGeneroCS(); 
-    this.testConsultarSectorViviendaCS();
-    this.testConsultarTipoViviendaCS(); 
-    this.testConsultarTipoReferenciaCS(); 
-    //this.testConsultarTipoIdentificacionCS(); 
-    //this.testConsultarBancosCS(); 
-    //this.testConsultarTipoPrestamosCS(); 
-    //this.testConsultarTipoCarteraCS();
-     
+
     //Cliente
-    
-    this.testConsultarClienteCS();
-    
-    
+    //this.testConsultarClienteCS();
     //this.testConsultarDireccionesTelefonosClienteCS(); 
     //this.testConsultarIngresosEgresosClienteCS(); 
     //this.testConsultarReferenciasClienteCS(); 
     //this.testCrearClienteCS();  
     //this.testEditarClienteCS(); 
-    
-     
+
+
+    //Catalogo
+    this.testConsultarDivicionPoliticaCS();
+    //this.testConsultarAgenciasCS(); 
+    //this.testConsultarAsesoresCS();
+    //this.testConsultarActividadEconomicaCS(); 
+    //this.testConsultarEducacionCS(); 
+    //this.testConsultarRubroPrestamosCS(); 
+    //this.testConsultarSectorViviendaCS(); 
+    //this.testConsultarEstadosCivilesCS(); 
+    //this.testConsultarViviendaCS(); 
+    //this.testConsultarProfesionesCS(); 
+    //this.testConsultarTipoIdentificacionCS(); 
+    //this.testConsultarBancosCS(); 
+    //this.testConsultarTipoReferenciaCS(); 
+    //this.testConsultarTipoPrestamosCS(); 
+    //this.testConsultarTipoCarteraCS(); 
+    //this.testConsultarTablaAmortizacionCS(); 
+    //this.testConsultarDivicionPoliticaConsolidadaCS(); 
+
+    // Prestamo
+    //this.testConsultaTablaAmortizacionOperacionAprobadaCS(); 
+    //this.testSimularPrecancelacionCS(); 
+    //this.testOperacionCancelarCS(); 
+    //this.testOperacionAbonoCS(); 
+    //this.testOperacionConsultaCS(); 
+    //this.testConsultaRiesgoAcumuladoCS(); 
+    //this.testConsultaRubrosCS(); 
+
+    // Credito Operacion
+    //this.testOperacionCrearCS(); 
+    //this.testOperacionRenovarCS(); 
+    //this.testOperacionAprobarCS();
+    //this.testOperacionNegarCS();
+
+    //Credito Simulacion
+    //this.testSimularTablaAmortizacionCS(); 
+
+    // Credito Consulta
+    //this.testCalcularSolcaCS(); 
   }
-
-
   // CLIENTE
-
-  testConsultarClienteCS(){
+  /*testConsultarClienteCS() {
     let entidadConsultaCliente = new ConsultaCliente();
-    let cedula = this.identificacion.value
-    //console.log(" "  + cedula)
-    entidadConsultaCliente.identificacion = cedula;
-    entidadConsultaCliente.idTipoIdentificacion = 1;
-
+    //entidadConsultaCliente.identificacion = "1311066441";
+    //entidadConsultaCliente.idTipoIdentificacion = 1;
     this.css.consultarClienteCS(entidadConsultaCliente).subscribe((data: any) => {
-
       if (data) {
-
-        this.primerNombre.setValue(data.primerNombre);
-        this.segundoNombre.setValue(data.segundoNombre);
-        this.nivelEducacion.setValue(this.listnombreEducacion.find(a=>a.codigo == data.codigoEducacion));
-        this.apellidoPaterno.setValue(data.primerApellido);
-        this.apellidoMaterno.setValue(data.segundoApellido);
-        this.genero.setValue(this.listNombreGenero.find(e=>e.codigo == data.codigoSexo));
-        this.estadoCivil.setValue(this.listNombreEstadoCivil.find(p=>p.codigo == data.codigoEstadoCivil));
-        this.cargaFamiliar.setValue(data.numeroCargasFamiliares);
-        this.fechaNacimiento.setValue(data.fechaNacimiento);
-        this.onChangeFechaNacimiento();
-        this.canalContacto.setValue
-        //this.separacionBienes.setValue
-        this.nacionalidad.setValue(this.listNombrePais.find(f=>f.id == data.idPais))
-        this.lugarNacimiento.setValue(this.bUbicaciones.find(n=>n.idParroquia == data.idLugarNacimiento))
-        this.tipoVivienda.setValue(this.listNombreTipoVivienda.find(v=>v.nombre))
-        this.origenIngresos.setValue(data.ingresos);
-        this.actividadEconomica.setValue(this.listActividadEconomica.find(a=>a.id == data.actividadEconomica.idActividadEconomica))
-        //this.actividadEmpresa.setValue
-        //this.actividadEconomicaEmpresa.setValue
-        //this.relacionDependencia.setValue
-        //this.cargo.setValue
-        this.profesion.setValue(this.listNombreProfesion.find(c=>c.codigo == data.codigoProfesion))
-        this.ocupacion.setValue(this.listNombreOcupacion.find(o=>o.codigo == data.codigoServicio))
-        this.email.setValue(data.email)
-        this.telefonoFijo.setValue
-        this.telefonoMovil.setValue(data.telefonos.find(t=>t.codigoTipoTelefono))
-        this.telefonoAdicional.setValue
-        this.telefonoOtro.setValue
-        //this.canalContacto.setValue
-        
+        //console.log("consultarClienteCS --> Funciona");
         console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
-        
       } else {
         this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
       }
@@ -1322,135 +1293,61 @@ export class GestionClienteComponent implements OnInit {
 
       }
     });
-  }
-
-  testConsultarDivicionPoliticaCS(){
-        this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
-            //console.log("funciona -----> consultarDivicionPoliticaCS");
-            //console.log("Consulta de catalogos de Divicion Politica ----->" + JSON.stringify(data));
-          if (!data.existeError) {
-            this.localizacion = data.catalogo;
-            //console.log(" desde aqui >>> ",this.localizacion)
-            this.bprovinces = this.localizacion.filter(e => e.tipoDivision == "PROVINCIA")
-            /*for (let i = 0; i < this.bprovinces.length; i++) {
-            this.provincias.push(this.bprovinces [i].nombre);
-            // console.log(" PROVINCIA >>>",this.provincias)
-            }*/
-    
-            this.bCantons = this.localizacion.filter(e => e.tipoDivision == 'CANTON')
-            /*for (let j = 0; j < this.bCantons.length; j++) {
-            this.cantones.push(this.bCantons [j].nombre);
-            //console.log(" CANTON >>>",this.cantones)
-            }*/
-    
-            this.bParroqui = this.localizacion.filter(e => e.tipoDivision == "PARROQUIA")
-            /*for (let x = 0; x < this.bParroqui.length; x++) {
-            this.parroquia.push(this.bParroqui [x].nombre);
-           // console.log(" PARROQUIAS >>>",this.parroquia)
-            }*/
-    
-    
-            let ubicacion = [];
-            ubicacion = this.bParroqui.map(parro => {
-              const cant = this.bCantons.find(c => c.id == parro.idPadre) || {};
-              const pro = this.bprovinces.find(p => p.id == cant.idPadre) || {};
-    
-              return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, idParroquia: parro.id, idCanton: cant.id, idProvincia: pro.id 
-                      };
-            }
-            );
-            this.bUbicaciones = ubicacion;
-            /*this.bNombre = this.uubicacion.filter(e => e.nombre)
-            for (let i = 0; i < this.bNombre.length; i++) {
-              this.bUbicaciones.push(this.bNombre[i].nombre);*/
-            //console.log("<<<ubicaciones>>>>>>>",this.bUbicaciones);
-            
-            this.ubication = new Array<User>();
-            this.bUbicaciones.forEach(e => {
-              let user = {} as User;
-              user.nombre = e;
-              this.ubication.push(user)
-              
-            });
-            console.log("<<<ubicaciones----->>>>>>>",this.ubication);
-          } else {
-            console.log("No me trajo data de catalogos de Divicion Politica ----->" + JSON.stringify(data));
-          } error => {
-            if (JSON.stringify(error).indexOf("codError") > 0) {
-              let b = error.error;
-              this.sinNoticeService.setNotice(b.setmsgError, 'error');
-            } else {
-              this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-            }
-          }
-        });
-  }
+  }*/
   
-  testConsultarEstadosCivilesCS(){
-    this.css.consultarEstadosCivilesCS().subscribe((data: any)=> {
-      //console.log("Consulta de catalogos de estado civil ----->" + JSON.stringify(data));
+  testConsultarDivicionPoliticaCS() {
+
+    this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
+      
+        //console.log("funciona -----> consultarDivicionPoliticaCS");
+        //console.log("Consulta de catalogos de Divicion Politica ----->" + JSON.stringify(data));
       if (!data.existeError) {
-        this.listNombreEstadoCivil = data.catalogo;
-      } else {
-        //console.log("No me trajo data de catalogos de ESTADO CIVIL ----->" + JSON.stringify(data));
-      } error => {
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          let b = error.error;
-          this.sinNoticeService.setNotice(b.setmsgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-        }
-      }
-    });
-  }
+        this.localizacion = data.catalogo;
+        //console.log(" desde aqui >>> ",this.localizacion)
+        this.bprovinces = this.localizacion.filter(e => e.tipoDivision == "PROVINCIA")
+        /*for (let i = 0; i < this.bprovinces.length; i++) {
+        this.provincias.push(this.bprovinces [i].nombre);
+        // console.log(" PROVINCIA >>>",this.provincias)
+        }*/
 
-  
-  testConsultarEducacionCS(){
-    this.css.consultarEducacionCS().subscribe((data: any)=> {
-      //console.log("Consulta de catalogos de NIVEL EDUCACION ----->" + JSON.stringify(data));
-      if (!data.existeError) {
-        this.listnombreEducacion = data.catalogo;
-        
-           //console.log(" Educacion -----> " + this.listnombreEducacion )
+        this.bCantons = this.localizacion.filter(e => e.tipoDivision == 'CANTON')
+        /*for (let j = 0; j < this.bCantons.length; j++) {
+        this.cantones.push(this.bCantons [j].nombre);
+        //console.log(" CANTON >>>",this.cantones)
+        }*/
 
-      } else {
-        console.log("No me trajo data de catalogos de NIVEL EDUCACION ----->" + JSON.stringify(data));
-      } error => {
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          let b = error.error;
-          this.sinNoticeService.setNotice(b.setmsgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-        }
-      }
-    });
-  }
+        this.bParroqui = this.localizacion.filter(e => e.tipoDivision == "PARROQUIA")
+        /*for (let x = 0; x < this.bParroqui.length; x++) {
+        this.parroquia.push(this.bParroqui [x].nombre);
+       // console.log(" PARROQUIAS >>>",this.parroquia)
+        }*/
 
-  testConsultarActividadEconomicaCS(){
-    this.css.consultarActividadEconomicaCS().subscribe((data: any)=> {
-      //console.log("Consulta de catalogos de Actividad Economica ----->" + JSON.stringify(data));
-      if (!data.existeError) {
-        this.consultaActividadEconomica = data.catalogo;
-        this.nombreconsultaActividadEconomica = this.consultaActividadEconomica.filter(e=>e.nombre)
-        
-        //console.log(" Actividad Economica -----> ", this.consultaActividadEconomica )
-        
-        
-        this.listActividadEconomica = this.nombreconsultaActividadEconomica.map(activi => {
-          const subActivi = this.nombreconsultaActividadEconomica.find(sa => sa.id == activi.idPadre) || {};
 
-          return { nombre: activi.nombre + " / "+ subActivi.nombre, id: activi.id, idPadre: subActivi.id}; 
-                  
+        let ubicacion = [];
+        ubicacion = this.bParroqui.map(parro => {
+          const cant = this.bCantons.find(c => c.id == parro.idPadre) || {};
+          const pro = this.bprovinces.find(p => p.id == cant.idPadre) || {};
+
+          return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, idParroquia: parro.id, idCanton: cant.id, idProvincia: pro.id, 
+                  parroquia: parro.nombre,
+                  canton:cant.nombre,
+                  provincia:pro.nombre};
         }
         );
-        /*this.activiNombre = this.listActividadEco.filter(e=>e.nombre)
-        for(let i = 0; i < this.activiNombre.length; ++i){
-          this.listActividadEconomica.push(this.activiNombre[i].nombre);
-          
-        }*/
-        //console.log(" Actividad Economica ---->>>>>>", this.listActividadEconomica)
+        this.uubicacion = ubicacion;
+        this.bNombre = this.uubicacion.filter(e => e.nombre)
+        for (let i = 0; i < this.bNombre.length; i++) {
+          this.bUbicaciones.push(this.bNombre[i].nombre);
+          //console.log("<<<ubicaciones>>>>>>>",this.bUbicaciones);
+        };
+        this.ubications = new Array<User>();
+        this.bUbicaciones.forEach(e => {
+          let user = {} as User;
+          user.name = e;
+          this.ubications.push(user)
+        });
       } else {
-        console.log("No me trajo data de catalogos de Actividad Economica ----->" + JSON.stringify(data));
+        console.log("No me trajo data de catalogos de Divicion Politica ----->" + JSON.stringify(data));
       } error => {
         if (JSON.stringify(error).indexOf("codError") > 0) {
           let b = error.error;
@@ -1461,162 +1358,7 @@ export class GestionClienteComponent implements OnInit {
       }
     });
   }
-
-  testConsultarPaisCS(){
-    this.css.consultarPaisCS().subscribe((data: any)=> {
-      //console.log("Consulta de catalogos de Paises ----->" + JSON.stringify(data));
-      if (!data.existeError) {
-        this.listNombrePais = data.catalogo;
-        //console.log(" PAIS -----> ", this.listNombrePais )
-
-      } else {
-        console.log("No me trajo data de catalogos de PAISES ----->" + JSON.stringify(data));
-      } error => {
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          let b = error.error;
-          this.sinNoticeService.setNotice(b.setmsgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-        }
-      }
-    });
-  }
-
-  testConsultarProfesionesCS(){
-    this.css.consultarProfesionesCS().subscribe((data: any)=>{
-      if (!data.existeError) {
-        this.listNombreProfesion = data.catalogo;
-        
-        //console.log(" PROFESIONES -----> " , this.listNombreProfesion )
-
-      } else {
-        console.log("No me trajo data de catalogos de PROFESIONES ----->" + JSON.stringify(data));
-      } error => {
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          let b = error.error;
-          this.sinNoticeService.setNotice(b.setmsgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-        }
-      }
-    });
-
-  }
-
-  testConsultaOcupacionCS(){
-    this.css.consultarOcupacionCS().subscribe((data: any)=> {
-      //console.log("me trajo data de catalogos de OCUPACIONES ----->" + JSON.stringify(data))
-      if (!data.existeError) {
-        this.listNombreOcupacion = data.catalogo;
-        //console.log(" OCUPACIONES -----> ", this.listNombreOcupacion )
-
-      } else {
-        console.log("No me trajo data de catalogos de OCUPACIONES ----->" + JSON.stringify(data));
-      } error => {
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          let b = error.error;
-          this.sinNoticeService.setNotice(b.setmsgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-        }
-      }
-
-    });
-  }
-
-  testConsultaGeneroCS(){
-    this.css.consultarGeneroCS().subscribe((data:any)=>{
-      //console.log("me trajo data de catalogos de GENERO ----->" + JSON.stringify(data))
-      if (!data.existeError) {
-
-        this.listNombreGenero = data.catalogo;
-        //console.log(" GENERO -----> " , this.listNombreGenero )
-
-      } else {
-        //console.log("No me trajo data de catalogos de GENERO ----->" + JSON.stringify(data));
-      } error => {
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          let b = error.error;
-          this.sinNoticeService.setNotice(b.setmsgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-        }
-      }
-    });
-  }
-
-  testConsultarTipoViviendaCS(){
-    this.css.consultarTipoViviendaCS().subscribe((data: any)=>{
-      //console.log("me trajo data de catalogos de TipoVivienda ----->" + JSON.stringify(data))
-      if (!data.existeError) {
-        this.listNombreTipoVivienda = data.catalogo;
-        /*this.nombreTipoVivienda = this.consultaTipoVivienda.filter(e=>e.nombre)
-        for (let i =0; i < this.nombreTipoVivienda.length; ++i ){
-          this.listNombreTipoVivienda.push(this.nombreTipoVivienda[i].nombre);
-        } */
-        //console.log(" TipoVivienda -----> ", this.listNombreTipoVivienda )
-
-      } else {
-        //console.log("No me trajo data de catalogos de TipoVivienda ----->" + JSON.stringify(data));
-      } error => {
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          let b = error.error;
-          this.sinNoticeService.setNotice(b.setmsgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-        }
-      }
-    });
-  }
-
-  testConsultarSectorViviendaCS(){
-    this.css.consultarSectorViviendaCS().subscribe((data: any)=>{
-      //console.log("me trajo data de catalogos de Sector Vivienda ----->" + JSON.stringify(data))
-      if (!data.existeError) {
-        this.consultaSectorVivienda = data.catalogo;
-        this.nombreSectorVivienda = this.consultaSectorVivienda.filter(e=>e.nombre)
-        for (let i =0; i < this.nombreSectorVivienda.length; ++i ){
-          this.listNombreSectorVivienda.push(this.nombreSectorVivienda[i].nombre);
-        } 
-        //console.log(" Sector Vivienda -----> " + this.listNombreSectorVivienda )
-
-      } else {
-        //console.log("No me trajo data de catalogos de Sector Vivienda ----->" + JSON.stringify(data));
-      } error => {
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          let b = error.error;
-          this.sinNoticeService.setNotice(b.setmsgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-        }
-      }
-    });
-  }
-
-  testConsultarTipoReferenciaCS(){
-    this.css.consultarTipoReferenciaCS().subscribe((data: any )=>{
-      //console.log("me trajo data de catalogos de Tipo Referencia ----->" + JSON.stringify(data))
-      if (!data.existeError) {
-        this.consultaTipoReferencia = data.catalogo;
-        this.nombreTipoReferencia = this.consultaTipoReferencia.filter(e=>e.nombre)
-        for (let i =0; i < this.nombreTipoReferencia.length; ++i ){
-          this.listNombreTipoReferencia.push(this.nombreTipoReferencia[i].nombre);
-        } 
-        //console.log(" Tipo Referencia -----> " + this.listNombreTipoReferencia )
-
-      } else {
-        //console.log("No me trajo data de catalogos de Tipo Referencia ----->" + JSON.stringify(data));
-      } error => {
-        if (JSON.stringify(error).indexOf("codError") > 0) {
-          let b = error.error;
-          this.sinNoticeService.setNotice(b.setmsgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-        }
-      }
-    });
-
-  }
+  
   /**
    * @param element 
    * @description METODO QUE EDITA UN ACTIVO DE LA TABLA
@@ -1969,7 +1711,7 @@ export class GestionClienteComponent implements OnInit {
                     if (respuesta.entidad) {
                       let clienteSoftBank = new ClienteSoftbank();
                       this.cs.crearClienSoftBank(clienteSoftBank);
-                      clienteSoftBank.nombreCompleto = this.nombresCompletos.value
+                      clienteSoftBank.nombreCompleto
                       clienteSoftBank.primerNombre = this.primerNombre.value
                       clienteSoftBank.segundoNombre = this.segundoNombre.value
                       clienteSoftBank.primerApellido= this.apellidoPaterno.value
@@ -2001,7 +1743,6 @@ export class GestionClienteComponent implements OnInit {
                       }
                       if(respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos >1){
                         console.log("tiene q navegar a la bandeja principal de asesores ");
-                        this.router.navigate(['../../asesor/bandeja-principal/bandeja-principal'])
                       }
                       this.id = respuesta.entidad.id
                       this.loadingSubject.next(false);
@@ -2059,7 +1800,7 @@ export class GestionClienteComponent implements OnInit {
 
   /********************************************  @TRACKING  ***********************************************************/
   /**
-  * @author Oscar Romero Developer-five
+  * @author 
   * @description Captura la hora de inicio de Tracking
   */
 

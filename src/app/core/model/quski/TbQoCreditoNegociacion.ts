@@ -1,7 +1,6 @@
 import { TbQoNegociacion } from "./TbQoNegociacion";
 import { TbQoTasacion } from "./TbQoTasacion";
 import { TbQoCliente } from "./TbQoCliente";
-import { TbQoAgencia } from "./TbQoAgencia";
 
 export class TbQoCreditoNegociacion {
     plazoCredito: string;
@@ -20,7 +19,7 @@ export class TbQoCreditoNegociacion {
     tbQoCliente:TbQoCliente;
     tbQoNegociacion : TbQoNegociacion;
     tbQoTasacion : TbQoTasacion  [];
-    tbQoAgencia:TbQoAgencia;
+    tbQoAgencia:any;
     constructor(){
         this.tbQoNegociacion = new TbQoNegociacion();
        // this.tbQoTasacion = new TbQoTasacion();

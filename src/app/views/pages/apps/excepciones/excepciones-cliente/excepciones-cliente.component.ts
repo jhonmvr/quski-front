@@ -287,12 +287,6 @@ export class ExcepcionesClienteComponent implements OnInit {
 
 
   /******************************************** @EVENT   *********************************************************/
-  public traerEntidadesVariables(event: Array<TbQoVariablesCrediticia>) {
-
-  }
-  public traerEntidadRiesgo(event: Array<TbQoRiesgoAcumulado>) {
-
-  }
 
 
 
@@ -356,9 +350,7 @@ export class ExcepcionesClienteComponent implements OnInit {
                 this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
                 this.dataPopup.isCalculadora = true;
                 //INPUT RIESGO ACUMULADO
-                this.dataPopupRiesgo = new DataPopup();
-                this.dataPopupRiesgo.cedula = this.entidadCliente.cedulaCliente;
-                this.dataPopupRiesgo.isNegociacion = true;
+
                 // FORM CONTACTO
                 this.telefonoDomicilio.setValue(this.entidadCliente.telefonoFijo);
                 this.telefonoAdicional.setValue(this.entidadCliente.telefonoAdicional);

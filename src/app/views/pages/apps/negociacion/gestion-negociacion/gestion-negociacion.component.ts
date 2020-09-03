@@ -10,7 +10,7 @@ import { ParametroService } from './../../../../../core/services/quski/parametro
 import { ClienteService } from './../../../../../core/services/quski/cliente.service';
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Page } from './../../../../../core/model/page';
 import { CRMService } from './../../../../../core/services/quski/crm.service';
 import { TrackingService } from './../../../../../core/services/quski/tracking.service';
@@ -22,18 +22,15 @@ import { ClienteSoftbank } from './../../../../../core/model/softbank/ClienteSof
 import { ProspectoCRM } from './../../../../../core/model/crm/prospectoCRM';
 import { PersonaCalculadora } from './../../../../../core/model/calculadora/PersonaCalculadora';
 import { TbQoVariablesCrediticia } from './../../../../../core/model/quski/TbQoVariablesCrediticia';
-import { TbQoRiesgoAcumulado } from './../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { CotizacionService } from './../../../../../core/services/quski/cotizacion.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GeneroEnum } from './../../../../../core/enum/GeneroEnum';
 import { PersonaConsulta } from './../../../../../core/model/calculadora/personaConsulta';
 import { IntegracionService } from './../../../../../core/services/quski/integracion.service';
 import { DataPopup } from './../../../../../core/model/wrapper/dataPopup';
 import { TbQoNegociacion } from './../../../../../core/model/quski/TbQoNegociacion';
-import { TbQoDireccionCliente } from './../../../../../core/model/quski/TbQoDireccionCliente';
 import { GuardarProspectoCRM } from './../../../../../core/model/crm/guardarProspectoCRM';
 import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/popups/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
-import { TbQoTasacion } from 'src/app/core/model/quski/TbQoTasacion';
+import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 
 export interface TimeTracking {
   tasacion: Date;
@@ -61,9 +58,13 @@ export class GestionNegociacionComponent implements OnInit {
   // ENTIDADES
   private entidadCliente: TbQoCliente;
   // CATALOGOS
-  private catEducacion: Array<any>;
-  private catPublicidad: Array<any> = ["CARGANDO CATALOGO"];  
-  private catTipoVivienda: Array<any>;
+  public catPublicidad: Array<any> = ["CARGANDO CATALOGO"];  
+  public catTipoJoya: Array<any>;
+  public catTipoOro: Array<any>;
+  public catEstadoJoya: Array<any>;
+
+
+
   // VARIABLES DE TRACKING
   private horaInicio:     TimeTracking;
   private horaAsignacion: TimeTracking;
@@ -135,10 +136,11 @@ export class GestionNegociacionComponent implements OnInit {
   private sinNotSer: ReNoticeService, 
   private noticeService: ReNoticeService, 
   private subheaderService: SubheaderService,
+  
   ) { 
-    //  RELACIONANDO FROMULARIO DE BUSQUEDA
+    //  RELACIONANDO FORMULARIO DE BUSQUEDA
     this.formBusqueda.addControl("identificacion", this.identificacion);
-    //  RELACIONANDO FROMULARIO DE CLIENTE
+    //  RELACIONANDO FORMULARIO DE CLIENTE
     this.formDatosCliente.addControl("fechaNacimiento", this.fechaDeNacimiento);
     this.formDatosCliente.addControl("nombresCompletos", this.nombresCompletos);
     this.formDatosCliente.addControl("edad", this.edad);
@@ -149,7 +151,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.formDatosCliente.addControl("campania", this.campania);
     this.formDatosCliente.addControl("publicidad", this.publicidad);
     this.formDatosCliente.addControl("aprobacionMupi" , this.aprobacionMupi);
-    //  RELACIONANDO FROMULARIO DE TASACION
+    //  RELACIONANDO FORMULARIO DE TASACION
     this.formTasacion.addControl("numeroPiezas" , this.numeroPiezas);
     this.formTasacion.addControl("tipoOro" , this.tipoOro);
     this.formTasacion.addControl("tipoJoya" , this.tipoJoya);
@@ -163,18 +165,36 @@ export class GestionNegociacionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.consultaCatalogos();
-    this.getPublicidades();
-    this.loading = this.loadingSubject.asObservable();
     this.subheaderService.setTitle('Negociación');
-    console.log("Esto calcula la edad? --> ",calcularEdad('1998-05-09'));
-    this.listJoyas = new Array<Combinacion>();
+    this.loading = this.loadingSubject.asObservable();
+    this.obtenerCatalogosSoftbank();
+    this.obtenerCatalogosCore();
+    // console.log("Esto calcula la edad? --> ",calcularEdad('1998-05-09'));
     const comb = {} as Combinacion;
     comb.id = new Array<number>();
     comb.id.push(0);
     comb.opcion = "--"
     this.listJoyas.push( comb );
+    this.inicioDeFlujo();
   }
+  /** ********************************************* @FLUJO ********************* **/
+  inicioDeFlujo() {
+    this.route.paramMap.subscribe((json: any) => {
+      if (json.params.id && json.params.origen) {
+        if(json.params.origen == "COT"){
+          console.log("Estoy buscando una cotizacion");
+          // Buscar cliente por id de cotizacion
+        } else if(json.params.origen == "NEG") {
+          console.log("Estoy buscando una negociacion");
+          // Buscar todos los datos de la negociacion "POR DEFINIR";          
+        }
+      } else{
+        console.log("Estoy iniciando nueva negociacion");
+        this.limpiarCamposBusqueda();
+      }
+    });
+  }
+
   /** ********************************************* @BUSQUEDA_CLIENTE ********************* **/
   /**
    * @author  Developer Twelve - Jeroham Cadenas
@@ -341,6 +361,7 @@ export class GestionNegociacionComponent implements OnInit {
   private cargarValores(cliente: TbQoCliente) {
     this.loadingSubject.next(true);
     this.cargarVariablesYRiesgo(cliente.cedulaCliente);
+    this.identificacion.setValue(cliente.cedulaCliente);
     this.nombresCompletos.setValue(cliente.primerNombre + ' ' + cliente.segundoNombre + ' ' + cliente.apellidoPaterno + ' ' + cliente.apellidoMaterno);
     this.nacionalidad.setValue(cliente.nacionalidad);
     this.movil.setValue(cliente.telefonoMovil);
@@ -348,6 +369,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.email.setValue(cliente.email);
     this.fechaDeNacimiento.setValue( cliente.fechaNacimiento );
     this.edad.setValue('');
+
     this.sinNotSer.setNotice('CLIENTE ENCONTRADO',"success");
     this.loadingSubject.next(false); 
   }
@@ -391,7 +413,7 @@ export class GestionNegociacionComponent implements OnInit {
       control.setValue(null);
     });
   }
-  /** ********************************************* @CATALOGOS ********************* **/
+  /** ********************************************* @NO SE  ********************* **/
   public traerEntidadesVariables(event: Array<TbQoVariablesCrediticia>) {
     this.guardarVariables(event);
   }
@@ -402,7 +424,7 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   /** ********************************************* @CATALOGOS ********************* **/
-  getPublicidades() {
+  private obtenerCatalogosCore() {
     this.par.findByNombreTipoOrdered("", "PUB", "Y").subscribe((data: any) => {
       this.catPublicidad = (data && data.entidades)? data.entidades: "CATALOGO NO CARGADO"
       if (data && data.entidades) {
@@ -427,43 +449,22 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   /**
-   * obtenerTipoOro
+   * obtenerCatalogosSoftbank
    */
-  public obtenerTipoOro() {
-  }
-
-
-
-
-
-  private consultaCatalogos() {
+  private obtenerCatalogosSoftbank() {
     this.loadingSubject.next(true);
-    this.sof.consultarEducacionCS().subscribe((data: any) => {
-      this.catEducacion = data.existeError ? data.catalogo : "Error al cargar catalogo";
-      this.loadingSubject.next(this.loadingSubject.getValue() ? false:false); 
+    this.sof.consultarTipoOroCS().subscribe( (data: any)=>{
+      this.catTipoOro = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      this.sof.consultarTipoJoyaCS().subscribe( (data: any)=>{
+        this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+        this.sof.consultarEstadoJoyaCS().subscribe( (data: any)=>{
+          this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+          this.loadingSubject.next(false); 
+        });
+      });
     });
   }
-  inicioDeFlujo() {
-    // this.capturaDatosTraking();
-    this.route.paramMap.subscribe((json: any) => {
-      if (json.params.id) {
-        this.cot.getEntity(json.params.id).subscribe( (data : any) =>{
-          if (data.entidad) {
-            // this.entidadNegociacion = data.entidad;
-            //this.capturaHoraInicio();
-            // @todo
-            // this.buscarCliente( this.entidadNegociacion.tbQoCliente.cedulaCliente );
-          }
-        }, error => {
-          let mensaje = "ERROR DESCONOCIDO AL CARGAR DATOS DE LA COTIZACION";
-          this.salirDeGestion( mensaje );
-        }); 
-      } else{
-        // Limpiar campos 
-        // @todo
-      }
-    });
-  }
+  
   /**
    * @author Jeroham Cadenas - Developer Twelve
    * @param mensaje Mensaje del componente

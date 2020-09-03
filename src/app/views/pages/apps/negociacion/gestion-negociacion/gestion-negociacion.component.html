@@ -162,7 +162,7 @@
 							<mat-form-field class="mat-form-field-fluid">
 								<mat-select placeholder="Tipo oro:" [formControl]="tipoOro">
 									<mat-option>--</mat-option>
-									<mat-option *ngFor="let tipoOro of listOros" [value]="tipoOro"></mat-option>
+									<mat-option *ngFor="let tipoOro of catTipoOro" [value]="tipoOro">{{ tipoOro.nombre }}</mat-option>
 								</mat-select>
 							</mat-form-field>
 						</div>
@@ -170,7 +170,7 @@
 							<mat-form-field class="mat-form-field-fluid">
 								<mat-select placeholder="Tipo de joya:" [formControl]="tipoJoya">
 									<mat-option>--</mat-option>
-									<mat-option *ngFor="let tipoJoya of listTipoJoya" [value]="tipoJoya"></mat-option>
+									<mat-option *ngFor="let tipoJoya of catTipoJoya" [value]="tipoJoya">{{ tipoJoya.nombre }}</mat-option>
 								</mat-select>
 							</mat-form-field>
 						</div>
@@ -180,7 +180,7 @@
 							<mat-form-field class="mat-form-field-fluid">
 								<mat-select placeholder="Estado" [formControl]="estado">
 									<mat-option>--</mat-option>
-									<mat-option *ngFor="let estado of estados" [value]="estado"> {{estado}} </mat-option>
+									<mat-option *ngFor="let estado of catEstadoJoya" [value]="estado"> {{estado.nombre}} </mat-option>
 								</mat-select>
 								<mat-error></mat-error>
 							</mat-form-field>

@@ -271,8 +271,8 @@
                 <div class="row mt-2">
                     <div class="col-md-8">
                         <ng-container *ngIf="dataPopup">
-                            <kt-tabla-variables-crediticias [dataPopup]='dataPopup'
-                                (entidades)='traerEntidadesVariables($event)'>
+                            <kt-tabla-variables-crediticias [dataPopup]='dataPopup'>
+                               
                             </kt-tabla-variables-crediticias>
                         </ng-container>
                     </div>
@@ -282,9 +282,8 @@
                 <ng-template matStepLabel>Riesgo Acumulado </ng-template>
                 <div class="row mt-2">
                     <div class="col-md-8">
-                        <ng-container *ngIf="dataPopupRiesgo">
-                            <kt-tabla-riesgo-acumulado [dataPopupRiesgo]='dataPopupRiesgo'
-                                (entidades)='traerEntidadRiesgo($event)'>
+                        <ng-container *ngIf="dataPopup">
+                            <kt-tabla-riesgo-acumulado [idCliente]="entidadCliente.id" [isPaged]="false";> 
                             </kt-tabla-riesgo-acumulado>
                         </ng-container>
                     </div>

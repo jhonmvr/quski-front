@@ -7,7 +7,7 @@ import { CreditoNegociacionService } from '../../../../../core/services/quski/cr
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
-import { TbMiCliente } from '../../../../../core/model/quski/TbMiCliente';
+import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 
 @Component({
@@ -36,7 +36,7 @@ export class ListCreditoComponent implements OnInit {
    'montoOperacion', 'asesor', 'proceso', 'estado'];
   /**Obligatorio paginacion */
   p = new Page();
-  dataSource:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
+  dataSource:MatTableDataSource<TbQoCliente>=new MatTableDataSource<TbQoCliente>();
   @ViewChild(MatPaginator, { static: true }) 
   paginator: MatPaginator;
   totalResults: number;
@@ -128,7 +128,7 @@ export class ListCreditoComponent implements OnInit {
       if (data.list) {
        
         this.totalResults = data.totalResults;
-    //    this.dataSource = new MatTableDataSource<TbMiCliente>(data.list);
+    //    this.dataSource = new MatTableDataSource<TbQoCliente>(data.list);
         //this.dataSource.paginator=this.paginator;
         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'info');
       } else {
