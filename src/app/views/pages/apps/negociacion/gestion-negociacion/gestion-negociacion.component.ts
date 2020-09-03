@@ -5,7 +5,7 @@ import { RelativeDateAdapter } from './../../../../../core/util/relative.dateada
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
 import { AuthDialogComponent } from './../../../../partials/custom/auth-dialog/auth-dialog.component';
-import { MatDialog, MatTableDataSource,  MatSort, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatTableDataSource, MatSort, MAT_DIALOG_DATA } from '@angular/material';
 import { ParametroService } from './../../../../../core/services/quski/parametro.service';
 import { ClienteService } from './../../../../../core/services/quski/cliente.service';
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
@@ -37,12 +37,12 @@ export interface TimeTracking {
   oferta: Date;
 }
 export interface ParamTracking {
-  proceso : string
-  actividad : string
+  proceso: string
+  actividad: string
 }
 export interface Combinacion {
-  id : Array<number>
-  opcion : string
+  id: Array<number>
+  opcion: string
 }
 @Component({
   selector: 'kt-gestion-negociacion',
@@ -66,20 +66,20 @@ export class GestionNegociacionComponent implements OnInit {
 
 
   // VARIABLES DE TRACKING
-  private horaInicio:     TimeTracking;
+  private horaInicio: TimeTracking;
   private horaAsignacion: TimeTracking;
-  private horaAtencion:   TimeTracking;
-  private horaFinal:      TimeTracking;
+  private horaAtencion: TimeTracking;
+  private horaFinal: TimeTracking;
   private tasacion: ParamTracking;
-  private oferta:   ParamTracking;
-  
+  private oferta: ParamTracking;
+
   // FORMULARIO BUSQUEDA
   public formBusqueda: FormGroup = new FormGroup({});
   public identificacion = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
   // FORMULARIO CLIENTE
   public formDatosCliente: FormGroup = new FormGroup({});
   public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public publicidad = new FormControl( '',[Validators.required]);
+  public publicidad = new FormControl('', [Validators.required]);
   public fechaDeNacimiento = new FormControl('', []);
   public edad = new FormControl('', []);
   public nacionalidad = new FormControl('', []);
@@ -100,17 +100,17 @@ export class GestionNegociacionComponent implements OnInit {
   public descripcion = new FormControl('', []);
   public pesoNeto = new FormControl('', []);
   public valorOro = new FormControl('', []);
-   // FORMULARIO COMBINACION
-   public formCombinacion: FormGroup = new FormGroup({});
-   public joyas = new FormControl('', []);
+  // FORMULARIO COMBINACION
+  public formCombinacion: FormGroup = new FormGroup({});
+  public joyas = new FormControl('', []);
 
   // TABLA DE TASACION
   // ---- @TODO: Crear un data source para la tabla 
   dataSourceTasacion = new MatTableDataSource<any>();
   displayedColumnsTasacion = ['Accion', 'N', 'NumeroPiezas', 'TipoOro', 'TipoJoya', 'Estado', 'Descripcion'
-,'PesoBruto', 'DescuentoPiedra', 'DescuentoSuelda', 'PesoNeto', 'ValorAvaluo'
-  , 'ValorComercial', 'ValorRealizacion', 'ValorOro'];
-  
+    , 'PesoBruto', 'DescuentoPiedra', 'DescuentoSuelda', 'PesoNeto', 'ValorAvaluo'
+    , 'ValorComercial', 'ValorRealizacion', 'ValorOro'];
+
   /**Obligatorio ordenamiento */
   @ViewChild('sort1', { static: true }) sort: MatSort;
   roomsFilter: any;
@@ -119,7 +119,7 @@ export class GestionNegociacionComponent implements OnInit {
   public currentPage = 0;
   public totalSize = 0;
   public totalResults = 0;
-  p = new Page ();
+  p = new Page();
 
 
  constructor(
@@ -200,36 +200,36 @@ export class GestionNegociacionComponent implements OnInit {
    * @author  Developer Twelve - Jeroham Cadenas
    * @description Metodo principal de busqueda.
    */
-  public buscarCliente(){
-    if(this.formBusqueda.valid){
+  public buscarCliente() {
+    if (this.formBusqueda.valid) {
       // VALORES DE CONSULTA
       this.entidadCliente = null;
       const cedula = this.identificacion.value
       const consultaSof = new ConsultaCliente(cedula);
-      let   clienteSof  = new ClienteSoftbank();
+      let clienteSof = new ClienteSoftbank();
       const consultaCor = cedula;
-      let   clienteCor  = new TbQoCliente(); 
-      this.sof.consultarClienteCS( consultaSof ).subscribe((data: any)=>{
-        clienteSof =  data.existeError? null: (data.identificacion == null)? null: data;
-        if(clienteSof){
-          clienteCor.cedulaCliente    = clienteSof.identificacion;
-          clienteCor.apellidoPaterno  = clienteSof.primerApellido;
-          clienteCor.apellidoMaterno  = clienteSof.segundoApellido;
-          clienteCor.primerNombre     = clienteSof.primerNombre;
-          clienteCor.segundoNombre    = clienteSof.segundoNombre;
-          clienteCor.fechaNacimiento  = clienteSof.fechaNacimiento;
+      let clienteCor = new TbQoCliente();
+      this.sof.consultarClienteCS(consultaSof).subscribe((data: any) => {
+        clienteSof = data.existeError ? null : (data.identificacion == null) ? null : data;
+        if (clienteSof) {
+          clienteCor.cedulaCliente = clienteSof.identificacion;
+          clienteCor.apellidoPaterno = clienteSof.primerApellido;
+          clienteCor.apellidoMaterno = clienteSof.segundoApellido;
+          clienteCor.primerNombre = clienteSof.primerNombre;
+          clienteCor.segundoNombre = clienteSof.segundoNombre;
+          clienteCor.fechaNacimiento = clienteSof.fechaNacimiento;
           clienteCor.cargasFamiliares = clienteSof.numeroCargasFamiliares;
-          clienteCor.email            = clienteSof.email; 
+          clienteCor.email = clienteSof.email;
           console.log("Cliente encontrado en sofbank")
           this.guardarCliente(clienteCor);
-        } else{
+        } else {
           console.log("No encontrado en softbank --> data:", data);
-          this.cli.findClienteByIdentificacion( consultaCor ).subscribe((data: any)=>{
-            clienteCor =  (data.entidad === null)? null: data.entidad;
-            if(clienteCor){
+          this.cli.findClienteByIdentificacion(consultaCor).subscribe((data: any) => {
+            clienteCor = (data.entidad === null) ? null : data.entidad;
+            if (clienteCor) {
               console.log("Cliente encontrado en Core");
               this.guardarCliente(clienteCor);
-            } else{
+            } else {
               console.log("Error en la consulta de Persona en core por lo siguiente: ");
               console.log("Cliente en Core --> data.entidad: ", data.entidad);
               this.abrirPopupDeAutorizacionYConsultaCliente(cedula);
@@ -237,21 +237,21 @@ export class GestionNegociacionComponent implements OnInit {
           });
         }
       });
-    }else{
-      this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'error');    
+    } else {
+      this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'error');
     }
-  }  
+  }
   /**
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cedula string
    */
-  private buscarEnCrmYEquifax( cedula: string ){
+  private buscarEnCrmYEquifax(cedula: string) {
     this.loadingSubject.next(true);
-    let clienteCrm:  ProspectoCRM;  
-    let cliente   : TbQoCliente;
-    this.crm.findClienteByCedulaCRM(cedula).subscribe((data: any)=>{
-      
-      if(clienteCrm =  data.list? null: data.list[0]){
+    let clienteCrm: ProspectoCRM;
+    let cliente: TbQoCliente;
+    this.crm.findClienteByCedulaCRM(cedula).subscribe((data: any) => {
+
+      if (clienteCrm = data.list ? null : data.list[0]) {
         cliente = new TbQoCliente();
         cliente.primerNombre = clienteCrm.firstName;
         cliente.cedulaCliente = clienteCrm.cedulaC;
@@ -259,64 +259,64 @@ export class GestionNegociacionComponent implements OnInit {
         cliente.telefonoMovil = clienteCrm.phoneMobile;
         cliente.telefonoAdicional = clienteCrm.phoneOther;
         cliente.telefonoTrabajo = clienteCrm.phoneWork;
-        cliente.email = clienteCrm.emailAddress; 
-      } else{
+        cliente.email = clienteCrm.emailAddress;
+      } else {
         console.log("Error en la consulta de Prospecto de CRM por lo siguiente: ");
         console.log("Prospecto de CRM --> data: ", data);
-        this.buscarEnEquifax( cedula );
+        this.buscarEnEquifax(cedula);
       }
-      this.loadingSubject.next(false); 
+      this.loadingSubject.next(false);
     });
   }
   /**
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cedula string
    */
-  private buscarEnEquifax( cedula: string ){
+  private buscarEnEquifax(cedula: string) {
     this.loadingSubject.next(true);
-    let clienteInt:  PersonaCalculadora;  
-    let cliente   : TbQoCliente;
+    let clienteInt: PersonaCalculadora;
+    let cliente: TbQoCliente;
     const consulta = new PersonaConsulta(cedula);
-    this.ing.getInformacionPersonaCalculadora( consulta ).subscribe((data: any)=>{
-      if(clienteInt =  (data.entidad.datoscliente)? null: data.entidad.datoscliente){
+    this.ing.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
+      if (clienteInt = (data.entidad.datoscliente) ? null : data.entidad.datoscliente) {
         cliente.fechaNacimiento = clienteInt.fechanacimiento;
-        cliente.nacionalidad = (clienteInt.nacionalidad === "EC")? "ECUADOR": null;
+        cliente.nacionalidad = (clienteInt.nacionalidad === "EC") ? "ECUADOR" : null;
         cliente.email = clienteInt.correoelectronico;
-        cliente.relacionDependencia = (clienteInt.relaciondependencia === "N")? "NO": (clienteInt.relaciondependencia === "S")? "SI":null;
+        cliente.relacionDependencia = (clienteInt.relaciondependencia === "N") ? "NO" : (clienteInt.relaciondependencia === "S") ? "SI" : null;
         cliente.cargo = clienteInt.cargo;
         cliente.profesion = clienteInt.profesion;
         cliente.cargasFamiliares = clienteInt.cargasfamiliares;
         cliente.cedulaCliente = clienteInt.identificacion.toString();
         this.guardarCliente(cliente);
-      } else{
+      } else {
         console.log("Error en la consulta de Persona en Equifax por lo siguiente: ");
         console.log("Cliente en Equifax --> identificacion: ", data.entidad.identificacion);
         console.log("Cliente en Equifax --> codigoError: ", data.entidad.codigoError);
         console.log("Cliente en Equifax --> mensaje: ", data.entidad.mensaje);
         console.log("Cliente en Equifax --> ejecucion: ", data.entidad.ejecucion);
-        this.sinNotSer.setNotice('CLIENTE NO ENCONTRADO', 'error');    
+        this.sinNotSer.setNotice('CLIENTE NO ENCONTRADO', 'error');
       }
-      this.loadingSubject.next(false); 
+      this.loadingSubject.next(false);
     });
   }
   /**
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cliente TbQoCliente
   */
-  private guardarProspectoEnCrm( cliente: TbQoCliente){
+  private guardarProspectoEnCrm(cliente: TbQoCliente) {
     this.loadingSubject.next(true);
     const prospecto = new GuardarProspectoCRM();
     prospecto.cedulaC = cliente.cedulaCliente;
-      prospecto.firstName = cliente.primerNombre;
-      prospecto.phoneHome = cliente.telefonoFijo;
-      prospecto.phoneMobile = cliente.telefonoMovil;
-      prospecto.leadSourceDescription = 'GESTION QUSKI';
-      prospecto.emailAddress = cliente.email;
-      prospecto.emailAddressCaps = cliente.email.toUpperCase();
-      this.crm.guardarProspectoCRM( prospecto ).subscribe((data: any)=>{
-        data.entidades? console.log("Guardado en CRM"): this.sinNotSer.setNotice('ERROR GUARDANDO EN CRM', 'error');
-        this.loadingSubject.next(false); 
-      }, error => {
+    prospecto.firstName = cliente.primerNombre;
+    prospecto.phoneHome = cliente.telefonoFijo;
+    prospecto.phoneMobile = cliente.telefonoMovil;
+    prospecto.leadSourceDescription = 'GESTION QUSKI';
+    prospecto.emailAddress = cliente.email;
+    prospecto.emailAddressCaps = cliente.email.toUpperCase();
+    this.crm.guardarProspectoCRM(prospecto).subscribe((data: any) => {
+      data.entidades ? console.log("Guardado en CRM") : this.sinNotSer.setNotice('ERROR GUARDANDO EN CRM', 'error');
+      this.loadingSubject.next(false);
+    }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
         this.sinNotSer.setNotice(b.msgError, 'error');
@@ -330,20 +330,20 @@ export class GestionNegociacionComponent implements OnInit {
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cliente TbQoCliente
   */
-  private guardarCliente( cliente: TbQoCliente){
+  private guardarCliente(cliente: TbQoCliente) {
     this.loadingSubject.next(true);
     let error: boolean;
     this.cli.persistEntity(cliente).subscribe((data: any) => {
-      if(data.entidad){
+      if (data.entidad) {
         console.log("Guardado en Core");
         this.entidadCliente = data.entidad;
         this.guardarProspectoEnCrm(this.entidadCliente);
         this.cargarValores(this.entidadCliente);
-      }else{
+      } else {
         this.entidadCliente = null;
         this.sinNotSer.setNotice('ERROR GUARDANDO CLIENTE EN CORE INTERNO', 'error');
       }
-      this.loadingSubject.next(false); 
+      this.loadingSubject.next(false);
     }, error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
@@ -351,7 +351,7 @@ export class GestionNegociacionComponent implements OnInit {
       } else {
         this.sinNotSer.setNotice('ERROR GUARDANDO CLIENTE EN CORE INTERNO', 'error');
       }
-      this.loadingSubject.next(false); 
+      this.loadingSubject.next(false);
     });
   }
   /**
@@ -367,13 +367,13 @@ export class GestionNegociacionComponent implements OnInit {
     this.movil.setValue(cliente.telefonoMovil);
     this.telefonoDomicilio.setValue(cliente.telefonoFijo);
     this.email.setValue(cliente.email);
-    this.fechaDeNacimiento.setValue( cliente.fechaNacimiento );
+    this.fechaDeNacimiento.setValue(cliente.fechaNacimiento);
     this.edad.setValue('');
 
     this.sinNotSer.setNotice('CLIENTE ENCONTRADO',"success");
     this.loadingSubject.next(false); 
   }
-  public cargarVariablesYRiesgo(cedula: string){
+  public cargarVariablesYRiesgo(cedula: string) {
     this.dataPopup = new DataPopup();
     this.dataPopup.isCalculadora = true;
     this.dataPopup.cedula = cedula;
@@ -383,7 +383,7 @@ export class GestionNegociacionComponent implements OnInit {
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cedula string
   */
-  private abrirPopupDeAutorizacionYConsultaCliente(cedula: string): any{
+  private abrirPopupDeAutorizacionYConsultaCliente(cedula: string): any {
     const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
       width: '600px',
       height: 'auto',
@@ -392,9 +392,9 @@ export class GestionNegociacionComponent implements OnInit {
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
       console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
       // @TODO: Conectar al flujo de busqueda.
-      if(respuesta){ 
+      if (respuesta) {
         this.buscarEnCrmYEquifax(cedula);
-      }else{
+      } else {
         this.sinNotSer.setNotice('BUSQUEDA CANCELADA', 'error');
         this.limpiarCamposBusqueda();
         this.entidadCliente = null;
@@ -426,7 +426,7 @@ export class GestionNegociacionComponent implements OnInit {
   /** ********************************************* @CATALOGOS ********************* **/
   private obtenerCatalogosCore() {
     this.par.findByNombreTipoOrdered("", "PUB", "Y").subscribe((data: any) => {
-      this.catPublicidad = (data && data.entidades)? data.entidades: "CATALOGO NO CARGADO"
+      this.catPublicidad = (data && data.entidades) ? data.entidades : "CATALOGO NO CARGADO"
       if (data && data.entidades) {
         this.catPublicidad = data.entidades;
       }
@@ -469,23 +469,23 @@ export class GestionNegociacionComponent implements OnInit {
    * @author Jeroham Cadenas - Developer Twelve
    * @param mensaje Mensaje del componente
   */
-  salirDeGestion( mensaje : string ){
+  salirDeGestion(mensaje: string) {
     const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
       width: "auto-max",
       height: "auto-max",
       data: mensaje
     });
     dialogRef.afterClosed().subscribe(r => {
-        this.router.navigate(['dashboard', ""]);  
+      this.router.navigate(['dashboard', ""]);
     });
   }
   getErrorMessage(pfield: string) {
-    const errorRequerido        = 'Ingresar valores';
-    const errorNumero           = 'Ingresar solo numeros';
-    const maximo                = "El maximo de caracteres es: ";
+    const errorRequerido = 'Ingresar valores';
+    const errorNumero = 'Ingresar solo numeros';
+    const maximo = "El maximo de caracteres es: ";
     const invalidIdentification = 'La identificacion no es valida';
-    const errorLogitudExedida   = 'La longitud sobrepasa el limite';
-    const errorInsuficiente     = 'La longitud es insuficiente';
+    const errorLogitudExedida = 'La longitud sobrepasa el limite';
+    const errorInsuficiente = 'La longitud es insuficiente';
     if (pfield && pfield === "identificacion") {
       const input = this.formBusqueda.get("identificacion");
       return input.hasError("required")
@@ -504,17 +504,17 @@ export class GestionNegociacionComponent implements OnInit {
       const input = this.nombresCompletos;
       return input.hasError('required') ? errorRequerido : '';
     }
-  
+
     if (pfield && pfield === 'fechaDeNacimiento') {
       const input = this.fechaDeNacimiento;
       return input.hasError('required') ? errorRequerido : '';
     }
-    
+
     if (pfield && pfield === 'nacionalidad') {
       const input = this.nacionalidad;
       return input.hasError('required') ? errorRequerido : '';
     }
-    
+
     if (pfield && pfield === 'telefonoDomicilio') {
       const input = this.formDatosCliente.get('telefonoDomicilio');
       return input.hasError('required')
@@ -527,14 +527,14 @@ export class GestionNegociacionComponent implements OnInit {
               ? errorInsuficiente
               : '';
     }
-  
+
     if (pfield && pfield == "email") {
 
       return this.email.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo
         + this.email.errors.maxlength.requiredLength : '';
 
     }
-  
+
 
     if (pfield && pfield === 'movil') {
       const input = this.movil;
@@ -550,17 +550,17 @@ export class GestionNegociacionComponent implements OnInit {
     }
   }
 
-///Validar solo numeros
-numberOnly(event): boolean {
-  const charCode = (event.which) ? event.which : event.keyCode;
-  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-    return false;
-  }
-  return true;
+  ///Validar solo numeros
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
 
-}
-  
-    ////Metodo de calculo de la fecha de nacimiento
+  }
+
+  ////Metodo de calculo de la fecha de nacimiento
   onChangeFechaNacimiento() {
 
     this.loadingSubject.next(true);
@@ -580,7 +580,7 @@ numberOnly(event): boolean {
     }
   }
 
-/// Consulta de la edad me diante la fecha 
+  /// Consulta de la edad me diante la fecha 
   getDiffFechas(fecha: Date, format: string) {
     this.loadingSubject.next(true);
     const convertFechas = new RelativeDateAdapter();

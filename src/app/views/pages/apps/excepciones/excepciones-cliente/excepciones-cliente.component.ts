@@ -23,6 +23,8 @@ import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
+import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
+import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 
 
 
@@ -36,6 +38,7 @@ export class ExcepcionesClienteComponent implements OnInit {
 
   private entidadCliente: TbQoCliente = null;
   private entidadNegociacion: TbQoNegociacion = null;
+  private entidadExcepcion: TbQoExcepcione = null;
 
 
   // STANDARD VARIABLES
@@ -114,6 +117,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     private tra: TrackingService,
     private route: ActivatedRoute,
     private par: ParametroService,
+    private exs: ExcepcionService,
     private router: Router,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService
@@ -173,6 +177,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.clienteNegociacion();
     this.subheaderService.setTitle("Excepciones de Negociación");
     this.capturaDatosTraking();
+
   }
   private buscarMensaje() {
     this.loadingSubject.next(true);
@@ -284,11 +289,93 @@ export class ExcepcionesClienteComponent implements OnInit {
 
   }
 
+  buscarExcepcion(id: number) {
+
+    this.exs.getEntity(id).subscribe((data: any) => {
+      console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+
+    });
+
+  }
+
 
 
   /******************************************** @EVENT   *********************************************************/
 
+  public submit(flujo: string) {
+    if (this.formDatosOperacion.valid) {
+      if (this.formDatosCliente.valid) {
+        if (this.formDatosContacto.valid) {
+          if (this.formDatosNegociacion) {
+            if (this.entidadCliente != null) {
+              if (this.entidadNegociacion != null) {
+                this.loadingSubject.next(true);
+                // this.guardado(this.entidadCliente, this.entidadCotizador, this.entidadesOpcionesCreditos);
+                if (flujo == 'EXCEPCION') {
+                  this.router.navigate(['negociacion/gestion-negociacion', this.entidadNegociacion.id]);
+                } else {
+                  this.router.navigate(['dashboard']);
+                }
+              } else {
+                this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DE OPCIONES DE CREDITO', 'error');
 
+              }
+            } else {
+              this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DE COTIZADOR', 'error');
+            }
+          } else {
+            this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DEL CLIENTE', 'error');
+          }
+
+        } else {
+          this.sinNoticeService.setNotice('INGRESE TODOS LOS CAMPOS DE LA SECCION DE OPCIONES DE CREDITO', 'error');
+        }
+      } else {
+        this.sinNoticeService.setNotice('INGRESE TODOS LOS CAMPOS DE LA SECCION CLIENTE', 'error');
+      }
+    }
+
+  }
+
+  /*  private guardado(cliente: TbQoCliente, negociacion: TbQoNegociacion) {
+      // CLIENTE 
+      cliente.primerNombre = this.nombresCompletos.value;
+      cliente.campania = this.campania.value;
+      cliente.nacionalidad = this.nacionalidad.value;
+      cliente.telefonoMovil = this.movil.value;
+      cliente.telefonoFijo = this.telefonoDomicilio.value;
+      cliente.email = this.correoElectronico.value;
+      cliente.fechaNacimiento = this.fechaNacimiento.value;
+      cliente.edad = this.edad.value;
+      cliente.aprobacionMupi = this.aprobacionMupi.value;
+      cliente.cedulaCliente = this.identificacion.value;
+      cliente.publicidad = this.fpublicidad.value;
+      // COTIZADOR
+      cotizador.gradoInteres = this.fgradoInteres.value.valor;
+      cotizador.motivoDeDesestimiento = this.fmotivoDesestimiento.value.valor;
+      cotizador.tbQoCliente = cliente;
+      // DETALLE DE CREDITO
+      const listDetalleCredito = new Array<TbQoDetalleCredito>();
+      opcionesDeCredito.forEach(e => {
+        const dcr = new TbQoDetalleCredito();
+        dcr.costoResguardado = e.costoFideicomiso;
+        dcr.costoSeguro = e.costoSeguro;
+        dcr.costoCustodia = e.costoCustodia;
+        dcr.costoNuevaOperacion = e.totalGastosNuevaOperacion;
+        dcr.costoTasacion = e.costoTasacion;
+        dcr.costoTransporte = e.costoTransporte;
+        dcr.costoValoracion = e.costoValoracion;
+        dcr.montoPreaprobado = e.montoFinanciado;
+        dcr.periodoPlazo = e.periodoPlazo;
+        dcr.plazo = e.plazo;
+        dcr.recibirCliente = e.valorARecibir;
+        dcr.solca = e.impuestoSolca;
+        dcr.valorCuota = e.cuota;
+        dcr.tbQoCotizador = cotizador;
+        listDetalleCredito.push(dcr);
+      });
+      this.guardarGestion(listDetalleCredito);
+    }*/
 
   /**
    * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION
@@ -299,11 +386,13 @@ export class ExcepcionesClienteComponent implements OnInit {
       data.params.id
       if (data.params.id) {
         this.idNegociacion = data.params.id;
-        // console.log('PARAMETRO=====> ', this.idNegociacion);
+        console.log('PARAMETRO=====> ', this.idNegociacion);
         this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
           console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
 
           this.entidadNegociacion = data.entidad;
+          console.log('PARAMETRO=====> ', this.entidadNegociacion.id);
+          this.buscarExcepcion(this.entidadNegociacion.id);
 
           if (data.entidad) {
             //TRACKING
