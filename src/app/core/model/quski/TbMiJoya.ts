@@ -1,4 +1,4 @@
-import { TbMiTipoJoya } from "./TbMiTipoJoya";
+//import { TbMiTipoJoya } from "./TbMiTipoJoya";
 
 import { TbMiContrato } from "./TbMiContrato";
 import { TbMiFunda } from "./TbMiFunda";
@@ -27,14 +27,14 @@ export class TbMiJoya {
     tbMiInventarios: any;
     tbMiContrato: TbMiContrato;
     tbMiFunda: TbMiFunda;
-    tbMiTipoJoya: TbMiTipoJoya;
+    // tbMiTipoJoya: TbMiTipoJoya;
     tbMiCompraOro: TbMiCompraOro;
     tbMiJoyaLotes: TbMiJoyaLote[];
     tbMiHistoricoJoyas: TbMiHistoricoJoya[];
 
     constructor() {
         this.tbMiFunda = new TbMiFunda();
-        this.tbMiTipoJoya = new TbMiTipoJoya();
+        //this.tbMiTipoJoya = new TbMiTipoJoya();
         this.tbMiCompraOro = new TbMiCompraOro();
         this.tbMiContrato = new TbMiContrato(true);
     }
