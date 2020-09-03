@@ -45,5 +45,22 @@ export class diferenciaEnDias{
             return ano+"-"+mes+"-"+dia;
         }
     }
+    static convertirFechaAStringDiaMesYear(fecha:Date){
+        if(fecha){
+            let dia:string = fecha.getDate().toString();
+            let mes:string =(fecha.getMonth()+1).toString();
+            let ano = fecha.getFullYear();
+
+            if((fecha.getMonth()+1)<10){
+                mes="0"+mes;
+                
+            }
+            if(fecha.getDate()<10){
+                dia="0"+dia;
+            }
+
+            return dia+"-"+mes+"-"+ano;
+        }
+    }
 
 }

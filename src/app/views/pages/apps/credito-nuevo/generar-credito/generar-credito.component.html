@@ -5,7 +5,7 @@
     </re-portlet-header>
 
     <re-portlet-body>
-        <mat-vertical-stepper>
+        <mat-vertical-stepper #stepper >
             <mat-step label="Informaci&#243;n Operaci&#243;n">
                 <div class="row">
                     <div class="col-md-2">
@@ -172,7 +172,9 @@
                     </div>
                     <div class="col-md-2">
                         <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="totalPesoNeto" placeholder="">
+                            <input matInput  
+                            [value]="totalPesoNeto.value | number:'1.2-2'"
+                            readonly>
                         </mat-form-field>
                     </div>
                 </div>
@@ -182,7 +184,9 @@
                     </div>
                     <div class="col-md-2">
                         <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="totalPesoBruto" placeholder="">
+                            <input matInput 
+                            [value]="totalPesoBruto.value | number:'1.2-2'"
+                            readonly>
                         </mat-form-field>
                     </div>
                     <div class="col-md-2">
@@ -190,7 +194,9 @@
                     </div>
                     <div class="col-md-2">
                         <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="totalPesoBrutoFunda" placeholder="">
+                            <input matInput
+                            [value]="totalPesoBrutoFunda.value | number:'1.2-2'"
+                            readonly>
                         </mat-form-field>
                     </div>
                     <div class="col-md-2">
@@ -198,7 +204,9 @@
                     </div>
                     <div class="col-md-2">
                         <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="totalValorRealizacion" placeholder="">
+                            <input matInput 
+                            [value]="totalValorRealizacion.value | number:'1.2-2'"
+                            >
                         </mat-form-field>
                     </div>
                 </div>
@@ -208,7 +216,9 @@
                     </div>
                     <div class="col-md-2">
                         <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="totalValorAvaluo" placeholder="">
+                            <input matInput 
+                            [value]="totalValorAvaluo.value | number:'1.2-2'"
+                           readonly>
                         </mat-form-field>
                     </div>
                     <div class="col-md-2">
@@ -216,7 +226,8 @@
                     </div>
                     <div class="col-md-2">
                         <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="totalValorComercial" placeholder="">
+                            <input matInput
+                             [value]="totalValorComercial.value | number:'1.2-2'"readonly>
                         </mat-form-field>
                     </div>
                     <div class="col-md-2">
@@ -336,11 +347,8 @@
                     </div>
                     <div class="col-md-2">
                         <mat-form-field>
-                            <mat-select placeholder="Tipo de Cartera" [formControl]="tipoCartera">
-                                <mat-option *ngFor="let tipoCartera of tiposCarteras" [value]="tipoCuenta">
-                                    {{tipoCuenta}}
-                                </mat-option>
-                            </mat-select>                     
+                                <input matInput [formControl]="tipoCartera" placeholder="">
+                                       
                         </mat-form-field>
                     </div>
                     <div class="col-md-2">
@@ -356,11 +364,8 @@
                     </div>
                     <div class="col-md-2">
                         <mat-form-field>
-                            <mat-select placeholder="Tipo de Cartera" [formControl]="destinoOperacion">
-                                <mat-option *ngFor="let destinoOperacion of destinosOperaciones" [value]="tipoCuenta">
-                                    {{destinoOperacion}}
-                                </mat-option>
-                            </mat-select>                     
+                            <input matInput [formControl]="destinoOperacion" readonly>
+                                         
                         </mat-form-field>
                     </div>
                 </div>
@@ -370,11 +375,7 @@
                     </div>
                     <div class="col-md-2">
                         <mat-form-field>
-                            <mat-select placeholder="Estado de la Operacion" [formControl]="estadoOperacion">
-                                <mat-option *ngFor="let estadoOp of estadoOp" [value]="estadoOp">
-                                    {{estadoOp}}
-                                </mat-option>
-                            </mat-select>                     
+                             <input matInput [formControl]="estadoOperacion" readonly>                   
                         </mat-form-field>
                     </div>
                     <div class="col-md-2">
