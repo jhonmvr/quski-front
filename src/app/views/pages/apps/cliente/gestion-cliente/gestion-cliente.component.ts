@@ -81,7 +81,7 @@ export class GestionClienteComponent implements OnInit {
   //private entidadNegociacion: TbQoNegociacion;
   public date;
 
-
+  ubications = [];
   ubication : User []; /////---------------->>>>>>>>>>>
   Bubications = [];
   filteredOptions: Observable<User[]>;
@@ -128,6 +128,8 @@ export class GestionClienteComponent implements OnInit {
   listNombreGenero =[];   // GENERO WEB SERVICE DE SOFTBANK
   consultaGenero =[];
   listNombreTipoVivienda = [];    // TIPO VIVIENDA WEB SERVICE DE SOFTBANK
+  consultaTipoVivienda=[];
+  listTipoTelefono =[];
   listNombrePais = [];    //LISTA DE PAISES WEB SERVICE DE SOFTBANK
   listNombreSectorVivienda =[]; // Sector VIVIENDA WEB SERVICE DE SOFTBANK
   listNombreTipoReferencia = []; // TIPO REFERENCIA WEB SERVICE DE SOFTBANK
@@ -326,9 +328,9 @@ export class GestionClienteComponent implements OnInit {
     private tr: TrackingService
   ) {
     //LLAMADA A SERVICIO DE PARAMETROS
-    this.sp.setParameter();
-    this.getActividadEconomica();
-    this.getCanalDeContacto();
+    //this.sp.setParameter();
+    //this.getActividadEconomica();
+    //this.getCanalDeContacto();
     //this.cargarUbicacion();
 
     //FORM DATOS CLIENTES
@@ -440,9 +442,7 @@ export class GestionClienteComponent implements OnInit {
 
     // BUSQUEDA DE CLIENTE POR NEGOCIACION
     this.llamarCatalogos();
-    this.clienteNegociacion();
-    this.testConsultarDivicionPoliticaCS();
-    this.testConsultarActividadEconomicaCS();
+    
     this.subheaderService.setTitle("Gestion de Clientes");
   }
 
@@ -505,7 +505,8 @@ export class GestionClienteComponent implements OnInit {
                 this.email.setValue(email);*/
 
 
-                this.implementacionServiciosSoftbankTEST();
+                
+              this.implementacionServiciosSoftbankTEST();
 
                 this.dc.findDireccionByIdCliente(this.id, "DOMICILIO").subscribe((data: any) => {
                   if (data.entidad) {
@@ -696,7 +697,7 @@ export class GestionClienteComponent implements OnInit {
    *  @description TRAE UNA LISTA DE ACTIVIDADES ECONOMICAS DEL SERVIDOR.
    *  @description IMPLEMENTA UN METODO ASINCRONO
    */
-  getActividadEconomica() {
+  /*getActividadEconomica() {
     this.sp.findByNombreTipoOrdered("", "ACT-ECON", "Y").subscribe((wrapper: any) => {
       //console.log("retornos "+ JSON.stringify(wrapper)  );
       if (wrapper && wrapper.entidades) {
@@ -723,7 +724,7 @@ export class GestionClienteComponent implements OnInit {
         this.sinNoticeService.setNotice("Error al cargar Actividad Economica", 'error');
       }
     });
-  }
+  }*/
   /**
    * 
    * @param pfield 
@@ -1243,7 +1244,8 @@ export class GestionClienteComponent implements OnInit {
     this.testConsultaGeneroCS(); 
     this.testConsultarSectorViviendaCS();
     this.testConsultarTipoViviendaCS(); 
-    this.testConsultarTipoReferenciaCS(); 
+    this.testConsultarTipoReferenciaCS();
+    this.testConsultarTipoTelefono(); 
     //this.testConsultarTipoIdentificacionCS(); 
     //this.testConsultarBancosCS(); 
     //this.testConsultarTipoPrestamosCS(); 
@@ -1287,11 +1289,11 @@ export class GestionClienteComponent implements OnInit {
         this.cargaFamiliar.setValue(data.numeroCargasFamiliares);
         this.fechaNacimiento.setValue(data.fechaNacimiento);
         this.onChangeFechaNacimiento();
-        this.canalContacto.setValue
+        //this.canalContacto.setValue
         //this.separacionBienes.setValue
         this.nacionalidad.setValue(this.listNombrePais.find(f=>f.id == data.idPais))
-        this.lugarNacimiento.setValue(this.bUbicaciones.find(n=>n.idParroquia == data.idLugarNacimiento))
-        this.tipoVivienda.setValue(this.listNombreTipoVivienda.find(v=>v.nombre))
+        this.lugarNacimiento.setValue(this.bNombre.find(n=>n.idParroquia == data.idLugarNacimiento))
+        this.tipoVivienda.setValue(this.consultaTipoVivienda.find(v=>v.nombre))
         this.origenIngresos.setValue(data.ingresos);
         this.actividadEconomica.setValue(this.listActividadEconomica.find(a=>a.id == data.actividadEconomica.idActividadEconomica))
         //this.actividadEmpresa.setValue
@@ -1302,7 +1304,12 @@ export class GestionClienteComponent implements OnInit {
         this.ocupacion.setValue(this.listNombreOcupacion.find(o=>o.codigo == data.codigoServicio))
         this.email.setValue(data.email)
         this.telefonoFijo.setValue
-        this.telefonoMovil.setValue(data.telefonos.find(t=>t.codigoTipoTelefono))
+        console.log(" --->>> ", data.telefonos.find(t=>t.codigoTipoTelefono == this.listTipoTelefono))
+        if(this.listTipoTelefono == data.telefonos.codigoTipoTelefono ){
+          this.telefonoMovil.setValue(data.telefonos.numero)
+        }
+
+        //this.telefonoMovil.setValue(data.telefonos.find(t=>t.codigoTipoTelefono == this.listTipoTelefono))
         this.telefonoAdicional.setValue
         this.telefonoOtro.setValue
         //this.canalContacto.setValue
@@ -1359,11 +1366,11 @@ export class GestionClienteComponent implements OnInit {
                       };
             }
             );
-            this.bUbicaciones = ubicacion;
-            /*this.bNombre = this.uubicacion.filter(e => e.nombre)
+            this.uubicacion = ubicacion;
+            this.bNombre = this.uubicacion.filter(e => e.nombre)
             for (let i = 0; i < this.bNombre.length; i++) {
-              this.bUbicaciones.push(this.bNombre[i].nombre);*/
-            //console.log("<<<ubicaciones>>>>>>>",this.bUbicaciones);
+              this.bUbicaciones.push(this.bNombre[i].nombre);
+            //console.log("<<<ubicaciones>>>>>>>",this.bNombre);
             
             this.ubication = new Array<User>();
             this.bUbicaciones.forEach(e => {
@@ -1372,7 +1379,9 @@ export class GestionClienteComponent implements OnInit {
               this.ubication.push(user)
               
             });
-            console.log("<<<ubicaciones----->>>>>>>",this.ubication);
+            this.ubications = this.ubication
+          }
+            //console.log("<<<ubicaciones----->>>>>>>",this.ubications);
           } else {
             console.log("No me trajo data de catalogos de Divicion Politica ----->" + JSON.stringify(data));
           } error => {
@@ -1549,15 +1558,35 @@ export class GestionClienteComponent implements OnInit {
     this.css.consultarTipoViviendaCS().subscribe((data: any)=>{
       //console.log("me trajo data de catalogos de TipoVivienda ----->" + JSON.stringify(data))
       if (!data.existeError) {
-        this.listNombreTipoVivienda = data.catalogo;
-        /*this.nombreTipoVivienda = this.consultaTipoVivienda.filter(e=>e.nombre)
+        this.consultaTipoVivienda = data.catalogo;
+        this.nombreTipoVivienda = this.consultaTipoVivienda.filter(e=>e.nombre)
         for (let i =0; i < this.nombreTipoVivienda.length; ++i ){
           this.listNombreTipoVivienda.push(this.nombreTipoVivienda[i].nombre);
-        } */
-        //console.log(" TipoVivienda -----> ", this.listNombreTipoVivienda )
+        } 
+        console.log(" TipoVivienda -----> ", this.listNombreTipoVivienda )
 
       } else {
         //console.log("No me trajo data de catalogos de TipoVivienda ----->" + JSON.stringify(data));
+      } error => {
+        if (JSON.stringify(error).indexOf("codError") > 0) {
+          let b = error.error;
+          this.sinNoticeService.setNotice(b.setmsgError, 'error');
+        } else {
+          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+        }
+      }
+    });
+  }
+
+  testConsultarTipoTelefono(){
+    this.css.consultarTipoTelefonoCS().subscribe((data: any)=>{
+      if (!data.existeError) {
+        this.listTipoTelefono = data.catalogo;
+        
+        //console.log(" TipoTelefono -----> ", this.listTipoTelefono )
+
+      } else {
+        //console.log("No me trajo data de catalogos de listTipoTelefono ----->" + JSON.stringify(data));
       } error => {
         if (JSON.stringify(error).indexOf("codError") > 0) {
           let b = error.error;
@@ -2052,7 +2081,9 @@ export class GestionClienteComponent implements OnInit {
 
   public llamarCatalogos() {
     this.loadingSubject.next(true);
-    //this.consultaCatalogos();
+    this.clienteNegociacion();
+    this.testConsultarDivicionPoliticaCS();
+    this.testConsultarActividadEconomicaCS();
     this.capturaDatosTraking();
 
   }
