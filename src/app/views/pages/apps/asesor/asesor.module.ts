@@ -54,12 +54,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'asesor',
+        redirectTo: 'bandeja-principal',
         pathMatch: 'full'
-      },
-      {
-        path: 'asesor',
-        component: AsesorComponent
       },
       {
         path: 'bandeja-principal',

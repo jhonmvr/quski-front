@@ -9,7 +9,7 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { RiesgoAcumuladoService } from '../../../../../core/services/quski/riesgoAcumulado.service';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
-import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
+
 
 @Component({
   selector: 'kt-tabla-riesgo-acumulado',
@@ -17,7 +17,6 @@ import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
   styleUrls: ['./tabla-riesgo-acumulado.component.scss']
 })
 export class TablaRiesgoAcumuladoComponent implements OnInit {
-  @Input() dataPopupRiesgo: DataPopup;
   // INPUT BUSQUEDA CORE
   @Input() idCliente: number = null;
   @Input() isPaged: boolean = false;
@@ -48,7 +47,18 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   public loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   // TABLA DE CREDITO
-  displayedColumnsRiesgoAcumulado = ['codigoCarteraQuski', 'diasMoraActual', 'estadoOperacion', 'estadoPrimeraCuotaVigente', 'fechaEfectiva', 'fechaVencimiento', 'interesMora', 'nombreProducto', 'numeroCuotasFaltantes', 'numeroCuotasTotales', 'primeraCuotaVigente', 'referencia', 'valorAlDia', 'valorCancelaPrestamo', 'saldo'];
+  displayedColumnsRiesgoAcumulado = [
+      'referencia',
+      'numeroOperacion', 
+      'codigoCarteraQuski', 
+      'tipoOperacion', 
+      'fechaEfectiva', 
+      'fechaVencimiento',
+      'valorAlDia',
+      'diasMoraActual', 
+      'saldo', 
+      'estadoPrimeraCuotaVigente', 
+      'estadoOperacion'];
   dataSourceRiesgoAcumulado = new MatTableDataSource<TbQoRiesgoAcumulado>();
   constructor(
     private sof: SoftbankService,
@@ -98,15 +108,13 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   public busquedaSoftbank() {
     if (this.cedula != "") {
       this.loadingSubject.next(true);
-      const consulta = new ConsultaCliente()
-      consulta.identificacion = this.cedula;
+      const consulta = new ConsultaCliente(this.cedula);
       this.sof.consultaRiesgoAcumuladoCS(consulta).subscribe((data: any) => {
         if (!data.existeError && data.operaciones != null) {
           this.entidadesRiesgo = data.operaciones;
           this.entidadesRiesgo.forEach(e => {
             e.idSoftbank = e.id;
             e.id = null;
-
           });
           this.dataSourceRiesgoAcumulado.data = this.entidadesRiesgo;
           this.enviarAlPadre(this.entidadesRiesgo);

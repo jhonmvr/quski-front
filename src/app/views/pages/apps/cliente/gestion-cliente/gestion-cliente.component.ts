@@ -19,7 +19,7 @@ import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapt
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
-import { Parroquia } from '../../../../../core/model/quski/Parroquia';
+//import { Parroquia } from '../../../../../core/model/quski/Parroquia';
 import { TbQoIngresoEgresoCliente } from '../../../../../core/model/quski/TbQoIngresoEgresoCliente';
 import { DireccionClienteService } from '../../../../../core/services/quski/direccion-cliente.service';
 import { TbQoDireccionCliente } from '../../../../../core/model/quski/TbQoDireccionCliente';
@@ -188,7 +188,7 @@ export class GestionClienteComponent implements OnInit {
   //public listSector = Object.keys(SectorEnum);
 
   // OBJETOS DE ENTIDADES
-  public ubicacionEntity: Parroquia[] = new Array();
+  public ubicacionEntity= new Array();
   public ingresoEgresoGuardado: TbQoIngresoEgresoCliente;
   public ingresoEgreso: TbQoIngresoEgresoCliente;
   public patrimonioActivo: TbQoPatrimonioCliente;

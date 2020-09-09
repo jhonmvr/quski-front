@@ -10,11 +10,12 @@
                     arrow_back</mat-icon>
                 <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
             </a>
-            <a href="javascript:void(0);" (click)="enviarRespuesta()" matTooltip="Enviar Respuesta"
+            <a href="javascript:void(0);" (click)="submit()" matTooltip="Enviar Respuesta"
                 style="font-size: 12px; vertical-align: middle;">
                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
                 </mat-icon>
-                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Enviar
+                <span style="position: relative; top: -10px; margin-left: 5px;" (click)="submit('GUARDAR')"
+                    class="blue-icon">Enviar
                     Respuesta</span>
             </a>
         </ng-container>
@@ -271,8 +272,8 @@
                 <div class="row mt-2">
                     <div class="col-md-8">
                         <ng-container *ngIf="dataPopup">
-                            <kt-tabla-variables-crediticias [dataPopup]='dataPopup'
-                                (entidades)='traerEntidadesVariables($event)'>
+                            <kt-tabla-variables-crediticias [dataPopup]='dataPopup'>
+                               
                             </kt-tabla-variables-crediticias>
                         </ng-container>
                     </div>
@@ -282,9 +283,8 @@
                 <ng-template matStepLabel>Riesgo Acumulado </ng-template>
                 <div class="row mt-2">
                     <div class="col-md-8">
-                        <ng-container *ngIf="dataPopupRiesgo">
-                            <kt-tabla-riesgo-acumulado [dataPopupRiesgo]='dataPopupRiesgo'
-                                (entidades)='traerEntidadRiesgo($event)'>
+                        <ng-container *ngIf="dataPopup">
+                            <kt-tabla-riesgo-acumulado [idCliente]="entidadCliente.id" [isPaged]="false";> 
                             </kt-tabla-riesgo-acumulado>
                         </ng-container>
                     </div>
