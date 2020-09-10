@@ -164,12 +164,12 @@
             <div class="col-md-4">
               <form class="example-form">
               <mat-form-field class= "example-full-width">
-                <mat-select placeholder="Actividad Económica:" [formControl]="actividadEconomica" required>
-                  <mat-option> -- </mat-option>
-                  <mat-option *ngFor="let actividadC of listActividadEconomica" [value]="actividadC">
+                <input placeholder="Actividad Económica:" type= "text" matInput [formControl]=" actividadEconomica " required [matAutocomplete]="auto2">
+                <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let actividadC of listActividadEconomica " [value]="actividadC">
                     {{ actividadC.nombre}}
                   </mat-option>
-                </mat-select>
+                </mat-autocomplete>
                 <mat-error>{{ getErrorMessage("actividadEconomica") }}</mat-error>
               </mat-form-field>
             </form>
@@ -207,7 +207,12 @@
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput numeric numericType="number"  type="text" placeholder="Télefono Móvil:" [formControl]="telefonoMovil" required/>
+                <input placeholder="Télefono Móvil:" type= "text" matInput numeric numericType="number" required [formControl]="telefonoMovil" [matAutocomplete]="auto3">
+                <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let telefonoM of telefonoMovil " [value]="telefonoM">
+                    {{ telefonoM}}
+                  </mat-option>
+                </mat-autocomplete>
                 <mat-error>{{ getErrorMessage("telefonoMovil") }}</mat-error>
               </mat-form-field>
             </div>
@@ -302,7 +307,7 @@
                 <mat-select placeholder="Tipo de Vivienda:" required [formControl]="tipoVivienda">
                   <mat-option>--</mat-option>
                   <mat-option *ngFor="let tipoVivienda of listNombreTipoVivienda" [value]="tipoVivienda">
-                    {{ tipoVivienda.nombre }}
+                    {{ tipoVivienda }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("tipoVivienda") }}</mat-error>
@@ -424,7 +429,7 @@
                 <mat-select placeholder="Actividad Económica:" required [formControl]="actividadEconomicaEmpresa">
                   <mat-option>--</mat-option>
                   <mat-option *ngFor="let actividadC of listActividadEconomica" [value]="actividadC">
-                    {{ actividadC }}
+                    {{ actividadC.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
