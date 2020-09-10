@@ -36,9 +36,11 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
    */
   private direccionDeFlujo(data: DataPopup) {
     if (data.isCotizacion) {
+      console.log('INGRESA AL IF isCotizacion ');
       this.iniciaBusquedaCotizacion(data.idBusqueda);
     } else {
       if (data.isNegociacion) {
+        console.log('INGRESA AL IF isNegociacion ');
         console.log('data==> direccionDeFlujo ', JSON.stringify(data));
         this.iniciaBusquedaNegociacion(data.idBusqueda);
       } else {
@@ -74,7 +76,6 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
       const consulta = new PersonaConsulta();
       consulta.identificacion = cedula;
       this.cal.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
-        console.log('VALOR DE LA DATA EN EL COMPONENTE VARIABLES ==> ', JSON.stringify(data));
         if (data.entidad.xmlVariablesInternas.variablesInternas.variable != null) {
           this.entidadesVariablesCrediticias = data.entidad.xmlVariablesInternas.variablesInternas.variable
           this.dataSourceVariablesCrediticias.data = this.entidadesVariablesCrediticias;
@@ -91,8 +92,8 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
     if (id != null) {
       if (id > 0) {
         this.vaC.variablesCrediticiaByIdNegociacion(id).subscribe((data: any) => {
-          if (data.list) {
-            this.entidadesVariablesCrediticias = data.list;
+          if (data) {
+            this.entidadesVariablesCrediticias = data;
             this.dataSourceVariablesCrediticias.data = this.entidadesVariablesCrediticias;
             this.enviarAlPadre(this.entidadesVariablesCrediticias);
           } else {

@@ -1,3 +1,4 @@
+import { EstadoExcepcionEnum } from './../../../../../core/enum/EstadoExcepcionEnum';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -25,6 +26,7 @@ import { IntegracionService } from '../../../../../core/services/quski/integraci
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
+import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
 
 
 
@@ -34,6 +36,7 @@ import { ExcepcionService } from '../../../../../core/services/quski/excepcion.s
   styleUrls: ['./excepciones-cliente.component.scss']
 })
 export class ExcepcionesClienteComponent implements OnInit {
+  [x: string]: any;
   // ENTIDADES
 
   private entidadCliente: TbQoCliente = null;
@@ -43,16 +46,16 @@ export class ExcepcionesClienteComponent implements OnInit {
 
   // STANDARD VARIABLES
   public dataPopup: DataPopup;
-  public dataPopupRiesgo: DataPopup;
+  //public dataPopupRiesgo: DataPopup;
   private idNegociacion: number;
   private cedulaCliente: string;
   private idCliente: number;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public mensaje: any;
+  public listExepcion = new Array<TbQoExcepcione>();
+  public loading;
 
-  // TABLA DE VARIABLES CREDITICIAS
-  displayedColumnsVariablesCrediticias = ['orden', 'variable', 'valor'];
-  dataSourceVariablesCrediticias = new MatTableDataSource<TbQoVariablesCrediticia>();
+
 
   // VARIABLES DE TRACKING
   public horaInicioExcepcion: Date;
@@ -172,6 +175,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loading = this.loadingSubject.asObservable();
     //TRACKING
     this.capturaHoraInicio('NEGOCIACION');
     this.clienteNegociacion();
@@ -288,94 +292,76 @@ export class ExcepcionesClienteComponent implements OnInit {
     });
 
   }
-
+  /**
+   * @description Metodo que realiza la busqueda de la excepcion por idNegociacion
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-09-04
+   * @param {number} id
+   * @memberof ExcepcionesClienteComponent
+   */
   buscarExcepcion(id: number) {
+    console.log('valor del id===> ', id.toString());
 
-    this.exs.getEntity(id).subscribe((data: any) => {
+    this.exs.findByIdNegociacion(id).subscribe((data: any) => {
+      if (data.list != null && data.list[0] != null) {
+        console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+        this.listExepcion = data.list[0];
+        console.log('valor de la llistas', this.listExepcion);
+        this.entidadExcepcion = data.list[0];
+        this.observacionAsesor.setValue(this.entidadExcepcion.observacionAsesor);
+        console.log('Observacion Aseseor===> ', this.observacionAsesor);
+
+      }
       console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
 
     });
 
   }
 
+  asignarAprobacion() {
+    console.log('ASIGNAR APROBACION');
+
+    if (this.radioB.value === 'APROBADO') {
+      this.radioB.setValue(EstadoExcepcionEnum.APROBADO);
+    } else if (this.radioB.value === 'NEGADO') {
+      this.radioB.setValue(EstadoExcepcionEnum.NEGADO);
+    }
+    this.entidadExcepcion.estadoExcepcion = this.radioB.value;
+    this.entidadExcepcion.observacionAprobador = this.observacionAprobador.value;
+  }
+
+
 
 
   /******************************************** @EVENT   *********************************************************/
 
   public submit(flujo: string) {
-    if (this.formDatosOperacion.valid) {
-      if (this.formDatosCliente.valid) {
-        if (this.formDatosContacto.valid) {
-          if (this.formDatosNegociacion) {
-            if (this.entidadCliente != null) {
-              if (this.entidadNegociacion != null) {
-                this.loadingSubject.next(true);
-                // this.guardado(this.entidadCliente, this.entidadCotizador, this.entidadesOpcionesCreditos);
-                if (flujo == 'EXCEPCION') {
-                  this.router.navigate(['negociacion/gestion-negociacion', this.entidadNegociacion.id]);
-                } else {
-                  this.router.navigate(['dashboard']);
-                }
-              } else {
-                this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DE OPCIONES DE CREDITO', 'error');
-
-              }
-            } else {
-              this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DE COTIZADOR', 'error');
-            }
-          } else {
-            this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DEL CLIENTE', 'error');
-          }
-
+    this.loadingSubject.next(true);
+    this.asignarAprobacion();
+    console.log('INICIA EL SUBMIT', this.entidadExcepcion);
+    this.exs.persistEntity(this.entidadExcepcion).subscribe((data: any) => {
+      console.log('GUARDA', JSON.stringify(data));
+      //this.registroExcepcion();
+      this.router.navigate(['asesor/bandeja-principal']);
+      this.sinNoticeService.setNotice('SE GUARDO LA EXCEPCION CORRECTAMENTE', 'success');
+    }, error => {
+      if (error.error) {
+        if (error.error.codError) {
+          this.sinNoticeService.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
         } else {
-          this.sinNoticeService.setNotice('INGRESE TODOS LOS CAMPOS DE LA SECCION DE OPCIONES DE CREDITO', 'error');
+          this.sinNoticeService.setNotice('Error al guardar la excepcion', 'error');
         }
+      } else if (error.statusText && error.status == 401) {
+
+        this.sinNoticeService.setNotice('Error al guardar la excepcion', 'error');
       } else {
-        this.sinNoticeService.setNotice('INGRESE TODOS LOS CAMPOS DE LA SECCION CLIENTE', 'error');
+        this.sinNoticeService.setNotice('Error al guardar la excepción', 'error');
       }
-    }
+    });
 
   }
 
-  /*  private guardado(cliente: TbQoCliente, negociacion: TbQoNegociacion) {
-      // CLIENTE 
-      cliente.primerNombre = this.nombresCompletos.value;
-      cliente.campania = this.campania.value;
-      cliente.nacionalidad = this.nacionalidad.value;
-      cliente.telefonoMovil = this.movil.value;
-      cliente.telefonoFijo = this.telefonoDomicilio.value;
-      cliente.email = this.correoElectronico.value;
-      cliente.fechaNacimiento = this.fechaNacimiento.value;
-      cliente.edad = this.edad.value;
-      cliente.aprobacionMupi = this.aprobacionMupi.value;
-      cliente.cedulaCliente = this.identificacion.value;
-      cliente.publicidad = this.fpublicidad.value;
-      // COTIZADOR
-      cotizador.gradoInteres = this.fgradoInteres.value.valor;
-      cotizador.motivoDeDesestimiento = this.fmotivoDesestimiento.value.valor;
-      cotizador.tbQoCliente = cliente;
-      // DETALLE DE CREDITO
-      const listDetalleCredito = new Array<TbQoDetalleCredito>();
-      opcionesDeCredito.forEach(e => {
-        const dcr = new TbQoDetalleCredito();
-        dcr.costoResguardado = e.costoFideicomiso;
-        dcr.costoSeguro = e.costoSeguro;
-        dcr.costoCustodia = e.costoCustodia;
-        dcr.costoNuevaOperacion = e.totalGastosNuevaOperacion;
-        dcr.costoTasacion = e.costoTasacion;
-        dcr.costoTransporte = e.costoTransporte;
-        dcr.costoValoracion = e.costoValoracion;
-        dcr.montoPreaprobado = e.montoFinanciado;
-        dcr.periodoPlazo = e.periodoPlazo;
-        dcr.plazo = e.plazo;
-        dcr.recibirCliente = e.valorARecibir;
-        dcr.solca = e.impuestoSolca;
-        dcr.valorCuota = e.cuota;
-        dcr.tbQoCotizador = cotizador;
-        listDetalleCredito.push(dcr);
-      });
-      this.guardarGestion(listDetalleCredito);
-    }*/
+
 
   /**
    * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION
@@ -391,7 +377,7 @@ export class ExcepcionesClienteComponent implements OnInit {
           console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
 
           this.entidadNegociacion = data.entidad;
-          console.log('PARAMETRO=====> ', this.entidadNegociacion.id);
+          console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
           this.buscarExcepcion(this.entidadNegociacion.id);
 
           if (data.entidad) {
@@ -438,6 +424,8 @@ export class ExcepcionesClienteComponent implements OnInit {
                 this.dataPopup = new DataPopup();
                 this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
                 this.dataPopup.isCalculadora = true;
+                // this.dataPopup.idBusqueda = this.entidadNegociacion.id;
+                console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
                 //INPUT RIESGO ACUMULADO
 
                 // FORM CONTACTO

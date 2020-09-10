@@ -71,8 +71,8 @@ const routes: Routes = [
 	}
 ];
 @NgModule({
-  	imports: [
-		
+	imports: [
+
 		CommonModule,
 		CommonModule,
 		RouterModule.forChild(routes),
@@ -104,11 +104,11 @@ const routes: Routes = [
 		MatTooltipModule,
 		MatButtonToggleModule,
 		NgbProgressbarModule,
-		
+
 		MatStepperModule,
 		PartialsModule
-  	],
-  	providers: [
+	],
+	providers: [
 		ModuleGuard,
 		{ provide: MatDialogRef, useValue: {} },
 		{
@@ -120,8 +120,8 @@ const routes: Routes = [
 				width: '900px'
 			}
 		},
-  	],  
-  	declarations: [
+	],
+	declarations: [
 		ExcepcionesComponent,
 		ExcepcionesClienteComponent,
 		ExcepcionesCoberturaComponent,
@@ -134,4 +134,4 @@ const routes: Routes = [
 
 	]
 })
-export class ExcepcionesModule {}
+export class ExcepcionesModule { }
