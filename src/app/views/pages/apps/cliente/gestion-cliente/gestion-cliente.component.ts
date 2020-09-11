@@ -34,7 +34,7 @@ import { ReferenciaParentescoEnum } from '../../../../../core/enum/ReferenciaPar
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, filter } from 'rxjs/operators';
 import { environment } from '../../../../../../../src/environments/environment';
 import { ClienteSoftbank } from '../../../../../core/model/softbank/ClienteSoftbank';
 import { FindValueSubscriber } from 'rxjs/internal/operators/find';
@@ -85,8 +85,8 @@ export class GestionClienteComponent implements OnInit {
   ubication : User []; /////---------------->>>>>>>>>>>
   Bubications = [];
   filteredOptions: Observable<User[]>;
-  //filteredOptions2: Observable<User[]>;
-  //filteredOptions3: Observable<User[]>;
+  filteredOptions2: Observable<User[]>;
+  filteredOptions3: Observable<User[]>;
 
 
   // VARIABLES DE BUSQUEDA EN NEGOCIACION
@@ -135,6 +135,8 @@ export class GestionClienteComponent implements OnInit {
   listNombreTipoReferencia = []; // TIPO REFERENCIA WEB SERVICE DE SOFTBANK
   //public canal = [];
 
+  //Telefonos cliente
+  //public tM = [];
 
   //UBICACION  
   public bParroqui = [];
@@ -155,6 +157,7 @@ export class GestionClienteComponent implements OnInit {
   listCodigoEstadoCivil = [];
   public nombreEstadoCivil = [];
   listNombreEstadoCivil = []
+  listTipoIdentificacion =[];
 
   
 
@@ -412,7 +415,7 @@ export class GestionClienteComponent implements OnInit {
   public _filter(nombre: string): User[] {
     const filterValue = nombre.toLowerCase();
 
-    return this.ubication.filter(option => option.nombre.toLowerCase().indexOf(filterValue) === 0);
+    return this.ubications.filter(option => option.nombre.toLowerCase().indexOf(filterValue) === 0);
   }
   
 
@@ -421,9 +424,20 @@ export class GestionClienteComponent implements OnInit {
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : name),
-        map(nombre => nombre ? this._filter(nombre) : this.ubication)
+        map(nombre => nombre ? this._filter(nombre) : this.ubications)
       );
-   
+      this.filteredOptions2 = this.ubicacion.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : name),
+        map(nombre => nombre ? this._filter(nombre) : this.ubications)
+      );
+      this.filteredOptions3 = this.ubicacionO.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : name),
+        map(nombre => nombre ? this._filter(nombre) : this.ubications)
+      );
 
     this.loading = this.loadingSubject.asObservable();
     this.habilitarBtActualizar = false;
@@ -470,9 +484,21 @@ export class GestionClienteComponent implements OnInit {
 
                 this.id = data.entidad.id;
                 this.nombresCompletos.setValue(data.entidad.primerNombre + ' ' + data.entidad.segundoNombre
-                  + ' ' + data.entidad.apellidoPaterno + ' ' + data.entidad.apellidoMaterno);
+                + ' ' + data.entidad.apellidoPaterno + ' ' + data.entidad.apellidoMaterno);
                 this.identificacion.setValue(data.entidad.cedulaCliente);
+                this.fechaNacimiento.setValue(data.entidad.fechaNacimiento);
+                this.onChangeFechaNacimiento();
+                this.telefonoFijo.setValue(data.entidad.telefonoFijo);
+                this.telefonoMovil.setValue(data.entidad.telefonoMovil);
+                this.nacionalidad.setValue(data.entidad.nacionalidad);
+                let email: string = data.entidad.email;
+                email = email.toLocaleUpperCase();
+                //console.log("email formateado ===> ", email);
+                this.email.setValue(email);
+                
                 /*this.primerNombre.setValue(data.entidad.primerNombre);
+                this.telefonoAdicional.setValue(data.entidad.telefonoAdicional);
+                this.telefonoOtro.setValue(data.entidad.telefonoTrabajo);
                 this.segundoNombre.setValue(data.entidad.segundoNombre);
                 this.nivelEducacion.setValue(data.entidad.nivelEducacion);
                 this.apellidoPaterno.setValue(data.entidad.apellidoPaterno);
@@ -480,17 +506,10 @@ export class GestionClienteComponent implements OnInit {
                 this.genero.setValue(data.entidad.genero);
                 this.estadoCivil.setValue(data.entidad.estadoCivil);
                 this.cargaFamiliar.setValue(data.entidad.cargasFamiliares);
-                this.fechaNacimiento.setValue(data.entidad.fechaNacimiento);
                 this.separacionBienes.setValue(data.entidad.separacionBienes);
-                this.nacionalidad.setValue(data.entidad.nacionalidad);
                 this.lugarNacimiento.setValue(data.entidad.lugarNacimiento);
                 this.edad.setValue(data.entidad.edad);
-                this.telefonoFijo.setValue(data.entidad.telefonoFijo);
-                this.telefonoMovil.setValue(data.entidad.telefonoMovil);
-                this.telefonoAdicional.setValue(data.entidad.telefonoAdicional);
-                this.telefonoOtro.setValue(data.entidad.telefonoTrabajo);
                 this.canalContacto.setValue(data.entidad.canalContacto);
-                let email: string = data.entidad.email;
                 //console.log("origenIngresos ===> "+ JSON.stringify(data.entidad));
                 this.origenIngresos.setValue(data.entidad.origenIngreso);
                 this.actividadEconomica.setValue(data.entidad.actividadEconomica);
@@ -500,10 +519,8 @@ export class GestionClienteComponent implements OnInit {
                 this.cargo.setValue(data.entidad.cargo);
                 this.profesion.setValue(data.entidad.profesion);
                 this.ocupacion.setValue(data.entidad.ocupacion);
-                email = email.toLocaleUpperCase();
-                //console.log("email formateado ===> ", email);
-                this.email.setValue(email);*/
-
+                */
+                
 
                 
               this.implementacionServiciosSoftbankTEST();
@@ -777,6 +794,10 @@ export class GestionClienteComponent implements OnInit {
     }
     if (pfield && pfield === 'estadoCivil') {
       const input = this.estadoCivil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'actividadEconomica') {
+      const input = this.actividadEconomica;
       return input.hasError('required') ? errorRequerido : '';
     }
     if (pfield && pfield === 'cargaFamiliar') {
@@ -1234,6 +1255,7 @@ export class GestionClienteComponent implements OnInit {
   implementacionServiciosSoftbankTEST() {
    
     //Catalogo
+    this.testTipoIdentificacion();
     this.testConsultarDivicionPoliticaCS();
     this.testConsultarEstadosCivilesCS(); 
     this.testConsultarEducacionCS(); 
@@ -1276,45 +1298,48 @@ export class GestionClienteComponent implements OnInit {
     entidadConsultaCliente.idTipoIdentificacion = 1;
 
     this.css.consultarClienteCS(entidadConsultaCliente).subscribe((data: any) => {
-
       if (data) {
-
-        this.primerNombre.setValue(data.primerNombre);
-        this.segundoNombre.setValue(data.segundoNombre);
-        this.nivelEducacion.setValue(this.listnombreEducacion.find(a=>a.codigo == data.codigoEducacion));
-        this.apellidoPaterno.setValue(data.primerApellido);
-        this.apellidoMaterno.setValue(data.segundoApellido);
-        this.genero.setValue(this.listNombreGenero.find(e=>e.codigo == data.codigoSexo));
-        this.estadoCivil.setValue(this.listNombreEstadoCivil.find(p=>p.codigo == data.codigoEstadoCivil));
-        this.cargaFamiliar.setValue(data.numeroCargasFamiliares);
-        this.fechaNacimiento.setValue(data.fechaNacimiento);
-        this.onChangeFechaNacimiento();
+        /*this.primerNombre.setValue(data.primerNombre);
+        //this.segundoNombre.setValue(data.segundoNombre);
+        //this.nivelEducacion.setValue(this.listnombreEducacion.find(a=>a.codigo == data.codigoEducacion));
+        //this.apellidoPaterno.setValue(data.primerApellido);
+        //this.apellidoMaterno.setValue(data.segundoApellido);
+        //this.genero.setValue(this.listNombreGenero.find(e=>e.codigo == data.codigoSexo));
+        //this.estadoCivil.setValue(this.listNombreEstadoCivil.find(p=>p.codigo == data.codigoEstadoCivil));
+        //this.cargaFamiliar.setValue(data.numeroCargasFamiliares);
+        //this.fechaNacimiento.setValue(data.fechaNacimiento);
+        //this.onChangeFechaNacimiento();
         //this.canalContacto.setValue
         //this.separacionBienes.setValue
-        this.nacionalidad.setValue(this.listNombrePais.find(f=>f.id == data.idPais))
-        this.lugarNacimiento.setValue(this.bNombre.find(n=>n.idParroquia == data.idLugarNacimiento))
-        this.tipoVivienda.setValue(this.consultaTipoVivienda.find(v=>v.nombre))
-        this.origenIngresos.setValue(data.ingresos);
-        this.actividadEconomica.setValue(this.listActividadEconomica.find(a=>a.id == data.actividadEconomica.idActividadEconomica))
+        //this.nacionalidad.setValue(this.listNombrePais.find(f=>f.id == data.idPais));
+        //this.lugarNacimiento.setValue(this.bNombre.find(n=>n.idParroquia == data.idLugarNacimiento));
+        //this.tipoVivienda.setValue(this.consultaTipoVivienda.find(v=>v.nombre));
+       // this.origenIngresos.setValue(data.ingresos);
+        //this.actividadEconomica.setValue(this.listActividadEconomica.find(a=>a.id == data.actividadEconomica.idActividadEconomica));
         //this.actividadEmpresa.setValue
         //this.actividadEconomicaEmpresa.setValue
         //this.relacionDependencia.setValue
         //this.cargo.setValue
-        this.profesion.setValue(this.listNombreProfesion.find(c=>c.codigo == data.codigoProfesion))
-        this.ocupacion.setValue(this.listNombreOcupacion.find(o=>o.codigo == data.codigoServicio))
-        this.email.setValue(data.email)
-        this.telefonoFijo.setValue
-        console.log(" --->>> ", data.telefonos.find(t=>t.codigoTipoTelefono == this.listTipoTelefono))
-        if(this.listTipoTelefono == data.telefonos.codigoTipoTelefono ){
-          this.telefonoMovil.setValue(data.telefonos.numero)
-        }
-
-        //this.telefonoMovil.setValue(data.telefonos.find(t=>t.codigoTipoTelefono == this.listTipoTelefono))
-        this.telefonoAdicional.setValue
-        this.telefonoOtro.setValue
-        //this.canalContacto.setValue
+        //this.profesion.setValue(this.listNombreProfesion.find(c=>c.codigo == data.codigoProfesion));
+        //this.ocupacion.setValue(this.listNombreOcupacion.find(o=>o.codigo == data.codigoServicio));
+        //this.email.setValue(data.email);
+        let tF = data.telefonos.find(t=>t.codigoTipoTelefono == "F");
+        //console.log(" Telefono M --->>> ",tF.numero)
+        if (tF!= null){
+          this.telefonoFijo.setValue(tF.numero)
+        };
         
-        console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
+        let tM = data.telefonos.find(t=>t.codigoTipoTelefono == "M");
+        //console.log(" Telefono M --->>> ",tM.numero)
+        if(tM!=null){
+          this.telefonoMovil.setValue(tM.numero)
+        };
+        
+        //this.telefonoAdicional.setValue
+        //this.telefonoOtro.setValue
+        //this.canalContacto.setValue
+        */
+        //console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
         
       } else {
         this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
@@ -1331,6 +1356,23 @@ export class GestionClienteComponent implements OnInit {
     });
   }
 
+  testTipoIdentificacion(){
+    this.css.consultarTipoIdentificacionCS().subscribe((data:any)=>{
+      //console.log("Consulta de catalogos de Tipo Identificacion ----->" + JSON.stringify(data));
+      if (!data.existeError) {
+        this.listTipoIdentificacion = data.catalogo;
+      } else {
+        //console.log("No me trajo data de catalogos de Tipo Identificacion ----->" + JSON.stringify(data));
+      } error => {
+        if (JSON.stringify(error).indexOf("codError") > 0) {
+          let b = error.error;
+          this.sinNoticeService.setNotice(b.setmsgError, 'error');
+        } else {
+          this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
+        }
+      }
+    });
+  }
   testConsultarDivicionPoliticaCS(){
         this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
             //console.log("funciona -----> consultarDivicionPoliticaCS");
@@ -1381,6 +1423,7 @@ export class GestionClienteComponent implements OnInit {
             });
             this.ubications = this.ubication
           }
+          
             //console.log("<<<ubicaciones----->>>>>>>",this.ubications);
           } else {
             console.log("No me trajo data de catalogos de Divicion Politica ----->" + JSON.stringify(data));
@@ -1563,7 +1606,7 @@ export class GestionClienteComponent implements OnInit {
         for (let i =0; i < this.nombreTipoVivienda.length; ++i ){
           this.listNombreTipoVivienda.push(this.nombreTipoVivienda[i].nombre);
         } 
-        console.log(" TipoVivienda -----> ", this.listNombreTipoVivienda )
+       // console.log(" TipoVivienda -----> ", this.listNombreTipoVivienda )
 
       } else {
         //console.log("No me trajo data de catalogos de TipoVivienda ----->" + JSON.stringify(data));
@@ -1767,6 +1810,7 @@ export class GestionClienteComponent implements OnInit {
     this.element = element;
     this.nombresCompletosR.setValue(element.nombresCompletos);
     this.parentescoR.setValue(element.parentesco);
+    console.log("Parentesco editar >>>---- ",this.parentescoR.value )
     this.direccionR.setValue(element.direccion);
     this.telefonoMovilR.setValue(element.telefonoMovil);
     this.telefonoFijoR.setValue(element.telefonoFijo);
@@ -1776,7 +1820,7 @@ export class GestionClienteComponent implements OnInit {
    */
 
 
-  crearUbicacionDomicilio() {
+  /*crearUbicacionDomicilio() {
     if (this.ubicacion.value) {
       for (let i = 0; i < this.ubicacionEntity.length; i++) {
 
@@ -1789,14 +1833,15 @@ export class GestionClienteComponent implements OnInit {
           this.cantonD = this.ubicacionEntity[i].canton.nombreCanton.toUpperCase();
           this.parroquiaD = this.ubicacionEntity[i].nombreParroquia.toUpperCase()
           this.provinciaD = this.ubicacionEntity[i].canton.provincia.nombreProvincia.toUpperCase()
+          console.log(" Docmicilio ---->>>> "+this.cantonD +" / "+ this.parroquiaD + " / " + this.provinciaD)
         }
       }
     }
-  }
+  }*/
   /**
    * 
    */
-  crearUbicacionLaboral() {
+  /*crearUbicacionLaboral() {
     if (this.ubicacionO.value) {
       for (let i = 0; i < this.ubicacionEntity.length; i++) {
 
@@ -1812,7 +1857,7 @@ export class GestionClienteComponent implements OnInit {
         }
       }
     }
-  }
+  }*/
   /**
    * 
    */
@@ -1861,15 +1906,15 @@ export class GestionClienteComponent implements OnInit {
    */
   guardar() {
     this.loadingSubject.next(true);
-    if (this.formCliente.invalid) {
+    /*if (this.formCliente.invalid) {
       this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS PERSONALES DEL CLIENTE", 'error');
       return;
-    }
+    }*/
     
     if (this.formDatosContacto.valid) {
       if (this.formDatosDireccionDomicilio.valid) {
-        console.log(" >>>>>>>> "+ this.formDatosDireccionDomicilio)
+        //console.log(" >>>>>>>> "+ this.formDatosDireccionDomicilio)
         if (this.formDatosDireccionLaboral.valid) {
           if (this.formDatosEconomicos.valid) {
             if (this.dataSourceIngresoEgreso.data.length > 0) {
@@ -1880,37 +1925,38 @@ export class GestionClienteComponent implements OnInit {
                   if (this.id != null && this.id != "") {
                     this.cliente.id = Number(this.id);
                   }
-                  this.cliente.actividadEconomica = this.actividadEconomica.value;
-                  this.cliente.actividadEconomicaEmpresa = this.actividadEconomicaEmpresa.value;
+                  this.cliente.actividadEconomica = this.actividadEconomica.value.id;
+                  this.cliente.actividadEconomicaEmpresa = this.actividadEconomicaEmpresa.value.id;
                   if (this.apellidoMaterno.value) {
-                    this.cliente.apellidoMaterno = this.apellidoMaterno.value.toUpperCase();
+                    this.cliente.apellidoMaterno = this.apellidoMaterno.value;
                   }
-                  this.cliente.apellidoPaterno = this.apellidoPaterno.value.toUpperCase();
-                  this.cliente.canalContacto = this.canalContacto.value.toUpperCase();
-                  this.cliente.cargasFamiliares = this.cargaFamiliar.value;
-                  this.cliente.cargo = this.cargo.value.toUpperCase();
+                  this.cliente.apellidoPaterno = this.apellidoPaterno.value;
+                  this.cliente.canalContacto = this.canalContacto.value;
+                  this.cliente.cargasFamiliares = Number(this.cargaFamiliar.value);
+                  this.cliente.cargo = this.cargo.value;
                   this.cliente.cedulaCliente = this.identificacion.value;
                   this.cliente.edad = this.edad.value;
-                  this.cliente.email = this.email.value.toUpperCase();
-                  this.cliente.estadoCivil = this.estadoCivil.value.toUpperCase();
+                  this.cliente.email = this.email.value;
+                  this.cliente.estadoCivil = this.estadoCivil.value.codigo;
                   this.cliente.fechaNacimiento = this.fechaNacimiento.value;
-                  this.cliente.genero = this.genero.value.toUpperCase();
-                  this.cliente.lugarNacimiento = this.lugarNacimiento.value;
-                  this.cliente.nacionalidad = this.nacionalidad.value.toUpperCase();
-                  this.cliente.nivelEducacion = this.nivelEducacion.value.toUpperCase();
-                  this.cliente.nombreEmpresa = this.actividadEmpresa.value.toUpperCase();
-                  this.cliente.ocupacion = this.ocupacion.value.toUpperCase();
-                  this.cliente.origenIngreso = this.origenIngresos.value.toUpperCase();
-                  this.cliente.primerNombre = this.primerNombre.value.toUpperCase();
-                  this.cliente.profesion = this.profesion.value.toUpperCase();
+                  this.cliente.genero = this.genero.value.codigo;
+                  let lugarNacimiento = this.uubicacion.find(x=>x.nombre ==this.lugarNacimiento.value.nombre);
+                  this.cliente.lugarNacimiento = lugarNacimiento.idParroquia;
+                  this.cliente.nacionalidad = this.nacionalidad.value.id;
+                  this.cliente.nivelEducacion = this.nivelEducacion.value.codigo;
+                  this.cliente.nombreEmpresa = this.actividadEmpresa.value;
+                  this.cliente.ocupacion = this.ocupacion.value.codigo;
+                  this.cliente.origenIngreso = this.origenIngresos.value;
+                  this.cliente.primerNombre = this.primerNombre.value;
+                  this.cliente.profesion = this.profesion.value.codigo;
                   if (this.relacionDependencia.value) {
-                    this.cliente.relacionDependencia = this.relacionDependencia.value.toUpperCase();
+                    this.cliente.relacionDependencia = this.relacionDependencia.value;
                   }
                   if (this.segundoNombre.value) {
-                    this.cliente.segundoNombre = this.segundoNombre.value.toUpperCase();
+                    this.cliente.segundoNombre = this.segundoNombre.value;
                   }
                   if (this.separacionBienes.value) {
-                    this.cliente.separacionBienes = this.separacionBienes.value.toUpperCase();
+                    this.cliente.separacionBienes = this.separacionBienes.value;
                   }
 
                   this.cliente.telefonoAdicional = this.telefonoAdicional.value;
@@ -1922,16 +1968,17 @@ export class GestionClienteComponent implements OnInit {
                   this.direccionDomicilio.barrio = this.barrio.value.toUpperCase();
                   this.direccionDomicilio.callePrincipal = this.callePrincipal.value.toUpperCase();
                   this.direccionDomicilio.calleSegundaria = this.calleSecundaria.value.toUpperCase();
-                  this.direccionDomicilio.canton = this.cantonD.toUpperCase();
-                  this.direccionDomicilio.provincia = this.provinciaD.toUpperCase();
-                  this.direccionDomicilio.parroquia = this.parroquiaD.toUpperCase();
+                  let x = this.uubicacion.find(x=>x.nombre ==this.ubicacion.value.nombre);
+                  this.direccionDomicilio.canton = x.idCanton;
+                  this.direccionDomicilio.provincia = x.idProvincia;
+                  this.direccionDomicilio.parroquia = x.idParroquia;
                   this.direccionDomicilio.direccionEnvioCorrespondencia = this.drCrDo.value;
                   this.direccionDomicilio.direccionLegal = this.drLgDo.value;
                   this.direccionDomicilio.numeracion = this.numeracion.value.toUpperCase();
                   this.direccionDomicilio.referenciaUbicacion = this.referenciaUbicacion.value.toUpperCase();
-                  this.direccionDomicilio.sector = this.sector.value.toUpperCase();
+                  this.direccionDomicilio.sector = this.sector.value;
                   this.direccionDomicilio.tipoDireccion = "DOMICILIO";
-                  this.direccionDomicilio.tipoVivienda = this.tipoVivienda.value.toUpperCase();
+                  this.direccionDomicilio.tipoVivienda = this.tipoVivienda.value;
                   if (this.idDireccionDomicilio != null) {
                     this.direccionDomicilio.id = this.idDireccionDomicilio;
                   }
@@ -1941,16 +1988,17 @@ export class GestionClienteComponent implements OnInit {
                   this.direccionLaboral.barrio = this.barrioO.value.toUpperCase();
                   this.direccionLaboral.callePrincipal = this.callePrincipalO.value.toUpperCase();
                   this.direccionLaboral.calleSegundaria = this.calleSecundariaO.value.toUpperCase();
-                  this.direccionLaboral.canton = this.cantonL.toUpperCase();
-                  this.direccionLaboral.provincia = this.provinciaL.toUpperCase();
-                  this.direccionLaboral.parroquia = this.parroquiaL.toUpperCase();
+                  let dL = this.uubicacion.find(x=>x.nombre ==this.ubicacionO.value.nombre);
+                  this.direccionLaboral.canton = dL.idCanton;
+                  this.direccionLaboral.provincia = dL.idProvincia;
+                  this.direccionLaboral.parroquia = dL.idParroquia;
                   this.direccionLaboral.direccionEnvioCorrespondencia = this.drCrLb.value;
                   this.direccionLaboral.direccionLegal = this.drLgLb.value;
                   this.direccionLaboral.numeracion = this.numeracionO.value.toUpperCase();
                   this.direccionLaboral.referenciaUbicacion = this.referenciaUbicacionO.value.toUpperCase();
-                  this.direccionLaboral.sector = this.sectorO.value.toUpperCase();
+                  this.direccionLaboral.sector = this.sectorO.value;
                   this.direccionLaboral.tipoDireccion = "LABORAL";
-                  this.direccionLaboral.tipoVivienda = this.tipoViviendaO.value.toUpperCase();
+                  this.direccionLaboral.tipoVivienda = this.tipoViviendaO.value;
                   if (this.idDireccionLaboral != null) {
                     this.direccionLaboral.id = this.idDireccionLaboral
                   }
@@ -1986,18 +2034,21 @@ export class GestionClienteComponent implements OnInit {
                     this.referenciaGuardado = new TbReferencia();
                     this.referenciaGuardado.direccion = element.direccion;
                     this.referenciaGuardado.nombresCompletos = element.nombresCompletos;
-                    this.referenciaGuardado.parentesco = element.parentesco;
+
+                    this.referenciaGuardado.parentesco = element.parentesco;    
+                    
+                  console.log("Parentesco >>>---- ",element.parentesco )
                     this.referenciaGuardado.telefonoFijo = element.telefonoFijo;
                     this.referenciaGuardado.telefonoMovil = element.telefonoMovil;
                     this.cliente.tbQoReferenciaPersonals.push(this.referenciaGuardado);
                   });
 
-
+            
                   this.cs.crearClienteConRelaciones(this.cliente,this.idNegociacion).subscribe((respuesta: any) => {
                     console.log('numero de creditos',respuesta.entidad.numeroCreditos);
                     if (respuesta.entidad) {
                       let clienteSoftBank = new ClienteSoftbank();
-                      this.cs.crearClienSoftBank(clienteSoftBank);
+                      /*this.cs.crearClienSoftBank(clienteSoftBank);
                       clienteSoftBank.nombreCompleto = this.nombresCompletos.value
                       clienteSoftBank.primerNombre = this.primerNombre.value
                       clienteSoftBank.segundoNombre = this.segundoNombre.value
@@ -2023,7 +2074,7 @@ export class GestionClienteComponent implements OnInit {
                       clienteSoftBank.pasivos = this.pasivo.value
                       //clienteSoftBank.ingresos = this.ingresoEgresoGuardado.esIngreso.values
                       //clienteSoftBank.egresos = this.totalValorIngresoEgreso.valueOf
-                      
+                      */
                       if(this.situacion =='EN PROCESO' && respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos == 1){
                         console.log("tiene q navegar al generar credito ");
                         this.router.navigate(['../../generar-credito/generar-credito'])
@@ -2032,6 +2083,7 @@ export class GestionClienteComponent implements OnInit {
                         console.log("tiene q navegar a la bandeja principal de asesores ");
                         this.router.navigate(['../../asesor/bandeja-principal/bandeja-principal'])
                       }
+                      
                       this.id = respuesta.entidad.id
                       this.loadingSubject.next(false);
                       this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
@@ -2048,6 +2100,7 @@ export class GestionClienteComponent implements OnInit {
                     } else {
                     }
                   });
+
                 } else {
                   this.loadingSubject.next(false);
                   this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS EN  LA SECCION DE REFERENCIAS PERSONALES", 'error');
@@ -2081,9 +2134,10 @@ export class GestionClienteComponent implements OnInit {
 
   public llamarCatalogos() {
     this.loadingSubject.next(true);
-    this.clienteNegociacion();
-    this.testConsultarDivicionPoliticaCS();
     this.testConsultarActividadEconomicaCS();
+    this.testConsultarDivicionPoliticaCS();
+    this.clienteNegociacion();
+    this.testTipoIdentificacion();
     this.capturaDatosTraking();
 
   }
@@ -2128,7 +2182,7 @@ export class GestionClienteComponent implements OnInit {
     this.sp.findByNombreTipoOrdered('NEGOCIACION', 'ACTIVIDAD', 'Y').subscribe((data: any) => {
       if (data.entidades) {
         this.actividad = data.entidades[0].nombre;
-        this.sp.findByNombreTipoOrdered('DATOS_CLIENTE', 'PROCESO', 'Y').subscribe((data: any) => {
+        this.sp.findByNombreTipoOrdered('CREACION', 'PROCESO', 'Y').subscribe((data: any) => {
           if (data.entidades) {
             this.procesoDatosCliente = data.entidades[0].nombre;
           }
@@ -2143,7 +2197,7 @@ export class GestionClienteComponent implements OnInit {
     tracking.proceso = this.procesoDatosCliente;
     tracking.observacion = '';
     tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
+    tracking.situacion = SituacionTrackingEnum.FINALIZADO; // Por definir
     tracking.usuario = atob(localStorage.getItem(environment.userKey)); // Modificar al id del asesor
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
