@@ -1,0 +1,317 @@
+<div class="spinner-container" *ngIf="loading | async">
+  <mat-spinner class="spiner"></mat-spinner>
+</div>
+<re-portlet>
+  <re-portlet-header [title]="'Excepción De Riesgo'" [class]="'kt-portlet__head--lg'">
+    <ng-container ktPortletTools>
+      <a [routerLink]="['../../']" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+          arrow_back</mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+      </a>
+      <a href="javascript:void(0);" (click)="submit()" matTooltip="Enviar Respuesta"
+        style="font-size: 12px; vertical-align: middle;">
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
+        </mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" (click)="submit('GUARDAR')"
+          class="blue-icon">Enviar
+          Respuesta</span>
+      </a>
+    </ng-container>
+  </re-portlet-header>
+
+  <re-portlet-body>
+    <mat-vertical-stepper>
+      <mat-step>
+        <ng-template matStepLabel>Datos de Operación</ng-template>
+        <form [formGroup]="formDatosOperacion">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="nombresCompletos" placeholder="Nombres Completos " />
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="mat-form-field-fluid">
+                <input [formControl]="identificacion" placeholder="C.I." matInput numeric numericType="number"
+                  (keypress)="numberOnly($event)" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field>
+                <input matInput [formControl]="nombreProceso" placeholder="Proceso" />
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Datos Del Cliente</ng-template>
+        <div class="kt-form">
+          <form [formGroup]="formDatosCliente">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="tipoIdentificacion" placeholder="Tipo de identificacion" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="identificacionC" placeholder="RUC / C.I / Pasaporte" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="aprobadoWebMupi" placeholder="Aprobado Web Mupi" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="primerNombre" placeholder="Primer Nombre" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="segundoNombre" placeholder="Segundo Nombre" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="separacionDeBienes" placeholder="Separacion de Bienes" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="apellidoPaterno" placeholder="Apellido Paterno" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="apellidoMaterno" placeholder="Apellido Materno" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="cargaFamiliar" placeholder="Cargas Familiares" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="genero" placeholder="Genero" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="estadoCivil" placeholder="Estado Civil" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="lugarDeNacimiento" placeholder="Lugar De Nacimiento" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <mat-label>Fecha de nacimiento</mat-label>
+                  <input matInput #inputFechaNacimiento [matDatepicker]="pickerFechaNacimiento"
+                    [formControl]="fechaDeNacimiento" required="true" />
+                  <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="nacionalidad" placeholder="Nacionalidad" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="edad" placeholder="Edad" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="nivelDeEducacion" placeholder="Nivel De Educacion" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="actividadEconomica" placeholder="Actividad Economica" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <mat-label>Última fecha de actualización de cliente</mat-label>
+                  <input matInput #inputFechaNacimientos [matDatepicker]="pickerFechaNacimientos"
+                    [formControl]="ultimaFechaDeActualizacionDeCliente" />
+                  <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimientos">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #pickerFechaNacimientos></mat-datepicker>
+                </mat-form-field>
+
+              </div>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Datos De contacto Del Cliente</ng-template>
+        <div class=" kt-form">
+          <form [formGroup]="formDatosContacto">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="telefonoDomicilio" placeholder="Telefono Domicilio:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="telefonoAdicional" placeholder="Telefono Adicional:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="telefonoMovil" placeholder="Telefono Movil:" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="telefonoOficina" placeholder="Telefono de Oficina/Otros:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="correo" placeholder="Correo Electronico:" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Datos De Negociación</ng-template>
+        <div class="kt-form">
+          <form [formGroup]="formDatosNegociacion">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="tipoProcesoNegociacion" placeholder="Tipo De Proceso: " matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input [formControl]="motivoNoAceptacion" placeholder="Motivo de No Aceptación: " matInput />
+                </mat-form-field>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <input [formControl]="calificadoMupi" placeholder="Calificado Mupi:" matInput />
+                  </mat-form-field>
+                </div>
+
+              </div>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Variables crediticias </ng-template>
+        <div class="row mt-2">
+          <div class="col-md-8">
+            <ng-container *ngIf="dataPopup">
+              <kt-tabla-variables-crediticias [dataPopup]='dataPopup'>
+
+              </kt-tabla-variables-crediticias>
+            </ng-container>
+          </div>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Riesgo Acumulado </ng-template>
+        <div class="row mt-2">
+          <div class="col">
+            <ng-container *ngIf="dataPopup">
+              <kt-tabla-riesgo-acumulado [idCliente]="entidadCliente.id" [isPaged]="false">
+              </kt-tabla-riesgo-acumulado>
+            </ng-container>
+          </div>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Excepción</ng-template>
+        <div class="kt-form">
+          <form [formGroup]="formDatosExcepcion">
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <mat-card class="warning">
+                  <span class="material-icons warning-icons">report_problem </span>
+                  <span>{{mensaje}}</span>
+
+
+
+
+                </mat-card>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-8">
+                <mat-label> Observacion Del Asesor: </mat-label>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-xl-8">
+                <textarea class="form-control border" rows="3" [formControl]="observacionAsesor"
+                  placeholder="Observacion Del Asesor: " matInput> {{ observacionAsesor }}</textarea>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-8">
+                <mat-label> Observacion Del Aprobador: </mat-label>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-xl-8">
+                <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
+                  placeholder="Observacion Del Aprobador: " matInput>{{ observacionAprobador }}</textarea>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class=" offset-3 offset-lg-2 col-xl-8">
+                <mat-radio-group [formControl]="radioB" (change)="capturaHoraAtencion()">
+                  <mat-radio-button value="APROBADO">Aprobar Excepcion</mat-radio-button>
+                  <mat-radio-button value="NEGADO">Negar Excepcion</mat-radio-button>
+                </mat-radio-group>
+
+
+
+              </div>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+    </mat-vertical-stepper>
+  </re-portlet-body>
+  <re-portlet-footer></re-portlet-footer>
+</re-portlet>

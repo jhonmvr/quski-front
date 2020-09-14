@@ -41,6 +41,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 // Component
 import { ExcepcionesClienteComponent } from './excepciones-cliente/excepciones-cliente.component';
 import { ExcepcionesCoberturaComponent } from './excepciones-cobertura/excepciones-cobertura.component';
+import { ExcepcionesRiesgoComponent } from './excepciones-riesgo/excepciones-riesgo.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { ExcepcionesComponent } from './excepciones.component';
 import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
@@ -66,6 +67,10 @@ const routes: Routes = [
 			{
 				path: 'excepcion-cobertura/:id',
 				component: ExcepcionesCoberturaComponent
+			},
+			{
+				path: 'excepcion-riesgo/:id',
+				component: ExcepcionesRiesgoComponent
 			}
 		]
 	}
@@ -125,6 +130,7 @@ const routes: Routes = [
 		ExcepcionesComponent,
 		ExcepcionesClienteComponent,
 		ExcepcionesCoberturaComponent,
+		ExcepcionesRiesgoComponent,
 	],
 	entryComponents: [
 		ErrorCargaInicialComponent,
