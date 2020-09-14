@@ -5,10 +5,10 @@
 <re-portlet>
   <re-portlet-header [title]="'Creacion/Actualizacion Clientes'"[class]="'kt-portlet__head--lg'">
     <ng-container ktPortletTools>
-      <a [routerLink]="['../../']" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
+      <!--<a [routerLink]="['../../']" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
         <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">arrow_back</mat-icon>
         <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
-      </a>
+      </a>-->
       <a href="javascript:void(0);" matTooltip="Guardar" (click)="guardar()" style="font-size: 12px; vertical-align: middle;">
         <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save</mat-icon>
         <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Guardar</span>
@@ -68,14 +68,14 @@
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
-                <input  matInput  placeholder="Apellido Materno:"  [formControl]="apellidoMaterno" />
-                <mat-error>{{ getErrorMessage("apellidoMaterno") }}</mat-error>
+                <input matInput placeholder="Apellido Paterno:"  [formControl]="apellidoPaterno" required/>
+                <mat-error>{{ getErrorMessage("apellidoPaterno") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Apellido Paterno:"  [formControl]="apellidoPaterno" required/>
-                <mat-error>{{ getErrorMessage("apellidoPaterno") }}</mat-error>
+                <input  matInput  placeholder="Apellido Materno:"  [formControl]="apellidoMaterno" />
+                <mat-error>{{ getErrorMessage("apellidoMaterno") }}</mat-error>
               </mat-form-field>
             </div>
             <!--<div class="col-md-4">
@@ -144,8 +144,8 @@
             <div class="col-md-4">
               <form class="example-form">
                 <mat-form-field class= "example-full-width">
-                  <input placeholder="Lugar de Nacimiento:" type= "text" matInput required [formControl]= "lugarNacimiento" [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                  <input placeholder="Lugar de Nacimiento:" type= "text" matInput required [formControl]= "lugarNacimiento" [matAutocomplete]="auto4">
+                    <mat-autocomplete #auto4="matAutocomplete" [displayWith]="displayFn">
                     <mat-option *ngFor="let name of filteredOptions | async" [value]="name">
                       {{name.nombre}}
                     </mat-option>
@@ -164,8 +164,8 @@
             <div class="col-md-4">
               <form class="example-form">
               <mat-form-field class= "example-full-width">
-                <input placeholder="Actividad Económica:" type= "text" matInput [formControl]=" actividadEconomica " required [matAutocomplete]="auto2">
-                <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">
+                <input placeholder="Actividad Económica:" type= "text" matInput [formControl]="actividadEconomica " required [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                   <mat-option *ngFor="let actividadC of listActividadEconomica " [value]="actividadC">
                     {{ actividadC.nombre}}
                   </mat-option>
@@ -196,6 +196,9 @@
             <div class="col-md-4">
               <mat-form-field>
                 <input matInput numeric numericType="number" type="text" placeholder="Tel&#233;fono Domicilio:" [formControl]="telefonoFijo"/>
+                <mat-option *ngFor="let tF of tF " [value]="tF">
+                  {{tF}}
+                </mat-option>
                 <mat-error>{{ getErrorMessage("telefonoFijo") }}</mat-error>
               </mat-form-field>
             </div>
@@ -207,12 +210,12 @@
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input placeholder="Télefono Móvil:" type= "text" matInput numeric numericType="number" required [formControl]="telefonoMovil" [matAutocomplete]="auto3">
-                <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">
-                  <mat-option *ngFor="let telefonoM of telefonoMovil " [value]="telefonoM">
-                    {{ telefonoM}}
+                <input placeholder="Télefono Móvil:" type= "text" matInput numeric numericType="number" required [formControl]="telefonoMovil" >
+                
+                  <mat-option *ngFor="let tM of tM " [value]="tM">
+                    {{tM}}
                   </mat-option>
-                </mat-autocomplete>
+                
                 <mat-error>{{ getErrorMessage("telefonoMovil") }}</mat-error>
               </mat-form-field>
             </div>
@@ -249,9 +252,9 @@
             <div class="col-md-4">
               <form class="example-form">
                 <mat-form-field class= "example-full-width">
-                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :"[matAutocomplete]="auto" [formControl]= "ubicacion" (selectionChange)="crearUbicacionDomicilio()">
-                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                    <mat-option *ngFor="let Dd of filteredOptions | async" [value]="Dd">
+                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :"[matAutocomplete]="auto2" [formControl]= "ubicacion" (selectionChange)="crearUbicacionDomicilio()">
+                  <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let Dd of filteredOptions2 | async" [value]="Dd">
                       {{Dd.nombre}}
                     </mat-option>
                   </mat-autocomplete>
@@ -269,7 +272,9 @@
               <mat-form-field>
                 <mat-select required placeholder="Sector:" [formControl]="sector">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let sector of listNombreSectorVivienda" [value]="sector"> {{ sector }}</mat-option>
+                  <mat-option *ngFor="let sector of listNombreSectorVivienda" [value]="sector">
+                     {{ sector }}
+                  </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("sector") }}</mat-error>
               </mat-form-field>
@@ -330,15 +335,17 @@
           </div>
           <div class="form-group row">
             <div class="col-md-4">
-              <mat-form-field >
-                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :" [matAutocomplete]="auto" required [formControl]= "ubicacionO"  (selectionChange)="crearUbicacionLaboral()">
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                  <mat-option *ngFor="let asd of filteredOptions | async" [value]="asd">
+              
+                <mat-form-field class= "example-full-width">
+                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :" [matAutocomplete]="auto1" required [formControl]= "ubicacionO"  (selectionChange)="crearUbicacionLaboral()">
+                <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let asd of filteredOptions3 | async" [value]="asd">
                     {{asd.nombre}}
                   </mat-option>
                 </mat-autocomplete>
-                <mat-error>{{ getErrorMessage("Parroquia / Canton / Provincia") }}</mat-error>
               </mat-form-field>
+                <mat-error>{{ getErrorMessage("Parroquia / Canton / Provincia") }}</mat-error>
+              
             </div>
             <div class="col-md-4">
               <mat-form-field>
