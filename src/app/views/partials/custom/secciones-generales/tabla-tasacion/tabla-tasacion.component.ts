@@ -1,3 +1,4 @@
+import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource, MAT_DIALOG_DATA } from '@angular/material';
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
@@ -5,22 +6,26 @@ import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVar
 import { VariablesCrediticiasService } from '../../../../../core/services/quski/variablesCrediticias.service';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
+import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
+import { Page } from '../../../../../core/model/page';
 
 @Component({
-  selector: 'kt-tabla-variables-crediticias',
-  templateUrl: './tabla-variables-crediticias.component.html',
-  styleUrls: ['./tabla-variables-crediticias.component.scss']
+  selector: 'kt-tabla-tasacion',
+  templateUrl: './tabla-tasacion.component.html',
+  styleUrls: ['./tabla-tasacion.component.scss']
 })
-export class TablaVariablesCrediticiasComponent implements OnInit {
+export class TablaTasacionComponent implements OnInit {
+
   // VARIABLES ANIDADAS
   @Input() dataPopup: DataPopup;
-  @Output() entidades: EventEmitter<Array<TbQoVariablesCrediticia>> = new EventEmitter<Array<TbQoVariablesCrediticia>>();
+  @Output() entidades: EventEmitter<Array<TbQoTasacion>> = new EventEmitter<Array<TbQoTasacion>>();
   // ENTIDADES
-  private entidadesVariablesCrediticias: Array<TbQoVariablesCrediticia>;
+  private entidadesTasaciones: Array<TbQoTasacion>;
   // TABLA DE VARIABLES CREDITICIAS
-  public displayedColumnsVariablesCrediticias = ['orden', 'variable', 'valor'];
-  public dataSourceVariablesCrediticias = new MatTableDataSource<TbQoVariablesCrediticia>();
+  public displayedColumnsTasacion = ['descripcion', 'descuentoPesoPiedra', 'descuentoSuelda'];
+  public dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
   constructor(
+    private tas: TasacionService,
     private vaC: VariablesCrediticiasService,
     private cal: IntegracionService,
   ) { }
@@ -51,15 +56,17 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
         }
       }
     }
+
   }
   private iniciaBusquedaCotizacion(id: number) {
     if (id != null) {
       if (id > 0) {
-        this.vaC.variablesCrediticiabyIdCotizador(id).subscribe((data: any) => {
+
+        this.tas.getTasacionByIdNegociacion(null, id).subscribe((data: any) => {
           if (data.list) {
-            this.entidadesVariablesCrediticias = data.list;
-            this.dataSourceVariablesCrediticias.data = this.entidadesVariablesCrediticias;
-            this.enviarAlPadre(this.entidadesVariablesCrediticias);
+            this.entidadesTasaciones = data.list;
+            this.dataSourceTasacion.data = this.entidadesTasaciones;
+            this.enviarAlPadre(this.entidadesTasaciones);
           } else {
             console.log("Error ----> Id de cotizacion no existe", id);
           }
@@ -77,9 +84,9 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
       consulta.identificacion = cedula;
       this.cal.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
         if (data.entidad.xmlVariablesInternas.variablesInternas.variable != null) {
-          this.entidadesVariablesCrediticias = data.entidad.xmlVariablesInternas.variablesInternas.variable
-          this.dataSourceVariablesCrediticias.data = this.entidadesVariablesCrediticias;
-          this.enviarAlPadre(this.entidadesVariablesCrediticias);
+          this.entidadesTasaciones = data.entidad.xmlVariablesInternas.variablesInternas.variable
+          this.dataSourceTasacion.data = this.entidadesTasaciones;
+          this.enviarAlPadre(this.entidadesTasaciones);
         } else {
           console.log("Error ----> Id de cotizacion no existe", cedula);
         }
@@ -93,9 +100,9 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
       if (id > 0) {
         this.vaC.variablesCrediticiaByIdNegociacion(id).subscribe((data: any) => {
           if (data) {
-            this.entidadesVariablesCrediticias = data;
-            this.dataSourceVariablesCrediticias.data = this.entidadesVariablesCrediticias;
-            this.enviarAlPadre(this.entidadesVariablesCrediticias);
+            this.entidadesTasaciones = data;
+            this.dataSourceTasacion.data = this.entidadesTasaciones;
+            this.enviarAlPadre(this.entidadesTasaciones);
           } else {
             console.log("Error ----> Id de cotizacion no existe", id);
           }
@@ -107,8 +114,8 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
       console.log("Error ----> Ingrese id de cotizador", id);
     }
   }
-  private enviarAlPadre(entidades: Array<TbQoVariablesCrediticia>) {
-    console.log('Estoy enviando esto desde variables crediticias -----> ', entidades);
+  private enviarAlPadre(entidades: Array<TbQoTasacion>) {
+    console.log('Estoy enviando esto desde tasacion -----> ', entidades);
     this.entidades.emit(entidades);
   }
 }

@@ -7,12 +7,7 @@ import { BehaviorSubject, Observable, Subject, from, throwError } from 'rxjs';
 import { map, catchError, tap, switchMap } from 'rxjs/operators';
 import { Page } from '../../model/page';
 import { DatePipe } from '@angular/common';
-import {TbMiCliente}from '../../model/quski/TbMiCliente';
-
-import { TbMiJoya } from '../../model/quski//TbMiJoya';
-import { TbMiLote } from '../../model/quski/TbMiLote';
 import { RelativeDateAdapter } from '../../util/relative.dateadapter';
-import { TbMiMovimientoCaja } from '../../model/quski/TbMiMovimientoCaja';
 
 
 @Injectable({
@@ -47,31 +42,6 @@ export class JoyaService extends BaseService {
       return error;
     }));*/
 
-  }
-
-  public guardarJoya(joya: TbMiJoya) {
-    let serviceUrl = this.appResourcesUrl + "tipoJoyaRestController/persistEntity";
-    let wrapper = { entidad: joya }
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
- 
-  }
-  venderJoya(joya: TbMiJoya, ingresos: TbMiMovimientoCaja[], cliente: TbMiCliente) {
-    let serviceUrl = this.appResourcesUrl + "joyaRestController/venderJoya";
-    let wrapper = { entidad: {joya:joya, ingresos:ingresos, comprador:cliente} }
-    this.params = new HttpParams()
-    this.params = this.params.set('usuario',localStorage.getItem('reUser'));
-    this.params = this.params.set('idAgencia',localStorage.getItem('reAgencia'));
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, wrapper, this.options);
-  }
-
-  findTipoOroByQuilate(quilate){
-    let serviceUrl = this.appResourcesUrl + "tipoOroRestController/tipoOroByQuilate";
-    this.params = new HttpParams()
-    this.params = this.params.set('quilate',quilate);
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
   }
   public findByEstado(dataparam, estado: string, serviceUrl: string) {
 
@@ -225,14 +195,6 @@ export class JoyaService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-
-  public updateJoyasByLotes(tbMiLotes: Array<TbMiLote>) {
-    let serviceUrl = this.appResourcesUrl + "joyaRestController/updateJoyasByLotes";
-    let wrapper = { entidades: tbMiLotes }
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
-  }
-
   public findByIdFunda(p: Page, idFunda: string) {
     let serviceUrl = this.appResourcesUrl + "joyaRestController/findByIdFunda";
 

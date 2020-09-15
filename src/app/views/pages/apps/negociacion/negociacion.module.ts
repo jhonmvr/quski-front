@@ -67,6 +67,10 @@ const routes: Routes = [
 			{
 				path: 'gestion-negociacion/:id',
 				component: GestionNegociacionComponent
+			},
+			{
+				path: 'gestion-negociacion/:origen/:id',
+				component: GestionNegociacionComponent
 			}
 
 		]

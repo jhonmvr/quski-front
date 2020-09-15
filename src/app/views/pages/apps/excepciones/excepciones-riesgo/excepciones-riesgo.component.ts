@@ -27,15 +27,13 @@ import { PersonaConsulta } from '../../../../../core/model/calculadora/personaCo
 import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
-
-
-
 @Component({
-  selector: 'kt-excepciones-cliente',
-  templateUrl: './excepciones-cliente.component.html',
-  styleUrls: ['./excepciones-cliente.component.scss']
+  selector: 'kt-excepciones-riesgo',
+  templateUrl: './excepciones-riesgo.component.html',
+  styleUrls: ['./excepciones-riesgo.component.scss']
 })
-export class ExcepcionesClienteComponent implements OnInit {
+export class ExcepcionesRiesgoComponent implements OnInit {
+
   [x: string]: any;
   // ENTIDADES
 
@@ -50,6 +48,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   private idNegociacion: number;
   private cedulaCliente: string;
   private idCliente: number;
+
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public mensaje: any;
   public listExepcion = new Array<TbQoExcepcione>();
@@ -100,9 +99,9 @@ export class ExcepcionesClienteComponent implements OnInit {
   // FORM DATOS NEGOCIACION
   public formDatosNegociacion: FormGroup = new FormGroup({});
   public tipoProcesoNegociacion = new FormControl('', []);
-  public estadoNegociacion = new FormControl('', []);
-  public fechaDeCreacionNegociacion = new FormControl('', []);
-  public ultimaFechaDeActualizacionNegociacion = new FormControl('', []);
+  public motivoNoAceptacion = new FormControl('', []);
+  public calificadoMupi = new FormControl('', []);
+
 
   // FORM DATOS EXCEPCION
   public formDatosExcepcion: FormGroup = new FormGroup({});
@@ -156,10 +155,11 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.formDatosContacto.addControl("telefonoOficina", this.telefonoOficina);
     this.formDatosContacto.addControl("correo", this.correo);
     //FORM DATOS NEGOCIACION
+
     this.formDatosNegociacion.addControl("tipoProcesoNegociacion", this.tipoProcesoNegociacion);
-    this.formDatosNegociacion.addControl("estadoNegociacion", this.estadoNegociacion);
-    this.formDatosNegociacion.addControl("fechaDeCreacionNegociacion", this.fechaDeCreacionNegociacion);
-    this.formDatosNegociacion.addControl("ultimaFechaDeActualizacionNegociacion", this.ultimaFechaDeActualizacionNegociacion);
+    this.formDatosNegociacion.addControl("motivoNoAceptacion", this.motivoNoAceptacion);
+    this.formDatosNegociacion.addControl("calificadoMupi", this.calificadoMupi);
+
     //FORM DATOS EXCEPCION
     this.formDatosExcepcion.addControl("observacionAsesor", this.observacionAsesor);
     this.formDatosExcepcion.addControl("excAprobada", this.excAprobada);
@@ -179,7 +179,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     //TRACKING
     this.capturaHoraInicio('NEGOCIACION');
     this.clienteNegociacion();
-    this.subheaderService.setTitle("Excepciones de Negociación");
+    this.subheaderService.setTitle("Excepciones de Riesgo");
     this.capturaDatosTraking();
 
   }
@@ -437,9 +437,8 @@ export class ExcepcionesClienteComponent implements OnInit {
                 //FORM DATOS NEGOCIACION
 
                 this.tipoProcesoNegociacion.setValue(this.entidadNegociacion.tipo);
-                this.estadoNegociacion.setValue(this.entidadNegociacion.situacion);
-                this.fechaDeCreacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
-                this.ultimaFechaDeActualizacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));
+                this.motivoNoAceptacion.setValue(this.entidadNegociacion.situacion);
+                this.calificadoMupi.setValue(this.entidadCliente.aprobacionMupi);
               } else {
                 this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 1', 'error');
               }

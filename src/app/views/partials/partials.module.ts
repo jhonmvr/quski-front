@@ -103,10 +103,11 @@ import { VerCotizacionesComponent } from './custom/popups/ver-cotizaciones/ver-c
 import { DetallesComponent } from './custom/popups/ver-cotizaciones/detalles/detalles.component';
 import { TablaDetalleCreditoComponent } from './custom/secciones-generales/tabla-detalle-credito/tabla-detalle-credito.component';
 import { TablaRiesgoAcumuladoComponent } from './custom/secciones-generales/tabla-riesgo-acumulado/tabla-riesgo-acumulado.component';
-
+import { TablaTasacionComponent } from './custom/secciones-generales/tabla-tasacion/tabla-tasacion.component';
 import { TablaVariablesCrediticiasComponent } from './custom/secciones-generales/tabla-variables-crediticias/tabla-variables-crediticias.component';
 import { TablaOfertaCalculadoraComponent } from './custom/secciones-generales/tabla-oferta-calculadora/tabla-oferta-calculadora.component';
 import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesgo-acumulado.component';
+
 import { TablaOfertaCreditoComponent } from './custom/secciones-generales/tabla-oferta-credito/tabla-oferta-credito.component';
 import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.component';
 
@@ -171,6 +172,7 @@ import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.
 		TablaOfertaCalculadoraComponent,
 		TablaOfertaCreditoComponent,
 		TablaRiesgoAcumuladoComponent,
+		TablaTasacionComponent,
 		RiesgoAcumuladoComponent,
 		TablaOfertaCreditoComponent,
 		MensajeEdadComponent
@@ -191,6 +193,7 @@ import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.
 		TablaVariablesCrediticiasComponent,
 		TablaOfertaCalculadoraComponent,
 		TablaRiesgoAcumuladoComponent,
+		TablaTasacionComponent,
 		TablaOfertaCreditoComponent,
 		MensajeEdadComponent,
 
@@ -292,6 +295,7 @@ import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.
 		TablaVariablesCrediticiasComponent,
 		TablaOfertaCalculadoraComponent,
 		TablaRiesgoAcumuladoComponent,
+		TablaTasacionComponent,
 		TablaOfertaCreditoComponent
 
 	]

@@ -1,35 +1,34 @@
 import { TbQoCliente } from './TbQoCliente'
 
 export class TbQoRiesgoAcumulado {
+    referencia: string                            // "BPM001",
+    numeroOperacion: string                       // "2020002150",
+    tipoCarteraQuski: string                      // "MO3",
+    tipoOperacion: string                         // "VENCIMIENTO",
+    fechaEfectiva: string                         // "2020-01-24",
+    fechaVencimiento: string                      // "2020-08-05",
+    interesMora:  number                          // 0.0,
+    saldo:  number                                // 457.73,
+    valorAlDia:  number                           // 0.00,
+    valorAlDiaMasCuotaActual:  number             // 72.03,
+    valorCancelaPrestamo:  number                 // 457.73,
+    valorProyectadoCuotaActual:  number           // 80.40,
+    diasMoraActual:  number                       // 0,
+    numeroCuotasTotales:  number                  // 6,
+    nombreProducto: string                        // "CONSUMO SIN BASE",
+    numeroCuotasFaltantes:  number                // 6,
+    primeraCuotaVigente:  number                  // 1,
+    estadoPrimeraCuotaVigente: string             // "ACTIVO",
+    numeroGarantiasReales:  number                // 0,
+    estadoOperacion: string                       // "AL DIA",
+    idMoneda:  number                             // 1,
+    esDemandada: boolean                          // false,
     id:  number                             // 1,
-    codigoCarteraQuski:  string             // null,
-    diasMoraActual:  number                 // null,
-    esDemandada:  number                    // null,
     estado:  number                         // "ACT",
-    estadoOperacion:  string                // 
-    estadoPrimeraCuotaVigente :  string     // "ACTIVO",
     fechaActualizacion :  Date              // null,
     fechaCreacion :  string                 // "2020-01-07",
-    fechaEfectiva: Date                     // "2020-01-24",
-    fechaVencimiento: Date                  // "2020-08-05",
     idSoftbank:  number                     // 1234
-    interesMora: number                     // 12.12
-    nombreProducto :  string                // "CONSUMO SIN BASE",
-    numeroCuotasFaltantes : number          //  2,
-    numeroCuotasTotales : number            // 1,
-    numeroGarantiasReales : number          // 0,
-    numeroOperacion :  string               // "2020001984",
-    primeraCuotaVigente : number            // 1,
-    referencia: string                      // "BPM001",
-    saldo: number                           // 457.73,
-    tipoOperacion: string                   // "VENCIMIENTO",
-    valorAlDia :  number                    // 0,
-    valorAlDiaMasCuotaActual :  number      // 4023,
-    valorCancelaPrestamo :  number          // 4023,
-    valorProyectadoCuotaActual : number     // 422778,
     tbQoCliente :  TbQoCliente
-    // NUEVOS CAMPOS 
-
     constructor() { 
         this.tbQoCliente = new TbQoCliente();
     }

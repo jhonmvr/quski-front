@@ -25,6 +25,7 @@ export class RiesgoAcumuladoSoftbank  {
   id:  number                                   // 19847
   constructor(){
     
+    
   }
 
 }

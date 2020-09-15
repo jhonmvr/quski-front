@@ -41,6 +41,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 // Component
 import { ExcepcionesClienteComponent } from './excepciones-cliente/excepciones-cliente.component';
 import { ExcepcionesCoberturaComponent } from './excepciones-cobertura/excepciones-cobertura.component';
+import { ExcepcionesRiesgoComponent } from './excepciones-riesgo/excepciones-riesgo.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { ExcepcionesComponent } from './excepciones.component';
 import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
@@ -66,13 +67,17 @@ const routes: Routes = [
 			{
 				path: 'excepcion-cobertura/:id',
 				component: ExcepcionesCoberturaComponent
+			},
+			{
+				path: 'excepcion-riesgo/:id',
+				component: ExcepcionesRiesgoComponent
 			}
 		]
 	}
 ];
 @NgModule({
-  	imports: [
-		
+	imports: [
+
 		CommonModule,
 		CommonModule,
 		RouterModule.forChild(routes),
@@ -104,11 +109,11 @@ const routes: Routes = [
 		MatTooltipModule,
 		MatButtonToggleModule,
 		NgbProgressbarModule,
-		
+
 		MatStepperModule,
 		PartialsModule
-  	],
-  	providers: [
+	],
+	providers: [
 		ModuleGuard,
 		{ provide: MatDialogRef, useValue: {} },
 		{
@@ -120,11 +125,12 @@ const routes: Routes = [
 				width: '900px'
 			}
 		},
-  	],  
-  	declarations: [
+	],
+	declarations: [
 		ExcepcionesComponent,
 		ExcepcionesClienteComponent,
 		ExcepcionesCoberturaComponent,
+		ExcepcionesRiesgoComponent,
 	],
 	entryComponents: [
 		ErrorCargaInicialComponent,
@@ -134,4 +140,4 @@ const routes: Routes = [
 
 	]
 })
-export class ExcepcionesModule {}
+export class ExcepcionesModule { }

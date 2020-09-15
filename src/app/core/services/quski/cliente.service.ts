@@ -1,12 +1,9 @@
-import { ClienteCRM } from './../../model/quski/ClienteCRM';
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 // import { Http, Headers, Response, RequestOptions, URLSearchParams, ResponseContentType } from '@angular/http';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { TbMiCliente } from '../../model/quski/TbMiCliente';
 import { Page } from '../../model/page';
 import { TbQoCliente } from "../../model/quski/TbQoCliente";
-import { Observable } from 'rxjs';
 import { TbQoCotizador } from '../../model/quski/TbQoCotizador';
 
 @Injectable({
