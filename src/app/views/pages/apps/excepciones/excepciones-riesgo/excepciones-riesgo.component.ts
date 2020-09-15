@@ -48,6 +48,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   private idNegociacion: number;
   private cedulaCliente: string;
   private idCliente: number;
+
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public mensaje: any;
   public listExepcion = new Array<TbQoExcepcione>();

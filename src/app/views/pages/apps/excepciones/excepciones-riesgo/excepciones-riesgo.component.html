@@ -259,6 +259,18 @@
           </div>
         </div>
       </mat-step>
+
+      <mat-step>
+        <ng-template matStepLabel>Tasación </ng-template>
+        <div class="row mt-2">
+          <div class="col">
+            <ng-container *ngIf="dataPopup">
+              <kt-tabla-tasacion>
+              </kt-tabla-tasacion>
+            </ng-container>
+          </div>
+        </div>
+      </mat-step>
       <mat-step>
         <ng-template matStepLabel>Excepción</ng-template>
         <div class="kt-form">
