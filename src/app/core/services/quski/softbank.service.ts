@@ -591,7 +591,7 @@ export class SoftbankService extends BaseService {
    * @param operacionCrear 
    */
   operacionCrearCS( operacionCrear : OperacionCrear ) {
-    let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "operacion/crear" ;
+    let serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/crearOperacion" ;
     let wrapper =  operacionCrear;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);

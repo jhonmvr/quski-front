@@ -23,7 +23,7 @@ export class TbQoCreditoNegociacion {
     tbQoCliente:TbQoCliente;
     tbQoNegociacion : TbQoNegociacion;
     tbQoTasacion : TbQoTasacion  [];
-    tbQoAgencia:TbQoAgencia;
+
     constructor(){
         this.tbQoNegociacion = new TbQoNegociacion();
        // this.tbQoTasacion = new TbQoTasacion();

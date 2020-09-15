@@ -97,6 +97,7 @@ export class GenerarCreditoComponent implements OnInit, AfterViewInit {
   totalValorR
   totalValorA
   totalValorC
+  totalNumeroJoya
   list=[]
   listaPrecios=[2.50, 5.00, 10.00]
 
@@ -203,6 +204,7 @@ operacion = new OperacionCrear()
     this.enableApoderado.next(false);
     this.enableTablaOfertaButton = this.enableTablaOferta.asObservable();
     this.enableTablaOferta.next(false);
+   
   
     this.cargarDatosOperacion()
     
@@ -372,6 +374,7 @@ validateEdadTipo(){
      this.totalResults = data.totalResults;
         this.dataSource = new MatTableDataSource<any>(data.list);
         this.calcular()
+        console.log(this.totalNumeroJoya)
         /*   
        
         */
@@ -461,6 +464,7 @@ calcular(){
   this.totalValorR = 0
   this.totalValorA = 0
   this.totalValorC = 0
+  this.totalNumeroJoya = 0
   let ind = 0;
   if (this.dataSource.data) {
     //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
@@ -477,6 +481,7 @@ calcular(){
     this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
     this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
     this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
+    this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas)
     });
     
   }
