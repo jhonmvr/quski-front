@@ -212,7 +212,7 @@ export class GestionClienteComponent implements OnInit {
   public lugarNacimiento = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public nivelEducacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cargaFamiliar = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public canalContacto = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public canalContacto = new FormControl('', [Validators.maxLength(50)]);
   public primerNombre = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public nacionalidad = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public genero = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -1906,11 +1906,11 @@ export class GestionClienteComponent implements OnInit {
    */
   guardar() {
     this.loadingSubject.next(true);
-    /*if (this.formCliente.invalid) {
+    if (this.formCliente.invalid) {
       this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS PERSONALES DEL CLIENTE", 'error');
       return;
-    }*/
+    }
     
     if (this.formDatosContacto.valid) {
       if (this.formDatosDireccionDomicilio.valid) {
@@ -2077,11 +2077,11 @@ export class GestionClienteComponent implements OnInit {
                       */
                       if(this.situacion =='EN PROCESO' && respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos == 1){
                         console.log("tiene q navegar al generar credito ");
-                        this.router.navigate(['../../generar-credito/generar-credito'])
+                        this.router.navigate(['../../credito-nuevo/generar-credito', this.idNegociacion])
                       }
                       if(respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos >1){
                         console.log("tiene q navegar a la bandeja principal de asesores ");
-                        this.router.navigate(['../../asesor/bandeja-principal/bandeja-principal'])
+                        this.router.navigate(['../../asesor/bandeja-principal', this.idNegociacion])
                       }
                       
                       this.id = respuesta.entidad.id

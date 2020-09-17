@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
 import { Page } from '../../../../../core/model/page';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
@@ -11,6 +11,8 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { FundaService } from '../../../../../core/services/quski/funda.service';
 import { BehaviorSubject } from 'rxjs';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
+import { DialogCargarHabilitanteComponent } from '../../cliente/gestion-cliente/dialog-cargar-habilitante/dialog-cargar-habilitante.component';
+import { RegistrarPagoComponent } from './registrar-pago/registrar-pago.component';
 
 @Component({
   selector: 'kt-gestion-credito',
@@ -52,6 +54,8 @@ export class GestionCreditoComponent implements OnInit {
   public riesgoTotalCliente = new FormControl('');
   public recibirCliente = new FormControl('');
   public netoCliente = new FormControl('');
+  
+  public dialog: MatDialog;
   ///Monto
   public montoSolicitado = new FormControl('');
 
@@ -337,4 +341,5 @@ getFunda(pesoFun){
     }
   });
 }
+
 }

@@ -174,17 +174,13 @@
               </mat-form-field>
             </form>
             </div>
-            <!--<div class="col-md-4">
-              <mat-form-field>
-                <mat-select placeholder="Canal de Contacto:" [formControl]="canalContacto" required>
-                  <mat-option> -- </mat-option>
-                  <mat-option *ngFor="let canalC of " [value]="canalC">
-                    {{ canalC }}
-                  </mat-option>
-                </mat-select>
-                <mat-error>{{ getErrorMessage("canalContacto") }}</mat-error>
-              </mat-form-field>
-            </div>-->
+            <div class="col-md-4">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <input matInput placeholder="Canal de Contacto:" [formControl]="canalContacto"/>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </form>
       </mat-step>
@@ -252,7 +248,7 @@
             <div class="col-md-4">
               <form class="example-form">
                 <mat-form-field class= "example-full-width">
-                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :"[matAutocomplete]="auto2" [formControl]= "ubicacion" (selectionChange)="crearUbicacionDomicilio()">
+                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :"[matAutocomplete]="auto2" [formControl]= "ubicacion" > <!--(selectionChange)="crearUbicacionDomicilio()"-->
                   <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">
                     <mat-option *ngFor="let Dd of filteredOptions2 | async" [value]="Dd">
                       {{Dd.nombre}}
@@ -337,7 +333,7 @@
             <div class="col-md-4">
               
                 <mat-form-field class= "example-full-width">
-                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :" [matAutocomplete]="auto1" required [formControl]= "ubicacionO"  (selectionChange)="crearUbicacionLaboral()">
+                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :" [matAutocomplete]="auto1" required [formControl]= "ubicacionO"  > <!--(selectionChange)="crearUbicacionLaboral()"-->
                 <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">
                   <mat-option *ngFor="let asd of filteredOptions3 | async" [value]="asd">
                     {{asd.nombre}}

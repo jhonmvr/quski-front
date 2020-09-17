@@ -482,7 +482,6 @@
                             <input matInput [formControl]="cuotas" placeholder="">
                         </mat-form-field>
                     </div>
-                    
                 </div>
                 <div class="row">
                     <div class="col-md-2">
@@ -517,8 +516,13 @@
                             <input matInput [formControl]="netoCliente" placeholder="">
                         </mat-form-field>
                     </div>
-                    
+                    <div  class="col-md-4" >
+                        <button mat-button (click)=" RegistrarPago()">
+                            Registrar Pagos 
+                        </button>
+                      </div>
                 </div>
+
             </mat-step>
        
             <mat-step label = "Joyas">
