@@ -1,0 +1,167 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" rel="stylesheet">
+<re-portlet>
+    <re-portlet-header [title]="'Aprobar Pagos'" [class]="'kt-portlet__head--lg'">
+</re-portlet-header>
+<re-portlet-body>
+    <mat-vertical-stepper>
+        <mat-step label="Información de Crédito">
+            <div class="row">
+                <div class="col-md-2">
+                    <label style="font-weight:bold">Nombre del cliente:</label>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field class="example-full-width">
+                        <input  matInput [formControl]=" " >
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label style="font-weight:bold">Cédula:</label>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field class="example-full-width">
+                        <input matInput [formControl]=" " >
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label style="font-weight:bold">Código de Operación:</label>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field class="example-full-width">
+                        <input matInput [formControl]=" " >
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label style="font-weight:bold">Código operación Mupi:</label>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field class="example-full-width">
+                        <input matInput [formControl]=" " >
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label style="font-weight:bold">Tipo de crédito:</label>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field class="example-full-width">
+                        <input matInput [formControl]=" " >
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-step>
+        <!-- DIA DE PAGO-->
+        <mat-step label="Día de pago" >
+            
+            <div class="mat-table__wrapper">
+                <table mat-table [dataSource]=" dato" class="mat-elevation-z20" #tabla>   
+                    <ng-container matColumnDef="rubro">
+                        <th mat-header-cell *matHeaderCellDef> Rubros </th>
+                        <td mat-cell *matCellDef="let arti"> {{arti.rubro}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="valor">
+                        <th mat-header-cell *matHeaderCellDef> Valor </th>
+                        <td mat-cell *matCellDef="let arti"> {{arti.valor}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columna"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columna;"></tr>
+                </table>
+            
+        </div>
+        </mat-step>
+        <!-- Tabla de pagos -->      
+        <mat-step label="Pagos">
+            <table mat-table [dataSource]=" datos" class="mat-elevation-z8" #tabla1>
+                
+                <ng-container matColumnDef="accion">
+                    <th mat-header-cell *matHeaderCellDef>Accion </th>
+                    <td mat-cell *matCellDef="let j = index;">
+                      <button mat-raised-button color="warn" focusable="false" (click)="borrarFila(j)">
+                        <mat-icon> Eliminar </mat-icon>
+                      </button>
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="institucionFinanciera">
+                  <th mat-header-cell *matHeaderCellDef> Institucion Financiera </th>
+                  <td mat-cell *matCellDef="let articulo"> {{articulo.institucionFinanciera}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="cuentas">
+                  <th mat-header-cell *matHeaderCellDef> Cuentas </th>
+                  <td mat-cell *matCellDef="let articulo"> {{articulo.cuentas}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="fechadePago">
+                  <th mat-header-cell *matHeaderCellDef> Fecha Pago </th>
+                  <td mat-cell *matCellDef="let articulo"> {{articulo.fechadePago}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="numerodeDeposito">
+                    <th mat-header-cell *matHeaderCellDef> Numero de deposito </th>
+                    <td mat-cell *matCellDef="let articulo"> {{articulo.numerodeDeposito}} </td>
+                  </ng-container>
+                
+                  <ng-container matColumnDef="valorpagado">
+                    <th mat-header-cell *matHeaderCellDef> Valor Depositado </th>
+                    <td mat-cell *matCellDef="let articulo"> {{articulo.valorpagado}} </td>
+                  </ng-container>
+                
+                <ng-container matColumnDef="descargar">
+                    <th mat-header-cell *matHeaderCellDef> Descarga foto </th>
+                    <td mat-cell *matCellDef="let j = index;">
+                      <button mat-raised-button color="warn" focusable="false" (click)="descargarComponente()">
+                        <mat-icon> D </mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+                <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+              </table>              
+              
+              <div class="row">
+                <div class="col-md-1.5">
+                    <label style="font-weight:bold">Valor Pre-cancelacion: </label>
+                </div>
+                <div class="col-md-2">
+                    <mat-form-field >
+                        <input matInput  [formControl]=" " >
+                    </mat-form-field>
+                </div>
+                <div class="col-md-1.5">
+                    <label style="font-weight:bold">Valor Depositado: </label>
+                </div><div class="col-md-2">
+                    <mat-form-field >
+                        <input matInput  [formControl]=" ">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <label style="font-weight:bold"> Obsevaciones </label>
+            <div class="col-md-8" >
+                <mat-form-field class="example-full-width" color="black">
+                    <input matInput type="text" >
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <div>
+                    <button mat-raised-button color="white" focusable="false"  (click)="aprobar()">
+                    Aprobar
+                </button>
+                </div>
+                <div>
+                    <button mat-raised-button color="white" focusable="false"  (click)="rechazar()">
+                    Rechazar
+                </button>
+                </div>
+            </div>
+        </mat-step>
+    </mat-vertical-stepper>
+</re-portlet-body>
