@@ -37,7 +37,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   [x: string]: any;
   // ENTIDADES
 
-  private entidadCliente: TbQoCliente = null;
+  public entidadCliente: TbQoCliente = null;
   private entidadNegociacion: TbQoNegociacion = null;
   private entidadExcepcion: TbQoExcepcione = null;
 
@@ -218,6 +218,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       if (hora.entidad) {
 
         this.horaAsignacionExcepcion = hora.entidad;
+        console.log('capturaHoraAsignacion===> ', JSON.stringify(hora));
 
       }
     });
@@ -228,6 +229,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
 
 
         this.horaAtencionExcepcion = hora.entidad;
+        console.log('capturaHoraAtencion===> ', JSON.stringify(hora));
 
       }
     });
@@ -236,7 +238,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
 
-
+        console.log('capturaHoraAtencion===> ', JSON.stringify(hora));
         this.registroExcepcion(this.entidadNegociacion.id, this.horaInicioExcepcion, this.horaAsignacionExcepcion,
           this.horaAtencionExcepcion, this.horaFinalExcepcion);
       }
@@ -244,13 +246,13 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     });
   }
   private capturaDatosTraking() {
-    this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
+    this.par.findByNombreTipoOrdered('EXCEPCION_RIESGO', 'TIP-EXC', 'Y').subscribe((data: any) => {
       if (data.entidades) {
         this.actividad = data.entidades[0].nombre;
-        this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
+        this.par.findByNombreTipoOrdered('EXCEPCION_RIESGO', 'TIP-EXC', 'Y').subscribe((data: any) => {
           if (data.entidades) {
             this.procesoExcepcion = data.entidades[0].nombre;
-            this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
+            this.par.findByNombreTipoOrdered('EXCEPCION_RIESGO', 'TIP-EXC', 'Y').subscribe((data: any) => {
               if (data.entidades) {
                 this.procesoExcepcion = data.entidades[0].nombre;
               }
@@ -275,7 +277,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     tracking.fechaFin = fechaFin;
     this.tra.guardarTracking(tracking).subscribe((data: any) => {
       if (data.entidad) {
-        console.log('data de tracking para Prospeccion ----> ', data.entidad);
+        console.log('data de tracking para Excepcion ----> ', data.entidad);
         this.loadingSubject.next(false);
       } else {
         this.loadingSubject.next(false);
@@ -300,19 +302,19 @@ export class ExcepcionesRiesgoComponent implements OnInit {
    * @memberof ExcepcionesClienteComponent
    */
   buscarExcepcion(id: number) {
-    console.log('valor del id===> ', id.toString());
+    // console.log('valor del id===> ', id.toString());
 
     this.exs.findByIdNegociacion(id).subscribe((data: any) => {
       if (data.list != null && data.list[0] != null) {
-        console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+        //console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
         this.listExepcion = data.list[0];
-        console.log('valor de la llistas', this.listExepcion);
+        // console.log('valor de la llistas', this.listExepcion);
         this.entidadExcepcion = data.list[0];
         this.observacionAsesor.setValue(this.entidadExcepcion.observacionAsesor);
-        console.log('Observacion Aseseor===> ', this.observacionAsesor);
+        // console.log('Observacion Aseseor===> ', this.observacionAsesor);
 
       }
-      console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+      // console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
 
     });
 
@@ -338,6 +340,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   public submit(flujo: string) {
     this.loadingSubject.next(true);
     this.asignarAprobacion();
+    this.capturaHoraFinal('NEGOCIACION');
     console.log('INICIA EL SUBMIT', this.entidadExcepcion);
     this.exs.persistEntity(this.entidadExcepcion).subscribe((data: any) => {
       console.log('GUARDA', JSON.stringify(data));
@@ -372,12 +375,12 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       data.params.id
       if (data.params.id) {
         this.idNegociacion = data.params.id;
-        console.log('PARAMETRO=====> ', this.idNegociacion);
+        // console.log('PARAMETRO=====> ', this.idNegociacion);
         this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
-          console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
+          // console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
 
           this.entidadNegociacion = data.entidad;
-          console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
+          //console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
           this.buscarExcepcion(this.entidadNegociacion.id);
 
           if (data.entidad) {
@@ -388,7 +391,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
 
             this.cedulaCliente = data.entidad.tbQoCliente.cedulaCliente;
             this.cli.findClienteByIdentificacion(this.cedulaCliente).subscribe((data: any) => {
-              console.log('VALOR DE LA DATA==> findClienteByIdentificacion ', JSON.stringify(data));
+              // console.log('VALOR DE LA DATA==> findClienteByIdentificacion ', JSON.stringify(data));
               this.entidadCliente = data.entidad;
               this.loadingSubject.next(false);
               if (data) {

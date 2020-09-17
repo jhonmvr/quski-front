@@ -31,6 +31,7 @@ export class TablaTasacionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log('DATAPOPUP===> ', this.dataPopup);
     this.direccionDeFlujo(this.dataPopup);
 
   }
@@ -40,44 +41,22 @@ export class TablaTasacionComponent implements OnInit {
    * @param data DataPopup
    */
   private direccionDeFlujo(data: DataPopup) {
-    if (data.isCotizacion) {
-      console.log('INGRESA AL IF isCotizacion ');
-      this.iniciaBusquedaCotizacion(data.idBusqueda);
+
+    if (data.isNegociacion) {
+      console.log('INGRESA AL IF isNegociacion ');
+      console.log('data==> direccionDeFlujo ', JSON.stringify(data));
+      this.iniciaBusquedaNegociacion(data.idBusqueda);
     } else {
-      if (data.isNegociacion) {
-        console.log('INGRESA AL IF isNegociacion ');
-        console.log('data==> direccionDeFlujo ', JSON.stringify(data));
-        this.iniciaBusquedaNegociacion(data.idBusqueda);
+      if (data.isCalculadora) {
+        this.iniciaBusquedaCalculadora(data.cedula);
       } else {
-        if (data.isCalculadora) {
-          this.iniciaBusquedaCalculadora(data.cedula);
-        } else {
-          console.log("Error ----> NO HAY DATOS DE ENTRADA ", data)
-        }
+        console.log("Error ----> NO HAY DATOS DE ENTRADA ", data)
       }
     }
-
   }
-  private iniciaBusquedaCotizacion(id: number) {
-    if (id != null) {
-      if (id > 0) {
 
-        this.tas.getTasacionByIdNegociacion(null, id).subscribe((data: any) => {
-          if (data.list) {
-            this.entidadesTasaciones = data.list;
-            this.dataSourceTasacion.data = this.entidadesTasaciones;
-            this.enviarAlPadre(this.entidadesTasaciones);
-          } else {
-            console.log("Error ----> Id de cotizacion no existe", id);
-          }
-        });
-      } else {
-        console.log("Error ----> id cotizador Incorrecto", id);
-      }
-    } else {
-      console.log("Error ----> Ingrese id de cotizador", id);
-    }
-  }
+
+
   private iniciaBusquedaCalculadora(cedula: string) {
     if (cedula != "") {
       const consulta = new PersonaConsulta();

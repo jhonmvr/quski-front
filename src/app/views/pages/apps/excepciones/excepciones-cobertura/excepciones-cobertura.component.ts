@@ -48,7 +48,6 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading;
   public usuario;
-  public actividad;
   public proceso;
   private minimoDeCobertura;
   private camposDinamicos;
@@ -78,10 +77,12 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   dataSourceCobertura = new MatTableDataSource<any>();
 
   // VARIABLES DE TRACKING
-  public horaInicio: any;
-  public horaAsignacion: any;
-  public horaAtencion: any = null;
-  public horaFinal: any;
+  public horaInicioExcepcion: Date;
+  public horaAsignacionExcepcion: Date = null;
+  public horaAtencionExcepcion: Date;
+  public horaFinalExcepcion: Date = null;
+  public procesoExcepcion: string;
+  public actividad: string;
 
   //FORM DATOS CONTACTOS_CLIENTE
   public formDatoContacto: FormGroup = new FormGroup({});
@@ -116,7 +117,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   public cobertura = new FormControl('', []);
 
   constructor(
-    private exc: ExcepcionService,
+    private exs: ExcepcionService,
     private tra: TrackingService,
     private par: ParametroService,
     private ing: IntegracionService,
@@ -165,16 +166,16 @@ export class ExcepcionesCoberturaComponent implements OnInit {
 
   ngOnInit() {
 
-    //this.subheaderService.setTitle('Excepción de Cobertura');
-    //this.loading = this.loadingSubject.asObservable();
+    this.subheaderService.setTitle('Excepción de Cobertura');
+    this.loading = this.loadingSubject.asObservable();
     // this.camposDinamicos = false;
     // this.minimoDeCobertura = 80;
     // this.validacionCobertura = false;
 
-    //TRACKING
-    // this.tra.getSystemDate().subscribe((hora: any) => { if (hora.entidad) { this.horaInicio = hora.entidad; } });
+    this.capturaHoraInicio('NEGOCIACION');
     this.buscarExcepcion();
     this.buscoDatosFlujo();
+    this.capturaDatosTraking();
     // this.usuario = localStorage.getItem(atob(environment.userKey));
     //  console.log('El usuario es excepcion cobertura ----> ', localStorage.getItem(atob(environment.userKey)));
   }
@@ -208,6 +209,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
 
 
         this.horaAtencionExcepcion = hora.entidad;
+        console.log('HORA DE capturaHoraAtencion ==> ', JSON.stringify(hora.entidad));
 
       }
     });
@@ -285,11 +287,31 @@ export class ExcepcionesCoberturaComponent implements OnInit {
         this.actividad = data.entidades[0].nombre;
         this.par.findByNombreTipoOrdered('EXCEPCION', 'PROCESO', 'Y').subscribe((data: any) => {
           if (data.entidades) {
-            this.proceso = data.entidades[0].nombre;
+            this.procesoExcepcion = data.entidades[0].nombre;
           }
         });
       }
     });
+  }
+
+  buscarExcepciones(id: number) {
+    console.log('valor del id===> ', id.toString());
+
+    this.exs.findByIdNegociacion(id).subscribe((data: any) => {
+      console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+      if (data.list != null && data.list[0] != null) {
+
+        this.listExepcion = data.list[0];
+        //  console.log('valor de la llistas', this.listExepcion);
+        this.entidadExcepcion = data.list[0];
+        this.observacionAsesor.setValue(this.entidadExcepcion.observacionAsesor);
+        //  console.log('Observacion Aseseor===> ', this.observacionAsesor);
+
+      }
+      // console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+
+    });
+
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -301,35 +323,56 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       data.params.id
       if (data.params.id) {
         this.idNegociacion = data.params.id;
-        console.log('PARAMETRO=====> ', this.idNegociacion);
+        //console.log('PARAMETRO=====> ', this.idNegociacion);
         this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
-          console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
+          if (data.entidad) {
+            console.log('VALOR DE LA NEGOCIACION findNegociacionById ', JSON.stringify(data));
+
+            this.capturaHoraAsignacion('NEGOCIACION');
+            this.entidadNegociacion = data.entidad;
+            this.entidadCliente = data.entidad.tbQoCliente;
+            this.buscarMensaje();
+            console.log('VALORES DE LA ENTIDAD NEGOSCIA==> .id', this.entidadNegociacion.id);
+            this.buscarExcepciones(this.entidadNegociacion.id);
+            //  console.log('id NEGOCIACION=====> ', this.entidadNegociacion);
+            //console.log(' CLIENTE==> ', this.entidadCliente)
+            //RECUPERO LA DATA DE VARIABLES
+            this.dataPopup = new DataPopup();
+            this.dataPopup.idBusqueda = this.entidadNegociacion.id;
+            this.dataPopup.isNegociacion = true;
+            // this.buscarExcepcion(this.entidadNegociacion.id);
+            if (data) {
 
 
-          this.entidadNegociacion = data.entidad;
-          this.entidadCliente = data.entidad.tbQoCliente;
-          this.buscarMensaje();
-          console.log('id NEGOCIACION=====> ', this.entidadNegociacion);
-          console.log(' CLIENTE==> ', this.entidadCliente)
-          //RECUPERO LA DATA DE VARIABLES
-          this.dataPopup = new DataPopup();
-          this.dataPopup.idBusqueda = this.entidadNegociacion.id;
-          this.dataPopup.isNegociacion = true;
-          // this.buscarExcepcion(this.entidadNegociacion.id);
-          this.telefonoDomicilio.setValue(this.entidadNegociacion.tbQoCliente.telefonoFijo);
-          this.telefonoMovil.setValue(this.entidadNegociacion.tbQoCliente.telefonoMovil);
-          this.telefonoAdicional.setValue(this.entidadNegociacion.tbQoCliente.telefonoAdicional);
-          this.telefonoOficinaOtros.setValue(this.entidadNegociacion.tbQoCliente.telefonoTrabajo);
-          this.correoElectronico.setValue(this.entidadNegociacion.tbQoCliente.email);
-          this.tipoProceso.setValue(this.entidadNegociacion.procesoActual);
-          this.estadoNegociacion.setValue(this.entidadNegociacion.situacion);
-          this.fechaCreacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
-          this.fechaActualizacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));
+              this.telefonoDomicilio.setValue(this.entidadNegociacion.tbQoCliente.telefonoFijo);
+              this.telefonoMovil.setValue(this.entidadNegociacion.tbQoCliente.telefonoMovil);
+              this.telefonoAdicional.setValue(this.entidadNegociacion.tbQoCliente.telefonoAdicional);
+              this.telefonoOficinaOtros.setValue(this.entidadNegociacion.tbQoCliente.telefonoTrabajo);
+              this.correoElectronico.setValue(this.entidadNegociacion.tbQoCliente.email);
+              this.tipoProceso.setValue(this.entidadNegociacion.procesoActual);
+              this.estadoNegociacion.setValue(this.entidadNegociacion.situacion);
+              this.fechaCreacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
+              this.fechaActualizacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));
+            } else {
+              this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 1', 'error');
+              this.capturaHoraAtencion('NEGOCIACION');
+            }
+          }
         });
+      } else {
+        this.sinNoticeService.setNotice('ERROR AL CARGAR NEGOCIACION', 'error');
+        this.capturaHoraAsignacion('NEGOCIACION');
+        this.capturaHoraAsignacion('NEGOCIACION');
+        this.capturaHoraAtencion('NEGOCIACION');
 
       }
     });
   }
+
+
+
+
+
 
   public traerEntidadesOpciones(event: Array<OpcionesDeCredito>) {
     this.entidadesOpcionesCreditos = new Array<OpcionesDeCredito>();
@@ -345,9 +388,9 @@ export class ExcepcionesCoberturaComponent implements OnInit {
 
       if (data.entidad.datoscliente != null) {
         if (data.entidad.mensaje != '') {
-          console.log('DATA EQUIFAX', JSON.stringify(data));
+          // console.log('DATA EQUIFAX', JSON.stringify(data));
           this.mensaje = data.entidad.mensaje;
-          console.log('BUSCA EN PERSONA CALCULADORA', this.mensaje);
+          // console.log('BUSCA EN PERSONA CALCULADORA', this.mensaje);
         }
       }
       this.loadingSubject.next(false);
@@ -368,11 +411,12 @@ export class ExcepcionesCoberturaComponent implements OnInit {
 
   public submit(flujo: string) {
     this.loadingSubject.next(true);
-    this.asignarAprobacion();
     console.log('INICIA EL SUBMIT', this.entidadExcepcion);
+    this.asignarAprobacion();
+
     this.exs.persistEntity(this.entidadExcepcion).subscribe((data: any) => {
-      console.log('GUARDA', JSON.stringify(data));
-      //this.registroExcepcion();
+      console.log('ENTIDAD EXCEPCION', JSON.stringify(data));
+      this.capturaHoraFinal('NEGOCIACION');
       this.router.navigate(['asesor/bandeja-principal']);
       this.sinNoticeService.setNotice('SE GUARDO LA EXCEPCION CORRECTAMENTE', 'success');
     }, error => {
