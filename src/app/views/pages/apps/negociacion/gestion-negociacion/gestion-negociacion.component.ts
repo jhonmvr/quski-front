@@ -5,10 +5,10 @@ import { RelativeDateAdapter } from './../../../../../core/util/relative.dateada
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
 import { AuthDialogComponent } from './../../../../partials/custom/auth-dialog/auth-dialog.component';
-import { MatDialog, MatTableDataSource, MatSort, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatTableDataSource, MatSort, MAT_DIALOG_DATA, MatStepper } from '@angular/material';
 import { ParametroService } from './../../../../../core/services/quski/parametro.service';
 import { ClienteService } from './../../../../../core/services/quski/cliente.service';
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { Page } from './../../../../../core/model/page';
@@ -31,6 +31,15 @@ import { TbQoNegociacion } from './../../../../../core/model/quski/TbQoNegociaci
 import { GuardarProspectoCRM } from './../../../../../core/model/crm/guardarProspectoCRM';
 import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/popups/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
+import { TbQoCotizador } from './../../../../../core/model/quski/TbQoCotizador';
+import { NegociacionService } from './../../../../../core/services/quski/negociacion.service';
+import { environment } from '../../../../../../../src/environments/environment';
+import { SituacionEnum } from './../../../../../core/enum/SituacionEnum';
+import { TasacionService } from './../../../../../core/services/quski/tasacion.service';
+import { ExcepcionService } from './../../../../../core/services/quski/excepcion.service';
+import { DataInjectExcepciones } from './../../../../../core/model/wrapper/DataInjectExcepciones';
+import { SolicitudDeExcepcionesComponent } from './../../../../partials/custom/popups/solicitud-de-excepciones/solicitud-de-excepciones.component';
+import { TbQoExcepcione } from './../../../../../core/model/quski/TbQoExcepcione';
 
 export interface TimeTracking {
   tasacion: Date;
@@ -39,10 +48,6 @@ export interface TimeTracking {
 export interface ParamTracking {
   proceso: string
   actividad: string
-}
-export interface Combinacion {
-  id: Array<number>
-  opcion: string
 }
 @Component({
   selector: 'kt-gestion-negociacion',
@@ -53,10 +58,13 @@ export class GestionNegociacionComponent implements OnInit {
   // VARIABLES PUBLICAS
   public dataPopup: DataPopup;
   public loading;
+  public usuario: string; 
   public loadingSubject = new BehaviorSubject<boolean>(false);
-  public listJoyas: Array<Combinacion> = new Array<Combinacion>();
+  @ViewChild('stepper',{static:true}) myStepper: MatStepper;
   // ENTIDADES
-  private entidadCliente: TbQoCliente;
+  private entidadNegociacion: TbQoNegociacion;
+  private entidadesExcepciones: Array<TbQoExcepcione>;
+  private entidadesTasacion: Array<TbQoTasacion>;
   // CATALOGOS
   public catPublicidad: Array<any> = ["CARGANDO CATALOGO"];  
   public catTipoJoya: Array<any>;
@@ -100,16 +108,24 @@ export class GestionNegociacionComponent implements OnInit {
   public descripcion = new FormControl('', []);
   public pesoNeto = new FormControl('', []);
   public valorOro = new FormControl('', []);
-  // FORMULARIO COMBINACION
-  public formCombinacion: FormGroup = new FormGroup({});
-  public joyas = new FormControl('', []);
+
+  public formOpcionesCredito: FormGroup = new FormGroup({});
+  public montoSolicitado = new FormControl('', []);
 
   // TABLA DE TASACION
   // ---- @TODO: Crear un data source para la tabla 
-  dataSourceTasacion = new MatTableDataSource<any>();
-  displayedColumnsTasacion = ['Accion', 'N', 'NumeroPiezas', 'TipoOro', 'TipoJoya', 'Estado', 'Descripcion'
-    , 'PesoBruto', 'DescuentoPiedra', 'DescuentoSuelda', 'PesoNeto', 'ValorAvaluo'
-    , 'ValorComercial', 'ValorRealizacion', 'ValorOro'];
+  dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
+  displayedColumnsTasacion = ['Accion', 'N', 'NumeroPiezas', 'TipoOro', 'TipoJoya', 'EstadoJoya', 'Descripcion', 
+  'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'ValorAvaluo', 'ValorComercial', 'ValorRealizacion', 'ValorOro'];
+    
+  dataSourceOpcionesCredito = new MatTableDataSource<any>();
+  displayedColumnsOpcionesCredito = ['Accion','plazo','periodoPlazo','periodicidadPlazo','montoFinanciado','valorARecibir','valorAPagar',
+  'costoCustodia','costoFideicomiso','costoSeguro','costoTasacion','costoTransporte','costoValoracion','impuestoSolca' ,
+  'formaPagoImpuestoSolca','formaPagoCapital','formaPagoCustodia','formaPagoFideicomiso','formaPagoInteres','formaPagoMora',
+  'formaPagoGastoCobranza','formaPagoSeguro','formaPagoTasador','formaPagoTransporte','formaPagoValoracion','saldoInteres',
+  'saldoMora','gastoCobranza','cuota','saldoCapitalRenov','montoPrevioDesembolso','totalGastosNuevaOperacion',
+  'totalCostosOperacionAnterior','custodiaDevengada','formaPagoCustodiaDevengada','tipooferta','porcentajeflujoplaneado',
+  'dividendoflujoplaneado','dividendosprorrateoserviciosdiferido'];
 
   /**Obligatorio ordenamiento */
   @ViewChild('sort1', { static: true }) sort: MatSort;
@@ -130,13 +146,15 @@ export class GestionNegociacionComponent implements OnInit {
   private par: ParametroService,
   private tra: TrackingService,
   private crm: CRMService,
+  private neg: NegociacionService,
+  private tas: TasacionService,
+  private exc: ExcepcionService,
   private route : ActivatedRoute,
   private router: Router,
   private dialog: MatDialog, 
   private sinNotSer: ReNoticeService, 
   private noticeService: ReNoticeService, 
-  private subheaderService: SubheaderService,
-  
+  private subheaderService: SubheaderService  
   ) { 
     //  RELACIONANDO FORMULARIO DE BUSQUEDA
     this.formBusqueda.addControl("identificacion", this.identificacion);
@@ -162,48 +180,117 @@ export class GestionNegociacionComponent implements OnInit {
     this.formTasacion.addControl("descripcion" , this.descripcion);
     this.formTasacion.addControl("pesoNeto" , this.pesoNeto);
     this.formTasacion.addControl("valorOro" , this.valorOro);
+
+    this.formOpcionesCredito.addControl("montoSolicitado" , this.montoSolicitado);
   }
 
   ngOnInit() {
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
+    this.usuario = atob(localStorage.getItem(environment.userKey))
     this.obtenerCatalogosSoftbank();
     this.obtenerCatalogosCore();
     // console.log("Esto calcula la edad? --> ",calcularEdad('1998-05-09'));
-    const comb = {} as Combinacion;
-    comb.id = new Array<number>();
-    comb.id.push(0);
-    comb.opcion = "--"
-    this.listJoyas.push( comb );
     this.inicioDeFlujo();
   }
   /** ********************************************* @FLUJO ********************* **/
   inicioDeFlujo() {
     this.route.paramMap.subscribe((json: any) => {
+      this.loadingSubject.next(true);
       if (json.params.id && json.params.origen) {
+        this.myStepper.selectedIndex = 1;
         if(json.params.origen == "COT"){
-          console.log("Estoy buscando una cotizacion");
-          // Buscar cliente por id de cotizacion
+          console.log("Estoy buscando una cotizacion"); // *************************************** Busco una cotizacion
+          this.cot.getEntity(json.params.id).subscribe((data: any)=>{
+            if(data.entidad){
+              const cotizacion: TbQoCotizador = data.entidad;
+              const negociacion: TbQoNegociacion = new TbQoNegociacion(cotizacion.tbQoCliente.id, this.usuario); 
+              this.neg.persistEntity(negociacion).subscribe((data: any)=>{
+                if(data.entidad){
+                  this.entidadNegociacion = new TbQoNegociacion();
+                  this.entidadNegociacion = data.entidad;
+                  this.cargarValoresBusquedayCliente(this.entidadNegociacion.tbQoCliente);
+                  this.consultarExcepcionesDeClienteEnBre(this.entidadNegociacion.tbQoCliente.cedulaCliente);
+                  this.sinNotSer.setNotice('SE HA INICIADO UNA NUEVA NEGOCIACION PARA: '+ data.entidad.cedulaCliente,"success");
+                }else{
+                  this.salirDeGestion("Error al intentar ingresar a la Negociacion.", this.entidadNegociacion.id);
+                }
+                this.loadingSubject.next(false);
+              }, error=>{ this.capturaError(error); this.loadingSubject.next(false);});
+            }else{
+              this.loadingSubject.next(false);
+              this.sinNotSer.setNotice('ERROR AL ENCONTRAR LA COTIZACION PREVIA', "error");
+              this.limpiarCamposBusqueda();
+              this.limpiarCamposCliente();
+            }
+          }, error=>{ this.capturaError(error); this.loadingSubject.next(false);});
         } else if(json.params.origen == "NEG") {
-          console.log("Estoy buscando una negociacion");
-          // Buscar todos los datos de la negociacion "POR DEFINIR";          
+          console.log("Estoy buscando una negociacion");       // *************************************** Busco una Negociacion.
+          this.neg.findNegociacionById(json.params.id).subscribe((data:any) => {
+            if(data.entidad){
+              this.entidadNegociacion = data.entidad;
+              this.tas.findByIdNegociacion(null, this.entidadNegociacion.id).subscribe((data:any)=>{
+                this.entidadesTasacion = data.list? data.list: null;
+                console.log("Tasacion ---> ", data.list); 
+                this.cargarValoresBusquedayCliente(this.entidadNegociacion.tbQoCliente);
+                this.cargarTablaTasacion(this.entidadesTasacion); 
+                if(this.entidadNegociacion.situacion === SituacionEnum.EN_PROCESO){
+                  this.exc.findByIdNegociacion(this.entidadNegociacion.id).subscribe((data: any)=>{
+                    if(data.list){
+                      this.entidadesExcepciones = data.list;
+                      this.entidadesExcepciones.forEach(e=>{
+                        if(e.estadoExcepcion === "NEGADO"){
+                          const mensaje = "Su excepcion solicitada fue negada por el siguiente motivo: " + e.observacionAprobador + ". Se finalizara la negociacion.";
+                          this.salirDeGestion(mensaje,this.entidadNegociacion.id,"EXCEPCION NEGADA");
+                        } else if(e.estadoExcepcion === "PENDIENTE"){
+                          this.salirDeGestion("Por favor, espere a que su solicitud de excepcion sea respondida por un aprobador",null,"ESPERANDO RESPUESTA DEL APROBADOR");
+                        } else if(e.estadoExcepcion === "APROBADO"){
+                          this.sinNotSer.setNotice("Su excepcion fue aprobada, continue con la negociacion.", 'success');
+                        }
+                      });
+                    }
+                  },error=>{ 
+                    this.capturaError(error); 
+                    this.salirDeGestion("No se pudo consultar excepciones existentes, se cerrara la negociacion por seguridad");
+                  });
+                  // Validar si tiene excepciones
+                } else if(this.entidadNegociacion.situacion === SituacionEnum.FINALIZADO){
+                  this.formBusqueda.disable();
+                  this.formDatosCliente.disable();
+                  this.formTasacion.disable();
+                  this.cargarValoresBusquedayCliente( this.entidadNegociacion.tbQoCliente );
+                  this.cargarTablaTasacion(this.entidadesTasacion); 
+                  this.loadingSubject.next(false);
+                } else {
+                  this.salirDeGestion("Error al intentar identificar la situacion de la Negociacion.");
+                }
+              }, error=>{ this.capturaError(error); this.loadingSubject.next(false)});
+            }else{
+              this.salirDeGestion("Error al intentar ingresar a la Negociacion.");
+            }
+            this.loadingSubject.next(false);
+          }, error=>{this.capturaError(error); this.loadingSubject.next(false);});
+        } else{
+            this.loadingSubject.next(false);
+            this.salirDeGestion("Error al intentar ingresar a la Negociacion.");
         }
       } else{
-        console.log("Estoy iniciando nueva negociacion");
+        console.log("Estoy iniciando nueva negociacion");     // *************************************** No busco nada, solo abro
+        this.entidadNegociacion = new TbQoNegociacion();
+        this.loadingSubject.next(false);
         this.limpiarCamposBusqueda();
       }
     });
   }
-
   /** ********************************************* @BUSQUEDA_CLIENTE ********************* **/
   /**
-   * @author  Developer Twelve - Jeroham Cadenas
+   * @author  Developer Twelve - Jeroham Cadenas                                              
    * @description Metodo principal de busqueda.
    */
   public buscarCliente() {
     if (this.formBusqueda.valid) {
+      this.loadingSubject.next(true);
       // VALORES DE CONSULTA
-      this.entidadCliente = null;
       const cedula = this.identificacion.value
       const consultaSof = new ConsultaCliente(cedula);
       let clienteSof = new ClienteSoftbank();
@@ -241,6 +328,22 @@ export class GestionNegociacionComponent implements OnInit {
       this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'error');
     }
   }
+  private consultarExcepcionesDeClienteEnBre(cedula:string) {
+    this.loadingSubject.next(true);
+    this.ing.getInformacionPersonaCalculadora(new PersonaConsulta(cedula)).subscribe((data:any) => {
+      if(data.entidad.codigoError === 3){
+        const excep = new DataInjectExcepciones(data.entidad.mensaje, this.entidadNegociacion.id);
+        excep.isCliente = true;
+        this.loadingSubject.next(false);
+        this.abrirPopupExcepciones(excep);
+      } else{
+        console.log("el cliente no presenta excepciones :)");
+      }
+    }, error=>{ 
+      this.capturaError(error); 
+      this.salirDeGestion("Error al capturar Excepciones existentes en BRE, la negociacion se cerrara por seguridad.",this.entidadNegociacion.id);
+    });  
+  }
   /**
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cedula string
@@ -250,7 +353,6 @@ export class GestionNegociacionComponent implements OnInit {
     let clienteCrm: ProspectoCRM;
     let cliente: TbQoCliente;
     this.crm.findClienteByCedulaCRM(cedula).subscribe((data: any) => {
-
       if (clienteCrm = data.list ? null : data.list[0]) {
         cliente = new TbQoCliente();
         cliente.primerNombre = clienteCrm.firstName;
@@ -317,13 +419,7 @@ export class GestionNegociacionComponent implements OnInit {
       data.entidades ? console.log("Guardado en CRM") : this.sinNotSer.setNotice('ERROR GUARDANDO EN CRM', 'error');
       this.loadingSubject.next(false);
     }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNotSer.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNotSer.setNotice('ERROR GUARDANDO EN CRM', 'error');
-      }
-      this.loadingSubject.next(false);
+      this.capturaError(error);
     });
   }
   /**
@@ -335,30 +431,33 @@ export class GestionNegociacionComponent implements OnInit {
     let error: boolean;
     this.cli.persistEntity(cliente).subscribe((data: any) => {
       if (data.entidad) {
-        console.log("Guardado en Core");
-        this.entidadCliente = data.entidad;
-        this.guardarProspectoEnCrm(this.entidadCliente);
-        this.cargarValores(this.entidadCliente);
+        console.log("Cliente Guardado en Core");
+        cliente = data.entidad;
+        const negociacion : TbQoNegociacion = new TbQoNegociacion(cliente.id, this.usuario);
+        this.neg.persistEntity(negociacion).subscribe((data:any) =>{
+          if(data.entidad){
+            console.log("Negociacion Guardado en Core");
+            this.entidadNegociacion = data.entidad;
+            this.guardarProspectoEnCrm(this.entidadNegociacion.tbQoCliente);
+            this.cargarValoresBusquedayCliente(this.entidadNegociacion.tbQoCliente);
+            this.consultarExcepcionesDeClienteEnBre(this.entidadNegociacion.tbQoCliente.cedulaCliente);
+          }
+        },error=>{this.capturaError(error)});
       } else {
-        this.entidadCliente = null;
+        this.entidadNegociacion = null;
         this.sinNotSer.setNotice('ERROR GUARDANDO CLIENTE EN CORE INTERNO', 'error');
       }
       this.loadingSubject.next(false);
     }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNotSer.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNotSer.setNotice('ERROR GUARDANDO CLIENTE EN CORE INTERNO', 'error');
-      }
-      this.loadingSubject.next(false);
+      this.capturaError(error);
     });
   }
+  /** ********************************************* @CARGAR ********************* **/
   /**
    * @author  Developer Twelve - Jeroham Cadenas
    * @param   cliente TbQoCliente
    */
-  private cargarValores(cliente: TbQoCliente) {
+  private cargarValoresBusquedayCliente(cliente: TbQoCliente) {
     this.loadingSubject.next(true);
     this.cargarVariablesYRiesgo(cliente.cedulaCliente);
     this.identificacion.setValue(cliente.cedulaCliente);
@@ -373,10 +472,12 @@ export class GestionNegociacionComponent implements OnInit {
     this.sinNotSer.setNotice('CLIENTE ENCONTRADO',"success");
     this.loadingSubject.next(false); 
   }
-  public cargarVariablesYRiesgo(cedula: string) {
-    this.dataPopup = new DataPopup();
-    this.dataPopup.isCalculadora = true;
-    this.dataPopup.cedula = cedula;
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @param tasaciones Array<TbQoTasacion>
+   */
+  public cargarTablaTasacion(tasaciones: Array<TbQoTasacion>) {
+    this.dataSourceTasacion.data = tasaciones; 
   }
   /** ********************************************* @POPUP ********************* **/
   /**
@@ -391,17 +492,104 @@ export class GestionNegociacionComponent implements OnInit {
     });
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
       console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
-      // @TODO: Conectar al flujo de busqueda.
       if (respuesta) {
         this.buscarEnCrmYEquifax(cedula);
       } else {
         this.sinNotSer.setNotice('BUSQUEDA CANCELADA', 'error');
         this.limpiarCamposBusqueda();
-        this.entidadCliente = null;
+        this.entidadNegociacion = null;
       }
     });
   }
+  public abrirPopupVerCotizacion(identificacion: string) {
+    const dialogRefGuardar = this.dialog.open(VerCotizacionesComponent, {
+      width: '900px',
+      height: 'auto',
+      data: identificacion
+    });
+    dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
+    });
+  }
+  public abrirSalirGestion(data: any) {
+    const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+      width: "auto-max",
+      height: "auto-max",
+      data: data
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      this.router.navigate(['dashboard', ""]);
+    });
+  }
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @param   cedula string
+  */
+  public abrirPopupExcepciones(data: DataInjectExcepciones = null){
+    if(data == null){
+      data = new DataInjectExcepciones(null, this.entidadNegociacion.id);
+      data.isCobertura = true;
+    }
+    const dialogRefGuardar = this.dialog.open(SolicitudDeExcepcionesComponent, {
+      width: '600px',
+      height: 'auto',
+      data: data
+    });
+    dialogRefGuardar.afterClosed().subscribe((result: TbQoExcepcione) => {
+      console.log('envio de RESP ' + JSON.stringify(result) + ' typeof respuesta ' + typeof (result));
+      if (result) {
+        this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion', null,'EXCEPCION SOLICITADA');
+      } else {
+        if(data.isCobertura){
+          this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'error');
+        }else{
+          this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', this.entidadNegociacion.id, 'NEGOCIACION CANCELADA'); 
+        }
+      }
+    });
+  }
+  
   /** ********************************************* @FUNCIONALIDAD ********************* **/
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @param mensaje Mensaje del componente
+  */
+  private salirDeGestion(dataMensaje: string, idNegociacion?: number, dataTitulo?:string) {
+    let data = {
+      mensaje:dataMensaje,
+      titulo: dataTitulo? dataTitulo: null
+    }
+    if(idNegociacion){
+      this.neg.cancelarNegociacion(idNegociacion).subscribe((data: any)=>{
+        if(data.entidad){
+          this.abrirSalirGestion(data);
+        }else{
+          this.sinNotSer.setNotice("Error cancelando la negociacion.", 'error')
+        }
+      },error =>{
+        this.capturaError(error);
+        this.sinNotSer.setNotice("reintentando cerrar negoacion");
+      });
+    } else {
+      this.abrirSalirGestion(data);
+    }
+  }
+  private capturaError(error:any){
+    if (error.error) {
+      if (error.error.codError) {
+        this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
+      } else {
+        this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
+      }
+    } else if (error.statusText && error.status == 401) {
+      this.dialog.open(AuthDialogComponent, {
+        data: {
+          mensaje: "Error " + error.statusText + " - " + error.message
+        }
+      });
+    } else {
+      this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
+    }
+  }
   /**
    * @author  Developer Twelve - Jeroham Cadenas
   */
@@ -413,70 +601,26 @@ export class GestionNegociacionComponent implements OnInit {
       control.setValue(null);
     });
   }
-  /** ********************************************* @NO SE  ********************* **/
-  public traerEntidadesVariables(event: Array<TbQoVariablesCrediticia>) {
-    this.guardarVariables(event);
-  }
-  private guardarVariables(entidades: Array<TbQoVariablesCrediticia>) {
-    entidades.forEach(e => {
-      e.tbQoNegociacion = new TbQoNegociacion();
-      //e.tbQoNegociacion.id = this.entidadCotizador.id;
-    });
-  }
-  /** ********************************************* @CATALOGOS ********************* **/
-  private obtenerCatalogosCore() {
-    this.par.findByNombreTipoOrdered("", "PUB", "Y").subscribe((data: any) => {
-      this.catPublicidad = (data && data.entidades) ? data.entidades : "CATALOGO NO CARGADO"
-      if (data && data.entidades) {
-        this.catPublicidad = data.entidades;
-      }
-    }, error => {
-      if (error.error) {
-        if (error.error.codError) {
-          this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-        } else {
-          this.sinNotSer.setNotice("Error al cargar parametros de publicidad", 'error');
-        }
-      } else if (error.statusText && error.status == 401) {
-        this.dialog.open(AuthDialogComponent, {
-          data: {
-            mensaje: "Error " + error.statusText + " - " + error.message
-          }
-        });
-      } else {
-        this.sinNotSer.setNotice("Error al cargar publicidades", 'error');
-      }
-    });
-  }
-  /**
-   * obtenerCatalogosSoftbank
-   */
-  private obtenerCatalogosSoftbank() {
-    this.loadingSubject.next(true);
-    this.sof.consultarTipoOroCS().subscribe( (data: any)=>{
-      this.catTipoOro = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-      this.sof.consultarTipoJoyaCS().subscribe( (data: any)=>{
-        this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-        this.sof.consultarEstadoJoyaCS().subscribe( (data: any)=>{
-          this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-          this.loadingSubject.next(false); 
-        });
-      });
-    });
-  }
-  
-  /**
-   * @author Jeroham Cadenas - Developer Twelve
-   * @param mensaje Mensaje del componente
+   /**
+   * @author  Developer Twelve - Jeroham Cadenas
   */
-  salirDeGestion(mensaje: string) {
-    const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
-      width: "auto-max",
-      height: "auto-max",
-      data: mensaje
-    });
-    dialogRef.afterClosed().subscribe(r => {
-      this.router.navigate(['dashboard', ""]);
+ private limpiarCamposCliente() {
+  Object.keys(this.formDatosCliente.controls).forEach((name) => {
+    const control = this.formDatosCliente.controls[name];
+    control.reset();
+    control.setErrors(null);
+    control.setValue(null);
+  });
+  }
+  /**
+    * @author  Developer Twelve - Jeroham Cadenas
+    */
+  private limpiarCamposTasacion() {
+    Object.keys(this.formTasacion.controls).forEach((name) => {
+      const control = this.formTasacion.controls[name];
+      control.reset();
+      control.setErrors(null);
+      control.setValue(null);
     });
   }
   getErrorMessage(pfield: string) {
@@ -529,37 +673,23 @@ export class GestionNegociacionComponent implements OnInit {
     }
 
     if (pfield && pfield == "email") {
-
-      return this.email.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo
-        + this.email.errors.maxlength.requiredLength : '';
-
+      const input = this.email;
+      return input.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo + this.email.errors.maxlength.requiredLength : '';
     }
 
 
     if (pfield && pfield === 'movil') {
       const input = this.movil;
-      return input.hasError('required')
-        ? errorRequerido
-        : input.hasError('pattern')
-          ? errorNumero
-          : input.hasError('maxlength')
-            ? errorLogitudExedida
-            : input.hasError('minlength')
-              ? errorInsuficiente
-              : '';
+      return input.hasError('required')? errorRequerido: input.hasError('pattern')? errorNumero: input.hasError('maxlength')? errorLogitudExedida: input.hasError('minlength')? errorInsuficiente: '';
     }
   }
-
-  ///Validar solo numeros
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       return false;
     }
     return true;
-
   }
-
   ////Metodo de calculo de la fecha de nacimiento
   onChangeFechaNacimiento() {
 
@@ -579,8 +709,6 @@ export class GestionNegociacionComponent implements OnInit {
       this.loadingSubject.next(false);
     }
   }
-
-  /// Consulta de la edad me diante la fecha 
   getDiffFechas(fecha: Date, format: string) {
     this.loadingSubject.next(true);
     const convertFechas = new RelativeDateAdapter();
@@ -604,20 +732,60 @@ export class GestionNegociacionComponent implements OnInit {
           this.loadingSubject.next(false);
         },
         error => {
-          if (JSON.stringify(error).indexOf("codError") > 0) {
-            const b = error.error;
-            this.sinNotSer.setNotice(b.msgError, "error");
-          } else {
-            this.sinNotSer.setNotice(
-              "Error obtener diferencia de fechas",
-              "error"
-            );
-            console.log(error);
-          }
-          this.loadingSubject.next(false);
+          this.capturaError(error);
         }
       );
   }
+  /** ********************************************* @VARIABLES_CREDITICIAS  ********************* **/
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @param   cedula string
+   */
+  public cargarVariablesYRiesgo(cedula: string) {
+    this.loadingSubject.next(true);
+    this.dataPopup = new DataPopup();
+    this.dataPopup.isCalculadora = true;
+    this.dataPopup.cedula = cedula;
+  }
+  /**
+   * @author  Developer Twelve - Jeroham Cadenas
+   * @param   cedula string
+   */
+  public traerEntidadesVariables(event: Array<TbQoVariablesCrediticia>) {
+    event.forEach(e => {
+      e.tbQoNegociacion = new TbQoNegociacion();
+      
+    });
+    this.loadingSubject.next(false);
 
+  }
 
+  /** ********************************************* @CATALOGOS ********************* **/
+  private obtenerCatalogosCore() {
+    this.par.findByNombreTipoOrdered("", "PUB", "Y").subscribe((data: any) => {
+      this.catPublicidad = (data && data.entidades) ? data.entidades : "CATALOGO NO CARGADO"
+      if (data && data.entidades) {
+        this.catPublicidad = data.entidades;
+      }
+    }, error => {
+      this.capturaError(error);
+      
+    });
+  }
+  /**
+   * obtenerCatalogosSoftbank
+   */
+  private obtenerCatalogosSoftbank() {
+    this.loadingSubject.next(true);
+    this.sof.consultarTipoOroCS().subscribe( (data: any)=>{
+      this.catTipoOro = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      this.sof.consultarTipoJoyaCS().subscribe( (data: any)=>{
+        this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+        this.sof.consultarEstadoJoyaCS().subscribe( (data: any)=>{
+          this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+          this.loadingSubject.next(false); 
+        });
+      });
+    });
+  }
 }

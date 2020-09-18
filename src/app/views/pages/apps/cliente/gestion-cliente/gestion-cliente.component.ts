@@ -5,14 +5,8 @@ import { MatTableDataSource, MatDialog } from '@angular/material';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { Page } from '../../../../../core/model/page';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
-import { SeparacionBienesEnum } from '../../../../../core/enum/SeparacionBienesEnum';
-import { ProfesionEnum } from '../../../../../core/enum/ProfesionEnum';
-import { EstadoCivilEnum } from '../../../../../core/enum/EstadoCivilEnum';
-import { NivelEstudioEnum } from '../../../../../core/enum/NivelEstudioEnum';
-import { SectorEnum } from '../../../../../core/enum/SectorEnum';
 import { OrigenIngresosEnum } from '../../../../../core/enum/OrigenIngresosEnum';
 import { OcupacionInmuebleEnum } from '../../../../../core/enum/OcupacionInmuebleEnum';
-import { GeneroEnum } from '../../../../../core/enum/GeneroEnum';
 import { CargaFamiliarEnum } from '../../../../../core/enum/CargaFamiliarEnum';
 import { RelacionDependenciaEnum } from '../../../../../core/enum/RelacionDependenciaEnum';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
@@ -33,7 +27,7 @@ import { TbQoDireccionCliente } from '../../../../../core/model/quski/TbQoDirecc
 import { PatrimonioService } from '../../../../../core/services/quski/patrimonio.service';
 import { ReferenciaPersonalService } from '../../../../../core/services/quski/referenciaPersonal.service';
 import { ParaDesarrolloEnum } from '../../../../../core/enum/ParaDesarrolloEnum';
-import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
+import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 
@@ -133,7 +127,6 @@ export class GestionClienteComponent implements OnInit {
   public localizacion;
 
   // ENUM ESPERANDO WEB SERVICE DE SOFTBANK
-  listProfesion = Object.keys(ProfesionEnum);
   listPaises = Object.values(PaisesEnum);
 
   // STANDARD VARIABLES
@@ -155,15 +148,10 @@ export class GestionClienteComponent implements OnInit {
   // ENUMS
   public listReferencia = Object.values(ReferenciaParentescoEnum);
   public listRelacionDependencia = Object.keys(RelacionDependenciaEnum);
-  public listSeparacionBienes = Object.values(SeparacionBienesEnum);
   public listTipoVivienda = Object.keys(OcupacionInmuebleEnum);
   public listParaDesarrolloEnum = Object.values(ParaDesarrolloEnum);
   public listOrigenIngreso = Object.values(OrigenIngresosEnum);
   public listCargaFamiliar = Object.values(CargaFamiliarEnum);
-  public listNivel = Object.values(NivelEstudioEnum);
-  public listEstadoCivil = Object.values(EstadoCivilEnum);
-  public listGenero = Object.values(GeneroEnum)
-  public listSector = Object.keys(SectorEnum);
   // OBJETOS DE ENTIDADES
   public ubicacionEntity = new Array();
   public ingresoEgresoGuardado: TbQoIngresoEgresoCliente;
@@ -979,13 +967,13 @@ export class GestionClienteComponent implements OnInit {
   habilitarCampo() {
     this.separacionBienes.setValue('');
     const estadoCivilIngresado = this.estadoCivil.value;
-    if (estadoCivilIngresado == EstadoCivilEnum.CASADO.toString()) {
+   /*  if (estadoCivilIngresado == EstadoCivilEnum.CASADO.toString()) {
       this.separacionBienes.setValidators([Validators.required]);
       this.separacionBienes.enable();
       this.sinNoticeService.setNotice("SELECCIONE LA OPCION DE SEPARACIÒN DE BIENES ", 'warning');
     } else {
       this.separacionBienes.disable();
-    }
+    } */
   }
   /**
    * @description FUNCION EN BOTON QUE AGREGA UN NUEVO ACTIVO A LA TABLA DE PATRIMONIO ACTIVOS
@@ -1853,7 +1841,7 @@ export class GestionClienteComponent implements OnInit {
     tracking.proceso = this.procesoDatosCliente;
     tracking.observacion = '';
     tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
+    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
     tracking.usuario = atob(localStorage.getItem(environment.userKey)); // Modificar al id del asesor
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;

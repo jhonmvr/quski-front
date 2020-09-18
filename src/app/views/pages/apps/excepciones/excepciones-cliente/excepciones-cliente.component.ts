@@ -10,16 +10,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
-import { TipoIdentificacionEnum } from '../../../../../core/enum/TipoIdentificacionEnum';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { environment } from '../../../../../../environments/environment';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
+import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
-import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
@@ -263,7 +261,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     tracking.proceso = this.procesoExcepcion;
     tracking.observacion = '';
     tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
+    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
     tracking.usuario = atob(localStorage.getItem(environment.userKey))
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
@@ -402,7 +400,6 @@ export class ExcepcionesClienteComponent implements OnInit {
 
             this.cedulaCliente = data.entidad.tbQoCliente.cedulaCliente;
             this.cli.findClienteByIdentificacion(this.cedulaCliente).subscribe((data: any) => {
-              console.log('VALOR DE LA DATA==> findClienteByIdentificacion ', JSON.stringify(data));
               this.entidadCliente = data.entidad;
               this.loadingSubject.next(false);
               if (data) {
@@ -416,7 +413,6 @@ export class ExcepcionesClienteComponent implements OnInit {
                 this.nombreProceso.setValue(this.entidadNegociacion.procesoActual);
                 this.buscarMensaje();
                 // FORM CLIENTE
-                this.tipoIdentificacion.setValue(TipoIdentificacionEnum.CEDULA);
                 this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
                 this.aprobadoWebMupi.setValue(this.entidadCliente.aprobacionMupi)
                 this.primerNombre.setValue(this.entidadCliente.primerNombre);

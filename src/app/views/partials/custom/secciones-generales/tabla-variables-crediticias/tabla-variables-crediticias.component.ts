@@ -5,6 +5,7 @@ import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVar
 import { VariablesCrediticiasService } from '../../../../../core/services/quski/variablesCrediticias.service';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'kt-tabla-variables-crediticias',
@@ -12,6 +13,8 @@ import { PersonaConsulta } from '../../../../../core/model/calculadora/personaCo
   styleUrls: ['./tabla-variables-crediticias.component.scss']
 })
 export class TablaVariablesCrediticiasComponent implements OnInit {
+  public loadingSubject = new BehaviorSubject<boolean>(false);
+  public loading;
   // VARIABLES ANIDADAS
   @Input() dataPopup: DataPopup;
   @Output() entidades: EventEmitter<Array<TbQoVariablesCrediticia>> = new EventEmitter<Array<TbQoVariablesCrediticia>>();
@@ -26,6 +29,8 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loading = this.loadingSubject.asObservable();
+
     this.direccionDeFlujo(this.dataPopup);
 
   }
@@ -39,7 +44,6 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
       this.iniciaBusquedaCotizacion(data.idBusqueda);
     } else {
       if (data.isNegociacion) {
-        console.log('data==> direccionDeFlujo ', JSON.stringify(data));
         this.iniciaBusquedaNegociacion(data.idBusqueda);
       } else {
         if (data.isCalculadora) {
@@ -74,7 +78,6 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
       const consulta = new PersonaConsulta();
       consulta.identificacion = cedula;
       this.cal.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
-        console.log('VALOR DE LA DATA EN EL COMPONENTE VARIABLES ==> ', JSON.stringify(data));
         if (data.entidad.xmlVariablesInternas.variablesInternas.variable != null) {
           this.entidadesVariablesCrediticias = data.entidad.xmlVariablesInternas.variablesInternas.variable
           this.dataSourceVariablesCrediticias.data = this.entidadesVariablesCrediticias;
@@ -107,7 +110,6 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
     }
   }
   private enviarAlPadre(entidades: Array<TbQoVariablesCrediticia>) {
-    console.log('Estoy enviando esto desde variables crediticias -----> ', entidades);
     this.entidades.emit(entidades);
   }
 }

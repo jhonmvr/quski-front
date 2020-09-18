@@ -1,0 +1,51 @@
+<div class="spinner-container" *ngIf="loading | async"><mat-spinner class="spiner"></mat-spinner></div>
+<div class="row m-1">
+    <div class="col">
+        <mat-card>
+            <mat-card-title> {{titulo}} </mat-card-title>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-12">
+                        <p> {{mensaje}} </p>
+                    </div>
+                    <div class="col-12">
+                        <p *ngIf="bre != null"> BRE: {{bre}} </p>
+                    </div>
+                    <div class="col-12">
+                        <ng-container *ngIf="subBotones && !abrirSubBotones; then thenTemplate; else elseTemplate"></ng-container>
+                        <ng-template #thenTemplate>
+                            <mat-card-actions>
+                                <button mat-raised-button color="primary" (click)="abrirSubBotonesM()"> Solicitar </button>
+                                <button mat-raised-button color="warn" (click)="salir()"> Cancelar </button>
+                            </mat-card-actions>
+                        </ng-template>
+                        <ng-template #elseTemplate>
+                            <ng-container *ngIf="abrirSubBotones; then thenTemplate;"></ng-container>
+                            <ng-template #thenTemplate>
+                                <form [formGroup]="formExcepciones">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <mat-form-field class="mat-form-field-fluid">
+                                                <mat-label> Observacion Del Asesor:  </mat-label> 
+                                                <textarea class="form-control border" rows="3" [formControl]="observacionAsesor" placeholder="Observacion Del Asesor: " matInput></textarea>
+                                                <mat-error>{{ getErrorMessage("observacionAsesor") }}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="offset-4 col-2">
+                                            <mat-card-actions>
+                                                <button mat-raised-button color="primary" (click)="enviarSolicitud()"> Enviar Solicitud </button>
+                                            </mat-card-actions>
+                                        </div>
+                                    </div>
+                                </form>
+                            </ng-template>
+                        </ng-template>                        
+                    </div>
+                </div>
+            </mat-card-content>
+
+        </mat-card>
+    </div>
+</div>

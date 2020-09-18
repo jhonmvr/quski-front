@@ -9,8 +9,8 @@ export class TbQoExcepcione {
   id : number                         // 1,                         // Actualizacion
   estado : string                     // "ACT",
   estadoExcepcion : string            // : "EXCEPCION_PENDIENTE",   // Actualizacion
-  idAprobador : number                //  1,                        // Actualizacion
-  idAsesor : number                   // 1,
+  idAprobador : string                //  "admin"                   // Actualizacion
+  idAsesor : string                   //  1,
   tipoExcepcion : string              // "EXCEPCION_CLIENTE",
   observacionAsesor : string          // "Este tipo tiene plata",   
   observacionAprobador : string       // null,                      // Actualizacion

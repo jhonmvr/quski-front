@@ -43,7 +43,7 @@ export class TasacionService extends BaseService {
    * @param p Page
    * @param idNegociacion number
    */
-  public getTasacionByIdNegociacion(p: Page, idNegociacion : number) {
+  public findByIdNegociacion(p: Page, idNegociacion : number) {
     this.params = new HttpParams()
     if (p != null) {
       if (p.pageSize) {

@@ -1,8 +1,0 @@
-export enum NivelEstudioEnum {
-    PRIMARIA= 'PRIMARIA',
-    SECUNDARIA= 'SECUNDARIA',
-    SUPERIOR= 'SUPERIOR',
-    NINGUNA= 'NINGUNA',
-    POSTGRADO= 'POSTGRADO',
-    TECNICA= 'TECNICA'
-}

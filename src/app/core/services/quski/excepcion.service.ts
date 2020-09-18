@@ -32,11 +32,11 @@ export class ExcepcionService extends BaseService {
    * @description Busca excepciones por id_Negociacion { list }
    * @param idNegociacion 
    */
-  public findByIdNegociacion(idNegociacion: string) {
+  public findByIdNegociacion(idNegociacion: number) {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + this.restC + 'findByIdNegociacion';
     this.params = new HttpParams();
-    this.params.set('idNegociacion', idNegociacion);
+    this.params.set('idNegociacion', idNegociacion.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }

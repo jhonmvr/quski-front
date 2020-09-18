@@ -9,7 +9,6 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
-import { TipoIdentificacionEnum } from '../../../../../core/enum/TipoIdentificacionEnum';
 import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
@@ -19,8 +18,7 @@ import { IntegracionService } from '../../../../../core/services/quski/integraci
 import { environment } from '../../../../../../../src/environments/environment';
 import { EstadoExcepcionEnum } from '../../../../../core/enum/EstadoExcepcionEnum';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
-import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
+import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
@@ -217,7 +215,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       if (this.cobertura.value >= this.minimoDeCobertura) {
         let consulta = new ConsultaOferta();
         consulta.identificacionCliente = this.cliente.cedulaCliente;
-        consulta.tipoOroKilataje = this.tasacion[0].tbQoTipoOro.quilate
+        consulta.tipoOroKilataje = this.tasacion[0].tipoOro
         consulta.fechaNacimiento = this.cliente.fechaNacimiento;
         consulta.coberturaExcepcionada = this.cobertura.value
         this.int.getInformacionOferta(consulta).subscribe((data: any) => {
@@ -281,7 +279,6 @@ export class ExcepcionesCoberturaComponent implements OnInit {
               this.identificacion.setValue(this.cliente.cedulaCliente);
 
               // FORM CLIENTE
-              this.tipoIdentificacion.setValue(TipoIdentificacionEnum.CEDULA);
               this.identificacionC.setValue(this.cliente.cedulaCliente);
               this.aprobadoWebMupi.setValue(this.cliente.aprobacionMupi);
               this.primerNombre.setValue(this.cliente.primerNombre);
@@ -329,7 +326,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
                         this.riesgoAcumul.push(rAcu);
                       });
                       this.dataSourceRiesgo.data = this.riesgoAcumul;
-                      this.tas.getTasacionByIdNegociacion(null, this.negociacion.id).subscribe((data: any) => {
+                      this.tas.findByIdNegociacion(null, this.negociacion.id).subscribe((data: any) => {
                         if (data.list) {
                           this.tasacion = new Array<TbQoTasacion>();
                           data.list.forEach(element => {
@@ -338,7 +335,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
                           this.dataSourceTasacion.data = this.tasacion;
                           let consulta = new ConsultaOferta();
                           consulta.identificacionCliente = this.cliente.cedulaCliente;
-                          consulta.tipoOroKilataje = this.tasacion[0].tbQoTipoOro.quilate
+                          consulta.tipoOroKilataje = this.tasacion[0].tipoOro
                           consulta.fechaNacimiento = this.cliente.fechaNacimiento;
                           consulta.coberturaExcepcionada = 1;
                           this.int.getInformacionOferta(consulta).subscribe((data: any) => {
@@ -450,7 +447,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
         let entidad: TbQoExcepcione = new TbQoExcepcione();
         let entidadIn: TbQoNegociacion = new TbQoNegociacion();
         entidad.id = this.excepcion.id;
-        entidad.idAprobador = 0; // To do: Agregar id de aprobador
+        entidad.idAprobador = null; // To do: Agregar id de aprobador
         entidad.observacionAprobador = this.observacionAprobador.value;
         entidadIn.id = this.negociacion.id;
         entidad.tbQoNegociacion = entidadIn;
@@ -554,8 +551,8 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     tracking.proceso = this.proceso
     tracking.observacion = "";
     tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionTrackingEnum.EN_PROCESO;
-    tracking.usuario = UsuarioEnum.APROBADOR; // Cambiar a usuario actual.
+    tracking.situacion = SituacionEnum.EN_PROCESO;
+    // tracking.usuario = // UsuarioEnum.APROBADOR; // Cambiar a usuario actual.
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
     tracking.fechaInicioAtencion = fechaInicioAtencion;
