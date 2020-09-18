@@ -1,0 +1,25 @@
+<div class="spinner-container" *ngIf="loading | async">
+  <mat-spinner class="spiner"></mat-spinner>
+</div>
+<mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceTasacion">
+  <ng-container matColumnDef="descripcion">
+    <mat-header-cell *matHeaderCellDef>descripcion</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      {{element.descripcion}}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="descuentoPesoPiedra">
+    <mat-header-cell *matHeaderCellDef>descuentoPesoPiedra</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      {{element.descuentoPesoPiedra}}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="descuentoSuelda">
+    <mat-header-cell *matHeaderCellDef>descuentoSuelda</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      {{element.descuentoSuelda}}
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumnsTasacion"></mat-row>
+</mat-table>

@@ -41,6 +41,7 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
    */
   private direccionDeFlujo(data: DataPopup) {
     if (data.isCotizacion) {
+      console.log('INGRESA AL IF isCotizacion ');
       this.iniciaBusquedaCotizacion(data.idBusqueda);
     } else {
       if (data.isNegociacion) {
@@ -94,8 +95,8 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
     if (id != null) {
       if (id > 0) {
         this.vaC.variablesCrediticiaByIdNegociacion(id).subscribe((data: any) => {
-          if (data.list) {
-            this.entidadesVariablesCrediticias = data.list;
+          if (data) {
+            this.entidadesVariablesCrediticias = data;
             this.dataSourceVariablesCrediticias.data = this.entidadesVariablesCrediticias;
             this.enviarAlPadre(this.entidadesVariablesCrediticias);
           } else {

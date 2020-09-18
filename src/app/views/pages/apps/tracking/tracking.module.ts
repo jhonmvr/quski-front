@@ -46,7 +46,8 @@ import { TrackingComponent } from './tracking.component';
 import { TablaTrackingComponent } from './list-tracking/tabla-tracking/tabla-tracking.component';
 import { ListTrackingComponent } from './list-tracking/list-tracking.component';
 import { AddFotoComponent } from '../../../partials/custom/fotos/add-foto/add-foto.component';
-import {PartialsModule} from '../../../partials/partials.module'
+import {PartialsModule} from '../../../partials/partials.module';
+import { TrackingPagosComponent } from './tracking-pagos/tracking-pagos.component'
 const routes: Routes = [
 	{
 		path: '',
@@ -70,6 +71,10 @@ const routes: Routes = [
 			{
 				path: 'list-tracking/:id',
 				component: ListTrackingComponent
+			},
+			{
+				path: 'tracking-pagos',
+				component: TrackingPagosComponent
 			}
 		]
 	}
@@ -78,7 +83,7 @@ const routes: Routes = [
 
 @NgModule({
 	imports: [
-		CommonModule,
+	CommonModule,
     	RouterModule.forChild(routes),
     	MatDialogModule,
     	CommonModule,
@@ -129,6 +134,7 @@ declarations: [
     TrackingComponent,
     TablaTrackingComponent,
     ListTrackingComponent,
+    TrackingPagosComponent,
   ],
   entryComponents: [
 	AddFotoComponent

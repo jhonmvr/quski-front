@@ -7,7 +7,7 @@ import { TbQoExcepcione } from '../../model/quski/TbQoExcepcione';
   providedIn: 'root'
 })
 export class ExcepcionService extends BaseService {
-  restC = "excepcionesRestController/";
+  public restC = 'excepcionesRestController/';
   constructor(_http: HttpClient) {
     super();
     this.http = _http;
@@ -35,8 +35,7 @@ export class ExcepcionService extends BaseService {
   public findByIdNegociacion(idNegociacion: number) {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + this.restC + 'findByIdNegociacion';
-    this.params = new HttpParams();
-    this.params.set('idNegociacion', idNegociacion.toString());
+    this.params = new HttpParams().set('idNegociacion', idNegociacion.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
@@ -107,12 +106,14 @@ export class ExcepcionService extends BaseService {
    * @description Guarda o actualiza una excepcion { entidad }
    * @param tbQoExcepcione TbQoExcepcione
    */
-  public persistEntity(tbQoExcepcione: TbQoExcepcione) {
-    let serviceUrl = this.appResourcesUrl + this.restC + "persistEntity";
-    let wrapper = { entidad: tbQoExcepcione };
+  public persistEntity(data: TbQoExcepcione) {
+    let serviceUrl = this.appResourcesUrl + this.restC + 'persistEntity';
+    console.log('VALOR DE LA DIRECCION', serviceUrl, 'VALOR DE LA EXCEPCION ===>  ', data);
+    let wrapper = { entidad: data };
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
+
 
 
 

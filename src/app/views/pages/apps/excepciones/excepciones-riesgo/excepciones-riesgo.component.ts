@@ -18,26 +18,23 @@ import { ParametroService } from '../../../../../core/services/quski/parametro.s
 import { environment } from '../../../../../../environments/environment';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
-import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
-
-
-
 @Component({
-  selector: 'kt-excepciones-cliente',
-  templateUrl: './excepciones-cliente.component.html',
-  styleUrls: ['./excepciones-cliente.component.scss']
+  selector: 'kt-excepciones-riesgo',
+  templateUrl: './excepciones-riesgo.component.html',
+  styleUrls: ['./excepciones-riesgo.component.scss']
 })
-export class ExcepcionesClienteComponent implements OnInit {
+export class ExcepcionesRiesgoComponent implements OnInit {
+
   [x: string]: any;
   // ENTIDADES
 
-  private entidadCliente: TbQoCliente = null;
+  public entidadCliente: TbQoCliente = null;
   private entidadNegociacion: TbQoNegociacion = null;
   private entidadExcepcion: TbQoExcepcione = null;
 
@@ -48,6 +45,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   private idNegociacion: number;
   private cedulaCliente: string;
   private idCliente: number;
+
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public mensaje: any;
   public listExepcion = new Array<TbQoExcepcione>();
@@ -98,9 +96,9 @@ export class ExcepcionesClienteComponent implements OnInit {
   // FORM DATOS NEGOCIACION
   public formDatosNegociacion: FormGroup = new FormGroup({});
   public tipoProcesoNegociacion = new FormControl('', []);
-  public estadoNegociacion = new FormControl('', []);
-  public fechaDeCreacionNegociacion = new FormControl('', []);
-  public ultimaFechaDeActualizacionNegociacion = new FormControl('', []);
+  public motivoNoAceptacion = new FormControl('', []);
+  public calificadoMupi = new FormControl('', []);
+
 
   // FORM DATOS EXCEPCION
   public formDatosExcepcion: FormGroup = new FormGroup({});
@@ -154,10 +152,11 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.formDatosContacto.addControl("telefonoOficina", this.telefonoOficina);
     this.formDatosContacto.addControl("correo", this.correo);
     //FORM DATOS NEGOCIACION
+
     this.formDatosNegociacion.addControl("tipoProcesoNegociacion", this.tipoProcesoNegociacion);
-    this.formDatosNegociacion.addControl("estadoNegociacion", this.estadoNegociacion);
-    this.formDatosNegociacion.addControl("fechaDeCreacionNegociacion", this.fechaDeCreacionNegociacion);
-    this.formDatosNegociacion.addControl("ultimaFechaDeActualizacionNegociacion", this.ultimaFechaDeActualizacionNegociacion);
+    this.formDatosNegociacion.addControl("motivoNoAceptacion", this.motivoNoAceptacion);
+    this.formDatosNegociacion.addControl("calificadoMupi", this.calificadoMupi);
+
     //FORM DATOS EXCEPCION
     this.formDatosExcepcion.addControl("observacionAsesor", this.observacionAsesor);
     this.formDatosExcepcion.addControl("excAprobada", this.excAprobada);
@@ -177,7 +176,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     //TRACKING
     this.capturaHoraInicio('NEGOCIACION');
     this.clienteNegociacion();
-    this.subheaderService.setTitle("Excepciones de Negociación");
+    this.subheaderService.setTitle("Excepciones de Riesgo");
     this.capturaDatosTraking();
 
   }
@@ -189,9 +188,9 @@ export class ExcepcionesClienteComponent implements OnInit {
 
       if (data.entidad.datoscliente != null) {
         if (data.entidad.mensaje != '') {
-          //  console.log('DATA EQUIFAX', JSON.stringify(data));
+          console.log('DATA EQUIFAX', JSON.stringify(data));
           this.mensaje = data.entidad.mensaje;
-          //  console.log('BUSCA EN PERSONA CALCULADORA', this.mensaje);
+          console.log('BUSCA EN PERSONA CALCULADORA', this.mensaje);
         }
       }
       this.loadingSubject.next(false);
@@ -207,7 +206,6 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
         this.horaInicioExcepcion = hora.entidad;
-        console.log('HORA DE INICIO ==> ', JSON.stringify(hora.entidad));
       }
 
     });
@@ -217,7 +215,7 @@ export class ExcepcionesClienteComponent implements OnInit {
       if (hora.entidad) {
 
         this.horaAsignacionExcepcion = hora.entidad;
-        console.log('HORA DE ASIGNACION ==> ', JSON.stringify(hora.entidad));
+        console.log('capturaHoraAsignacion===> ', JSON.stringify(hora));
 
       }
     });
@@ -228,8 +226,7 @@ export class ExcepcionesClienteComponent implements OnInit {
 
 
         this.horaAtencionExcepcion = hora.entidad;
-        console.log('HORA DE capturaHoraAtencion ==> ', JSON.stringify(hora.entidad));
-
+        console.log('capturaHoraAtencion===> ', JSON.stringify(hora));
 
       }
     });
@@ -238,7 +235,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
 
-
+        console.log('capturaHoraAtencion===> ', JSON.stringify(hora));
         this.registroExcepcion(this.entidadNegociacion.id, this.horaInicioExcepcion, this.horaAsignacionExcepcion,
           this.horaAtencionExcepcion, this.horaFinalExcepcion);
       }
@@ -246,13 +243,13 @@ export class ExcepcionesClienteComponent implements OnInit {
     });
   }
   private capturaDatosTraking() {
-    this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
+    this.par.findByNombreTipoOrdered('EXCEPCION_RIESGO', 'TIP-EXC', 'Y').subscribe((data: any) => {
       if (data.entidades) {
         this.actividad = data.entidades[0].nombre;
-        this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
+        this.par.findByNombreTipoOrdered('EXCEPCION_RIESGO', 'TIP-EXC', 'Y').subscribe((data: any) => {
           if (data.entidades) {
             this.procesoExcepcion = data.entidades[0].nombre;
-            this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
+            this.par.findByNombreTipoOrdered('EXCEPCION_RIESGO', 'TIP-EXC', 'Y').subscribe((data: any) => {
               if (data.entidades) {
                 this.procesoExcepcion = data.entidades[0].nombre;
               }
@@ -277,7 +274,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     tracking.fechaFin = fechaFin;
     this.tra.guardarTracking(tracking).subscribe((data: any) => {
       if (data.entidad) {
-        console.log('data de tracking para Excpeción Cliente ----> ', data.entidad);
+        console.log('data de tracking para Excepcion ----> ', data.entidad);
         this.loadingSubject.next(false);
       } else {
         this.loadingSubject.next(false);
@@ -302,16 +299,16 @@ export class ExcepcionesClienteComponent implements OnInit {
    * @memberof ExcepcionesClienteComponent
    */
   buscarExcepcion(id: number) {
-    //console.log('valor del id===> ', id.toString());
+    // console.log('valor del id===> ', id.toString());
 
     this.exs.findByIdNegociacion(id).subscribe((data: any) => {
       if (data.list != null && data.list[0] != null) {
-        //  console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+        //console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
         this.listExepcion = data.list[0];
-        //  console.log('valor de la llistas', this.listExepcion);
+        // console.log('valor de la llistas', this.listExepcion);
         this.entidadExcepcion = data.list[0];
         this.observacionAsesor.setValue(this.entidadExcepcion.observacionAsesor);
-        //  console.log('Observacion Aseseor===> ', this.observacionAsesor);
+        // console.log('Observacion Aseseor===> ', this.observacionAsesor);
 
       }
       // console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
@@ -321,7 +318,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   }
 
   asignarAprobacion() {
-    //  console.log('ASIGNAR APROBACION');
+    console.log('ASIGNAR APROBACION');
 
     if (this.radioB.value === 'APROBADO') {
       this.radioB.setValue(EstadoExcepcionEnum.APROBADO);
@@ -340,10 +337,11 @@ export class ExcepcionesClienteComponent implements OnInit {
   public submit(flujo: string) {
     this.loadingSubject.next(true);
     this.asignarAprobacion();
-    //console.log('INICIA EL SUBMIT', this.entidadExcepcion);
+    this.capturaHoraFinal('NEGOCIACION');
+    console.log('INICIA EL SUBMIT', this.entidadExcepcion);
     this.exs.persistEntity(this.entidadExcepcion).subscribe((data: any) => {
-      //console.log('GUARDA', JSON.stringify(data));
-      this.capturaHoraFinal('NEGOCIACION');
+      console.log('GUARDA', JSON.stringify(data));
+      //this.registroExcepcion();
       this.router.navigate(['asesor/bandeja-principal']);
       this.sinNoticeService.setNotice('SE GUARDO LA EXCEPCION CORRECTAMENTE', 'success');
     }, error => {
@@ -374,9 +372,9 @@ export class ExcepcionesClienteComponent implements OnInit {
       data.params.id
       if (data.params.id) {
         this.idNegociacion = data.params.id;
-        //| console.log('PARAMETRO=====> ', this.idNegociacion);
+        // console.log('PARAMETRO=====> ', this.idNegociacion);
         this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
-          //console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
+          // console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
 
           this.entidadNegociacion = data.entidad;
           //console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
@@ -390,6 +388,7 @@ export class ExcepcionesClienteComponent implements OnInit {
 
             this.cedulaCliente = data.entidad.tbQoCliente.cedulaCliente;
             this.cli.findClienteByIdentificacion(this.cedulaCliente).subscribe((data: any) => {
+              // console.log('VALOR DE LA DATA==> findClienteByIdentificacion ', JSON.stringify(data));
               this.entidadCliente = data.entidad;
               this.loadingSubject.next(false);
               if (data) {
@@ -425,7 +424,7 @@ export class ExcepcionesClienteComponent implements OnInit {
                 this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
                 this.dataPopup.isCalculadora = true;
                 // this.dataPopup.idBusqueda = this.entidadNegociacion.id;
-                //      console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
+                console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
                 //INPUT RIESGO ACUMULADO
 
                 // FORM CONTACTO
@@ -437,9 +436,8 @@ export class ExcepcionesClienteComponent implements OnInit {
                 //FORM DATOS NEGOCIACION
 
                 this.tipoProcesoNegociacion.setValue(this.entidadNegociacion.tipo);
-                this.estadoNegociacion.setValue(this.entidadNegociacion.situacion);
-                this.fechaDeCreacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
-                this.ultimaFechaDeActualizacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));
+                this.motivoNoAceptacion.setValue(this.entidadNegociacion.situacion);
+                this.calificadoMupi.setValue(this.entidadCliente.aprobacionMupi);
               } else {
                 this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 1', 'error');
               }

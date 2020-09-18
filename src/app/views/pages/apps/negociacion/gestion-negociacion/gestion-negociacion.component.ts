@@ -229,7 +229,7 @@ export class GestionNegociacionComponent implements OnInit {
           this.neg.findNegociacionById(json.params.id).subscribe((data:any) => {
             if(data.entidad){
               this.entidadNegociacion = data.entidad;
-              this.tas.findByIdNegociacion(null, this.entidadNegociacion.id).subscribe((data:any)=>{
+              this.tas.getTasacionByIdNegociacion(null, this.entidadNegociacion.id).subscribe((data:any)=>{
                 this.entidadesTasacion = data.list? data.list: null;
                 console.log("Tasacion ---> ", data.list); 
                 this.cargarValoresBusquedayCliente(this.entidadNegociacion.tbQoCliente);
