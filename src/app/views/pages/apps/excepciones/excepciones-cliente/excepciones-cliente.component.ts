@@ -186,7 +186,6 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
         this.horaInicioExcepcion = hora.entidad;
-        console.log('HORA DE INICIO ==> ', JSON.stringify(hora.entidad));
       }
 
     });
@@ -196,7 +195,7 @@ export class ExcepcionesClienteComponent implements OnInit {
       if (hora.entidad) {
 
         this.horaAsignacionExcepcion = hora.entidad;
-        console.log('HORA DE ASIGNACION ==> ', JSON.stringify(hora.entidad));
+
 
       }
     });
@@ -204,20 +203,13 @@ export class ExcepcionesClienteComponent implements OnInit {
   private capturaHoraAtencion(etapa: string) {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
-
-
         this.horaAtencionExcepcion = hora.entidad;
-        console.log('HORA DE capturaHoraAtencion ==> ', JSON.stringify(hora.entidad));
-
-
       }
     });
   }
   private capturaHoraFinal(etapa: string) {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
-
-
         this.registroExcepcion(this.entidadNegociacion.id, this.horaInicioExcepcion, this.horaAsignacionExcepcion,
           this.horaAtencionExcepcion, this.horaFinalExcepcion);
       }
@@ -256,7 +248,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     tracking.fechaFin = fechaFin;
     this.tra.guardarTracking(tracking).subscribe((data: any) => {
       if (data.entidad) {
-        console.log('data de tracking para Excpeción Cliente ----> ', data.entidad);
+        //  console.log('data de tracking para Excpeción Cliente ----> ', data.entidad);
         this.loadingSubject.next(false);
       } else {
         this.loadingSubject.next(false);
@@ -285,7 +277,7 @@ export class ExcepcionesClienteComponent implements OnInit {
 
     this.exs.findByIdNegociacion(id).subscribe((data: any) => {
       if (data.list != null && data.list[0] != null) {
-        console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+        // console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
         this.listExepcion = data.list[0];
         //  console.log('valor de la llistas', this.listExepcion);
         this.entidadExcepcion = data.list[0];
@@ -342,9 +334,6 @@ export class ExcepcionesClienteComponent implements OnInit {
     });
 
   }
-
-
-
   /**
    * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION
    * @description PASADA POR this.route.paramMap
@@ -364,7 +353,7 @@ export class ExcepcionesClienteComponent implements OnInit {
 
           if (data.entidad) {
             //TRACKING
-            console.log('TRACKING', JSON.stringify(data));
+            // console.log('TRACKING', JSON.stringify(data));
             this.capturaHoraAsignacion('NEGOCIACION');
 
 
@@ -403,7 +392,7 @@ export class ExcepcionesClienteComponent implements OnInit {
                 // INPUT VARIABLES CREDITICIAS
                 this.dataPopup = new DataPopup();
                 this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
-                this.dataPopup.isCalculadora = true;
+                this.dataPopup.isNegociacion = true;
                 this.dataPopup.idBusqueda = this.entidadNegociacion.id;
                 console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
                 //INPUT RIESGO ACUMULADO

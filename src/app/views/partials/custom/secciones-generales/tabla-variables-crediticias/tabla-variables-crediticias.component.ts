@@ -30,7 +30,7 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
 
   ngOnInit() {
     this.loading = this.loadingSubject.asObservable();
-
+    console.log('DATA POPUP', this.dataPopup);
     this.direccionDeFlujo(this.dataPopup);
 
   }
@@ -40,12 +40,14 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
    * @param data DataPopup
    */
   private direccionDeFlujo(data: DataPopup) {
+    console.log('INICIA CAMBIO DIRECCION ');
     if (data.isCotizacion) {
-      console.log('INGRESA AL IF isCotizacion ');
+
       this.iniciaBusquedaCotizacion(data.idBusqueda);
     } else {
       if (data.isNegociacion) {
         this.iniciaBusquedaNegociacion(data.idBusqueda);
+        console.log('INGRESA AL IF isNegociacion ');
       } else {
         if (data.isCalculadora) {
           this.iniciaBusquedaCalculadora(data.cedula);
