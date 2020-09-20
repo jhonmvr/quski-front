@@ -57,13 +57,7 @@ export class ExcepcionesClienteComponent implements OnInit {
 
   // VARIABLES DE TRACKING
   public horaInicioExcepcion: Date;
-  public horaAsignacionExcepcion: Date = null;
-  public horaAtencionExcepcion: Date;
-  public horaFinalExcepcion: Date = null;
-  public procesoExcepcion: string;
-  public actividad: string;
 
-  // FORM DATOS OPERACION
   public formDatosOperacion: FormGroup = new FormGroup({});
   public nombresCompletos = new FormControl('', []);
   public identificacion = new FormControl('', []);
@@ -181,22 +175,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.capturaDatosTraking();
 
   }
-  private buscarMensaje() {
-    this.loadingSubject.next(true);
-    const consulta = new PersonaConsulta();
-    consulta.identificacion = this.entidadCliente.cedulaCliente;
-    this.ing.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
 
-      if (data.entidad.datoscliente != null) {
-        if (data.entidad.mensaje != '') {
-          //  console.log('DATA EQUIFAX', JSON.stringify(data));
-          this.mensaje = data.entidad.mensaje;
-          //  console.log('BUSCA EN PERSONA CALCULADORA', this.mensaje);
-        }
-      }
-      this.loadingSubject.next(false);
-    });
-  }
 
   /********************************************  @TRACKING  ***********************************************************/
   /**
@@ -306,11 +285,12 @@ export class ExcepcionesClienteComponent implements OnInit {
 
     this.exs.findByIdNegociacion(id).subscribe((data: any) => {
       if (data.list != null && data.list[0] != null) {
-        //  console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+        console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
         this.listExepcion = data.list[0];
         //  console.log('valor de la llistas', this.listExepcion);
         this.entidadExcepcion = data.list[0];
         this.observacionAsesor.setValue(this.entidadExcepcion.observacionAsesor);
+        this.mensaje = this.entidadExcepcion.mensajeBre;
         //  console.log('Observacion Aseseor===> ', this.observacionAsesor);
 
       }
@@ -401,7 +381,7 @@ export class ExcepcionesClienteComponent implements OnInit {
                 // console.log('VALOR DE LA dataNegociacion====> ', JSON.stringify(this.entidadNegociacion));
                 //console.log('VALOR DE LA ENTIDAD====> ', JSON.stringify(this.entidadNegociacion.procesoActual));
                 this.nombreProceso.setValue(this.entidadNegociacion.procesoActual);
-                this.buscarMensaje();
+
                 // FORM CLIENTE
                 this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
                 this.aprobadoWebMupi.setValue(this.entidadCliente.aprobacionMupi)
@@ -424,8 +404,8 @@ export class ExcepcionesClienteComponent implements OnInit {
                 this.dataPopup = new DataPopup();
                 this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
                 this.dataPopup.isCalculadora = true;
-                // this.dataPopup.idBusqueda = this.entidadNegociacion.id;
-                //      console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
+                this.dataPopup.idBusqueda = this.entidadNegociacion.id;
+                console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
                 //INPUT RIESGO ACUMULADO
 
                 // FORM CONTACTO

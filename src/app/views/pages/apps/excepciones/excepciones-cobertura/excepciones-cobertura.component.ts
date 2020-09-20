@@ -27,6 +27,8 @@ import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOf
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
+import 'hammerjs';
+
 
 @Component({
   selector: 'kt-excepciones-cobertura',
@@ -52,6 +54,8 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   private validacionCobertura;
   public dataPopup: DataPopup;
   public consultaOferta: ConsultaOferta;
+  public vertical: true;
+  public valor: null;
 
 
   // OBJETOS DE ENTIDADES
@@ -112,7 +116,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   public observacionAsesor = new FormControl('', []);
   public observacionAprobador = new FormControl('', []);
   public radioB = new FormControl('', []);
-  public cobertura = new FormControl('', []);
+  public porcentaje = new FormControl('', []);
 
   constructor(
     private exs: ExcepcionService,
@@ -152,7 +156,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.formDatosExcepcion.addControl('observacionAsesor', this.observacionAsesor);
     this.formDatosExcepcion.addControl('observacionAprobador', this.observacionAprobador);
     this.formDatosExcepcion.addControl('radioB', this.radioB);
-    this.formDatosExcepcion.addControl('cobertura', this.cobertura);
+    this.formDatosExcepcion.addControl('porcentaje', this.porcentaje);
 
 
     //SECCIONES Y CAMPOS DE LECTURA
@@ -192,6 +196,14 @@ export class ExcepcionesCoberturaComponent implements OnInit {
 
     });
   }
+  /**
+   * @description Captura de la hora de asignacion en Tracking
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-09-20
+   * @private
+   * @param {string} etapa
+   * @memberof ExcepcionesCoberturaComponent
+   */
   private capturaHoraAsignacion(etapa: string) {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
@@ -201,6 +213,14 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       }
     });
   }
+  /**
+   * @description Captura la hora de Atención en Tracking
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-09-20
+   * @private
+   * @param {string} etapa
+   * @memberof ExcepcionesCoberturaComponent
+   */
   private capturaHoraAtencion(etapa: string) {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
@@ -212,17 +232,30 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       }
     });
   }
+  /**
+   * @description Captura la hora Final para Tracking
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-09-20
+   * @private
+   * @param {string} etapa
+   * @memberof ExcepcionesCoberturaComponent
+   */
   private capturaHoraFinal(etapa: string) {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
-
-
         this.registroExcepcion(this.entidadNegociacion.id, this.horaInicioExcepcion, this.horaAsignacionExcepcion,
           this.horaAtencionExcepcion, this.horaFinalExcepcion);
       }
 
     });
   }
+  /**
+   * @description Método que busca la excepcion segun su tipo en la tabla de parametros
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-09-20
+   * @private
+   * @memberof ExcepcionesCoberturaComponent
+   */
   private capturaDatosTraking() {
     this.par.findByNombreTipoOrdered('EXCEPCION_COBERTURA', 'TIP-EXC', 'Y').subscribe((data: any) => {
       if (data.entidades) {
@@ -240,6 +273,17 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       }
     });
   }
+  /**
+   * @description Método que realiza el registro de la excepcion ademas se guarda tambien el tracking 
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-09-20
+   * @param {number} codigoRegistro
+   * @param {Date} fechaInicio
+   * @param {Date} fechaAsignacion
+   * @param {Date} fechaInicioAtencion
+   * @param {Date} fechaFin
+   * @memberof ExcepcionesCoberturaComponent
+   */
   public registroExcepcion(codigoRegistro: number, fechaInicio: Date, fechaAsignacion: Date, fechaInicioAtencion: Date, fechaFin: Date) {
     const tracking: TbQoTracking = new TbQoTracking();
     this.loadingSubject.next(true);
@@ -291,10 +335,11 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       }
     });
   }
+  /********************************************  @EXCEPCION  ***********************************************************/
 
   buscarExcepciones(id: number) {
+    this.loadingSubject.next(true);
     console.log('valor del id===> ', id.toString());
-
     this.exs.findByIdNegociacion(id).subscribe((data: any) => {
       console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
       if (data.list != null && data.list[0] != null) {
@@ -303,12 +348,10 @@ export class ExcepcionesCoberturaComponent implements OnInit {
         //  console.log('valor de la llistas', this.listExepcion);
         this.entidadExcepcion = data.list[0];
         this.observacionAsesor.setValue(this.entidadExcepcion.observacionAsesor);
-        //  console.log('Observacion Aseseor===> ', this.observacionAsesor);
-
+        this.mensaje = (this.entidadExcepcion.mensajeBre);
       }
-      // console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
-
     });
+    this.loadingSubject.next(false);
 
   }
   /**
@@ -326,13 +369,14 @@ export class ExcepcionesCoberturaComponent implements OnInit {
           if (data.entidad) {
             console.log('VALOR DE LA NEGOCIACION findNegociacionById ', JSON.stringify(data));
 
+
             this.capturaHoraAsignacion('NEGOCIACION');
             this.entidadNegociacion = data.entidad;
             this.entidadCliente = data.entidad.tbQoCliente;
-            this.buscarMensaje();
+
             console.log('VALORES DE LA ENTIDAD NEGOSCIA==> .id', this.entidadNegociacion.id);
             this.buscarExcepciones(this.entidadNegociacion.id);
-            //  console.log('id NEGOCIACION=====> ', this.entidadNegociacion);
+            console.log('id NEGOCIACION=====> ', this.entidadNegociacion);
             //console.log(' CLIENTE==> ', this.entidadCliente)
             //RECUPERO LA DATA DE VARIABLES
             this.dataPopup = new DataPopup();
@@ -358,6 +402,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
           }
         });
       } else {
+        this.loadingSubject.next(false);
         this.sinNoticeService.setNotice('ERROR AL CARGAR NEGOCIACION', 'error');
         this.capturaHoraAsignacion('NEGOCIACION');
         this.capturaHoraAsignacion('NEGOCIACION');
@@ -365,6 +410,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
 
       }
     });
+    this.loadingSubject.next(false);
   }
 
 
@@ -377,23 +423,6 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.entidadesOpcionesCreditos = event;
   }
 
-  private buscarMensaje() {
-    this.loadingSubject.next(true);
-    const consulta = new PersonaConsulta();
-
-    consulta.identificacion = this.entidadCliente.cedulaCliente;
-    this.ing.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
-
-      if (data.entidad.datoscliente != null) {
-        if (data.entidad.mensaje != '') {
-          // console.log('DATA EQUIFAX', JSON.stringify(data));
-          this.mensaje = data.entidad.mensaje;
-          // console.log('BUSCA EN PERSONA CALCULADORA', this.mensaje);
-        }
-      }
-      this.loadingSubject.next(false);
-    });
-  }
 
   asignarAprobacion() {
     console.log('ASIGNAR APROBACION');
@@ -418,6 +447,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       this.router.navigate(['asesor/bandeja-principal']);
       this.sinNoticeService.setNotice('SE GUARDO LA EXCEPCION CORRECTAMENTE', 'success');
     }, error => {
+      this.loadingSubject.next(false);
       if (error.error) {
         if (error.error.codError) {
           this.sinNoticeService.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
@@ -434,139 +464,28 @@ export class ExcepcionesCoberturaComponent implements OnInit {
 
   }
 
-  /*
-  enviarRespuesta() {
-    this.loadingSubject.next(false);
-    if (this.radioB.value != '') {
-      if (this.observacionAprobador.value != '') {
-        let entidad: TbQoExcepcione = new TbQoExcepcione();
-        let entidadIn: TbQoNegociacion = new TbQoNegociacion();
-        entidad.id = this.excepcion.id;
-        entidad.idAprobador = null; // To do: Agregar id de aprobador
-        entidad.observacionAprobador = this.observacionAprobador.value;
-        entidadIn.id = this.negociacion.id;
-        entidad.tbQoNegociacion = entidadIn;
- 
-        if (this.radioB.value == 'Negado') {
-          entidad.estadoExcepcion = EstadoExcepcionEnum.NEGADO.toString();
-          this.exc.persistEntity(entidad).subscribe((data: any) => {
-            this.loadingSubject.next(false);
-            console.log('Esto me esta guardando en base ----> ', data);
-            this.tra.getSystemDate().subscribe((hora: any) => {
-              if (hora.entidad) {
-                this.horaFinal = hora.entidad
-                if (this.negociacion.id != null) {
-                  this.registrarTracking(
-                    this.negociacion.id,
-                    this.horaInicio,
-                    this.horaAsignacion,
-                    this.horaAtencion,
-                    this.horaFinal
-                  );
-                } else {
-                  this.sinNoticeService.setNotice('NO EXISTE NEGOCIACION PREVIA PARA HACER SEGUIMIENTO DE TRACKING', 'error');
-                }
-              }
-            });
-            // falta envio de notificacion
-            // Falta redireccion a pantalla principal de excepciones
-            // this.router.navigate(['cliente/gestion-cliente', this.negociacion.id]);
-          }, error => {
-            this.loadingSubject.next(false);
-            if (JSON.stringify(error).indexOf('codError') > 0) {
-              let b = error.error;
-              this.sinNoticeService.setNotice(b.msgError, 'error');
-            } else {
-              this.sinNoticeService.setNotice('ERROR AL GUARDAR CAMBIOS EN LA EXCEPCION', 'error');
-            }
-          });
-        } else {
-          if (this.validacionCobertura) {
-            entidad.estadoExcepcion = EstadoExcepcionEnum.APROBADO.toString();
-            entidad.caracteristica = this.cobertura.value;
-            this.exc.persistEntity(entidad).subscribe((data: any) => {
-              this.loadingSubject.next(false);
-              console.log('Esto me esta guardando en base ----> ', data);
-              this.tra.getSystemDate().subscribe((hora: any) => {
-                if (hora.entidad) {
-                  this.horaFinal = hora.entidad
-                  if (this.negociacion.id != null) {
-                    this.registrarTracking(
-                      this.negociacion.id,
-                      this.horaInicio,
-                      this.horaAsignacion,
-                      this.horaAtencion,
-                      this.horaFinal
-                    );
-                  } else {
-                    this.sinNoticeService.setNotice('NO EXISTE NEGOCIACION PREVIA PARA HACER SEGUIMIENTO DE TRACKING', 'error');
-                  }
-                }
-              });
-              // To do: falta envio de notificacion
-              // To do: Falta redireccion a pantalla principal de excepciones
-              // this.router.navigate(['cliente/gestion-cliente', this.negociacion.id]);
-            }, error => {
-              this.loadingSubject.next(false);
-              if (JSON.stringify(error).indexOf('codError') > 0) {
-                let b = error.error;
-                this.sinNoticeService.setNotice(b.msgError, 'error');
-              } else {
-                this.sinNoticeService.setNotice('ERROR AL GUARDAR CAMBIOS EN LA EXCEPCION', 'error');
-              }
-            });
-          } else {
-            this.loadingSubject.next(false);
-            this.sinNoticeService.setNotice('AUN NO HA CONSULTADO LAS OPCIONES DE CREDITO CON LA NUEVA COBERTURA', 'error');
-          }
-        }
- 
-      } else {
-        this.loadingSubject.next(false);
-        this.sinNoticeService.setNotice('INGRESE UNA RAZON DE SU RESPUESTA', 'error');
-      }
-    } else {
-      this.loadingSubject.next(false);
-      this.sinNoticeService.setNotice('POR FAVOR MARQUE UNA OPCION CON SU RESPUESA', 'error');
+
+
+  formatLabel(value: number) {
+    if (value >= 1000) {
+      return Math.round(value / 1000) + '%';
+      console.log('el valor es ', this.porcentaje);
     }
-  }*/
-  /* * 
-  /* @author Jeroham Cadenas - Developer Twuelve
-  /* @param codigoRegistro number
-  /* @param fechaInicio Date
-  /* @param fechaAsignacion Date
-  /* @param fechaInicioAtencion Date
-  /* @param fechaFin Date
-  */
-  /* public registrarTracking(codigoRegistro: number, fechaInicio: Date, fechaAsignacion: Date, fechaInicioAtencion: Date, fechaFin: Date) {
-     this.loadingSubject.next(true);
-     let tracking: TbQoTracking = new TbQoTracking();
-     tracking.actividad = this.actividad; // Modulo en ProducBacklog
-     tracking.proceso = this.proceso
-     tracking.observacion = '';
-     tracking.codigoRegistro = codigoRegistro;
-     tracking.situacion = SituacionTrackingEnum.EN_PROCESO;
-     tracking.usuario = UsuarioEnum.APROBADOR; // Cambiar a usuario actual.
-     tracking.fechaInicio = fechaInicio;
-     tracking.fechaAsignacion = fechaAsignacion;
-     tracking.fechaInicioAtencion = fechaInicioAtencion;
-     tracking.fechaFin = fechaFin;
-     this.tra.guardarTracking(tracking).subscribe((data: any) => {
-       if (data.entidad) {
-         console.log(' Tracking creado ------>' + JSON.stringify(data.entidad));
-         this.loadingSubject.next(false);
-       } else {
-         this.loadingSubject.next(false);
-         this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING DE GESTION CLIENTE EN METODO', 'error');
-       }
-     }, error => {
-       this.loadingSubject.next(false);
-       if (JSON.stringify(error).indexOf('codError') > 0) {
-         let b = error.error;
-         this.sinNoticeService.setNotice(b.msgError, 'error');
-       } else {
-         this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING DE GESTION CLIENTE EN METODO // ERROR CAPTURADO', 'error');
-       }
-     });
-   }*/
+
+    return value;
+  }
+
+  public slideChange(event) {
+    console.log('valor capturado es ', event);
+
+    this.valor = event.value;
+    this.porcentaje.setValue(this.valor);
+    console.log('valor  es ', this.valor);
+    this.entidadExcepcion.caracteristica = this.valor;
+
+    console.log('Excepcion===>  ', this.entidadExcepcion);
+
+
+  }
+
 }
