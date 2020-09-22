@@ -265,8 +265,76 @@
         <div class="row mt-2">
           <div class="col">
             <ng-container>
-              <kt-tabla-tasacion>
-              </kt-tabla-tasacion>
+              <!--START MAT TABLE-->
+              <div class="mat-table__wrapper">
+                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceTasacion" matSort #sort1="matSort"
+                  matSortActive="N" matSortDirection="asc" matSortDisableClear>>
+                  <ng-container matColumnDef="N">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>N</mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="numeroPiezas">
+                    <mat-header-cell *matHeaderCellDef>Número de Piezas</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.numeroPiezas}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="tipoJoya">
+                    <mat-header-cell *matHeaderCellDef>Tipo Joya</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.tipoJoya}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="estadoJoya">
+                    <mat-header-cell *matHeaderCellDef>Estado Joya</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.estadoJoya}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="descripcion">
+                    <mat-header-cell *matHeaderCellDef>Descripción</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.descripcion}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="pesoBruto">
+                    <mat-header-cell *matHeaderCellDef>Peso Bruto</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.pesoBruto}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="descuentoPesoPiedra">
+                    <mat-header-cell *matHeaderCellDef>Descuento Peso Piedra</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.descuentoPesoPiedra}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="descuentoSuelda">
+                    <mat-header-cell *matHeaderCellDef>Descuento Suelda</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.descuentoSuelda}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="pesoNeto">
+                    <mat-header-cell *matHeaderCellDef>
+                      Peso Neto</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.pesoNeto}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="valorAvaluo">
+                    <mat-header-cell *matHeaderCellDef>
+                      Valor Avaluo
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.valorAvaluo}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="valorComercial">
+                    <mat-header-cell *matHeaderCellDef>Valor Comercial</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.valorComercial}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="valorRealizacion">
+                    <mat-header-cell *matHeaderCellDef>Valor Realización</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.valorRealizacion}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="valorOro">
+                    <mat-header-cell *matHeaderCellDef>Valor Oro</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.valorOro}} </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
+                  <mat-row
+                    *matRowDef="  let row;                columns: displayedColumnsTasacion                            ">
+                  </mat-row>
+                </mat-table>
+                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+                  [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+                </mat-paginator>
+              </div>
+              <!--end MAT TABLE-->
             </ng-container>
           </div>
         </div>
@@ -280,10 +348,6 @@
                 <mat-card class="warning">
                   <span class="material-icons warning-icons">report_problem </span>
                   <span>{{mensaje}}</span>
-
-
-
-
                 </mat-card>
               </div>
             </div>

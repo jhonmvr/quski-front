@@ -46,17 +46,17 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   private mensaje = "ERROR AL CARGAR RIESGO ACUMULADO";
   // TABLA DE CREDITO
   displayedColumnsRiesgoAcumulado = [
-      'referencia',
-      'numeroOperacion', 
-      'codigoCarteraQuski', 
-      'tipoOperacion', 
-      'fechaEfectiva', 
-      'fechaVencimiento',
-      'valorAlDia',
-      'diasMoraActual', 
-      'saldo', 
-      'estadoPrimeraCuotaVigente', 
-      'estadoOperacion'];
+    'referencia',
+    'numeroOperacion',
+    'codigoCarteraQuski',
+    'tipoOperacion',
+    'fechaEfectiva',
+    'fechaVencimiento',
+    'valorAlDia',
+    'diasMoraActual',
+    'saldo',
+    'estadoPrimeraCuotaVigente',
+    'estadoOperacion'];
   dataSourceRiesgoAcumulado = new MatTableDataSource<TbQoRiesgoAcumulado>();
   constructor(
     private sof: SoftbankService,
@@ -66,6 +66,8 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    console.log('DATA DE RIESGO ACUMULADO ')
     if (this.idCliente != null && this.cedula == null) {
       this.initiateTablePaginator();
       this.busquedaCore();
