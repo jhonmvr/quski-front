@@ -11,16 +11,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
-import { TipoIdentificacionEnum } from '../../../../../core/enum/TipoIdentificacionEnum';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { environment } from '../../../../../../environments/environment';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
+import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
-import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
@@ -59,13 +57,7 @@ export class ExcepcionesClienteComponent implements OnInit {
 
   // VARIABLES DE TRACKING
   public horaInicioExcepcion: Date;
-  public horaAsignacionExcepcion: Date = null;
-  public horaAtencionExcepcion: Date;
-  public horaFinalExcepcion: Date = null;
-  public procesoExcepcion: string;
-  public actividad: string;
 
-  // FORM DATOS OPERACION
   public formDatosOperacion: FormGroup = new FormGroup({});
   public nombresCompletos = new FormControl('', []);
   public identificacion = new FormControl('', []);
@@ -183,22 +175,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.capturaDatosTraking();
 
   }
-  private buscarMensaje() {
-    this.loadingSubject.next(true);
-    const consulta = new PersonaConsulta();
-    consulta.identificacion = this.entidadCliente.cedulaCliente;
-    this.ing.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
 
-      if (data.entidad.datoscliente != null) {
-        if (data.entidad.mensaje != '') {
-          console.log('DATA EQUIFAX', JSON.stringify(data));
-          this.mensaje = data.entidad.mensaje;
-          console.log('BUSCA EN PERSONA CALCULADORA', this.mensaje);
-        }
-      }
-      this.loadingSubject.next(false);
-    });
-  }
 
   /********************************************  @TRACKING  ***********************************************************/
   /**
@@ -219,24 +196,20 @@ export class ExcepcionesClienteComponent implements OnInit {
 
         this.horaAsignacionExcepcion = hora.entidad;
 
+
       }
     });
   }
   private capturaHoraAtencion(etapa: string) {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
-
-
         this.horaAtencionExcepcion = hora.entidad;
-
       }
     });
   }
   private capturaHoraFinal(etapa: string) {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
-
-
         this.registroExcepcion(this.entidadNegociacion.id, this.horaInicioExcepcion, this.horaAsignacionExcepcion,
           this.horaAtencionExcepcion, this.horaFinalExcepcion);
       }
@@ -267,7 +240,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     tracking.proceso = this.procesoExcepcion;
     tracking.observacion = '';
     tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
+    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
     tracking.usuario = atob(localStorage.getItem(environment.userKey))
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
@@ -275,7 +248,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     tracking.fechaFin = fechaFin;
     this.tra.guardarTracking(tracking).subscribe((data: any) => {
       if (data.entidad) {
-        console.log('data de tracking para Prospeccion ----> ', data.entidad);
+        //  console.log('data de tracking para Excpeción Cliente ----> ', data.entidad);
         this.loadingSubject.next(false);
       } else {
         this.loadingSubject.next(false);
@@ -300,26 +273,27 @@ export class ExcepcionesClienteComponent implements OnInit {
    * @memberof ExcepcionesClienteComponent
    */
   buscarExcepcion(id: number) {
-    console.log('valor del id===> ', id.toString());
+    //console.log('valor del id===> ', id.toString());
 
     this.exs.findByIdNegociacion(id).subscribe((data: any) => {
       if (data.list != null && data.list[0] != null) {
-        console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+        // console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
         this.listExepcion = data.list[0];
-        console.log('valor de la llistas', this.listExepcion);
+        //  console.log('valor de la llistas', this.listExepcion);
         this.entidadExcepcion = data.list[0];
         this.observacionAsesor.setValue(this.entidadExcepcion.observacionAsesor);
-        console.log('Observacion Aseseor===> ', this.observacionAsesor);
+        this.mensaje = this.entidadExcepcion.mensajeBre;
+        //  console.log('Observacion Aseseor===> ', this.observacionAsesor);
 
       }
-      console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+      // console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
 
     });
 
   }
 
   asignarAprobacion() {
-    console.log('ASIGNAR APROBACION');
+    //  console.log('ASIGNAR APROBACION');
 
     if (this.radioB.value === 'APROBADO') {
       this.radioB.setValue(EstadoExcepcionEnum.APROBADO);
@@ -338,10 +312,10 @@ export class ExcepcionesClienteComponent implements OnInit {
   public submit(flujo: string) {
     this.loadingSubject.next(true);
     this.asignarAprobacion();
-    console.log('INICIA EL SUBMIT', this.entidadExcepcion);
+    //console.log('INICIA EL SUBMIT', this.entidadExcepcion);
     this.exs.persistEntity(this.entidadExcepcion).subscribe((data: any) => {
-      console.log('GUARDA', JSON.stringify(data));
-      //this.registroExcepcion();
+      //console.log('GUARDA', JSON.stringify(data));
+      this.capturaHoraFinal('NEGOCIACION');
       this.router.navigate(['asesor/bandeja-principal']);
       this.sinNoticeService.setNotice('SE GUARDO LA EXCEPCION CORRECTAMENTE', 'success');
     }, error => {
@@ -360,9 +334,6 @@ export class ExcepcionesClienteComponent implements OnInit {
     });
 
   }
-
-
-
   /**
    * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION
    * @description PASADA POR this.route.paramMap
@@ -372,23 +343,22 @@ export class ExcepcionesClienteComponent implements OnInit {
       data.params.id
       if (data.params.id) {
         this.idNegociacion = data.params.id;
-        console.log('PARAMETRO=====> ', this.idNegociacion);
+        //| console.log('PARAMETRO=====> ', this.idNegociacion);
         this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
-          console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
+          //console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
 
           this.entidadNegociacion = data.entidad;
-          console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
+          //console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
           this.buscarExcepcion(this.entidadNegociacion.id);
 
           if (data.entidad) {
             //TRACKING
-            console.log('TRACKING', JSON.stringify(data));
+            // console.log('TRACKING', JSON.stringify(data));
             this.capturaHoraAsignacion('NEGOCIACION');
 
 
             this.cedulaCliente = data.entidad.tbQoCliente.cedulaCliente;
             this.cli.findClienteByIdentificacion(this.cedulaCliente).subscribe((data: any) => {
-              console.log('VALOR DE LA DATA==> findClienteByIdentificacion ', JSON.stringify(data));
               this.entidadCliente = data.entidad;
               this.loadingSubject.next(false);
               if (data) {
@@ -400,9 +370,8 @@ export class ExcepcionesClienteComponent implements OnInit {
                 // console.log('VALOR DE LA dataNegociacion====> ', JSON.stringify(this.entidadNegociacion));
                 //console.log('VALOR DE LA ENTIDAD====> ', JSON.stringify(this.entidadNegociacion.procesoActual));
                 this.nombreProceso.setValue(this.entidadNegociacion.procesoActual);
-                this.buscarMensaje();
+
                 // FORM CLIENTE
-                this.tipoIdentificacion.setValue(TipoIdentificacionEnum.CEDULA);
                 this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
                 this.aprobadoWebMupi.setValue(this.entidadCliente.aprobacionMupi)
                 this.primerNombre.setValue(this.entidadCliente.primerNombre);
@@ -423,8 +392,8 @@ export class ExcepcionesClienteComponent implements OnInit {
                 // INPUT VARIABLES CREDITICIAS
                 this.dataPopup = new DataPopup();
                 this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
-                this.dataPopup.isCalculadora = true;
-                // this.dataPopup.idBusqueda = this.entidadNegociacion.id;
+                this.dataPopup.isNegociacion = true;
+                this.dataPopup.idBusqueda = this.entidadNegociacion.id;
                 console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
                 //INPUT RIESGO ACUMULADO
 

@@ -13,8 +13,8 @@
 		</ng-container>
 	</re-portlet-header>
 	<re-portlet-body>
-		<mat-vertical-stepper>
-			<mat-step>
+		<mat-vertical-stepper [linear]="false" #stepper>
+			<mat-step [stepControl]="formBusqueda">
 				<ng-template matStepLabel>Busqueda de Cliente</ng-template>
 				<form [formGroup]="formBusqueda">
 					<div class="row">
@@ -27,7 +27,7 @@
 							</mat-form-field>
 						</div>
 						<div class=" offset-md-1 col-md-4">
-							<button mat-raised-button color="primary" (click)="buscarCliente()">
+							<button mat-raised-button color="primary" matStepperNext (click)="buscarCliente()">
 								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
 								</mat-icon>
 								<span class="white-icon">Buscar cliente </span>
@@ -36,7 +36,7 @@
 					</div>
 				</form>
 			</mat-step>
-			<mat-step>
+			<mat-step [stepControl]="formDatosCliente">
 				<ng-template matStepLabel>Datos Cliente</ng-template>
 				<form [formGroup]="formDatosCliente">
 					<div class="row">
@@ -47,12 +47,13 @@
 								<mat-error>{{ getErrorMessage("nombresCompletos") }}</mat-error>
 							</mat-form-field>
 						</div>
-						<div class="offset-md-2 col-md-2">
-							<button mat-raised-button (click)="abrirPopupVerCotizacion()">
-								<mat-icon style="font-size: 32px" matTooltipPosition="above">remove_red_eye</mat-icon>
-								<span>Ver cotizacion</span>
+						<div *ngIf="entidadNegociacion" class="offset-md-2 col-md-2">
+							<button mat-raised-button (click)="abrirPopupVerCotizacion(entidadNegociacion.tbQoCliente.cedulaCliente)">
+							  <mat-icon style="font-size: 32px" matTooltipPosition="above" class="blue-icon">remove_red_eye
+							  </mat-icon>
+							  <span class="blue-icon">Ver cotizacion</span>
 							</button>
-						</div>
+						  </div>
 					</div>
 					<div class="row">
 						<div class="col-md-6 ">
@@ -134,23 +135,23 @@
 						</div>
 					</div>
 				</form>
-			</mat-step>
-			<mat-step>
+			</mat-step >
+			<mat-step >
 				<ng-template matStepLabel>Variables Crediticias</ng-template>
 				<ng-container *ngIf="dataPopup">
-					<kt-tabla-variables-crediticias [dataPopup]="dataPopup"></kt-tabla-variables-crediticias>
+					<kt-tabla-variables-crediticias [dataPopup]="dataPopup" (entidades)="traerEntidadesVariables($event)"></kt-tabla-variables-crediticias>
 				</ng-container>
 			</mat-step>
-			<mat-step>
+			<mat-step >
 				<ng-template matStepLabel>Riesgo Acumulado</ng-template>
 				<ng-container *ngIf="dataPopup">
-					<kt-tabla-riesgo-acumulado [cedula]="entidadCliente.cedulaCliente" [isGuardar]="true">
+					<kt-tabla-riesgo-acumulado [cedula]="entidadNegociacion.tbQoCliente.cedulaCliente" [isGuardar]="true">
 					</kt-tabla-riesgo-acumulado>
 				</ng-container>
 			</mat-step>
-			<mat-step>
+			<mat-step [stepControl]="formTasacion">
 				<ng-template matStepLabel> Tasación </ng-template>
-				<form [formGroup]="formDatosCliente">
+				<form [formGroup]="formTasacion">
 					<div class="row">
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
@@ -269,7 +270,7 @@
 						<mat-cell *matCellDef=""> </mat-cell>
 						<td align="left" mat-footer-cell *matFooterCellDef>&#8212; </td>
 					</ng-container>
-					<ng-container matColumnDef="Estado">
+					<ng-container matColumnDef="EstadoJoya">
 						<mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
 						<mat-cell *matCellDef=""> </mat-cell>
 						<td align="left" mat-footer-cell *matFooterCellDef>&#8212; </td>
@@ -285,7 +286,7 @@
 						<mat-cell *matCellDef=""> </mat-cell>
 						<td align="right" mat-footer-cell *matFooterCellDef> </td>
 					</ng-container>
-					<ng-container matColumnDef="DescuentoPiedra">
+					<ng-container matColumnDef="DescuentoPesoPiedra">
 						<mat-header-cell *matHeaderCellDef>Descuento piedra</mat-header-cell>
 						<mat-cell *matCellDef=""> </mat-cell>
 						<td align="right" mat-footer-cell *matFooterCellDef></td>
@@ -324,257 +325,167 @@
 					<mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
 					<mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
 				</mat-table>
-				<form [formGroup]="formCombinacion">
-					<div class="row">
-						<div class="col-md-4 offset-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<mat-select placeholder="Combinacion de joyas" [formControl]="joyas" multiple>
-									<mat-option *ngFor="let joyas of listJoyas" [value]="joyas.id"> {{joyas.opcion}} </mat-option>
-								</mat-select>
-								<mat-error>{{ getErrorMessage('seleccion') }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-				</form>
 			</mat-step>
-			<mat-step>
+			<mat-step [stepControl]="formOpcionesCredito">
 				<ng-template matStepLabel>Detalle Opciones de crédito</ng-template>
-				<div class="mat-table__wrapper">
-					<mat-table #table class="mat-elevation-z8" [dataSource]="displayedColumnsOpt" matSort
+
+					<mat-table #table class="example-container mat-elevation-z8" [dataSource]="dataSourceOpcionesCredito" matSort
 						#sort1="matSort" matSortDisableClear>
 						<ng-container matColumnDef="Accion">
 							<mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="Plazo">
+						<ng-container matColumnDef="plazo">
 							<mat-header-cell *matHeaderCellDef mat-sort-header>Plazo</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="TipoOperacion">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="periodoPlazo">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>periodoPlazo</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="PeriodicidadPlazo">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="periodicidadPlazo">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>periodicidadPlazo</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="TipoOferta">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="montoFinanciado">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>montoFinanciado</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="MontoPreAprobado">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="valorARecibir">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>valorARecibir</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="ValorCouta">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="valorAPagar">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>valorAPagar</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="ARecibirCliente">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="costoCustodia">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>costoCustodia</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="APagarPorCliente">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="costoFideicomiso">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>costoFideicomiso</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="ValorAPagarNeto">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="costoSeguro">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>costoSeguro</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="ValoresCreditoAnterior">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="costoTasacion">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>costoTasacion</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="TotalCostosNuevaOpreacion">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="costoTransporte">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>costoTransporte</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="CostoCustodia">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="costoValoracion">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>costoValoracion</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoCustodia">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="impuestoSolca">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>impuestoSolca</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="CostoTransporte">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoImpuestoSolca">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoImpuestoSolca</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoTransporte">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoCapital">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoCapital</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="CostoValoracion">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoCustodia">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoCustodia</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoValoracion">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoFideicomiso">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoFideicomiso</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="CostoTasacion">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoInteres">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoInteres</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoTasacion">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoMora">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoMora</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="CostoSeguro">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoGastoCobranza">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoGastoCobranza</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoSeguro">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoSeguro">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoSeguro</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="CostoResguardo">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoTasador">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoTasador</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoResguardo">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoTransporte">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoTransporte</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="Solca">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoValoracion">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoValoracion</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoSolca">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="saldoInteres">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>saldoInteres</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="SaldoCapitaOpAnt">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="saldoMora">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>saldoMora</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="SaldoInteresOpAnt">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="gastoCobranza">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>gastoCobranza</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoInteres">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="cuota">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>cuota</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="SaldoMoraOpAnt">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="saldoCapitalRenov">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>saldoCapitalRenov</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoMora">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="montoPrevioDesembolso">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>montoPrevioDesembolso</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="GastosDeCobranzaOpAnt">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="totalGastosNuevaOperacion">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>totalGastosNuevaOperacion</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoGastoCobranza">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="totalCostosOperacionAnterior">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>totalCostosOperacionAnterior</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="CustodiaVencidaOptAnt">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="custodiaDevengada">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>custodiaDevengada</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoCustodiaVencida">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="formaPagoCustodiaDevengada">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>formaPagoCustodiaDevengada</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="AbonoCapitaOpAnterior">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="tipooferta">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>tipooferta</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="FormaPagoAbonoCapital">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="porcentajeflujoplaneado">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>porcentajeflujoplaneado</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="MontoDesembolsoBallon">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="dividendoflujoplaneado">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>dividendoflujoplaneado</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
-						<ng-container matColumnDef="ProcentajeFlujoPlaneado">
-							<mat-header-cell *matHeaderCellDef mat-sort-header>TipoOperacion</mat-header-cell>
-							<mat-cell *matCellDef="">
-
-							</mat-cell>
+						<ng-container matColumnDef="dividendosprorrateoserviciosdiferido">
+							<mat-header-cell *matHeaderCellDef mat-sort-header>dividendosprorrateoserviciosdiferido</mat-header-cell>
+							<mat-cell *matCellDef=""></mat-cell>
 						</ng-container>
 						<mat-header-row *matHeaderRowDef="displayedColumnsOpcionesCredito"></mat-header-row>
 						<mat-row *matRowDef="let row; columns: displayedColumnsOpcionesCredito"></mat-row>
@@ -583,11 +494,32 @@
 						[showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage"
 						(page)="paged()">
 					</mat-paginator>
-				</div>
+					<form [formGroup]="formOpcionesCredito">
+						<div class="row">
+							<div class="col-md-3">
+								<mat-form-field class="mat-form-field-fluid">
+									<input [formControl]="montoSolicitado" placeholder="Monto solicitado" autocomplete="off"
+									matInput numeric numericType="number"
+									(keypress)="numberOnly($event)" >
+								</mat-form-field>
+							</div>
+							<div class="col-md-3">
+								<button mat-raised-button color="primary" >
+									<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+									</mat-icon>
+									<span class="white-icon">Aplicar Monto</span>
+								</button>
+							</div>
+							<div class="offset-md-3 col-md-3">
+								<button mat-raised-button color="warn" (click)="abrirPopupExcepciones()">
+									<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+									</mat-icon>
+									<span class="white-icon">Solicitar Cobertura</span>
+								</button>
+							</div>
+						</div>
+					</form>
 			</mat-step>
-			<mat-step>
-				<ng-template matStepLabel>Detalle Opciones de crédito</ng-template>
-				<lista </mat-step>
 		</mat-vertical-stepper>
 
 	</re-portlet-body>

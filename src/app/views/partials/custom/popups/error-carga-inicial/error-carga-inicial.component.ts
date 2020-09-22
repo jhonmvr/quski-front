@@ -9,16 +9,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./error-carga-inicial.component.scss']
 })
 export class ErrorCargaInicialComponent implements OnInit {
-  private mensaje: string;
+  public mensaje: string;
+  public titulo: string;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: string,
+    @Inject(MAT_DIALOG_DATA) private data: any,
     public dialogRefGuardar: MatDialogRef<any>,
 
   ) { }
 
   ngOnInit(): void {
-    this.mensaje = this.data;
+    this.mensaje = this.data.mensaje;
+    this.titulo = this.data.titulo? this.data.titulo: "ERROR";
   }
   salir(){
     this.dialogRefGuardar.close(false);

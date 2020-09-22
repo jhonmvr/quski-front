@@ -1,0 +1,56 @@
+
+<h1 mat-dialog-title> Añadir Pago</h1>
+<div mat-dialog-content>
+    <div class="contenedor">    
+        <div class="row">
+            <div class="col-md-2">
+                <label style="font-weight:bold">Institucion Financiera:</label>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input  matInput [formControl]=" " >
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <label style="font-weight:bold">Numero de deposito:</label>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input matInput [formControl]=" " >
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <label style="font-weight:bold">Valor deposito:</label>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input  matInput [formControl]=" " >
+                </mat-form-field>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+            <div class="col-md-2">
+                <label style="font-weight:bold">Cuentas:</label>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input matInput [formControl]=" " >
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <label style="font-weight:bold">Fecha de pago:</label>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input matInput [formControl]=" " >
+                </mat-form-field>
+            </div>
+            </div>
+        </div>
+    </div>     
+    <div mat-dialog-actions>
+        <button mat-button onclick="agregar()">Agregar</button>
+        <button mat-button onclick="">No Thanks</button>
+    </div>
+</div>

@@ -4,6 +4,7 @@ import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from "../../model/page";
 import { DatePipe } from '@angular/common';
+import { TbQoNegociacion } from '../../model/quski/TbQoNegociacion';
 
 
 @Injectable({
@@ -20,26 +21,58 @@ export class NegociacionService extends BaseService {
     this.setParameter();
 
   }
+  /**
+   * @author Developer Twelve - Jeroham Cadenas
+   * @param idNegociacion number
+   */
   public findNegociacionById(id: number) {
-    const serviceUrl =
-      this.appResourcesUrl + this.urlRest + 'getEntity';
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'getEntity';
     this.params = new HttpParams().set('id', id.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-
-  findClienteById(id: number) {
-    const serviceUrl =
-      this.appResourcesUrl + 'clienteRestController/getEntity';
-    this.params = new HttpParams().set('id', id.toString());
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
-  }
+  /**
+   * @author Developer Twelve - Jeroham Cadenas
+   * @param idNegociacion number
+   */
   findNegociacionByIdCliente(idNegociacion: number) {
-    const serviceUrl =
-      this.appResourcesUrl + 'negociacionRestController/findByIdCliente';
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'findByIdCliente';
     this.params = new HttpParams().set('id', idNegociacion.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
+  }
+  /**
+   * @author Developer Twelve - Jeroham Cadenas
+   * @param entidad TbQoNegociacion
+   */
+  public persistEntity(entidad: TbQoNegociacion) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'persistEntity';
+    const wrapper = { entidad: entidad };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Developer Twelve - Jeroham Cadenas
+   * @param id number
+   */
+  public cancelarNegociacion(id: number) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'cancelarNegociacion';
+    const negociacion = new TbQoNegociacion();
+    negociacion.id = id;
+    const wrapper = { entidad: negociacion };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  /**
+   * @author Developer Twelve - Jeroham Cadenas
+   * @param id number
+   */
+  public finalizarNegociacion(id: number) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'finalizarNegociacion';
+    const negociacion = new TbQoNegociacion();
+    negociacion.id = id;
+    const wrapper = { entidad: negociacion };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
   }
 }

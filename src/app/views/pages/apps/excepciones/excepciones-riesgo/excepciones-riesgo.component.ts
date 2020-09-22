@@ -1,6 +1,6 @@
 import { EstadoExcepcionEnum } from './../../../../../core/enum/EstadoExcepcionEnum';
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
@@ -11,22 +11,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
-import { TipoIdentificacionEnum } from '../../../../../core/enum/TipoIdentificacionEnum';
-import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
-import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { environment } from '../../../../../../environments/environment';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
-import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
-import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
+import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
+import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
+import { Page } from '../../../../../core/model/page';
+import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
 @Component({
   selector: 'kt-excepciones-riesgo',
   templateUrl: './excepciones-riesgo.component.html',
@@ -37,7 +35,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   [x: string]: any;
   // ENTIDADES
 
-  private entidadCliente: TbQoCliente = null;
+  public entidadCliente: TbQoCliente = null;
   private entidadNegociacion: TbQoNegociacion = null;
   private entidadExcepcion: TbQoExcepcione = null;
 
@@ -48,6 +46,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   private idNegociacion: number;
   private cedulaCliente: string;
   private idCliente: number;
+  public tasacion = new TbQoTasacion();
+  public tasacionArray = new Array<TbQoTasacion>();
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public mensaje: any;
@@ -101,7 +101,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   public tipoProcesoNegociacion = new FormControl('', []);
   public motivoNoAceptacion = new FormControl('', []);
   public calificadoMupi = new FormControl('', []);
-
+  // FORM TASACIONES
+  public displayedColumnsTasacion = ['N', 'numeroPiezas', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto', 'descuentoPesoPiedra', 'descuentoSuelda', 'pesoNeto', 'valorAvaluo', 'valorComercial', 'valorRealizacion', 'valorOro']
 
   // FORM DATOS EXCEPCION
   public formDatosExcepcion: FormGroup = new FormGroup({});
@@ -110,6 +111,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   public excNegada = new FormControl('', []);
   public observacionAprobador = new FormControl('', []);
   public radioB = new FormControl('', []);
+
+  dataSourceTasacion: MatTableDataSource<TbQoTasacion> = new MatTableDataSource<TbQoTasacion>();
 
 
   constructor(
@@ -120,10 +123,12 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     private route: ActivatedRoute,
     private par: ParametroService,
     private exs: ExcepcionService,
+    private tas: TasacionService,
     private router: Router,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService
   ) {
+
 
     //FORM DATOS OPERACION
     this.formDatosOperacion.addControl("nombresCompletos", this.nombresCompletos);
@@ -160,6 +165,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.formDatosNegociacion.addControl("motivoNoAceptacion", this.motivoNoAceptacion);
     this.formDatosNegociacion.addControl("calificadoMupi", this.calificadoMupi);
 
+
+
     //FORM DATOS EXCEPCION
     this.formDatosExcepcion.addControl("observacionAsesor", this.observacionAsesor);
     this.formDatosExcepcion.addControl("excAprobada", this.excAprobada);
@@ -172,6 +179,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.formDatosContacto.disable();
     this.formDatosNegociacion.disable();
     this.observacionAsesor.disable();
+
   }
 
   ngOnInit() {
@@ -218,6 +226,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       if (hora.entidad) {
 
         this.horaAsignacionExcepcion = hora.entidad;
+        console.log('capturaHoraAsignacion===> ', JSON.stringify(hora));
 
       }
     });
@@ -228,6 +237,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
 
 
         this.horaAtencionExcepcion = hora.entidad;
+        console.log('capturaHoraAtencion===> ', JSON.stringify(hora));
 
       }
     });
@@ -236,7 +246,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
 
-
+        console.log('capturaHoraAtencion===> ', JSON.stringify(hora));
         this.registroExcepcion(this.entidadNegociacion.id, this.horaInicioExcepcion, this.horaAsignacionExcepcion,
           this.horaAtencionExcepcion, this.horaFinalExcepcion);
       }
@@ -244,13 +254,13 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     });
   }
   private capturaDatosTraking() {
-    this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
+    this.par.findByNombreTipoOrdered('EXCEPCION_RIESGO', 'TIP-EXC', 'Y').subscribe((data: any) => {
       if (data.entidades) {
         this.actividad = data.entidades[0].nombre;
-        this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
+        this.par.findByNombreTipoOrdered('EXCEPCION_RIESGO', 'TIP-EXC', 'Y').subscribe((data: any) => {
           if (data.entidades) {
             this.procesoExcepcion = data.entidades[0].nombre;
-            this.par.findByNombreTipoOrdered('EXCEPCION_CLIENTE', 'TIP-EXC', 'Y').subscribe((data: any) => {
+            this.par.findByNombreTipoOrdered('EXCEPCION_RIESGO', 'TIP-EXC', 'Y').subscribe((data: any) => {
               if (data.entidades) {
                 this.procesoExcepcion = data.entidades[0].nombre;
               }
@@ -267,7 +277,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     tracking.proceso = this.procesoExcepcion;
     tracking.observacion = '';
     tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
+    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
     tracking.usuario = atob(localStorage.getItem(environment.userKey))
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
@@ -275,7 +285,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     tracking.fechaFin = fechaFin;
     this.tra.guardarTracking(tracking).subscribe((data: any) => {
       if (data.entidad) {
-        console.log('data de tracking para Prospeccion ----> ', data.entidad);
+        console.log('data de tracking para Excepcion ----> ', data.entidad);
         this.loadingSubject.next(false);
       } else {
         this.loadingSubject.next(false);
@@ -300,19 +310,20 @@ export class ExcepcionesRiesgoComponent implements OnInit {
    * @memberof ExcepcionesClienteComponent
    */
   buscarExcepcion(id: number) {
-    console.log('valor del id===> ', id.toString());
+    // console.log('valor del id===> ', id.toString());
 
     this.exs.findByIdNegociacion(id).subscribe((data: any) => {
       if (data.list != null && data.list[0] != null) {
-        console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+        //console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
         this.listExepcion = data.list[0];
-        console.log('valor de la llistas', this.listExepcion);
+        // console.log('valor de la llistas', this.listExepcion);
         this.entidadExcepcion = data.list[0];
         this.observacionAsesor.setValue(this.entidadExcepcion.observacionAsesor);
-        console.log('Observacion Aseseor===> ', this.observacionAsesor);
+        this.mensaje = (this.entidadExcepcion.mensajeBre);
+        // console.log('Observacion Aseseor===> ', this.observacionAsesor);
 
       }
-      console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
+      // console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
 
     });
 
@@ -338,6 +349,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   public submit(flujo: string) {
     this.loadingSubject.next(true);
     this.asignarAprobacion();
+    this.capturaHoraFinal('NEGOCIACION');
     console.log('INICIA EL SUBMIT', this.entidadExcepcion);
     this.exs.persistEntity(this.entidadExcepcion).subscribe((data: any) => {
       console.log('GUARDA', JSON.stringify(data));
@@ -363,6 +375,35 @@ export class ExcepcionesRiesgoComponent implements OnInit {
 
 
 
+
+  buscarTasación() {
+    this.loadingSubject.next(true);
+
+    this.tas.getTasacionByIdNegociacion(this.p, this.entidadNegociacion.id).subscribe((tasacionData: any) => {
+      console.log('TASACION DATA ', JSON.stringify(tasacionData));
+
+      if (tasacionData && tasacionData.list) {
+        const tmp = tasacionData.list;
+        for (let index = 0; index < tmp.length; index++) {
+          this.tasacion = new TbQoTasacion();
+          this.tasacion.id = tmp[index].id;
+          this.tasacion.descripcion = tmp[index].descripcion;
+          this.tasacion.descuentoPesoPiedra = tmp[index].descuentoPesoPiedra;
+          this.tasacionArray.push(this.tasacion);
+
+
+
+        }
+        this.dataSourceTasacion = tasacionData.list;
+
+      } else {
+
+      }
+    });
+  }
+
+
+
   /**
    * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION
    * @description PASADA POR this.route.paramMap
@@ -372,12 +413,13 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       data.params.id
       if (data.params.id) {
         this.idNegociacion = data.params.id;
-        console.log('PARAMETRO=====> ', this.idNegociacion);
+        // console.log('PARAMETRO=====> ', this.idNegociacion);
         this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
-          console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
+          // console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
 
           this.entidadNegociacion = data.entidad;
-          console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
+          this.buscarTasación();
+          //console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
           this.buscarExcepcion(this.entidadNegociacion.id);
 
           if (data.entidad) {
@@ -388,7 +430,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
 
             this.cedulaCliente = data.entidad.tbQoCliente.cedulaCliente;
             this.cli.findClienteByIdentificacion(this.cedulaCliente).subscribe((data: any) => {
-              console.log('VALOR DE LA DATA==> findClienteByIdentificacion ', JSON.stringify(data));
+              // console.log('VALOR DE LA DATA==> findClienteByIdentificacion ', JSON.stringify(data));
               this.entidadCliente = data.entidad;
               this.loadingSubject.next(false);
               if (data) {
@@ -402,7 +444,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
                 this.nombreProceso.setValue(this.entidadNegociacion.procesoActual);
                 this.buscarMensaje();
                 // FORM CLIENTE
-                this.tipoIdentificacion.setValue(TipoIdentificacionEnum.CEDULA);
                 this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
                 this.aprobadoWebMupi.setValue(this.entidadCliente.aprobacionMupi)
                 this.primerNombre.setValue(this.entidadCliente.primerNombre);
@@ -420,11 +461,12 @@ export class ExcepcionesRiesgoComponent implements OnInit {
                 this.nivelDeEducacion.setValue(this.entidadCliente.nivelEducacion);
                 this.actividadEconomica.setValue(this.entidadCliente.actividadEconomica);
                 this.ultimaFechaDeActualizacionDeCliente.setValue(new Date(this.entidadCliente.fechaActualizacion));
+
                 // INPUT VARIABLES CREDITICIAS
                 this.dataPopup = new DataPopup();
                 this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
-                this.dataPopup.isCalculadora = true;
-                // this.dataPopup.idBusqueda = this.entidadNegociacion.id;
+                this.dataPopup.isNegociacion = true;
+                this.dataPopup.idBusqueda = this.entidadNegociacion.id;
                 console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
                 //INPUT RIESGO ACUMULADO
 
