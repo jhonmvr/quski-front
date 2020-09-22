@@ -25,7 +25,7 @@ import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOf
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
-import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
+import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { DatosRegistro } from '../../../../../core/model/softbank/DatosRegistro';
 import { Garantias } from '../../../../../core/model/softbank/Garantias';
 import { DatosCuentaCliente } from '../../../../../core/model/softbank/DatosCuentaCliente';
@@ -730,7 +730,7 @@ public registroCreacion(codigoRegistro: number, fechaInicio: Date, fechaAsignaci
   tracking.proceso = this.procesoCreacion;
   tracking.observacion = '';
   tracking.codigoRegistro = codigoRegistro;
-  tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
+  tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
   tracking.usuario = atob(localStorage.getItem(environment.userKey))
   tracking.fechaInicio = fechaInicio;
   tracking.fechaAsignacion = fechaAsignacion;
@@ -761,7 +761,7 @@ public registroTasación(codigoRegistro: number, fechaInicio: Date, fechaAsignac
   tracking.proceso = this.procesoDocumentosLegales;
   tracking.observacion = '';
   tracking.codigoRegistro = codigoRegistro;
-  tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
+  tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
   tracking.usuario = atob(localStorage.getItem(environment.userKey))
   tracking.fechaInicio = fechaInicio;
   tracking.fechaAsignacion = fechaAsignacion;
