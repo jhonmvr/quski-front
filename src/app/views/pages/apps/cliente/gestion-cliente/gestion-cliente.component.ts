@@ -2077,7 +2077,7 @@ export class GestionClienteComponent implements OnInit {
                       */
                       if(this.situacion =='EN PROCESO' && respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos == 1){
                         console.log("tiene q navegar al generar credito ");
-                        this.router.navigate(['../../generar-credito/generar-credito'])
+                        this.router.navigate(['../../generar-credito/generar-credito/',this.idNegociacion])
                       }
                       if(respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos >1){
                         console.log("tiene q navegar a la bandeja principal de asesores ");

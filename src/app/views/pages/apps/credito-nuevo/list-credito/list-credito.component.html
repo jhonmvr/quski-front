@@ -3,7 +3,7 @@
 </div>
 
 <re-portlet>
-    <re-portlet-header [title]="'Listado Credito'" [class]="'kt-portlet__head--lg'">
+    <re-portlet-header [title]="'BANDEJA DE ADMINISTRACIÓN DE OPERACIONES '" [class]="'kt-portlet__head--lg'">
         
 		<ng-container ktPortletTools>
             <a href="javascript:void(0);" (click)="buscar()" matTooltip="Buscar Credito" style="font-size: 12px; vertical-align: middle;">
@@ -29,14 +29,11 @@
                     </div>
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <mat-select placeholder="Proceso" formControlName="proceso" >
-                                <mat-option>--</mat-option>
-                                <mat-option *ngFor="let pro of procesosCatalogo" [value]="pro">
-                                  {{ pro}}
-                                </mat-option>
-                              </mat-select>
+                            <input matInput [formControl]="codigoOperacionMadre" placeholder="Codigo Operacion Madre " autocomplete="off">
                         </mat-form-field>
+                      
                     </div>
+            
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
                             <mat-select placeholder="Agencia" formControlName="agencia" >
@@ -68,10 +65,10 @@
                     </div>
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <mat-select placeholder="Estado Codigo" formControlName="estado" >
+                            <mat-select placeholder="Asesor" formControlName="asesor" >
                                 <mat-option>--</mat-option>
-                                <mat-option *ngFor="let est of estadosCatalogo" [value]="est">
-                                  {{ est}}
+                                <mat-option *ngFor="let ase of asesores" [value]="ase">
+                                  {{ ase}}
                                 </mat-option>
                               </mat-select>
                         </mat-form-field>
@@ -97,10 +94,10 @@
                     </div>
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <mat-select placeholder="Situacion" formControlName="asesor" >
+                            <mat-select placeholder="Estado" formControlName="estado" >
                                 <mat-option>--</mat-option>
-                                <mat-option *ngFor="let ases of asesores" [value]="ases">
-                                  {{ ases}}
+                                <mat-option *ngFor="let est of estados" [value]="est">
+                                  {{ est}}
                                 </mat-option>
                               </mat-select>
                         </mat-form-field>
@@ -126,10 +123,10 @@
                     </div>
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <mat-select placeholder="Asesor" formControlName="asesor" >
+                            <mat-select placeholder="Tipo de credito" formControlName="tipoCredito" >
                                 <mat-option>--</mat-option>
-                                <mat-option *ngFor="let ases of asesores" [value]="ases">
-                                  {{ ases}}
+                                <mat-option *ngFor="let tip of tipos" [value]="tip">
+                                  {{ tip}}
                                 </mat-option>
                               </mat-select>
                         </mat-form-field>
@@ -146,8 +143,35 @@
                             <input matInput [formControl]="cedulaCliente" placeholder="CI" autocomplete="off">
                         </mat-form-field>
                     </div>
+                    <div class="col-md-3 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="plazo" placeholder="Plazo" autocomplete="off">
+                        </mat-form-field>
+                    </div>
                 </div>  
-                
+                <div class="row align-items-center" > 
+                    <div class="col-md-3 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <mat-select placeholder="Impago" formControlName="impago" >
+                           
+                                <mat-option *ngFor="let op of opciones" [value]="op">
+                                  {{ op}}
+                                </mat-option>
+                              </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <mat-select placeholder="Retanqueo" formControlName="retanqueo" >
+                               
+                                <mat-option *ngFor="let op2 of opciones" [value]="op2">
+                                  {{ op2}}
+                                </mat-option>
+                              </mat-select>
+                        </mat-form-field>
+                    </div>
+                 
+                </div>  
             </div>
         </div> 
         <!-- END FILTERS -->
@@ -156,7 +180,7 @@
         <div class="mat-table__wrapper">
             <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
             matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
-                <ng-container matColumnDef="detalles">
+                <ng-container matColumnDef="accion">
                     <mat-header-cell *matHeaderCellDef>
                         Detalles 
                     </mat-header-cell>
@@ -169,12 +193,8 @@
                 </ng-container>
                 <ng-container matColumnDef="cliente">
                 <mat-header-cell *matHeaderCellDef>Cliente</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.cedulaCliente}}</mat-cell>
+                <mat-cell *matCellDef="let element"> {{element.cliente}}</mat-cell>
             </ng-container>
-                <ng-container matColumnDef="cedulaCliente">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Cedula de Identidad</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.primerNombre}} {{element.segundoNombre}} {{element.apellidoPaterno}} {{element.apellidoMaterno}}</mat-cell>
-                </ng-container>
                 <ng-container matColumnDef="codigoOperacion">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Codigo Operacion</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.nivelEducacion}} </mat-cell>
@@ -197,15 +217,50 @@
                 <mat-header-cell *matHeaderCellDef>Asesor</mat-header-cell>
                 <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
             </ng-container>
-            <ng-container matColumnDef="proceso">
-                <mat-header-cell *matHeaderCellDef>Proceso</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.nacionalidad}} </mat-cell>
+            <ng-container matColumnDef="estadoOperacion">
+                <mat-header-cell *matHeaderCellDef>Estado Operacion</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
             </ng-container>
-            <ng-container matColumnDef="estado">
-                    <mat-header-cell *matHeaderCellDef>Estado operacion</mat-header-cell>
+            <ng-container matColumnDef="tipoCredito">
+                    <mat-header-cell *matHeaderCellDef>Tipo de Credito</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
                 </ng-container>
-            
+            <ng-container matColumnDef="codigoTablaAmortizacion">
+                    <mat-header-cell *matHeaderCellDef>Tabla de amortizacion</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.codigoAmortizacion}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="impago">
+                <mat-header-cell *matHeaderCellDef>Impago</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="retanqueo">
+                <mat-header-cell *matHeaderCellDef>Retanqueo</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="coberturaActual">
+                <mat-header-cell *matHeaderCellDef>Cobertura Actual</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="coberturaInicial">
+                <mat-header-cell *matHeaderCellDef>Cobertura Inicial</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="descripcionBloqueo">
+                <mat-header-cell *matHeaderCellDef>Descripcion del bloqueo</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="diasMora">
+                <mat-header-cell *matHeaderCellDef>Dias de Mora</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="estadoUbicacion">
+                <mat-header-cell *matHeaderCellDef>Estado de ubicacion</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="estadoProceso">
+                <mat-header-cell *matHeaderCellDef>Estado de Proceso</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
             
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
