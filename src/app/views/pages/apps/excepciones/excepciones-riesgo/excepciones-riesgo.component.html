@@ -267,10 +267,9 @@
             <ng-container>
               <!--START MAT TABLE-->
               <div class="mat-table__wrapper">
-                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceTasacion" matSort #sort1="matSort"
-                  matSortActive="N" matSortDirection="asc" matSortDisableClear>>
+                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceTasacion">
                   <ng-container matColumnDef="N">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>N</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>N</mat-header-cell>
                     <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="numeroPiezas">
@@ -330,9 +329,7 @@
                     *matRowDef="  let row;                columns: displayedColumnsTasacion                            ">
                   </mat-row>
                 </mat-table>
-                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
-                  [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
-                </mat-paginator>
+
               </div>
               <!--end MAT TABLE-->
             </ng-container>

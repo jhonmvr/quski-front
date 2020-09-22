@@ -374,38 +374,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   }
 
 
-  /**
-* Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
-*/
-  getPaginacion(ordenarPor: string, tipoOrden: string, paginado: string, pagina): Page {
-    const p = new Page();
-    p.pageNumber = pagina;
-    p.pageSize = this.paginator.pageSize;
-    p.sortFields = ordenarPor;
-    p.sortDirections = tipoOrden;
-    p.isPaginated = paginado;
-    // // console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
-    return p;
-  }
-
-  /**
-  * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
-  */
-  paged() {
-    this.p = this.getPaginacion(this.sort.active, this.sort.direction, 'Y', this.paginator.pageIndex);
-
-  }
-  /**
-  * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
-  */
-  buscar() {
-    this.p = new Page();
-    this.totalResults = 0;
-    this.paginator.pageIndex = 0;
-    this.p.isPaginated = 'Y';
-    this.p.size = 5;
-    this.p.pageNumber = 0;
-  }
 
 
   buscarTasación() {
