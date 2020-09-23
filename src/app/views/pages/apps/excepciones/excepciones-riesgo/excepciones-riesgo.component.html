@@ -276,6 +276,10 @@
                     <mat-header-cell *matHeaderCellDef>Número de Piezas</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.numeroPiezas}} </mat-cell>
                   </ng-container>
+                  <ng-container matColumnDef="tipoOro">
+                    <mat-header-cell *matHeaderCellDef>Tipo de Oro</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.tipoOro}} </mat-cell>
+                  </ng-container>
                   <ng-container matColumnDef="tipoJoya">
                     <mat-header-cell *matHeaderCellDef>Tipo Joya</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.tipoJoya}} </mat-cell>

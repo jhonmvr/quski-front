@@ -102,7 +102,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   public motivoNoAceptacion = new FormControl('', []);
   public calificadoMupi = new FormControl('', []);
   // FORM TASACIONES
-  public displayedColumnsTasacion = ['N', 'numeroPiezas', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto', 'descuentoPesoPiedra', 'descuentoSuelda', 'pesoNeto', 'valorAvaluo', 'valorComercial', 'valorRealizacion', 'valorOro']
+  public displayedColumnsTasacion = ['N', 'numeroPiezas', 'tipoOro', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto', 'descuentoPesoPiedra', 'descuentoSuelda', 'pesoNeto', 'valorAvaluo', 'valorComercial', 'valorRealizacion', 'valorOro']
 
   // FORM DATOS EXCEPCION
   public formDatosExcepcion: FormGroup = new FormGroup({});
@@ -372,6 +372,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     });
 
   }
+
 
 
 
