@@ -5,7 +5,6 @@ import { MatTableDataSource, MatDialog } from '@angular/material';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { Page } from '../../../../../core/model/page';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
-import { SeparacionBienesEnum } from '../../../../../core/enum/SeparacionBienesEnum';
 import { OrigenIngresosEnum } from '../../../../../core/enum/OrigenIngresosEnum';
 import { OcupacionInmuebleEnum } from '../../../../../core/enum/OcupacionInmuebleEnum';
 import { RelacionDependenciaEnum } from '../../../../../core/enum/RelacionDependenciaEnum';
@@ -26,7 +25,7 @@ import { TbQoDireccionCliente } from '../../../../../core/model/quski/TbQoDirecc
 import { PatrimonioService } from '../../../../../core/services/quski/patrimonio.service';
 import { ReferenciaPersonalService } from '../../../../../core/services/quski/referenciaPersonal.service';
 import { ParaDesarrolloEnum } from '../../../../../core/enum/ParaDesarrolloEnum';
-import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
+import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
@@ -180,7 +179,7 @@ export class GestionClienteComponent implements OnInit {
   // ENUMS
   //public listReferencia = Object.values(ReferenciaParentescoEnum);
   public listRelacionDependencia = Object.keys(RelacionDependenciaEnum);
-  public listSeparacionBienes = Object.values(SeparacionBienesEnum);
+  // public listSeparacionBienes = Object.values(SeparacionBienesEnum);
   public listParaDesarrolloEnum = Object.values(ParaDesarrolloEnum);
   public listOrigenIngreso = Object.values(OrigenIngresosEnum);
   //public listTipoVivienda = Object.keys(OcupacionInmuebleEnum);
@@ -2197,7 +2196,7 @@ export class GestionClienteComponent implements OnInit {
     tracking.proceso = this.procesoDatosCliente;
     tracking.observacion = '';
     tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionTrackingEnum.FINALIZADO; // Por definir
+    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
     tracking.usuario = atob(localStorage.getItem(environment.userKey)); // Modificar al id del asesor
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;

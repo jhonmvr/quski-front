@@ -24,16 +24,26 @@ export class ListCreditoComponent implements OnInit {
   idReferenciaHab:string="1";
 
   codigoOperacion = new FormControl('', []);
+  codigoOperacionMadre = new FormControl('', []);
+  agencia = new FormControl('', []);
   proceso = new FormControl('', []);
   estado = new FormControl('', []); 
-  fechaCreacion = new FormControl('', []);
-  fechaVencimiento = new FormControl('', []);
-  estadoCodigo = new FormControl('', []);
+  fechaCreacionDesde = new FormControl('', []);
+  fechaCreacionFin = new FormControl('', []);
+  fechaVencimientoDesde = new FormControl('', []);
+  fechaVencimientoFin = new FormControl('', []);
+  fechaAprobacionDesde = new FormControl('', []);
+  fechaAprobacionFin = new FormControl('', []);
+  tipoCredito = new FormControl('', []);
   cliente = new FormControl('', []);
   cedulaCliente = new FormControl('', []);
+  plazo = new FormControl('', []);
+  opciones = ['SI', 'NO']
 
-  displayedColumns = ['detalles', 'cliente',  'cedulaCliente', 'codigoOperacion', 'fechaCreacion', 'fechaVencimiento',
-   'montoOperacion', 'asesor', 'proceso', 'estado'];
+  displayedColumns = ['accion', 'cliente', 'codigoOperacion', 'fechaCreacion', 'fechaVencimiento',
+   'montoOperacion', 'asesor', 'estadoOperacion' , 'tipoCredito', 'codigoTablaAmortizacion' ,
+   'impago', 'retanqueo', 'coberturaActual' , 'coberturaInicial','descripcionBloqueo', 'diasMora',
+  'estadoUbicacion', 'estadoProceso'];
   /**Obligatorio paginacion */
   p = new Page();
   dataSource:MatTableDataSource<TbQoCliente>=new MatTableDataSource<TbQoCliente>();
@@ -58,7 +68,7 @@ export class ListCreditoComponent implements OnInit {
      }
 
   ngOnInit() {
-    //this.titulo.setNotice("GESTION DE CLIENTES")
+  
     this.loading = this.loadingSubject.asObservable();
     // Set title to page breadCrumbs
     this.subheaderService.setTitle('Gestion credito');

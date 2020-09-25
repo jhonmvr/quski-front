@@ -5,6 +5,7 @@ import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVar
 import { VariablesCrediticiasService } from '../../../../../core/services/quski/variablesCrediticias.service';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'kt-tabla-variables-crediticias',
@@ -12,6 +13,8 @@ import { PersonaConsulta } from '../../../../../core/model/calculadora/personaCo
   styleUrls: ['./tabla-variables-crediticias.component.scss']
 })
 export class TablaVariablesCrediticiasComponent implements OnInit {
+  public loadingSubject = new BehaviorSubject<boolean>(false);
+  public loading;
   // VARIABLES ANIDADAS
   @Input() dataPopup: DataPopup;
   @Output() entidades: EventEmitter<Array<TbQoVariablesCrediticia>> = new EventEmitter<Array<TbQoVariablesCrediticia>>();
@@ -26,6 +29,8 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loading = this.loadingSubject.asObservable();
+    console.log('DATA POPUP', this.dataPopup);
     this.direccionDeFlujo(this.dataPopup);
 
   }
@@ -35,14 +40,14 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
    * @param data DataPopup
    */
   private direccionDeFlujo(data: DataPopup) {
+    console.log('INICIA CAMBIO DIRECCION ');
     if (data.isCotizacion) {
-      console.log('INGRESA AL IF isCotizacion ');
+
       this.iniciaBusquedaCotizacion(data.idBusqueda);
     } else {
       if (data.isNegociacion) {
-        console.log('INGRESA AL IF isNegociacion ');
-        console.log('data==> direccionDeFlujo ', JSON.stringify(data));
         this.iniciaBusquedaNegociacion(data.idBusqueda);
+        console.log('INGRESA AL IF isNegociacion ');
       } else {
         if (data.isCalculadora) {
           this.iniciaBusquedaCalculadora(data.cedula);
@@ -108,7 +113,6 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
     }
   }
   private enviarAlPadre(entidades: Array<TbQoVariablesCrediticia>) {
-    console.log('Estoy enviando esto desde variables crediticias -----> ', entidades);
     this.entidades.emit(entidades);
   }
 }

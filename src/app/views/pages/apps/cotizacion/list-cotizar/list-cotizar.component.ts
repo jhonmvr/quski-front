@@ -14,15 +14,11 @@ import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { CotizacionService } from '../../../../../core/services/quski/cotizacion.service';
 import { TipoOroService } from '../../../../../core/services/quski/tipoOro.service';
-import { EstadoQuskiEnum } from '../../../../../core/enum/EstadoQuskiEnum';
 import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
 import { TbQoTipoOro, } from '../../../../..//core/model/quski/TbQoTipoOro';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
-import { ProcesoEnum } from '../../../../../core/enum/ProcesoEnum';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { SituacionTrackingEnum } from '../../../../../core/enum/SituacionTrackingEnum';
-import { ActividadEnum } from '../../../../../core/enum/ActividadEnum';
-import { UsuarioEnum } from '../../../../../core/enum/UsuarioEnum';
+import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { Router } from '@angular/router';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
@@ -31,7 +27,6 @@ import { PersonaConsulta } from '../../../../../core/model/calculadora/personaCo
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
 import { ClienteSoftbank } from '../../../../../core/model/softbank/ClienteSoftbank';
-import { GeneroEnum } from '../../../../../core/enum/GeneroEnum';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { TbQoCotizador } from '../../../../../core/model/quski/TbQoCotizador';
 import { VariablesCrediticiasService } from '../../../../../core/services/quski/variablesCrediticias.service';
@@ -399,10 +394,12 @@ export class ListCotizarComponent implements OnInit {
     let cliente = new TbQoCliente();
     if (softbank != null) {
       // setear soft
-      if (softbank.codigoSexo) {
-        cliente.genero = GeneroEnum.MASCULINO;
-      } else {
-        cliente.genero = GeneroEnum.FEMENINO;
+      if (softbank.codigoSexo == "M") {
+        cliente.genero = "MASCULINO";
+      } else if(softbank.codigoSexo == "F"){
+        cliente.genero = "FEMENINO";
+      } else{
+        cliente.genero = null;
       }
       this.catEducacion.forEach(element => {
         if (softbank.codigoEducacion === element.codigo) {
@@ -928,7 +925,7 @@ export class ListCotizarComponent implements OnInit {
     tracking.proceso = this.procesoProspeccion;
     tracking.observacion = '';
     tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
+    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
     tracking.usuario = atob(localStorage.getItem(environment.userKey))
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
@@ -959,7 +956,7 @@ export class ListCotizarComponent implements OnInit {
     tracking.proceso = this.procesoTasacion;
     tracking.observacion = '';
     tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionTrackingEnum.EN_PROCESO; // Por definir
+    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
     tracking.usuario = atob(localStorage.getItem(environment.userKey))
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
@@ -1358,7 +1355,7 @@ export class ListCotizarComponent implements OnInit {
               this.loadingSubject.next(true);
               this.guardado(this.entidadCliente, this.entidadCotizador, this.entidadesOpcionesCreditos);
               if (flujo == 'NEGOCIAR') {
-                this.router.navigate(['negociacion/gestion-negociacion', this.entidadCotizador.id]);
+                this.router.navigate(['negociacion/gestion-negociacion/COT', this.entidadCotizador.id]);
               } else {
                 this.router.navigate(['dashboard']);
               }

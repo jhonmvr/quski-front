@@ -44,21 +44,19 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
 
   // VARIABLES STANDARS  
   private mensaje = "ERROR AL CARGAR RIESGO ACUMULADO";
-  public loading;
-  private loadingSubject = new BehaviorSubject<boolean>(false);
   // TABLA DE CREDITO
   displayedColumnsRiesgoAcumulado = [
-      'referencia',
-      'numeroOperacion', 
-      'codigoCarteraQuski', 
-      'tipoOperacion', 
-      'fechaEfectiva', 
-      'fechaVencimiento',
-      'valorAlDia',
-      'diasMoraActual', 
-      'saldo', 
-      'estadoPrimeraCuotaVigente', 
-      'estadoOperacion'];
+    'referencia',
+    'numeroOperacion',
+    'codigoCarteraQuski',
+    'tipoOperacion',
+    'fechaEfectiva',
+    'fechaVencimiento',
+    'valorAlDia',
+    'diasMoraActual',
+    'saldo',
+    'estadoPrimeraCuotaVigente',
+    'estadoOperacion'];
   dataSourceRiesgoAcumulado = new MatTableDataSource<TbQoRiesgoAcumulado>();
   constructor(
     private sof: SoftbankService,
@@ -68,7 +66,8 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loading = this.loadingSubject.asObservable();
+
+    console.log('DATA DE RIESGO ACUMULADO ')
     if (this.idCliente != null && this.cedula == null) {
       this.initiateTablePaginator();
       this.busquedaCore();
@@ -80,22 +79,18 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   }
   public busquedaCore() {
     if (this.idCliente != null) {
-      this.loadingSubject.next(true);
       this.rie.findRiesgoAcumuladoByIdCliente(this.p, this.idCliente).subscribe((data: any) => {
         if (!data.list != null) {
           this.entidadesRiesgo = data.list;
           this.dataSourceRiesgoAcumulado.data = this.entidadesRiesgo;
           this.enviarAlPadre(this.entidadesRiesgo);
-          this.loadingSubject.next(false);
           if (this.isGuardar) {
             this.guardarCore(this.entidadesRiesgo);
           }
         } else {
-          this.loadingSubject.next(false);
           this.siN.setNotice("NO EXISTEN RIESGOS ACUMULADOS REGISTRADOS PARA ESTE CLIENTE", 'error');
         }
       }, error => {
-        this.loadingSubject.next(false);
         if (JSON.stringify(error).indexOf("codError") > 0) {
           let b = error.error;
           this.siN.setNotice(b.msgError, 'error');
@@ -107,7 +102,6 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   }
   public busquedaSoftbank() {
     if (this.cedula != "") {
-      this.loadingSubject.next(true);
       const consulta = new ConsultaCliente(this.cedula);
       this.sof.consultaRiesgoAcumuladoCS(consulta).subscribe((data: any) => {
         if (!data.existeError && data.operaciones != null) {
@@ -118,17 +112,14 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
           });
           this.dataSourceRiesgoAcumulado.data = this.entidadesRiesgo;
           this.enviarAlPadre(this.entidadesRiesgo);
-          this.loadingSubject.next(false);
           if (this.isGuardar) {
             this.guardarCore(this.entidadesRiesgo);
           }
         } else {
           this.mensaje += " existeError: " + data.mensaje;
           this.siN.setNotice(this.mensaje, 'error');
-          this.loadingSubject.next(false);
         }
       }, error => {
-        this.loadingSubject.next(false);
         if (JSON.stringify(error).indexOf("codError") > 0) {
           let b = error.error;
           this.siN.setNotice(b.msgError, 'error');
@@ -139,7 +130,6 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
     }
   }
   private guardarCore(guardarCore: Array<TbQoRiesgoAcumulado>) {
-    this.loadingSubject.next(true);
     this.cli.findClienteByIdentificacion(this.cedula).subscribe((data: any) => {
       if (data.entidad) {
         guardarCore.forEach(e => {
@@ -149,14 +139,11 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
         });
         this.rie.persistEntities(guardarCore).subscribe((data: any) => {
           if (data.entidades != null) {
-            console.log("Data guardada en base ---> ", data.entidades);
-            this.loadingSubject.next(false);
+            console.log("Riesgo acumulado guadado en core");
           } else {
-            this.loadingSubject.next(false);
             this.siN.setNotice('ERROR AL GUARDAR RIESGOS ACUMULADOS', 'error');
           }
         }, error => {
-          this.loadingSubject.next(false);
           if (JSON.stringify(error).indexOf("codError") > 0) {
             let b = error.error;
             this.siN.setNotice(b.msgError, 'error');
@@ -172,7 +159,6 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
 
   }
   private enviarAlPadre(entidades: Array<TbQoRiesgoAcumulado>) {
-    console.log(" Esto estoy enviando al padre -----> ", entidades);
     this.list.emit(entidades);
   }
 

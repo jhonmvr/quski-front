@@ -146,12 +146,21 @@
                                     <span class="material-icons warning-icons">report_problem </span>
                                     <span>{{mensaje}}</span>
 
-
-
-
                                 </mat-card>
                             </div>
                         </div>
+
+
+                        <mat-slider thumbLabel [displayWith]="formatLabel" tickInterval="1000" min="0" max="100"
+                            (change)="slideChange($event)" vertical invert>
+                            <mat-label>"Porcentaje de Excepcion"</mat-label>
+                        </mat-slider>
+
+                        <mat-form-field>
+                            <input [formControl]="porcentaje" placeholder="Porcentaje de Excepción" matInput
+                                [(ngModel)]="this.valor" readonly />
+                        </mat-form-field>
+
                         <div class="row mt-3">
                             <div class="col-md-8">
                                 <mat-label> Observacion Del Asesor: </mat-label>

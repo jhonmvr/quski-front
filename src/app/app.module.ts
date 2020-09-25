@@ -82,10 +82,10 @@ export function initializeLayoutConfig(appConfig: LayoutConfigService) {
 
 export function hljsLanguages(): HighlightLanguage[] {
 	return [
-		{name: 'typescript', func: typescript},
-		{name: 'scss', func: scss},
-		{name: 'xml', func: xml},
-		{name: 'json', func: json}
+		{ name: 'typescript', func: typescript },
+		{ name: 'scss', func: scss },
+		{ name: 'xml', func: xml },
+		{ name: 'json', func: json }
 	];
 }
 
@@ -104,9 +104,9 @@ export function hljsLanguages(): HighlightLanguage[] {
 		PartialsModule,
 		CoreModule,
 		OverlayModule,
-		StoreModule.forRoot(reducers, {metaReducers}),
+		StoreModule.forRoot(reducers, { metaReducers }),
 		EffectsModule.forRoot([]),
-		StoreRouterConnectingModule.forRoot({stateKey: 'router'}),
+		StoreRouterConnectingModule.forRoot({ stateKey: 'router' }),
 		StoreDevtoolsModule.instrument(),
 		AuthModule.forRoot(),
 		TranslateModule.forRoot(),
@@ -124,6 +124,7 @@ export function hljsLanguages(): HighlightLanguage[] {
 		KtDialogService,
 		DataTableService,
 		SplashScreenService,
+
 		{
 			provide: PERFECT_SCROLLBAR_CONFIG,
 			useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
@@ -140,9 +141,9 @@ export function hljsLanguages(): HighlightLanguage[] {
 		},
 		{
 			provide: HIGHLIGHT_OPTIONS,
-			useValue: {languages: hljsLanguages}
+			useValue: { languages: hljsLanguages }
 		},
-		{provide: APP_BASE_HREF, useValue: '/quski-front'},
+		{ provide: APP_BASE_HREF, useValue: '/quski-front' },
 		// template services
 		SubheaderService,
 		MenuHorizontalService,
