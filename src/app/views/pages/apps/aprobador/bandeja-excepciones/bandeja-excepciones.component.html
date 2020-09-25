@@ -1,0 +1,72 @@
+<div class="spinner-container" *ngIf="loading | async">
+  <mat-spinner class="spiner"></mat-spinner>
+</div>
+
+<re-portlet>
+  <re-portlet-header [title]="'Bandeja Principal Aprobador'" [class]="'kt-portlet__head--lg'">
+    <ng-container class="d-flex justify-content-around" ktPortletTools>
+      <a href="javascript:void(0);" matTooltip="Guardar" style="font-size: 12px; vertical-align: middle;">
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">save</mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Guardar</span>
+      </a>
+    </ng-container>
+
+
+  </re-portlet-header>
+  <re-portlet-body>
+    <!-- start::FILTERS & GROUP ACTIONS -->
+
+    <div class="kt-form">
+      <mat-vertical-stepper>
+        <mat-step [stepControl]="formBusqueda">
+          <ng-template matStepLabel>Bandeja Principal Aprobador</ng-template>
+          <form [formGroup]="formBusqueda">
+            <div class="row -12">
+              <div class="col-2">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required matInput
+                    [required]="true" numericType="number" (keypress)="numberOnly($event)" />
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <button mat-button matTooltip="Buscar">
+                  <mat-icon style="font-size: 24px;" class="orange-icon" matTooltipPosition="above">search</mat-icon>
+                  <span class="orange-icon">Buscar</span>
+                </button>
+              </div>
+            </div>
+            <div class="row mt-2">
+
+            </div>
+          </form>
+          <div class="mat-table__wrapper">
+            <mat-table class="mat-elevation-z8">
+              <ng-container matColumnDef="accion">
+                <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
+
+              </ng-container>
+              <ng-container matColumnDef="tipoExcepcion">
+                <mat-header-cell *matHeaderCellDef>Tipo Excepción</mat-header-cell>
+
+              </ng-container>
+              <ng-container matColumnDef="nombreCliente">
+                <mat-header-cell *matHeaderCellDef>Nombre del Cliente</mat-header-cell>
+
+              </ng-container>
+
+
+
+              <mat-header-row *matHeaderRowDef="displayedColumnsExcepciones"></mat-header-row>
+
+            </mat-table>
+          </div>
+
+        </mat-step>
+
+
+      </mat-vertical-stepper>
+    </div>
+    <!-- END FILTERS -->
+  </re-portlet-body>
+  <re-portlet-footer></re-portlet-footer>
+</re-portlet>

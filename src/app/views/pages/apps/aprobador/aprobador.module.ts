@@ -1,9 +1,7 @@
-// Component
-
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Translate Module
 import { TranslateModule } from '@ngx-translate/core';
@@ -40,10 +38,11 @@ import {
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPermissionsModule } from 'ngx-permissions';
-//Component
+
+import { BandejaExcepcionesComponent } from './bandeja-excepciones/bandeja-excepciones.component';
 import { PartialsModule } from '../../../partials/partials.module';
-import { AsesorComponent } from './asesor.component';
-import { BandejaPrincipalComponent } from './bandeja-principal/bandeja-principal.component';
+import { AprobadorComponent } from './aprobador.component';
+import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 
 
 
@@ -51,17 +50,21 @@ import { BandejaPrincipalComponent } from './bandeja-principal/bandeja-principal
 const routes: Routes = [
   {
     path: '',
-    component: AsesorComponent,
+    component: AprobadorComponent,
 
     children: [
       {
         path: '',
-        redirectTo: 'bandeja-principal',
+        redirectTo: 'aprobador',
         pathMatch: 'full'
       },
       {
-        path: 'bandeja-principal',
-        component: BandejaPrincipalComponent
+        path: 'aprobador',
+        component: AprobadorComponent
+      },
+      {
+        path: 'bandeja-excepciones',
+        component: BandejaExcepcionesComponent
       }
 
     ]
@@ -118,8 +121,15 @@ const routes: Routes = [
     },
   ],
   declarations: [
-    AsesorComponent,
-    BandejaPrincipalComponent
+    AprobadorComponent,
+    BandejaExcepcionesComponent
+  ],
+  entryComponents: [
+    ErrorCargaInicialComponent,
+
+
+
+
   ]
 })
-export class AsesorModule { }
+export class AprobadorModule { }
