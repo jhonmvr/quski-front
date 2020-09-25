@@ -1,5 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { AprobarPagosComponent } from './../aprobar-pagos.component';
+import { TbQoRegistrarPago } from './../../../../../../../core/model/quski/TbQoRegistrarPago';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { RegistrarPagoService } from './../../../../../../../core/services/quski/registrarPago.service';
+import { BehaviorSubject } from 'rxjs';
+import { ReNoticeService } from './../../../../../../../core/services/re-notice.service';
 
 @Component({
   selector: 'kt-dialogo-aprobar-pagos',
@@ -7,20 +13,63 @@ import { MAT_DIALOG_DATA } from '@angular/material';
   styleUrls: ['./dialogo-aprobar-pagos.component.scss']
 })
 export class DialogoAprobarPagosComponent implements OnInit {
+  loading;
+  loadingSubject = new BehaviorSubject<boolean>(false);
+  /**
+   * 
+   * @param  sinNoticeService;
+   * 
+   */
+  constructor(public dialogRef: MatDialogRef<DialogoAprobarPagosComponent>,
+    private sinNoticeService: ReNoticeService,
+    @Inject(MAT_DIALOG_DATA) public data: TbQoRegistrarPago, public dataService: RegistrarPagoService) {
 
-  private proceso: string = "CLIENTE";
-  private rol: string = "1";
-  private idRef
-  private title :string = "DIALOGO BLOQUEAR FONDOS";
-  private useType : string = "FORM";
-  private estOperacion : string = "DISPONIBLE"
-
-
-  constructor(@Inject(MAT_DIALOG_DATA) private data: string) { }
-
-
-  ngOnInit(): void {
-    this.idRef = this.data;
   }
 
+  observacion = new FormControl('', [Validators.required]);
+  public formAprobarPagos: FormGroup = new FormGroup({});
+
+
+  ngOnInit() {
+    this.formAprobarPagos.addControl('observacion', this.observacion);
+
+  }
+  /**
+   * @description METODO QUE AGREGA UNA NUEVO PAGO
+   */
+  public nuevoPago() {
+    if (this.formAprobarPagos.invalid) {
+      alert("COMPLETE EL FORMULARIO CORRECTAMENTE");
+      return;
+    }
+
+    let wrapperRespuesta = {
+      observacion: this.observacion.value,
+    
+    }
+    this.dialogRef.close(wrapperRespuesta);
+
+  }
+
+  aprobar() {
+    console.log("voy a aprobar ")
+    this.loadingSubject.next(true);
+    if (this.formAprobarPagos.invalid) {
+      this.loadingSubject.next(false);
+      this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS APROBAR PAGO", 'warning');
+      return;
+    }
+  }
+    rechazar() {
+      console.log("voy a rechazar ")
+      this.loadingSubject.next(true);
+      if (this.formAprobarPagos.invalid) {
+        this.loadingSubject.next(false);
+        this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS APROBAR PAGO", 'warning');
+        return;
+      }
+    }
+  onNoClick() {
+    this.dialogRef.close();
+  }
 }

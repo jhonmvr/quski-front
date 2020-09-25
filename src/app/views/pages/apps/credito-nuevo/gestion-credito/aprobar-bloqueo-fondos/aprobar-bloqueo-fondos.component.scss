@@ -10,4 +10,145 @@ table {
     max-width: 600px;
     box-shadow: -1px 3px 66px 0px rgba(0,0,0,0.75);
     padding: 1rem;
+}
+.example-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    min-width: 300px;
+    position: relative;
+    }
+    .material-icons {
+        font-size: 31px !important;
+        height: 31px;
+        width: 34px;
+        color: gray;
+        text-align: center;
+}
+.mat-button .mat-button-wrapper>*, .mat-fab .mat-button-wrapper>*, .mat-flat-button .mat-button-wrapper>*, .mat-icon-button .mat-button-wrapper>*, .mat-mini-fab .mat-button-wrapper>*, .mat-raised-button .mat-button-wrapper>*, .mat-stroked-button .mat-button-wrapper>* {
+vertical-align: baseline;
+}
+    .mat-button, .mat-flat-button, .mat-icon-button, .mat-stroked-button {
+
+        min-width: 28px;
+        height: fit-content;
+}
+  .mat-table {
+    overflow: auto;
+    max-height: 500px;
+  }
+
+  .mat-header-cell.mat-sort-header-sorted {
+    color: black;
+  }
+
+  .example-header {
+    min-height: 64px;
+    padding: 8px 24px 0;
+  }
+
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .mat-table {
+    overflow: auto;
+    max-height: 500px;
+  }
+  .mat-column-select {
+    overflow: initial;
+  }
+  .example-header {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    font-size: 20px;
+  }
+
+  .example-table {
+    overflow: auto;
+    min-height: 300px;
+  }
+
+.example-loading-shade {
+position: absolute;
+top: 0;
+left: 0;
+bottom: 56px;
+right: 0;
+background: rgba(0, 0, 0, 0.15);
+z-index: 1;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.example-rate-limit-reached {
+color: #980000;
+max-width: 360px;
+text-align: center;
+}
+
+/* Column Widths */
+.mat-column-number,
+.mat-column-state {
+max-width: 64px;
+}
+
+.mat-column-created {
+max-width: 124px;
+}
+//cambios
+
+
+.mat-column-N {
+  flex: 0 0 40px;
+  }
+  
+.mat-column-descripcion {
+flex: 0 0 200px;
+}
+
+.mat-column-generar {
+  flex: 0 0 200px;
+}
+
+.mat-column-respaldar {
+  flex: 0 0 200px;
+}
+
+.mat-column-archivoCargado {
+  flex: 0 0 200px;
+}
+
+.mat-footer-row {
+  font-weight: bold;
+}
+
+.mat-table-sticky {
+  border-top: 1px solid #e0e0e0;
+}
+
+table {
+  width: 100%;
+}
+th, td {
+
+  width: 100px;
+  word-wrap: break-word;
+}
+
+.mat-column-fecha {
+  flex: 0 0 25px;
+ }
+
+
+ tr.mat-footer-row {
+  font-weight: bold;
+}
+
+.mat-progress-spinner circle, .mat-spinner circle {
+    stroke: #003B71!important;
 }   

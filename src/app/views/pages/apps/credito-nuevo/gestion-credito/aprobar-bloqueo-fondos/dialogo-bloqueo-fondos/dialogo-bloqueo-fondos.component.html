@@ -3,12 +3,13 @@
     <label style="font-weight:bold"> Obsevaciones </label>
     <div class="col-md-8" >
         <mat-form-field class="example-full-width" color="black">
+            <input matInput [formControl]="observacion">
             <input matInput type="text" >
         </mat-form-field>
     </div>    
     <div mat-dialog-actions>
-        <button mat-button onclick="">Aceptar</button>
-        <button mat-button onclick="">Cancelar</button>
+        <button mat-button (click)="aprobar()">Aceptar</button>
+        <button mat-button (click)="rechazar()">Cancelar</button>
     </div>
 </div>
 
