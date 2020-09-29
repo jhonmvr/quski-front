@@ -119,12 +119,12 @@
                     </ng-container>
                     <ng-container matColumnDef="subir">
                         <th mat-header-cell *matHeaderCellDef> Subir Comprobante </th>
-                        <td mat-cell *matCellDef="let j = index;">
+                        <td mat-cell *matCellDef="let j;">
                             <form action="/subir" method="POST" enctype="multipart/form-data">
-                                <input type= "file">
-                                <button type="submit" mat-raised-button focusable="false" (click)="subirComprobante()">
+
+                                <button type="submit" mat-raised-button focusable="false" (click)="subirComprobante(j)">
                                     <mat-icon style="font-size: 32px" matTooltipPosition="above"
-                                        matTooltip="Subir Comprobante">S</mat-icon>
+                                        matTooltip="Subir Comprobante">cloud_upload</mat-icon>
                                 </button>
                             </form>
                         </td>
@@ -135,7 +135,7 @@
                         <td mat-cell *matCellDef="let j = index;">
                             <button mat-raised-button focusable="false" (click)="descargarComprobante()">
                                 <mat-icon style="font-size: 32px" matTooltipPosition="above"
-                                    matTooltip="Descarga Comprobante">S</mat-icon>
+                                    matTooltip="Descarga Comprobante">cloud_download</mat-icon>
                             </button>
                         </td>
                     </ng-container>

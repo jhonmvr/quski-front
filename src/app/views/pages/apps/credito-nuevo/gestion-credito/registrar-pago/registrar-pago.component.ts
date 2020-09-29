@@ -15,6 +15,7 @@ import { environment } from './../..`/../../../../../../../environments/environm
 import { DataUpload } from './../../../../../../core/interfaces/data-upload';
 import { ObjectStorageService } from './../../../../../../core/services/object-storage.service';
 import { ReFileUploadService } from './../../../../../../core/services/re-file-upload.service';
+import { UploadFileComponent } from '../../upload-file/upload-file.component';
 
 
 
@@ -111,28 +112,21 @@ export class RegistrarPagoComponent implements OnInit {
   };
 
 
-  subirComprobante() {
-    /*if (confirm("Realmente quiere subir?")) {
-      const app = require('express')(),
-        multer = require('multer'),
-        storage = multer.diskStorage({
-          destination: (req, file, cb) => {
-            cb(null, './registar-pago-dialog')
-          },
-          filename: (req, file, cb) => {
-            cb(null, file.originalname)
-          }
-        })
-      const upload = multer({ storage });
+  subirComprobante(j) {
+    console.log("registro ",j)
+    const dialogRef = this.dialog.open(UploadFileComponent, {
+      width: "auto",
+      height: "auto"
+    });
 
-      app.get('/', (req, res) => {
-        res.sendFile('./registrar-pago.component.html', { root: __dirname })
-      })
-      app.post('/subir', upload.single('archivo'), (req, res) => {
-        console.log(req.file)
-        res.send('archivo se subio correctamente')
-      })
-    }*/
+    dialogRef.afterClosed().subscribe(r => {
+      console.log("resultado del archivito q subi XD", r);
+      if (r) {
+        j.nombreArchivo = r.nombreArchivo;
+        j.archivo = r.archivo;
+        this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE", "success");
+      }
+    });
   }
   descargarComprobante() {
     if (confirm("Realmente quiere descargar?")) {
@@ -251,20 +245,11 @@ export class RegistrarPagoComponent implements OnInit {
     cliente.valorPrecancelado = this.valorPreCancelado.value;
     cliente.valorDepositado = this.valorDepositado.value;
     cliente.observacion = this.observacion.value;
-    cliente.tipo = ('REGISTRAR_PAGOS')
+    cliente.tipo = ('REGISTRAR_PAGO')
     registrarPagoWrapper.cliente = cliente;
     if (this.dataSource.data.length > 0) {
-
-      this.dataSource.data.forEach(element => {
-        let pagos = new TbQoRegistrarPago();
-        pagos.institucionFinanciera = element.institucionFinanciera;
-        pagos.cuentas = element.cuentas;
-        pagos.fechaPago = element.fechadePago;
-        pagos.numeroDeposito = element.numerodeDeposito;
-        pagos.valorPagado = element.valorpagado
-        registrarPagoWrapper.pagos.push(pagos);
-        console.log(" registro >>>>",);
-      });
+      registrarPagoWrapper.pagos = this.dataSource.data;
+   
 
     } else {
       registrarPagoWrapper.pagos = null;
@@ -382,31 +367,5 @@ export class RegistrarPagoComponent implements OnInit {
     }
   }
 
-  public subirArchivoHabilitante() {
-    //console.log("===> subirArchivoHabilitantecontraro relate id: " +JSON.stringify(this.dataUpload));
-    //console.log("===> subirArchivoHabilitantecontraro relate id: " +btoa( JSON.stringify( this.dataUpload )));
-    //console.log("===> subirArchivoHabilitante contraro relate tipo: " +JSON.stringify(this.data.tipoDocumento));
-    this.os.createObject(btoa(JSON.stringify(this.dataUpload)),
-      this.os.mongoDb, environment.mongoHabilitanteCollection).subscribe((objectData: any) => {
-        //console.log("===> subirArchivoHabilitante retorna mongo: " +JSON.stringify(objectData));
-        if (objectData && objectData.entidad) {
-          this.dataUpload.objectId = objectData.entidad;
-          this.fileBase64 = null;
-          this.upload.uploadFile(this.upload.appResourcesUrl + "uploadRestController/loadFileHabilitanteSimplified", this.dataUpload).subscribe((data: any) => {
-            //this.dialog.close(data.relatedIdStr);
-          }, error => {
-            //console.log("error llegado " + JSON.stringify(error.error));
-            if (JSON.stringify(error.error).indexOf("codError") > 0) {
-              let b = error.error;
-            } else {
-              console.log("error no java " + error);
-            }
-          }
-          );
-        }
-      });
-
-
-  }
 
 }
