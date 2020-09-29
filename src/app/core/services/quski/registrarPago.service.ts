@@ -20,19 +20,27 @@ import { Page } from '../../model/page';
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
-  public crearRegistrarPagoConRelaciones(registrarPago) {
-   
+ public crearRegistrarPagoConRelaciones(registrarPagoWrapper) {
     this.options = { headers: this.headers, params: this.params };
     const serviceUrl =
       this.appResourcesUrl + 'registrarPagoRestController/crearRegistrarPago';
-    
+
     this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, registrarPago, this.options);
+    return this.http.post(serviceUrl, registrarPagoWrapper, this.options);
   }
+
   findAllRegistrarPago(p: Page) {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + 'registrarPagoRestController/listAllEntities';
     this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  public clientePagoByIdCliente(idPago: string) {
+    const serviceUrl =
+      this.appResourcesUrl + 'registrarPagoRestController/findByIdClientePago';
+    this.params = new HttpParams().set('id', idPago);
+    this.options = { headers: this.headers, params: this.params };
+    console.log(" >>>>>> ", this.params);
     return this.http.get(serviceUrl, this.options);
   }
 }

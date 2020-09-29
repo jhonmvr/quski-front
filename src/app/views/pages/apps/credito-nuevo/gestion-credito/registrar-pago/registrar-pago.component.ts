@@ -12,6 +12,9 @@ import { TbQoRegistrarPago } from './../../../../../../core/model/quski/TbQoRegi
 import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
 import { Page } from '../../../../../../core/model/page';
 import { environment } from './../..`/../../../../../../../environments/environment';
+import { DataUpload } from './../../../../../../core/interfaces/data-upload';
+import { ObjectStorageService } from './../../../../../../core/services/object-storage.service';
+import { ReFileUploadService } from './../../../../../../core/services/re-file-upload.service';
 
 
 
@@ -26,8 +29,11 @@ import { environment } from './../..`/../../../../../../../environments/environm
 export class RegistrarPagoComponent implements OnInit {
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
-  procesoSubject:BehaviorSubject<string>=new BehaviorSubject<string>("");
-  estadoOperacionSubject:BehaviorSubject<string>=new BehaviorSubject<string>("");
+  private uploadSubject = new BehaviorSubject<boolean>(false);
+  public dataUpload: DataUpload;
+  fileBase64: string;
+  procesoSubject: BehaviorSubject<string> = new BehaviorSubject<string>("");
+  estadoOperacionSubject: BehaviorSubject<string> = new BehaviorSubject<string>("");
   columnas = ['accion', 'institucionFinanciera', 'cuentas', 'fechadePago', 'numerodeDeposito', 'valorpagado', 'subir', 'descargar'];
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
@@ -59,8 +65,9 @@ export class RegistrarPagoComponent implements OnInit {
     private sinNoticeService: ReNoticeService,
     private registrarPagoService: RegistrarPagoService,
     private noticeService: ReNoticeService,
-
+    private upload: ReFileUploadService, private os: ObjectStorageService,
     public dialog: MatDialog) {
+    this.upload.setParameter();
     this.formRegistrarPago.addControl("nombresCliente", this.nombreCliente);
     this.formRegistrarPago.addControl("cedula", this.cedula);
     this.formRegistrarPago.addControl("codigoOperacion", this.codigoOperacion);
@@ -73,36 +80,7 @@ export class RegistrarPagoComponent implements OnInit {
 
   submit() {
 
-    /*this.loadingSubject.next(true);
-    this.dataSource = null;
-    this.registrarPagoService.findAllRegistrarPago(this.p).subscribe((data: any) => {
-    this.loadingSubject.next(false);
-    console.log("====> datos: " + JSON.stringify( data ));
-    if (data.list) {            
-      this.totalResults = data.totalResults;
-      //.dataSource = new MatTableDataSource<TbQoRegistrarPago>(data.list);
-      
-      for (let i = 0; i < this.dataSource.data.length; i++) {
-        
-        this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
-      }} else {
-        this.sinNoticeService.setNotice("NO SE ENCONTRARON REGISTROS", 'info');
-      }
-    }, error => {
-      this.loadingSubject.next(false);
-      if(  error.error ){
-				this.noticeService.setNotice(error.error.codError + ' - ' + error.error.msgError  , 'error');
-			} else if(  error.statusText && error.status==401 ){
-				this.dialog.open(RegistarPagoDialogComponent, {
-					data: {
-						mensaje:"Error " + error.statusText + " - " + error.message
-					}
-				});
-			} else {
-				this.noticeService.setNotice("Error al cargar las notificaciones o alertas", 'error');
-			}
-    }                                                                                                                                                                 
-    );*/
+
   }
 
   id;
@@ -133,12 +111,30 @@ export class RegistrarPagoComponent implements OnInit {
   };
 
 
-  subirComponente() {
-    if (confirm("Realmente quiere subir?")) {
+  subirComprobante() {
+    /*if (confirm("Realmente quiere subir?")) {
+      const app = require('express')(),
+        multer = require('multer'),
+        storage = multer.diskStorage({
+          destination: (req, file, cb) => {
+            cb(null, './registar-pago-dialog')
+          },
+          filename: (req, file, cb) => {
+            cb(null, file.originalname)
+          }
+        })
+      const upload = multer({ storage });
 
-    }
+      app.get('/', (req, res) => {
+        res.sendFile('./registrar-pago.component.html', { root: __dirname })
+      })
+      app.post('/subir', upload.single('archivo'), (req, res) => {
+        console.log(req.file)
+        res.send('archivo se subio correctamente')
+      })
+    }*/
   }
-  descargarComponente() {
+  descargarComprobante() {
     if (confirm("Realmente quiere descargar?")) {
 
     }
@@ -207,7 +203,7 @@ export class RegistrarPagoComponent implements OnInit {
     });
   }
 
- 
+
   testconsultaRubrosCS() {
     let entidadConsultaRubros;
     entidadConsultaRubros = 2020001984;
@@ -238,10 +234,14 @@ export class RegistrarPagoComponent implements OnInit {
       this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS REGISTRAR PAGOS", 'warning');
       return;
     }
+
+
+
     let registrarPagoWrapper = {
-      pagos:[],
-      cliente:{}
+      cliente: {},
+      pagos: []
     }
+
     let cliente = new TbQoClientePago();
     cliente.nombreCliente = this.nombreCliente.value;
     cliente.cedula = this.cedula.value;
@@ -263,23 +263,22 @@ export class RegistrarPagoComponent implements OnInit {
         pagos.numeroDeposito = element.numerodeDeposito;
         pagos.valorPagado = element.valorpagado
         registrarPagoWrapper.pagos.push(pagos);
-        console.log(" registro >>>>", );
+        console.log(" registro >>>>",);
       });
-      
-    } else { 
+
+    } else {
       registrarPagoWrapper.pagos = null;
     }
 
-    this.registrarPagoService.crearRegistrarPagoConRelaciones(registrarPagoWrapper).subscribe(p=>{
-      
+    this.registrarPagoService.crearRegistrarPagoConRelaciones(registrarPagoWrapper).subscribe(p => {
+      console.log(" >>> ", this.registrarPagoService);
+
       this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
-    },error=>{
+    }, error => {
       this.loadingSubject.next(false);
     }
     )
-   
-
   }
 
   /**
@@ -333,45 +332,81 @@ export class RegistrarPagoComponent implements OnInit {
       return this.valorDepositado.hasError('required') ? errorrequiredo : '';
     }
   }
-  /*getPermiso(tipo:string, permisos:Array<TbQoRegistrarPago> ):boolean{
-    if( permisos && permisos.length>0 ){
-      //console.log("===> getPermiso rol " + localStorage.getItem( environment.rolKey ) + " tipo: " +  tipo + " datos "+ JSON.stringify( permisos));
-      let existPermisos=permisos.filter(p=>p.idPago === Number( localStorage.getItem( environment.rolKey ) ));
-      //console.log("===> permisos filter " + JSON.stringify( existPermisos));
-      if( existPermisos &&  existPermisos.length >0 ){
-        
-        if( tipo === "CARGA_ARC" &&  existPermisos[0].cargarFoto && existPermisos[0].cargarFoto===true  ){
-          return true;
+
+  onFileChange(event) {
+
+    let reader = new FileReader();
+    if (event.target.files && event.target.files.length > 0) {
+      let file = <File>event.target.files[0];
+      let mimeType = file.type;
+      let mimeSize = file.size;
+      if (mimeType.match('\.pdf') != null || mimeType.match('\.png') != null) {
+        if (mimeSize < 500000) {
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            this.uploadSubject.next(true);
+            //this.fileBase64= String(reader.result).split(",")[1];
+            /*this.dataUpload = {
+              name: file.name,
+              type: file.type,
+              //process: this.dataSource.proceso,
+              //: this.dataSource.documentoHabilitante?Number(this.data.documentoHabilitante):null,
+              //relatedIdStr: this.dataSource.referencia,
+              //typeAction: this.dataSource.tipoDocumento,
+              fileBase64: String(reader.result).split(",")[1],
+              objectId:""
+            };*/
+          };
+        } else {
+          //console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
+          //this.fileInput.nativeElement = null;
+          //document.getElementById("fileUpload").nodeValue = "";
+          //file = null
+          this.dataUpload = null;
+          this.uploadSubject.next(false);
+          this.sinNoticeService.setNotice("Tamaño de archivo no permitido.", 'error');
         }
-        if( tipo === "DESCARGA_ARC" &&  existPermisos[0].descargarComprobante && existPermisos[0].descargarComprobante===true  ){
-          return true;
-        }
-        
+
+      } else {
+        //console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
+        //this.fileInput.nativeElement = null;
+        //document.getElementById("fileUpload").nodeValue = "";
+        //file = null
+        this.dataUpload = null;
+        this.uploadSubject.next(false);
+        console.log("entra aqui")
+        this.sinNoticeService.setNotice("Formato no permitido. Ingrese un .PDF", 'error');
       }
-      
+    } else {
+      this.uploadSubject.next(false);
     }
-    return false;
   }
-  @Input() set proceso(value: string) {
-    this.procesoSubject.next(value);
-}
 
-get proceso():string {
-  return this.procesoSubject.getValue();
-}
-@Input("estadoOperacion") set estadoOperacion(value: string) {
-  this.estadoOperacionSubject.next(value);
-}
+  public subirArchivoHabilitante() {
+    //console.log("===> subirArchivoHabilitantecontraro relate id: " +JSON.stringify(this.dataUpload));
+    //console.log("===> subirArchivoHabilitantecontraro relate id: " +btoa( JSON.stringify( this.dataUpload )));
+    //console.log("===> subirArchivoHabilitante contraro relate tipo: " +JSON.stringify(this.data.tipoDocumento));
+    this.os.createObject(btoa(JSON.stringify(this.dataUpload)),
+      this.os.mongoDb, environment.mongoHabilitanteCollection).subscribe((objectData: any) => {
+        //console.log("===> subirArchivoHabilitante retorna mongo: " +JSON.stringify(objectData));
+        if (objectData && objectData.entidad) {
+          this.dataUpload.objectId = objectData.entidad;
+          this.fileBase64 = null;
+          this.upload.uploadFile(this.upload.appResourcesUrl + "uploadRestController/loadFileHabilitanteSimplified", this.dataUpload).subscribe((data: any) => {
+            //this.dialog.close(data.relatedIdStr);
+          }, error => {
+            //console.log("error llegado " + JSON.stringify(error.error));
+            if (JSON.stringify(error.error).indexOf("codError") > 0) {
+              let b = error.error;
+            } else {
+              console.log("error no java " + error);
+            }
+          }
+          );
+        }
+      });
 
-get estadoOperacion():string {
-return this.estadoOperacionSubject.getValue();
-}
-  loadArchivoCliente(j) {
-    let envioModel={
-      subirComponente:j.subirComponente,
-      descargarComprobante:j.descargarComprobante
-    };
+
   }
-    
-  */
+
 }

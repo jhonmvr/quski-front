@@ -102,6 +102,10 @@ const routes: Routes = [
 				path: 'gestion-credito/aprobar-pagos',
 				component: AprobarPagosComponent
 			},
+			{
+				path: 'gestion-credito/aprobar-pagos/:id',
+				component: AprobarPagosComponent
+			},
 		]
 	}
 ];

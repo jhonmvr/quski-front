@@ -1,5 +1,8 @@
+import { TbQoRegistrarPago } from './TbQoRegistrarPago';
+
 export class TbQoClientePago{
-    id : number;
+	id : number;
+	
     nombreCliente : String;
 	cedula : String;
 	codigoOperacion : String;
@@ -10,4 +13,9 @@ export class TbQoClientePago{
 	observacion : String;
 	estado: String;
 	tipo: String;
+
+	
+	constructor(){
+		
+	} 
 }

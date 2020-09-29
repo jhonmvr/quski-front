@@ -87,7 +87,8 @@
                         <th mat-header-cell *matHeaderCellDef>Accion </th>
                         <td mat-cell *matCellDef="let j = index;">
                             <button mat-raised-button focusable="false" (click)="deletFila(j)">
-                                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Eliminar">S</mat-icon>
+                                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Eliminar">S
+                                </mat-icon>
                             </button>
                         </td>
                     </ng-container>
@@ -119,17 +120,22 @@
                     <ng-container matColumnDef="subir">
                         <th mat-header-cell *matHeaderCellDef> Subir Comprobante </th>
                         <td mat-cell *matCellDef="let j = index;">
-                            <button mat-raised-button  focusable="false" (click)="subirComponente()">
-                                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Comprobante">S</mat-icon>
-                            </button>
+                            <form action="/subir" method="POST" enctype="multipart/form-data">
+                                <input type= "file">
+                                <button type="submit" mat-raised-button focusable="false" (click)="subirComprobante()">
+                                    <mat-icon style="font-size: 32px" matTooltipPosition="above"
+                                        matTooltip="Subir Comprobante">S</mat-icon>
+                                </button>
+                            </form>
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="descargar">
                         <th mat-header-cell *matHeaderCellDef> Descarga Comprobante </th>
                         <td mat-cell *matCellDef="let j = index;">
-                            <button mat-raised-button focusable="false" (click)="descargarComponente()">
-                                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Descarga Comprobante">S</mat-icon>
+                            <button mat-raised-button focusable="false" (click)="descargarComprobante()">
+                                <mat-icon style="font-size: 32px" matTooltipPosition="above"
+                                    matTooltip="Descarga Comprobante">S</mat-icon>
                             </button>
                         </td>
                     </ng-container>

@@ -10,6 +10,11 @@ import { SubheaderService } from './../../../../../../core/_base/layout';
 import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
 import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
 import { ClienteSoftbank } from './../../../../../../core/model/softbank/ClienteSoftbank';
+import { TbQoRegistrarPago } from './../../../../../../core/model/quski/TbQoRegistrarPago';
+import { AuthDialogComponent } from './../../../../../../../app/views/partials/custom/auth-dialog/auth-dialog.component';
+import { ConsultaCliente } from './../../../../../../core/model/softbank/ConsultaCliente';
+import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'kt-aprobar-pagos',
@@ -21,7 +26,7 @@ export class AprobarPagosComponent implements OnInit {
   loadingSubject = new BehaviorSubject<boolean>(false);
   columnas = ['accion', 'institucionFinanciera', 'cuentas', 'fechadePago', 'numerodeDeposito', 'valorpagado', 'descargar'];
 
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  dataSource: MatTableDataSource<TbQoRegistrarPago> = new MatTableDataSource<TbQoRegistrarPago>();
   dataSourceRubros: MatTableDataSource<any> = new MatTableDataSource<any>();
   totalResults: number;
   p = new Page();
@@ -29,7 +34,7 @@ export class AprobarPagosComponent implements OnInit {
   columna: string[] = ['rubro', 'valor'];
 
   @ViewChild('sort1', { static: true }) sort: DialogoAprobarPagosComponent;
-
+  private idCliente : string;
   public formAprobarPago: FormGroup = new FormGroup({});
   public nombreCliente = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cedula = new FormControl('', [Validators.required, Validators.maxLength(13)]);
@@ -45,10 +50,11 @@ export class AprobarPagosComponent implements OnInit {
    * 
    */
   constructor(
+    private route: ActivatedRoute,
     private css: SoftbankService,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
-    private registrarPagoService: RegistrarPagoService,
+    private rp: RegistrarPagoService,
     private noticeService: ReNoticeService,
 
     public dialog: MatDialog) {
@@ -64,36 +70,37 @@ export class AprobarPagosComponent implements OnInit {
 
   submit() {
 
-    /*this.loadingSubject.next(true);
+    this.loadingSubject.next(true);
     this.dataSource = null;
-    this.registrarPagoService.findAllRegistrarPago(this.p).subscribe((data: any) => {
-    this.loadingSubject.next(false);
-    console.log("====> datos: " + JSON.stringify( data ));
-    if (data.list) {            
-      this.totalResults = data.totalResults;
-      //.dataSource = new MatTableDataSource<TbQoRegistrarPago>(data.list);
-      
-      for (let i = 0; i < this.dataSource.data.length; i++) {
-        
-        this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
-      }} else {
+    this.rp.findAllRegistrarPago(this.p).subscribe((data: any) => {
+      this.loadingSubject.next(false);
+      console.log("====> datos: " + JSON.stringify(data));
+      if (data.list) {
+        this.totalResults = data.totalResults;
+        this.dataSource = new MatTableDataSource<TbQoRegistrarPago>(data.list);
+
+        for (let i = 0; i < this.dataSource.data.length; i++) {
+
+          this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
+        }
+      } else {
         this.sinNoticeService.setNotice("NO SE ENCONTRARON REGISTROS", 'info');
       }
     }, error => {
       this.loadingSubject.next(false);
-      if(  error.error ){
-				this.noticeService.setNotice(error.error.codError + ' - ' + error.error.msgError  , 'error');
-			} else if(  error.statusText && error.status==401 ){
-				this.dialog.open(RegistarPagoDialogComponent, {
-					data: {
-						mensaje:"Error " + error.statusText + " - " + error.message
-					}
-				});
-			} else {
-				this.noticeService.setNotice("Error al cargar las notificaciones o alertas", 'error');
-			}
-    }                                                                                                                                                                 
-    );*/
+      if (error.error) {
+        this.noticeService.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
+      } else if (error.statusText && error.status == 401) {
+        this.dialog.open(AuthDialogComponent, {
+          data: {
+            mensaje: "Error " + error.statusText + " - " + error.message
+          }
+        });
+      } else {
+        this.noticeService.setNotice("Error al cargar las notificaciones o alertas", 'error');
+      }
+    }
+    );
   }
 
   id;
@@ -136,69 +143,16 @@ export class AprobarPagosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.testoperacionConsultaCS();
-    this.consultarClienteSoftbankCS();
+    
     this.testconsultaRubrosCS();
-    //falta el de rubros pre cancelacion
+    this.ConsultarPagosId();
     this.subheaderService.setTitle("Aprobar Pagos");
     this.loading = this.loadingSubject.asObservable();
-    // this.submit();
+   
   }
 
-  consultarClienteSoftbankCS() {
-    let entidadConsultaCliente = new ClienteSoftbank();
-    //let cedula = this.identificacion.value;
-    //console.log(" "  + cedula)
-    entidadConsultaCliente.identificacion = "1311066441";
-    entidadConsultaCliente.idTipoIdentificacion = 1;
 
-    this.css.consultarClienteSoftbankCS(entidadConsultaCliente).subscribe((data: any) => {
-      if (data) {
-        this.cedula.setValue(data.identificacion);
-        this.nombreCliente.setValue(data.nombreCompleto);
-        let cuentasBancaCliente = data.cuentasBancariasCliente[0];
-        //console.log(" cuenta banco --->",cuentasBancaCliente.cuenta )
-        this.codigoCuentaMupi.setValue("5248548563");
-        this.tipoCredito.setValue("CUOTAS");
-        //console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data));
-      } else {
-        this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
-      }
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("Error no fue cacturado en 'consultarClienteCS' :(", 'error');
-
-      }
-    });
-  }
-
-  testoperacionConsultaCS() {
-    let entidadConsultaOperacion = new ClienteSoftbank();
-    entidadConsultaOperacion.identificacion = "1311066441";
-    entidadConsultaOperacion.idTipoIdentificacion = 1;
-    this.css.operacionConsultaCS(entidadConsultaOperacion).subscribe((data: any) => {
-      if (data.operaciones[0]) {
-        let codOpera = data.operaciones[0];
-        this.codigoOperacion.setValue(codOpera.numeroOperacion);
-        //console.log("Consulta de Operacion en Cloustudio --> " + JSON.stringify(data.operaciones[0]));
-      } else {
-        this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaOperacion'", 'error');
-      }
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("Error no fue cacturado en 'entidadConsultaOperacion' :(", 'error');
-
-      }
-    });
-  }
-
- 
+  
   testconsultaRubrosCS() {
     let entidadConsultaRubros;
     entidadConsultaRubros = 2020001984;
@@ -219,18 +173,47 @@ export class AprobarPagosComponent implements OnInit {
 
       }
     })
-  };
+  }
 
-    /*
-        this.bloqueoFondoService.crearBloqueoFondoConRelaciones( ).subscribe(p=>{
-          
-          this.loadingSubject.next(false);
-          this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
-        },error=>{
-          this.loadingSubject.next(false);
-        }
-        )
-       */
+
+  ConsultarPagosId() {
+    this.route.paramMap.subscribe((data: any) => {
+      data.params.id
+      //console.log(" id = ? " , data.params.id)
+      if (data.params.id) {
+        this.idCliente = data.params.id;
+        this.rp.clientePagoByIdCliente(this.idCliente).subscribe((data: any) => {
+          if (data) {
+            let cliente = data.entidades[0].tbQoClientePago;
+            this.nombreCliente.setValue(cliente.nombreCliente);
+            this.cedula.setValue(cliente.cedula);
+            this.codigoOperacion.setValue(cliente.codigoOperacion);
+            this.codigoCuentaMupi.setValue(cliente.codigoCuentaMupi);
+            this.tipoCredito.setValue(cliente.tipoCredito);
+            this.valorPreCancelado.setValue(cliente.valorPrecancelado);
+            this.valorDepositado.setValue(cliente.valorDepositado);
+            this.observacion.setValue(cliente.observacion);
+            console.log("Cliente: ----> ", cliente)
+            console.log("Consulta de pagos en clientePagoByIdCliente --> " + JSON.stringify(data));
+          } else {
+            this.sinNoticeService.setNotice("No me trajo datos 'clientePagoByIdCliente'", 'error');
+          }
+        }, error => {
+          if (JSON.stringify(error).indexOf("codError") > 0) {
+            let b = error.error;
+            this.sinNoticeService.setNotice(b.msgError, 'error');
+          } else {
+            this.sinNoticeService.setNotice("Error no fue cacturado en 'clientePagoByIdCliente' :(", 'error');
+
+          }
+        })
+      } else {
+
+      }
+    })
+  }
+  
+  
   /**
  * 
  * @param pfield 

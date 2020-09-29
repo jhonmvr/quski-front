@@ -15,8 +15,7 @@ import { TbQoClientePago } from '../../model/quski/TbQoClientePago';
         this.setParameter();
   }
   public persistEntity(clientePago: TbQoClientePago) {
-    const serviceUrl =
-      this.appResourcesUrl + 'clientePagoRestController/persistEntity';
+    const serviceUrl = this.appResourcesUrl + 'clientePagoRestController/persistEntity';
     const wrapper = { entidad: clientePago };
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
@@ -34,6 +33,15 @@ import { TbQoClientePago } from '../../model/quski/TbQoClientePago';
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + 'clientePagoRestController/listAllEntities';
     this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+
+  public clientePagoByIdCliente(cedula: string) {
+    const serviceUrl =
+      this.appResourcesUrl + 'clientePagoRestController/findByIdClientePago';
+    this.params = new HttpParams().set('cedula', cedula);
+    this.options = { headers: this.headers, params: this.params };
+    console.log(" >>>>>> ", this.params);
     return this.http.get(serviceUrl, this.options);
   }
 }
