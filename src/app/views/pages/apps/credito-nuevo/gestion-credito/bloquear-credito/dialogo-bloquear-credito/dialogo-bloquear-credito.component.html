@@ -1,13 +1,13 @@
 <h1 mat-dialog-title> Añadir Pago</h1>
 <div mat-dialog-content>
-    <div class="contenedor">    
+    <div class="contenedor">
         <div class="row">
             <div class="col-md-2">
                 <label style="font-weight:bold">Institucion Financiera:</label>
             </div>
             <div class="col-md-2">
                 <mat-form-field class="example-full-width">
-                    <input  matInput [formControl]=" " >
+                    <input  type = "text" matInput [formControl] ="institucionFinaciera" >
                 </mat-form-field>
             </div>
             <div class="col-md-2">
@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-2">
                 <mat-form-field class="example-full-width">
-                    <input matInput [formControl]=" " >
+                    <input matInput type= "number" [formControl] ="numeroDeposito"  >
                 </mat-form-field>
             </div>
             <div class="col-md-2">
@@ -23,7 +23,7 @@
             </div>
             <div class="col-md-2">
                 <mat-form-field class="example-full-width">
-                    <input  matInput [formControl]=" " >
+                    <input  matInput type= "number" [formControl] ="valorDeposito"  >
                 </mat-form-field>
             </div>
         </div>
@@ -34,7 +34,7 @@
             </div>
             <div class="col-md-2">
                 <mat-form-field class="example-full-width">
-                    <input matInput [formControl]=" " >
+                    <input matInput class="text" [formControl] ="cuentas" >
                 </mat-form-field>
             </div>
             <div class="col-md-2">
@@ -42,14 +42,17 @@
             </div>
             <div class="col-md-2">
                 <mat-form-field class="example-full-width">
-                    <input matInput [formControl]=" " >
+                    <input [matDatepicker]="fechaPago" matInput [formControl]="fechaPago">
+                    <mat-datepicker-toggle matSuffix [for]="fechaPago"></mat-datepicker-toggle>
+                    <mat-datepicker #fechaPago></mat-datepicker>
                 </mat-form-field>
             </div>
             </div>
         </div>
+    
     </div>     
     <div mat-dialog-actions>
-        <button mat-button onclick="agregar()">Agregar</button>
-        <button mat-button onclick="">No Thanks</button>
+        <button mat-button   (click)="nuevoPago()" tabindex="1">Agregar</button>
+        <button mat-button (click)="onNoClick()">Cancelar</button>
     </div>
 </div>

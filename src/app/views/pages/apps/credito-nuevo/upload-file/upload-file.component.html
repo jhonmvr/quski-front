@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Subir Archivo</h1>
+<div mat-dialog-content>
+  <input type="file" class="inputfile" accept="application/pdf" *ngIf="!(uploading | async)"  id="fileUpload" (change)="onFileChange($event,element); $event.preventDefault()" #fileInput value="Escoja" >
+  <button type="button"  *ngIf="uploading | async" class="btn btn-sm btn-default" (click)="subirArchivoHabilitante(element); $event.preventDefault()">
+    <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
+  </button>
+  <div class="row">
+    <mat-progress-bar *ngIf="loadImg.asObservable() | async" mode="indeterminate">  </mat-progress-bar>
+  </div>
+</div>
+<div mat-dialog-actions>
+    <a href="javascript:void(0);" (click)="onNoClick()" matTooltip="Cancelar" style="font-size: 12px; vertical-align: middle;">
+      <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="Cancelar">cancel</mat-icon><span style="position: relative;top: -10px;margin-left: 5px;">Cancelar</span>
+    </a>
+  
+</div>

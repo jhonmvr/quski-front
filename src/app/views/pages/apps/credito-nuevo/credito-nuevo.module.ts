@@ -58,6 +58,7 @@ import { AprobarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo
 import { DialogoBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-bloqueo-fondos/dialogo-bloqueo-fondos.component';
 import { AprobarPagosComponent } from './gestion-credito/aprobar-pagos/aprobar-pagos.component';
 import { DialogoAprobarPagosComponent } from './gestion-credito/aprobar-pagos/dialogo-aprobar-pagos/dialogo-aprobar-pagos.component';
+import { UploadFileComponent } from './upload-file/upload-file.component';
 
 
 
@@ -102,6 +103,10 @@ const routes: Routes = [
 				path: 'gestion-credito/aprobar-pagos',
 				component: AprobarPagosComponent
 			},
+			{
+				path: 'gestion-credito/aprobar-pagos/:id',
+				component: AprobarPagosComponent
+			},
 		]
 	}
 ];
@@ -117,7 +122,8 @@ const routes: Routes = [
 	  AprobarBloqueoFondosComponent,
 	  DialogoBloqueoFondosComponent,
 	  AprobarPagosComponent,
-	  DialogoAprobarPagosComponent],
+	  DialogoAprobarPagosComponent,
+	  UploadFileComponent],
   
   imports: [
 	CommonModule,
@@ -158,7 +164,8 @@ providers:[
 
 ], 
 
-entryComponents: [RegistarPagoDialogComponent, DialogoBloquearCreditoComponent,DialogoBloqueoFondosComponent,DialogoAprobarPagosComponent]
+entryComponents: [RegistarPagoDialogComponent, DialogoBloquearCreditoComponent,DialogoBloqueoFondosComponent,
+	DialogoAprobarPagosComponent, UploadFileComponent]
 })
 
 

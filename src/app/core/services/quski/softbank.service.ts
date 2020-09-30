@@ -11,6 +11,7 @@ import { OperacionCrear } from '../../model/softbank/OperacionCrear';
 import { SimulacionTablaAmortizacion } from '../../model/softbank/SimulacionTablaAmortizacion';
 import { ConsultaSolca } from '../../model/softbank/ConsultaSolca';
 import { OperacionRenovar } from '../../model/softbank/OperacionRenovar';
+import { ClienteSoftbank } from '../../model/softbank/ClienteSoftbank';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,17 @@ export class SoftbankService extends BaseService {
    * @param ConsultaCliente
    */
   consultarClienteCS( consultaCliente : ConsultaCliente ) {
+    const serviceUrl = this.softBaseBankUrl + this.urlRestCliente + 'consultar';
+    const wrapper = consultaCliente ;
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  }
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Consultar cliente Softbank
+   * @param ConsultaCliente
+   */
+  consultarClienteSoftbankCS( consultaCliente : ClienteSoftbank ) {
     const serviceUrl = this.softBaseBankUrl + this.urlRestCliente + 'consultar';
     const wrapper = consultaCliente ;
     this.options = { headers: this.headers };
@@ -554,7 +566,7 @@ export class SoftbankService extends BaseService {
    * Consulta las operaciones activas del cliente
    * @param consultaCliente 
    */
-  operacionConsultaCS( consultaCliente : ConsultaCliente ) {
+  operacionConsultaCS( consultaCliente : ClienteSoftbank ) {
     let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/consulta" ;
     let wrapper =  consultaCliente;
     this.options = { headers: this.headers };
