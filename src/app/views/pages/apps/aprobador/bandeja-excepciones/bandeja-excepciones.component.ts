@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { TbQoExcepcionRol } from '../../../../../core/model/quski/TbQoExcepcionRol';
 import { MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 
 @Component({
   selector: 'kt-bandeja-excepciones',
@@ -14,24 +15,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./bandeja-excepciones.component.scss']
 })
 export class BandejaExcepcionesComponent implements OnInit {
-
+  //FILTRO DE BUSQUEDA
   public formBusqueda: FormGroup = new FormGroup({});
   public identificacion = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   // STANDARD VARIABLES
   private loadingSubject = new BehaviorSubject<boolean>(false);
+  public loading;
   usuario: string;
-
+  //VARIABLES DE LA TABLA
   displayedColumnsExcepciones = ['accion', 'tipoExcepcion', 'nombreCliente'];
   dataSourceExcepcionRol = new MatTableDataSource<TbQoExcepcionRol>();
-
-  entidadCotizador: any;
-
-
-
+  private agregar = new Array<TbQoExcepcionRol>();
 
   constructor(
     private exr: ExcepcionRolService,
     private router: Router,
+    private sinNoticeService: ReNoticeService,
   ) {
     this.formBusqueda.addControl('cedula', this.identificacion);
 
@@ -41,37 +40,61 @@ export class BandejaExcepcionesComponent implements OnInit {
     this.usuario = atob(localStorage.getItem(environment.userKey));
     console.log('valor del usuario==> ', this.usuario);
     this.busquedaExcepciones(this.usuario);
+    this.dataSourceExcepcionRol = null;
+    this.loading = this.loadingSubject.asObservable();
   }
-
+  /**
+   * @description Método que realiza la búsqueda de la excepcion por medio del rol que se recupera en en OnInit
+   * @author Kléber Guerra  - Relative Engine
+   * @date 2020-09-30
+   * @private
+   * @param {string} rol
+   * @memberof BandejaExcepcionesComponent
+   */
   private busquedaExcepciones(rol: string) {
     this.loadingSubject.next(true);
     this.exr.findByRolAndIdentificacion(rol, null).subscribe((data: any) => {
       if (data && data.list) {
-
         this.dataSourceExcepcionRol = data.list;
         console.log('DATASOURCE==> ', JSON.stringify(this.dataSourceExcepcionRol));
-
-      } else {
-
       }
       this.loadingSubject.next(false);
 
     });
   }
   public find() {
+    this.dataSourceExcepcionRol = null;
     this.loadingSubject.next(true);
     this.exr.findByRolAndIdentificacion(this.usuario, this.identificacion.value).subscribe((data: any) => {
-      if (data && data.list) {
-
-        this.dataSourceExcepcionRol = data.list;
-        console.log('DATASOURCE find==> ', JSON.stringify(this.dataSourceExcepcionRol));
-
+      let listRecuperados = new Array<TbQoExcepcionRol>();
+      this.agregar = new Array<TbQoExcepcionRol>();
+      listRecuperados = data.list;
+      console.log('LISTRECUPERADOS==> ', listRecuperados);
+      if (listRecuperados) {
+        this.dataSourceExcepcionRol = null;
+        for (let index = 0; index < listRecuperados.length; index++) {
+          if (this.identificacion.value === listRecuperados[index].identificacion) {
+            let encontrados = new TbQoExcepcionRol();
+            console.log('INGRESA AL IF');
+            encontrados = listRecuperados[index];
+            this.agregar.push(encontrados);
+          }
+        }
       } else {
-
+        this.sinNoticeService.setNotice('NO EXISTE ESA CEDULA', 'error');
       }
+      this.dataSourceExcepcionRol = new MatTableDataSource(this.agregar);
       this.loadingSubject.next(false);
-
     });
+
+  }
+
+  public traerExcepciones() {
+    if (this.identificacion.value == "") {
+      this.busquedaExcepciones(this.usuario);
+    } else {
+      this.find();
+    }
 
   }
 

@@ -9,6 +9,7 @@ export class TbQoExcepcionRol {
     fechaCreacion: Date
     idNegociacion: number;
     nombreCliente: string;
+    identificacion: string;
 
     constructor() {
 
