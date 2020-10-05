@@ -1,5 +1,3 @@
-import { AprobadorModule } from './views/pages/apps/aprobador/aprobador.module';
-
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -54,6 +52,10 @@ const routes: Routes = [
 			{
 				path: 'aprobador',
 				loadChildren: () => import('../app/views/pages/apps/aprobador/aprobador.module').then(m => m.AprobadorModule)
+			},
+			{
+				path: 'fabrica',
+				loadChildren: () => import('../app/views/pages/apps/fabrica/fabrica.module').then(m => m.FabricaModule)
 			},
 			{
 				path: 'builder',

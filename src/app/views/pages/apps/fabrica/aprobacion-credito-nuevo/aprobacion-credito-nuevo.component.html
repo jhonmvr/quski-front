@@ -1,0 +1,1097 @@
+<div class="spinner-container" *ngIf="loading | async">
+  <mat-spinner class="spiner"></mat-spinner>
+</div>
+<re-portlet>
+  <re-portlet-header [title]="'Excepción Cliente'" [class]="'kt-portlet__head--lg'">
+    <ng-container ktPortletTools>
+      <a [routerLink]="['../../']" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+          arrow_back</mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+      </a>
+      <a href="javascript:void(0);" (click)="submit()" matTooltip="Enviar Respuesta"
+        style="font-size: 12px; vertical-align: middle;">
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
+        </mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" (click)="submit('GUARDAR')"
+          class="blue-icon">Enviar
+          Respuesta</span>
+      </a>
+    </ng-container>
+  </re-portlet-header>
+
+  <re-portlet-body>
+    <mat-vertical-stepper>
+      <mat-step>
+        <ng-template matStepLabel>Información Operación</ng-template>
+        <form [formGroup]="formDatosOperacion">
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field>
+                <input matInput [formControl]="nombresCompletos" placeholder="Código Operación " />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field>
+                <input [formControl]="identificacion" placeholder="Proceso" matInput numeric numericType="number"
+                  (keypress)="numberOnly($event)" />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <mat-form-field>
+                <input matInput [formControl]="nombreProceso" placeholder="Cliente" />
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Habilitantes</ng-template>
+        <re-habilitante></re-habilitante>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Datos De contacto Del Cliente</ng-template>
+        <div class=" kt-form">
+
+          <mat-horizontal-stepper>
+            <mat-step label="Datos Personales del Cliente" state="phone">
+              <form [formGroup]="formDatosCliente">
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="tipoIdentificacion" placeholder="Tipo de Identificacion:" matInput />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="tipoIdentificacion" placeholder="RUC/C.I./Pasaporte:" matInput />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoAdicional" placeholder="Aprobado Web Mupi:" matInput />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field>
+                      <input [formControl]="telefonoMovil" placeholder="Nombres Completos:" matInput />
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Primer Nombre:" matInput />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Segundo Nombre:" matInput />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Apellido Paterno:" matInput />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Apellido Materno:" matInput />
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="correo" placeholder="Separacion de bienes" matInput />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Género:" matInput />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Estado Civil:" matInput />
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="correo" placeholder="Cargas familiares" matInput />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Nacionalidad:" matInput />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Lugar de nacimiento:" matInput />
+                    </mat-form-field>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Edad:" matInput />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Fecha de nacimiento:" matInput />
+                    </mat-form-field>
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Nivel de educación:" matInput />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Actividad Ecónomica:" matInput />
+                    </mat-form-field>
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input [formControl]="telefonoOficina" placeholder="Fecha Última Actualización:" matInput />
+                    </mat-form-field>
+                  </div>
+                </div>
+
+              </form>
+            </mat-step>
+            <mat-step label="Datos de Contacto del Cliente" state="chat">
+              <div class=" kt-form">
+                <form [formGroup]="formDatosContacto">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoDomicilio" placeholder="Telefono Domicilio:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoAdicional" placeholder="Telefono Adicional:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoMovil" placeholder="Telefono Movil:" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoOficina" placeholder="Telefono de Oficina/Otros:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Correo Electronico:" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </mat-step>
+            <mat-step label="Dirección Domicilio">
+              <div class=" kt-form">
+                <form [formGroup]="formDatosDireccionDomicilio">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoDomicilio" placeholder="Es Dirección Legal:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field>
+                        <input [formControl]="telefonoAdicional" placeholder="Es Dirección Envio Correspondencia:"
+                          matInput />
+                      </mat-form-field>
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                      <mat-form-field>
+                        <input [formControl]="telefonoDomicilio" placeholder="Ubicación (Provincia/Cantón/Parroquia):"
+                          matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoOficina" placeholder="Calle Principal:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Numeración:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Calle Secundaria:" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoOficina" placeholder="Referencia Ubicación:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Barrio:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Sector:" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </mat-step>
+            <mat-step label="Dirección Laboral">
+              <div class=" kt-form">
+                <form [formGroup]="formDatosDireccionDomicilio">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoDomicilio" placeholder="Es Dirección Legal:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field>
+                        <input [formControl]="telefonoAdicional" placeholder="Es Dirección Envio Correspondencia:"
+                          matInput />
+                      </mat-form-field>
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                      <mat-form-field>
+                        <input [formControl]="telefonoDomicilio" placeholder="Ubicación (Provincia/Cantón/Parroquia):"
+                          matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoOficina" placeholder="Calle Principal:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Numeración:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Calle Secundaria:" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoOficina" placeholder="Referencia Ubicación:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Barrio:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Sector:" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Correo Electrónico:" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </mat-step>
+            <mat-step label="Datos Económicos del Cliente">
+              <div class=" kt-form">
+                <form [formGroup]="formDatosDireccionDomicilio">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="Origen" placeholder="Origen Ingresos:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoAdicional" placeholder="Nombre Empresa:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoAdicional" placeholder="Actividad Económica:" matInput />
+                      </mat-form-field>
+                    </div>
+
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col">
+                      <mat-form-field>
+                        <input [formControl]="telefonoDomicilio" placeholder="Relación de Dependencia:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="telefonoOficina" placeholder="Cargo:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Profesión:" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <input [formControl]="correo" placeholder="Ocupación:" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+
+                </form>
+              </div>
+            </mat-step>
+            <mat-step label="Patrimonio">
+              <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourcePatrimonio" style="max-width: 760px;">
+                <ng-container matColumnDef="Accion">
+                  <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <a (click)="deleteActivo(element)">
+                      <mat-icon matTooltip="Borrar">delete</mat-icon>
+                    </a>
+                    <a (click)="editarActivo(element)">
+                      <mat-icon matTooltip="Editar">edit</mat-icon>
+                    </a>
+                  </mat-cell>
+                  <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                </ng-container>
+                <ng-container matColumnDef="Activo">
+                  <mat-header-cell *matHeaderCellDef> Activo </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{ element.activos }} </mat-cell>
+                  <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+                </ng-container>
+                <ng-container matColumnDef="Avaluo">
+                  <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
+                  <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
+                </ng-container>
+                <ng-container matColumnDef="Pasivo">
+                  <mat-header-cell *matHeaderCellDef> Pasivo </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
+                  <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
+                </ng-container>
+                <ng-container matColumnDef="Ifis">
+                  <mat-header-cell *matHeaderCellDef> Ifis </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
+                  <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
+                </ng-container>
+                <ng-container matColumnDef="Infocorp">
+                  <mat-header-cell *matHeaderCellDef> Infocorp </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
+                  <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumnsPatrimonio"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsPatrimonio"></mat-row>
+                <mat-footer-row *matFooterRowDef="displayedColumnsPatrimonio; sticky: true"></mat-footer-row>
+              </mat-table>
+            </mat-step>
+            <mat-step label="Ingresos Egresos">
+              <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceIngresoEgreso"
+                style="max-width: 760px;">
+                <ng-container matColumnDef="Accion">
+                  <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <a (click)="deleteActivo(element)">
+                      <mat-icon matTooltip="Borrar">delete</mat-icon>
+                    </a>
+                    <a (click)="editarActivo(element)">
+                      <mat-icon matTooltip="Editar">edit</mat-icon>
+                    </a>
+                  </mat-cell>
+                  <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                </ng-container>
+                <ng-container matColumnDef="Ingreso">
+                  <mat-header-cell *matHeaderCellDef> Ingreso </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{ element.activos }} </mat-cell>
+                  <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+                </ng-container>
+                <ng-container matColumnDef="Egreso">
+                  <mat-header-cell *matHeaderCellDef> Egreso </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
+                  <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumnsII"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsII"></mat-row>
+                <mat-footer-row *matFooterRowDef="displayedColumnsII; sticky: true"></mat-footer-row>
+              </mat-table>
+            </mat-step>
+            <mat-step>
+              <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceReferencia">
+                <ng-container matColumnDef="Accion">
+                  <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <a (click)="deleteReferencia(element)">
+                      <mat-icon matTooltip="Borrar">delete</mat-icon>
+                    </a>
+                    <a (click)="editarReferencia(element)">
+                      <mat-icon matTooltip="Editar">edit</mat-icon>
+                    </a>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="N">
+                  <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
+                  <mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="NombresCompletos">
+                  <mat-header-cell *matHeaderCellDef>Nombres Completos</mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{ element.nombresCompletos }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="Parentesco">
+                  <mat-header-cell *matHeaderCellDef> Parentesco </mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{ element.parentesco }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="Direccion">
+                  <mat-header-cell *matHeaderCellDef> Dirección </mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{ element.direccion }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="TelefonoMovil">
+                  <mat-header-cell *matHeaderCellDef>Teléfono Movil</mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{ element.telefonoMovil }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="TelefonoFijo">
+                  <mat-header-cell *matHeaderCellDef>Teléfono Fijo</mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{ element.telefonoFijo }}</mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumnsReferencia"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsReferencia"></mat-row>
+              </mat-table>
+            </mat-step>
+
+            <!-- Icon overrides. -->
+            <ng-template matStepperIcon="phone">
+              <mat-icon>call_end</mat-icon>
+            </ng-template>
+            <ng-template matStepperIcon="chat">
+              <mat-icon>forum</mat-icon>
+            </ng-template>
+          </mat-horizontal-stepper>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Datos De Negociación</ng-template>
+        <div class="kt-form">
+          <mat-horizontal-stepper>
+            <mat-step>
+              <ng-template matStepLabel>Datos Adicionales de la Negociación</ng-template>
+              <div class=" kt-form">
+
+                <mat-horizontal-stepper>
+                  <mat-step label="Datos Adicionales de la Operación" state="phone">
+                    <div [formGroup]="formDatosCliente">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <mat-form-field>
+                            <input [formControl]="tipoIdentificacion" placeholder="Tipo Proceso:" matInput />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <mat-form-field>
+                            <input [formControl]="tipoIdentificacion" placeholder="Calificacion Mupi:" matInput />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <mat-form-field>
+                            <input [formControl]="telefonoAdicional"
+                              placeholder="Aparecerá todas las exepciones del crédito:" matInput />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </mat-step>
+                  <mat-step>
+                    <ng-template matStepLabel>Variables crediticias </ng-template>
+                    <div class="row mt-2">
+                      <div class="col-md-8">
+                        <ng-container *ngIf="dataPopup">
+                          <kt-tabla-variables-crediticias [dataPopup]='dataPopup'>
+
+                          </kt-tabla-variables-crediticias>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </mat-step>
+                  <mat-step>
+                    <ng-template matStepLabel>Riesgo acumulado </ng-template>
+                    <div class="row mt-2">
+                      <div class="col-md-8">
+                        <ng-container *ngIf="dataPopup">
+                          <kt-tabla-riesgo-acumulado>
+
+                          </kt-tabla-riesgo-acumulado>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </mat-step>
+                  <mat-step label="Datos de Contacto del Cliente" state="chat">
+
+
+                    <div class=" kt-form">
+                      <form [formGroup]="formDatosContacto">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoDomicilio" placeholder="Telefono Domicilio:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoAdicional" placeholder="Telefono Adicional:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoMovil" placeholder="Telefono Movil:" matInput />
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoOficina" placeholder="Telefono de Oficina/Otros:"
+                                matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Correo Electronico:" matInput />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </mat-step>
+                  <mat-step label="Dirección Domicilio">
+                    <div class=" kt-form">
+                      <form [formGroup]="formDatosDireccionDomicilio">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoDomicilio" placeholder="Es Dirección Legal:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-6">
+                            <mat-form-field>
+                              <input [formControl]="telefonoAdicional" placeholder="Es Dirección Envio Correspondencia:"
+                                matInput />
+                            </mat-form-field>
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+                          <div class="col">
+                            <mat-form-field>
+                              <input [formControl]="telefonoDomicilio"
+                                placeholder="Ubicación (Provincia/Cantón/Parroquia):" matInput />
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoOficina" placeholder="Calle Principal:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Numeración:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Calle Secundaria:" matInput />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoOficina" placeholder="Referencia Ubicación:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Barrio:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Sector:" matInput />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </mat-step>
+                  <mat-step label="Dirección Laboral">
+                    <div class=" kt-form">
+                      <form [formGroup]="formDatosDireccionDomicilio">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoDomicilio" placeholder="Es Dirección Legal:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-6">
+                            <mat-form-field>
+                              <input [formControl]="telefonoAdicional" placeholder="Es Dirección Envio Correspondencia:"
+                                matInput />
+                            </mat-form-field>
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+                          <div class="col">
+                            <mat-form-field>
+                              <input [formControl]="telefonoDomicilio"
+                                placeholder="Ubicación (Provincia/Cantón/Parroquia):" matInput />
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoOficina" placeholder="Calle Principal:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Numeración:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Calle Secundaria:" matInput />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoOficina" placeholder="Referencia Ubicación:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Barrio:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Sector:" matInput />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Correo Electrónico:" matInput />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </mat-step>
+                  <mat-step label="Datos Económicos del Cliente">
+                    <div class=" kt-form">
+                      <form [formGroup]="formDatosDireccionDomicilio">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="Origen" placeholder="Origen Ingresos:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoAdicional" placeholder="Nombre Empresa:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoAdicional" placeholder="Actividad Económica:" matInput />
+                            </mat-form-field>
+                          </div>
+
+                        </div>
+
+
+                        <div class="row">
+                          <div class="col">
+                            <mat-form-field>
+                              <input [formControl]="telefonoDomicilio" placeholder="Relación de Dependencia:"
+                                matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="telefonoOficina" placeholder="Cargo:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Profesión:" matInput />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <input [formControl]="correo" placeholder="Ocupación:" matInput />
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+
+                      </form>
+                    </div>
+                  </mat-step>
+                  <mat-step label="Patrimonio">
+                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourcePatrimonio"
+                      style="max-width: 760px;">
+                      <ng-container matColumnDef="Accion">
+                        <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a (click)="deleteActivo(element)">
+                            <mat-icon matTooltip="Borrar">delete</mat-icon>
+                          </a>
+                          <a (click)="editarActivo(element)">
+                            <mat-icon matTooltip="Editar">edit</mat-icon>
+                          </a>
+                        </mat-cell>
+                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="Activo">
+                        <mat-header-cell *matHeaderCellDef> Activo </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.activos }} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="Avaluo">
+                        <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }}
+                        </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}
+                        </mat-footer-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="Pasivo">
+                        <mat-header-cell *matHeaderCellDef> Pasivo </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }}
+                        </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}
+                        </mat-footer-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="Ifis">
+                        <mat-header-cell *matHeaderCellDef> Ifis </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }}
+                        </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}
+                        </mat-footer-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="Infocorp">
+                        <mat-header-cell *matHeaderCellDef> Infocorp </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }}
+                        </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}
+                        </mat-footer-cell>
+                      </ng-container>
+                      <mat-header-row *matHeaderRowDef="displayedColumnsPatrimonio"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumnsPatrimonio"></mat-row>
+                      <mat-footer-row *matFooterRowDef="displayedColumnsPatrimonio; sticky: true"></mat-footer-row>
+                    </mat-table>
+                  </mat-step>
+                  <mat-step label="Ingresos Egresos">
+                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceIngresoEgreso"
+                      style="max-width: 760px;">
+                      <ng-container matColumnDef="Accion">
+                        <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a (click)="deleteActivo(element)">
+                            <mat-icon matTooltip="Borrar">delete</mat-icon>
+                          </a>
+                          <a (click)="editarActivo(element)">
+                            <mat-icon matTooltip="Editar">edit</mat-icon>
+                          </a>
+                        </mat-cell>
+                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="Ingreso">
+                        <mat-header-cell *matHeaderCellDef> Ingreso </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.activos }} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="Egreso">
+                        <mat-header-cell *matHeaderCellDef> Egreso </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }}
+                        </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}
+                        </mat-footer-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayedColumnsII"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumnsII"></mat-row>
+                      <mat-footer-row *matFooterRowDef="displayedColumnsII; sticky: true"></mat-footer-row>
+                    </mat-table>
+                  </mat-step>
+                  <mat-step>
+                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceReferencia">
+                      <ng-container matColumnDef="Accion">
+                        <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a (click)="deleteReferencia(element)">
+                            <mat-icon matTooltip="Borrar">delete</mat-icon>
+                          </a>
+                          <a (click)="editarReferencia(element)">
+                            <mat-icon matTooltip="Editar">edit</mat-icon>
+                          </a>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="N">
+                        <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="NombresCompletos">
+                        <mat-header-cell *matHeaderCellDef>Nombres Completos</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.nombresCompletos }}</mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="Parentesco">
+                        <mat-header-cell *matHeaderCellDef> Parentesco </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.parentesco }}</mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="Direccion">
+                        <mat-header-cell *matHeaderCellDef> Dirección </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.direccion }}</mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="TelefonoMovil">
+                        <mat-header-cell *matHeaderCellDef>Teléfono Movil</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.telefonoMovil }}</mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="TelefonoFijo">
+                        <mat-header-cell *matHeaderCellDef>Teléfono Fijo</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.telefonoFijo }}</mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayedColumnsReferencia"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumnsReferencia"></mat-row>
+                    </mat-table>
+                  </mat-step>
+
+                  <!-- Icon overrides. -->
+                  <ng-template matStepperIcon="phone">
+                    <mat-icon>call_end</mat-icon>
+                  </ng-template>
+                  <ng-template matStepperIcon="chat">
+                    <mat-icon>forum</mat-icon>
+                  </ng-template>
+                </mat-horizontal-stepper>
+              </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </mat-step>
+
+          </mat-horizontal-stepper>
+
+        </div>
+      </mat-step>
+
+      <mat-step>
+        <ng-template matStepLabel>Riesgo Acumulado </ng-template>
+        <div class="row mt-2">
+          <div class="col">
+            <ng-container *ngIf="dataPopup">
+              <kt-tabla-riesgo-acumulado [idCliente]="entidadCliente.id" [isPaged]="false">
+              </kt-tabla-riesgo-acumulado>
+            </ng-container>
+          </div>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Excepción</ng-template>
+        <div class="kt-form">
+          <form [formGroup]="formDatosExcepcion">
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <mat-card class="warning">
+                  <span class="material-icons warning-icons">report_problem </span>
+                  <span>{{mensaje}}</span>
+
+
+
+
+                </mat-card>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-8">
+                <mat-label> Observacion Del Asesor: </mat-label>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-xl-8">
+                <textarea class="form-control border" rows="3" [formControl]="observacionAsesor"
+                  placeholder="Observacion Del Asesor: " matInput> {{ observacionAsesor }}</textarea>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-8">
+                <mat-label> Observacion Del Aprobador: </mat-label>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-xl-8">
+                <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
+                  placeholder="Observacion Del Aprobador: " matInput>{{ observacionAprobador }}</textarea>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class=" offset-3 offset-lg-2 col-xl-8">
+                <mat-radio-group [formControl]="radioB" (change)="capturaHoraAtencion()">
+                  <mat-radio-button value="APROBADO">Aprobar Excepcion</mat-radio-button>
+                  <mat-radio-button value="NEGADO">Negar Excepcion</mat-radio-button>
+                </mat-radio-group>
+
+
+
+              </div>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+    </mat-vertical-stepper>
+  </re-portlet-body>
+  <re-portlet-footer></re-portlet-footer>
+</re-portlet>
