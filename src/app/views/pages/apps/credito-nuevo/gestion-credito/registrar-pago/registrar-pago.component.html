@@ -4,8 +4,6 @@
     <re-portlet-body>
         <mat-vertical-stepper>
             <mat-step label="Información de Crédito">
-
-
                 <div class="row">
                     <div class="col-md-2">
                         <label style="font-weight:bold">Nombre del cliente:</label>
@@ -85,9 +83,9 @@
 
                     <ng-container matColumnDef="accion">
                         <th mat-header-cell *matHeaderCellDef>Accion </th>
-                        <td mat-cell *matCellDef="let j = index;">
-                            <button mat-raised-button focusable="false" (click)="deletFila(j)">
-                                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Eliminar">S
+                        <td mat-cell *matCellDef="let j">
+                            <button mat-icon-button  (click)="deletFila(j)">
+                                <mat-icon style="font-size: 62px" matTooltipPosition="above" matTooltip="Eliminar">cancel
                                 </mat-icon>
                             </button>
                         </td>
@@ -120,21 +118,18 @@
                     <ng-container matColumnDef="subir">
                         <th mat-header-cell *matHeaderCellDef> Subir Comprobante </th>
                         <td mat-cell *matCellDef="let j;">
-                            <form action="/subir" method="POST" enctype="multipart/form-data">
-
-                                <button type="submit" mat-raised-button focusable="false" (click)="subirComprobante(j)">
-                                    <mat-icon style="font-size: 32px" matTooltipPosition="above"
+                                <button type="submit" mat-icon-button focusable="false" (click)="subirComprobante(j)">
+                                    <mat-icon style="font-size: 42px" matTooltipPosition="above"
                                         matTooltip="Subir Comprobante">cloud_upload</mat-icon>
                                 </button>
-                            </form>
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="descargar">
                         <th mat-header-cell *matHeaderCellDef> Descarga Comprobante </th>
-                        <td mat-cell *matCellDef="let j = index;">
-                            <button mat-raised-button focusable="false" (click)="descargarComprobante()">
-                                <mat-icon style="font-size: 32px" matTooltipPosition="above"
+                        <td mat-cell *matCellDef="let j;">
+                            <button mat-icon-button focusable="false" (click)="descargarComprobante()">
+                                <mat-icon style="font-size: 42px" matTooltipPosition="above"
                                     matTooltip="Descarga Comprobante">cloud_download</mat-icon>
                             </button>
                         </td>

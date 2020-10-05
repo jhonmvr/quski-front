@@ -17,7 +17,7 @@ export class RegistarPagoDialogComponent implements OnInit {
     
       }
 
-      institucionFinanciera = new FormControl('',[Validators.required]);
+    institucionFinanciera = new FormControl('',[Validators.required]);
     
     numerodeDeposito = new FormControl('',[Validators.required]);
     
@@ -25,7 +25,7 @@ export class RegistarPagoDialogComponent implements OnInit {
     
     cuentas = new FormControl('',[Validators.required]);
     
-    fechadePago = new FormControl('');
+    fechadePago = new FormControl('',[Validators.required]);
 
     public formCliente: FormGroup = new FormGroup({});
  
@@ -37,6 +37,7 @@ export class RegistarPagoDialogComponent implements OnInit {
         this.formCliente.addControl('cuentas',this.cuentas);
         this.formCliente.addControl('fechadePago',this.fechadePago);
 
+        this.institucionFinanciera.setValue("Mutualista Pichincha");
       }
   /**
    * @description METODO QUE AGREGA UNA NUEVO PAGO

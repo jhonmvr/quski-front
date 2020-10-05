@@ -7,7 +7,9 @@ import { SoftbankService } from './../../../../../../core/services/quski/softban
 import { SubheaderService } from './../../../../../../core/_base/layout';
 import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
 import { ClienteSoftbank } from './../../../../../../core/model/softbank/ClienteSoftbank';
-import { BloquearFondoService } from '../../../../../../core/services/quski/bloquearFondo.service';
+import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
+import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
+import { UploadFileComponent } from '../../upload-file/upload-file.component';
 
 @Component({
   selector: 'kt-bloquear-credito',
@@ -17,7 +19,7 @@ import { BloquearFondoService } from '../../../../../../core/services/quski/bloq
 export class BloquearCreditoComponent implements OnInit {
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
-  columnas: string[] = ['accion', 'institucionFinanciera', 'cuentas', 'fechadePago', 'numerodeDeposito', 'valorpagado', 'subir', 'descargar'];
+  columnas = ['accion', 'institucionFinanciera', 'cuentas', 'fechaPago', 'numeroDeposito', 'valorPagado', 'subir', 'descargar'];
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   dataSourceRubros: MatTableDataSource<any> = new MatTableDataSource<any>();
@@ -30,7 +32,6 @@ export class BloquearCreditoComponent implements OnInit {
   public cedula = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public nombreCliente = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public codigoCuentaMupi = new FormControl('', [Validators.required, Validators.maxLength(13)]);
-  public valorPreCancelado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public valorDepositado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public observacion = new FormControl('', [Validators.maxLength(150)]);
   /**
@@ -42,14 +43,13 @@ export class BloquearCreditoComponent implements OnInit {
     private css: SoftbankService,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
-    private bloquearFondoService: BloquearFondoService,
+    private registrarPagoService: RegistrarPagoService,
     public dialog: MatDialog
   ) {
     this.formBloqueoFondo.addControl("identificacion", this.identificacion);
     this.formBloqueoFondo.addControl("nombresCliente", this.nombreCliente);
     this.formBloqueoFondo.addControl("cedula", this.cedula);
     this.formBloqueoFondo.addControl("codigoCuentaMupi", this.codigoCuentaMupi);
-    this.formBloqueoFondo.addControl("valorPreCancelado", this.valorPreCancelado);
     this.formBloqueoFondo.addControl("valorDepositado", this.valorDepositado);
     this.formBloqueoFondo.addControl("observacion", this.observacion);
   }
@@ -83,12 +83,23 @@ export class BloquearCreditoComponent implements OnInit {
     data.splice(row, 1);
     this.dataSource = new MatTableDataSource<any>(data);
   };
-  subirComponente() {
-    if (confirm("Realmente quiere subir?")) {
+  subirComprobante(j) {
+    console.log("registro ",j)
+    const dialogRef = this.dialog.open(UploadFileComponent, {
+      width: "auto",
+      height: "auto"
+    });
 
-    }
+    dialogRef.afterClosed().subscribe(r => {
+      console.log("resultado del archivito q subi XD", r);
+      if (r) {
+        j.nombreArchivo = r.nombreArchivo;
+        j.archivo = r.archivo;
+        this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE", "success");
+      }
+    });
   }
-  descargarComponente() {
+  descargarComprobante() {
     if (confirm("Realmente quiere descargar?")) {
 
     }
@@ -116,9 +127,9 @@ export class BloquearCreditoComponent implements OnInit {
         this.cedula.setValue(data.identificacion);
         this.nombreCliente.setValue(data.nombreCompleto);
         let cuentasBancaCliente = data.cuentasBancariasCliente[0];
-        //console.log(" cuenta banco --->",cuentasBancaCliente.cuenta )
+        console.log(" cuentas cuentasBancariasCliente --->",cuentasBancaCliente )
         this.codigoCuentaMupi.setValue("5248548563");
-        //console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data));
+        console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data));
       } else {
         this.sinNoticeService.setNotice("Error no fue cacturado en 'consultarClienteCS' :(", 'error');
       }
@@ -143,18 +154,38 @@ export class BloquearCreditoComponent implements OnInit {
       return;
     }
 
-    /*
-        this.bloqueoFondoService.crearBloqueoFondoConRelaciones( ).subscribe(p=>{
-          
-          this.loadingSubject.next(false);
-          this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
-        },error=>{
-          this.loadingSubject.next(false);
-        }
-        )
-       */
+    let registrarBloqueoFondoWrapper = {
+      cliente: {},
+      bloqueos: []
+    }
 
+    let cliente = new TbQoClientePago();
+    cliente.nombreCliente = this.nombreCliente.value;
+    cliente.cedula = this.cedula.value;
+    cliente.codigoCuentaMupi = this.codigoCuentaMupi.value;
+    cliente.valorDepositado = this.valorDepositado.value;
+    cliente.observacion = this.observacion.value;
+    cliente.tipo = ('BLOQUEO_FONDO')
+    registrarBloqueoFondoWrapper.cliente = cliente;
+    if (this.dataSource.data.length > 0) {
+      registrarBloqueoFondoWrapper.bloqueos = this.dataSource.data;
+    } else {
+      registrarBloqueoFondoWrapper.bloqueos = null;
+    }
+
+    this.registrarPagoService.bloqueoFondosConRelaciones(registrarBloqueoFondoWrapper).subscribe(p => {
+      console.log("Datos que se van a guardar >>> ", this.registrarPagoService);
+
+      this.loadingSubject.next(false);
+      this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
+    }, error => {
+      this.loadingSubject.next(false);
+    }
+
+    )
   }
+
+  
   /**
  * 
  * @param pfield 
@@ -193,9 +224,6 @@ export class BloquearCreditoComponent implements OnInit {
 
     if (pfield && pfield == "nombreCliente") {
       return this.nombreCliente.hasError('required') ? errorrequiredo : '';
-    }
-    if (pfield && pfield == "valorPreCancelado") {
-      return this.valorPreCancelado.hasError('required') ? errorrequiredo : '';
     }
     if (pfield && pfield == "valorDepositado") {
       return this.valorDepositado.hasError('required') ? errorrequiredo : '';

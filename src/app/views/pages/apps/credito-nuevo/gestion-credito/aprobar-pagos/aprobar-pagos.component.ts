@@ -1,21 +1,22 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTable, MatDialog, MatTableDataSource } from '@angular/material';
+import { MatTable, MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { DialogoAprobarPagosComponent } from './dialogo-aprobar-pagos/dialogo-aprobar-pagos.component';
+import { DialogoRechazarPagosComponent } from './dialogo-rechazar-pagos/dialogo-rechazar-pagos.component';
 import { BehaviorSubject } from 'rxjs';
-import { Page } from './../../../../../../core/model/page';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SoftbankService } from './../../../../../../core/services/quski/softbank.service';
 import { SubheaderService } from './../../../../../../core/_base/layout';
 import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
 import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
+import { ActivatedRoute, Router } from '@angular/router';
+/*import { Page } from './../../../../../../core/model/page';
 import { ClienteSoftbank } from './../../../../../../core/model/softbank/ClienteSoftbank';
 import { TbQoRegistrarPago } from './../../../../../../core/model/quski/TbQoRegistrarPago';
 import { AuthDialogComponent } from './../../../../../../../app/views/partials/custom/auth-dialog/auth-dialog.component';
 import { ConsultaCliente } from './../../../../../../core/model/softbank/ConsultaCliente';
 import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
-import { ActivatedRoute } from '@angular/router';
-
+*/
 @Component({
   selector: 'kt-aprobar-pagos',
   templateUrl: './aprobar-pagos.component.html',
@@ -23,18 +24,21 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AprobarPagosComponent implements OnInit {
   loading;
-  loadingSubject = new BehaviorSubject<boolean>(false);
-  columnas = ['accion', 'institucionFinanciera', 'cuentas', 'fechadePago', 'numerodeDeposito', 'valorpagado', 'descargar'];
-
-  dataSource: MatTableDataSource<TbQoRegistrarPago> = new MatTableDataSource<TbQoRegistrarPago>();
+  //loadingSubject = new BehaviorSubject<boolean>(false);
+  columnas = ['institucionFinanciera', 'cuentas', 'fechaPago', 'numeroDeposito', 'valorPagado', 'descargar'];
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   dataSourceRubros: MatTableDataSource<any> = new MatTableDataSource<any>();
-  totalResults: number;
-  p = new Page();
-
+  //totalResults: number;
+  //p = new Page();
+  //paginator: MatPaginator;
   columna: string[] = ['rubro', 'valor'];
-
-  @ViewChild('sort1', { static: true }) sort: DialogoAprobarPagosComponent;
+  //total: string;
+  //@ViewChild('tabla1', { static: true }) sort: MatSort;
+  
+  
   private idCliente : string;
+  private estado : string;
+  private tipo : string;
   public formAprobarPago: FormGroup = new FormGroup({});
   public nombreCliente = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cedula = new FormControl('', [Validators.required, Validators.maxLength(13)]);
@@ -44,20 +48,22 @@ export class AprobarPagosComponent implements OnInit {
   public valorPreCancelado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public valorDepositado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public observacion = new FormControl('', [Validators.maxLength(150)]);
+  
   /**
    * 
    * @param  sinNoticeService;
    * 
    */
+  loadingSubject = new BehaviorSubject<boolean>(false);
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private css: SoftbankService,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
     private rp: RegistrarPagoService,
-    private noticeService: ReNoticeService,
-
-    public dialog: MatDialog) {
+    public dialog: MatDialog
+    ) {
     this.formAprobarPago.addControl("nombresCliente", this.nombreCliente);
     this.formAprobarPago.addControl("cedula", this.cedula);
     this.formAprobarPago.addControl("codigoOperacion", this.codigoOperacion);
@@ -69,58 +75,60 @@ export class AprobarPagosComponent implements OnInit {
   }
 
   submit() {
-
-    this.loadingSubject.next(true);
-    this.dataSource = null;
-    this.rp.findAllRegistrarPago(this.p).subscribe((data: any) => {
-      this.loadingSubject.next(false);
-      console.log("====> datos: " + JSON.stringify(data));
-      if (data.list) {
-        this.totalResults = data.totalResults;
-        this.dataSource = new MatTableDataSource<TbQoRegistrarPago>(data.list);
-
-        for (let i = 0; i < this.dataSource.data.length; i++) {
-
-          this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
-        }
-      } else {
-        this.sinNoticeService.setNotice("NO SE ENCONTRARON REGISTROS", 'info');
-      }
-    }, error => {
-      this.loadingSubject.next(false);
-      if (error.error) {
-        this.noticeService.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-      } else if (error.statusText && error.status == 401) {
-        this.dialog.open(AuthDialogComponent, {
-          data: {
-            mensaje: "Error " + error.statusText + " - " + error.message
-          }
-        });
-      } else {
-        this.noticeService.setNotice("Error al cargar las notificaciones o alertas", 'error');
-      }
-    }
-    );
+    
   }
 
   id;
-  PopUp() {
-    console.log("entra a popUp Aprobrar y Rechazar")
+  Aprobar() {
+    console.log("entra a popUp Aprobrar ")
     let idReferenciaHab = this.id;
     const dialogRef = this.dialog.open(DialogoAprobarPagosComponent, {
       width: "auto-max",
       height: "auto-max",
       data: idReferenciaHab
     });
-    dialogRef.afterClosed().subscribe(r => {
-      console.log("datos de salida popUp", r)
-      let datos = this.dataSource.data;
-      datos.push(r);
+    dialogRef.afterClosed().subscribe(a => {
+      //console.log("datos de salida popUp", r)
+      /*let wrapperRespuesta = new TbQoClientePago();
+    
+    wrapperRespuesta.observacion = this.observacion.value;*/
+    
+    
+    this.rp.aprobarPago(this.idCliente, this.estado, this.tipo ).subscribe(q => {
+      console.log(" >>> ", this.rp);
 
-      console.log("dataSOurce", datos);
-      if (r) {
-        this.dataSource.data = datos;
-      }
+      this.loadingSubject.next(false);
+      this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
+      this.router.navigate(['../../asesor/bandeja-principal', this.idCliente]);
+    }, error => {
+      this.loadingSubject.next(false);
+    })
+    });
+  }
+  Rechazar() {
+    console.log("entra a popUp Rechazar")
+    let idReferenciaHab = this.id;
+    const dialogRef = this.dialog.open(DialogoRechazarPagosComponent, {
+      width: "auto-max",
+      height: "auto-max",
+      data: idReferenciaHab
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      //console.log("datos de salida popUp", r)
+      /*let wrapperRespuesta = new TbQoClientePago();
+    
+    wrapperRespuesta.observacion = this.observacion.value;*/
+    
+    
+    this.rp.rechazarPago(this.idCliente, this.estado, this.tipo ).subscribe(p => {
+      console.log(" >>> ", this.rp);
+
+      this.loadingSubject.next(false);
+      this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
+      this.router.navigate(['../../asesor/bandeja-principal', this.idCliente]);
+    }, error => {
+      this.loadingSubject.next(false);
+    })
     });
   }
   deletFila(row) {
@@ -131,12 +139,12 @@ export class AprobarPagosComponent implements OnInit {
   };
 
 
-  subirComponente() {
+  /*subirComprobante() {
     if (confirm("Realmente quiere subir?")) {
 
     }
-  }
-  descargarComponente() {
+  }*/
+  descargarComprobante() {
     if (confirm("Realmente quiere descargar?")) {
 
     }
@@ -147,12 +155,51 @@ export class AprobarPagosComponent implements OnInit {
     this.testconsultaRubrosCS();
     this.ConsultarPagosId();
     this.subheaderService.setTitle("Aprobar Pagos");
-    this.loading = this.loadingSubject.asObservable();
-   
+
   }
 
 
-  
+  ConsultarPagosId() {
+    this.route.paramMap.subscribe((data: any) => {
+      data.params.id
+      //console.log(" id = ? " , data.params.id)
+      if (data.params.id) {
+        this.idCliente = data.params.id;
+        let tipodb = "REGISTRO_PAGO";
+        this.rp.clientePagoByIdCliente(this.idCliente, tipodb).subscribe((data: any) => {
+          if (data) {
+            let cliente = data.entidades[0].tbQoClientePago;
+            this.nombreCliente.setValue(cliente.nombreCliente);
+            this.cedula.setValue(cliente.cedula);
+            this.codigoOperacion.setValue(cliente.codigoOperacion);
+            this.codigoCuentaMupi.setValue(cliente.codigoCuentaMupi);
+            this.tipoCredito.setValue(cliente.tipoCredito);
+            this.valorPreCancelado.setValue(cliente.valorPrecancelado);
+            this.valorDepositado.setValue(cliente.valorDepositado);
+            this.observacion.setValue(cliente.observacion);
+            this.estado = cliente.estado;
+            this.tipo = cliente.tipo;
+            console.log("Cliente: ----> ", this.estado)
+            console.log("Consulta de pagos en clientePagoByIdCliente --> " + JSON.stringify(data));
+            
+            this.dataSource = new MatTableDataSource<any>(data.entidades);
+          } else {
+            this.sinNoticeService.setNotice("No me trajo datos 'clientePagoByIdCliente'", 'error');
+          }
+        }, error => {
+          if (JSON.stringify(error).indexOf("codError") > 0) {
+            let b = error.error;
+            this.sinNoticeService.setNotice(b.msgError, 'error');
+          } else {
+            this.sinNoticeService.setNotice("Error no fue cacturado en 'clientePagoByIdCliente' :(", 'error');
+
+          }
+        })
+      } else {
+
+      }
+    })
+  }
   testconsultaRubrosCS() {
     let entidadConsultaRubros;
     entidadConsultaRubros = 2020001984;
@@ -174,46 +221,6 @@ export class AprobarPagosComponent implements OnInit {
       }
     })
   }
-
-
-  ConsultarPagosId() {
-    this.route.paramMap.subscribe((data: any) => {
-      data.params.id
-      //console.log(" id = ? " , data.params.id)
-      if (data.params.id) {
-        this.idCliente = data.params.id;
-        this.rp.clientePagoByIdCliente(this.idCliente).subscribe((data: any) => {
-          if (data) {
-            let cliente = data.entidades[0].tbQoClientePago;
-            this.nombreCliente.setValue(cliente.nombreCliente);
-            this.cedula.setValue(cliente.cedula);
-            this.codigoOperacion.setValue(cliente.codigoOperacion);
-            this.codigoCuentaMupi.setValue(cliente.codigoCuentaMupi);
-            this.tipoCredito.setValue(cliente.tipoCredito);
-            this.valorPreCancelado.setValue(cliente.valorPrecancelado);
-            this.valorDepositado.setValue(cliente.valorDepositado);
-            this.observacion.setValue(cliente.observacion);
-            console.log("Cliente: ----> ", cliente)
-            console.log("Consulta de pagos en clientePagoByIdCliente --> " + JSON.stringify(data));
-          } else {
-            this.sinNoticeService.setNotice("No me trajo datos 'clientePagoByIdCliente'", 'error');
-          }
-        }, error => {
-          if (JSON.stringify(error).indexOf("codError") > 0) {
-            let b = error.error;
-            this.sinNoticeService.setNotice(b.msgError, 'error');
-          } else {
-            this.sinNoticeService.setNotice("Error no fue cacturado en 'clientePagoByIdCliente' :(", 'error');
-
-          }
-        })
-      } else {
-
-      }
-    })
-  }
-  
-  
   /**
  * 
  * @param pfield 
@@ -266,3 +273,6 @@ export class AprobarPagosComponent implements OnInit {
     }
   }
 }
+
+
+

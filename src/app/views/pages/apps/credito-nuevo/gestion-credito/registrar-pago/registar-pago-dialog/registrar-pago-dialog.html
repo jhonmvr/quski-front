@@ -1,13 +1,14 @@
-<h1 mat-dialog-title> Añadir Pago</h1>
+<div class="title"> <h3> Añadir Pago</h3></div>
+<div class="mat-table__wrapper">
 <div mat-dialog-content>
-    <div class="contenedor">
+    <div class="form-popup">
         <div class="row">
             <div class="col-md-2">
-                <label style="font-weight:bold">Institucion Financiera:</label>
+                <label style="font-weight:bold"><b>Institucion Financiera:</b></label>
             </div>
             <div class="col-md-2">
                 <mat-form-field class="example-full-width">
-                    <input type="text" matInput [formControl]="institucionFinanciera">
+                    <input type="text" placeholder="" matInput [formControl]="institucionFinanciera">
                 </mat-form-field>
             </div>
             <div class="col-md-2">
@@ -18,7 +19,7 @@
                     <input matInput type="number" [formControl]="numerodeDeposito">
                 </mat-form-field>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1.5">
                 <label style="font-weight:bold">Valor Pagado:</label>
             </div>
             <div class="col-md-2">
@@ -52,7 +53,18 @@
 
     </div>
     <div mat-dialog-actions>
-        <button mat-button (click)="nuevoPago()" tabindex="1">Agregar</button>
-        <button mat-button (click)="onNoClick()">Cancelar</button>
+        <div class="col-md-2">
+        <button mat-icon-button color="white" focusable="true" (click)="nuevoPago()"> 
+            <mat-icon style="font-size: 62px" matTooltipPosition="above" matTooltip="Aceptar">check_box
+            </mat-icon>Aceptar
+        </button>
     </div>
+    <div class="col-md-2">
+        <button mat-icon-button color="black" focusable="false" (click)="onNoClick()"> 
+            <mat-icon style="font-size: 62px" matTooltipPosition="above" matTooltip="Cancelar">not_interested
+            </mat-icon>Cancelar
+        </button>
+    </div>
+    </div>   
+</div>   
 </div>

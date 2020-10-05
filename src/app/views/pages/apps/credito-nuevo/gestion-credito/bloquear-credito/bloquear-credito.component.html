@@ -15,7 +15,8 @@
             </mat-form-field>
           </div>
           <div class="col-md-2">
-            <button mat-raised-button color="warn" focusable="false" matStepperNext (click)="consultarClienteSoftbankCS()" >
+            <button mat-raised-button color="warn" focusable="false" matStepperNext
+              (click)="consultarClienteSoftbankCS()">
               Buscar
             </button>
           </div>
@@ -36,11 +37,11 @@
         <div class="row">
           <div class="col-md-2">
             <label style="font-weight:bold">Cédula:</label>
-                    </div>
-                    <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="cedula" required>
-                            <mat-error>{{ getErrorMessage("cedula") }}</mat-error>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="example-full-width">
+              <input matInput [formControl]="cedula" required>
+              <mat-error>{{ getErrorMessage("cedula") }}</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -51,70 +52,74 @@
           <div class="col-md-4">
             <mat-form-field class="example-full-width">
               <input matInput [formControl]="codigoCuentaMupi" required>
-                            <mat-error>{{ getErrorMessage("codigoCuentaMupi") }}</mat-error>
+              <mat-error>{{ getErrorMessage("codigoCuentaMupi") }}</mat-error>
             </mat-form-field>
           </div>
         </div>
       </mat-step>
       <!-- Tabla de pagos -->
       <mat-step label="Pagos">
-        <table mat-table [dataSource]=" dataSource" class="mat-elevation-z8" #tabla1>
+        <div class="mat-table__wrapper">
+          <table mat-table [dataSource]=" dataSource" class="mat-elevation-z8" #tabla1>
 
-          <ng-container matColumnDef="accion">
+            <ng-container matColumnDef="accion">
               <th mat-header-cell *matHeaderCellDef>Accion </th>
-              <td mat-cell *matCellDef="let j = index;">
-                  <button mat-raised-button color="warn" focusable="false" (click)="deletFila(j)">
-                      <mat-icon> Eliminar </mat-icon>
-                  </button>
+              <td mat-cell *matCellDef="let j">
+                <button mat-icon-button (click)="deletFila(j)">
+                  <mat-icon style="font-size: 62px" matTooltipPosition="above" matTooltip="Eliminar">cancel
+                  </mat-icon>
+                </button>
               </td>
-          </ng-container>
+            </ng-container>
 
-          <ng-container matColumnDef="institucionFinanciera">
+            <ng-container matColumnDef="institucionFinanciera">
               <th mat-header-cell *matHeaderCellDef> Institucion Financiera </th>
               <td mat-cell *matCellDef="let articulo"> {{articulo.institucionFinanciera}} </td>
-          </ng-container>
+            </ng-container>
 
-          <ng-container matColumnDef="cuentas">
+            <ng-container matColumnDef="cuentas">
               <th mat-header-cell *matHeaderCellDef> Cuentas </th>
               <td mat-cell *matCellDef="let articulo"> {{articulo.cuentas}} </td>
-          </ng-container>
+            </ng-container>
 
-          <ng-container matColumnDef="fechadePago">
+            <ng-container matColumnDef="fechaPago">
               <th mat-header-cell *matHeaderCellDef> Fecha Pago </th>
-              <td mat-cell *matCellDef="let articulo"> {{articulo.fechadePago | date: 'dd/MM/yyyy'}} </td>
-          </ng-container>
+              <td mat-cell *matCellDef="let articulo"> {{articulo.fechaPago | date: 'dd/MM/yyyy'}} </td>
+            </ng-container>
 
-          <ng-container matColumnDef="numerodeDeposito">
-              <th mat-header-cell *matHeaderCellDef> Numero de deposito </th>
-              <td mat-cell *matCellDef="let articulo"> {{articulo.numerodeDeposito}} </td>
-          </ng-container>
+            <ng-container matColumnDef="numeroDeposito">
+              <th mat-header-cell *matHeaderCellDef> Numero de Deposito </th>
+              <td mat-cell *matCellDef="let articulo"> {{articulo.numeroDeposito}} </td>
+            </ng-container>
 
-          <ng-container matColumnDef="valorpagado">
-              <th mat-header-cell *matHeaderCellDef> Valor Depositado </th>
-              <td mat-cell *matCellDef="let articulo"> {{articulo.valorpagado}} </td>
-          </ng-container>
-          <ng-container matColumnDef="subir">
+            <ng-container matColumnDef="valorPagado">
+              <th mat-header-cell *matHeaderCellDef> Valor Pagado </th>
+              <td mat-cell *matCellDef="let articulo"> {{articulo.valorPagado}} </td>
+            </ng-container>
+            <ng-container matColumnDef="subir">
               <th mat-header-cell *matHeaderCellDef> Subir Foto </th>
-              <td mat-cell *matCellDef="let j = index;">
-                  <button mat-raised-button color="warn" focusable="false" (click)="subirComponente()">
-                      <mat-icon> S </mat-icon>
-                  </button>
+              <td mat-cell *matCellDef="let j">
+                <button type="submit" mat-icon-button focusable="false" (click)="subirComprobante(j)">
+                  <mat-icon style="font-size: 42px" matTooltipPosition="above" matTooltip="Subir Comprobante">
+                    cloud_upload</mat-icon>
+                </button>
               </td>
-          </ng-container>
+            </ng-container>
 
-          <ng-container matColumnDef="descargar">
+            <ng-container matColumnDef="descargar">
               <th mat-header-cell *matHeaderCellDef> Descarga Foto </th>
-              <td mat-cell *matCellDef="let j = index;">
-                  <button mat-raised-button color="warn" focusable="false" (click)="descargarComponente()">
-                      <mat-icon> D </mat-icon>
-                  </button>
+              <td mat-cell *matCellDef="let j">
+                <button mat-icon-button focusable="false" (click)="descargarComprobante(j)">
+                  <mat-icon style="font-size: 42px" matTooltipPosition="above" matTooltip="Descarga Comprobante">
+                    cloud_download</mat-icon>
+                </button>
               </td>
-          </ng-container>
+            </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-          <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
-      </table>
-
+            <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+          </table>
+        </div>
         <div class="row mb-5">
           <div class="col-md-4">
             <button mat-raised-button color="white" focusable="false" (click)="cargarPagos()">
@@ -133,7 +138,7 @@
           </div>
         </div>
 
-        <label style="font-weight:bold"> Obsevaciones </label>
+        <label style="font-weight:bold"> Obsevaciones :</label>
         <div class="col-md-8">
           <mat-form-field class="example-full-width" color="black">
             <input matInput [formControl]="observacion">
@@ -142,7 +147,7 @@
         </div>
 
         <div>
-          <button mat-raised-button color="white" focusable="false" (click)= "Enviar()" >
+          <button mat-raised-button color="white" focusable="false" (click)="Enviar()">
             Enviar
           </button>
         </div>
