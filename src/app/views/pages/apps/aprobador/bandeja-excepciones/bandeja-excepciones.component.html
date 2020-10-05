@@ -19,7 +19,7 @@
     <div class="kt-form">
       <mat-vertical-stepper>
         <mat-step [stepControl]="formBusqueda">
-          <ng-template matStepLabel>Bandeja Principal Aprobador</ng-template>
+          <ng-template matStepLabel>Listado de Excepciones Pendientes</ng-template>
           <form [formGroup]="formBusqueda">
             <div class="row -12">
               <div class="col-2">
@@ -29,7 +29,7 @@
                 </mat-form-field>
               </div>
               <div class="col">
-                <button mat-button matTooltip="Buscar">
+                <button mat-button matTooltip="Buscar" (click)="traerExcepciones()">
                   <mat-icon style="font-size: 24px;" class="orange-icon" matTooltipPosition="above">search</mat-icon>
                   <span class="orange-icon">Buscar</span>
                 </button>
@@ -40,23 +40,33 @@
             </div>
           </form>
           <div class="mat-table__wrapper">
-            <mat-table class="mat-elevation-z8">
+            <mat-table class="mat-elevation-z8" [dataSource]="dataSourceExcepcionRol">
               <ng-container matColumnDef="accion">
                 <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
-
+                <mat-cell *matCellDef="let element">
+                  <a (click)="verExcepcion(element)">
+                    <mat-icon matTooltip="Ver Excepción">edit</mat-icon>
+                  </a>
+                </mat-cell>
+                <td align="left" mat-footer-cell *matFooterCellDef>&#8212;</td>
               </ng-container>
               <ng-container matColumnDef="tipoExcepcion">
+                <mat-cell *matCellDef="let element"> {{element.tipoExcepcion}} </mat-cell>
                 <mat-header-cell *matHeaderCellDef>Tipo Excepción</mat-header-cell>
 
               </ng-container>
               <ng-container matColumnDef="nombreCliente">
+
+                <mat-cell *matCellDef="let element"> {{element.nombreCliente}} {{element.apellidoCliente}} </mat-cell>
                 <mat-header-cell *matHeaderCellDef>Nombre del Cliente</mat-header-cell>
+                <td align="left" mat-footer-cell *matFooterCellDef>&#8212;</td>
 
               </ng-container>
 
 
 
               <mat-header-row *matHeaderRowDef="displayedColumnsExcepciones"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsExcepciones;"></mat-row>
 
             </mat-table>
           </div>
