@@ -16,25 +16,26 @@ export class DialogoBloquearCreditoComponent implements OnInit {
 
   }
 
-  institucionFinaciera = new FormControl('', [Validators.required]);
+  institucionFinanciera = new FormControl('', [Validators.required]);
 
   numeroDeposito = new FormControl('', [Validators.required]);
 
-  valorDeposito = new FormControl('', [Validators.required]);
+  valorPagado = new FormControl('', [Validators.required]);
 
   cuentas = new FormControl('', [Validators.required]);
 
-  fechaPago = new FormControl(new Date(),);
+  fechaPago = new FormControl('',[Validators.required]);
+
   public formCliente: FormGroup = new FormGroup({});
 
 
   ngOnInit() {
-    this.formCliente.addControl('institucionFinaciera', this.institucionFinaciera);
+    this.formCliente.addControl('institucionFinanciera', this.institucionFinanciera);
     this.formCliente.addControl('numeroDeposito', this.numeroDeposito);
-    this.formCliente.addControl('valorDeposito', this.valorDeposito);
+    this.formCliente.addControl('valorPagado', this.valorPagado);
     this.formCliente.addControl('cuentas', this.cuentas);
     this.formCliente.addControl('fechaPago', this.fechaPago);
-
+    this.institucionFinanciera.setValue("Mutualista Pichincha");
   }
   /**
    * @description METODO QUE AGREGA UNA NUEVO PAGO
@@ -46,11 +47,11 @@ export class DialogoBloquearCreditoComponent implements OnInit {
     }
 
     let wrapperRespuesta = {
-      institucionFinanciera: this.institucionFinaciera.value,
-      numerodeDeposito: this.numeroDeposito.value,
-      valorpagado: this.valorDeposito.value,
+      institucionFinanciera: this.institucionFinanciera.value,
+      numeroDeposito: this.numeroDeposito.value,
+      valorPagado: this.valorPagado.value,
       cuentas: this.cuentas.value,
-      fechadePago: this.fechaPago.value
+      fechaPago: this.fechaPago.value
     }
     this.dialogRef.close(wrapperRespuesta);
 

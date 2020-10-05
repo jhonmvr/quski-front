@@ -111,7 +111,6 @@ export class RegistrarPagoComponent implements OnInit {
     this.dataSource = new MatTableDataSource<any>(data);
   };
 
-
   subirComprobante(j) {
     console.log("registro ",j)
     const dialogRef = this.dialog.open(UploadFileComponent, {
@@ -221,15 +220,13 @@ export class RegistrarPagoComponent implements OnInit {
   };
 
   guardar() {
-    console.log("voy a guarar ")
+    console.log("voy a guardar ")
     this.loadingSubject.next(true);
     if (this.formRegistrarPago.invalid) {
       this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS REGISTRAR PAGOS", 'warning');
       return;
     }
-
-
 
     let registrarPagoWrapper = {
       cliente: {},
@@ -245,12 +242,10 @@ export class RegistrarPagoComponent implements OnInit {
     cliente.valorPrecancelado = this.valorPreCancelado.value;
     cliente.valorDepositado = this.valorDepositado.value;
     cliente.observacion = this.observacion.value;
-    cliente.tipo = ('REGISTRAR_PAGO')
+    cliente.tipo = ('REGISTRO_PAGO')
     registrarPagoWrapper.cliente = cliente;
     if (this.dataSource.data.length > 0) {
       registrarPagoWrapper.pagos = this.dataSource.data;
-   
-
     } else {
       registrarPagoWrapper.pagos = null;
     }

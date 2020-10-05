@@ -1,13 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatTable, MatTableDataSource } from '@angular/material';
-import { DialogoBloqueoFondosComponent } from './dialogo-bloqueo-fondos/dialogo-bloqueo-fondos.component';
 import { BehaviorSubject } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SoftbankService } from './../../../../../../core/services/quski/softbank.service';
 import { SubheaderService } from './../../../../../../core/_base/layout';
 import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
-import { BloquearFondoService } from '../../../../../../core/services/quski/bloquearFondo.service';
 import { ClienteSoftbank } from './../../../../../../core/model/softbank/ClienteSoftbank';
+import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DialogoAprobarBloqueoFondosComponent } from './dialogo-aprobar-bloqueo-fondos/dialogo-aprobar-bloqueo-fondos.component';
+import { DialogoRechazarBloqueoFondosComponent } from './dialogo-rechazar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos.component';
 
 @Component({
   selector: 'kt-aprobar-bloqueo-fondos',
@@ -17,16 +19,17 @@ import { ClienteSoftbank } from './../../../../../../core/model/softbank/Cliente
 export class AprobarBloqueoFondosComponent implements OnInit {
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
-  columnas: string[] = ['accion', 'institucionFinanciera', 'cuentas', 'fechadePago', 'numerodeDeposito', 'valorpagado', 'descargar'];
-
+  columnas: string[] = ['institucionFinanciera', 'cuentas', 'fechaPago', 'numeroDeposito', 'valorPagado', 'descargar'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   dataSourceRubros: MatTableDataSource<any> = new MatTableDataSource<any>();
-  totalResults: number;
+  //totalResults: number;
   //p = new Page();
-  @ViewChild('sort1', { static: true }) sort: DialogoBloqueoFondosComponent;
-
+  //@ViewChild('sort1', { static: true }) sort: DialogoBloqueoFondosComponent;
+  //private identificacion: string;
+  private idCliente: string;
+  private estado: string;
+  private tipo: string;
   public formBloqueoFondo: FormGroup = new FormGroup({});
-  public identificacion = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public cedula = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public nombreCliente = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public codigoCuentaMupi = new FormControl('', [Validators.required, Validators.maxLength(13)]);
@@ -39,13 +42,14 @@ export class AprobarBloqueoFondosComponent implements OnInit {
      * 
      */
   constructor(
+    private router: Router,
+    private route: ActivatedRoute,
     private css: SoftbankService,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
-    private bloquearFondoService: BloquearFondoService,
+    private rp: RegistrarPagoService,
     public dialog: MatDialog
   ) {
-    this.formBloqueoFondo.addControl("identificacion", this.identificacion);
     this.formBloqueoFondo.addControl("nombresCliente", this.nombreCliente);
     this.formBloqueoFondo.addControl("cedula", this.cedula);
     this.formBloqueoFondo.addControl("codigoCuentaMupi", this.codigoCuentaMupi);
@@ -58,23 +62,56 @@ export class AprobarBloqueoFondosComponent implements OnInit {
 
 
   id;
-  Popup() {
-    console.log("entra a popUp angregar pago")
+  Aprobar() {
+    console.log("entra a popUp Aprobrar ")
     let idReferenciaHab = this.id;
-    const dialogRef = this.dialog.open(DialogoBloqueoFondosComponent, {
+    const dialogRef = this.dialog.open(DialogoAprobarBloqueoFondosComponent, {
+      width: "auto-max",
+      height: "auto-max",
+      data: idReferenciaHab
+    });
+    dialogRef.afterClosed().subscribe(a => {
+      //console.log("datos de salida popUp", r)
+      /*let wrapperRespuesta = new TbQoClientePago();
+    
+    wrapperRespuesta.observacion = this.observacion.value;*/
+
+
+      this.rp.aprobarPago(this.idCliente, this.estado, this.tipo).subscribe(q => {
+        console.log(" >>> ", this.rp);
+
+        this.loadingSubject.next(false);
+        this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
+        this.router.navigate(['../../asesor/bandeja-principal', this.idCliente]);
+      }, error => {
+        this.loadingSubject.next(false);
+      })
+    });
+  }
+  Rechazar() {
+    console.log("entra a popUp Rechazar")
+    let idReferenciaHab = this.id;
+    const dialogRef = this.dialog.open(DialogoRechazarBloqueoFondosComponent, {
       width: "auto-max",
       height: "auto-max",
       data: idReferenciaHab
     });
     dialogRef.afterClosed().subscribe(r => {
-      console.log("datos de salida popUp", r)
-      let datos = this.dataSource.data;
-      datos.push(r);
+      //console.log("datos de salida popUp", r)
+      /*let wrapperRespuesta = new TbQoClientePago();
+    
+    wrapperRespuesta.observacion = this.observacion.value;*/
 
-      console.log("dataSOurce", datos);
-      if (r) {
-        this.dataSource.data = datos;
-      }
+
+      this.rp.rechazarPago(this.idCliente, this.estado, this.tipo).subscribe(p => {
+        console.log(" >>> ", this.rp);
+
+        this.loadingSubject.next(false);
+        this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
+        this.router.navigate(['../../asesor/bandeja-principal', this.idCliente]);
+      }, error => {
+        this.loadingSubject.next(false);
+      })
     });
   }
   deletFila(row) {
@@ -83,32 +120,30 @@ export class AprobarBloqueoFondosComponent implements OnInit {
     data.splice(row, 1);
     this.dataSource = new MatTableDataSource<any>(data);
   };
-  subirComponente() {
+  /*subirComponente() {
     if (confirm("Realmente quiere subir?")) {
 
     }
-  }
-  descargarComponente() {
+  }*/
+  descargarComprobante() {
     if (confirm("Realmente quiere descargar?")) {
 
     }
   }
 
   ngOnInit() {
-    //this.testoperacionConsultaCS();
-    //falta el de rubros pre cancelacion
     this.subheaderService.setTitle("Bloqueo de Fondos");
     this.loading = this.loadingSubject.asObservable();
-    // this.submit();
+    this.ConsultarPagosId();
+    //this.consultarClienteSoftbankCS();
+
+
   }
 
-
-
-  consultarClienteSoftbankCS() {
+  /*consultarClienteSoftbankCS() {
     let entidadConsultaCliente = new ClienteSoftbank();
-    let cedula = this.identificacion.value;
-    console.log(" " + cedula)
-    entidadConsultaCliente.identificacion = cedula;
+    entidadConsultaCliente.identificacion = this.identificacion;
+    console.log(" ---->>>>> ", entidadConsultaCliente.identificacion = this.identificacion);
     entidadConsultaCliente.idTipoIdentificacion = 1;
 
     this.css.consultarClienteSoftbankCS(entidadConsultaCliente).subscribe((data: any) => {
@@ -131,39 +166,49 @@ export class AprobarBloqueoFondosComponent implements OnInit {
 
       }
     });
-  }
+  }*/
 
+  ConsultarPagosId() {
+    this.route.paramMap.subscribe((data: any) => {
+      data.params.id;
+      console.log(" id = ? ", data.params.id)
+      if (data.params.id) {
+        this.idCliente = data.params.id;
+        let tipodb = "BLOQUEO_FONDO";
+        this.rp.clientePagoByIdCliente(this.idCliente, tipodb).subscribe((data: any) => {
+          if (data) {
+            let cliente = data.entidades[0].tbQoClientePago;
+            this.nombreCliente.setValue(cliente.nombreCliente);
+            this.cedula.setValue(cliente.cedula);
+            this.codigoCuentaMupi.setValue(cliente.codigoCuentaMupi);
+            //this.valorPreCancelado.setValue(cliente.valorPrecancelado);
+            this.valorDepositado.setValue(cliente.valorDepositado);
+            this.observacion.setValue(cliente.observacion);
+            this.estado = cliente.estado;
+            this.tipo = cliente.tipo;
+            console.log("Cliente: ----> ", this.estado);
+            console.log("Cliente: ----> ", this.tipo);
+            console.log("Consulta de pagos en clientePagoByIdCliente --> " + JSON.stringify(data));
 
-  aprobar() {
-    console.log("voy a aprobar ")
-    this.loadingSubject.next(true);
-    if (this.formBloqueoFondo.invalid) {
-      this.loadingSubject.next(false);
-      this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS BLOQUEAR FONDOS", 'warning');
-      return;
-    }
-  }
-    rechazar() {
-      console.log("voy a rechazar ")
-      this.loadingSubject.next(true);
-      if (this.formBloqueoFondo.invalid) {
-        this.loadingSubject.next(false);
-        this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS BLOQUEAR FONDOS", 'warning');
-        return;
+            this.dataSource = new MatTableDataSource<any>(data.entidades);
+          } else {
+            this.sinNoticeService.setNotice("No me trajo datos 'clientePagoByIdCliente'", 'error');
+          }
+        }, error => {
+          if (JSON.stringify(error).indexOf("codError") > 0) {
+            let b = error.error;
+            this.sinNoticeService.setNotice(b.msgError, 'error');
+          } else {
+            this.sinNoticeService.setNotice("Error no fue cacturado en 'clientePagoByIdCliente' :(", 'error');
+
+          }
+        })
+      } else {
+
       }
-    }
-    /*
-        this.bloqueoFondoService.crearBloqueoFondoConRelaciones( ).subscribe(p=>{
-          
-          this.loadingSubject.next(false);
-          this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
-        },error=>{
-          this.loadingSubject.next(false);
-        }
-        )
-       */
+    })
+  }
 
-  
   /**
  * 
  * @param pfield 

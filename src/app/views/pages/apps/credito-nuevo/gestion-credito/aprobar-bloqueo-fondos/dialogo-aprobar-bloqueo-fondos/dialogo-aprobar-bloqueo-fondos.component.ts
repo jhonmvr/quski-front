@@ -1,19 +1,18 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { AprobarPagosComponent } from './../aprobar-pagos.component';
-import { TbQoRegistrarPago } from './../../../../../../../core/model/quski/TbQoRegistrarPago';
+import { TbQoRegistrarPago } from '../../../../../../../core/model/quski/TbQoRegistrarPago';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { RegistrarPagoService } from './../../../../../../../core/services/quski/registrarPago.service';
+import { RegistrarPagoService } from '../../../../../../../core/services/quski/registrarPago.service';
 import { BehaviorSubject } from 'rxjs';
-import { ReNoticeService } from './../../../../../../../core/services/re-notice.service';
-import { TbQoClientePago } from './../../../../../../../core/model/quski/TbQoClientePago';
+import { ReNoticeService } from '../../../../../../../core/services/re-notice.service';
+import { TbQoClientePago } from '../../../../../../../core/model/quski/TbQoClientePago';
 
 @Component({
-  selector: 'kt-dialogo-aprobar-pagos',
-  templateUrl: './dialogo-aprobar-pagos.component.html',
-  styleUrls: ['./dialogo-aprobar-pagos.component.scss']
+  selector: 'kt-dialogo-aprobar-bloqueo-fondos',
+  templateUrl: './dialogo-aprobar-bloqueo-fondos.component.html',
+  styleUrls: ['./dialogo-aprobar-bloqueo-fondos.component.scss']
 })
-export class DialogoAprobarPagosComponent implements OnInit {
+export class DialogoAprobarBloqueoFondosComponent implements OnInit {
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
   /**
@@ -21,8 +20,9 @@ export class DialogoAprobarPagosComponent implements OnInit {
    * @param  sinNoticeService;
    * 
    */
-  constructor(private registrarPagoService: RegistrarPagoService,
-    public dialogRef: MatDialogRef<DialogoAprobarPagosComponent>,
+  constructor(
+    private registrarPagoService: RegistrarPagoService,
+    public dialogRef: MatDialogRef<DialogoAprobarBloqueoFondosComponent>,
     private sinNoticeService: ReNoticeService,
     @Inject(MAT_DIALOG_DATA) public data: TbQoRegistrarPago, public dataService: RegistrarPagoService) {
 

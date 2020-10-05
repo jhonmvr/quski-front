@@ -55,10 +55,12 @@ import { RegistarPagoDialogComponent } from './gestion-credito/registrar-pago/re
 import { BloquearCreditoComponent } from './gestion-credito/bloquear-credito/bloquear-credito.component';
 import { DialogoBloquearCreditoComponent } from './gestion-credito/bloquear-credito/dialogo-bloquear-credito/dialogo-bloquear-credito.component';
 import { AprobarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/aprobar-bloqueo-fondos.component';
-import { DialogoBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-bloqueo-fondos/dialogo-bloqueo-fondos.component';
 import { AprobarPagosComponent } from './gestion-credito/aprobar-pagos/aprobar-pagos.component';
-import { DialogoAprobarPagosComponent } from './gestion-credito/aprobar-pagos/dialogo-aprobar-pagos/dialogo-aprobar-pagos.component';
 import { UploadFileComponent } from './upload-file/upload-file.component';
+import { DialogoAprobarPagosComponent } from './gestion-credito/aprobar-pagos/dialogo-aprobar-pagos/dialogo-aprobar-pagos.component';
+import { DialogoRechazarPagosComponent } from './gestion-credito/aprobar-pagos/dialogo-rechazar-pagos/dialogo-rechazar-pagos.component';
+import { DialogoAprobarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-aprobar-bloqueo-fondos/dialogo-aprobar-bloqueo-fondos.component';
+import { DialogoRechazarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos.component';
 
 
 
@@ -96,13 +98,13 @@ const routes: Routes = [
 				component: BloquearCreditoComponent
 			},
 			{
-				path: 'gestion-credito/aprobar-bloqueo-fondos',
+				path: 'gestion-credito/aprobar-bloqueo-fondos/:id',
 				component: AprobarBloqueoFondosComponent
 			},
-			{
+			/*{
 				path: 'gestion-credito/aprobar-pagos',
 				component: AprobarPagosComponent
-			},
+			},*/
 			{
 				path: 'gestion-credito/aprobar-pagos/:id',
 				component: AprobarPagosComponent
@@ -110,6 +112,7 @@ const routes: Routes = [
 		]
 	}
 ];
+
 @NgModule({
   declarations: [CreditoNuevoComponent,
 	RegistarPagoDialogComponent,
@@ -120,11 +123,13 @@ const routes: Routes = [
 	  BloquearCreditoComponent,
 	  DialogoBloquearCreditoComponent,
 	  AprobarBloqueoFondosComponent,
-	  DialogoBloqueoFondosComponent,
 	  AprobarPagosComponent,
 	  DialogoAprobarPagosComponent,
-	  UploadFileComponent],
-  
+	  UploadFileComponent,
+	  DialogoRechazarPagosComponent,
+	  DialogoAprobarBloqueoFondosComponent,
+	  DialogoRechazarBloqueoFondosComponent
+	],
   imports: [
 	CommonModule,
 	RouterModule.forChild(routes),
@@ -164,8 +169,8 @@ providers:[
 
 ], 
 
-entryComponents: [RegistarPagoDialogComponent, DialogoBloquearCreditoComponent,DialogoBloqueoFondosComponent,
-	DialogoAprobarPagosComponent, UploadFileComponent]
+entryComponents: [RegistarPagoDialogComponent, DialogoBloquearCreditoComponent,DialogoAprobarBloqueoFondosComponent,DialogoRechazarBloqueoFondosComponent,
+	DialogoAprobarPagosComponent, UploadFileComponent,DialogoRechazarPagosComponent]
 })
 
 
