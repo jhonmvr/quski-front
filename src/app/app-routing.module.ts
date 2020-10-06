@@ -1,3 +1,4 @@
+import { AprobadorModule } from './views/pages/apps/aprobador/aprobador.module';
 
 // Angular
 import { NgModule } from '@angular/core';
@@ -49,6 +50,10 @@ const routes: Routes = [
 			{
 				path: 'excepciones',
 				loadChildren: () => import('../app/views/pages/apps/excepciones/excepciones.module').then(m => m.ExcepcionesModule)
+			},
+			{
+				path: 'aprobador',
+				loadChildren: () => import('../app/views/pages/apps/aprobador/aprobador.module').then(m => m.AprobadorModule)
 			},
 			{
 				path: 'builder',

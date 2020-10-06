@@ -3,6 +3,7 @@ import { TbQoTasacion } from "./TbQoTasacion";
 import { TbQoCliente } from "./TbQoCliente";
 
 export class TbQoCreditoNegociacion {
+    id:number;
     plazoCredito: string;
     montoPreaprobado: string;
     recibirCliente: string;
@@ -15,12 +16,14 @@ export class TbQoCreditoNegociacion {
     costoEstimado: string;
     valorCuota: string;
     idUsuario:string;
+    fechaCracion:string;
+    fechaVencimiento:string;
     codigoOperacion:string;
     tbQoNegociacion : TbQoNegociacion;
     tbQoTasacion : TbQoTasacion  [];
     tbQoAgencia:any;
-    constructor( idNegociacion? : number){
         
+    constructor(idNegociacion? : number ){
         this.tbQoNegociacion = new TbQoNegociacion();
         this.tbQoNegociacion.id = idNegociacion > 0 ? idNegociacion : null;
        // this.tbQoTasacion = new TbQoTasacion();

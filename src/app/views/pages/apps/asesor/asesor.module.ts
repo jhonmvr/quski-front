@@ -1,8 +1,9 @@
 // Component
 
-import { BandejaPrincipalComponent } from './bandeja-principal/bandeja-principal.component';
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Translate Module
 import { TranslateModule } from '@ngx-translate/core';
@@ -39,9 +40,10 @@ import {
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPermissionsModule } from 'ngx-permissions';
-import { Routes, RouterModule } from '@angular/router';
+//Component
 import { PartialsModule } from '../../../partials/partials.module';
 import { AsesorComponent } from './asesor.component';
+import { BandejaPrincipalComponent } from './bandeja-principal/bandeja-principal.component';
 
 
 

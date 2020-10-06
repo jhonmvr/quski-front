@@ -3,13 +3,17 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+
+
 // Translate Module
 import { TranslateModule } from '@ngx-translate/core';
 // Auth
 import { ModuleGuard } from '../../../../core/auth';
 // Material
 import {
+	MatSliderModule,
 	MatInputModule,
+	MatFormFieldModule,
 	MatPaginatorModule,
 	MatProgressSpinnerModule,
 	MatSortModule,
@@ -92,6 +96,8 @@ const routes: Routes = [
 		MatMenuModule,
 		MatSelectModule,
 		MatInputModule,
+		MatSliderModule,
+		MatFormFieldModule,
 		MatTableModule,
 		MatAutocompleteModule,
 		MatRadioModule,

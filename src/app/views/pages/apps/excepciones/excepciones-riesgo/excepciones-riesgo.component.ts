@@ -1,6 +1,6 @@
 import { EstadoExcepcionEnum } from './../../../../../core/enum/EstadoExcepcionEnum';
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
@@ -11,8 +11,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
-import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
-import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { environment } from '../../../../../../environments/environment';
@@ -24,6 +22,9 @@ import { PersonaConsulta } from '../../../../../core/model/calculadora/personaCo
 import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
+import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
+import { Page } from '../../../../../core/model/page';
+import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
 @Component({
   selector: 'kt-excepciones-riesgo',
   templateUrl: './excepciones-riesgo.component.html',
@@ -45,6 +46,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   private idNegociacion: number;
   private cedulaCliente: string;
   private idCliente: number;
+  public tasacion = new TbQoTasacion();
+  public tasacionArray = new Array<TbQoTasacion>();
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public mensaje: any;
@@ -98,7 +101,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   public tipoProcesoNegociacion = new FormControl('', []);
   public motivoNoAceptacion = new FormControl('', []);
   public calificadoMupi = new FormControl('', []);
-
+  // FORM TASACIONES
+  public displayedColumnsTasacion = ['N', 'numeroPiezas', 'tipoOro', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto', 'descuentoPesoPiedra', 'descuentoSuelda', 'pesoNeto', 'valorAvaluo', 'valorComercial', 'valorRealizacion', 'valorOro']
 
   // FORM DATOS EXCEPCION
   public formDatosExcepcion: FormGroup = new FormGroup({});
@@ -107,6 +111,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   public excNegada = new FormControl('', []);
   public observacionAprobador = new FormControl('', []);
   public radioB = new FormControl('', []);
+
+  dataSourceTasacion: MatTableDataSource<TbQoTasacion> = new MatTableDataSource<TbQoTasacion>();
 
 
   constructor(
@@ -117,10 +123,12 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     private route: ActivatedRoute,
     private par: ParametroService,
     private exs: ExcepcionService,
+    private tas: TasacionService,
     private router: Router,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService
   ) {
+
 
     //FORM DATOS OPERACION
     this.formDatosOperacion.addControl("nombresCompletos", this.nombresCompletos);
@@ -157,6 +165,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.formDatosNegociacion.addControl("motivoNoAceptacion", this.motivoNoAceptacion);
     this.formDatosNegociacion.addControl("calificadoMupi", this.calificadoMupi);
 
+
+
     //FORM DATOS EXCEPCION
     this.formDatosExcepcion.addControl("observacionAsesor", this.observacionAsesor);
     this.formDatosExcepcion.addControl("excAprobada", this.excAprobada);
@@ -169,6 +179,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.formDatosContacto.disable();
     this.formDatosNegociacion.disable();
     this.observacionAsesor.disable();
+
   }
 
   ngOnInit() {
@@ -308,6 +319,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
         // console.log('valor de la llistas', this.listExepcion);
         this.entidadExcepcion = data.list[0];
         this.observacionAsesor.setValue(this.entidadExcepcion.observacionAsesor);
+        this.mensaje = (this.entidadExcepcion.mensajeBre);
         // console.log('Observacion Aseseor===> ', this.observacionAsesor);
 
       }
@@ -363,6 +375,36 @@ export class ExcepcionesRiesgoComponent implements OnInit {
 
 
 
+
+
+  buscarTasación() {
+    this.loadingSubject.next(true);
+
+    this.tas.getTasacionByIdNegociacion(this.p, this.entidadNegociacion.id).subscribe((tasacionData: any) => {
+      console.log('TASACION DATA ', JSON.stringify(tasacionData));
+
+      if (tasacionData && tasacionData.list) {
+        const tmp = tasacionData.list;
+        for (let index = 0; index < tmp.length; index++) {
+          this.tasacion = new TbQoTasacion();
+          this.tasacion.id = tmp[index].id;
+          this.tasacion.descripcion = tmp[index].descripcion;
+          this.tasacion.descuentoPesoPiedra = tmp[index].descuentoPesoPiedra;
+          this.tasacionArray.push(this.tasacion);
+
+
+
+        }
+        this.dataSourceTasacion = tasacionData.list;
+
+      } else {
+
+      }
+    });
+  }
+
+
+
   /**
    * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION
    * @description PASADA POR this.route.paramMap
@@ -377,6 +419,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
           // console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
 
           this.entidadNegociacion = data.entidad;
+          this.buscarTasación();
           //console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
           this.buscarExcepcion(this.entidadNegociacion.id);
 
@@ -419,11 +462,12 @@ export class ExcepcionesRiesgoComponent implements OnInit {
                 this.nivelDeEducacion.setValue(this.entidadCliente.nivelEducacion);
                 this.actividadEconomica.setValue(this.entidadCliente.actividadEconomica);
                 this.ultimaFechaDeActualizacionDeCliente.setValue(new Date(this.entidadCliente.fechaActualizacion));
+
                 // INPUT VARIABLES CREDITICIAS
                 this.dataPopup = new DataPopup();
                 this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
-                this.dataPopup.isCalculadora = true;
-                // this.dataPopup.idBusqueda = this.entidadNegociacion.id;
+                this.dataPopup.isNegociacion = true;
+                this.dataPopup.idBusqueda = this.entidadNegociacion.id;
                 console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
                 //INPUT RIESGO ACUMULADO
 

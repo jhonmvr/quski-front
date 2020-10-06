@@ -31,7 +31,7 @@ export class TablaTasacionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('DATAPOPUP===> ', this.dataPopup);
+    console.log('DATAPOPUP TASACION===> ', this.dataPopup);
     this.direccionDeFlujo(this.dataPopup);
 
   }
@@ -74,6 +74,8 @@ export class TablaTasacionComponent implements OnInit {
       console.log("Error ----> Ingrese id de cotizador", cedula);
     }
   }
+
+
   private iniciaBusquedaNegociacion(id: number) {
     if (id != null) {
       if (id > 0) {

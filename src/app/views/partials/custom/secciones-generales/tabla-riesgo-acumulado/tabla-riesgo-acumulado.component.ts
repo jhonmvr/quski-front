@@ -47,17 +47,17 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   private mensaje = "ERROR AL CARGAR RIESGO ACUMULADO";
   // TABLA DE CREDITO
   displayedColumnsRiesgoAcumulado = [
-      'referencia',
-      'numeroOperacion', 
-      'codigoCarteraQuski', 
-      'tipoOperacion', 
-      'fechaEfectiva', 
-      'fechaVencimiento',
-      'valorAlDia',
-      'diasMoraActual', 
-      'saldo', 
-      'estadoPrimeraCuotaVigente', 
-      'estadoOperacion'];
+    'referencia',
+    'numeroOperacion',
+    'codigoCarteraQuski',
+    'tipoOperacion',
+    'fechaEfectiva',
+    'fechaVencimiento',
+    'valorAlDia',
+    'diasMoraActual',
+    'saldo',
+    'estadoPrimeraCuotaVigente',
+    'estadoOperacion'];
   dataSourceRiesgoAcumulado = new MatTableDataSource<TbQoRiesgoAcumulado>();
   constructor(
     private sof: SoftbankService,
