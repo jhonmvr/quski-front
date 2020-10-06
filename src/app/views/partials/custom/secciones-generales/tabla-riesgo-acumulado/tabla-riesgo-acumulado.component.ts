@@ -24,6 +24,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   @Input() cedula: string = null;
   // INPUT GENERAL
   @Input() isGuardar: boolean = false;
+  @Input() base: TbQoRiesgoAcumulado[] = null;
 
   /**Obligatorio paginacion */
   public p: Page = new Page();
@@ -66,14 +67,16 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
-    console.log('DATA DE RIESGO ACUMULADO ')
-    if (this.idCliente != null && this.cedula == null) {
-      this.initiateTablePaginator();
-      this.busquedaCore();
-    } else {
-      if (this.cedula != null && this.idCliente == null) {
-        this.busquedaSoftbank();
+    if(this.base != null){
+      this.dataSourceRiesgoAcumulado.data = this.base;
+    }else{
+      if (this.idCliente != null && this.cedula == null) {
+        this.initiateTablePaginator();
+        this.busquedaCore();
+      } else {
+        if (this.cedula != null && this.idCliente == null) {
+          this.busquedaSoftbank();
+        }
       }
     }
   }

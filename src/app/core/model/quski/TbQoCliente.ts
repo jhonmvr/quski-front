@@ -41,6 +41,7 @@ export class TbQoCliente {
   telefonoMovil: string;
   telefonoTrabajo: string;
   aprobacionMupi: string;
+  nombreCompleto: string;
 
 
   tbQoArchivoClientes: null;

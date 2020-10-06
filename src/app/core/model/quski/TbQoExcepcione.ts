@@ -17,7 +17,7 @@ export class TbQoExcepcione {
   fechaActualizacion: Date           // null,
   fechaCreacion: Date                // "2020-01-07",
   caracteristica: string
-  mensajeBre: string                     // "100", "Creditos impagos"  // Actualizacion
+  mensajeBre: string                 // "100", "Creditos impagos"  // Actualizacion
   tbQoNegociacion: TbQoNegociacion   //                            // Actualizacion
   constructor() {
     this.tbQoNegociacion = new TbQoNegociacion();

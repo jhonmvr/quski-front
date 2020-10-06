@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from '../../model/page';
+import { TbQoTasacion } from '../../model/quski/TbQoTasacion';
 
 @Injectable({
   providedIn: 'root'
@@ -65,6 +66,18 @@ export class TasacionService extends BaseService {
     this.params = this.params.set('idNegociacion', idNegociacion.toString());
 
     const serviceUrl = this.appResourcesUrl + this.rest + 'findByIdNegociacion';
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  public persistEntity(entidad: TbQoTasacion) {
+    let serviceUrl = this.appResourcesUrl + this.rest + "persistEntity";
+    let wrapper = { entidad: entidad }
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
+  public eliminarJoya(id : number) {
+    this.params = new HttpParams().set('id', id.toString())
+    const serviceUrl = this.appResourcesUrl + this.rest +'eliminarJoya';
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }

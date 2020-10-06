@@ -12,9 +12,12 @@ export class TbQoTasacion{
     descuentoPesoPiedra : number;
     descuentoSuelda : number;
     pesoNeto: number;
+    precioOro: number;
     valorAvaluo : number;
-    valorComercial : number;
+    valorAplicable: number;
     valorRealizacion : number;
+    tienePiedras: string;
+    detallePiedras: string;
     valorOro: number;
     id : number;
     fechaActualizacion : Date;
