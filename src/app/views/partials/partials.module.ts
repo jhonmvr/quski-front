@@ -111,6 +111,7 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 import { TablaOfertaCreditoComponent } from './custom/secciones-generales/tabla-oferta-credito/tabla-oferta-credito.component';
 import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.component';
 import { SolicitudDeExcepcionesComponent } from './custom/popups/solicitud-de-excepciones/solicitud-de-excepciones.component';
+import { ListaExcepcionesComponent } from './custom/popups/lista-excepciones/lista-excepciones.component';
 
 
 
@@ -177,7 +178,8 @@ import { SolicitudDeExcepcionesComponent } from './custom/popups/solicitud-de-ex
 		RiesgoAcumuladoComponent,
 		TablaOfertaCreditoComponent,
 		MensajeEdadComponent,
-		SolicitudDeExcepcionesComponent
+		SolicitudDeExcepcionesComponent,
+		ListaExcepcionesComponent
 
 	],
 	exports: [

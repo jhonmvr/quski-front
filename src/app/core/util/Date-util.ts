@@ -1,4 +1,6 @@
+
 export class DateUtil{
+
     formatDateToString(date : Date) {
         let str : string;
         if( date !=null ) {

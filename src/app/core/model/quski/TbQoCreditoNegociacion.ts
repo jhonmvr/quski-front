@@ -16,12 +16,13 @@ export class TbQoCreditoNegociacion {
     valorCuota: string;
     idUsuario:string;
     codigoOperacion:string;
-    tbQoCliente:TbQoCliente;
     tbQoNegociacion : TbQoNegociacion;
     tbQoTasacion : TbQoTasacion  [];
     tbQoAgencia:any;
-    constructor(){
+    constructor( idNegociacion? : number){
+        
         this.tbQoNegociacion = new TbQoNegociacion();
+        this.tbQoNegociacion.id = idNegociacion > 0 ? idNegociacion : null;
        // this.tbQoTasacion = new TbQoTasacion();
     }
 

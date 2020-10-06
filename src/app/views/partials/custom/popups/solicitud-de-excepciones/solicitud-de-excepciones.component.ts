@@ -6,14 +6,12 @@ import { MensajeExcepcionEnum } from '../../../../../core/enum/MensajeExcepcion'
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { BehaviorSubject } from 'rxjs';
-import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { AuthDialogComponent } from '../../auth-dialog/auth-dialog.component';
 import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { environment } from '../../../../../../../src/environments/environment';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
-import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'kt-solicitud-de-excepciones',
@@ -41,7 +39,6 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
     public  dialogRef: MatDialogRef<SolicitudDeExcepcionesComponent>,
     private sinNotSer: ReNoticeService, 
     private dialog: MatDialog, 
-    private neg: NegociacionService,
     private exc: ExcepcionService,
     private par: ParametroService,
     ) { 
@@ -58,7 +55,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
   private inicioDeFlujo(dataExcepciones: DataInjectExcepciones) {
     dataExcepciones.isRiesgo? this.solitudRiesgo(dataExcepciones):
       dataExcepciones.isCobertura? this.solitudCobertura(dataExcepciones):
-        dataExcepciones.isCliente? this.solitudCliente(dataExcepciones): this.mostrarError("Tipo de excepcion no definida.");
+        dataExcepciones.isCliente? this.solitudCliente(dataExcepciones): this.mostrarError("TIPO DE EXCEPCION NO DEFINIDA");
   }
   private solitudRiesgo(dataExcepciones: DataInjectExcepciones) {
     this.titulo     = TituloExcepcionEnum.RIESGO;
@@ -108,12 +105,11 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
       excepcion.idAsesor = this.usuario;
       excepcion.tipoExcepcion = this.tipoExcep;
       excepcion.observacionAsesor = this.observacionAsesor.value;
-      excepcion.caracteristica = this.dataExcepciones.mensajeBre; // TODO: Cambiar a campo de mensaje de bre. 
+      excepcion.mensajeBre = this.dataExcepciones.mensajeBre; // TODO: Cambiar a campo de mensaje de bre. 
       excepcion.tbQoNegociacion = new TbQoNegociacion();
       excepcion.tbQoNegociacion.id = this.dataExcepciones.idNegociacion;
       this.exc.persistEntity(excepcion).subscribe( (data:any)=>{
         if(data.entidad){
-          this.sinNotSer.setNotice('LA SOLICITUD A SIDO GENERADA CON EXITO, ESPERE RESPUESTA DEL APROBADOR','success');
           this.salir(data.entidad);
         } else{
           this.sinNotSer.setNotice('ERROR AL GENERAR SOLICITUD','error');

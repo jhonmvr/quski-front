@@ -4,12 +4,9 @@ export class DataInjectExcepciones{
     isCliente: boolean   
     mensajeBre: string 
     idNegociacion: number
-    constructor( mensajeBre: string, idNegociacion: number){
-        this.isRiesgo = false;
-        this.isCobertura = false;
-        this.isCliente = false;
-
-        this.mensajeBre = mensajeBre;
-        this.idNegociacion = idNegociacion;
+    constructor(isCliente: boolean = false, isRiesgo: boolean = false, isCobertura: boolean = false){
+        this.isCliente = isCliente;
+        this.isRiesgo = isRiesgo;
+        this.isCobertura = isCobertura;
     }
 }
