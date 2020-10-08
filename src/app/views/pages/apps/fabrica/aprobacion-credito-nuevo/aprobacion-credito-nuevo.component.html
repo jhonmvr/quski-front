@@ -2,7 +2,7 @@
   <mat-spinner class="spiner"></mat-spinner>
 </div>
 <re-portlet>
-  <re-portlet-header [title]="'Excepción Cliente'" [class]="'kt-portlet__head--lg'">
+  <re-portlet-header [title]="'Aprobación Fábrica Créditos Nuevos'" [class]="'kt-portlet__head--lg'">
     <ng-container ktPortletTools>
       <a [routerLink]="['../../']" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
         <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
@@ -1104,28 +1104,13 @@
         <ng-template matStepLabel>Resultado de la operación</ng-template>
         <div class="kt-form">
           <form [formGroup]="formDatosExcepcion">
-            <div class="row mt-3">
-              <div class="col-md-6">
-                <mat-card class="warning">
-                  <span class="material-icons warning-icons">report_problem </span>
-                  <span>{{mensaje}}</span>
 
-
-
-
-                </mat-card>
-              </div>
-            </div>
             <div class="row">
               <div class="col-md-4">
                 <mat-form-field>
-                  <input [formControl]="tipoIdentificacion" placeholder="Motivo Devolucion:" matInput />
+                  <input [formControl]="tipoIdentificacion" placeholder="Motivo Devolución:" matInput />
                 </mat-form-field>
               </div>
-
-
-            </div>
-            <div class="row">
               <div class="col-md-4">
                 <mat-form-field>
                   <input [formControl]="tipoIdentificacion" placeholder="Códgo Cash:" matInput />
@@ -1134,33 +1119,28 @@
 
 
             </div>
+
+
+
+
             <div class="row mt-3">
               <div class="col-md-8">
-                <mat-label> Observacion Del Asesor: </mat-label>
+                <mat-label> Observación Del Asesor: </mat-label>
               </div>
             </div>
-            <div class="row mt-3">
-              <div class="col-xl-8">
-                <textarea class="form-control border" rows="3" [formControl]="observacionAsesor"
-                  placeholder="Observacion Del Asesor: " matInput> {{ observacionAsesor }}</textarea>
-              </div>
-            </div>
-            <div class="row mt-3">
-              <div class="col-md-8">
-                <mat-label> Observacion Del Aprobador: </mat-label>
-              </div>
-            </div>
+
+
             <div class="row mt-3">
               <div class="col-xl-8">
                 <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
-                  placeholder="Observacion Del Aprobador: " matInput>{{ observacionAprobador }}</textarea>
+                  placeholder="Observaciones: " matInput>{{ observacionAprobador }}</textarea>
               </div>
             </div>
             <div class="row mt-3">
               <div class=" offset-3 offset-lg-2 col-xl-8">
                 <mat-radio-group [formControl]="radioB" (change)="capturaHoraAtencion()">
-                  <mat-radio-button value="APROBADO">Aprobar Excepcion</mat-radio-button>
-                  <mat-radio-button value="NEGADO">Negar Excepcion</mat-radio-button>
+                  <mat-radio-button value="APROBADO">Aprobar</mat-radio-button>
+                  <mat-radio-button value="NEGADO">Rechazar</mat-radio-button>
                 </mat-radio-group>
 
 
