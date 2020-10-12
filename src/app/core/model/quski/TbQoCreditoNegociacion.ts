@@ -18,7 +18,7 @@ export class TbQoCreditoNegociacion {
     idUsuario:string;
     fechaCracion:string;
     fechaVencimiento:string;
-    codigoOperacion:string;
+    codigo:string;
     tbQoNegociacion : TbQoNegociacion;
     tbQoTasacion : TbQoTasacion  [];
     tbQoAgencia:any;

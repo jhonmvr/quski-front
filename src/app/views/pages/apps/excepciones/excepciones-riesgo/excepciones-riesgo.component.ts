@@ -16,14 +16,11 @@ import { ParametroService } from '../../../../../core/services/quski/parametro.s
 import { environment } from '../../../../../../environments/environment';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
-import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
-import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
-import { Page } from '../../../../../core/model/page';
 import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
 @Component({
   selector: 'kt-excepciones-riesgo',

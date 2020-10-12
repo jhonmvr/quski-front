@@ -75,6 +75,19 @@ export class NegociacionService extends BaseService {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   }
+    /**
+   * @author Developer Twelve - Jeroham Cadenas
+   * @param entidad TbQoNegociacion
+   */
+  public reasignar(idNegociacion: number, codigoAsesor: string ) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'persistEntity';
+    let negociacion = new TbQoNegociacion();
+    negociacion.id = idNegociacion;
+    negociacion.idAsesor = codigoAsesor;
+    const wrapper = { entidad: {id: idNegociacion, idAsesor: codigoAsesor} };
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  }
   /**
    * @author Developer Twelve - Jeroham Cadenas
    * @param id number

@@ -112,6 +112,7 @@ import { TablaOfertaCreditoComponent } from './custom/secciones-generales/tabla-
 import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.component';
 import { SolicitudDeExcepcionesComponent } from './custom/popups/solicitud-de-excepciones/solicitud-de-excepciones.component';
 import { ListaExcepcionesComponent } from './custom/popups/lista-excepciones/lista-excepciones.component';
+import { ReasignarUsuarioComponent } from './custom/popups/reasignar-usuario/reasignar-usuario.component';
 
 
 
@@ -179,7 +180,8 @@ import { ListaExcepcionesComponent } from './custom/popups/lista-excepciones/lis
 		TablaOfertaCreditoComponent,
 		MensajeEdadComponent,
 		SolicitudDeExcepcionesComponent,
-		ListaExcepcionesComponent
+		ListaExcepcionesComponent,
+		ReasignarUsuarioComponent
 
 	],
 	exports: [
