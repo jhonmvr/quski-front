@@ -480,7 +480,7 @@
                 <mat-footer-row *matFooterRowDef="displayedColumnsII; sticky: true"></mat-footer-row>
               </mat-table>
             </mat-step>
-            <mat-step>
+            <mat-step label="Ingresos Egresos 2">
               <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceReferencia">
                 <ng-container matColumnDef="Accion">
                   <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
@@ -1044,8 +1044,6 @@
                 <input [formControl]="tipoIdentificacion" placeholder="Fecha de vencimiento:" matInput />
               </mat-form-field>
             </div>
-
-
           </div>
           <div class="row">
             <div class="col-md-4">
@@ -1092,12 +1090,7 @@
                 <input [formControl]="tipoIdentificacion" placeholder="Capital + Interés:" matInput />
               </mat-form-field>
             </div>
-
-
           </div>
-
-
-
         </div>
       </mat-step>
       <mat-step>
@@ -1116,20 +1109,12 @@
                   <input [formControl]="tipoIdentificacion" placeholder="Códgo Cash:" matInput />
                 </mat-form-field>
               </div>
-
-
             </div>
-
-
-
-
             <div class="row mt-3">
               <div class="col-md-8">
                 <mat-label> Observación Del Asesor: </mat-label>
               </div>
             </div>
-
-
             <div class="row mt-3">
               <div class="col-xl-8">
                 <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
@@ -1142,9 +1127,6 @@
                   <mat-radio-button value="APROBADO">Aprobar</mat-radio-button>
                   <mat-radio-button value="NEGADO">Rechazar</mat-radio-button>
                 </mat-radio-group>
-
-
-
               </div>
             </div>
           </form>

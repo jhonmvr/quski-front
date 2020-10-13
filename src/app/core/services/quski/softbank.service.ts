@@ -358,9 +358,9 @@ export class SoftbankService extends BaseService {
    * @description Catalogos de asesores por agencia
    * @param idAgencia 
    */
-  consultarAsesoresCS( idAgencia : number ) {
+  consultarAsesoresCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "asesor" ;
-    let wrapper =  {idAgencia};
+    let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 

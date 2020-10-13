@@ -1,4 +1,4 @@
 export enum SituacionEnum {
-    EN_PROCESO= 'EN PROCESO',
+    EN_PROCESO= 'EN_PROCESO',
     FINALIZADO= 'FINALIZADO'
 }

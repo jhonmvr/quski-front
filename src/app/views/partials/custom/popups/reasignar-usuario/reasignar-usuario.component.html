@@ -1,0 +1,27 @@
+<div class="row m-2">
+    <div class="col-12 mt-2 mb-2">
+        <mat-card-title> Lista de Excepciones Revisadas </mat-card-title>
+    </div>
+    <div class="offset-1 col-10 mt-2 mb-2">
+        <mat-card-title> Usuario Actual: {{ usuario }}</mat-card-title>
+    </div>
+    <div class="col-12">
+        <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource">
+
+            <ng-container matColumnDef="usuario">
+                <mat-header-cell *matHeaderCellDef> Usuario </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.nombre }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="reasignar">
+                <mat-header-cell *matHeaderCellDef> Reasignar </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <a (click)="reasignar(row)" matTooltip="Reasignar"><mat-icon>create</mat-icon></a>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </mat-table>
+    </div>
+</div>

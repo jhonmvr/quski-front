@@ -9,17 +9,14 @@ import { TbQoCliente } from "./TbQoCliente";
 
 export class TbQoNegociacion {
     id: number;
-    asesorResponsable: string
-    codigoOperacion: string
     estado: string;
     fechaActualizacion: Date;
     fechaCreacion: Date;
-    idAsesorResponsable: string;
+    idAsesor: string;
     procesoActual: string
     situacion: string
     tipo: string
-    estadoNegociacion: string
-    tipoNegociacion: string
+
     tbQoCreditoNegociacions: TbQoCreditoNegociacion[]
     tbQoDocumentoHabilitantes: null
     tbQoCliente: TbQoCliente
@@ -27,7 +24,7 @@ export class TbQoNegociacion {
     constructor(idCliente?: number, idAsesor?: string) {
         this.tbQoCliente = new TbQoCliente();
         this.tbQoCliente.id = idCliente?idCliente: null;
-        this.idAsesorResponsable = idAsesor? idAsesor: null;   
+        this.idAsesor = idAsesor? idAsesor: null;   
         this.tbQoCreditoNegociacions = new Array<TbQoCreditoNegociacion>();
         this.tbQoVariablesCrediticias = new Array<TbQoVariablesCrediticia>();
 
