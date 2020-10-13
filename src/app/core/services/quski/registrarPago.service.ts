@@ -40,32 +40,30 @@ import { Page } from '../../model/page';
       this.appResourcesUrl + 'registrarPagoRestController/findByIdClientePago';
     this.params = new HttpParams().set('id', idPago).set('tipo', tipo);
     this.options = { headers: this.headers, params: this.params };
-    console.log(" >>>>>> ", this.params);
     return this.http.get(serviceUrl, this.options);
   }
   public bloqueoFondosConRelaciones(registrarBloqueoFondoWrapper) {
     this.options = { headers: this.headers, params: this.params };
     const serviceUrl =
       this.appResourcesUrl + 'registrarPagoRestController/bloqueoFondo';
-
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, registrarBloqueoFondoWrapper, this.options);
   }
 
-  public aprobarPago(id: string, estado : string, tipo : string) {
+  public aprobarPago(id: string, estado : string, tipo : string, nombre) {
     this.options = { headers: this.headers, params: this.params };
     const serviceUrl =
       this.appResourcesUrl + 'registrarPagoRestController/aprobar';
-      this.params = new HttpParams().set('id', id ).set('estado', estado).set('tipo', tipo);
+      this.params = new HttpParams().set('id', id ).set('estado', estado).set('tipo', tipo).set('nombre',nombre);
       //this.params= new HttpParams().set('estado', estado);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-  public rechazarPago(id: string, estado : string, tipo : string) {
+  public rechazarPago(id: string, estado : string, tipo : string, nombre) {
     this.options = { headers: this.headers, params: this.params };
     const serviceUrl =
       this.appResourcesUrl + 'registrarPagoRestController/rechazar';
-      this.params = new HttpParams().set('id', id ).set('estado', estado).set('tipo', tipo);
+      this.params = new HttpParams().set('id', id ).set('estado', estado).set('tipo', tipo).set('nombre',nombre);
       //this.params= new HttpParams().set('estado', estado);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
