@@ -391,7 +391,6 @@ export class ExcepcionesCoberturaComponent implements OnInit {
               this.telefonoAdicional.setValue(this.entidadNegociacion.tbQoCliente.telefonoAdicional);
               this.telefonoOficinaOtros.setValue(this.entidadNegociacion.tbQoCliente.telefonoTrabajo);
               this.correoElectronico.setValue(this.entidadNegociacion.tbQoCliente.email);
-              this.tipoProceso.setValue(this.entidadNegociacion.procesoActual);
               this.estadoNegociacion.setValue(this.entidadNegociacion.situacion);
               this.fechaCreacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
               this.fechaActualizacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));

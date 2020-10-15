@@ -437,9 +437,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
                   + ' ' + this.entidadCliente.apellidoPaterno + ' ' + this.entidadCliente.apellidoMaterno);
                 this.idCliente = data.id;
                 this.identificacion.setValue(this.entidadCliente.cedulaCliente);
-                // console.log('VALOR DE LA dataNegociacion====> ', JSON.stringify(this.entidadNegociacion));
-                //console.log('VALOR DE LA ENTIDAD====> ', JSON.stringify(this.entidadNegociacion.procesoActual));
-                this.nombreProceso.setValue(this.entidadNegociacion.procesoActual);
                 this.buscarMensaje();
                 // FORM CLIENTE
                 this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
@@ -475,8 +472,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
                 this.telefonoOficina.setValue(this.entidadCliente.telefonoTrabajo);
                 this.correo.setValue(this.entidadCliente.email);
                 //FORM DATOS NEGOCIACION
-
-                this.tipoProcesoNegociacion.setValue(this.entidadNegociacion.tipo);
                 this.motivoNoAceptacion.setValue(this.entidadNegociacion.situacion);
                 this.calificadoMupi.setValue(this.entidadCliente.aprobacionMupi);
               } else {
