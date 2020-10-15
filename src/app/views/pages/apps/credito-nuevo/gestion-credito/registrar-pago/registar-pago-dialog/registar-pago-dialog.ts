@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { TbQoRegistrarPago } from './../../../../../../../core/model/quski/TbQoRegistrarPago';
 import { RegistrarPagoService } from './../../../../../../../core/services/quski/registrarPago.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'kt-registar-pago-dialog',
@@ -11,49 +12,52 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 })
 export class RegistarPagoDialogComponent implements OnInit {
 
-   
+  loadingSubject = new BehaviorSubject<boolean>(false);
     constructor( public dialogRef: MatDialogRef<RegistarPagoDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data:TbQoRegistrarPago  , public dataService: RegistrarPagoService ) { 
     
       }
-
+      public formCliente: FormGroup = new FormGroup({});
+      
     institucionFinanciera = new FormControl('',[Validators.required]);
     
-    numerodeDeposito = new FormControl('',[Validators.required]);
+    numeroDeposito = new FormControl('',[Validators.required]);
     
-    valorpagado = new FormControl('',[Validators.required]);
+    valorPagado = new FormControl('',[Validators.required]);
     
     cuentas = new FormControl('',[Validators.required]);
     
-    fechadePago = new FormControl('',[Validators.required]);
+    fechaPago = new FormControl('',[Validators.required]);
 
-    public formCliente: FormGroup = new FormGroup({});
  
 
       ngOnInit(){
-        this.formCliente.addControl('institucionFinaciera',this.institucionFinanciera);
-        this.formCliente.addControl('numerodeDeposito',this.numerodeDeposito);
-        this.formCliente.addControl('valorpagado',this.valorpagado);
-        this.formCliente.addControl('cuentas',this.cuentas);
-        this.formCliente.addControl('fechadePago',this.fechadePago);
-
         this.institucionFinanciera.setValue("Mutualista Pichincha");
+
+        this.formCliente.addControl('institucionFinanciera',this.institucionFinanciera);
+        this.formCliente.addControl('numeroDeposito',this.numeroDeposito);
+        this.formCliente.addControl('valorPagado',this.valorPagado);
+        this.formCliente.addControl('cuentas',this.cuentas);
+        this.formCliente.addControl('fechaPago',this.fechaPago);
+
       }
   /**
    * @description METODO QUE AGREGA UNA NUEVO PAGO
    */
   public nuevoPago() {
+    this.loadingSubject.next(true);
     if (this.formCliente.invalid){
+      this.loadingSubject.next(false);
       alert("COMPLETE EL FORMULARIO CORRECTAMENTE");
       return;
     }
 
     let wrapperRespuesta={
       institucionFinanciera:this.institucionFinanciera.value,
-      numerodeDeposito:this.numerodeDeposito.value,
-      valorpagado:this.valorpagado.value,
+      numeroDeposito:this.numeroDeposito.value,
+      valorPagado:this.valorPagado.value,
       cuentas:this.cuentas.value,
-      fechadePago:this.fechadePago.value
+      fechaPago:this.fechaPago.value
     }
     this.dialogRef.close(wrapperRespuesta);
 

@@ -10,6 +10,8 @@ import { SubheaderService } from './../../../../../../core/_base/layout';
 import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
 import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { stringify } from 'querystring';
+import { Key } from 'protractor';
 /*import { Page } from './../../../../../../core/model/page';
 import { ClienteSoftbank } from './../../../../../../core/model/softbank/ClienteSoftbank';
 import { TbQoRegistrarPago } from './../../../../../../core/model/quski/TbQoRegistrarPago';
@@ -93,8 +95,11 @@ export class AprobarPagosComponent implements OnInit {
     
     wrapperRespuesta.observacion = this.observacion.value;*/
     
-    
-    this.rp.aprobarPago(this.idCliente, this.estado, this.tipo ).subscribe(q => {
+      if (this.tipo == "APROBADO"){
+      }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
+        
+    let user = localStorage.getItem(localStorage.key(2));
+    this.rp.aprobarPago(this.idCliente, this.estado, this.tipo, user ).subscribe(q => {
       console.log(" >>> ", this.rp);
 
       this.loadingSubject.next(false);
@@ -102,8 +107,8 @@ export class AprobarPagosComponent implements OnInit {
       this.router.navigate(['../../asesor/bandeja-principal', this.idCliente]);
     }, error => {
       this.loadingSubject.next(false);
-    })
     });
+  });
   }
   Rechazar() {
     console.log("entra a popUp Rechazar")
@@ -119,8 +124,11 @@ export class AprobarPagosComponent implements OnInit {
     
     wrapperRespuesta.observacion = this.observacion.value;*/
     
-    
-    this.rp.rechazarPago(this.idCliente, this.estado, this.tipo ).subscribe(p => {
+    if (this.tipo == "APROBADO"){
+    }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
+      
+  let user = localStorage.getItem(localStorage.key(2));
+    this.rp.rechazarPago(this.idCliente, this.estado, this.tipo, user ).subscribe(p => {
       console.log(" >>> ", this.rp);
 
       this.loadingSubject.next(false);
@@ -179,7 +187,9 @@ export class AprobarPagosComponent implements OnInit {
             this.observacion.setValue(cliente.observacion);
             this.estado = cliente.estado;
             this.tipo = cliente.tipo;
-            console.log("Cliente: ----> ", this.estado)
+            localStorage.getItem(localStorage.key(2));
+            console.log("user:--->>>"+localStorage.getItem(localStorage.key(2)) );
+            console.log("Cliente: ----> ", this.estado);
             console.log("Consulta de pagos en clientePagoByIdCliente --> " + JSON.stringify(data));
             
             this.dataSource = new MatTableDataSource<any>(data.entidades);

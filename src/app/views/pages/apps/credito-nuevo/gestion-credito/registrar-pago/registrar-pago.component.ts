@@ -35,7 +35,7 @@ export class RegistrarPagoComponent implements OnInit {
   fileBase64: string;
   procesoSubject: BehaviorSubject<string> = new BehaviorSubject<string>("");
   estadoOperacionSubject: BehaviorSubject<string> = new BehaviorSubject<string>("");
-  columnas = ['accion', 'institucionFinanciera', 'cuentas', 'fechadePago', 'numerodeDeposito', 'valorpagado', 'subir', 'descargar'];
+  columnas = ['accion', 'institucionFinanciera', 'cuentas', 'fechaPago', 'numeroDeposito', 'valorPagado', 'subir', 'descargar'];
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   dataSourceRubros: MatTableDataSource<any> = new MatTableDataSource<any>();
@@ -123,10 +123,13 @@ export class RegistrarPagoComponent implements OnInit {
       if (r) {
         j.nombreArchivo = r.nombreArchivo;
         j.archivo = r.archivo;
+        //this.fileBase64 = j.archivo;
+        //console.log("comprobante" + this.fileBase64);  
         this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE", "success");
       }
     });
   }
+
   descargarComprobante() {
     if (confirm("Realmente quiere descargar?")) {
 
@@ -242,7 +245,7 @@ export class RegistrarPagoComponent implements OnInit {
     cliente.valorPrecancelado = this.valorPreCancelado.value;
     cliente.valorDepositado = this.valorDepositado.value;
     cliente.observacion = this.observacion.value;
-    cliente.tipo = ('REGISTRO_PAGO')
+    cliente.tipo = ('REGISTRO_PAGO');
     registrarPagoWrapper.cliente = cliente;
     if (this.dataSource.data.length > 0) {
       registrarPagoWrapper.pagos = this.dataSource.data;

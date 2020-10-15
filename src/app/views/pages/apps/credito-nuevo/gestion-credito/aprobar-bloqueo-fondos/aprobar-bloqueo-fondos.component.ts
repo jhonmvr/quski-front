@@ -75,9 +75,11 @@ export class AprobarBloqueoFondosComponent implements OnInit {
       /*let wrapperRespuesta = new TbQoClientePago();
     
     wrapperRespuesta.observacion = this.observacion.value;*/
-
-
-      this.rp.aprobarPago(this.idCliente, this.estado, this.tipo).subscribe(q => {
+    if (this.tipo == "APROBADO"){
+    }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
+      
+  let user = localStorage.getItem(localStorage.key(2));
+      this.rp.aprobarPago(this.idCliente, this.estado, this.tipo, user).subscribe(q => {
         console.log(" >>> ", this.rp);
 
         this.loadingSubject.next(false);
@@ -102,8 +104,11 @@ export class AprobarBloqueoFondosComponent implements OnInit {
     
     wrapperRespuesta.observacion = this.observacion.value;*/
 
-
-      this.rp.rechazarPago(this.idCliente, this.estado, this.tipo).subscribe(p => {
+    if (this.tipo == "APROBADO"){
+    }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
+      
+  let user = localStorage.getItem(localStorage.key(2));
+      this.rp.rechazarPago(this.idCliente, this.estado, this.tipo,user).subscribe(p => {
         console.log(" >>> ", this.rp);
 
         this.loadingSubject.next(false);

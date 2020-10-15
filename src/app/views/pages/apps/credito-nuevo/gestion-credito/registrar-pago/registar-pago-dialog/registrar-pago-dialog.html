@@ -16,7 +16,7 @@
             </div>
             <div class="col-md-2">
                 <mat-form-field class="example-full-width">
-                    <input matInput type="number" [formControl]="numerodeDeposito">
+                    <input matInput type="number" [formControl]="numeroDeposito">
                 </mat-form-field>
             </div>
             <div class="col-md-1.5">
@@ -24,7 +24,7 @@
             </div>
             <div class="col-md-2">
                 <mat-form-field class="example-full-width">
-                    <input matInput type="number" [formControl]="valorpagado">
+                    <input matInput type="number" [formControl]="valorPagado">
                 </mat-form-field>
             </div>
         </div>
@@ -43,9 +43,9 @@
                 </div>
                 <div class="col-md-2">
                     <mat-form-field class="example-full-width">
-                        <input matInput [matDatepicker]="fechaPago" matInput [formControl]="fechadePago">
-                        <mat-datepicker-toggle matSuffix [for]="fechaPago"></mat-datepicker-toggle>
-                        <mat-datepicker #fechaPago></mat-datepicker>
+                        <input matInput [matDatepicker]="fechadePago" [formControl]="fechaPago">
+                        <mat-datepicker-toggle matSuffix [for]="fechadePago"></mat-datepicker-toggle>
+                        <mat-datepicker #fechadePago></mat-datepicker>
                     </mat-form-field>
                 </div>
             </div>
