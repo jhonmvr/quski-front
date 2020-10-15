@@ -402,7 +402,6 @@ export class ExcepcionesClienteComponent implements OnInit {
                 this.correo.setValue(this.entidadCliente.email);
                 //FORM DATOS NEGOCIACION
 
-                this.tipoProcesoNegociacion.setValue(this.entidadNegociacion.tipo);
                 this.estadoNegociacion.setValue(this.entidadNegociacion.situacion);
                 this.fechaDeCreacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
                 this.ultimaFechaDeActualizacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));

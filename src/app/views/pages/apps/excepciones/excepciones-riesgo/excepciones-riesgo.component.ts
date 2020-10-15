@@ -472,8 +472,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
                 this.telefonoOficina.setValue(this.entidadCliente.telefonoTrabajo);
                 this.correo.setValue(this.entidadCliente.email);
                 //FORM DATOS NEGOCIACION
-
-                this.tipoProcesoNegociacion.setValue(this.entidadNegociacion.tipo);
                 this.motivoNoAceptacion.setValue(this.entidadNegociacion.situacion);
                 this.calificadoMupi.setValue(this.entidadCliente.aprobacionMupi);
               } else {

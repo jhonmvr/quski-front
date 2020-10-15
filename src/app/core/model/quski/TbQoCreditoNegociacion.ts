@@ -1,6 +1,4 @@
 import { TbQoNegociacion } from "./TbQoNegociacion";
-import { TbQoTasacion } from "./TbQoTasacion";
-import { TbQoCliente } from "./TbQoCliente";
 
 export class TbQoCreditoNegociacion {
     id:number;
@@ -12,21 +10,22 @@ export class TbQoCreditoNegociacion {
     costoTransporte: string;
     costoCredito: string;
     costoSeguro: string;
-    costoResguardo: string;
+    costoResguardado: string;
     costoEstimado: string;
     valorCuota: string;
-    idUsuario:string;
-    fechaCracion:string;
+    usuario:string;
+    fechaCracion: Date;
+    fechaActualizacion: Date;
     fechaVencimiento:string;
     codigo:string;
     tbQoNegociacion : TbQoNegociacion;
-    tbQoTasacion : TbQoTasacion  [];
-    tbQoAgencia:any;
+    idAgencia : number;
+    estado: string;
+
         
     constructor(idNegociacion? : number ){
         this.tbQoNegociacion = new TbQoNegociacion();
         this.tbQoNegociacion.id = idNegociacion > 0 ? idNegociacion : null;
-       // this.tbQoTasacion = new TbQoTasacion();
     }
 
 }
