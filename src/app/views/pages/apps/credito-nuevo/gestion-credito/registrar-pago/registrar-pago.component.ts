@@ -16,7 +16,9 @@ import { DataUpload } from './../../../../../../core/interfaces/data-upload';
 import { ObjectStorageService } from './../../../../../../core/services/object-storage.service';
 import { ReFileUploadService } from './../../../../../../core/services/re-file-upload.service';
 import { UploadFileComponent } from '../../upload-file/upload-file.component';
-
+import { HabilitanteWrapper } from './../../../../../../core/model/wrapper/habilitante-wrapper';
+import { saveAs } from 'file-saver';
+import { toPublicName } from '@angular/compiler/src/i18n/serializers/xmb';
 
 
 /**
@@ -30,6 +32,8 @@ import { UploadFileComponent } from '../../upload-file/upload-file.component';
 export class RegistrarPagoComponent implements OnInit {
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
+  banderaGuardar = new BehaviorSubject<boolean>(false);
+  banderaDescargar = new BehaviorSubject<boolean>(false);
   private uploadSubject = new BehaviorSubject<boolean>(false);
   public dataUpload: DataUpload;
   fileBase64: string;
@@ -69,6 +73,7 @@ export class RegistrarPagoComponent implements OnInit {
     private upload: ReFileUploadService, private os: ObjectStorageService,
     public dialog: MatDialog) {
     this.upload.setParameter();
+    this.os.setParameter();
     this.formRegistrarPago.addControl("nombresCliente", this.nombreCliente);
     this.formRegistrarPago.addControl("cedula", this.cedula);
     this.formRegistrarPago.addControl("codigoOperacion", this.codigoOperacion);
@@ -94,6 +99,7 @@ export class RegistrarPagoComponent implements OnInit {
       data: idReferenciaHab
     });
     dialogRef.afterClosed().subscribe(r => {
+    this.banderaGuardar.next(true);
       console.log("datos de salida popUp", r)
       let datos = this.dataSource.data;
       datos.push(r);
@@ -122,18 +128,38 @@ export class RegistrarPagoComponent implements OnInit {
       console.log("resultado del archivito q subi XD", r);
       if (r) {
         j.nombreArchivo = r.nombreArchivo;
-        j.archivo = r.archivo;
-        //this.fileBase64 = j.archivo;
-        //console.log("comprobante" + this.fileBase64);  
+        j.archivo = r.archivo;  
         this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE", "success");
+        
+    this.banderaGuardar.next(false);
       }
     });
   }
 
-  descargarComprobante() {
-    if (confirm("Realmente quiere descargar?")) {
-
-    }
+  descargarComprobante(j) {
+    console.log("Archivo subido --->>>>> ", j);
+    this.os.getObjectById( j.archivo,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+      if (confirm("Realmente quiere descargar?")) {
+        if( data && data.entidad ){
+          let obj=JSON.parse( atob(data.entidad) );
+          console.log("entra a retorno json " + JSON.stringify( obj ));
+          const byteCharacters = atob(obj.fileBase64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], {type: j});
+          saveAs(blob , obj.name);
+        }else {
+          this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
+        }
+      }
+      },
+      error => {
+        console.log("================>error: " + JSON.stringify(error));
+        this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
+      });
   }
 
   ngOnInit() {
@@ -233,7 +259,7 @@ export class RegistrarPagoComponent implements OnInit {
 
     let registrarPagoWrapper = {
       cliente: {},
-      pagos: []
+      pagos: {}
     }
 
     let cliente = new TbQoClientePago();
@@ -253,15 +279,19 @@ export class RegistrarPagoComponent implements OnInit {
       registrarPagoWrapper.pagos = null;
     }
 
-    this.registrarPagoService.crearRegistrarPagoConRelaciones(registrarPagoWrapper).subscribe(p => {
+    this.registrarPagoService.crearRegistrarPagoConRelaciones(registrarPagoWrapper).subscribe((p:any) => {
       console.log(" >>> ", this.registrarPagoService);
-
+      if(p.entidad && p.entidad.pagos){
+        this.dataSource.data = p.entidad.pagos;
+        this.banderaDescargar.next(true);
+      }
       this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
     }, error => {
       this.loadingSubject.next(false);
     }
     )
+
   }
 
   /**
@@ -315,55 +345,4 @@ export class RegistrarPagoComponent implements OnInit {
       return this.valorDepositado.hasError('required') ? errorrequiredo : '';
     }
   }
-
-  onFileChange(event) {
-
-    let reader = new FileReader();
-    if (event.target.files && event.target.files.length > 0) {
-      let file = <File>event.target.files[0];
-      let mimeType = file.type;
-      let mimeSize = file.size;
-      if (mimeType.match('\.pdf') != null || mimeType.match('\.png') != null) {
-        if (mimeSize < 500000) {
-          reader.readAsDataURL(file);
-          reader.onload = () => {
-            this.uploadSubject.next(true);
-            //this.fileBase64= String(reader.result).split(",")[1];
-            /*this.dataUpload = {
-              name: file.name,
-              type: file.type,
-              //process: this.dataSource.proceso,
-              //: this.dataSource.documentoHabilitante?Number(this.data.documentoHabilitante):null,
-              //relatedIdStr: this.dataSource.referencia,
-              //typeAction: this.dataSource.tipoDocumento,
-              fileBase64: String(reader.result).split(",")[1],
-              objectId:""
-            };*/
-          };
-        } else {
-          //console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
-          //this.fileInput.nativeElement = null;
-          //document.getElementById("fileUpload").nodeValue = "";
-          //file = null
-          this.dataUpload = null;
-          this.uploadSubject.next(false);
-          this.sinNoticeService.setNotice("Tamaño de archivo no permitido.", 'error');
-        }
-
-      } else {
-        //console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
-        //this.fileInput.nativeElement = null;
-        //document.getElementById("fileUpload").nodeValue = "";
-        //file = null
-        this.dataUpload = null;
-        this.uploadSubject.next(false);
-        console.log("entra aqui")
-        this.sinNoticeService.setNotice("Formato no permitido. Ingrese un .PDF", 'error');
-      }
-    } else {
-      this.uploadSubject.next(false);
-    }
-  }
-
-
 }

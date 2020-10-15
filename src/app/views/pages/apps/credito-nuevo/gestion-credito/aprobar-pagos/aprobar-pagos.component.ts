@@ -12,13 +12,10 @@ import { RegistrarPagoService } from './../../../../../../core/services/quski/re
 import { ActivatedRoute, Router } from '@angular/router';
 import { stringify } from 'querystring';
 import { Key } from 'protractor';
-/*import { Page } from './../../../../../../core/model/page';
-import { ClienteSoftbank } from './../../../../../../core/model/softbank/ClienteSoftbank';
-import { TbQoRegistrarPago } from './../../../../../../core/model/quski/TbQoRegistrarPago';
-import { AuthDialogComponent } from './../../../../../../../app/views/partials/custom/auth-dialog/auth-dialog.component';
-import { ConsultaCliente } from './../../../../../../core/model/softbank/ConsultaCliente';
-import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
-*/
+import { environment } from './../..`/../../../../../../..//environments/environment';
+import { ObjectStorageService } from './../../../../../../core/services/object-storage.service';
+import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'kt-aprobar-pagos',
   templateUrl: './aprobar-pagos.component.html',
@@ -64,8 +61,10 @@ export class AprobarPagosComponent implements OnInit {
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
     private rp: RegistrarPagoService,
+    private os: ObjectStorageService,
     public dialog: MatDialog
     ) {
+    this.os.setParameter();
     this.formAprobarPago.addControl("nombresCliente", this.nombreCliente);
     this.formAprobarPago.addControl("cedula", this.cedula);
     this.formAprobarPago.addControl("codigoOperacion", this.codigoOperacion);
@@ -152,10 +151,29 @@ export class AprobarPagosComponent implements OnInit {
 
     }
   }*/
-  descargarComprobante() {
-    if (confirm("Realmente quiere descargar?")) {
-
-    }
+  descargarComprobante(j) {
+    this.os.getObjectById( j.archivo,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+      if (confirm("Realmente quiere descargar?")) {
+        if( data && data.entidad ){
+          let obj=JSON.parse( atob(data.entidad) );
+          console.log("entra a retorno json " + JSON.stringify( obj ));
+          const byteCharacters = atob(obj.fileBase64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], {type: j});
+          saveAs(blob , obj.name);
+        }else {
+          this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
+        }
+      }
+      },
+      error => {
+        console.log("================>error: " + JSON.stringify(error));
+        this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
+      });
   }
 
   ngOnInit() {
@@ -176,6 +194,9 @@ export class AprobarPagosComponent implements OnInit {
         let tipodb = "REGISTRO_PAGO";
         this.rp.clientePagoByIdCliente(this.idCliente, tipodb).subscribe((data: any) => {
           if (data) {
+            if(data.entidad && data.entidad.pagos){
+              this.dataSource.data = data.entidad.pagos;
+            }
             let cliente = data.entidades[0].tbQoClientePago;
             this.nombreCliente.setValue(cliente.nombreCliente);
             this.cedula.setValue(cliente.cedula);

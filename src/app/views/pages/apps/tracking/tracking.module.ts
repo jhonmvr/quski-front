@@ -43,7 +43,6 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 
 // Component
 import { TrackingComponent } from './tracking.component';
-import { TablaTrackingComponent } from './list-tracking/tabla-tracking/tabla-tracking.component';
 import { ListTrackingComponent } from './list-tracking/list-tracking.component';
 import { AddFotoComponent } from '../../../partials/custom/fotos/add-foto/add-foto.component';
 import {PartialsModule} from '../../../partials/partials.module';
@@ -61,15 +60,7 @@ const routes: Routes = [
 				pathMatch: 'full'
 			},
 			{
-				path: 'tabla-tracking',
-				component: TablaTrackingComponent
-			},
-			{
 				path: 'list-tracking',
-				component: ListTrackingComponent
-			},
-			{
-				path: 'list-tracking/:id',
 				component: ListTrackingComponent
 			},
 			{
@@ -132,7 +123,6 @@ const routes: Routes = [
   ],
 declarations: [
     TrackingComponent,
-    TablaTrackingComponent,
     ListTrackingComponent,
     TrackingPagosComponent,
   ],

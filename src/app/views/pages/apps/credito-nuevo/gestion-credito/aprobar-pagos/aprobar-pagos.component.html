@@ -113,7 +113,7 @@
                         <ng-container matColumnDef="descargar">
                             <th mat-header-cell *matHeaderCellDef> Descarga Foto </th>
                             <td mat-cell *matCellDef="let j ">
-                                <button mat-icon-button focusable="false" (click)="descargarComprobante()">
+                                <button mat-icon-button focusable="false" (click)="descargarComprobante(j)">
                                     <mat-icon style="font-size: 42px" matTooltipPosition="above"
                                         matTooltip="Descarga Comprobante">cloud_download</mat-icon>
                                 </button>
