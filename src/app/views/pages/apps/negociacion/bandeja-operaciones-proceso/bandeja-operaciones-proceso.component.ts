@@ -9,16 +9,10 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { WrapperBusqueda } from '../../../../../core/model/wrapper/WrapperBusqueda';
+import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
 
-export interface WrapperBusqueda {
-  nombreCompleto: string
-  identificacion: string
-  proceso: string
-  fechaCreacionDesde: Date
-  fechaCreacionHasta: Date
-  estado: string
-  actividad: string
-}
 @Component({
   selector: 'kt-bandeja-operaciones-proceso',
   templateUrl: './bandeja-operaciones-proceso.component.html',
@@ -47,6 +41,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService,
+    private pro: ProcesoService,
     private subheaderService: SubheaderService
   ) {
     /** ** @FORMULARIO ** */
@@ -68,7 +63,14 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
 
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   public buscarOperaciones(wrapper: WrapperBusqueda = null) {
-    
+    if(wrapper == null){
+      wrapper = new WrapperBusqueda( this.usuario );
+    }
+    this.pro.buscarOperaciones(wrapper).subscribe( (data: any) =>{
+      if( data.list != null ){
+        // @TODO: Cargar cosas; 
+      }
+    }, error => { this.capturaError(error); });
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @FUNCIONALIDAD ** */
   public getErrorMessage(pfield: string) {
@@ -93,18 +95,35 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
               "";
     }
   }
+  private capturaError(error: any) {
+    if (error.error) {
+      if (error.error.codError) {
+        this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
+      } else {
+        this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
+      }
+    } else if (error.statusText && error.status == 401) {
+      this.dialog.open(AuthDialogComponent, {
+        data: {
+          mensaje: "Error " + error.statusText + " - " + error.message
+        }
+      });
+    } else {
+      this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
+    }
+  }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BOTONES ** */
   public buscar(){
     if(this.formFiltro.valid){
-      let busqueda = {} as WrapperBusqueda;
-      busqueda.estado = this.estado.value;
-      busqueda.actividad = this.actividad.value;
-      busqueda.fechaCreacionDesde = this.fechaCreacionDesde.value;
-      busqueda.fechaCreacionHasta = this.fechaCreacionHasta.value;
-      busqueda.identificacion = this.identificacion.value;
-      busqueda.nombreCompleto = this.nombreCompleto.value;
-      busqueda.proceso = this.proceso.value;
-      this.buscarOperaciones( busqueda );
+      const w = new WrapperBusqueda( this.usuario );
+      w.estado = this.estado.value;
+      w.actividad = this.actividad.value;
+      w.fechaCreacionDesde = this.fechaCreacionDesde.value;
+      w.fechaCreacionHasta = this.fechaCreacionHasta.value;
+      w.identificacion = this.identificacion.value;
+      w.nombreCompleto = this.nombreCompleto.value;
+      w.proceso = this.proceso.value;
+      this.buscarOperaciones( w );
     } else{
       this.sinNotSer.setNotice('COMPLETE LOS CAMPOS CORRECTAMENTE', 'error');
 

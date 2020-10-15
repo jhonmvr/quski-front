@@ -437,9 +437,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
                   + ' ' + this.entidadCliente.apellidoPaterno + ' ' + this.entidadCliente.apellidoMaterno);
                 this.idCliente = data.id;
                 this.identificacion.setValue(this.entidadCliente.cedulaCliente);
-                // console.log('VALOR DE LA dataNegociacion====> ', JSON.stringify(this.entidadNegociacion));
-                //console.log('VALOR DE LA ENTIDAD====> ', JSON.stringify(this.entidadNegociacion.procesoActual));
-                this.nombreProceso.setValue(this.entidadNegociacion.procesoActual);
                 this.buscarMensaje();
                 // FORM CLIENTE
                 this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
