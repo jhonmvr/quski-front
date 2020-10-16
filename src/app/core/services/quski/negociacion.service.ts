@@ -79,11 +79,11 @@ export class NegociacionService extends BaseService {
    * @author Developer Twelve - Jeroham Cadenas
    * @param entidad TbQoNegociacion
    */
-  public reasignar(idNegociacion: number, codigoAsesor: string ) {
-    const serviceUrl = this.appResourcesUrl + this.urlRest + 'persistEntity';
-    const wrapper = { entidad: {id: idNegociacion, idAsesor: codigoAsesor} };
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+  public reasignar(id: number, codigoAsesor: string ) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'reasignarNegociacion';
+    this.params = new HttpParams().set('id', id.toString()).set('usuario', codigoAsesor);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
   }
   /**
    * @author Developer Twelve - Jeroham Cadenas

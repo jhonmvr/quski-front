@@ -29,6 +29,30 @@ export class ProcesoService extends BaseService {
   }
   /**
    * @author Jeroham Cadenas
+   */
+  public getActividades() {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'getActividades';
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  /**
+   * @author Jeroham Cadenas
+   */
+  public getEstadosProceso() {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'getEstadosProceso';
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  /**
+   * @author Jeroham Cadenas
+   */
+  public getProcesos() {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'getProcesos';
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  /**
+   * @author Jeroham Cadenas
    * @param entidad TbQoProceso
    */
   public persistEntity(entidad : TbQoProceso) {
@@ -43,7 +67,7 @@ export class ProcesoService extends BaseService {
    */
   public buscarOperaciones(w: WrapperBusqueda) {
     let serviceUrl = this.appResourcesUrl + this.urlRest +"buscarOperaciones";
-    let wrapper = { entidad: w }
+    let wrapper =  w ;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 

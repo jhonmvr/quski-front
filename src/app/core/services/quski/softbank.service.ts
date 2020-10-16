@@ -360,7 +360,7 @@ export class SoftbankService extends BaseService {
    */
   consultarAsesoresCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "asesor" ;
-    let wrapper =  "";
+    let wrapper =  {  "idAgencia": 2};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   } 

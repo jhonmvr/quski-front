@@ -1,16 +1,20 @@
 <div class="row m-2">
     <div class="col-12 mt-2 mb-2">
-        <mat-card-title> Lista de Excepciones Revisadas </mat-card-title>
+        <mat-card-title> Reasignar la operacion a un nuevo Asesor </mat-card-title>
     </div>
     <div class="offset-1 col-10 mt-2 mb-2">
-        <mat-card-title> Usuario Actual: {{ usuario }}</mat-card-title>
+        <mat-card-title> Usuario Actual: {{ usuario | titlecase }}</mat-card-title>
     </div>
     <div class="col-12">
         <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource">
 
             <ng-container matColumnDef="usuario">
                 <mat-header-cell *matHeaderCellDef> Usuario </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.nombre }} </mat-cell>
+                <mat-cell *matCellDef="let element"> {{ element.codigo | titlecase }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="nombre">
+                <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.nombre | titlecase }} </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="reasignar">

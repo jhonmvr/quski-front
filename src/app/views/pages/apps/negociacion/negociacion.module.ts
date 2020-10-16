@@ -50,6 +50,7 @@ import { ErrorCargaInicialComponent } from '../../../../views/partials/custom/po
 import { VerCotizacionesComponent } from '../../../../views/partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
 import { BandejaOperacionesProcesoComponent } from './bandeja-operaciones-proceso/bandeja-operaciones-proceso.component';
 import { ListaExcepcionesComponent } from '../../../../views/partials/custom/popups/lista-excepciones/lista-excepciones.component';
+import { ReasignarUsuarioComponent } from '../../../../views/partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
 
 const routes: Routes = [
 	{
@@ -136,7 +137,8 @@ const routes: Routes = [
 	entryComponents: [	
 		ErrorCargaInicialComponent,
 		VerCotizacionesComponent,
-		ListaExcepcionesComponent
+		ListaExcepcionesComponent,
+		ReasignarUsuarioComponent
 
 	]
 })
