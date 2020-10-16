@@ -10,13 +10,12 @@ import { SubheaderService } from './../../../../../../core/_base/layout';
 import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
 import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
 import { ActivatedRoute, Router } from '@angular/router';
-/*import { Page } from './../../../../../../core/model/page';
-import { ClienteSoftbank } from './../../../../../../core/model/softbank/ClienteSoftbank';
-import { TbQoRegistrarPago } from './../../../../../../core/model/quski/TbQoRegistrarPago';
-import { AuthDialogComponent } from './../../../../../../../app/views/partials/custom/auth-dialog/auth-dialog.component';
-import { ConsultaCliente } from './../../../../../../core/model/softbank/ConsultaCliente';
-import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
-*/
+import { stringify } from 'querystring';
+import { Key } from 'protractor';
+import { environment } from './../..`/../../../../../../..//environments/environment';
+import { ObjectStorageService } from './../../../../../../core/services/object-storage.service';
+import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'kt-aprobar-pagos',
   templateUrl: './aprobar-pagos.component.html',
@@ -62,8 +61,10 @@ export class AprobarPagosComponent implements OnInit {
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
     private rp: RegistrarPagoService,
+    private os: ObjectStorageService,
     public dialog: MatDialog
     ) {
+    this.os.setParameter();
     this.formAprobarPago.addControl("nombresCliente", this.nombreCliente);
     this.formAprobarPago.addControl("cedula", this.cedula);
     this.formAprobarPago.addControl("codigoOperacion", this.codigoOperacion);
@@ -93,8 +94,11 @@ export class AprobarPagosComponent implements OnInit {
     
     wrapperRespuesta.observacion = this.observacion.value;*/
     
-    
-    this.rp.aprobarPago(this.idCliente, this.estado, this.tipo ).subscribe(q => {
+      if (this.tipo == "APROBADO"){
+      }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
+        
+    let user = localStorage.getItem(localStorage.key(2));
+    this.rp.aprobarPago(this.idCliente, this.estado, this.tipo, user ).subscribe(q => {
       console.log(" >>> ", this.rp);
 
       this.loadingSubject.next(false);
@@ -102,8 +106,8 @@ export class AprobarPagosComponent implements OnInit {
       this.router.navigate(['../../asesor/bandeja-principal', this.idCliente]);
     }, error => {
       this.loadingSubject.next(false);
-    })
     });
+  });
   }
   Rechazar() {
     console.log("entra a popUp Rechazar")
@@ -119,8 +123,11 @@ export class AprobarPagosComponent implements OnInit {
     
     wrapperRespuesta.observacion = this.observacion.value;*/
     
-    
-    this.rp.rechazarPago(this.idCliente, this.estado, this.tipo ).subscribe(p => {
+    if (this.tipo == "APROBADO"){
+    }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
+      
+  let user = localStorage.getItem(localStorage.key(2));
+    this.rp.rechazarPago(this.idCliente, this.estado, this.tipo, user ).subscribe(p => {
       console.log(" >>> ", this.rp);
 
       this.loadingSubject.next(false);
@@ -144,10 +151,29 @@ export class AprobarPagosComponent implements OnInit {
 
     }
   }*/
-  descargarComprobante() {
-    if (confirm("Realmente quiere descargar?")) {
-
-    }
+  descargarComprobante(j) {
+    this.os.getObjectById( j.archivo,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+      if (confirm("Realmente quiere descargar?")) {
+        if( data && data.entidad ){
+          let obj=JSON.parse( atob(data.entidad) );
+          console.log("entra a retorno json " + JSON.stringify( obj ));
+          const byteCharacters = atob(obj.fileBase64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], {type: j});
+          saveAs(blob , obj.name);
+        }else {
+          this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
+        }
+      }
+      },
+      error => {
+        console.log("================>error: " + JSON.stringify(error));
+        this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
+      });
   }
 
   ngOnInit() {
@@ -168,6 +194,9 @@ export class AprobarPagosComponent implements OnInit {
         let tipodb = "REGISTRO_PAGO";
         this.rp.clientePagoByIdCliente(this.idCliente, tipodb).subscribe((data: any) => {
           if (data) {
+            if(data.entidad && data.entidad.pagos){
+              this.dataSource.data = data.entidad.pagos;
+            }
             let cliente = data.entidades[0].tbQoClientePago;
             this.nombreCliente.setValue(cliente.nombreCliente);
             this.cedula.setValue(cliente.cedula);
@@ -179,7 +208,9 @@ export class AprobarPagosComponent implements OnInit {
             this.observacion.setValue(cliente.observacion);
             this.estado = cliente.estado;
             this.tipo = cliente.tipo;
-            console.log("Cliente: ----> ", this.estado)
+            localStorage.getItem(localStorage.key(2));
+            console.log("user:--->>>"+localStorage.getItem(localStorage.key(2)) );
+            console.log("Cliente: ----> ", this.estado);
             console.log("Consulta de pagos en clientePagoByIdCliente --> " + JSON.stringify(data));
             
             this.dataSource = new MatTableDataSource<any>(data.entidades);

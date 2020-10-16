@@ -9,7 +9,9 @@ export class TbQoRegistrarPago {
 	fechaPago: String; 
 	numeroDeposito: String; 
 	valorPagado: String;
-	comprobante: String;
+	idComprobante: String;
+	archivo: String;
+	nombreArchivo: String;
 	constructor(){
 		this.TbQoClientePago = new TbQoClientePago();
 	} 

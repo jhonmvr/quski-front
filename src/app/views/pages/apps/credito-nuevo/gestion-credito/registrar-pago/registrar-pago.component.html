@@ -101,24 +101,24 @@
                         <td mat-cell *matCellDef="let articulo"> {{articulo.cuentas}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="fechadePago">
+                    <ng-container matColumnDef="fechaPago">
                         <th mat-header-cell *matHeaderCellDef> Fecha Pago </th>
-                        <td mat-cell *matCellDef="let articulo"> {{articulo.fechadePago | date:'dd/MM/yyyy' }} </td>
+                        <td mat-cell *matCellDef="let articulo"> {{articulo.fechaPago | date:'dd/MM/yyyy' }} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="numerodeDeposito">
+                    <ng-container matColumnDef="numeroDeposito">
                         <th mat-header-cell *matHeaderCellDef> Numero de deposito </th>
-                        <td mat-cell *matCellDef="let articulo"> {{articulo.numerodeDeposito}} </td>
+                        <td mat-cell *matCellDef="let articulo"> {{articulo.numeroDeposito}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="valorpagado">
+                    <ng-container matColumnDef="valorPagado">
                         <th mat-header-cell *matHeaderCellDef> Valor Depositado </th>
-                        <td mat-cell *matCellDef="let articulo"> {{articulo.valorpagado}} </td>
+                        <td mat-cell *matCellDef="let articulo"> {{articulo.valorPagado}} </td>
                     </ng-container>
                     <ng-container matColumnDef="subir">
                         <th mat-header-cell *matHeaderCellDef> Subir Comprobante </th>
                         <td mat-cell *matCellDef="let j;">
-                                <button type="submit" mat-icon-button focusable="false" (click)="subirComprobante(j)">
+                                <button *ngIf="banderaGuardar.asObservable() | async" type="submit" mat-icon-button focusable="false" (click)="subirComprobante(j)">
                                     <mat-icon style="font-size: 42px" matTooltipPosition="above"
                                         matTooltip="Subir Comprobante">cloud_upload</mat-icon>
                                 </button>
@@ -128,7 +128,7 @@
                     <ng-container matColumnDef="descargar">
                         <th mat-header-cell *matHeaderCellDef> Descarga Comprobante </th>
                         <td mat-cell *matCellDef="let j;">
-                            <button mat-icon-button focusable="false" (click)="descargarComprobante()">
+                            <button *ngIf="banderaDescargar.asObservable() | async" mat-icon-button focusable="false" (click)="descargarComprobante(j)" >
                                 <mat-icon style="font-size: 42px" matTooltipPosition="above"
                                     matTooltip="Descarga Comprobante">cloud_download</mat-icon>
                             </button>

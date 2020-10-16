@@ -49,6 +49,8 @@ import { GestionNegociacionComponent } from './gestion-negociacion/gestion-negoc
 import { ErrorCargaInicialComponent } from '../../../../views/partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { VerCotizacionesComponent } from '../../../../views/partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
 import { BandejaOperacionesProcesoComponent } from './bandeja-operaciones-proceso/bandeja-operaciones-proceso.component';
+import { ListaExcepcionesComponent } from '../../../../views/partials/custom/popups/lista-excepciones/lista-excepciones.component';
+import { ReasignarUsuarioComponent } from '../../../../views/partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
 
 const routes: Routes = [
 	{
@@ -134,7 +136,9 @@ const routes: Routes = [
 	],
 	entryComponents: [	
 		ErrorCargaInicialComponent,
-		VerCotizacionesComponent
+		VerCotizacionesComponent,
+		ListaExcepcionesComponent,
+		ReasignarUsuarioComponent
 
 	]
 })

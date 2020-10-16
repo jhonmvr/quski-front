@@ -10,7 +10,9 @@ import { RegistrarPagoService } from './../../../../../../core/services/quski/re
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogoAprobarBloqueoFondosComponent } from './dialogo-aprobar-bloqueo-fondos/dialogo-aprobar-bloqueo-fondos.component';
 import { DialogoRechazarBloqueoFondosComponent } from './dialogo-rechazar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos.component';
-
+import { ObjectStorageService } from './../../../../../../core/services/object-storage.service';
+import { environment } from './../..`/../../../../../../../environments/environment';
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'kt-aprobar-bloqueo-fondos',
   templateUrl: './aprobar-bloqueo-fondos.component.html',
@@ -48,8 +50,10 @@ export class AprobarBloqueoFondosComponent implements OnInit {
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
     private rp: RegistrarPagoService,
+    private os: ObjectStorageService,
     public dialog: MatDialog
   ) {
+    this.os.setParameter();
     this.formBloqueoFondo.addControl("nombresCliente", this.nombreCliente);
     this.formBloqueoFondo.addControl("cedula", this.cedula);
     this.formBloqueoFondo.addControl("codigoCuentaMupi", this.codigoCuentaMupi);
@@ -75,9 +79,11 @@ export class AprobarBloqueoFondosComponent implements OnInit {
       /*let wrapperRespuesta = new TbQoClientePago();
     
     wrapperRespuesta.observacion = this.observacion.value;*/
-
-
-      this.rp.aprobarPago(this.idCliente, this.estado, this.tipo).subscribe(q => {
+    if (this.tipo == "APROBADO"){
+    }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
+      
+  let user = localStorage.getItem(localStorage.key(2));
+      this.rp.aprobarPago(this.idCliente, this.estado, this.tipo, user).subscribe(q => {
         console.log(" >>> ", this.rp);
 
         this.loadingSubject.next(false);
@@ -102,8 +108,11 @@ export class AprobarBloqueoFondosComponent implements OnInit {
     
     wrapperRespuesta.observacion = this.observacion.value;*/
 
-
-      this.rp.rechazarPago(this.idCliente, this.estado, this.tipo).subscribe(p => {
+    if (this.tipo == "APROBADO"){
+    }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
+      
+  let user = localStorage.getItem(localStorage.key(2));
+      this.rp.rechazarPago(this.idCliente, this.estado, this.tipo,user).subscribe(p => {
         console.log(" >>> ", this.rp);
 
         this.loadingSubject.next(false);
@@ -125,10 +134,29 @@ export class AprobarBloqueoFondosComponent implements OnInit {
 
     }
   }*/
-  descargarComprobante() {
-    if (confirm("Realmente quiere descargar?")) {
-
-    }
+  descargarComprobante(j) {
+    this.os.getObjectById( j.archivo,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+      if (confirm("Realmente quiere descargar?")) {
+        if( data && data.entidad ){
+          let obj=JSON.parse( atob(data.entidad) );
+          console.log("entra a retorno json " + JSON.stringify( obj ));
+          const byteCharacters = atob(obj.fileBase64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], {type: j});
+          saveAs(blob , obj.name);
+        }else {
+          this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
+        }
+      }
+      },
+      error => {
+        console.log("================>error: " + JSON.stringify(error));
+        this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
+      });
   }
 
   ngOnInit() {

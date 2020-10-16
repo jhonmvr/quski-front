@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
+import { SubheaderService } from './../../../../core/_base/layout';
 
 @Component({
   selector: 'kt-tracking',
@@ -8,10 +9,15 @@ import { ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrackingComponent implements OnInit {
+ 
 
-  constructor() { }
+  constructor(
+    
+    private subheaderService: SubheaderService,
+  ) { }
 
   ngOnInit() {
+    this.subheaderService.setTitle("GESTION TRACKING");
   }
 
 }

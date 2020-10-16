@@ -99,7 +99,7 @@
             <ng-container matColumnDef="subir">
               <th mat-header-cell *matHeaderCellDef> Subir Foto </th>
               <td mat-cell *matCellDef="let j">
-                <button type="submit" mat-icon-button focusable="false" (click)="subirComprobante(j)">
+                <button *ngIf="banderaGuardar.asObservable() | async" type="submit" mat-icon-button focusable="false" (click)="subirComprobante(j)">
                   <mat-icon style="font-size: 42px" matTooltipPosition="above" matTooltip="Subir Comprobante">
                     cloud_upload</mat-icon>
                 </button>
@@ -109,7 +109,7 @@
             <ng-container matColumnDef="descargar">
               <th mat-header-cell *matHeaderCellDef> Descarga Foto </th>
               <td mat-cell *matCellDef="let j">
-                <button mat-icon-button focusable="false" (click)="descargarComprobante(j)">
+                <button *ngIf="banderaDescargar.asObservable() | async" mat-icon-button focusable="false" (click)="descargarComprobante(j)">
                   <mat-icon style="font-size: 42px" matTooltipPosition="above" matTooltip="Descarga Comprobante">
                     cloud_download</mat-icon>
                 </button>

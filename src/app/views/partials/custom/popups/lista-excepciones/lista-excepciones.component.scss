@@ -1,0 +1,31 @@
+.mat-header-cell {
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .mat-cell {
+    text-align: center;
+    justify-content:center;
+  }
+  .material-icons {
+    font-size: 31px !important;
+    height: 31px;
+    width: 34px;
+    color: gray;
+    text-align: center;
+  }
+  .warning-icons {
+    font-size: 31px !important;
+    height: 31px;
+    width: 34px;
+    color: gray;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .warning {
+    color: black;
+    background-color: #ffff00;
+    border-color: white;
+    font-weight: 400;
+    font-size: 14px;
+  }

@@ -16,14 +16,11 @@ import { ParametroService } from '../../../../../core/services/quski/parametro.s
 import { environment } from '../../../../../../environments/environment';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
-import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
-import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
-import { Page } from '../../../../../core/model/page';
 import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
 @Component({
   selector: 'kt-excepciones-riesgo',
@@ -440,9 +437,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
                   + ' ' + this.entidadCliente.apellidoPaterno + ' ' + this.entidadCliente.apellidoMaterno);
                 this.idCliente = data.id;
                 this.identificacion.setValue(this.entidadCliente.cedulaCliente);
-                // console.log('VALOR DE LA dataNegociacion====> ', JSON.stringify(this.entidadNegociacion));
-                //console.log('VALOR DE LA ENTIDAD====> ', JSON.stringify(this.entidadNegociacion.procesoActual));
-                this.nombreProceso.setValue(this.entidadNegociacion.procesoActual);
                 this.buscarMensaje();
                 // FORM CLIENTE
                 this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
@@ -478,8 +472,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
                 this.telefonoOficina.setValue(this.entidadCliente.telefonoTrabajo);
                 this.correo.setValue(this.entidadCliente.email);
                 //FORM DATOS NEGOCIACION
-
-                this.tipoProcesoNegociacion.setValue(this.entidadNegociacion.tipo);
                 this.motivoNoAceptacion.setValue(this.entidadNegociacion.situacion);
                 this.calificadoMupi.setValue(this.entidadCliente.aprobacionMupi);
               } else {

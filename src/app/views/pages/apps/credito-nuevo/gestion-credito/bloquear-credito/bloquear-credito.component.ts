@@ -10,7 +10,10 @@ import { ClienteSoftbank } from './../../../../../../core/model/softbank/Cliente
 import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
 import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
 import { UploadFileComponent } from '../../upload-file/upload-file.component';
-
+import { saveAs } from 'file-saver';
+import { ReFileUploadService } from './../../../../../../core/services/re-file-upload.service';
+import { ObjectStorageService } from './../../../../../../core/services/object-storage.service';
+import { environment } from './../../../../../../../environments/environment';
 @Component({
   selector: 'kt-bloquear-credito',
   templateUrl: './bloquear-credito.component.html',
@@ -19,6 +22,8 @@ import { UploadFileComponent } from '../../upload-file/upload-file.component';
 export class BloquearCreditoComponent implements OnInit {
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
+  banderaGuardar = new BehaviorSubject<boolean>(false);
+  banderaDescargar = new BehaviorSubject<boolean>(false);
   columnas = ['accion', 'institucionFinanciera', 'cuentas', 'fechaPago', 'numeroDeposito', 'valorPagado', 'subir', 'descargar'];
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
@@ -44,8 +49,12 @@ export class BloquearCreditoComponent implements OnInit {
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
     private registrarPagoService: RegistrarPagoService,
+    private upload: ReFileUploadService, 
+    private os: ObjectStorageService,
     public dialog: MatDialog
-  ) {
+    ) {
+    this.upload.setParameter();
+    this.os.setParameter();
     this.formBloqueoFondo.addControl("identificacion", this.identificacion);
     this.formBloqueoFondo.addControl("nombresCliente", this.nombreCliente);
     this.formBloqueoFondo.addControl("cedula", this.cedula);
@@ -67,6 +76,7 @@ export class BloquearCreditoComponent implements OnInit {
       data: idReferenciaHab
     });
     dialogRef.afterClosed().subscribe(r => {
+      this.banderaGuardar.next(true);
       console.log("datos de salida popUp", r)
       let datos = this.dataSource.data;
       datos.push(r);
@@ -96,13 +106,34 @@ export class BloquearCreditoComponent implements OnInit {
         j.nombreArchivo = r.nombreArchivo;
         j.archivo = r.archivo;
         this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE", "success");
+        this.banderaGuardar.next(false);
       }
     });
   }
-  descargarComprobante() {
-    if (confirm("Realmente quiere descargar?")) {
-
-    }
+  descargarComprobante(j) {
+    console.log("Archivo subido --->>>>> ", j);
+    this.os.getObjectById( j.archivo,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+      if (confirm("Realmente quiere descargar?")) {
+        if( data && data.entidad ){
+          let obj=JSON.parse( atob(data.entidad) );
+          console.log("entra a retorno json " + JSON.stringify( obj ));
+          const byteCharacters = atob(obj.fileBase64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], {type: j});
+          saveAs(blob , obj.name);
+        }else {
+          this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
+        }
+      }
+      },
+      error => {
+        console.log("================>error: " + JSON.stringify(error));
+        this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
+      });
   }
 
   ngOnInit() {
@@ -156,7 +187,7 @@ export class BloquearCreditoComponent implements OnInit {
 
     let registrarBloqueoFondoWrapper = {
       cliente: {},
-      bloqueos: []
+      bloqueos: {}
     }
 
     let cliente = new TbQoClientePago();
@@ -173,9 +204,12 @@ export class BloquearCreditoComponent implements OnInit {
       registrarBloqueoFondoWrapper.bloqueos = null;
     }
 
-    this.registrarPagoService.bloqueoFondosConRelaciones(registrarBloqueoFondoWrapper).subscribe(p => {
+    this.registrarPagoService.bloqueoFondosConRelaciones(registrarBloqueoFondoWrapper).subscribe((p:any) => {
       console.log("Datos que se van a guardar >>> ", this.registrarPagoService);
-
+      if(p.entidad && p.entidad.pagos){
+        this.dataSource.data = p.entidad.pagos;
+        this.banderaDescargar.next(true);
+      }
       this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
     }, error => {
