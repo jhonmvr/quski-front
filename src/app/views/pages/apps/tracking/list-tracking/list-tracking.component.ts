@@ -10,7 +10,6 @@ import { ReNoticeService } from './../../../../../core/services/re-notice.servic
 import { AuthDialogComponent } from './../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Tracking } from './../../../../../core/model/softbank/Tracking';
 import { AnyCnameRecord } from 'dns';
 
 @Component({
