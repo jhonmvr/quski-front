@@ -51,6 +51,10 @@ const routes: Routes = [
 				loadChildren: () => import('../app/views/pages/apps/excepciones/excepciones.module').then(m => m.ExcepcionesModule)
 			},
 			{
+				path: 'devolucion',
+				loadChildren: () => import('../app/views/pages/apps/devolucion/devolucion.module').then(m => m.DevolucionModule)
+			},
+			{
 				path: 'builder',
 				loadChildren: () => import('../app/views/theme/content/builder/builder.module').then(m => m.BuilderModule)
 			},
