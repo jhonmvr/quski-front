@@ -14,8 +14,8 @@ export class TrackingUtil{
     this.t = new TbQoTracking();
     this.t.actividad  = actividad;
     this.t.proceso = proceso; 
-    this.t.usuario    = localStorage.getItem(environment.userKey);
-    this.t.situacion  = SituacionEnum.EN_PROCESO;
+    this.t.usuarioCreacion    = localStorage.getItem(environment.userKey);
+    this.t.estado  = SituacionEnum.EN_PROCESO;
   }
   public capturarHoraInicio() {
     this.tra.getSystemDate().subscribe((hora: any) => {
@@ -27,14 +27,14 @@ export class TrackingUtil{
   public capturarHoraAsignacion() {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
-        this.t.fechaAsignacion = hora.entidad;
+        this.t.fechaCreacion = hora.entidad;
       }
     });
   }
   public capturaHoraAtencion() {
     this.tra.getSystemDate().subscribe((hora: any) => {
       if (hora.entidad) {
-        this.t.fechaInicioAtencion = hora.entidad;
+        this.t.fechaInicio = hora.entidad;
       }
     });
   }
@@ -46,9 +46,9 @@ export class TrackingUtil{
     });
   }
   public registrar(codigoRegistro: number, observacion?: string) {
-    if(this.t.fechaAsignacion != null && this.t.fechaInicio != null && this.t.fechaInicioAtencion != null && this.t.fechaFin != null){
+    if(this.t.fechaCreacion != null && this.t.fechaInicio != null && this.t.fechaInicio != null && this.t.fechaFin != null){
       this.t.observacion = observacion.length > 0? observacion : null;
-      this.t.codigoRegistro = codigoRegistro;
+     
       this.tra.guardarTracking(this.t).subscribe((data: any) => {
         if (data.entidad) {
           console.log('TRACKING REGISTRADO ----> ', data.entidad);

@@ -104,7 +104,6 @@ const routes: Routes = [
 		MatTooltipModule,
 		MatButtonToggleModule,
 		NgbProgressbarModule,
-
 		MatStepperModule,
 		PartialsModule
   ],
