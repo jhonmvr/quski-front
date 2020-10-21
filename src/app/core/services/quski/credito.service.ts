@@ -5,12 +5,14 @@ import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from '../../../core/model/page';
 import { DatePipe } from '@angular/common';
+import { TbQoCreditoNegociacion } from '../../model/quski/TbQoCreditoNegociacion';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class CreditoService extends BaseService {
+  private rest = "detalleCreditoRestController/"
   constructor(_http: HttpClient) {
     super();
     this.http = _http;
@@ -53,8 +55,12 @@ export class CreditoService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
 
     return this.http.get(serviceUrl, this.options);
-
-
+  }
+  persistEntity( entidad: TbQoCreditoNegociacion ) {
+    let serviceUrl = this.appResourcesUrl + this.rest +"persistEntity";
+    let wrapper = { entidad: entidad }
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
   }
 
 

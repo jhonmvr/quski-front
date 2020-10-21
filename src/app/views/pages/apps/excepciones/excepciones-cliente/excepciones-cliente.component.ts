@@ -367,9 +367,6 @@ export class ExcepcionesClienteComponent implements OnInit {
                   + ' ' + this.entidadCliente.apellidoPaterno + ' ' + this.entidadCliente.apellidoMaterno);
                 this.idCliente = data.id;
                 this.identificacion.setValue(this.entidadCliente.cedulaCliente);
-                // console.log('VALOR DE LA dataNegociacion====> ', JSON.stringify(this.entidadNegociacion));
-                //console.log('VALOR DE LA ENTIDAD====> ', JSON.stringify(this.entidadNegociacion.procesoActual));
-                this.nombreProceso.setValue(this.entidadNegociacion.procesoActual);
 
                 // FORM CLIENTE
                 this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
@@ -405,7 +402,6 @@ export class ExcepcionesClienteComponent implements OnInit {
                 this.correo.setValue(this.entidadCliente.email);
                 //FORM DATOS NEGOCIACION
 
-                this.tipoProcesoNegociacion.setValue(this.entidadNegociacion.tipo);
                 this.estadoNegociacion.setValue(this.entidadNegociacion.situacion);
                 this.fechaDeCreacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
                 this.ultimaFechaDeActualizacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));

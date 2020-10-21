@@ -120,69 +120,22 @@ export class TrackingPagosComponent implements OnInit {
       if (data.list) {            
         this.totalResults = data.totalResults;
         this.dataSource = new MatTableDataSource<TbQoTracking>(data.list);
+        console.log(" daos registro pagos ", data.list);
         //Tracking fecha
         for (let i = 0; i < this.dataSource.data.length; i++) {
           let a = this.dataSource.data[i].fechaInicioAtencion;
           this.fIni = new Date(a);
           this.fI = this.fIni.toTimeString();
-          console.log("Hora inicio >>>> ", this.fI)
+          //console.log("Hora inicio >>>> ", this.fI)
         }
-        /* this.hour = addZero(this.fI.getHours());
-        this.minutes = addZero(this.fI.getMinutes());
-        this.segundo = addZero(this.fI.getSeconds());
-        console.log("Hora inicio >>>> "+this.hour+":"+":"+this.minutes+":",this.segundo+":")  */
-
-
+        
         for (let i = 0; i < this.dataSource.data.length; i++) {
           let a = this.dataSource.data[i].fechaFin;
           this.fFini = new Date(a);
           this.fF = this.fFini.toTimeString();
-          console.log("Hora Fin >>>> ", this.fF) 
+          //console.log("Hora Fin >>>> ", this.fF) 
         }
-        
-          /*let hour :    number = 0;
-          let minutes : number = 0;
-          let segundo:  number = 0; 
-          for (let i = 0; i < this.fI.length; i++) {
-            let a = +this.fI[i].totalTiempo.slice(0,2);
-            hour = hour + a;
-            let b = +this.fI[i].totalTiempo.slice(3,5);
-            minutes = minutes + b;
-            let c = +this.fI[i].totalTiempo.slice(6,8);
-            segundo = segundo + c;
-            
-            if (minutes >= 60) {
-              minutes = 0;
-              hour = hour + 1;
-            }
-            if(segundo >= 60){
-              segundo = 0;
-              minutes = minutes + 1;
-            }
-          }
-          
-          let hours
-          if (hour < 10) {
-            hours = "0"+hour;
-          }else{
-            hours = hour;
-          }
-          let minute
-          if (minutes < 10) {
-            minute = "0"+minutes;
-          }else{
-            minute = minutes;
-          }
-          let segundos
-          if (segundo < 10) {
-            segundos = "0"+segundo;
-          }else{
-            segundos = segundo;
-          }
-          this.total = hours+":"+minute+":"+segundos;
-        */
-
-
+      
         this.dataSource.paginator=this.paginator;
         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
       } else {
@@ -204,30 +157,5 @@ export class TrackingPagosComponent implements OnInit {
     }                                                                                                                                                                 
     );
   }
-  /*verificar() {
-    this.loadingSubject.next(true);
-    this.autorizacionService.getUserByToken().subscribe((result: any) => {
-      this.loadingSubject.next(false);
-      if (result.entidad) {      
-
-        console.log( "hola, si funciono ==>"+ result.entidad);
-      } else {
-        console.log( "hola, no funciono");
-      }
-    }, error => {
-      this.loadingSubject.next(false);
-      if(  error.error ){
-				this.noticeService.setNotice(error.error.codError + ' - ' + error.error.msgError  , 'error');
-			} else if(  error.statusText && error.status==401 ){
-				this.dialog.open(AuthDialogComponent, {
-					data: {
-						mensaje:"Error " + error.statusText + " - " + error.message
-					}
-				});
-			} else {
-				this.noticeService.setNotice("Error al cargar las notificaciones o alertas", 'error');
-			}
-    }
-    );
-  }*/
+ 
 }

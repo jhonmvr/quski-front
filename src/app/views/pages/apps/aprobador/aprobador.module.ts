@@ -1,8 +1,7 @@
-// Component
 
-import { BandejaPrincipalComponent } from './bandeja-principal/bandeja-principal.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Translate Module
 import { TranslateModule } from '@ngx-translate/core';
@@ -39,9 +38,12 @@ import {
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPermissionsModule } from 'ngx-permissions';
-import { Routes, RouterModule } from '@angular/router';
+
+import { BandejaExcepcionesComponent } from './bandeja-excepciones/bandeja-excepciones.component';
 import { PartialsModule } from '../../../partials/partials.module';
-import { AsesorComponent } from './asesor.component';
+import { AprobadorComponent } from './aprobador.component';
+import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { BandejaAprobadorComponent } from './bandeja-aprobador/bandeja-aprobador.component';
 
 
 
@@ -49,18 +51,23 @@ import { AsesorComponent } from './asesor.component';
 const routes: Routes = [
   {
     path: '',
-    component: AsesorComponent,
+    component: AprobadorComponent,
 
     children: [
       {
         path: '',
-        redirectTo: 'bandeja-principal',
+        redirectTo: 'bandeja-aprobador',
         pathMatch: 'full'
       },
       {
-        path: 'bandeja-principal',
-        component: BandejaPrincipalComponent
-      }
+        path: 'bandeja-excepciones',
+        component: BandejaExcepcionesComponent
+      },
+      {
+        path: 'bandeja-aprobador',
+        component: BandejaAprobadorComponent
+      },
+
 
     ]
   }
@@ -116,8 +123,16 @@ const routes: Routes = [
     },
   ],
   declarations: [
-    AsesorComponent,
-    BandejaPrincipalComponent
+    AprobadorComponent,
+    BandejaExcepcionesComponent,
+    BandejaAprobadorComponent
+  ],
+  entryComponents: [
+    ErrorCargaInicialComponent,
+
+
+
+
   ]
 })
-export class AsesorModule { }
+export class AprobadorModule { }

@@ -1,147 +1,140 @@
 <re-portlet>
-    <re-portlet-header [title]="'Aprobar Bloqueo de Fondos'" [class]="'kt-portlet__head--lg'">
+    <re-portlet-header [title]="'Aprobar / Rechazar Bloqueo de Fondos'" [class]="'kt-portlet__head--lg'">
 </re-portlet-header>
 <re-portlet-body>
     <mat-vertical-stepper>
-        <mat-step label="Búsqueda de Cliente">
-            <div class="row">
-                <div class="col-md-1.5">
-                    <label style="font-weight:bold">Identificacion:</label>
-                </div>
-                <div class="col-md-4">
-                    <mat-form-field>
-                        <input matInput [formControl]=" " >
-                    </mat-form-field>
-                </div>
-                <div class="col-md-2">
-                <button mat-raised-button color="warn" focusable="false" onclick="Buscar(j)">
-                     Buscar 
-                </button>
+        <!--<mat-step label="Búsqueda de Cliente">
+          <div class="row">
+            <div class="col-md-1.5">
+              <label style="font-weight:bold">Identificacion:</label>
             </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <input matInput [formControl]="identificacion" required>
+                <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
+              </mat-form-field>
             </div>
-        </mat-step>
+            <div class="col-md-2">
+              <button mat-raised-button color="warn" focusable="false" matStepperNext (click)="consultarClienteSoftbankCS()" >
+                Buscar
+              </button>
+            </div>
+          </div>
+        </mat-step>-->
         <mat-step label="Información de Cliente">
-            <div class="row">
-                <div class="col-md-2">
-                    <label style="font-weight:bold">Nombre del cliente:</label>
-                </div>
-                <div class="col-md-4">
-                    <mat-form-field class="example-full-width">
-                        <input  matInput [formControl]=" " >
-                    </mat-form-field>
-                </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label style="font-weight:bold">Nombre del cliente:</label>
             </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <label style="font-weight:bold">Identificacion:</label>
-                </div>
-                <div class="col-md-4">
-                    <mat-form-field class="example-full-width">
-                        <input matInput [formControl]=" " >
-                    </mat-form-field>
-                </div>
+            <div class="col-md-4">
+              <mat-form-field class="example-full-width">
+                <input matInput [formControl]="nombreCliente" required>
+                <mat-error>{{ getErrorMessage("nombreCliente") }}</mat-error>
+              </mat-form-field>
             </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <label style="font-weight:bold">Código operación Mupi:</label>
-                </div>
-                <div class="col-md-4">
-                    <mat-form-field class="example-full-width">
-                        <input matInput [formControl]=" " >
-                    </mat-form-field>
-                </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label style="font-weight:bold">Cédula:</label>
+                      </div>
+                      <div class="col-md-4">
+                          <mat-form-field class="example-full-width">
+                              <input matInput [formControl]="cedula" required>
+                              <mat-error>{{ getErrorMessage("cedula") }}</mat-error>
+              </mat-form-field>
             </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label style="font-weight:bold">Código Cuenta Mupi:</label>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="example-full-width">
+                <input matInput [formControl]="codigoCuentaMupi" required>
+                              <mat-error>{{ getErrorMessage("codigoCuentaMupi") }}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
         </mat-step>
-        <!-- Tabla de pagos -->      
+        <!-- Tabla de pagos -->
         <mat-step label="Pagos">
-            <table mat-table [dataSource]=" datos" class="mat-elevation-z8" #tabla1>
-                
-                <!--<ng-container matColumnDef="accion">
-                    <th mat-header-cell *matHeaderCellDef>Accion </th>
-                    <td mat-cell *matCellDef="let j = index;">
-                      <button mat-raised-button color="warn" focusable="false" onclick="borrarFila(j)">
+          <table mat-table [dataSource]=" dataSource" class="mat-elevation-z8" #tabla1>
+  
+           <!-- <ng-container matColumnDef="accion">
+                <th mat-header-cell *matHeaderCellDef>Accion </th>
+                <td mat-cell *matCellDef="let j = index;">
+                    <button mat-raised-button color="warn" focusable="false" (click)="deletFila(j)">
                         <mat-icon> Eliminar </mat-icon>
-                      </button>
-                    </td>
-                </ng-container>-->
-                
-                <ng-container matColumnDef="institucionFinanciera">
-                  <th mat-header-cell *matHeaderCellDef> Institucion Financiera </th>
-                  <td mat-cell *matCellDef="let articulo"> {{articulo.institucionFinanciera}} </td>
-                </ng-container>
-              
-                <ng-container matColumnDef="cuentas">
-                  <th mat-header-cell *matHeaderCellDef> Cuentas </th>
-                  <td mat-cell *matCellDef="let articulo"> {{articulo.cuentas}} </td>
-                </ng-container>
-              
-                <ng-container matColumnDef="fechadePago">
-                  <th mat-header-cell *matHeaderCellDef> Fecha Pago </th>
-                  <td mat-cell *matCellDef="let articulo"> {{articulo.fechadePago}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="numerodeDeposito">
-                    <th mat-header-cell *matHeaderCellDef> Numero de deposito </th>
-                    <td mat-cell *matCellDef="let articulo"> {{articulo.numerodeDeposito}} </td>
-                  </ng-container>
-                
-                  <ng-container matColumnDef="valorpagado">
-                    <th mat-header-cell *matHeaderCellDef> Valor Depositado </th>
-                    <td mat-cell *matCellDef="let articulo"> {{articulo.valorpagado}} </td>
-                  </ng-container>
-               <!-- <ng-container matColumnDef="subir">
-                  <th mat-header-cell *matHeaderCellDef> Subir componente </th>
-                  <td mat-cell *matCellDef="let j = index;">
-                    <button mat-raised-button color="warn" focusable="false" onclick="subirComponente()">
-                        <mat-icon> S </mat-icon>
                     </button>
-                  </td>
-                </ng-container>
-                -->
-                <ng-container matColumnDef="descargar">
-                    <th mat-header-cell *matHeaderCellDef> Descargar Foto </th>
-                    <td mat-cell *matCellDef="let j = index;">
-                      <button mat-raised-button color="warn" focusable="false" onclick="descargarComponente()">
-                        <mat-icon> D </mat-icon>
-                      </button>
-                    </td>
-                  </ng-container>
-              
-                <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-                <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
-              </table>
+                </td>
+            </ng-container>
+            -->
+            <ng-container matColumnDef="institucionFinanciera">
+                <th mat-header-cell *matHeaderCellDef> Institucion Financiera </th>
+                <td mat-cell *matCellDef="let articulo"> {{articulo.institucionFinanciera}} </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="cuentas">
+                <th mat-header-cell *matHeaderCellDef> Cuentas </th>
+                <td mat-cell *matCellDef="let articulo"> {{articulo.cuentas}} </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="fechaPago">
+                <th mat-header-cell *matHeaderCellDef> Fecha Pago </th>
+                <td mat-cell *matCellDef="let articulo"> {{articulo.fechaPago | date: 'dd/MM/yyyy'}} </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="numeroDeposito">
+                <th mat-header-cell *matHeaderCellDef> Numero de deposito </th>
+                <td mat-cell *matCellDef="let articulo"> {{articulo.numeroDeposito}} </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="valorPagado">
+                <th mat-header-cell *matHeaderCellDef> Valor Depositado </th>
+                <td mat-cell *matCellDef="let articulo"> {{articulo.valorPagado | number: '1.2-2'}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="descargar">
+                <th mat-header-cell *matHeaderCellDef> Descarga Foto </th>
+                <td mat-cell *matCellDef="let j = index;">
+                  <button mat-icon-button focusable="false" (click)="descargarComprobante(j)">
+                    <mat-icon style="font-size: 42px" matTooltipPosition="above"
+                        matTooltip="Descarga Comprobante">cloud_download</mat-icon>
+                </button>
+                </td>
+            </ng-container>
+  
+            <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+        </table>
 
-             <!---- <div class="row mb-5">
-                <div  class="col-md-4" >
-                  <button mat-raised-button color="white" focusable="false" (click)="cargarPagos()">
-                    Agregar Pago
-                  </button>
-                </div>
-              </div> -->
-              <div class="row">
-                <div class="col-md-1.5">
-                    <label style="font-weight:bold">Valor Depositado: </label>
-                </div><div class="col-md-2">
-                    <mat-form-field >
-                        <input matInput  [formControl]=" ">
-                    </mat-form-field>
-                </div>
+          <div class="row">
+            <div class="col-md-1.5">
+              <label style="font-weight:bold">Valor Depositado: </label>
             </div>
-
-            <label style="font-weight:bold"> Obsevaciones </label>
-            <div class="col-md-8" >
-                <mat-form-field class="example-full-width" color="black">
-                    <input matInput type="text" >
-                </mat-form-field>
+            <div class="col-md-2">
+              <mat-form-field>
+                <input matInput [formControl]="valorDepositado" required>
+              </mat-form-field>
             </div>
+          </div>
+  
+          <label style="font-weight:bold"> Obsevaciones </label>
+          <div class="col-md-8">
+            <mat-form-field class="example-full-width" color="black">
+              <input matInput [formControl]="observacion">
+              <input matInput type="text">
+            </mat-form-field>
+          </div>
+  
             <div class="row">
                 <div>
-                    <button mat-raised-button color="white" focusable="false"  (click)="aprobar()">
+                    <button mat-raised-button color="white" focusable="false"  (click)="Aprobar()">
                     Aprobar
                 </button>
                 </div>
                 <div>
-                    <button mat-raised-button color="white" focusable="false"  (click)="rechazar()">
+                    <button mat-raised-button color="white" focusable="false"  (click)="Rechazar()">
                     Rechazar
                 </button>
                 </div>

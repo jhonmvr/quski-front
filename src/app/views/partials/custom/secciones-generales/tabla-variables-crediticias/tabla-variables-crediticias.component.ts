@@ -17,6 +17,7 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
   public loading;
   // VARIABLES ANIDADAS
   @Input() dataPopup: DataPopup;
+  @Input() base: TbQoVariablesCrediticia[];
   @Output() entidades: EventEmitter<Array<TbQoVariablesCrediticia>> = new EventEmitter<Array<TbQoVariablesCrediticia>>();
   // ENTIDADES
   private entidadesVariablesCrediticias: Array<TbQoVariablesCrediticia>;
@@ -30,9 +31,11 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
 
   ngOnInit() {
     this.loading = this.loadingSubject.asObservable();
-    console.log('DATA POPUP', this.dataPopup);
-    this.direccionDeFlujo(this.dataPopup);
-
+    if(this.base != null){
+      this.dataSourceVariablesCrediticias.data = this.base;
+    }else if( this.dataPopup != null){
+      this.direccionDeFlujo(this.dataPopup);
+    }
   }
   /**
    * @author Jeroham cadenas - Developer twelve

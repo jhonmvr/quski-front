@@ -34,9 +34,9 @@ export class OpcionesDeCredito  {
   totalCostosOperacionAnterior : number           // 0.0,
   custodiaDevengada : number                      // 0.0,
   formaPagoCustodiaDevengada : string             // "C",
-  tipooferta : string                             // "N",
-  porcentajeflujoplaneado : number                // 0,
-  dividendoflujoplaneado : number                 // 999,
-  dividendosprorrateoserviciosdiferido : number   // 0
+  tipoOferta : string                             // "N",
+  porcetajeFlujoPlaneado : number                // 0,
+  dividendoFlujoPlaneado : number                 // 999,
+  dividendoProrrateoServiciosDiferido : number   // 0
   constructor(){}
 }

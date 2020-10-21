@@ -21,7 +21,7 @@ export class ClienteSoftbank {
   idPaisNacimiento: number                        //52,
   idPais: number                                  //52,
   idLugarNacimiento: number                       //1352,
-  actividadEconomica: ActividadEconomicaCliente 
+  actividadEconomica: ActividadEconomicaCliente  
 
   fechaNacimiento: Date                         //"1991-06-30",
   codigoSexo: string                            //"M",

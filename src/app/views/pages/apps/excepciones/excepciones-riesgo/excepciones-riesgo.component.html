@@ -276,6 +276,10 @@
                     <mat-header-cell *matHeaderCellDef>Número de Piezas</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.numeroPiezas}} </mat-cell>
                   </ng-container>
+                  <ng-container matColumnDef="tipoOro">
+                    <mat-header-cell *matHeaderCellDef>Tipo de Oro</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.tipoOro}} </mat-cell>
+                  </ng-container>
                   <ng-container matColumnDef="tipoJoya">
                     <mat-header-cell *matHeaderCellDef>Tipo Joya</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.tipoJoya}} </mat-cell>
@@ -293,34 +297,34 @@
                     <mat-cell *matCellDef="let element"> {{element.pesoBruto}} </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="descuentoPesoPiedra">
-                    <mat-header-cell *matHeaderCellDef>Descuento Peso Piedra</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>Descuento Peso Piedra (Gr)</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.descuentoPesoPiedra}} </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="descuentoSuelda">
-                    <mat-header-cell *matHeaderCellDef>Descuento Suelda</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>Descuento Suelda (Gr)</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.descuentoSuelda}} </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="pesoNeto">
                     <mat-header-cell *matHeaderCellDef>
-                      Peso Neto</mat-header-cell>
+                      Peso Neto (Gr)</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.pesoNeto}} </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="valorAvaluo">
                     <mat-header-cell *matHeaderCellDef>
-                      Valor Avaluo
+                      Valor Avaluo $
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.valorAvaluo}} </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="valorComercial">
-                    <mat-header-cell *matHeaderCellDef>Valor Comercial</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>Valor Comercial $</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.valorComercial}} </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="valorRealizacion">
-                    <mat-header-cell *matHeaderCellDef>Valor Realización</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>Valor Realización $</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.valorRealizacion}} </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="valorOro">
-                    <mat-header-cell *matHeaderCellDef>Valor Oro</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>Valor Oro $</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.valorOro}} </mat-cell>
                   </ng-container>
 

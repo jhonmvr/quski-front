@@ -48,6 +48,9 @@ import { PartialsModule } from '../../../partials/partials.module';
 import { GestionNegociacionComponent } from './gestion-negociacion/gestion-negociacion.component';
 import { ErrorCargaInicialComponent } from '../../../../views/partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { VerCotizacionesComponent } from '../../../../views/partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
+import { BandejaOperacionesProcesoComponent } from './bandeja-operaciones-proceso/bandeja-operaciones-proceso.component';
+import { ListaExcepcionesComponent } from '../../../../views/partials/custom/popups/lista-excepciones/lista-excepciones.component';
+import { ReasignarUsuarioComponent } from '../../../../views/partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
 
 const routes: Routes = [
 	{
@@ -58,15 +61,15 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				redirectTo: 'gestion-negociacion',
+				redirectTo: 'bandeja-operaciones',
 				pathMatch: 'full'
 			},{
 				path: 'gestion-negociacion',
 				component: GestionNegociacionComponent
 			},
 			{
-				path: 'gestion-negociacion/:id',
-				component: GestionNegociacionComponent
+				path: 'bandeja-operaciones',
+				component: BandejaOperacionesProcesoComponent
 			},
 			{
 				path: 'gestion-negociacion/:origen/:id',
@@ -129,11 +132,13 @@ const routes: Routes = [
 	declarations: [
 		GestionNegociacionComponent,
 		NegociacionComponent,
-		GestionNegociacionComponent
+		BandejaOperacionesProcesoComponent
 	],
 	entryComponents: [	
 		ErrorCargaInicialComponent,
-		VerCotizacionesComponent
+		VerCotizacionesComponent,
+		ListaExcepcionesComponent,
+		ReasignarUsuarioComponent
 
 	]
 })

@@ -1,4 +1,3 @@
-
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -19,10 +18,6 @@ const routes: Routes = [
 			{
 				path: 'dashboard',
 				loadChildren: () => import('../app/views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
-			},
-			{
-				path: 'asesor',
-				loadChildren: () => import('../app/views/pages/apps/asesor/asesor.module').then(m => m.AsesorModule),
 			},
 			{
 				path: 'cliente',
@@ -53,6 +48,14 @@ const routes: Routes = [
 			{
 				path: 'devolucion',
 				loadChildren: () => import('../app/views/pages/apps/devolucion/devolucion.module').then(m => m.DevolucionModule)
+			},
+			{
+				path: 'aprobador',
+				loadChildren: () => import('../app/views/pages/apps/aprobador/aprobador.module').then(m => m.AprobadorModule)
+			},
+			{
+				path: 'fabrica',
+				loadChildren: () => import('../app/views/pages/apps/fabrica/fabrica.module').then(m => m.FabricaModule)
 			},
 			{
 				path: 'builder',
