@@ -123,7 +123,7 @@ export class TrackingPagosComponent implements OnInit {
         console.log(" daos registro pagos ", data.list);
         //Tracking fecha
         for (let i = 0; i < this.dataSource.data.length; i++) {
-          let a = this.dataSource.data[i].fechaInicioAtencion;
+          let a = this.dataSource.data[i].fechaInicio;
           this.fIni = new Date(a);
           this.fI = this.fIni.toTimeString();
           //console.log("Hora inicio >>>> ", this.fI)

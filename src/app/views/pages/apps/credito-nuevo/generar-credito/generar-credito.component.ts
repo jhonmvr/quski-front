@@ -729,12 +729,12 @@ public registroCreacion(codigoRegistro: number, fechaInicio: Date, fechaAsignaci
   tracking.actividad = this.actividad;
   tracking.proceso = this.procesoCreacion;
   tracking.observacion = '';
-  tracking.codigoRegistro = codigoRegistro;
+  /*tracking.codigoRegistro = codigoRegistro;
   tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
   tracking.usuario = atob(localStorage.getItem(environment.userKey))
   tracking.fechaInicio = fechaInicio;
   tracking.fechaAsignacion = fechaAsignacion;
-  tracking.fechaInicioAtencion = fechaInicioAtencion;
+  tracking.fechaInicioAtencion = fechaInicioAtencion;*/
   tracking.fechaFin = fechaFin;
   this.tra.guardarTracking(tracking).subscribe((data: any) => {
     if (data.entidad) {
@@ -760,12 +760,12 @@ public registroTasación(codigoRegistro: number, fechaInicio: Date, fechaAsignac
   tracking.actividad = this.actividad;
   tracking.proceso = this.procesoDocumentosLegales;
   tracking.observacion = '';
-  tracking.codigoRegistro = codigoRegistro;
+  /*tracking.codigoRegistro = codigoRegistro;
   tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
   tracking.usuario = atob(localStorage.getItem(environment.userKey))
   tracking.fechaInicio = fechaInicio;
   tracking.fechaAsignacion = fechaAsignacion;
-  tracking.fechaInicioAtencion = fechaInicioAtencion;
+  tracking.fechaInicioAtencion = fechaInicioAtencion;*/
   tracking.fechaFin = fechaFin;
   this.tra.guardarTracking(tracking).subscribe((data: any) => {
     if (data.entidad) {

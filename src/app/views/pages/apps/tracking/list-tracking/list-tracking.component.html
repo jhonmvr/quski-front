@@ -3,98 +3,170 @@
 </div>
 
 <re-portlet>
-    <re-portlet-header [title]="'Listado Tracking'" [class]="'kt-portlet__head--lg'">
+    <re-portlet-header style="position: relative;" [title]="'Listado Tracking'" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
-            <input type="text" matInput (keyup)="filtrar($event)" placeholder="Ingrese su busqueda" >
+            <input type="text" matInput (keyup)="filtrar($event)" placeholder="Ingrese su busqueda">
         </ng-container>
-		<ng-container ktPortletTools>
-            <!--<a href="javascript:void(0);" (click)="buscar()" matTooltip="Buscar" style="font-size: 12px; vertical-align: middle;">
-                <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above" >search</mat-icon>
-                <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar</span>
-            </a>-->
-        </ng-container>
+
     </re-portlet-header>
     <re-portlet-body>
-        <!--<kt-tabla-tracking></kt-tabla-tracking>-->
-        <!--<kt-tracking-pagos></kt-tracking-pagos>-->
-         <!--START MAT TABLE-->
-        <div class="mat-table__wrapper">
-            <mat-table #table class="mat-elevation-z8" 
-            matSort #sort1="matSort" [dataSource]='dataSource' matSortDirection="asc" matSortDisableClear>
+        <div class="form-group row" >
+            <div class="col-md-2">
+                <mat-select
+                  placeholder="Proceso"
+                  [formControl]="proceso" (selectionChange)="SelectActividad($event.value)">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let proceso of listProcesos" [value]="proceso"  >
+                    {{ proceso}}
+                  </mat-option>
+                </mat-select>
+            </div>
+            <div class="col-md-2">
+                <mat-select
+                  placeholder="Actividad"
+                  [formControl]="actividad"(selectionChange)="SelectSeccion($event.value)">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let actividad of listActividad" [value]="actividad">
+                    {{ actividad }}
+                  </mat-option>
+                </mat-select>
+            </div>
+            <div class="col-md-2">
+                <mat-select
+                  placeholder="Seccion"
+                  [formControl]="seccion">
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let seccion of listSeccion" [value]="seccion">
+                    {{ seccion }}
+                  </mat-option>
+                </mat-select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input matInput [formControl]="codigoBPM"placeholder="CodigoBPM">
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input matInput [formControl]="codigoSoftbank"placeholder="Codigo Operacion Softbank">
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input matInput [formControl]="usuario"placeholder="Usuario">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input matInput [matDatepicker]="fechaDesde"[formControl]="fechaDesde "placeholder="Fecha Desde">
+                    <mat-datepicker-toggle matSuffix [for]="fechaDesde"></mat-datepicker-toggle>
+                    <mat-datepicker #fechaDesde></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                    <input matInput [matDatepicker]="fechaHasta" [formControl]="fechaHasta"placeholder="Fecha Hasta">
+                    <mat-datepicker-toggle matSuffix [for]="fechaHasta"></mat-datepicker-toggle>
+                    <mat-datepicker #fechaHasta></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <ng-container ktPortletTools>
+            <a href="javascript:void(0);" (click)="buscar()" matTooltip="Buscar"
+                style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above">search</mat-icon>
+                <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar</span>
+            </a>
+        </ng-container>
+        <div class="col-12 mt-3">
+        <!--START MAT TABLE
+        <div class="mat-table__wrapper">-->
+            <mat-table #table class="mat-elevation-z8" matSort #sort1="matSort" [dataSource]='dataSource'
+                matSortDirection="asc" matSortDisableClear>
+            
                 <ng-container matColumnDef="proceso">
                     <mat-header-cell *matHeaderCellDef>Proceso</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.proceso}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef> Total </mat-footer-cell>    
+                    <mat-footer-cell *matFooterCellDef> Total </mat-footer-cell>
                 </ng-container>
-                
+
                 <ng-container matColumnDef="actividad">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Actividad</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.actividad}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
-        
+
                 <ng-container matColumnDef="seccion">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Seccion</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.seccion}} </mat-cell>
-                    <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
+
                 <ng-container matColumnDef="codigoBpm">
                     <mat-header-cell *matHeaderCellDef>Codigo BPM</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.codigoBpm}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
-        
+
                 <ng-container matColumnDef="codigoOperacionSoftbank">
                     <mat-header-cell *matHeaderCellDef>Codigo Operacion Softbank</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.codigoOperacionSoftbank}}</mat-cell>
-                    <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
-        
+
                 <ng-container matColumnDef="fechaAsignacion">
                     <mat-header-cell *matHeaderCellDef>Fecha Asignacion</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.fechaAsignacion | date:'short'}} </mat-cell>
-                    <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
-                
+
+                <ng-container matColumnDef="usuario">
+                    <mat-header-cell *matHeaderCellDef>Usuario</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.usuarioCreacion}} </mat-cell>
+                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                </ng-container>
+
                 <ng-container matColumnDef="fechaCreacion">
                     <mat-header-cell *matHeaderCellDef>Hora Inicio</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.fechaCreacion | date:'short'}} </mat-cell>
-                    <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
+
                 <ng-container matColumnDef="fechaActualizacion">
                     <mat-header-cell *matHeaderCellDef>Hora Fin</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.fechaActualizacion | date:'short'}} </mat-cell>
-                    <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
-               
-                <ng-container matColumnDef="usuario">
-                        <mat-header-cell *matHeaderCellDef>Usuario</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.usuario}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
-                    </ng-container>
+
                 <ng-container matColumnDef="tiempoTotal">
                     <mat-header-cell *matHeaderCellDef>Total Tiempo</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.tiempoTotal}} </mat-cell>
-                    <mat-footer-cell *matFooterCellDef> {{total}} </mat-footer-cell>    
+                    <mat-cell *matCellDef="let element">{{element.tiempoTranscurrido}} </mat-cell>
+                    <mat-footer-cell *matFooterCellDef> {{total}} </mat-footer-cell>
                 </ng-container>
+
                 <ng-container matColumnDef="fecha">
                     <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.fecha}} </mat-cell>
-                    <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
+                    <mat-cell *matCellDef="let element">{{element.fechaCreacion}} </mat-cell>
+                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                    <mat-footer-row *matFooterRowDef="displayedColumns"></mat-footer-row>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                <mat-footer-row *matFooterRowDef="displayedColumns"></mat-footer-row>
             </mat-table>
-            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" 
-            [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+                [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
             </mat-paginator>
-            
+
         </div>
-        <!--end MAT TABLE-->
-        
-    </re-portlet-body>    
+        <!--end MAT TABLE
+    </div>-->
+    </re-portlet-body>
     <re-portlet-footer></re-portlet-footer>
 </re-portlet>
-
- 
