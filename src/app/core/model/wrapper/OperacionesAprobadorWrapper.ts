@@ -9,7 +9,7 @@ export class OperacionesAprobadorWrapper {
     nombreAgencia: string; 
     asesor: string;     
     aprobador: string; 
-    
+    orden: number; 
     constructor() {
 
     }
