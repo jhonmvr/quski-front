@@ -1,16 +1,17 @@
 export class OperacionesProcesoWrapper {
-    idNegociacion: number;
+    id: number;
     codigoOperacion: string;
     nombreCliente: string;
-    identificacion: string;
-    montoPreAprobado: number;
+    cedulaCliente: string;
+    montoPreaprobado: any;
     fechaCreacion: Date;
-    situacion: string;
-    agencia: string;
-    estado: string;
+    idAgencia: number;
+    agencia: string;  // Se completa este campo en front.
+    estadoProceso: string;
     proceso: string;
     asesor: string;
-    aprobador: string;
+    usuarioEjecutor: string;
+    actividad: string
     constructor() {
 
     }

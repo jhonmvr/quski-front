@@ -43,6 +43,7 @@ import { BandejaExcepcionesComponent } from './bandeja-excepciones/bandeja-excep
 import { PartialsModule } from '../../../partials/partials.module';
 import { AprobadorComponent } from './aprobador.component';
 import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { BandejaAprobadorComponent } from './bandeja-aprobador/bandeja-aprobador.component';
 
 
 
@@ -55,17 +56,18 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'aprobador',
+        redirectTo: 'bandeja-aprobador',
         pathMatch: 'full'
-      },
-      {
-        path: 'aprobador',
-        component: AprobadorComponent
       },
       {
         path: 'bandeja-excepciones',
         component: BandejaExcepcionesComponent
-      }
+      },
+      {
+        path: 'bandeja-aprobador',
+        component: BandejaAprobadorComponent
+      },
+
 
     ]
   }
@@ -122,7 +124,8 @@ const routes: Routes = [
   ],
   declarations: [
     AprobadorComponent,
-    BandejaExcepcionesComponent
+    BandejaExcepcionesComponent,
+    BandejaAprobadorComponent
   ],
   entryComponents: [
     ErrorCargaInicialComponent,

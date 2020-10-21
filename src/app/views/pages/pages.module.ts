@@ -16,7 +16,6 @@ import { CotizarModule } from './apps/cotizacion/cotizar.module';
 import { CreditoNuevoModule } from './apps/credito-nuevo/credito-nuevo.module';
 import { NegociacionModule } from './apps/negociacion/negociacion.module';
 import { ExcepcionesModule } from './apps/excepciones/excepciones.module';
-import { AsesorModule } from './apps/asesor/asesor.module';
 import { AprobadorModule } from './apps/aprobador/aprobador.module';
 
 
@@ -52,7 +51,6 @@ const RELATIVE_DATE_FORMATS = {
 		NegociacionModule,
 		ExcepcionesModule,
 		UserManagementModule,
-		AsesorModule,
 		AprobadorModule
 	],
 	providers: []
