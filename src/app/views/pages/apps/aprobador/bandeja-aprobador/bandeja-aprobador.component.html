@@ -1,0 +1,107 @@
+<div class="spinner-container" *ngIf="loading | async">
+	<mat-spinner class="spiner"></mat-spinner>
+</div>
+
+<re-portlet>
+	<re-portlet-header [title]="'BANDEJA PRINCIPAL DE ASIGNACIÓN BAJO DEMANDA'" [class]="'kt-portlet__head--lg'">
+		<ng-container ktPortletTools>
+			<a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
+				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
+				</mat-icon>
+				<span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Limpiar</span>
+			</a>
+		</ng-container>
+	</re-portlet-header>
+	<re-portlet-body>
+        <div class="row">
+            <div class="col-12">
+                <form [formGroup]="formFiltro">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input [formControl]="codigo" placeholder="Codigo BPM" autocomplete="on" matInput />
+                                <mat-error>{{ getErrorMessage("codigo") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input [formControl]="cedula" placeholder="C.I." autocomplete="off" matInput numeric numericType="number"
+                                    (keypress)="numberOnly($event)" />
+                                <mat-error>{{ getErrorMessage("cedula") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Proceso" [formControl]="proceso">
+                                    <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Agencia" [formControl]="agencia">
+                                    <mat-option *ngFor="let element of catAgencia" [value]="element">{{ element.nombre }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 offset-5">
+                            <button mat-raised-button color="basic" (click)="buscar()">
+                                <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>
+                                <span >Buscar Operacion</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-12 mt-3">
+                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource">
+                    <ng-container matColumnDef="accion">
+                        <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <button mat-raised-button color="basic" (click)="abrirSolicitud(row)">
+                                <span >Tomar</span>
+                            </button>
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="codigo">
+                        <mat-header-cell *matHeaderCellDef >Codigo BPM</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.codigo | uppercase  }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="proceso">
+                        <mat-header-cell *matHeaderCellDef >Proceso</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.proceso | titlecase  }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaSolicitud">
+                        <mat-header-cell *matHeaderCellDef >Fecha Solicitud</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.fechaSolicitud }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="cedulaCliente">
+                        <mat-header-cell *matHeaderCellDef >Cedula Cliente</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.cedulaCliente }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="nombreCliente">
+                        <mat-header-cell *matHeaderCellDef >Nombre Cliente</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.nombreCliente | titlecase }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="nombreAgencia">
+                        <mat-header-cell *matHeaderCellDef >Agencia</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.nombreAgencia | titlecase  }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="asesor">
+                        <mat-header-cell *matHeaderCellDef >Asesor</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.asesor | titlecase }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="aprobador">
+                        <mat-header-cell *matHeaderCellDef >Aprobador</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.aprobador | titlecase }}</mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                </mat-table>
+            </div>
+        </div>
+	</re-portlet-body>
+	<re-portlet-footer></re-portlet-footer>
+</re-portlet>

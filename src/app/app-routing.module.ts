@@ -20,10 +20,6 @@ const routes: Routes = [
 				loadChildren: () => import('../app/views/pages/dashboard/dashboard.module').then(m => m.DashboardModule)
 			},
 			{
-				path: 'asesor',
-				loadChildren: () => import('../app/views/pages/apps/asesor/asesor.module').then(m => m.AsesorModule),
-			},
-			{
 				path: 'cliente',
 				loadChildren: () => import('../app/views/pages/apps/cliente/cliente.module').then(m => m.ClienteModule),
 			}, {
@@ -48,6 +44,10 @@ const routes: Routes = [
 			{
 				path: 'excepciones',
 				loadChildren: () => import('../app/views/pages/apps/excepciones/excepciones.module').then(m => m.ExcepcionesModule)
+			},
+			{
+				path: 'devolucion',
+				loadChildren: () => import('../app/views/pages/apps/devolucion/devolucion.module').then(m => m.DevolucionModule)
 			},
 			{
 				path: 'aprobador',

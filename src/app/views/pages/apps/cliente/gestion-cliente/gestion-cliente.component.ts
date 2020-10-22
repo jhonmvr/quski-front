@@ -2195,12 +2195,12 @@ export class GestionClienteComponent implements OnInit {
     tracking.actividad = this.actividad;
     tracking.proceso = this.procesoDatosCliente;
     tracking.observacion = '';
-    tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
-    tracking.usuario = atob(localStorage.getItem(environment.userKey)); // Modificar al id del asesor
+   // tracking.codigoBpm = codigoRegistro;
+    tracking.estado = SituacionEnum.EN_PROCESO; // Por definir
+    tracking.usuarioCreacion = atob(localStorage.getItem(environment.userKey)); // Modificar al id del asesor
     tracking.fechaInicio = fechaInicio;
-    tracking.fechaAsignacion = fechaAsignacion;
-    tracking.fechaInicioAtencion = fechaInicioAtencion;
+    tracking.fechaCreacion = fechaAsignacion;
+    tracking.fechaInicio = fechaInicioAtencion;
     tracking.fechaFin = fechaFin;
     this.tr.guardarTracking(tracking).subscribe((data: any) => {
       if (data.entidad) {

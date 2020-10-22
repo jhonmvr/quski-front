@@ -4,6 +4,7 @@ import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TbQoProceso } from '../../model/quski/TbQoProceso';
 import { WrapperBusqueda } from '../../model/wrapper/WrapperBusqueda';
+import { BusquedaAprobadorWrapper } from '../../model/wrapper/BusquedaAprobadorWrapper';
 
 @Injectable({
   providedIn: 'root'
@@ -63,13 +64,23 @@ export class ProcesoService extends BaseService {
   } 
   /**
    * @author Jeroham Cadenas
-   * @param entidad TbQoProceso
+   * @param   WrapperBusqueda
    */
   public buscarOperaciones(w: WrapperBusqueda) {
     let serviceUrl = this.appResourcesUrl + this.urlRest +"buscarOperaciones";
     let wrapper =  w ;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
+  } 
+    /**
+   * @author Jeroham Cadenas
+   * @param  BusquedaAprobadorWrapper
+   */
+  public buscarOperacionesAprobador(w: BusquedaAprobadorWrapper) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest +"buscarOperacionesAprobador";
+    let wrapper =  w ;
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
   } 
 
 

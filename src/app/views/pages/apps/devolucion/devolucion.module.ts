@@ -3,14 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-
-// Translate Module
 import { TranslateModule } from '@ngx-translate/core';
-// Auth
-import { ModuleGuard } from '../../../../core/auth';
-
-// Material
 import {
 	MatInputModule,
 	MatPaginatorModule,
@@ -40,45 +33,50 @@ import {
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { DevolucionComponent } from './devolucion.component';
+import { SolicitudDevolucionComponent } from './solicitud-devolucion/solicitud-devolucion.component';
+import { PartialsModule } from '../../../../views/partials/partials.module';
+import { SeleccionFechaComponent } from './seleccion-fecha/seleccion-fecha.component';
+import { ListaPendientesComponent } from './lista-pendientes/lista-pendientes.component';
 
-// Component
-import { TrackingComponent } from './tracking.component';
-import { ListTrackingComponent } from './list-tracking/list-tracking.component';
-import { AddFotoComponent } from '../../../partials/custom/fotos/add-foto/add-foto.component';
-import {PartialsModule} from '../../../partials/partials.module';
-import { TrackingPagosComponent } from './tracking-pagos/tracking-pagos.component'
 const routes: Routes = [
 	{
 		path: '',
-		component: TrackingComponent,
+		component: DevolucionComponent,
 		// canActivate: [ModuleGuard],
 		// data: { moduleName: 'ecommerce' },
 		children: [
 			{
 				path: '',
-				redirectTo: 'list-tracking',
+				redirectTo: 'solicitud-devolucion',
 				pathMatch: 'full'
+			},{
+				path: 'solicitud-devolucion',
+				component: SolicitudDevolucionComponent
 			},
 			{
-				path: 'list-tracking',
-				component: ListTrackingComponent
+				path: 'set-arribo',
+				component: SeleccionFechaComponent
 			},
 			{
-				path: 'tracking-pagos',
-				component: TrackingPagosComponent
-			}
+				path: 'lista-pendejas',
+				component: SeleccionFechaComponent
+			},
+		
+
 		]
 	}
 ];
 
-
 @NgModule({
-	imports: [
-	CommonModule,
-    	RouterModule.forChild(routes),
-    	MatDialogModule,
-    	CommonModule,
-    	NgxPermissionsModule.forChild(),
+  declarations: [SolicitudDevolucionComponent, DevolucionComponent, SeleccionFechaComponent, ListaPendientesComponent],
+  imports: [
+    CommonModule,
+		RouterModule.forChild(routes),
+		PartialsModule,
+		MatDialogModule,
+		CommonModule,
+		NgxPermissionsModule.forChild(),
 		RouterModule.forChild(routes),
 		FormsModule,
 		ReactiveFormsModule,
@@ -86,7 +84,7 @@ const routes: Routes = [
 		MatButtonModule,
 		MatMenuModule,
 		MatSelectModule,
-    	MatInputModule,
+		MatInputModule,
 		MatTableModule,
 		MatAutocompleteModule,
 		MatRadioModule,
@@ -104,29 +102,13 @@ const routes: Routes = [
 		MatTooltipModule,
 		MatButtonToggleModule,
 		NgbProgressbarModule,
-		MatStepperModule,
-		PartialsModule
+   	    MatStepperModule,
+   
   ],
   providers:[
-	ModuleGuard,
-	{ provide: MatDialogRef, useValue: {} },
-    {
-			provide: MAT_DIALOG_DEFAULT_OPTIONS,
-			useValue: {
-				hasBackdrop: true,
-				panelClass: 'kt-mat-dialog-container__wrapper',
-				height: 'auto',
-				width: '900px'
-			}
-		},
-  ],
-declarations: [
-    TrackingComponent,
-    ListTrackingComponent,
-    TrackingPagosComponent,
-  ],
-  entryComponents: [
-	AddFotoComponent
-  ]
+
+  ], 
+  
+  entryComponents: []
 })
-export class TrackingModule {}
+export class DevolucionModule { }

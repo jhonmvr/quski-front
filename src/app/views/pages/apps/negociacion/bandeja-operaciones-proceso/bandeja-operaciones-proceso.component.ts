@@ -26,7 +26,6 @@ export interface Agencia{
   templateUrl: './bandeja-operaciones-proceso.component.html',
   styleUrls: ['./bandeja-operaciones-proceso.component.scss']
 })
-/** ** @TODO: Agregar validacion de los campos ** */
 export class BandejaOperacionesProcesoComponent implements OnInit {
   /** ** @VARIABLES ** */
   public loading;
@@ -55,8 +54,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     private sof: SoftbankService,
     private router: Router,
     private dialog: MatDialog,
-    private sinNotSer: ReNoticeService,
-    private subheaderService: SubheaderService
+    private sinNotSer: ReNoticeService
   ) {
     /** ** @FORMULARIO ** */
     this.formFiltro.addControl("nombreCompleto", this.nombreCompleto);

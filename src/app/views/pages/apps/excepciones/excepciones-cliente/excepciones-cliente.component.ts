@@ -239,12 +239,12 @@ export class ExcepcionesClienteComponent implements OnInit {
     tracking.actividad = this.actividad;
     tracking.proceso = this.procesoExcepcion;
     tracking.observacion = '';
-    tracking.codigoRegistro = codigoRegistro;
+    /*tracking.codigoRegistro = codigoRegistro;
     tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
     tracking.usuario = atob(localStorage.getItem(environment.userKey))
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
-    tracking.fechaInicioAtencion = fechaInicioAtencion;
+    tracking.fechaInicioAtencion = fechaInicioAtencion;*/
     tracking.fechaFin = fechaFin;
     this.tra.guardarTracking(tracking).subscribe((data: any) => {
       if (data.entidad) {
