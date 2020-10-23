@@ -1,0 +1,20 @@
+<div class="row m-2">
+    <div class="col-12 mt-2 mb-2">
+        <mat-card-title> {{ valores.titulo }} </mat-card-title>
+    </div>
+</div>
+<mat-card>
+    <div class="row m-2 justify-content-center">
+        <div class="col-8">
+            <mat-card-content> {{ valores.mensaje }} </mat-card-content>        
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-2">
+            <button mat-raised-button (click)="salir(true)" color="primary"> ACEPTAR </button>
+        </div>
+        <div class="col-2">
+            <button mat-raised-button (click)="salir(false)" color="warn"> CANCELAR </button>
+        </div>
+    </div>
+</mat-card>

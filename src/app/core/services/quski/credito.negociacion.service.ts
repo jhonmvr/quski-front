@@ -7,6 +7,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class CreditoNegociacionService extends BaseService {
 
+  urlRest = "creditoNegociacionRestController/";
+
   constructor(_http: HttpClient) {
     super();
     this.http = _http;
@@ -21,5 +23,12 @@ export class CreditoNegociacionService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-  
+
+  public traerCreditoNegociacionExistente(id: number) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerCreditoNegociacionExistente';
+    this.params = new HttpParams().set('id', id.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+
 }

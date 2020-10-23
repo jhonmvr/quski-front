@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
 import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
 import { BusquedaAprobadorWrapper } from './../../../../../core/model/wrapper/BusquedaAprobadorWrapper';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 
 
 export interface Agencia{
@@ -80,6 +81,9 @@ export class BandejaAprobadorComponent implements OnInit {
           });
           e.proceso = e.proceso.replace("_"," ").replace("_"," ").replace("_"," ").replace("_"," ").replace("_"," ");
           e.nombreCliente = e.nombreCliente.replace("_"," ").replace("_"," ").replace("_"," ").replace("_"," ").replace("_"," ");
+          if(e.aprobador == null || e.aprobador == "" || e.aprobador == "null"){
+            e.aprobador = "Libre";
+          }
         });
         this.dataSource.data = operaciones;
         this.loadingSubject.next(false);
@@ -198,41 +202,55 @@ export class BandejaAprobadorComponent implements OnInit {
     }
   }
   public abrirSolicitud(row: OperacionesAprobadorWrapper ){
-    if(row.id != null){
-      console.log('Proceso en boton. ---> ',row.proceso);
+    let mensaje = row.aprobador == 'Libre'
+      ? 'Tomar y gestionar la operacion '+row.codigo+'.' 
+      : 'Tomar la operacion '+row.codigo+', que actualmente esta tomada por: '+ row.aprobador;
 
-      if(row.proceso =="NUEVO"){
-        this.sinNotSer.setNotice("APROBACION NUEVO, SIN DESARROLLO","error");
-        this.limpiarFiltros();
-        this.router.navigate(['aprobador']);    
-      }
-      if(row.proceso =="RENOVACION"){
-        this.sinNotSer.setNotice("APROBACION RENOVACION, SIN DESARROLLO","error");
-        this.limpiarFiltros();
-        this.router.navigate(['aprobador']);    
-      }
-      if(row.proceso =="COTIZACION"){
-        this.sinNotSer.setNotice("APROBACION COTIZACION, SIN DESARROLLO","error");
-        this.limpiarFiltros();
-        this.router.navigate(['aprobador']);    
-      }
-      if(row.proceso =="PAGO"){
-        this.sinNotSer.setNotice("APROBACION PAGO, SIN DESARROLLO","error");
-        this.limpiarFiltros();
-        this.router.navigate(['aprobador']);    
-      }
-      if(row.proceso =="DEVOLUCION"){
-        this.sinNotSer.setNotice("APROBACION DEVOLUCION, SIN DESARROLLO","error");
-        this.limpiarFiltros();
-        this.router.navigate(['aprobador']);    
-      }
-      if(row.proceso =="VERIFICACION TELEFONICA"){
-        this.sinNotSer.setNotice("APROBACION VERIFICACION TELEFONICA, SIN DESARROLLO","error");
-        this.limpiarFiltros();
-        this.router.navigate(['aprobador']);    
-      }
-    } else{
-      this.sinNotSer.setNotice('ERROR DE BASE, CONTACTE SOPORTE','error');
-    }
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        width: "800px",
+        height: "auto",
+        data: mensaje
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        console.log('result ---> ', r);
+        if(r){
+          if(row.id != null){
+            if(row.proceso =="NUEVO"){
+              this.limpiarFiltros();
+              this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.id]);    
+            }
+            if(row.proceso =="RENOVACION"){
+              this.sinNotSer.setNotice("APROBACION RENOVACION, SIN DESARROLLO","error");
+              this.limpiarFiltros();
+              this.router.navigate(['aprobador']);    
+            }
+            if(row.proceso =="COTIZACION"){
+              this.sinNotSer.setNotice("APROBACION COTIZACION, SIN DESARROLLO","error");
+              this.limpiarFiltros();
+              this.router.navigate(['aprobador']);    
+            }
+            if(row.proceso =="PAGO"){
+              this.sinNotSer.setNotice("APROBACION PAGO, SIN DESARROLLO","error");
+              this.limpiarFiltros();
+              this.router.navigate(['aprobador']);    
+            }
+            if(row.proceso =="DEVOLUCION"){
+              this.sinNotSer.setNotice("APROBACION DEVOLUCION, SIN DESARROLLO","error");
+              this.limpiarFiltros();
+              this.router.navigate(['aprobador']);    
+            }
+            if(row.proceso =="VERIFICACION TELEFONICA"){
+              this.sinNotSer.setNotice("APROBACION VERIFICACION TELEFONICA, SIN DESARROLLO","error");
+              this.limpiarFiltros();
+              this.router.navigate(['aprobador']);    
+            }
+          } else{
+            this.sinNotSer.setNotice('ERROR DE BASE, CONTACTE SOPORTE','error');
+          }
+        }else{
+          this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
+        }
+
+      });
   }
 }
