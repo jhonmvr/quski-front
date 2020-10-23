@@ -11,7 +11,6 @@ import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
 import { AprobacionWrapper } from '../../../../../core/model/wrapper/AprobacionWrapper';
 import { FormControl, FormGroup } from '@angular/forms';
-import { SituacionEnum } from './../../../../../core/enum/SituacionEnum';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { environment } from '../../../../../../../src/environments/environment';
@@ -302,14 +301,14 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
           console.log('NEGOCIACION traerCreditoNegociacionExistente ', JSON.stringify(wrapper));
           if (wrapper.entidad) {
             this.crediNegoW = wrapper.entidad;
-            const situacion = this.crediNegoW.credito.tbQoNegociacion.situacion;
+            this.setearValores(this.crediNegoW);
+            /* const situacion = this.crediNegoW.credito.tbQoNegociacion.situacion;
             if (situacion == SituacionEnum.EN_PROCESO) {
               console.log('ingresa al if creditoNegociacion')
-              this.setearValores(this.crediNegoW);
 
             } else {
               this.sinNotSer.setNotice('reintentando cerrar negoacion');
-            }
+            } */
           }
 
 
@@ -372,7 +371,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
                 this.telefonoOficina.setValue(this.entidadCliente.telefonoTrabajo);
                 this.correo.setValue(this.entidadCliente.email);
                 //FORM DATOS NEGOCIACION
-                this.motivoNoAceptacion.setValue(this.entidadNegociacion.situacion);
+                //this.motivoNoAceptacion.setValue(this.entidadNegociacion.situacion);
                 this.calificadoMupi.setValue(this.entidadCliente.aprobacionMupi);
               } else {
                 this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 1', 'error');
@@ -503,13 +502,13 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.cneg.traerCreditoNegociacionExistente(id).subscribe((wrapper: any) => {
       if (wrapper.entidad.respuesta) {
         this.crediNegoW = wrapper.entidad;
-        const situacion = this.crediNegoW.credito.tbQoNegociacion.situacion;
+        /* const situacion = this.crediNegoW.credito.tbQoNegociacion.situacion;
         if (situacion == SituacionEnum.EN_PROCESO) {
           // this.setearValores();
 
         } else {
           this.sinNotSer.setNotice('reintentando cerrar negoacion');
-        }
+        } */
       }
 
     }, error => {
