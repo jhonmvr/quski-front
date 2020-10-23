@@ -78,7 +78,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   private buscarOperaciones(wrapper: WrapperBusqueda = null) {
     this.loadingSubject.next(true);
     if(wrapper == null){
-      wrapper = new WrapperBusqueda( this.usuario );
+     // wrapper = new WrapperBusqueda( this.usuario );
     }
     this.pro.buscarOperaciones(wrapper).subscribe( (data: any) =>{
       if( data.entidades != null ){
