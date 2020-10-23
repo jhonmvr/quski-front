@@ -1,4 +1,4 @@
-export enum SituacionEnum {
+export enum ProcesoEnum {
     EN_PROCESO = 'EN_PROCESO',
     FINALIZADO = 'FINALIZADO',
     PENDIENTE_APROBACION = 'PENDIENTE_APROBACION'

@@ -358,7 +358,6 @@ datos
          data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno == null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno, 
           " ", data.entidad.tbQoNegociacion.tbQoCliente.primerNombre
          ," ", data.entidad.tbQoNegociacion.tbQoCliente.segundoNombre== null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.segundoNombre))
-         this.situacion.setValue(data.entidad.situacion == null ? "" : data.entidad.situacion)
          this.tipoCuenta.setValue("CUENTA DE AHORROS")
          this.validateEdadTipo();
          this.buscarExcepcionEdad();

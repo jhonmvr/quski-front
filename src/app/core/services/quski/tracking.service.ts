@@ -22,7 +22,7 @@ export class TrackingService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-  busquedaTracking( trackingWrapper: any) {
+  busquedaTracking( p: Page, trackingWrapper: any) {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + 'trackingRestController/busqueda';
     let wrapper = trackingWrapper;
