@@ -11,17 +11,17 @@
     </re-portlet-header>
     <re-portlet-body>
         <div class="form-group row" >
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <mat-select
                   placeholder="Proceso"
                   [formControl]="proceso" (selectionChange)="SelectActividad($event.value)">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let proceso of listProcesos" [value]="proceso"  >
+                  <mat-option *ngFor="let proceso of procesos" [value]="proceso"  >
                     {{ proceso}}
                   </mat-option>
                 </mat-select>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <mat-select
                   placeholder="Actividad"
                   [formControl]="actividad"(selectionChange)="SelectSeccion($event.value)">
@@ -31,7 +31,7 @@
                   </mat-option>
                 </mat-select>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <mat-select
                   placeholder="Seccion"
                   [formControl]="seccion">
@@ -43,36 +43,36 @@
             </div>
         </div>
         <div class="form-group row">
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <mat-form-field class="example-full-width">
                     <input matInput [formControl]="codigoBPM"placeholder="CodigoBPM">
                 </mat-form-field>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <mat-form-field class="example-full-width">
                     <input matInput [formControl]="codigoSoftbank"placeholder="Codigo Operacion Softbank">
                 </mat-form-field>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <mat-form-field class="example-full-width">
                     <input matInput [formControl]="usuario"placeholder="Usuario">
                 </mat-form-field>
             </div>
         </div>
         <div class="form-group row">
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="fechaDesde"[formControl]="fechaDesde "placeholder="Fecha Desde">
-                    <mat-datepicker-toggle matSuffix [for]="fechaDesde"></mat-datepicker-toggle>
-                    <mat-datepicker #fechaDesde></mat-datepicker>
+                    <input matInput [matDatepicker]="fechadesde" [formControl]="fechaDesde "placeholder="Fecha Desde">
+                    <mat-datepicker-toggle matSuffix [for]="fechadesde"></mat-datepicker-toggle>
+                    <mat-datepicker #fechadesde></mat-datepicker>
                 </mat-form-field>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="fechaHasta" [formControl]="fechaHasta"placeholder="Fecha Hasta">
-                    <mat-datepicker-toggle matSuffix [for]="fechaHasta"></mat-datepicker-toggle>
-                    <mat-datepicker #fechaHasta></mat-datepicker>
+                    <input matInput [matDatepicker]="fechahasta" [formControl]="fechaHasta"placeholder="Fecha Hasta">
+                    <mat-datepicker-toggle matSuffix [for]="fechahasta"></mat-datepicker-toggle>
+                    <mat-datepicker #fechahasta></mat-datepicker>
                 </mat-form-field>
             </div>
         </div>
@@ -87,36 +87,37 @@
         <div class="col-12 mt-3">
         <!--START MAT TABLE
         <div class="mat-table__wrapper">-->
-            <mat-table #table class="mat-elevation-z8" matSort #sort1="matSort" [dataSource]='dataSource'
+            <mat-progress-bar mode="indeterminate" *ngIf="cargardatos.asObservable() | async"></mat-progress-bar>
+            <mat-table #table class="mat-elevation-z8 " matSort #sort1="matSort" [dataSource]='dataSource'
                 matSortDirection="asc" matSortDisableClear>
             
                 <ng-container matColumnDef="proceso">
                     <mat-header-cell *matHeaderCellDef>Proceso</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.proceso}}</mat-cell>
+                    <mat-cell class="mat-form-field-fluid"*matCellDef="let element"> {{element.proceso | titlecase }}</mat-cell>
                     <mat-footer-cell *matFooterCellDef> Total </mat-footer-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="actividad">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Actividad</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.actividad}}</mat-cell>
+                    <mat-cell class="mat-form-field-fluid"*matCellDef="let element "> {{element.actividad | titlecase}}</mat-cell>
                     <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="seccion">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Seccion</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.seccion}} </mat-cell>
+                    <mat-cell class="mat-form-field-fluid"*matCellDef="let element">{{element.seccion | titlecase }} </mat-cell>
                     <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="codigoBpm">
                     <mat-header-cell *matHeaderCellDef>Codigo BPM</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.codigoBpm}}</mat-cell>
+                    <mat-cell *matCellDef="let element"> {{element.codigoBpm }}</mat-cell>
                     <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="codigoOperacionSoftbank">
                     <mat-header-cell *matHeaderCellDef>Codigo Operacion Softbank</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.codigoOperacionSoftbank}}</mat-cell>
+                    <mat-cell *matCellDef="let element"> {{element.codigoOperacionSoftbank | titlecase }}</mat-cell>
                     <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
 
@@ -128,7 +129,7 @@
 
                 <ng-container matColumnDef="usuario">
                     <mat-header-cell *matHeaderCellDef>Usuario</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.usuarioCreacion}} </mat-cell>
+                    <mat-cell *matCellDef="let element">{{element.usuarioCreacion | titlecase }} </mat-cell>
                     <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
 
@@ -147,13 +148,13 @@
                 <ng-container matColumnDef="tiempoTotal">
                     <mat-header-cell *matHeaderCellDef>Total Tiempo</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.tiempoTranscurrido}} </mat-cell>
-                    <mat-footer-cell *matFooterCellDef> {{total}} </mat-footer-cell>
+                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="fecha">
                     <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.fechaCreacion}} </mat-cell>
-                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    <mat-footer-cell *matFooterCellDef> {{totalResults}} </mat-footer-cell>
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
