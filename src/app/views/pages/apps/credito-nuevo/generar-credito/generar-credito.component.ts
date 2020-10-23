@@ -1,16 +1,13 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
-import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { DatePipe } from '@angular/common';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog, MatStepper } from '@angular/material';
 import { Page } from '../../../../../core/model/page';
 import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
-import { HabilitanteComponent } from '../../../../partials/custom/habilitante/habilitante.component';
 import { HabilitanteDialogComponent } from '../../../../partials/custom/habilitante/habilitante-dialog/habilitante-dialog.component';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { environment } from '../../../../../../environments/environment';
@@ -25,10 +22,10 @@ import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOf
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
-import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { DatosRegistro } from '../../../../../core/model/softbank/DatosRegistro';
 import { Garantias } from '../../../../../core/model/softbank/Garantias';
 import { DatosCuentaCliente } from '../../../../../core/model/softbank/DatosCuentaCliente';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 
 
 @Component({
@@ -187,7 +184,7 @@ operacion = new OperacionCrear()
   
 
   constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, private tas: TasacionService,
-    public dialog: MatDialog, private dhs: DocumentoHabilitanteService, private os: ObjectStorageService,
+    public dialog: MatDialog, private dhs: DocumentoHabilitanteService, private pro: ProcesoService, private os: ObjectStorageService,
     private fs: FundaService, private css: SoftbankService, private es: ExcepcionService, private tra: TrackingService, 
     private par: ParametroService) { 
     
@@ -266,28 +263,31 @@ operacion = new OperacionCrear()
       if(data.entidad){
         this.tbCreditoNegociacion = data.entidad
         this.tbQoCliente = this.tbCreditoNegociacion.tbQoNegociacion.tbQoCliente
-        console.log("Pilas el data" , data.entidad)
-        console.log(this.tbQoCliente)
-        console.log(this.tbCreditoNegociacion.tbQoNegociacion)
-        this.codigoOperacion.setValue(data.entidad.codigo)
-        this.cedulaCliente.setValue(data.entidad.tbQoNegociacion.tbQoCliente.cedulaCliente)
-        this.nombresCompletos.setValue(data.entidad.tbQoNegociacion.tbQoCliente.apellidoPaterno.concat(" ",
-         data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno == null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno, 
-          " ", data.entidad.tbQoNegociacion.tbQoCliente.primerNombre
-         ," ", data.entidad.tbQoNegociacion.tbQoCliente.segundoNombre== null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.segundoNombre))
-         this.situacion.setValue(data.entidad.situacion == null ? "" : data.entidad.situacion)
-         this.tipoCuenta.setValue("CUENTA DE AHORROS")
-         this.validateEdadTipo();
-         this.buscarExcepcionEdad();
-        this.consultarClienteCS();
-         if(data.entidad.tipo === "CUOTAS"){
-           console.log("deberia verse")
-          this.enableDiaPago.next(true);
-         }else{
-          this.enableDiaPago.next(false);
-         }
+        this.pro.findByIdReferencia( this.tbCreditoNegociacion.tbQoNegociacion.id, "NUEVO" ).subscribe( (dataProceso: any) =>{
+          if(dataProceso.entidad != null){
+            console.log("Pilas el data" , data.entidad)
+            console.log(this.tbQoCliente)
+            console.log(this.tbCreditoNegociacion.tbQoNegociacion)
+            this.codigoOperacion.setValue(data.entidad.codigo)
+            this.cedulaCliente.setValue(data.entidad.tbQoNegociacion.tbQoCliente.cedulaCliente)
+            this.nombresCompletos.setValue(data.entidad.tbQoNegociacion.tbQoCliente.apellidoPaterno.concat(" ",
+             data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno == null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno, 
+              " ", data.entidad.tbQoNegociacion.tbQoCliente.primerNombre
+             ," ", data.entidad.tbQoNegociacion.tbQoCliente.segundoNombre== null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.segundoNombre))
+             this.situacion.setValue(dataProceso.entidad.estadoProceso == null ? "" : dataProceso.entidad.estadoProceso);
+             this.tipoCuenta.setValue("CUENTA DE AHORROS")
+             this.validateEdadTipo();
+             this.buscarExcepcionEdad();
+            this.consultarClienteCS();
+             if(data.entidad.tipo === "CUOTAS"){
+               console.log("deberia verse")
+              this.enableDiaPago.next(true);
+             }else{
+              this.enableDiaPago.next(false);
+             }
+          } 
+        });
         
-
       }
     })
 
@@ -730,7 +730,6 @@ public registroCreacion(codigoRegistro: number, fechaInicio: Date, fechaAsignaci
   tracking.proceso = this.procesoCreacion;
   tracking.observacion = '';
   /*tracking.codigoRegistro = codigoRegistro;
-  tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
   tracking.usuario = atob(localStorage.getItem(environment.userKey))
   tracking.fechaInicio = fechaInicio;
   tracking.fechaAsignacion = fechaAsignacion;
@@ -761,7 +760,6 @@ public registroTasación(codigoRegistro: number, fechaInicio: Date, fechaAsignac
   tracking.proceso = this.procesoDocumentosLegales;
   tracking.observacion = '';
   /*tracking.codigoRegistro = codigoRegistro;
-  tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
   tracking.usuario = atob(localStorage.getItem(environment.userKey))
   tracking.fechaInicio = fechaInicio;
   tracking.fechaAsignacion = fechaAsignacion;

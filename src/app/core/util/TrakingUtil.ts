@@ -1,5 +1,4 @@
 import { environment } from '../../../environments/environment';
-import { SituacionEnum } from '../enum/SituacionEnum';
 import { TbQoTracking } from '../model/quski/TbQoTracking';
 import { TrackingService } from '../services/quski/tracking.service';
 
@@ -15,7 +14,7 @@ export class TrackingUtil{
     this.t.actividad  = actividad;
     this.t.proceso = proceso; 
     this.t.usuarioCreacion    = localStorage.getItem(environment.userKey);
-    this.t.estado  = SituacionEnum.EN_PROCESO;
+    this.t.estado  = 'ACT'
   }
   public capturarHoraInicio() {
     this.tra.getSystemDate().subscribe((hora: any) => {

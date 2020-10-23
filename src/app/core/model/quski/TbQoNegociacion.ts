@@ -6,7 +6,6 @@ export class TbQoNegociacion {
     estado: string;
     fechaActualizacion: Date;
     fechaCreacion: Date;
-    situacion: string
     asesor: string
     aprobador: string
 

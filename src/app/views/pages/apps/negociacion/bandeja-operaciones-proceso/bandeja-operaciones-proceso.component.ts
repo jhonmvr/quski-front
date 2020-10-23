@@ -90,9 +90,10 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
               e.agencia = c.nombre;
             }
           });
-          e.actividad = e.actividad.replace("_"," ").replace("_"," ").replace("_"," ");
-          e.estadoProceso = e.estadoProceso.replace("_"," ").replace("_"," ").replace("_"," ");
-          e.nombreCliente = e.nombreCliente.replace("_"," ").replace("_"," ").replace("_"," ");
+          e.actividad = e.actividad.replace(/_/gi," ");
+          e.estadoProceso = e.estadoProceso.replace(/_/gi," ");
+          e.nombreCliente = e.nombreCliente.replace(/_/gi," ");
+          e.proceso = e.proceso.replace(/_/gi," ");
           if(e.montoPreaprobado == "0"){
             e.montoPreaprobado = "No Aplica";
           }
@@ -202,11 +203,11 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
 
       if(this.estado.value != "" && this.estado.value != null){
         console.log("estado -->", this.estado.value);
-        w.estado = this.estado.value.replace(' ','_').replace(' ','_').replace(' ','_');
+        w.estado = this.estado.value.replace(/_/gi," ");
       }
       if(this.actividad.value != "" && this.actividad.value!= null){
         console.log("actividad -->", this.actividad.value);
-        w.actividad = this.actividad.value.replace(' ','_').replace(' ','_').replace(' ','_');
+        w.actividad = this.actividad.value.replace(/_/gi," ");
       }
       if(this.fechaCreacionDesde.value != "" && this.fechaCreacionDesde.value!= null){
         console.log("fechaCreacionDesde -->", this.fechaCreacionDesde.value);
@@ -222,7 +223,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       }
       if(this.nombreCompleto.value != "" && this.nombreCompleto.value!= null){
         console.log("nombreCompleto -->", this.nombreCompleto.value);
-        w.nombreCompleto = this.nombreCompleto.value.replace(' ','_').replace(' ','_').replace(' ','_');
+        w.nombreCompleto = this.nombreCompleto.value.replace(/_/gi," ");
       }
       if(this.proceso.value != ""  && this.proceso.value!= null){
         console.log("proceso -->", this.proceso.value);
