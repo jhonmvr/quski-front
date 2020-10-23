@@ -61,7 +61,7 @@ const routes: Routes = [
         component: FabricaComponent
       },
       {
-        path: 'aprobacion-credito-nuevo',
+        path: 'aprobacion-credito-nuevo/:id',
         component: AprobacionCreditoNuevoComponent
       }
 
