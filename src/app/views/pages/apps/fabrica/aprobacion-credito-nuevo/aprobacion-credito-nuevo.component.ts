@@ -318,12 +318,11 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
           if (wrapper.entidad) {
             this.crediNegoW = wrapper.entidad;
             const situacion = this.crediNegoW.proceso.estadoProceso;
-            if (situacion == ProcesoEnum.PENDIENTE_APROBACION) {
-              console.log('ingresa al if creditoNegociacion')
 
-            } else {
-              this.sinNotSer.setNotice('reintentando cerrar negoacion');
-            }
+            console.log('ingresa al if creditoNegociacion')
+            this.setearValores(this.crediNegoW);
+
+
           }
 
 
@@ -527,7 +526,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.montoSolicitado.setValue(this.entidadCreditoNegociacion.montoSolicitado);
     this.montoDiferido.setValue(this.entidadCreditoNegociacion.montoDiferido);
     this.plazo.setValue(this.entidadCreditoNegociacion.plazoCredito);
-    this.tipoOperacion.setValue(this.entidadCreditoNegociacion.tipoOperacion);
+    //this.tipoOperacion.setValue(this.entidadCreditoNegociacion.tipoOperacion);
 
 
 
@@ -546,7 +545,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
         /* const situacion = this.crediNegoW.credito.tbQoNegociacion.situacion;
         if (situacion == SituacionEnum.EN_PROCESO) {
           // this.setearValores();
-
+  
         } else {
           this.sinNotSer.setNotice('reintentando cerrar negoacion');
         } */
