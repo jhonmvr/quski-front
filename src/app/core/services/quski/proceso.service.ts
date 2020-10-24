@@ -107,9 +107,8 @@ export class ProcesoService extends BaseService {
    */
   public buscarOperaciones(w: WrapperBusqueda) {
     let serviceUrl = this.appResourcesUrl + this.urlRest +"buscarOperaciones";
-    let wrapper =  w ;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,w,this.options);
   } 
     /**
    * @author Jeroham Cadenas

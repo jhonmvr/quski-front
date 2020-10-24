@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatPaginator, MatTableDataSource } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
 import { OperacionesAprobadorWrapper } from './../../../../../core/model/wrapper/OperacionesAprobadorWrapper';
 import { ProcesoService } from './../../../../../core/services/quski/proceso.service';
@@ -41,6 +41,7 @@ export class BandejaAprobadorComponent implements OnInit {
   public agencia  = new FormControl('');
 
   /** ** @TABLA ** */
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   dataSource = new MatTableDataSource<OperacionesAprobadorWrapper>();
   displayedColumns = ['accion', 'codigo', 'proceso', 'fechaSolicitud', 'cedulaCliente', 'nombreCliente', 'nombreAgencia', 'asesor', 'aprobador'];
   constructor(
@@ -64,15 +65,12 @@ export class BandejaAprobadorComponent implements OnInit {
     this.cargarCatalogos();
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
-  private buscarOperaciones(wrapper: BusquedaAprobadorWrapper = null) {
+  private buscarOperaciones(wrapper?: BusquedaAprobadorWrapper) {
     this.loadingSubject.next(true);
-    if(wrapper == null){
-      wrapper = new BusquedaAprobadorWrapper();
-    }
     this.pro.buscarOperacionesAprobador(wrapper).subscribe( (data: any) =>{
-      if( data.entidades != null ){
-        console.log("Holis, soy la data -> ", data.entidades);
-        let operaciones: OperacionesAprobadorWrapper[] = data.entidades;
+      if( data.entidad  && data.entidad.operaciones){
+        console.log("Holis, soy la data -> ", data.entidad.operaciones);
+        let operaciones: OperacionesAprobadorWrapper[] = data.entidad.operaciones;
         operaciones.forEach(e=>{
           this.catAgencia.forEach( c =>{
             if(e.idAgencia == c.id){
@@ -86,9 +84,12 @@ export class BandejaAprobadorComponent implements OnInit {
           }
         });
         this.dataSource.data = operaciones;
+        this.paginator.length = data.entidad.result;
         this.loadingSubject.next(false);
       } else {
         this.loadingSubject.next(false);
+        this.paginator.length = 0;
+        this.dataSource.data = null;
         console.log("Me cai en la busqueda :c");
       }
     }, error => { this.capturaError(error); });
@@ -142,7 +143,7 @@ export class BandejaAprobadorComponent implements OnInit {
         this.pro.getProcesos().subscribe( (data: any) =>{
           if(data.entidades != null){
             this.catProceso = data.entidades;
-            this.buscarOperaciones();
+            this.buscarOperaciones( new BusquedaAprobadorWrapper() );
           } else{
             this.loadingSubject.next(false);
             this.proceso.disable();
@@ -163,7 +164,7 @@ export class BandejaAprobadorComponent implements OnInit {
       control.setErrors(null);
       control.setValue(null);
     });
-    this.buscarOperaciones();
+    this.buscarOperaciones(new BusquedaAprobadorWrapper() );
   }
   public numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -172,11 +173,18 @@ export class BandejaAprobadorComponent implements OnInit {
     }
     return true;
   }
+  public paged() {
+    this.buscar(this.paginator.pageSize, this.paginator.pageIndex);
+  }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BOTONES ** */
-  public buscar(){
+  public buscar(limite: number, pagina: number ){
     if(this.formFiltro.valid){
-      const w = new BusquedaAprobadorWrapper( );
-
+      let w;
+      if(limite && pagina){
+         w = new BusquedaAprobadorWrapper(this.paginator.pageSize,this.paginator.pageIndex);
+      }else{
+         w = new BusquedaAprobadorWrapper();
+      }
       if(this.codigo.value != "" && this.codigo.value != null){
         w.codigo = this.codigo.value;
         w.codigo = w.codigo.toUpperCase();
@@ -193,7 +201,7 @@ export class BandejaAprobadorComponent implements OnInit {
       }
       if(this.proceso.value != ""  && this.proceso.value != null){
         console.log("proceso --> ", this.proceso.value);
-        w.proceso = this.proceso.value.replace(" ","_").replace(" ","_").replace(" ","_").replace(" ","_").replace(" ","_");
+        w.proceso = this.proceso.value.replace(/ /gi,"_",);
       }
       this.buscarOperaciones( w );
     } else{
@@ -212,12 +220,12 @@ export class BandejaAprobadorComponent implements OnInit {
         data: mensaje
       });
       dialogRef.afterClosed().subscribe(r => {
-        console.log('result ---> ', r);
         if(r){
           if(row.id != null){
             if(row.proceso =="NUEVO"){
               this.limpiarFiltros();
-              this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.id]);    
+              this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.codigo.replace('NUEV','')]);    
+              console.log('id credito -> ', row.codigo.replace('NUEV', '') );
             }
             if(row.proceso =="RENOVACION"){
               this.sinNotSer.setNotice("APROBACION RENOVACION, SIN DESARROLLO","error");
@@ -225,7 +233,7 @@ export class BandejaAprobadorComponent implements OnInit {
               this.router.navigate(['aprobador']);    
             }
             if(row.proceso =="COTIZACION"){
-              this.sinNotSer.setNotice("APROBACION COTIZACION, SIN DESARROLLO","error");
+              this.sinNotSer.setNotice("ERROR, CONTACTE SOPORTE","error");
               this.limpiarFiltros();
               this.router.navigate(['aprobador']);    
             }

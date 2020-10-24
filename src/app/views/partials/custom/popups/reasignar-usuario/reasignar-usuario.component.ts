@@ -6,6 +6,7 @@ import { NegociacionService } from '../../../../../core/services/quski/negociaci
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { AuthDialogComponent } from '../../auth-dialog/auth-dialog.component';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { ConfirmarAccionComponent } from '../confirmar-accion/confirmar-accion.component';
 
 export interface Usuario{
   codigo:  string
@@ -51,14 +52,25 @@ export class ReasignarUsuarioComponent implements OnInit {
     }, error =>{ this.capturaError( error ) });
   }
   public reasignar(row: Usuario){
-    this.pro.reasignarOperacion( this.data.id, this.data.proceso, row.codigo ).subscribe( (data: any) =>{
-      if(data.entidad){
-        console.log('Si se pudo :) ->', data.entidad.asesor);
-        this.dialogRefGuardar.close(true);
-      }else{
-        this.sinNotSer.setNotice('ERROR REASIGNANDO ASESOR, VUELVA A INTENTAR.', 'error');
+    const mensaje = "Reasignarle la operacion al usuario, " + row.nombre;
+    const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
+      width: '800px',
+      height: 'auto',
+      data: mensaje
+    });
+    dialogRefGuardar.afterClosed().subscribe((result: true) => {
+      if (result) {
+        this.pro.reasignarOperacion( this.data.id, this.data.proceso, row.codigo ).subscribe( (data: any) =>{
+          if(data.entidad){
+            console.log('Si se pudo :) ->', data.entidad.asesor);
+            this.dialogRefGuardar.close(true);
+          }else{
+            this.sinNotSer.setNotice('ERROR REASIGNANDO ASESOR, VUELVA A INTENTAR.', 'error');
+          }
+        });
       }
     });
+    
   }
   private capturaError(error: any) {
     if (error.error) {

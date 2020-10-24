@@ -70,7 +70,7 @@
                     </div>
                     <div class="row">
                         <div class="col-4 offset-5">
-                            <button mat-raised-button color="basic" (click)="buscar()">
+                            <button mat-raised-button color="basic" (click)="buscar(null,null)">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>
                                 <span >Buscar Operacion</span>
                             </button>
@@ -83,15 +83,20 @@
                     <ng-container matColumnDef="Accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
                         <mat-cell *matCellDef="let row">
+                            <ng-container *ngIf="row.estadoProceso != 'PENDIENTE EXCEPCION' && rol == 'ASESOR'">
+                                <a (click)="verOperacion(row)">
+                                    <mat-icon matTooltip="Ver Operacion">edit</mat-icon>
+                                </a>
+                            </ng-container>
                             <a (click)="verDetalle(row)">
 								<mat-icon matTooltip="Ver Detalle">remove_red_eye</mat-icon>
-							</a>
-							<a (click)="verOperacion(row)">
-								<mat-icon matTooltip="Ver Operacion">edit</mat-icon>
                             </a>
-                            <a (click)="reasignar(row)">
-								<mat-icon matTooltip="Reasignar Asesor">account_circle</mat-icon>
-							</a>
+                            <ng-container *ngIf="rol == 'SUPERVISOR'">
+                                <a (click)="reasignar(row)">
+                                    <mat-icon matTooltip="Reasignar Asesor">account_circle</mat-icon>
+                                </a>
+                            </ng-container>
+                            
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="codigoOperacion">
@@ -141,6 +146,7 @@
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
                 </mat-table>
+                <mat-paginator #paginator  [pageSizeOptions]="[5, 10, 20]" (page)="paged()"></mat-paginator>
             </div>
         </div>
 	</re-portlet-body>
