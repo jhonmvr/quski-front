@@ -3,11 +3,14 @@ export class BusquedaAprobadorWrapper{
     proceso: string;
     idAgencia: number;
     codigo: string;
-
-    constructor(){ 
+    numberItems: number
+    numberPage:number
+    constructor( numberItems?: number, numberPage?:number ){ 
         this.cedula    = null;
         this.proceso   = null;
         this.idAgencia = null;
         this.codigo    = null;
+        this.numberItems = numberItems ? numberItems : 5 ;
+        this.numberPage = numberPage ? numberPage: 0 ;
     }
 }

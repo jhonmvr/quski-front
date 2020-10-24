@@ -47,7 +47,7 @@
                     </div>
                     <div class="row">
                         <div class="col-4 offset-5">
-                            <button mat-raised-button color="basic" (click)="buscar()">
+                            <button mat-raised-button color="basic" (click)="buscar(null,null)">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>
                                 <span >Buscar Operacion</span>
                             </button>
@@ -60,9 +60,11 @@
                     <ng-container matColumnDef="accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
                         <mat-cell *matCellDef="let row">
-                            <button mat-raised-button color="basic" (click)="abrirSolicitud(row)">
-                                <span >Tomar</span>
-                            </button>
+                            <ng-container *ngIf="row.proceso != 'COTIZACION'">
+                                <button mat-raised-button color="basic" (click)="abrirSolicitud(row)">
+                                    <span >Tomar</span>
+                                </button>
+                            </ng-container>
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="codigo">
@@ -100,6 +102,7 @@
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
                 </mat-table>
+                <mat-paginator #paginator  [pageSizeOptions]="[5, 10, 20]" (page)="paged()"></mat-paginator>
             </div>
         </div>
 	</re-portlet-body>
