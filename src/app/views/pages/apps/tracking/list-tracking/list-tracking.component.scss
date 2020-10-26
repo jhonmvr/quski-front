@@ -93,3 +93,15 @@ table{
   justify-content: center;
   font-size: smaller;
 }
+.mat-header-cell {
+  flex-direction: column;
+  justify-content: center;
+  font-size: smaller;
+  
+}
+
+.mat-cell {
+  text-align: center;
+  justify-content:center;
+  font-size: smaller;
+}

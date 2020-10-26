@@ -113,6 +113,7 @@ import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.
 import { SolicitudDeExcepcionesComponent } from './custom/popups/solicitud-de-excepciones/solicitud-de-excepciones.component';
 import { ListaExcepcionesComponent } from './custom/popups/lista-excepciones/lista-excepciones.component';
 import { ReasignarUsuarioComponent } from './custom/popups/reasignar-usuario/reasignar-usuario.component';
+import { ConfirmarAccionComponent } from './custom/popups/confirmar-accion/confirmar-accion.component';
 
 
 
@@ -181,7 +182,8 @@ import { ReasignarUsuarioComponent } from './custom/popups/reasignar-usuario/rea
 		MensajeEdadComponent,
 		SolicitudDeExcepcionesComponent,
 		ListaExcepcionesComponent,
-		ReasignarUsuarioComponent
+		ReasignarUsuarioComponent,
+		ConfirmarAccionComponent
 
 	],
 	exports: [

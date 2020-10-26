@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatDialog } from '@angular/material';
@@ -6,7 +6,6 @@ import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { Page } from '../../../../../core/model/page';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { OrigenIngresosEnum } from '../../../../../core/enum/OrigenIngresosEnum';
-import { OcupacionInmuebleEnum } from '../../../../../core/enum/OcupacionInmuebleEnum';
 import { RelacionDependenciaEnum } from '../../../../../core/enum/RelacionDependenciaEnum';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
@@ -18,50 +17,22 @@ import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapt
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
-//import { Parroquia } from '../../../../../core/model/quski/Parroquia';
 import { TbQoIngresoEgresoCliente } from '../../../../../core/model/quski/TbQoIngresoEgresoCliente';
 import { DireccionClienteService } from '../../../../../core/services/quski/direccion-cliente.service';
 import { TbQoDireccionCliente } from '../../../../../core/model/quski/TbQoDireccionCliente';
 import { PatrimonioService } from '../../../../../core/services/quski/patrimonio.service';
 import { ReferenciaPersonalService } from '../../../../../core/services/quski/referenciaPersonal.service';
 import { ParaDesarrolloEnum } from '../../../../../core/enum/ParaDesarrolloEnum';
-import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
-import { ReferenciaParentescoEnum } from '../../../../../core/enum/ReferenciaParentescoEnum';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
-import { map, startWith, filter } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { environment } from '../../../../../../../src/environments/environment';
 import { ClienteSoftbank } from '../../../../../core/model/softbank/ClienteSoftbank';
-import { FindValueSubscriber } from 'rxjs/internal/operators/find';
-//import { ProfesionEnum } from '../../../../../core/enum/ProfesionEnum';
-//import { EstadoCivilEnum } from '../../../../../core/enum/EstadoCivilEnum';
-//import { NivelEstudioEnum } from '../../../../../core/enum/NivelEstudioEnum';
-//import { SectorEnum } from '../../../../../core/enum/SectorEnum';
-//import { GeneroEnum } from '../../../../../core/enum/GeneroEnum';
-//import { CargaFamiliarEnum } from '../../../../../core/enum/CargaFamiliarEnum';
-//import { PaisesEnum } from '../../../../../core/enum/PaisesEnum';
-//import { ParroquiaService } from '../../../../../core/services/quski/parroquia.service';
-//import { CrearCliente } from '../../../../../core/model/softbank/CrearCliente';
-//import { ActividadEconomicaCliente } from '../../../../../core/model/softbank/ActividadEconomicaCliente';
-//import { ContactosCliente } from '../../../../../core/model/softbank/ContactosCliente';
-//import { CuentasBancariasCliente } from '../../../../../core/model/softbank/CuentasBancariasCliente';
-//import { TelefonosCliente } from '../../../../../core/model/softbank/TelefonosCliente';
-//import { EditarCliente } from '../../../../../core/model/softbank/EditarCliente';
-//import { SimulacionPrecancelacion } from '../../../../../core/model/softbank/SimulacionPrecancelacion';
-//import { SimulacionTablaAmortizacion } from '../../../../../core/model/softbank/SimulacionTablaAmortizacion';
-//import { OperacionAbono } from '../../../../../core/model/softbank/OperacionAbono';
-//import { OperacionCancelar } from '../../../../../core/model/softbank/OperacionCancelar';
-//import { Rubros } from '../../../../../core/model/softbank/Rubros';
-//import { OperacionCrear } from '../../../../../core/model/softbank/OperacionCrear';
-//import { OperacionRenovar } from '../../../../../core/model/softbank/OperacionRenovar';
-//import { DatosImpCom } from '../../../../../core/model/softbank/DatosImpCom';
-//import { ConsultaSolca } from '../../../../../core/model/softbank/ConsultaSolca';
-//import { ifError } from 'assert';
-//import { TbQoNegociacion } from '../../../../../../../src/app/core/model/quski/TbQoNegociacion';
+
 
 
 
@@ -314,6 +285,7 @@ export class GestionClienteComponent implements OnInit {
     ///>>>>>>>>
 
     private css: SoftbankService,
+    //private csf: ClienteSoftbankService,
     private neg: NegociacionService,
     private cs: ClienteService,
     public dialog: MatDialog,
@@ -471,8 +443,6 @@ export class GestionClienteComponent implements OnInit {
         this.idNegociacion = data.params.id;
         this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
-            this.situacion = data.entidad.situacion
-            console.log('SITUACION', this.situacion);
             this.capturaHoraAsignacion();
             this.capturaHoraAtencion()
 
@@ -2042,8 +2012,8 @@ export class GestionClienteComponent implements OnInit {
                     this.cliente.tbQoReferenciaPersonals.push(this.referenciaGuardado);
                   });
 
-            
-                  this.cs.crearClienteConRelaciones(this.cliente,this.idNegociacion).subscribe((respuesta: any) => {
+            /*
+                  this.csf.crearClienteSoftbank().subscribe((respuesta: any) => {
                     console.log('numero de creditos',respuesta.entidad.numeroCreditos);
                     if (respuesta.entidad) {
                       let clienteSoftBank = new ClienteSoftbank();
@@ -2073,22 +2043,12 @@ export class GestionClienteComponent implements OnInit {
                       clienteSoftBank.pasivos = this.pasivo.value
                       //clienteSoftBank.ingresos = this.ingresoEgresoGuardado.esIngreso.values
                       //clienteSoftBank.egresos = this.totalValorIngresoEgreso.valueOf
-                      */
-                      if(this.situacion =='EN PROCESO' && respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos == 1){
-                        console.log("tiene q navegar al generar credito ");
-                        this.router.navigate(['../../credito-nuevo/generar-credito', this.idNegociacion])
-                      }
-                      if(respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos >1){
-                        console.log("tiene q navegar a la bandeja principal de asesores ");
-                        this.router.navigate(['../../asesor/bandeja-principal', this.idNegociacion])
-                      }
-                      
-                      this.id = respuesta.entidad.id
+                      */                      
+/*                      this.id = respuesta.entidad.id
                       this.loadingSubject.next(false);
                       this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
                       this.capturaHoraFinal()
                       this.router.navigate(['credito-nuevo/', this.idNegociacion]);
-                      //console.log(" JSON CLIENTE----->" + JSON.stringify(data.entidad))
 
                     }
                   }, error => {
@@ -2099,7 +2059,7 @@ export class GestionClienteComponent implements OnInit {
                     } else {
                     }
                   });
-
+*/
                 } else {
                   this.loadingSubject.next(false);
                   this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS EN  LA SECCION DE REFERENCIAS PERSONALES", 'error');
@@ -2196,7 +2156,6 @@ export class GestionClienteComponent implements OnInit {
     tracking.proceso = this.procesoDatosCliente;
     tracking.observacion = '';
    // tracking.codigoBpm = codigoRegistro;
-    tracking.estado = SituacionEnum.EN_PROCESO; // Por definir
     tracking.usuarioCreacion = atob(localStorage.getItem(environment.userKey)); // Modificar al id del asesor
     tracking.fechaInicio = fechaInicio;
     tracking.fechaCreacion = fechaAsignacion;

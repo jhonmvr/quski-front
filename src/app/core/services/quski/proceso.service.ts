@@ -54,6 +54,45 @@ export class ProcesoService extends BaseService {
   }
   /**
    * @author Jeroham Cadenas
+   * @param id {tbQoNegociacion - tbQoClientePago - tbQoDevolucion - tbQoVerificacionTelefonica}
+   * @param proceso 
+   * @param nuevoAsesor 
+   */
+  public reasignarOperacion(id: number, proceso: string, nuevoAsesor: string ) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'reasignarOperacion';
+    this.params = new HttpParams().set('id', id.toString()).set('proceso', proceso).set('usuario',nuevoAsesor);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  /**
+   * @author Jeroham Cadenas
+   */
+  public cancelarNegociacion(idNegociacion: number, usuario: string) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'cancelarNegociacion';
+    this.params = new HttpParams().set('idNegociacion', idNegociacion.toString()).set('usuario', usuario);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+    /**
+   * @author Jeroham Cadenas
+   */
+  public cambiarEstadoProceso(idReferencia: number, proceso: string, newEstado: string) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'cambiarEstadoProceso';
+    this.params = new HttpParams().set('idReferencia', idReferencia.toString()).set('proceso', proceso).set('newEstado', newEstado);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+    /**
+   * @author Jeroham Cadenas
+   */
+  public findByIdReferencia(id: number, proceso: string) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'findByIdReferencia';
+    this.params = new HttpParams().set('id', id.toString()).set('proceso', proceso);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  /**
+   * @author Jeroham Cadenas
    * @param entidad TbQoProceso
    */
   public persistEntity(entidad : TbQoProceso) {
@@ -68,9 +107,8 @@ export class ProcesoService extends BaseService {
    */
   public buscarOperaciones(w: WrapperBusqueda) {
     let serviceUrl = this.appResourcesUrl + this.urlRest +"buscarOperaciones";
-    let wrapper =  w ;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,w,this.options);
   } 
     /**
    * @author Jeroham Cadenas

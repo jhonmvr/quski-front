@@ -44,6 +44,7 @@ import { PartialsModule } from '../../../partials/partials.module';
 import { AprobadorComponent } from './aprobador.component';
 import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { BandejaAprobadorComponent } from './bandeja-aprobador/bandeja-aprobador.component';
+import { ConfirmarAccionComponent } from '../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 
 
 
@@ -129,7 +130,7 @@ const routes: Routes = [
   ],
   entryComponents: [
     ErrorCargaInicialComponent,
-
+    ConfirmarAccionComponent
 
 
 

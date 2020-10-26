@@ -7,7 +7,7 @@ import { TbQoCotizador } from './TbQoCotizador';
 export class TbQoCliente {
   id: number;
   actividadEconomica: string;
-  actividadEconomicaEmpresa : string;
+  actividadEconomicaEmpresa: string;
   apellidoMaterno: string;
   apellidoPaterno: string;
   apoderadoCliente: string;
@@ -42,6 +42,7 @@ export class TbQoCliente {
   telefonoTrabajo: string;
   aprobacionMupi: string;
   nombreCompleto: string;
+
 
 
   tbQoArchivoClientes: null;

@@ -18,7 +18,6 @@ import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
 import { TbQoTipoOro, } from '../../../../..//core/model/quski/TbQoTipoOro';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { Router } from '@angular/router';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
@@ -44,7 +43,6 @@ import { TbQoDetalleCredito } from '../../../../../core/model/quski/TbQoDetalleC
 import { RiesgoAcumuladoComponent } from '../../../../partials/custom/popups/riesgo-acumulado/riesgo-acumulado.component';
 import { MensajeEdadComponent } from '../../../../../../app/views/partials/custom/popups/mensaje-edad/mensaje-edad.component';
 import { GuardarProspectoCRM } from '../../../../../core/model/crm/guardarProspectoCRM';
-import { environment } from '../../../../../../environments/environment';
 
 
 @Component({
@@ -924,13 +922,6 @@ export class ListCotizarComponent implements OnInit {
     tracking.actividad = this.actividad;
     tracking.proceso = this.procesoProspeccion;
     tracking.observacion = '';
-    /*tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
-    tracking.usuario = atob(localStorage.getItem(environment.userKey))
-    tracking.fechaInicio = fechaInicio;
-    tracking.fechaAsignacion = fechaAsignacion;
-    tracking.fechaInicioAtencion = fechaInicioAtencion;
-    tracking.fechaFin = fechaFin;*/
     this.tra.guardarTracking(tracking).subscribe((data: any) => {
       if (data.entidad) {
         console.log('data de tracking para Prospeccion ----> ', data.entidad);
@@ -955,13 +946,6 @@ export class ListCotizarComponent implements OnInit {
     tracking.actividad = this.actividad;
     tracking.proceso = this.procesoTasacion;
     tracking.observacion = '';
-    /*tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
-    tracking.usuario = atob(localStorage.getItem(environment.userKey))
-    tracking.fechaInicio = fechaInicio;
-    tracking.fechaAsignacion = fechaAsignacion;
-    tracking.fechaInicioAtencion = fechaInicioAtencion;
-    tracking.fechaFin = fechaFin;*/
     this.tra.guardarTracking(tracking).subscribe((data: any) => {
       if (data.entidad) {
         console.log(' TRACKING TASACION ------>' + JSON.stringify(data.entidad));

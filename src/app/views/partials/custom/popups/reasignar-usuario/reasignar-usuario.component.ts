@@ -5,6 +5,8 @@ import { SoftbankService } from '../../../../../core/services/quski/softbank.ser
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { AuthDialogComponent } from '../../auth-dialog/auth-dialog.component';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { ConfirmarAccionComponent } from '../confirmar-accion/confirmar-accion.component';
 
 export interface Usuario{
   codigo:  string
@@ -28,6 +30,7 @@ export class ReasignarUsuarioComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: OperacionesProcesoWrapper,
     public sof: SoftbankService,
+    public pro: ProcesoService,
     private dialog: MatDialog,
     public neg: NegociacionService,
     public dialogRefGuardar: MatDialogRef<any>,
@@ -49,19 +52,24 @@ export class ReasignarUsuarioComponent implements OnInit {
     }, error =>{ this.capturaError( error ) });
   }
   public reasignar(row: Usuario){
-    if( this.data.proceso == 'NUEVO' || this.data.proceso == 'RENOVACION'){
-      this.neg.reasignar( this.data.id, row.codigo ).subscribe( (data: any) =>{
-        if(data.entidad != null){
-          console.log('Si se pudo :) ->', data.entidad.asesor);
-          this.dialogRefGuardar.close(true);
-        }else{
-          this.sinNotSer.setNotice('ERROR REASIGNANDO ASESOR, VUELVA A INTENTAR.', 'error');
-        }
-      });
-    }
-    if( this.data.proceso == 'DEVOLUCION'){
-      this.sinNotSer.setNotice('REASIGNACION DE DEVOLUCION AUN NO CREADA EN CORE', 'error');
-    }
+    const mensaje = "Reasignarle la operacion al usuario, " + row.nombre;
+    const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
+      width: '800px',
+      height: 'auto',
+      data: mensaje
+    });
+    dialogRefGuardar.afterClosed().subscribe((result: true) => {
+      if (result) {
+        this.pro.reasignarOperacion( this.data.id, this.data.proceso, row.codigo ).subscribe( (data: any) =>{
+          if(data.entidad){
+            console.log('Si se pudo :) ->', data.entidad.asesor);
+            this.dialogRefGuardar.close(true);
+          }else{
+            this.sinNotSer.setNotice('ERROR REASIGNANDO ASESOR, VUELVA A INTENTAR.', 'error');
+          }
+        });
+      }
+    });
     
   }
   private capturaError(error: any) {

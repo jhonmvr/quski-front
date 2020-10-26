@@ -15,13 +15,14 @@ import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { environment } from '../../../../../../environments/environment';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
+import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 @Component({
   selector: 'kt-excepciones-riesgo',
   templateUrl: './excepciones-riesgo.component.html',
@@ -29,13 +30,13 @@ import { TasacionService } from '../../../../../core/services/quski/tasacion.ser
 })
 export class ExcepcionesRiesgoComponent implements OnInit {
 
-  [x: string]: any;
+  //[x: string]: any;
   // ENTIDADES
 
   public entidadCliente: TbQoCliente = null;
   private entidadNegociacion: TbQoNegociacion = null;
   private entidadExcepcion: TbQoExcepcione = null;
-
+  private procesoEntidad: TbQoProceso;
 
   // STANDARD VARIABLES
   public dataPopup: DataPopup;
@@ -116,6 +117,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     private neg: NegociacionService,
     private cli: ClienteService,
     private ing: IntegracionService,
+    private pro: ProcesoService,
     private tra: TrackingService,
     private route: ActivatedRoute,
     private par: ParametroService,
@@ -273,12 +275,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     tracking.actividad = this.actividad;
     tracking.proceso = this.procesoExcepcion;
     tracking.observacion = '';
-    /*tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
-    tracking.usuario = atob(localStorage.getItem(environment.userKey))
-    tracking.fechaInicio = fechaInicio;
-    tracking.fechaAsignacion = fechaAsignacion;
-    tracking.fechaInicioAtencion = fechaInicioAtencion;*/
+   
     tracking.fechaFin = fechaFin;
     this.tra.guardarTracking(tracking).subscribe((data: any) => {
       if (data.entidad) {
@@ -377,7 +374,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   buscarTasación() {
     this.loadingSubject.next(true);
 
-    this.tas.getTasacionByIdNegociacion(this.p, this.entidadNegociacion.id).subscribe((tasacionData: any) => {
+    this.tas.getTasacionByIdNegociacion(null, this.entidadNegociacion.id).subscribe((tasacionData: any) => {
       console.log('TASACION DATA ', JSON.stringify(tasacionData));
 
       if (tasacionData && tasacionData.list) {
@@ -411,87 +408,93 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       data.params.id
       if (data.params.id) {
         this.idNegociacion = data.params.id;
-        // console.log('PARAMETRO=====> ', this.idNegociacion);
-        this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
-          // console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
-
-          this.entidadNegociacion = data.entidad;
-          this.buscarTasación();
-          //console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
-          this.buscarExcepcion(this.entidadNegociacion.id);
-
-          if (data.entidad) {
-            //TRACKING
-            console.log('TRACKING', JSON.stringify(data));
-            this.capturaHoraAsignacion('NEGOCIACION');
-
-
-            this.cedulaCliente = data.entidad.tbQoCliente.cedulaCliente;
-            this.cli.findClienteByIdentificacion(this.cedulaCliente).subscribe((data: any) => {
-              // console.log('VALOR DE LA DATA==> findClienteByIdentificacion ', JSON.stringify(data));
-              this.entidadCliente = data.entidad;
-              this.loadingSubject.next(false);
-              if (data) {
-                // FORM OPERACION
-                this.nombresCompletos.setValue(this.entidadCliente.primerNombre + ' ' + this.entidadCliente.segundoNombre
-                  + ' ' + this.entidadCliente.apellidoPaterno + ' ' + this.entidadCliente.apellidoMaterno);
-                this.idCliente = data.id;
-                this.identificacion.setValue(this.entidadCliente.cedulaCliente);
-                this.buscarMensaje();
-                // FORM CLIENTE
-                this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
-                this.aprobadoWebMupi.setValue(this.entidadCliente.aprobacionMupi)
-                this.primerNombre.setValue(this.entidadCliente.primerNombre);
-                this.segundoNombre.setValue(this.entidadCliente.segundoNombre);
-                this.separacionDeBienes.setValue(this.entidadCliente.separacionBienes);
-                this.apellidoPaterno.setValue(this.entidadCliente.apellidoPaterno);
-                this.apellidoMaterno.setValue(this.entidadCliente.apellidoMaterno);
-                this.cargaFamiliar.setValue(this.entidadCliente.cargasFamiliares);
-                this.genero.setValue(this.entidadCliente.genero);
-                this.estadoCivil.setValue(this.entidadCliente.estadoCivil);
-                this.lugarDeNacimiento.setValue(this.entidadCliente.lugarNacimiento);
-                this.fechaDeNacimiento.setValue(new Date(this.entidadCliente.fechaNacimiento));
-                this.nacionalidad.setValue(this.entidadCliente.nacionalidad);
-                this.edad.setValue(this.entidadCliente.edad);
-                this.nivelDeEducacion.setValue(this.entidadCliente.nivelEducacion);
-                this.actividadEconomica.setValue(this.entidadCliente.actividadEconomica);
-                this.ultimaFechaDeActualizacionDeCliente.setValue(new Date(this.entidadCliente.fechaActualizacion));
-
-                // INPUT VARIABLES CREDITICIAS
-                this.dataPopup = new DataPopup();
-                this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
-                this.dataPopup.isNegociacion = true;
-                this.dataPopup.idBusqueda = this.entidadNegociacion.id;
-                console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
-                //INPUT RIESGO ACUMULADO
-
-                // FORM CONTACTO
-                this.telefonoDomicilio.setValue(this.entidadCliente.telefonoFijo);
-                this.telefonoAdicional.setValue(this.entidadCliente.telefonoAdicional);
-                this.telefonoMovil.setValue(this.entidadCliente.telefonoMovil);
-                this.telefonoOficina.setValue(this.entidadCliente.telefonoTrabajo);
-                this.correo.setValue(this.entidadCliente.email);
-                //FORM DATOS NEGOCIACION
-                this.motivoNoAceptacion.setValue(this.entidadNegociacion.situacion);
-                this.calificadoMupi.setValue(this.entidadCliente.aprobacionMupi);
+        this.pro.findByIdReferencia(this.idNegociacion, "NUEVO").subscribe( (dataProceso: any)=>{
+          if(dataProceso.entidad != null){
+            this.procesoEntidad = dataProceso.entidad;
+            this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
+              // console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
+    
+              this.entidadNegociacion = data.entidad;
+              this.buscarTasación();
+              //console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
+              this.buscarExcepcion(this.entidadNegociacion.id);
+    
+              if (data.entidad) {
+                //TRACKING
+                console.log('TRACKING', JSON.stringify(data));
+                this.capturaHoraAsignacion('NEGOCIACION');
+    
+    
+                this.cedulaCliente = data.entidad.tbQoCliente.cedulaCliente;
+                this.cli.findClienteByIdentificacion(this.cedulaCliente).subscribe((data: any) => {
+                  // console.log('VALOR DE LA DATA==> findClienteByIdentificacion ', JSON.stringify(data));
+                  this.entidadCliente = data.entidad;
+                  this.loadingSubject.next(false);
+                  if (data) {
+                    // FORM OPERACION
+                    this.nombresCompletos.setValue(this.entidadCliente.primerNombre + ' ' + this.entidadCliente.segundoNombre
+                      + ' ' + this.entidadCliente.apellidoPaterno + ' ' + this.entidadCliente.apellidoMaterno);
+                    this.idCliente = data.id;
+                    this.identificacion.setValue(this.entidadCliente.cedulaCliente);
+                    this.buscarMensaje();
+                    // FORM CLIENTE
+                    this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
+                    this.aprobadoWebMupi.setValue(this.entidadCliente.aprobacionMupi)
+                    this.primerNombre.setValue(this.entidadCliente.primerNombre);
+                    this.segundoNombre.setValue(this.entidadCliente.segundoNombre);
+                    this.separacionDeBienes.setValue(this.entidadCliente.separacionBienes);
+                    this.apellidoPaterno.setValue(this.entidadCliente.apellidoPaterno);
+                    this.apellidoMaterno.setValue(this.entidadCliente.apellidoMaterno);
+                    this.cargaFamiliar.setValue(this.entidadCliente.cargasFamiliares);
+                    this.genero.setValue(this.entidadCliente.genero);
+                    this.estadoCivil.setValue(this.entidadCliente.estadoCivil);
+                    this.lugarDeNacimiento.setValue(this.entidadCliente.lugarNacimiento);
+                    this.fechaDeNacimiento.setValue(new Date(this.entidadCliente.fechaNacimiento));
+                    this.nacionalidad.setValue(this.entidadCliente.nacionalidad);
+                    this.edad.setValue(this.entidadCliente.edad);
+                    this.nivelDeEducacion.setValue(this.entidadCliente.nivelEducacion);
+                    this.actividadEconomica.setValue(this.entidadCliente.actividadEconomica);
+                    this.ultimaFechaDeActualizacionDeCliente.setValue(new Date(this.entidadCliente.fechaActualizacion));
+    
+                    // INPUT VARIABLES CREDITICIAS
+                    this.dataPopup = new DataPopup();
+                    this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
+                    this.dataPopup.isNegociacion = true;
+                    this.dataPopup.idBusqueda = this.entidadNegociacion.id;
+                    console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
+                    //INPUT RIESGO ACUMULADO
+    
+                    // FORM CONTACTO
+                    this.telefonoDomicilio.setValue(this.entidadCliente.telefonoFijo);
+                    this.telefonoAdicional.setValue(this.entidadCliente.telefonoAdicional);
+                    this.telefonoMovil.setValue(this.entidadCliente.telefonoMovil);
+                    this.telefonoOficina.setValue(this.entidadCliente.telefonoTrabajo);
+                    this.correo.setValue(this.entidadCliente.email);
+                    //FORM DATOS NEGOCIACION
+                    this.motivoNoAceptacion.setValue(this.procesoEntidad.estadoProceso);
+                    this.calificadoMupi.setValue(this.entidadCliente.aprobacionMupi);
+                  } else {
+                    this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 1', 'error');
+                  }
+                }, error => {
+                  this.loadingSubject.next(false);
+                  if (JSON.stringify(error).indexOf("codError") > 0) {
+                    let b = error.error;
+                    this.sinNoticeService.setNotice(b.msgError, 'error');
+                  } else {
+                    this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 2', 'error');
+                  }
+                });
               } else {
-                this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 1', 'error');
-              }
-            }, error => {
-              this.loadingSubject.next(false);
-              if (JSON.stringify(error).indexOf("codError") > 0) {
-                let b = error.error;
-                this.sinNoticeService.setNotice(b.msgError, 'error');
-              } else {
-                this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 2', 'error');
+                this.sinNoticeService.setNotice('ERROR AL CARGAR NEGOCIACION', 'error');
+                this.capturaHoraAsignacion('NEGOCIACION');
+    
               }
             });
-          } else {
-            this.sinNoticeService.setNotice('ERROR AL CARGAR NEGOCIACION', 'error');
-            this.capturaHoraAsignacion('NEGOCIACION');
-
+          }else{
+            this.sinNoticeService.setNotice('ERROR AL CARGAR EXCEPCION', 'error');
           }
-        });
+        });        
       } else {
         this.sinNoticeService.setNotice('ERROR AL CARGAR EXCEPCION', 'error');
         this.capturaHoraAsignacion('NEGOCIACION');

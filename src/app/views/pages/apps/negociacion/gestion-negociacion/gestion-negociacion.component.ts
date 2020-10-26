@@ -24,12 +24,12 @@ import { environment } from '../../../../../../../src/environments/environment';
 import { MatDialog, MatTableDataSource, MatStepper } from '@angular/material';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
-import { SituacionEnum } from './../../../../../core/enum/SituacionEnum';
 import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 
 @Component({
   selector: 'kt-gestion-negociacion',
@@ -110,6 +110,7 @@ export class GestionNegociacionComponent implements OnInit {
   constructor(
     private sof: SoftbankService,
     private par: ParametroService,
+    private pro: ProcesoService,
     private cal: CalculadoraService,
     private neg: NegociacionService,
     private tas: TasacionService,
@@ -185,14 +186,9 @@ export class GestionNegociacionComponent implements OnInit {
     this.neg.traerNegociacionExistente( id ).subscribe( (wrapper: any) =>{
       if(wrapper.entidad.respuesta){
         this.negoW = wrapper.entidad;
-        const situacion = this.negoW.credito.tbQoNegociacion.situacion;
-        if(situacion == SituacionEnum.EN_PROCESO ){
-          this.validarExcepciones(this.negoW);
-        }else{
-          this.salirDeGestion("La negociacion \""+this.negoW.credito.codigo+"\". Ya fue finalizada o Cancelada.", false, "NEGOCIACION EN ESTADO: "+ situacion);
-        }
+        this.validarExcepciones(this.negoW);
       }else{
-        this.salirDeGestion("La negociacion que esta buscando, no existe.");
+        this.salirDeGestion("La negociacion que esta buscando, no existe, fue cerrada o cancelada");
       }
     }, error =>{ this.capturaError(error)});
   }
@@ -422,14 +418,14 @@ export class GestionNegociacionComponent implements OnInit {
 
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, cancelar: boolean = false, dataTitulo?: string) {
-    let data = {
+    let pData = {
       mensaje: dataMensaje,
       titulo: dataTitulo ? dataTitulo : null
     }
     if (cancelar) {
-      this.neg.cancelarNegociacion(this.negoW.credito.tbQoNegociacion.id).subscribe((data: any) => {
+      this.pro.cancelarNegociacion(this.negoW.credito.tbQoNegociacion.id, this.usuario).subscribe((data: any) => {
         if (data.entidad) {
-          this.abrirSalirGestion(data);
+          this.abrirSalirGestion(pData);
         } else {
           this.sinNotSer.setNotice("Error cancelando la negociacion.", 'error')
         }
@@ -438,7 +434,7 @@ export class GestionNegociacionComponent implements OnInit {
         this.sinNotSer.setNotice("reintentando cerrar negoacion");
       });
     } else {
-      this.abrirSalirGestion(data);
+      this.abrirSalirGestion(pData);
     }
   }
   private capturaError(error: any) {

@@ -7,10 +7,7 @@ import { TbQoTracking } from './../../../../../core/model/quski/TbQoTracking';
 import { AutorizacionService } from './../../../../../core/services/autorizacion.service';
 import { TrackingService } from './../../../../../core/services/quski/tracking.service';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
-import { AuthDialogComponent } from './../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
-import { SubheaderService } from '../../../../../core/_base/layout';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AnyCnameRecord } from 'dns';
 
 @Component({
   selector: 'kt-list-tracking',
@@ -22,6 +19,7 @@ export class ListTrackingComponent implements OnInit {
 
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
+  cargardatos = new BehaviorSubject<boolean>(false);
   displayedColumns = ['proceso', 'actividad', 'seccion', 'codigoBpm', 'codigoOperacionSoftbank', 'usuario', 'fechaCreacion', 'fechaActualizacion',
     'tiempoTotal', 'fecha'];
   /**Obligatorio paginacion */
@@ -30,8 +28,10 @@ export class ListTrackingComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
   totalResults: number;
-  listProcesos: [];
+  total: number;
   listActividad: [];
+  actividades: any;
+  procesos: any;
   listSeccion: [];
   entidadTrackingService: any;
   pageSize = 5;
@@ -39,7 +39,7 @@ export class ListTrackingComponent implements OnInit {
 
   /**Obligatorio ordenamiento */
   @ViewChild('sort1', { static: true }) sort: MatSort;
-  total: string;
+
   public formCliente: FormGroup = new FormGroup({});
   public proceso = new FormControl('', [Validators.required, Validators.maxLength(30)]);
   public actividad = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -63,17 +63,18 @@ export class ListTrackingComponent implements OnInit {
 
   ngOnInit() {
     //this.submit();
-    this.SelectProceso();
     this.loading = this.loadingSubject.asObservable();
+    this.SelectProceso();
     this.initiateTablePaginator();
     //Se ejecuta cuando se hace click en el ordenamiento en el mattable
-    this.sort.sortChange.subscribe(() => {
+    /*this.sort.sortChange.subscribe(() => {
       this.initiateTablePaginator();
       //this.submit();
+      this.paged();
       //this.buscar();
-    });
-    this.initiateTablePaginator();
+    });*/
   }
+
   filtrar(event: Event) {
     const filtro = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filtro.trim().toLowerCase();
@@ -87,6 +88,7 @@ export class ListTrackingComponent implements OnInit {
     this.paginator.pageIndex = 0;
     this.totalResults = 0;
     this.dataSource.paginator = this.paginator;
+
   }
   /**
    * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
@@ -105,7 +107,7 @@ export class ListTrackingComponent implements OnInit {
   * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
   */
   paged() {
-    this.p = this.getPaginacion(this.sort.active, this.sort.direction, 'Y', this.paginator.pageIndex)
+    this.p = this.getPaginacion(this.sort.active, this.sort.direction, 'N', this.paginator.pageIndex);
     //this.submit();
     this.buscar();
   }
@@ -115,72 +117,101 @@ export class ListTrackingComponent implements OnInit {
   buscar() {
     //this.dataSource.paginator = this.paginator;
     //this.initiateTablePaginator();
-    
+    this.cargardatos.next(true);
+
     let trackingWrapper = new TrakingWrapper();
     if (this.proceso.value)
-      trackingWrapper.proceso = this.proceso.value;
+      trackingWrapper.proceso = this.enviaprocess;
     if (this.actividad.value)
-      trackingWrapper.actividad = this.actividad.value;
+      trackingWrapper.actividad = this.enviaActividad;
     if (this.seccion.value)
-      trackingWrapper.seccion = this.seccion.value;
+      trackingWrapper.seccion = this.seccion.value.replace(/ /gi, "_");
     if (this.codigoBPM.value)
       trackingWrapper.codigoBpm = this.codigoBPM.value;
     if (this.codigoSoftbank.value)
       trackingWrapper.codigoOperacionSoftbank = this.codigoSoftbank.value;
     if (this.usuario.value)
       trackingWrapper.usuarioCreacion = this.usuario.value;
-    if (this.fechaDesde.value )
-      trackingWrapper.fechaCreacion = this.fechaDesde.value;
-    if(this.fechaHasta.value)
-    trackingWrapper.fechaCreacion = this.fechaHasta.value;
+    if (this.fechaDesde.value)
+      trackingWrapper.fechaDesde = this.fechaDesde.value;
+    if (this.fechaHasta.value)
+      trackingWrapper.fechaHasta = this.fechaHasta.value;
 
+    console.log("datos enviando", this.p, trackingWrapper);
+    this.trackService.busquedaTracking(this.p, trackingWrapper).subscribe((data: any) => {
+      // console.log("====> datos: " + JSON.stringify(data));
 
-    this.trackService.busquedaTracking(trackingWrapper).subscribe((data: any) => {
-      console.log("====> datos: " + JSON.stringify(data));
+      if (data.list != null) {
 
-      if (data.list) {
-        this.totalResults = data.totalResults;
         this.dataSource = new MatTableDataSource<TbQoTracking>(data.list);
+        this.dataSource.data.forEach(e => {
+          e.proceso = e.proceso.replace(/_/gi, " ");
+          e.actividad = e.actividad.replace(/_/gi, " ");
+          e.seccion = e.seccion.replace(/_/gi, " ");
+        })
+
+        this.totalResults = data.totalResults;
+
         this.dataSource.paginator = this.paginator;
         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
+        this.cargardatos.next(false);
       } else {
+        this.initiateTablePaginator();
         this.sinNoticeService.setNotice("NO SE ENCONTRARON REGISTROS", 'info');
       }
     }
     );
-
   }
 
   SelectProceso() {
     const listProcesos = this.trackService.listProceso(this.p).subscribe((data: any) => {
-      this.listProcesos = data.entidades;
-      console.log("Filtro para el combo --->>> ", this.listProcesos);
-
+      let listProcesos = data.entidades;
+      console.log("Busqueda proceso --->>> ", listProcesos);
+      this.e = listProcesos.map(e => {
+        return e.replace(/_/gi, " ");
+      });
+      this.procesos = this.e;
+      console.log("Elimina guion --->>> ", this.procesos);
     });
 
   }
   SelectActividad() {
-    const listActividad = this.trackService.listActividad(this.proceso.value).subscribe((data: any) => {
-      this.listActividad = data.entidades;
+    this.enviaprocess = this.proceso.value.replace(/ /gi, "_");
+    console.log("Envia proceso con guion --->>> ", this.enviaprocess);
+    const listActividad = this.trackService.listActividad(this.enviaprocess).subscribe((data: any) => {
+      let listActividad = data.entidades;
       console.log("Filtro para la activi --->>> ", this.listActividad);
+
+      this.a = listActividad.map(e => {
+        return e.replace(/_/gi, " ");
+      });
+      this.listActividad = this.a;
+      console.log("Elimina guion --->>> ", this.listActividad);
+
       this.listSeccion = null;
       this.actividad.setValue(null);
       this.seccion.setValue(null);
-    },error=>{
+    }, error => {
       this.listActividad = null;
       this.listSeccion = null;
     });
   }
   SelectSeccion() {
-
-    const listSeccion = this.trackService.listSeccion(this.actividad.value).subscribe((data: any) => {
-      this.listSeccion = data.entidades;
+    this.enviaActividad = this.actividad.value.replace(/ /gi, "_");
+    const listSeccion = this.trackService.listSeccion(this.enviaActividad).subscribe((data: any) => {
+      let listSeccion = data.entidades;
       console.log("Filtro para la seccion --->>> ", this.listSeccion);
 
+      this.s = listSeccion.map(e => {
+        return e.replace(/_/gi, " ");
+      });
+      this.listSeccion = this.s;
+      console.log("Elimina guion --->>> ", this.listSeccion);
+
     },
-    error=>{
-      this.listSeccion = null;
-    }
+      error => { 
+        this.listSeccion = null;
+      }
     );
   }
 
@@ -194,7 +225,6 @@ export class ListTrackingComponent implements OnInit {
       if (data.list) {
         this.totalResults = data.totalResults;
         this.dataSource = new MatTableDataSource<TbQoTracking>(data.list);
-
         this.dataSource.paginator = this.paginator;
         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
       } else {
@@ -225,8 +255,9 @@ export class TrakingWrapper {
   "codigoBpm": any
   "codigoOperacionSoftbank": any
   "usuarioCreacion": any
-  "fechaCreacion": any
- 
+  //"fechaCreacion": any
+  "fechaDesde": any
+  "fechaHasta": any
 
   constructor() {
 
