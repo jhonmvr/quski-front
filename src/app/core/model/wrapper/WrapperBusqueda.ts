@@ -7,8 +7,9 @@ export class WrapperBusqueda{
     estado: string;
     actividad: string;
     asesor: string;
-
-    constructor(asesor: string){
+    numberItems: number
+    numberPage:number
+    constructor(numberItems?: number, numberPage?: number, asesor?: string){
         this.actividad = null;
         this.identificacion = null;
         this.proceso = null;
@@ -16,7 +17,9 @@ export class WrapperBusqueda{
         this.fechaCreacionHasta = null;
         this.estado = null;
         this.actividad = null;
-        this.asesor = asesor;
         
+        this.numberItems = numberItems ? numberItems : 5 ;
+        this.asesor = asesor ? asesor :  null ;
+        this.numberPage = numberPage ? numberPage: 0 ;
     }
 }

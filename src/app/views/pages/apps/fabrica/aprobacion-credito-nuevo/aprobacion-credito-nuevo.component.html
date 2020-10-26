@@ -573,8 +573,8 @@
                     <ng-template matStepLabel>Variables crediticias </ng-template>
                     <div class="row mt-2">
                       <div class="col-md-8">
-                        <ng-container *ngIf="dataPopup">
-                          <kt-tabla-variables-crediticias [dataPopup]='dataPopup'>
+                        <ng-container *ngIf="componenteVariable == true">
+                          <kt-tabla-variables-crediticias [base]='this.crediNegoW.variables'>
 
                           </kt-tabla-variables-crediticias>
                         </ng-container>
@@ -585,8 +585,8 @@
                     <ng-template matStepLabel>Riesgo acumulado </ng-template>
                     <div class="row mt-2">
                       <div class="col-md-8">
-                        <ng-container *ngIf="dataPopup">
-                          <kt-tabla-riesgo-acumulado>
+                        <ng-container *ngIf="this.crediNegoW  && crediNegoW.riesgos">
+                          <kt-tabla-riesgo-acumulado [base]='this.crediNegoW.riesgos'>
 
                           </kt-tabla-riesgo-acumulado>
                         </ng-container>
@@ -604,7 +604,7 @@
 
                         <ng-container matColumnDef="TipoOro">
                           <mat-header-cell *matHeaderCellDef class="text-align"> Tipo de oro </mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align"> {{ element.tbQoTipoOro.quilate }}
+                          <mat-cell *matCellDef="let element" class="text-align"> {{ element.tipoOro }}
                           </mat-cell>
                         </ng-container>
 

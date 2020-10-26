@@ -5,8 +5,8 @@ import { environment } from '../../../../../../../src/environments/environment';
 import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SubheaderService } from '../../../../../core/_base/layout';
-import { MatDialog, MatTableDataSource } from '@angular/material';
-import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatPaginator, MatTableDataSource } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
@@ -30,11 +30,16 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   /** ** @VARIABLES ** */
   public loading;
   public usuario: string;
+  public rol: string;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   private catAgencia : Array<Agencia>;
   public catProceso : Array<string>;
   public catEstadoProceso : Array<string>;
   public catActividad : Array<string>;
+  
+
+
+
 
   /** ** @FORMULARIO ** */
   public formFiltro: FormGroup = new FormGroup({});
@@ -46,6 +51,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public estado = new FormControl('');
   public actividad = new FormControl('');
   /** ** @TABLA ** */
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   dataSource = new MatTableDataSource<OperacionesProcesoWrapper>();
   displayedColumns = ['Accion', 'codigoOperacion', 'nombreCliente', 'cedulaCliente', 'montoPreaprobado', 'fechaCreacion', 'agencia', 'estadoProceso', 'proceso', 'asesor', 'usuarioEjecutor','actividad'];
 
@@ -68,39 +74,52 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
 
   ngOnInit() {
     this.loading = this.loadingSubject.asObservable();
-    this.usuario = atob(localStorage.getItem(environment.userKey)).toUpperCase();
-    //this.usuario = 'elpi';
+    //this.usuario = atob(localStorage.getItem(environment.userKey)).toUpperCase();
+    this.usuario = 'Jero';
+    //this.rol = "SUPERVISOR"; 
+    this.rol = "ASESOR";
     this.cargarCatalogosOperacionesAndEnums();
+    this.cargarEnumBase();
 
   }
 
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
-  private buscarOperaciones(wrapper: WrapperBusqueda = null) {
+  private buscarOperaciones(wrapper?: WrapperBusqueda) {
     this.loadingSubject.next(true);
-    if(wrapper == null){
-      wrapper = new WrapperBusqueda( this.usuario );
-    }
+    wrapper.asesor = this.rol != "SUPERVISOR" ? this.usuario : null;
     this.pro.buscarOperaciones(wrapper).subscribe( (data: any) =>{
-      if( data.entidades != null ){
-        console.log("Holis, soy la data -> ", data.entidades);
-        let operaciones: OperacionesProcesoWrapper[] = data.entidades;
+      if( data.entidad != null && data.entidad.operaciones != null){
+        let operaciones: OperacionesProcesoWrapper[] = data.entidad.operaciones;
         operaciones.forEach(e=>{
-          this.catAgencia.forEach( c =>{
-            if(e.idAgencia == c.id){
-              e.agencia = c.nombre;
-            }
-          });
-          e.actividad = e.actividad.replace("_"," ").replace("_"," ").replace("_"," ");
-          e.estadoProceso = e.estadoProceso.replace("_"," ").replace("_"," ").replace("_"," ");
-          e.nombreCliente = e.nombreCliente.replace("_"," ").replace("_"," ").replace("_"," ");
+          if(e.idAgencia != 0){
+            this.catAgencia.forEach( c =>{
+              if(e.idAgencia == c.id){
+                e.agencia = c.nombre;
+              }
+            });
+          }else{
+            e.agencia = "Sin Agencia";
+          }
+          
+          if(e.actividad ==" " || e.actividad =="null"){
+            e.actividad = "Sin Tracking";
+          }else{
+            e.actividad = e.actividad.replace(/_/gi," ");
+          }
+          e.estadoProceso = e.estadoProceso.replace(/_/gi," ");
+          e.nombreCliente = e.nombreCliente.replace(/_/gi," ");
+          e.proceso = e.proceso.replace(/_/gi," ");
           if(e.montoPreaprobado == "0"){
             e.montoPreaprobado = "No Aplica";
           }
         });
-        this.loadingSubject.next(false);
-        this.cargarEnumBase();
         this.dataSource.data = operaciones;
+        this.paginator.length = data.entidad.result;
+        this.loadingSubject.next(false);
       } else {
+        this.loadingSubject.next(false);
+        this.paginator.length = 0;
+        this.dataSource.data = null;
         console.log("Me cai en la busqueda :c");
       }
     }, error => { this.capturaError(error); });
@@ -150,7 +169,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     this.sof.consultarAgenciasCS().subscribe( (data: any) =>{
       if(!data.existeError){
         this.catAgencia = data.catalogo;
-        this.buscarOperaciones();
+        this.buscarOperaciones( new WrapperBusqueda() );
       } else {
         console.log("Me cai en la Cat de agencia :c");
       }
@@ -186,7 +205,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       control.setErrors(null);
       control.setValue(null);
     });
-    this.buscarOperaciones();
+    this.buscarOperaciones(new WrapperBusqueda());
   }
   public numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -195,18 +214,25 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     }
     return true;
   }
+  public paged() {
+    this.buscar(this.paginator.pageSize, this.paginator.pageIndex);
+  }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BOTONES ** */
-  public buscar(){
+  public buscar( limite: number, pagina: number ){
     if(this.formFiltro.valid){
-      const w = new WrapperBusqueda( this.usuario );
-
+      let w;
+      if(limite && pagina){
+         w = new WrapperBusqueda(this.paginator.pageSize,this.paginator.pageIndex, null);
+      }else{
+         w = new WrapperBusqueda();
+      }
       if(this.estado.value != "" && this.estado.value != null){
         console.log("estado -->", this.estado.value);
-        w.estado = this.estado.value.replace(' ','_').replace(' ','_').replace(' ','_');
+        w.estado = this.estado.value.replace(/ /gi,"_",);
       }
       if(this.actividad.value != "" && this.actividad.value!= null){
         console.log("actividad -->", this.actividad.value);
-        w.actividad = this.actividad.value.replace(' ','_').replace(' ','_').replace(' ','_');
+        w.actividad = this.actividad.value.replace(/ /gi,"_",);
       }
       if(this.fechaCreacionDesde.value != "" && this.fechaCreacionDesde.value!= null){
         console.log("fechaCreacionDesde -->", this.fechaCreacionDesde.value);
@@ -222,11 +248,11 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       }
       if(this.nombreCompleto.value != "" && this.nombreCompleto.value!= null){
         console.log("nombreCompleto -->", this.nombreCompleto.value);
-        w.nombreCompleto = this.nombreCompleto.value.replace(' ','_').replace(' ','_').replace(' ','_');
+        w.nombreCompleto = this.nombreCompleto.value;
       }
       if(this.proceso.value != ""  && this.proceso.value!= null){
         console.log("proceso -->", this.proceso.value);
-        w.proceso = this.proceso.value;
+        w.proceso = this.proceso.value.replace(/ /gi,"_",);
       }
 
       this.buscarOperaciones( w );

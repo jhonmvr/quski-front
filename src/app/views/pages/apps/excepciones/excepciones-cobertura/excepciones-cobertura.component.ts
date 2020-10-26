@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { MatTableDataSource } from '@angular/material';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -12,22 +12,17 @@ import { TrackingService } from '../../../../../core/services/quski/tracking.ser
 import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
-import { VariablesCrediticiasService } from '../../../../../core/services/quski/variablesCrediticias.service';
-import { RiesgoAcumuladoService } from '../../../../../core/services/quski/riesgoAcumulado.service';
-import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
-import { environment } from '../../../../../../../src/environments/environment';
 import { EstadoExcepcionEnum } from '../../../../../core/enum/EstadoExcepcionEnum';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { SituacionEnum } from '../../../../../core/enum/SituacionEnum';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
-import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
 import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
 import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOferta';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
-import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
 import 'hammerjs';
+import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 
 
 @Component({
@@ -36,19 +31,21 @@ import 'hammerjs';
   styleUrls: ['./excepciones-cobertura.component.scss']
 })
 export class ExcepcionesCoberturaComponent implements OnInit {
-  [x: string]: any;
 
   //ENTIDADES
   private entidadNegociacion: TbQoNegociacion = null;
   private entidadesOpcionesCreditos: Array<OpcionesDeCredito> = null;
   private entidadCliente: TbQoCliente = null;
   private entidadExcepcion: TbQoExcepcione = null;
-
+  private procesoEntidad: TbQoProceso;
   // STANDARD VARIABLES
+  private idNegociacion: number;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading;
   public usuario;
   public proceso;
+  public mensaje: string;
+  public listExepcion: any;
   private minimoDeCobertura;
   private camposDinamicos;
   private validacionCobertura;
@@ -122,11 +119,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     private exs: ExcepcionService,
     private tra: TrackingService,
     private par: ParametroService,
-    private ing: IntegracionService,
-    private vcr: VariablesCrediticiasService,
-    private rie: RiesgoAcumuladoService,
-    private tas: TasacionService,
-    private int: IntegracionService,
+    private pro: ProcesoService,
     private route: ActivatedRoute,
     private router: Router,
     private subheaderService: SubheaderService,
@@ -291,7 +284,6 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     tracking.proceso = this.procesoExcepcion;
     tracking.observacion = '';
     /*tracking.codigoRegistro = codigoRegistro;
-    tracking.situacion = SituacionEnum.EN_PROCESO; // Por definir
     tracking.usuario = atob(localStorage.getItem(environment.userKey))
     tracking.fechaInicio = fechaInicio;
     tracking.fechaAsignacion = fechaAsignacion;
@@ -365,41 +357,51 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       if (data.params.id) {
         this.idNegociacion = data.params.id;
         //console.log('PARAMETRO=====> ', this.idNegociacion);
-        this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
-          if (data.entidad) {
-            console.log('VALOR DE LA NEGOCIACION findNegociacionById ', JSON.stringify(data));
+        this.pro.findByIdReferencia(this.idNegociacion, "NUEVO").subscribe( (dataProceso: any)=>{
+          if(dataProceso.entidad != null){
+            this.procesoEntidad = dataProceso.entidad;
+            this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
+              if (data.entidad) {
+                console.log('VALOR DE LA NEGOCIACION findNegociacionById ', JSON.stringify(data));
+    
+    
+                this.capturaHoraAsignacion('NEGOCIACION');
+                this.entidadNegociacion = data.entidad;
+                this.entidadCliente = data.entidad.tbQoCliente;
+    
+                console.log('VALORES DE LA ENTIDAD NEGOSCIA==> .id', this.entidadNegociacion.id);
+                this.buscarExcepciones(this.entidadNegociacion.id);
+                console.log('id NEGOCIACION=====> ', this.entidadNegociacion);
+                //console.log(' CLIENTE==> ', this.entidadCliente)
+                //RECUPERO LA DATA DE VARIABLES
+                this.dataPopup = new DataPopup();
+                this.dataPopup.idBusqueda = this.entidadNegociacion.id;
+                this.dataPopup.isNegociacion = true;
+                // this.buscarExcepcion(this.entidadNegociacion.id);
+                if (data) {
+    
+    
+                  this.telefonoDomicilio.setValue(this.entidadNegociacion.tbQoCliente.telefonoFijo);
+                  this.telefonoMovil.setValue(this.entidadNegociacion.tbQoCliente.telefonoMovil);
+                  this.telefonoAdicional.setValue(this.entidadNegociacion.tbQoCliente.telefonoAdicional);
+                  this.telefonoOficinaOtros.setValue(this.entidadNegociacion.tbQoCliente.telefonoTrabajo);
+                  this.correoElectronico.setValue(this.entidadNegociacion.tbQoCliente.email);
+                  this.estadoNegociacion.setValue(this.procesoEntidad.estadoProceso);
+                  this.fechaCreacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
+                  this.fechaActualizacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));
+                } else {
+                  this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 1', 'error');
+                  this.capturaHoraAtencion('NEGOCIACION');
+                }
+              }
+            });
+          } else{
+            this.loadingSubject.next(false);
+            this.sinNoticeService.setNotice('ERROR AL CARGAR NEGOCIACION', 'error');
 
-
-            this.capturaHoraAsignacion('NEGOCIACION');
-            this.entidadNegociacion = data.entidad;
-            this.entidadCliente = data.entidad.tbQoCliente;
-
-            console.log('VALORES DE LA ENTIDAD NEGOSCIA==> .id', this.entidadNegociacion.id);
-            this.buscarExcepciones(this.entidadNegociacion.id);
-            console.log('id NEGOCIACION=====> ', this.entidadNegociacion);
-            //console.log(' CLIENTE==> ', this.entidadCliente)
-            //RECUPERO LA DATA DE VARIABLES
-            this.dataPopup = new DataPopup();
-            this.dataPopup.idBusqueda = this.entidadNegociacion.id;
-            this.dataPopup.isNegociacion = true;
-            // this.buscarExcepcion(this.entidadNegociacion.id);
-            if (data) {
-
-
-              this.telefonoDomicilio.setValue(this.entidadNegociacion.tbQoCliente.telefonoFijo);
-              this.telefonoMovil.setValue(this.entidadNegociacion.tbQoCliente.telefonoMovil);
-              this.telefonoAdicional.setValue(this.entidadNegociacion.tbQoCliente.telefonoAdicional);
-              this.telefonoOficinaOtros.setValue(this.entidadNegociacion.tbQoCliente.telefonoTrabajo);
-              this.correoElectronico.setValue(this.entidadNegociacion.tbQoCliente.email);
-              this.estadoNegociacion.setValue(this.entidadNegociacion.situacion);
-              this.fechaCreacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
-              this.fechaActualizacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));
-            } else {
-              this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 1', 'error');
-              this.capturaHoraAtencion('NEGOCIACION');
-            }
           }
         });
+        
       } else {
         this.loadingSubject.next(false);
         this.sinNoticeService.setNotice('ERROR AL CARGAR NEGOCIACION', 'error');

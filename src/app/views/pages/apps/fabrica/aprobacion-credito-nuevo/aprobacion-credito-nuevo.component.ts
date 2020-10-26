@@ -1,3 +1,5 @@
+import { ProcesoEnum } from './../../../../../core/enum/ProcesoEnum';
+import { TbQoCreditoNegociacion } from './../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatTableDataSource, MatStepper } from '@angular/material';
 import { TbQoPatrimonioCliente } from '../../../../../core/model/quski/TbQoPatrimonioCliente';
@@ -11,7 +13,6 @@ import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
 import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
 import { AprobacionWrapper } from '../../../../../core/model/wrapper/AprobacionWrapper';
 import { FormControl, FormGroup } from '@angular/forms';
-import { SituacionEnum } from './../../../../../core/enum/SituacionEnum';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { environment } from '../../../../../../../src/environments/environment';
@@ -21,6 +22,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { TbQoDireccionCliente } from '../../../../../core/model/quski/TbQoDireccionCliente';
+import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
+import { throwIfEmpty } from 'rxjs/operators';
 
 
 @Component({
@@ -36,17 +39,23 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
   // ENTIDADES
 
-  private crediNegoW: AprobacionWrapper = null;
+  public componenteVariable: boolean;
+  public componenteRiesgo: boolean;
+
+  public crediNegoW: AprobacionWrapper = null;
   private entidadCliente: TbQoCliente = null;
   private entidadProceso: TbQoProceso = null;
-  private entidadesVariablesCrediticias = new Array<TbQoVariablesCrediticia>();
   private entidadNegociacion: TbQoNegociacion = null;
   private entidadExcepcion: TbQoExcepcione = null;
-  private entidadTasacion: TbQoTasacion = null;
   private entidadDirecciones = new Array<TbQoDireccionCliente>();
   private entdidadPatrimonio = new Array<TbQoPatrimonioCliente>();
   private entidadIngresoEgreso = new Array<TbQoIngresoEgresoCliente>();
-  //private entidadReferencias=new Array<TbQoReferenciaPersonals>();
+  private entidadReferencias = new Array<TbReferencia>();
+  public entidadVariables = new Array<TbQoVariablesCrediticia>();
+  private entidadRiesgos = new Array<TbQoRiesgoAcumulado>();
+  private entidadJoyas = new Array<TbQoTasacion>();
+  private entidadCreditoNegociacion: TbQoCreditoNegociacion = null;
+  //private entidadTasacion: TbQoTasacion = null;
 
   // TABLA DE PATRIMONIO ACTIVO
   displayedColumnsPatrimonio = ['Accion', 'Activo', 'Avaluo', 'Pasivo', 'Ifis', 'Infocorp'];
@@ -61,9 +70,15 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   displayedColumnsReferencia = ['Accion', 'N', 'NombresCompletos', 'Parentesco', 'Direccion', 'TelefonoMovil', 'TelefonoFijo'];
   dataSourceReferencia = new MatTableDataSource<TbReferencia>();
 
+  // TABLA DE VARIABLES CREDITICIAS
+  public displayedColumnsVariablesCrediticias = ['orden', 'variable', 'valor'];
+  public dataSourceVariablesCrediticias = new MatTableDataSource<TbQoVariablesCrediticia>();
+
   // TABLA TASACION
   displayedColumnsTasacion = ['NumeroPiezas', 'TipoOro', 'TipoJoya', 'Estado', 'Descripcion', 'PesoBruto', 'DescuentoPiedra', 'DescuentoSuelda', 'PesoNeto', 'ValorAvaluo', 'ValorComercial', 'ValorRealizacion', 'ValorOro'];
   dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
+
+  //
 
   // FORMULARIO INFORMACION OPERACION
   public formOperacion: FormGroup = new FormGroup({});
@@ -242,8 +257,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   campania: any;
   publicidad: any;
   aprobacionMupi: any;
-  componenteVariable: boolean;
-  componenteRiesgo: boolean;
+
   dataSourceCreditoNegociacion: MatTableDataSource<unknown>;
 
 
@@ -289,6 +303,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.creditoNegociacion();
     // this.validarCreditoNegociacion(id);
+    this.componenteVariable = false;
+    this.componenteRiesgo = false;
   }
 
 
@@ -302,14 +318,12 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
           console.log('NEGOCIACION traerCreditoNegociacionExistente ', JSON.stringify(wrapper));
           if (wrapper.entidad) {
             this.crediNegoW = wrapper.entidad;
-            const situacion = this.crediNegoW.credito.tbQoNegociacion.situacion;
-            if (situacion == SituacionEnum.EN_PROCESO) {
-              console.log('ingresa al if creditoNegociacion')
-              this.setearValores(this.crediNegoW);
+            const situacion = this.crediNegoW.proceso.estadoProceso;
 
-            } else {
-              this.sinNotSer.setNotice('reintentando cerrar negoacion');
-            }
+            console.log('ingresa al if creditoNegociacion')
+            this.setearValores(this.crediNegoW);
+
+
           }
 
 
@@ -372,7 +386,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
                 this.telefonoOficina.setValue(this.entidadCliente.telefonoTrabajo);
                 this.correo.setValue(this.entidadCliente.email);
                 //FORM DATOS NEGOCIACION
-                this.motivoNoAceptacion.setValue(this.entidadNegociacion.situacion);
+                //this.motivoNoAceptacion.setValue(this.entidadNegociacion.situacion);
                 this.calificadoMupi.setValue(this.entidadCliente.aprobacionMupi);
               } else {
                 this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 1', 'error');
@@ -402,13 +416,19 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
 
   private setearValores(aprob: AprobacionWrapper) {
-    console.log('APRBACION EN SETEAR DATOS ==>', aprob.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
+    //console.log('APRBACION EN SETEAR DATOS ==>', aprob.riesgos);
 
     this.entidadCliente = aprob.credito.tbQoNegociacion.tbQoCliente;
     this.entidadProceso = aprob.proceso;
     this.entidadDirecciones = aprob.direcciones;
     this.entdidadPatrimonio = aprob.patrimonios;
     this.entidadIngresoEgreso = aprob.ingresosEgresos;
+    this.entidadReferencias = aprob.referencias;
+    this.entidadVariables = aprob.variables;
+    this.entidadRiesgos = aprob.riesgos;
+    this.entidadJoyas = aprob.joyas;
+    this.entidadCreditoNegociacion = aprob.credito;
+    console.log('ENTIDAD JOYA=====>', this.entidadJoyas)
     //SETEO INFORMACION OPERACION 
     this.codigoOperacion.setValue(aprob.credito.codigo);
     this.proceso.setValue(aprob.proceso.proceso);
@@ -489,6 +509,49 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
     this.dataSourceIngresoEgreso = new MatTableDataSource(this.entidadIngresoEgreso);
 
+    //DATOS REFERENCIAS
+
+    this.dataSourceReferencia = new MatTableDataSource(this.entidadReferencias);
+
+    //DATOS VARIABLES
+    this.componenteVariable = this.entidadVariables != null ? true : false;
+
+    //DATOS RIESGO ACUMULADO
+    this.componenteRiesgo = this.entidadRiesgos != null ? true : false;
+
+    //DATOS TASACION
+
+    this.dataSourceTasacion = new MatTableDataSource(this.entidadJoyas);
+    //DATOS CREDITO NUEVO 
+    this.montoPreaprobado.setValue(this.entidadCreditoNegociacion.montoPreaprobado);
+    this.montoSolicitado.setValue(this.entidadCreditoNegociacion.montoSolicitado);
+    this.montoDiferido.setValue(this.entidadCreditoNegociacion.montoDiferido);
+    this.plazo.setValue(this.entidadCreditoNegociacion.plazoCredito);
+    console.log('ENTIDAD CREDITO NEGOCIACION ', this.entidadCreditoNegociacion.costoResguardo);
+    this.tipoOperacion.setValue(this.entidadCreditoNegociacion.tipo);
+    this.tipoOferta.setValue(this.entidadProceso.proceso);
+    this.costoCustodia.setValue(this.entidadCreditoNegociacion.costoCustodia);
+    this.formaPagoCustodia.setValue(this.entidadCreditoNegociacion.formaPagoCustodia);
+    this.costoTransporte.setValue(this.entidadCreditoNegociacion.costoTransporte);
+    this.formaPagoTransporte.setValue(this.entidadCreditoNegociacion.formaPagoTransporte);
+    this.costoValoracion.setValue(this.entidadCreditoNegociacion.costoValoracion);
+    this.formaPagoValoracion.setValue(this.entidadCreditoNegociacion.formaPagoValoracion);
+    this.costoTasacion.setValue(this.entidadCreditoNegociacion.costoTasacion);
+    this.formaPagoTasacion.setValue(this.entidadCreditoNegociacion.formaPagoTasacion);
+    this.costoResguardo.setValue(this.entidadCreditoNegociacion.costoResguardo);
+    this.formaPagoResguardo.setValue(this.entidadCreditoNegociacion.formaPagoResguardo);
+    this.costoSeguro.setValue(this.entidadCreditoNegociacion.costoSeguro);
+    this.formaPagoSeguro.setValue(this.entidadCreditoNegociacion.formaPagoSeguro);
+    this.solca.setValue(this.entidadCreditoNegociacion.solca);
+    this.formaPagoSolca.setValue(this.entidadCreditoNegociacion.formaPagoSolca);
+    this.montoDesembolsoBallon.setValue(this.entidadCreditoNegociacion.montoDesembolsoBallon);
+    this.aPagarCliente.setValue(this.entidadCreditoNegociacion.aPagarCliente);
+    this.riesgoTotalCliente.setValue(this.entidadCreditoNegociacion.riesgoTotalCliente);
+    this.aRecibirCliente.setValue(this.entidadCreditoNegociacion.aRecibirCliente);
+    this.netoAlCliente.setValue(this.entidadCreditoNegociacion.netoAlCliente);
+
+
+
 
 
 
@@ -503,13 +566,13 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.cneg.traerCreditoNegociacionExistente(id).subscribe((wrapper: any) => {
       if (wrapper.entidad.respuesta) {
         this.crediNegoW = wrapper.entidad;
-        const situacion = this.crediNegoW.credito.tbQoNegociacion.situacion;
+        /* const situacion = this.crediNegoW.credito.tbQoNegociacion.situacion;
         if (situacion == SituacionEnum.EN_PROCESO) {
           // this.setearValores();
-
+  
         } else {
           this.sinNotSer.setNotice('reintentando cerrar negoacion');
-        }
+        } */
       }
 
     }, error => {
