@@ -209,7 +209,7 @@ export class ListTrackingComponent implements OnInit {
       console.log("Elimina guion --->>> ", this.listSeccion);
 
     },
-      error => {
+      error => { 
         this.listSeccion = null;
       }
     );

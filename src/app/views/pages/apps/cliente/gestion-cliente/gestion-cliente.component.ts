@@ -37,6 +37,7 @@ import { map, startWith, filter } from 'rxjs/operators';
 import { environment } from '../../../../../../../src/environments/environment';
 import { ClienteSoftbank } from '../../../../../core/model/softbank/ClienteSoftbank';
 import { FindValueSubscriber } from 'rxjs/internal/operators/find';
+import { ClienteSoftbankService } from './../../../../../core/services/quski/clienteSoftbank.service';
 //import { ProfesionEnum } from '../../../../../core/enum/ProfesionEnum';
 //import { EstadoCivilEnum } from '../../../../../core/enum/EstadoCivilEnum';
 //import { NivelEstudioEnum } from '../../../../../core/enum/NivelEstudioEnum';
@@ -314,6 +315,7 @@ export class GestionClienteComponent implements OnInit {
     ///>>>>>>>>
 
     private css: SoftbankService,
+    private csf: ClienteSoftbankService,
     private neg: NegociacionService,
     private cs: ClienteService,
     public dialog: MatDialog,
@@ -2042,8 +2044,8 @@ export class GestionClienteComponent implements OnInit {
                     this.cliente.tbQoReferenciaPersonals.push(this.referenciaGuardado);
                   });
 
-            
-                  this.cs.crearClienteConRelaciones(this.cliente,this.idNegociacion).subscribe((respuesta: any) => {
+            /*
+                  this.csf.crearClienteSoftbank().subscribe((respuesta: any) => {
                     console.log('numero de creditos',respuesta.entidad.numeroCreditos);
                     if (respuesta.entidad) {
                       let clienteSoftBank = new ClienteSoftbank();
@@ -2074,7 +2076,7 @@ export class GestionClienteComponent implements OnInit {
                       //clienteSoftBank.ingresos = this.ingresoEgresoGuardado.esIngreso.values
                       //clienteSoftBank.egresos = this.totalValorIngresoEgreso.valueOf
                       */
-                      if(this.situacion =='EN PROCESO' && respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos == 1){
+                     /* if(this.situacion =='EN PROCESO' && respuesta.entidad.numeroCreditos && respuesta.entidad.numeroCreditos == 1){
                         console.log("tiene q navegar al generar credito ");
                         this.router.navigate(['../../credito-nuevo/generar-credito', this.idNegociacion])
                       }
@@ -2099,7 +2101,7 @@ export class GestionClienteComponent implements OnInit {
                     } else {
                     }
                   });
-
+*/
                 } else {
                   this.loadingSubject.next(false);
                   this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS EN  LA SECCION DE REFERENCIAS PERSONALES", 'error');
