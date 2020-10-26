@@ -285,6 +285,7 @@ export class GestionClienteComponent implements OnInit {
     ///>>>>>>>>
 
     private css: SoftbankService,
+    //private csf: ClienteSoftbankService,
     private neg: NegociacionService,
     private cs: ClienteService,
     public dialog: MatDialog,
@@ -2011,8 +2012,8 @@ export class GestionClienteComponent implements OnInit {
                     this.cliente.tbQoReferenciaPersonals.push(this.referenciaGuardado);
                   });
 
-            
-                  this.cs.crearClienteConRelaciones(this.cliente,this.idNegociacion).subscribe((respuesta: any) => {
+            /*
+                  this.csf.crearClienteSoftbank().subscribe((respuesta: any) => {
                     console.log('numero de creditos',respuesta.entidad.numeroCreditos);
                     if (respuesta.entidad) {
                       let clienteSoftBank = new ClienteSoftbank();
@@ -2043,7 +2044,7 @@ export class GestionClienteComponent implements OnInit {
                       //clienteSoftBank.ingresos = this.ingresoEgresoGuardado.esIngreso.values
                       //clienteSoftBank.egresos = this.totalValorIngresoEgreso.valueOf
                       */                      
-                      this.id = respuesta.entidad.id
+/*                      this.id = respuesta.entidad.id
                       this.loadingSubject.next(false);
                       this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
                       this.capturaHoraFinal()
@@ -2058,7 +2059,7 @@ export class GestionClienteComponent implements OnInit {
                     } else {
                     }
                   });
-
+*/
                 } else {
                   this.loadingSubject.next(false);
                   this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS EN  LA SECCION DE REFERENCIAS PERSONALES", 'error');

@@ -54,10 +54,11 @@ export class SolicitudDevolucionComponent implements OnInit{
 joyasList  = [{"tipoOro": "18KILATES", 
 "tipoJoya":"VARIOS", 
 "estadoJoya":"BUEN ESTADOS",
-"descripcion":"PesoBruto",
+"descripcion":"ESA MISMA",
+"pesoBruto":"12.00",
 "tienesPiedras": "NO",
 "detallePiedras":  "VARIOS",
-"descuentoPeso": "0.00",
+"descuentoPesoPiedra": "0.00",
 "pesoNeto": "11.30",
 "valorAvaluo":  "311.20",
 "fundaMadre" : "A0123",
@@ -68,9 +69,10 @@ joyasList  = [{"tipoOro": "18KILATES",
 "tipoJoya":"VARIOS", 
 "estadoJoya":"BUEN ESTADOS",
 "descripcion":"PesoBruto",
+"pesoBruto":"12.00",
 "tienesPiedras": "NO",
 "detallePiedras":  "VARIOS",
-"descuentoPeso": "0.00",
+"descuentoPesoPiedra": "0.00",
 "pesoNeto": "11.30",
 "valorAvaluo":  "311.20",
 "fundaMadre" : "A0123",
@@ -85,7 +87,11 @@ joyasList  = [{"tipoOro": "18KILATES",
   
   
   //observables
- 
+  objetoCredito ={
+    "fechaAprobacion": "",
+    "fechaVencimiento": "",
+    "monto": ""
+  }
 
   enableHerederoButton;
   enableHeredero = new BehaviorSubject<boolean>(false);
@@ -107,8 +113,9 @@ joyasList  = [{"tipoOro": "18KILATES",
   parametroObjeto 
   idCreditoNegociacion= 96
   //TABLA
-  displayedColumnsJoyas = ['tipoOro',  'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto',
-  ,'tienePiedras','detallePiedras','descuentoPesoPiedra', 'pesoNeto',  'valorAvaluo', 'numeroFundaMadre',
+  displayedColumnsJoyas = ['tipoOro', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto',
+  'tienePiedras','detallePiedras','descuentoPesoPiedra', 'pesoNeto', 
+   'valorAvaluo', 'numeroFundaMadre',
    'numeroFundaActual', 'ciudadTevcol'];
   
   
@@ -121,7 +128,7 @@ joyasList  = [{"tipoOro": "18KILATES",
  dataSourceHeredero =new MatTableDataSource;
  //:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
 
-objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiIiwKICAgICJtb250b0ZpbmFuY2lhZG8iOiAiNzAwIiwKICAgICJhc2Vzb3IiOiAiSnVhbml0byIsCiAgICAiZXN0YWRvT3BlcmFjaW9uIjogICJDQU5DRUxBRE8iLAogICAgInRpcG9DcmVkaXRvIjogIiIsCiAgICAiY29kaWdvVGFibGFBbW9ydGl6YWNpb25RdXNraSI6IkEwMSIsCiAgICAiaW1wYWdvIjogIm5vIiwKICAgICJyZXRhbnF1ZW8iOiAibm8iLAogICAgImNvYmVydHVyYUluaWNpYWwiOiAiMTIwMCIsCiAgICAiY29iZXJ0dXJhQWN0dWFsIjogIjExMDAiLAogICAgImJsb3F1ZW8iOiIiLAogICAgImRpYXNNb3JhIjogIiIsCiAgICAiZXN0YWRvVWJpY2FjaW9uIjoiIiwKICAgICJlc3RhZG9Qcm9jZXNvIjoiIiwKICAgICJjb2RpZ29TZXJ2aWNpbyI6IiIsCiAgICAibWlncmFkbyI6ICIiCgp9'
+objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIyMDIwLTEwLTEyIiwKICAgICJmZWNoYVZlbmNpbWllbnRvIjogIjIwMjAtMTEtMTAiLAogICAgIm1vbnRvRmluYW5jaWFkbyI6ICI3MDAiLAogICAgImFzZXNvciI6ICJKdWFuaXRvIiwKICAgICJlc3RhZG9PcGVyYWNpb24iOiAgIkNBTkNFTEFETyIsCiAgICAidGlwb0NyZWRpdG8iOiAiIiwKICAgICJjb2RpZ29UYWJsYUFtb3J0aXphY2lvblF1c2tpIjoiQTAxIiwKICAgICJpbXBhZ28iOiAibm8iLAogICAgInJldGFucXVlbyI6ICJubyIsCiAgICAiY29iZXJ0dXJhSW5pY2lhbCI6ICIxMjAwIiwKICAgICJjb2JlcnR1cmFBY3R1YWwiOiAiMTEwMCIsCiAgICAiYmxvcXVlbyI6IiIsCiAgICAiZGlhc01vcmEiOiAiIiwKICAgICJlc3RhZG9VYmljYWNpb24iOiIiLAogICAgImVzdGFkb1Byb2Nlc28iOiIiLAogICAgImNvZGlnb1NlcnZpY2lvIjoiIiwKICAgICJtaWdyYWRvIjogIiIKCn0='
 datos
   // VARIABLES DE TRACKING
   public horaAsignacionCreacion: Date = null;
@@ -213,9 +220,16 @@ datos
    this.codigoOperacion.setValue(this.datos.numeroOperacion)
   }
   cargarDatos(){
-   
+    let listDatosCreditos = []
     this.consultarClienteCS();
-    
+    this.objetoCredito.fechaAprobacion = this.datos.fechaAprobacion
+    this.objetoCredito.fechaVencimiento = this.datos.fechaVencimiento
+    this.objetoCredito.monto = this.datos.montoFinanciado
+    listDatosCreditos.push(this.objetoCredito)
+    console.log(listDatosCreditos)
+    this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
+    this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)
+    console.log("datasource Credito"  , this.objetoCredito)
     console.log(this.datos.nombreCliente)
     this.nombresCompletos.setValue(this.datos.nombreCliente)
     this.codigoOperacion.setValue(this.datos.numeroOperacion)
@@ -412,20 +426,10 @@ getEdad(fechaValue){
 
 
  getJoyas(){
+  this.totalResults = this.joyasList.length;
+  console.log( this.joyasList)
   this.dataSourceJoyas = new MatTableDataSource<any>(this.joyasList);
-   this.tas.getTasacionByIdCredito(this.p,this.idCreditoNegociacion).subscribe((data:any)=>{
-     console.log("que pasa por la calle", data.list)
-     
-     this.totalResults = data.totalResults;
-      
-        //this.calcular()
-       
-       
-  
-        this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'info');
-   }, error=> {
-    this.sinNoticeService.setNotice("ERROR CARGANDO LAS JOYAS", 'error');
-   })
+   
  }
 
 
@@ -572,7 +576,10 @@ validateHeredero(){
 }
 
 agregarEnTabla(){
-  this.listTablaHeredero.push([{ cedula :this.cedulaHeredero.value, nombre: this.nombreHeredero.value}])
+  let objetoHeredero = { cedula:"", nombre:""}
+  objetoHeredero.cedula= this.cedulaHeredero.value  
+  objetoHeredero.nombre= this.nombreHeredero.value
+  this.listTablaHeredero.push(objetoHeredero)
   this.dataSourceHeredero=new MatTableDataSource<any>(this.listTablaHeredero);
   console.log(this.listTablaHeredero)
 }

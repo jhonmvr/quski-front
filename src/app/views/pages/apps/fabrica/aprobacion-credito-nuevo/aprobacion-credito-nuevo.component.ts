@@ -23,6 +23,7 @@ import { SubheaderService } from './../../../../../core/_base/layout/services/su
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { TbQoDireccionCliente } from '../../../../../core/model/quski/TbQoDireccionCliente';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
+import { throwIfEmpty } from 'rxjs/operators';
 
 
 @Component({
@@ -318,12 +319,11 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
           if (wrapper.entidad) {
             this.crediNegoW = wrapper.entidad;
             const situacion = this.crediNegoW.proceso.estadoProceso;
-            if (situacion == ProcesoEnum.PENDIENTE_APROBACION) {
-              console.log('ingresa al if creditoNegociacion')
 
-            } else {
-              this.sinNotSer.setNotice('reintentando cerrar negoacion');
-            }
+            console.log('ingresa al if creditoNegociacion')
+            this.setearValores(this.crediNegoW);
+
+
           }
 
 
@@ -527,7 +527,30 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.montoSolicitado.setValue(this.entidadCreditoNegociacion.montoSolicitado);
     this.montoDiferido.setValue(this.entidadCreditoNegociacion.montoDiferido);
     this.plazo.setValue(this.entidadCreditoNegociacion.plazoCredito);
-    this.tipoOperacion.setValue(this.entidadCreditoNegociacion.tipoOperacion);
+    console.log('ENTIDAD CREDITO NEGOCIACION ', this.entidadCreditoNegociacion.costoResguardo);
+    this.tipoOperacion.setValue(this.entidadCreditoNegociacion.tipo);
+    this.tipoOferta.setValue(this.entidadProceso.proceso);
+    this.costoCustodia.setValue(this.entidadCreditoNegociacion.costoCustodia);
+    this.formaPagoCustodia.setValue(this.entidadCreditoNegociacion.formaPagoCustodia);
+    this.costoTransporte.setValue(this.entidadCreditoNegociacion.costoTransporte);
+    this.formaPagoTransporte.setValue(this.entidadCreditoNegociacion.formaPagoTransporte);
+    this.costoValoracion.setValue(this.entidadCreditoNegociacion.costoValoracion);
+    this.formaPagoValoracion.setValue(this.entidadCreditoNegociacion.formaPagoValoracion);
+    this.costoTasacion.setValue(this.entidadCreditoNegociacion.costoTasacion);
+    this.formaPagoTasacion.setValue(this.entidadCreditoNegociacion.formaPagoTasacion);
+    this.costoResguardo.setValue(this.entidadCreditoNegociacion.costoResguardo);
+    this.formaPagoResguardo.setValue(this.entidadCreditoNegociacion.formaPagoResguardo);
+    this.costoSeguro.setValue(this.entidadCreditoNegociacion.costoSeguro);
+    this.formaPagoSeguro.setValue(this.entidadCreditoNegociacion.formaPagoSeguro);
+    this.solca.setValue(this.entidadCreditoNegociacion.solca);
+    this.formaPagoSolca.setValue(this.entidadCreditoNegociacion.formaPagoSolca);
+    this.montoDesembolsoBallon.setValue(this.entidadCreditoNegociacion.montoDesembolsoBallon);
+    this.aPagarCliente.setValue(this.entidadCreditoNegociacion.aPagarCliente);
+    this.riesgoTotalCliente.setValue(this.entidadCreditoNegociacion.riesgoTotalCliente);
+    this.aRecibirCliente.setValue(this.entidadCreditoNegociacion.aRecibirCliente);
+    this.netoAlCliente.setValue(this.entidadCreditoNegociacion.netoAlCliente);
+
+
 
 
 
@@ -546,7 +569,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
         /* const situacion = this.crediNegoW.credito.tbQoNegociacion.situacion;
         if (situacion == SituacionEnum.EN_PROCESO) {
           // this.setearValores();
-
+  
         } else {
           this.sinNotSer.setNotice('reintentando cerrar negoacion');
         } */

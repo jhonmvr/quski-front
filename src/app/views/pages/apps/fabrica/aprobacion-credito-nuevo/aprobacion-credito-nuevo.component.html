@@ -585,7 +585,7 @@
                     <ng-template matStepLabel>Riesgo acumulado </ng-template>
                     <div class="row mt-2">
                       <div class="col-md-8">
-                        <ng-container *ngIf="componenteRiesgo == true">
+                        <ng-container *ngIf="this.crediNegoW  && crediNegoW.riesgos">
                           <kt-tabla-riesgo-acumulado [base]='this.crediNegoW.riesgos'>
 
                           </kt-tabla-riesgo-acumulado>
