@@ -11,6 +11,7 @@
                     <div class="col-md-2">
                         <label style="font-weight:bold">C&#243;digo operaci&#243;n:</label>
                     </div>
+                    <!-- Todo: Cambiar-->
                     <div class="col-md-4">
                         <mat-form-field class="example-full-width">
                             <input matInput [formControl]="codigoOperacion" readonly>
@@ -61,7 +62,8 @@
                   </div>
             </mat-step>
          
-            <mat-step label = "Asignacion de Funda">
+            <mat-step label = "Asignacion de Funda">                    <!-- Todo: Cambiar-->
+
                 <div class="mat-table__wrapper">
                     <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
                     matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
@@ -155,7 +157,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <label style="font-weight:bold">Peso De la Funda:</label>
+                        <label style="font-weight:bold">Peso De la Funda:</label>                    <!-- Todo: Cambiar-->
+
                     </div>
                     <div class="col-md-2">
                         <mat-form-field>
@@ -243,7 +246,8 @@
                     </div>
           
                 </div>
-                <div class="row">
+                <div class="row">                    <!-- Todo: Cambiar-->
+
                     <div class= "col-md-4">
                         <a href="javascript:void(0);" *ngIf="getPermiso('CARGA_ARC')" (click)="cargarFotoJoya(); $event.preventDefault()">
                             <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
@@ -265,7 +269,8 @@
                             <span style="position: relative;top: -10px;margin-left: 5px;">Carga Foto</span>
                         </a>
                         </div>
-                          <div class= "col-md-2">
+                          <div class= "col-md-2">                    <!-- Todo: Cambiar-->
+
                             <img  src="data:image/png;base64, {{srcFunda}}"
                             class="img-responsive" style="width:400px !important; height:300px !important" alt="" />
                         </div>
@@ -275,7 +280,8 @@
              
             </mat-step>
 
-            <mat-step label="Datos Instruccion Operativa">
+            <mat-step label="Datos Instruccion Operativa">                    <!-- Todo: Cambiar-->
+
                 <div class="row">
                     <div class="col-md-4">
                         <mat-form-field class="example-full-width">
@@ -347,7 +353,8 @@
                                 <button mat-button  (click)="generarCredito()">Generar Credito
                                 </button>
             </mat-step>
-            <mat-step label="Datos del Credito nuevo">
+            <mat-step label="Datos del Credito nuevo">                    <!-- Todo: Cambiar-->
+
                 <div class="row">
                     <div class="col-md-2">
                         <label style="font-weight:bold">Tipo de Cartera:</label>
