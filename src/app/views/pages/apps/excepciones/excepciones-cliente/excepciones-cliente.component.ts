@@ -13,7 +13,7 @@ import { NegociacionService } from '../../../../../core/services/quski/negociaci
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
@@ -32,7 +32,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   private entidadCliente: TbQoCliente = null;
   private procesoEntidad: TbQoProceso;
   private entidadNegociacion: TbQoNegociacion = null;
-  private entidadExcepcion: TbQoExcepcione = null;
+  private entidadExcepcion: TbQoExcepcion = null;
 
 
   // STANDARD VARIABLES
@@ -43,7 +43,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   private idCliente: number;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public mensaje: any;
-  public listExepcion = new Array<TbQoExcepcione>();
+  public listExepcion = new Array<TbQoExcepcion>();
   public loading;
 
 

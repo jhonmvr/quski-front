@@ -1,527 +1,412 @@
+<div class="spinner-container" *ngIf="loading | async">
+	<mat-spinner class="spiner"></mat-spinner>
+</div>
 <re-portlet>
     <re-portlet-header [title]="'Generar Credito'" [class]="'kt-portlet__head--lg'">
-
-
+        <ng-container ktPortletTools>
+			<a href="javascript:void(0);" matTooltip="Guardar" style="font-size: 12px; vertical-align: middle;">
+				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
+				</mat-icon>
+				<span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Guardar</span>
+			</a>
+		</ng-container>
     </re-portlet-header>
 
     <re-portlet-body>
-        <mat-vertical-stepper #stepper >
-            <mat-step label="Informaci&#243;n Operaci&#243;n">
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">C&#243;digo operaci&#243;n:</label>
+        <mat-vertical-stepper [linear]="true" #stepper>
+            <mat-step label="Información Operación" [stepControl]="formInformacion"> 
+                <form [formGroup]="formInformacion">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="codigoOperacion" readonly
+                                    placeholder="C&#243;digo operaci&#243;n:" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="estadoOperacion" readonly placeholder="Estado De Operacion:" />
+                            </mat-form-field>
+                        </div>
                     </div>
-                    <!-- Todo: Cambiar-->
-                    <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="codigoOperacion" readonly>
-                        </mat-form-field>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="cedulaCliente" readonly placeholder="Cedula Cliente:" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="nombreCompleto" readonly
+                                    placeholder="Nombre Completo :" />
+                            </mat-form-field>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Situacion:</label>
-                    </div>
-                    <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="situacion" readonly>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Cedula:</label>
-                    </div>
-                    <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="cedulaCliente" readonly>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Cliente:</label>
-                    </div>
-                    <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="nombresCompletos" readonly>
-                        </mat-form-field>
-                    </div>
-                </div>
+                </form>
             </mat-step>
-            <mat-step label="D&#237;a de pago" *ngIf="enableDiaPagoButton | async">
-                <div class="col-md-4">
-                    <mat-form-field>
-                      <input [min]="fechaServer"  (dateChange)="validacionFecha()"
-                      matInput #inputFechaCuota [matDatepicker]="pickerFechaCuota"
-                        placeholder="Fecha de la Cuota" [formControl]="fechaCuota"
-                        />
-                      <mat-datepicker-toggle matSuffix [for]="pickerFechaCuota"></mat-datepicker-toggle>
-                      <mat-datepicker #pickerFechaCuota></mat-datepicker>
-                    </mat-form-field>
-                  </div>
-            </mat-step>
-         
-            <mat-step label = "Asignacion de Funda">                    <!-- Todo: Cambiar-->
 
-                <div class="mat-table__wrapper">
-                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
-                    matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
-        
-                        <ng-container matColumnDef="numeroPiezas">
+            <ng-container *ngIf="this.operacionNuevo && this.operacionNuevo.credito.tipo == 'CUOTAS'">
+                <mat-step label="Día de pago" [stepControl]="formFecha">  
+                    <form [formGroup]="formFecha">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input [min]="fechaServer" (dateChange)="validacionFecha()" matInput #inputFechaCuota
+                                    [matDatepicker]="pickerFechaCuota" placeholder="Fecha de la Cuota"
+                                    [formControl]="fechaCuota"/>
+                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCuota"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerFechaCuota></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </form>
+                </mat-step>
+            </ng-container>
+
+            <mat-step label="Asignacion de Funda" [stepControl]="formFunda">
+                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource">
+                    <ng-container matColumnDef="total">
+                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                        <mat-cell *matCellDef="let element"> </mat-cell>
+                        <mat-footer-cell *matFooterCellDef>  Total:  </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroPiezas">
                         <mat-header-cell *matHeaderCellDef>Numero Piezas</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.numeroPiezas}}</mat-cell>
-                        <td  mat-footer-cell *matFooterCellDef>{{totalNumeroJoya  }}</td>
+                        <mat-footer-cell *matFooterCellDef>  {{ totalNumeroJoya  }}</mat-footer-cell>
                     </ng-container>
-                        <ng-container matColumnDef="tipoOro">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Oro</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{element.tipoOro}} </mat-cell>
-                            <td  mat-footer-cell *matFooterCellDef>  </td>    
-                        </ng-container>
-                        <ng-container matColumnDef="tipoJoya">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Joya</mat-header-cell>
-                            <mat-cell *matCellDef="let element">{{element.tipoJoya}} </mat-cell>
-                            <td  mat-footer-cell *matFooterCellDef>  </td>    
-                        </ng-container>
-                        <ng-container matColumnDef="estadoJoya">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Estado de Joya</mat-header-cell>
-                            <mat-cell *matCellDef="let element">{{element.estadoJoya}} </mat-cell>
-                            <td  mat-footer-cell *matFooterCellDef>  </td>    
-                        </ng-container>
-                        <ng-container matColumnDef="descripcion">
-                            <mat-header-cell *matHeaderCellDef>Descripcion</mat-header-cell>
-                            <mat-cell *matCellDef="let element">{{element.descripcion}} </mat-cell>
-                            <td  mat-footer-cell *matFooterCellDef>  </td>    
-                        </ng-container>
-                        
-                        <ng-container matColumnDef="pesoBruto">
-                            <mat-header-cell *matHeaderCellDef>Peso Bruto (Gr)</mat-header-cell>
-                            <mat-cell *matCellDef="let element">{{element.pesoBruto}} </mat-cell>
-                            <td  mat-footer-cell *matFooterCellDef>  </td>    
-                        </ng-container>
-                        <ng-container matColumnDef="tieneDescuento">
+                    <ng-container matColumnDef="tipoOro">
+                        <mat-header-cell *matHeaderCellDef >Tipo de Oro</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.tipoOro}} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="tipoJoya">
+                        <mat-header-cell *matHeaderCellDef >Tipo de Joya</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.tipoJoya}} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="estadoJoya">
+                        <mat-header-cell *matHeaderCellDef >Estado de Joya</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.estadoJoya}} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="descripcion">
+                        <mat-header-cell *matHeaderCellDef>Descripcion</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.descripcion}} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="pesoBruto">
+                        <mat-header-cell *matHeaderCellDef>Peso Bruto (Gr)</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.pesoBruto}} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> {{ totalPesoB  }} </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="tieneDescuento">
                         <mat-header-cell *matHeaderCellDef>Tiene descuentos</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
-                        <td  mat-footer-cell *matFooterCellDef>  </td>    
-                    </ng-container>
-                    <ng-container matColumnDef="descripcionDescuentos">
-                        <mat-header-cell *matHeaderCellDef>Descripcion de descuentos </mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.nacionalidad}} </mat-cell>
-                        <td  mat-footer-cell *matFooterCellDef>  </td>    
+                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                     </ng-container>
                     <ng-container matColumnDef="descuentoPesoPiedra">
-                            <mat-header-cell *matHeaderCellDef>Descuento Peso Piedra</mat-header-cell>
-                            <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
-                            <td  mat-footer-cell *matFooterCellDef>  </td>    
-                        </ng-container>
+                        <mat-header-cell *matHeaderCellDef>Descuento Peso Piedra</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.descuentoPesoPiedra}} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                    </ng-container>
                     <ng-container matColumnDef="descuentoSuelda">
                         <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.actividadEconomica}} </mat-cell>
-                        <td  mat-footer-cell *matFooterCellDef>  </td>    
+                        <mat-cell *matCellDef="let element">{{element.descuentoSuelda}} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                     </ng-container>
                     <ng-container matColumnDef="pesoNeto">
                         <mat-header-cell *matHeaderCellDef>Peso Neto (Gr)</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.pesoNeto}} </mat-cell>
-                        <td  mat-footer-cell *matFooterCellDef>  </td>    
+                        <mat-footer-cell *matFooterCellDef> {{ totalPesoN  }} </mat-footer-cell>
                     </ng-container>
                     <ng-container matColumnDef="valorOro">
                         <mat-header-cell *matHeaderCellDef>Valor oro</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.valorOro}} </mat-cell>
-                        <td  mat-footer-cell *matFooterCellDef>  </td>    
+                        <mat-footer-cell *matFooterCellDef> {{ totalValorO  }}  </mat-footer-cell>
                     </ng-container>
                     <ng-container matColumnDef="valorAvaluo">
                         <mat-header-cell *matHeaderCellDef>Valor Avaluo</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.valorAvaluo}} </mat-cell>
-                        <td  mat-footer-cell *matFooterCellDef>  </td>    
+                        <mat-footer-cell *matFooterCellDef> {{ totalValorA  }} </mat-footer-cell>
+
                     </ng-container>
                     <ng-container matColumnDef="valorComercial">
-                        <mat-header-cell *matHeaderCellDef>Valor comercial</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef>Valor Comercial  </mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.valorComercial}} </mat-cell>
-                        <td  mat-footer-cell *matFooterCellDef>  </td>    
+                        <mat-footer-cell *matFooterCellDef> {{ totalValorC  }} </mat-footer-cell>
+
                     </ng-container>
                     <ng-container matColumnDef="valorRealizacion">
                         <mat-header-cell *matHeaderCellDef>Valor Realizacion</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.valorRealizacion}} </mat-cell>
-                        <td  mat-footer-cell *matFooterCellDef>  </td>    
+                        <mat-footer-cell *matFooterCellDef> {{ totalValorR  }}  </mat-footer-cell>
+
                     </ng-container>
-                    
-                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                        <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
-                    </mat-table>
-                    <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" 
-                    [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
-                
-                    </mat-paginator>
-                    
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Peso De la Funda:</label>                    <!-- Todo: Cambiar-->
 
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field>
-                            <mat-select placeholder="Funda" [formControl]="pesoFunda" (selectionChange)="getFunda($event.value)">
-                                <mat-option *ngFor="let pesoFundas of listaPrecios" [value]="pesoFundas">
-                                    {{pesoFundas}}
-                                </mat-option>
-                            </mat-select>                     
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Numero Funda Nuevo</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="numeroFunda" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">PesoNeto:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput  
-                            [value]="totalPesoNeto.value | number:'1.2-2'"
-                            readonly>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Total Peso Bruto Gr:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput 
-                            [value]="totalPesoBruto.value | number:'1.2-2'"
-                            readonly>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Peso Bruto total (Con Funda) (GR)</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput
-                            [value]="totalPesoBrutoFunda.value | number:'1.2-2'"
-                            readonly>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Total valor de Realizacion:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput 
-                            [value]="totalValorRealizacion.value | number:'1.2-2'"
-                            >
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Total Valor Avaluo:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput 
-                            [value]="totalValorAvaluo.value | number:'1.2-2'"
-                           readonly>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Total valor comercial</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput
-                             [value]="totalValorComercial.value | number:'1.2-2'"readonly>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                    <button mat-button  (click)="anularFunda()">Anular Funda 
-                    </button>
-                    </div>
-          
-                </div>
-                <div class="row">                    <!-- Todo: Cambiar-->
-
-                    <div class= "col-md-4">
-                        <a href="javascript:void(0);" *ngIf="getPermiso('CARGA_ARC')" (click)="cargarFotoJoya(); $event.preventDefault()">
-                            <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
-                            <span style="position: relative;top: -10px;margin-left: 5px;">Carga Foto</span>
-                        </a>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    <mat-footer-row *matFooterRowDef="displayedColumns;"></mat-footer-row>
+                </mat-table>
+                <form [formGroup]="formFunda">
+                    <div class="row mt-3">
+                        <div class="col-md-4 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Peso De la Funda: " [formControl]="pesoFunda">
+                                    <mat-option *ngFor="let element of catTipoFunda" [value]="element">
+                                        {{element.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
-                        <div class= "col-md-2">
-                            <img  src="data:image/png;base64, {{srcJoya}}"
-                             class="img-responsive" style="width:400px !important; height:300px !important" alt="" />
-
-
+                        <div class="col-md-4 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="totalPesoBrutoFunda" readonly placeholder="Total de peso bruto con funda (Gr)" />
+                            </mat-form-field>
                         </div>
-
-         
-                 
-                    <div class= "col-md-4">
-                        <a href="javascript:void(0);" *ngIf="getPermiso('CARGA_ARC')" (click)="cargarFotoFunda(); $event.preventDefault()">
-                            <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
-                            <span style="position: relative;top: -10px;margin-left: 5px;">Carga Foto</span>
-                        </a>
+                        <div class="col-md-4 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="numeroFunda" readonly placeholder="Numero de funda" />
+                            </mat-form-field>
                         </div>
-                          <div class= "col-md-2">                    <!-- Todo: Cambiar-->
-
-                            <img  src="data:image/png;base64, {{srcFunda}}"
-                            class="img-responsive" style="width:400px !important; height:300px !important" alt="" />
-                        </div>
-                    </div>
-        
-                  
-             
-            </mat-step>
-
-            <mat-step label="Datos Instruccion Operativa">                    <!-- Todo: Cambiar-->
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="tipoCuenta" readonly>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="numeroCuenta" placeholder="Numero de Cuenta">
-                        </mat-form-field>
-                    </div>
+                       
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
-                            <mat-form-field>
-                                <mat-select placeholder="" [formControl]="tipoCliente" (selectionChange)="validateTipoCliente($event.value)">
-                                    <mat-option *ngFor="let tipoCli of tiposClientes " [value]="tipoCli">
-                                        {{tipoCli}}
+                        <ng-container *ngIf="existeCredito">
+                            <div class="offset-md-5 col-md-6 ">
+                                <button mat-raised-button (click)="anularFunda()"><span class="blue-icon"> Anular Funda </span></button>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-4 offset-md-4">
+                                    <button mat-raised-button (click)="cargarFotoJoya()"><span class="blue-icon"> Carga Foto De Joya </span></button>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="srcJoya">
+                                <div class="row mt-2">
+                                    <div class="col-md-8 offset-md-2">
+                                        <mat-card>
+                                            <img mat-card-image src="{{'data:image/png;base64,' + this.srcJoya}}" class="img-responsive">
+                                        </mat-card>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-4 offset-md-4">
+                                    <button mat-raised-button (click)="cargarFotoFunda()"><span class="blue-icon"> Carga Foto De Funda </span></button>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="srcFunda">
+                                <div class="row  mt-2">
+                                    <div class="col-md-8 offset-md-2">
+                                        <mat-card>
+                                            <img mat-card-image src="{{'data:image/png;base64,' + this.srcFunda}}" class="img-responsive">
+                                        </mat-card>
+                                        
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                        </div>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step label="Datos Instruccion Operativa" [stepControl]="formInstruccion">
+                <form [formGroup]="formInstruccion">
+                    <div class="row">
+                        <div class="col-md-3 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select required placeholder="Tipo de cuenta" [formControl]="tipoCuenta">
+                                    <mat-option *ngFor="let element of catCuenta" [value]="element">
+                                        {{element}}
                                     </mat-option>
-                                </mat-select>                     
+                                </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
-                            <mat-form-field>
-                                <input matInput [formControl]="firmanteOperacion" placeholder="Firmante Operacion">                 
+                        <div class="col-md-3 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput required [formControl]="numeroCuenta" placeholder="Numero de Cuenta">
                             </mat-form-field>
                         </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select required placeholder="Tipo de Garante" [formControl]="tipoCliente" (selectionChange)="onChangeTipoCliente($event)">
+                                    <mat-option *ngFor="let element of catTipoCliente " [value]="element">
+                                        {{element.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
-
-                        <div class="row" *ngIf="enableApoderadoButton | async">
-                            
-                            <div class="col-md-4">
-                                <mat-form-field class="example-full-width">
-                                    <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (APODERADO)">
-                                </mat-form-field>
+                        <div class="col-md-3 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select required placeholder="Firmante Operacion" [formControl]="firmanteOperacion">
+                                    <mat-option *ngFor="let element of catFirmanteOperacion " [value]="element">
+                                        {{element.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <ng-container *ngIf="this.tipoCliente.value.codigo == 'CYA' || this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'SCD';">
+                            <div class="offset-md-5 col-md-7">
+                                <mat-card-title> Datos de Garante</mat-card-title>
                             </div>
-                            <div class="col-md-4">
-                                <mat-form-field class="example-full-width">
-                                    <input matInput [formControl]="nombresCompletosApoderado" placeholder="Nombres Completos (APODERADO)">
-                                </mat-form-field>
-                            </div>
-                            </div>
-
-                            <div class="row" *ngIf="enableCodeudorButton | async">
-                            
-                                <div class="col-md-4">
-                                    <mat-form-field class="example-full-width">
-                                        <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (CODEUDOR)">
+                            <ng-container *ngIf="this.tipoCliente.value.codigo == 'CYA' || this.tipoCliente.value.codigo == 'SCD'">
+                                <div class="col-md-4 ">
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input matInput [formControl]="identificacionCodeudor" placeholder="Identificacion (Codeudor)">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4 ">
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input matInput [formControl]="nombreCompletoCodeudor" placeholder="Nombre Completo (Codeudor)">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-4">
-                                    <mat-form-field class="example-full-width">
-                                        <input matInput [formControl]="nombresCompletosApoderado" placeholder="Nombres Completos (CODEUDOR)">
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input (dateChange)="validarEdadCodeudor($event.value)" matInput
+                                            #inputFechaNacimientoCodeudor [matDatepicker]="pickerFechaNacimientoCodeudor"
+                                            placeholder="Fecha de Nacimiento (Codeudor)" [formControl]="fechaNacimientoCodeudor" />
+                                        <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimientoCodeudor">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #pickerFechaNacimientoCodeudor></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="this.tipoCliente.value.codigo == 'CYA' || this.tipoCliente.value.codigo == 'SAP'">
+                                <div class="col-md-4">
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (Apoderado)">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-4">
-                                    <mat-form-field>
-                                      <input   (dateChange)="validateEdadCodeudor($event.value)"
-                                      matInput #inputFechaNacimientoCodeudor [matDatepicker]="pickerFechaNacimientoCodeudor"
-                                        placeholder="Fecha de Nacimiento Codeudor" [formControl]="fechaNacimientoCodeudor"
-                                        />
-                                      <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimientoCodeudor"></mat-datepicker-toggle>
-                                      <mat-datepicker #pickerFechaNacimientoCodeudor></mat-datepicker>
-                                      <mat-error *ngIf="validateEdadCodeudor(fechaNacimientoCodeudor.value)"> la edad tiene  ser menor a 65</mat-error>
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input matInput [formControl]="nombreCompletoApoderado" placeholder="Nombre Completo (Apoderado)">
                                     </mat-form-field>
-                                  </div>
                                 </div>
-
-                                <button mat-button  (click)="generarCredito()">Generar Credito
-                                </button>
+                                <div class="col-md-4">
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input (dateChange)="validarEdadCodeudor($event.value)" matInput
+                                            #inputFechaNacimientoApoderado [matDatepicker]="pickerFechaNacimientoApoderado"
+                                            placeholder="Fecha de Nacimiento (Apoderado)" [formControl]="fechaNacimientoApoderado" />
+                                        <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimientoApoderado">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #pickerFechaNacimientoApoderado></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 offset-md-5">
+                            <button mat-raised-button color="primary" (click)="generarCredito()"> Generar Credito </button>
+                        </div>
+                    </div>
+                </form>
             </mat-step>
-            <mat-step label="Datos del Credito nuevo">                    <!-- Todo: Cambiar-->
-
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Tipo de Cartera:</label>
+            <mat-step label="Datos del Credito nuevo" [stepControl]="formCredito">
+                <form [formGroup]="formCredito">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="tipoCartera" readonly placeholder="Tipo de Cartera">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="descripcionProducto"  readonly placeholder="Descripcion del producto">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="destinoOperacion" readonly placeholder="Destino de la operacion">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="estadoOperacionSoft" readonly placeholder="Estado de la operacion">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="tipoOperacion" readonly placeholder="Tipo de operacion">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="plazo" readonly placeholder="Plazo">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="fechaEfectiva" readonly placeholder="Fecha Efectiva">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="fechaVencimiento" readonly placeholder="Fecha de Vencimiento">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="montoFinanciado" readonly placeholder="Monto Financiado">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="valorDesembolso" readonly placeholder="Valor Desembolso">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="totalInteres" readonly placeholder="Total interes">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="cuotas" readonly placeholder="Cuotas">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="pagarCliente" readonly placeholder="A pagar por cliente">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="riesgoTotalCliente" readonly placeholder="Riesgo Total Cliente">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="recibirCliente" readonly placeholder="A Recibir Cliente">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="netoCliente" readonly placeholder="Neto Al Cliente">
+                            </mat-form-field>
+                        </div>
                     </div>
-                    <div class="col-md-2">
-                        <mat-form-field>
-                                <input matInput [formControl]="tipoCartera" placeholder="">
-                                       
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Descripcion del producto</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="descripcionProducto" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Destino de la operacion:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field>
-                            <input matInput [formControl]="destinoOperacion" readonly>
-                                         
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Estado de la operacion:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field>
-                             <input matInput [formControl]="estadoOperacion" readonly>                   
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Tipo de Operacion:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field>
-                            <mat-select placeholder="Estado de la Operacion" [formControl]="estadoOperacion">
-                                <mat-option *ngFor="let estadoOp of estadoOp" [value]="estadoOp">
-                                    {{estadoOp}}
-                                </mat-option>
-                            </mat-select>                     
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Plazo:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="plazo" placeholder="">
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <mat-form-field>
-                          <input   (dateChange)="validacionFecha()"
-                          matInput #inputfechaEfectiva [matDatepicker]="pickerfechaEfectiva"
-                            placeholder="Fecha Efectiva" [formControl]="fechaEfectiva"
-                            />
-                          <mat-datepicker-toggle matSuffix [for]="pickerfechaEfectiva"></mat-datepicker-toggle>
-                          <mat-datepicker #pickerfechaEfectiva></mat-datepicker>
-                        </mat-form-field>
-                      </div>
-
-                      <div class="col-md-4">
-                        <mat-form-field>
-                          <input   (dateChange)="validacionFecha()"
-                          matInput #inputfechaVencimiento [matDatepicker]="pickerfechaVencimiento"
-                            placeholder="Fecha de Vencimiento" [formControl]="fechaVencimiento"
-                            />
-                          <mat-datepicker-toggle matSuffix [for]="pickerfechaVencimiento"></mat-datepicker-toggle>
-                          <mat-datepicker #pickerfechaVencimiento></mat-datepicker>
-                        </mat-form-field>
-                      </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Monto Financiado:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="montoFinanciado" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Valor Desembolso:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="valorDesembolso" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Total interes:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="totalInteres" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Cuotas:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="cuotas" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">A pagar por cliente:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="pagarCliente" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Riesgo Total Cliente:</label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="riesgoTotalCliente" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-1">
-                        <label style="font-weight:bold">A Recibir Cliente:</label>
-                    </div>
-                    <div class="col-md-1">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="recibirCliente" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-1">
-                        <label style="font-weight:bold">Neto Al Cliente:</label>
-                    </div>
-                    <div class="col-md-1">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="netoCliente" placeholder="">
-                        </mat-form-field>
-                    </div>
-                    
-                </div>
+                </form>
             </mat-step>
-            
-            <mat-step label = "Documento Habilitantes">
-                <re-habilitante [proceso]="proceso" [useType]="'FORM'" [referencia]="'2'" [rol]="'1'">
-                </re-habilitante>
-                <div>
-                    <button mat-button  (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
-                </div>
-                
+
+            <mat-step label="Documento Habilitantes">
+                <ng-container *ngIf="existeCredito">
+                    <re-habilitante [proceso]="'CREDITONUEVO'" [useType]="'LIST'" [tipoDocumento]="'5'" [referencia]="this.operacionNuevo.credito.id" [rol]="'7'"> </re-habilitante>
+                    <div class="row">
+                        <div class="col-md-4 offset-md-5">
+                            <button mat-button (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
+                        </div>
+                    </div>
+                </ng-container>
             </mat-step>
         </mat-vertical-stepper>
-
     </re-portlet-body>
-
 </re-portlet>

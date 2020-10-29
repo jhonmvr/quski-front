@@ -23,10 +23,25 @@ export class CreditoNegociacionService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
+  /**
+   * @author Jeroham Cadenas
+   * @param data EnviarOperacion (Interface)
+   */
+  public crearOperacionNuevo( data: any) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest + "crearOperacionNuevo" ;
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, data, this.options);
+  }
 
   public traerCreditoNegociacionExistente(id: number) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerCreditoNegociacionExistente';
     this.params = new HttpParams().set('id', id.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  public traerCreditoNuevo(idNegociacion: number) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerCreditoNuevo';
+    this.params = new HttpParams().set('idNegociacion', idNegociacion.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }

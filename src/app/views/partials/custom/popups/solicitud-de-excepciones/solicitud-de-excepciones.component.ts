@@ -8,7 +8,7 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { BehaviorSubject } from 'rxjs';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { AuthDialogComponent } from '../../auth-dialog/auth-dialog.component';
-import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { environment } from '../../../../../../../src/environments/environment';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
@@ -101,7 +101,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
   enviarSolicitud(){
     if(this.formExcepciones.valid){
       this.loadingSubject.next(true);
-      const excepcion: TbQoExcepcione = new TbQoExcepcione();
+      const excepcion: TbQoExcepcion = new TbQoExcepcion();
       excepcion.idAsesor = this.usuario;
       excepcion.tipoExcepcion = this.tipoExcep;
       excepcion.observacionAsesor = this.observacionAsesor.value;
@@ -147,7 +147,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
       this.tipoExcep = null;
     }
   }
-  private salir(result: TbQoExcepcione) {
+  private salir(result: TbQoExcepcion) {
     this.dialogRef.close(result);
   }
   public abrirSubBotonesM() {

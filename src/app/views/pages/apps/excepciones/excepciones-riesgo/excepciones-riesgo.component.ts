@@ -17,7 +17,7 @@ import { environment } from '../../../../../../environments/environment';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
-import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
@@ -35,7 +35,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
 
   public entidadCliente: TbQoCliente = null;
   private entidadNegociacion: TbQoNegociacion = null;
-  private entidadExcepcion: TbQoExcepcione = null;
+  private entidadExcepcion: TbQoExcepcion = null;
   private procesoEntidad: TbQoProceso;
 
   // STANDARD VARIABLES
@@ -49,7 +49,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public mensaje: any;
-  public listExepcion = new Array<TbQoExcepcione>();
+  public listExepcion = new Array<TbQoExcepcion>();
   public loading;
 
 

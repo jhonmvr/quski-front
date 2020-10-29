@@ -9,7 +9,7 @@ import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { constructor } from 'lodash';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
-import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
 import { AprobacionWrapper } from '../../../../../core/model/wrapper/AprobacionWrapper';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -46,7 +46,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   private entidadCliente: TbQoCliente = null;
   private entidadProceso: TbQoProceso = null;
   private entidadNegociacion: TbQoNegociacion = null;
-  private entidadExcepcion: TbQoExcepcione = null;
+  private entidadExcepcion: TbQoExcepcion = null;
   private entidadDirecciones = new Array<TbQoDireccionCliente>();
   private entdidadPatrimonio = new Array<TbQoPatrimonioCliente>();
   private entidadIngresoEgreso = new Array<TbQoIngresoEgresoCliente>();
@@ -527,10 +527,9 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.montoSolicitado.setValue(this.entidadCreditoNegociacion.montoSolicitado);
     this.montoDiferido.setValue(this.entidadCreditoNegociacion.montoDiferido);
     this.plazo.setValue(this.entidadCreditoNegociacion.plazoCredito);
-    console.log('ENTIDAD CREDITO NEGOCIACION ', this.entidadCreditoNegociacion.costoResguardo);
     this.tipoOperacion.setValue(this.entidadCreditoNegociacion.tipo);
     this.tipoOferta.setValue(this.entidadProceso.proceso);
-    this.costoCustodia.setValue(this.entidadCreditoNegociacion.costoCustodia);
+/*     this.costoCustodia.setValue(this.entidadCreditoNegociacion.costoCustodia);
     this.formaPagoCustodia.setValue(this.entidadCreditoNegociacion.formaPagoCustodia);
     this.costoTransporte.setValue(this.entidadCreditoNegociacion.costoTransporte);
     this.formaPagoTransporte.setValue(this.entidadCreditoNegociacion.formaPagoTransporte);
@@ -544,10 +543,10 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.formaPagoSeguro.setValue(this.entidadCreditoNegociacion.formaPagoSeguro);
     this.solca.setValue(this.entidadCreditoNegociacion.solca);
     this.formaPagoSolca.setValue(this.entidadCreditoNegociacion.formaPagoSolca);
-    this.montoDesembolsoBallon.setValue(this.entidadCreditoNegociacion.montoDesembolsoBallon);
-    this.aPagarCliente.setValue(this.entidadCreditoNegociacion.aPagarCliente);
+    this.montoDesembolsoBallon.setValue(this.entidadCreditoNegociacion.montoDesembolsoBallon); */
+    this.aPagarCliente.setValue(this.entidadCreditoNegociacion.apagarCliente);
     this.riesgoTotalCliente.setValue(this.entidadCreditoNegociacion.riesgoTotalCliente);
-    this.aRecibirCliente.setValue(this.entidadCreditoNegociacion.aRecibirCliente);
+    this.aRecibirCliente.setValue(this.entidadCreditoNegociacion.arecibirCliente);
     this.netoAlCliente.setValue(this.entidadCreditoNegociacion.netoAlCliente);
 
 

@@ -1,7 +1,7 @@
 import { TbQoCliente } from '../quski/TbQoCliente';
 import { TbQoCreditoNegociacion } from '../quski/TbQoCreditoNegociacion';
 import { TbQoDireccionCliente } from '../quski/TbQoDireccionCliente';
-import { TbQoExcepcione } from '../quski/TbQoExcepcione';
+import { TbQoExcepcion } from '../quski/TbQoExcepcion';
 import { TbQoIngresoEgresoCliente } from '../quski/TbQoIngresoEgresoCliente';
 import { TbQoPatrimonioCliente } from '../quski/TbQoPatrimonioCliente';
 import { TbQoProceso } from '../quski/TbQoProceso';
@@ -22,7 +22,7 @@ export class AprobacionWrapper {
     proceso: TbQoProceso;
 
 
-    excepciones: TbQoExcepcione[];
+    excepciones: TbQoExcepcion[];
 
     excepcionBre: string;
     respuesta: boolean;

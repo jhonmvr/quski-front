@@ -73,11 +73,15 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				redirectTo: 'generar-credito',
+				redirectTo: 'lista-credito',
 				pathMatch: 'full'
 			},
 			{
 				path: 'generar-credito',
+				component: GenerarCreditoComponent
+			},
+			{
+				path: 'generar-credito/:id',
 				component: GenerarCreditoComponent
 			},
 

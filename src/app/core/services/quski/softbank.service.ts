@@ -7,7 +7,6 @@ import { EditarCliente } from '../../model/softbank/EditarCliente';
 import { SimulacionPrecancelacion } from '../../model/softbank/SimulacionPrecancelacion';
 import { OperacionCancelar } from '../../model/softbank/OperacionCancelar';
 import { OperacionAbono } from '../../model/softbank/OperacionAbono';
-import { OperacionCrear } from '../../model/softbank/OperacionCrear';
 import { SimulacionTablaAmortizacion } from '../../model/softbank/SimulacionTablaAmortizacion';
 import { ConsultaSolca } from '../../model/softbank/ConsultaSolca';
 import { OperacionRenovar } from '../../model/softbank/OperacionRenovar';
@@ -597,17 +596,17 @@ export class SoftbankService extends BaseService {
   /** 
    * ************************************* @CREDITOS_OPERACION
    */
-  /**
+ /**
    * @author Jeroham Cadenas - Developer Twelve
    * @description Crea una operacion nueva.
    * @param operacionCrear 
    */
-  operacionCrearCS( operacionCrear : OperacionCrear ) {
+  /*  operacionCrearCS( operacionCrear : OperacionCrear ) {
     let serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/crearOperacion" ;
     let wrapper =  operacionCrear;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
-  } 
+  }  */
   /**
    * @author Jeroham Cadenas - Developer Twelve
    * @description Renova una operacion existente.

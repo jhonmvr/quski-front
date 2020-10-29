@@ -9,7 +9,7 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
-import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { EstadoExcepcionEnum } from '../../../../../core/enum/EstadoExcepcionEnum';
@@ -36,7 +36,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   private entidadNegociacion: TbQoNegociacion = null;
   private entidadesOpcionesCreditos: Array<OpcionesDeCredito> = null;
   private entidadCliente: TbQoCliente = null;
-  private entidadExcepcion: TbQoExcepcione = null;
+  private entidadExcepcion: TbQoExcepcion = null;
   private procesoEntidad: TbQoProceso;
   // STANDARD VARIABLES
   private idNegociacion: number;
@@ -58,7 +58,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   // OBJETOS DE ENTIDADES
   private negociacion: TbQoNegociacion;
   private cliente: TbQoCliente;
-  private excepcion: TbQoExcepcione;
+  private excepcion: TbQoExcepcion;
   private variablesCre: Array<TbQoVariablesCrediticia>;
   private riesgoAcumul: Array<TbQoRiesgoAcumulado>;
   private tasacion: Array<TbQoTasacion>;
