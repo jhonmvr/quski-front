@@ -19,7 +19,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="codigo" placeholder="Codigo BPM" autocomplete="on" matInput />
+                                <input [formControl]="codigo" placeholder="Codigo BPM" autocomplete="off" matInput />
                                 <mat-error>{{ getErrorMessage("codigo") }}</mat-error>
                             </mat-form-field>
                         </div>
@@ -67,9 +67,13 @@
                             </ng-container>
                         </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="codigo">
-                        <mat-header-cell *matHeaderCellDef >Codigo BPM</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.codigo | uppercase  }}</mat-cell>
+                    <ng-container matColumnDef="codigoBpm">
+                        <mat-header-cell *matHeaderCellDef >Codigo Bpm</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.codigoBpm | uppercase  }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="codigoOperacion">
+                        <mat-header-cell *matHeaderCellDef >Codigo Operacion</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.codigoOperacion | uppercase  }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="proceso">
                         <mat-header-cell *matHeaderCellDef >Proceso</mat-header-cell>

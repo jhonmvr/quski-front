@@ -43,7 +43,7 @@ export class BandejaAprobadorComponent implements OnInit {
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   dataSource = new MatTableDataSource<OperacionesAprobadorWrapper>();
-  displayedColumns = ['accion', 'codigo', 'proceso', 'fechaSolicitud', 'cedulaCliente', 'nombreCliente', 'nombreAgencia', 'asesor', 'aprobador'];
+  displayedColumns = ['accion', 'codigoBpm', 'codigoOperacion', 'proceso', 'fechaSolicitud', 'cedulaCliente', 'nombreCliente', 'nombreAgencia', 'asesor', 'aprobador'];
   constructor(
     private pro: ProcesoService,
     private sof: SoftbankService,
@@ -211,8 +211,8 @@ export class BandejaAprobadorComponent implements OnInit {
   }
   public abrirSolicitud(row: OperacionesAprobadorWrapper ){
     let mensaje = row.aprobador == 'Libre'
-      ? 'Tomar y gestionar la operacion '+row.codigo+'.' 
-      : 'Tomar la operacion '+row.codigo+', que actualmente esta tomada por: '+ row.aprobador;
+      ? 'Tomar y gestionar la operacion '+row.codigoBpm+'.' 
+      : 'Tomar la operacion '+row.codigoBpm+', que actualmente esta tomada por: '+ row.aprobador;
 
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
         width: "800px",
@@ -224,8 +224,8 @@ export class BandejaAprobadorComponent implements OnInit {
           if(row.id != null){
             if(row.proceso =="NUEVO"){
               this.limpiarFiltros();
-              this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.codigo.replace('NUEV','')]);    
-              console.log('id credito -> ', row.codigo.replace('NUEV', '') );
+              this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.codigoBpm.replace('NUEV','')]);    
+              console.log('id credito -> ', row.codigoBpm.replace('NUEV', '') );
             }
             if(row.proceso =="RENOVACION"){
               this.sinNotSer.setNotice("APROBACION RENOVACION, SIN DESARROLLO","error");

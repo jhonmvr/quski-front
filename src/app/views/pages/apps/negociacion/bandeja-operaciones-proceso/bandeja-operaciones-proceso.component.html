@@ -99,6 +99,10 @@
                             
                         </mat-cell>
                     </ng-container>
+                    <ng-container matColumnDef="codigoBpm">
+                        <mat-header-cell *matHeaderCellDef >Codigo Bpm</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.codigoBpm | uppercase  }}</mat-cell>
+                    </ng-container>
                     <ng-container matColumnDef="codigoOperacion">
                         <mat-header-cell *matHeaderCellDef >Codigo Operacion</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ element.codigoOperacion | uppercase  }}</mat-cell>

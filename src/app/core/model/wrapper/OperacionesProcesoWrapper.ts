@@ -1,5 +1,6 @@
 export class OperacionesProcesoWrapper {
     id: number;
+    codigoBpm: string;
     codigoOperacion: string;
     nombreCliente: string;
     cedulaCliente: string;

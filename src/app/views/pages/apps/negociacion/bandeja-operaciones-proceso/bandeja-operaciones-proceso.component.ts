@@ -53,7 +53,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   dataSource = new MatTableDataSource<OperacionesProcesoWrapper>();
-  displayedColumns = ['Accion', 'codigoOperacion', 'nombreCliente', 'cedulaCliente', 'montoPreaprobado', 'fechaCreacion', 'agencia', 'estadoProceso', 'proceso', 'asesor', 'usuarioEjecutor','actividad'];
+  displayedColumns = ['Accion', 'codigoBpm', 'codigoOperacion', 'nombreCliente', 'cedulaCliente', 'montoPreaprobado', 'fechaCreacion', 'agencia', 'estadoProceso', 'proceso', 'asesor', 'usuarioEjecutor','actividad'];
 
   constructor(
     private pro: ProcesoService,
@@ -74,8 +74,8 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
 
   ngOnInit() {
     this.loading = this.loadingSubject.asObservable();
-    //this.usuario = atob(localStorage.getItem(environment.userKey)).toUpperCase();
-    this.usuario = 'Jero';
+    this.usuario = atob(localStorage.getItem(environment.userKey));
+    //this.usuario = 'Jero';
     //this.rol = "SUPERVISOR"; 
     this.rol = "ASESOR";
     this.cargarCatalogosOperacionesAndEnums();
