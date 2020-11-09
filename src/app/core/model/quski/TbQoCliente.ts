@@ -1,20 +1,19 @@
 import { TbReferencia } from './TbReferencia';
 import { TbQoDireccionCliente } from './TbQoDireccionCliente';
-import { TbQoPatrimonioCliente } from './TbQoPatrimonioCliente';
 import { TbQoIngresoEgresoCliente } from './TbQoIngresoEgresoCliente';
 import { TbQoCotizador } from './TbQoCotizador';
+import { TbQoPatrimonio } from './TbQoPatrimonio';
+import { TbQoTelefonoCliente } from './TbQoTelefonoCliente';
 
 export class TbQoCliente {
   id: number;
   actividadEconomica: string;
-  actividadEconomicaEmpresa: string;
   apellidoMaterno: string;
   apellidoPaterno: string;
   apoderadoCliente: string;
   campania: string;
   canalContacto: string;
   cargasFamiliares: number;
-  cargo: string;
   cedulaCliente: string;
   edad: number;
   email: string;
@@ -27,19 +26,12 @@ export class TbQoCliente {
   lugarNacimiento: string;
   nacionalidad: string;
   nivelEducacion: string;
-  nombreEmpresa: string;
-  ocupacion: string;
   origenIngreso: string;
   primerNombre: string;
   profesion: string;
   publicidad: string;
-  relacionDependencia: string;
   segundoNombre: string;
   separacionBienes: string;
-  telefonoAdicional: string;
-  telefonoFijo: string;
-  telefonoMovil: string;
-  telefonoTrabajo: string;
   aprobacionMupi: string;
   nombreCompleto: string;
 
@@ -49,14 +41,15 @@ export class TbQoCliente {
   tbQoCotizador: TbQoCotizador[];
   tbQoDocumentoHabilitantes: null;
   tbQoNegociacions: null;
+  tbQoTelefonosClientes: TbQoTelefonoCliente[];
   tbQoDireccionClientes: TbQoDireccionCliente[];
-  tbQoPatrimonios: TbQoPatrimonioCliente[];
+  tbQoPatrimonios: TbQoPatrimonio[];
   tbQoReferenciaPersonals: TbReferencia[];
   tbQoIngresoEgresoClientes: TbQoIngresoEgresoCliente[];
   tbQoRiesgoAcumulados: null;
   constructor() {
     this.tbQoIngresoEgresoClientes = new Array<TbQoIngresoEgresoCliente>();
-    this.tbQoPatrimonios = new Array<TbQoPatrimonioCliente>();
+    this.tbQoPatrimonios = new Array<TbQoPatrimonio>();
     this.tbQoReferenciaPersonals = new Array<TbReferencia>();
     this.tbQoDireccionClientes = new Array<TbQoDireccionCliente>();
   }

@@ -1,31 +1,28 @@
-<div class="spinner-container" *ngIf=" cliente">
-  <mat-spinner class="spiner"></mat-spinner>
+<div class="spinner-container" *ngIf="loading | async">
+	<mat-spinner class="spiner"></mat-spinner>
 </div>
 
 <re-portlet>
   <re-portlet-header [title]="'Creacion/Actualizacion Clientes'"[class]="'kt-portlet__head--lg'">
     <ng-container ktPortletTools>
-      <!--<a [routerLink]="['../../']" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
-        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">arrow_back</mat-icon>
+      <a href="javascript:void(0);" matTooltip="Regresar a Negociacion" style="font-size: 12px; vertical-align: middle;">
         <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
-      </a>-->
-      <a href="javascript:void(0);" matTooltip="Guardar" (click)="guardar()" style="font-size: 12px; vertical-align: middle;">
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">arrow_back</mat-icon>
+      </a>
+      <a href="javascript:void(0);"  matTooltip="Regresar a la creacion de Credito" (click)="guardar()" style="font-size: 12px; vertical-align: middle;">
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Avanzar</span>
         <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save</mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Guardar</span>
       </a>
     </ng-container>
   </re-portlet-header>
   <re-portlet-body>
-    <!--START FORMS-->
-    <!-- DATOS PERSONALES -->
-    <mat-vertical-stepper>
+
+    <mat-vertical-stepper [linear]="false" #stepper>
       <mat-step label="Datos Personales" [stepControl]="formCliente">
         <form [formGroup]="formCliente">
           <div class="row mb-5">
             <div  class="col-md-4" >
-              <button mat-button (click)=" cargarComponenteHabilitante()">
-                Documentos Habilitantes
-              </button>
+              <button mat-button (click)=" cargarComponenteHabilitante()"> Documentos Habilitantes</button>
             </div>
           </div>
           <div class="form-group row">
@@ -58,8 +55,8 @@
                 <mat-select
                   placeholder="Nivel de Educación:"
                   [formControl]="nivelEducacion">
-                  <mat-option *ngFor="let nivelEducacion of listnombreEducacion" [value]="nivelEducacion" required>
-                    {{ nivelEducacion.nombre }}
+                  <mat-option *ngFor="let element of catEducacion" [value]="element" required>
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -78,24 +75,24 @@
                 <mat-error>{{ getErrorMessage("apellidoMaterno") }}</mat-error>
               </mat-form-field>
             </div>
-            <!--<div class="col-md-4">
+            <div class="col-md-4">
               <mat-form-field>
                 <mat-select  placeholder="Separación de Bienes:" [formControl]="separacionBienes" required>
-                  <mat-option>--</mat-option>
-                  <mat-option *ngFor="let separacionBienes of listSeparacionBienes"  [value]="separacionBienes">
-                    {{ separacionBienes }}
+                  <mat-option>NO APLICA</mat-option>
+                  <mat-option *ngFor="let element of catSeparacionBienes"  [value]="element">
+                    {{ element }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-            </div>-->
+            </div>
           </div>
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field>
                 <mat-select placeholder="Género:" [formControl]="genero" required>
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let genero of listNombreGenero" [value]="genero">
-                    {{ genero.nombre }}
+                  <mat-option *ngFor="let element of catGenero" [value]="element">
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("genero") }}</mat-error>
@@ -103,10 +100,10 @@
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <mat-select placeholder="Estado Civil:" [formControl]="estadoCivil"  required> <!--(selectionChange)="habilitarCampo()"-->
+                <mat-select placeholder="Estado Civil:" [formControl]="estadoCivil"  required (selectionChange)="habilitarCampo()">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let estadoCivil of listNombreEstadoCivil" [value]="estadoCivil">
-                    {{ estadoCivil.nombre }}
+                  <mat-option *ngFor="let element of catEstadoCivil" [value]="element">
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("estadoCivil") }}</mat-error>
@@ -134,8 +131,8 @@
               <mat-form-field>
                 <mat-select placeholder="Nacionalidad:" [formControl]="nacionalidad" required>
                   <mat-option> -- </mat-option>
-                  <mat-option *ngFor="let paises of listNombrePais" [value]="paises">
-                    {{ paises.nombre }}
+                  <mat-option *ngFor="let element of catPais" [value]="element">
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("nacionalidad") }}</mat-error>
@@ -146,7 +143,7 @@
                 <mat-form-field class= "example-full-width">
                   <input placeholder="Lugar de Nacimiento:" type= "text" matInput required [formControl]= "lugarNacimiento" [matAutocomplete]="auto4">
                     <mat-autocomplete #auto4="matAutocomplete" [displayWith]="displayFn">
-                    <mat-option *ngFor="let name of filteredOptions | async" [value]="name">
+                    <mat-option *ngFor="let name of catFiltradoLugarNacimiento | async" [value]="name">
                       {{name.nombre}}
                     </mat-option>
                   </mat-autocomplete>
@@ -166,8 +163,8 @@
               <mat-form-field class= "example-full-width">
                 <input placeholder="Actividad Económica:" type= "text" matInput [formControl]="actividadEconomica " required [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                  <mat-option *ngFor="let actividadC of listActividadEconomica " [value]="actividadC">
-                    {{ actividadC.nombre}}
+                  <mat-option *ngFor="let element of catActividadEconomica " [value]="element">
+                    {{ element.nombre}}
                   </mat-option>
                 </mat-autocomplete>
                 <mat-error>{{ getErrorMessage("actividadEconomica") }}</mat-error>
@@ -238,10 +235,10 @@
         <form [formGroup]="formDatosDireccionDomicilio">
           <div class="form-group row">
             <div class="col-md-4">
-              <mat-checkbox (change)="direccionLegalD()" [formControl]="drLgDo">Es Dirección Legal</mat-checkbox>
+              <mat-checkbox (change)="direccionLegalD()" [formControl]="direccionLegalDomicilio">Es Dirección Legal</mat-checkbox>
             </div>
             <div class="col-md-4">
-              <mat-checkbox (change)="direccionCorreoD()" [formControl]="drCrDo">Es Dirección Envio Correspondencia</mat-checkbox>
+              <mat-checkbox (change)="direccionCorreoD()" [formControl]="direccionCorreoDomicilio">Es Dirección Envio Correspondencia</mat-checkbox>
             </div>
           </div>
           <div class="form-group row">
@@ -250,7 +247,7 @@
                 <mat-form-field class= "example-full-width">
                 <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :"[matAutocomplete]="auto2" [formControl]= "ubicacion" > <!--(selectionChange)="crearUbicacionDomicilio()"-->
                   <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">
-                    <mat-option *ngFor="let Dd of filteredOptions2 | async" [value]="Dd">
+                    <mat-option *ngFor="let Dd of catFiltradoUbicacionDomicilio | async" [value]="Dd">
                       {{Dd.nombre}}
                     </mat-option>
                   </mat-autocomplete>
@@ -268,8 +265,8 @@
               <mat-form-field>
                 <mat-select required placeholder="Sector:" [formControl]="sector">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let sector of listNombreSectorVivienda" [value]="sector">
-                     {{ sector }}
+                  <mat-option *ngFor="let element of catSectorVivienda" [value]="element">
+                     {{ element.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("sector") }}</mat-error>
@@ -307,8 +304,8 @@
               <mat-form-field>
                 <mat-select placeholder="Tipo de Vivienda:" required [formControl]="tipoVivienda">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let tipoVivienda of listNombreTipoVivienda" [value]="tipoVivienda">
-                    {{ tipoVivienda }}
+                  <mat-option *ngFor="let element of catTipoVivienda" [value]="element">
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("tipoVivienda") }}</mat-error>
@@ -323,19 +320,19 @@
         <form [formGroup]="formDatosDireccionLaboral">
           <div class="form-group row">
             <div class="col-md-4">
-              <mat-checkbox (change)="direccionLegalL()" [formControl]="drLgLb">Es Dirección Legal</mat-checkbox>
+              <mat-checkbox (change)="direccionLegalL()" [formControl]="direccionLegalLaboral">Es Dirección Legal</mat-checkbox>
             </div>
             <div class="col-md-4">
-              <mat-checkbox (change)="direccionCorreoL()" [formControl]="drCrLb">Es Dirección Envio Correspondencia</mat-checkbox>
+              <mat-checkbox (change)="direccionCorreoL()" [formControl]="direccionCorreoLaboral">Es Dirección Envio Correspondencia</mat-checkbox>
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-4">
               
                 <mat-form-field class= "example-full-width">
-                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :" [matAutocomplete]="auto1" required [formControl]= "ubicacionO"  > <!--(selectionChange)="crearUbicacionLaboral()"-->
+                <input matInput type= "text" placeholder="Parroquia / Canton / Provincia :" [matAutocomplete]="auto1" required [formControl]= "ubicacionO"  >
                 <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">
-                  <mat-option *ngFor="let asd of filteredOptions3 | async" [value]="asd">
+                  <mat-option *ngFor="let asd of catFiltradoUbicacionLaboral | async" [value]="asd">
                     {{asd.nombre}}
                   </mat-option>
                 </mat-autocomplete>
@@ -353,8 +350,8 @@
               <mat-form-field>
                 <mat-select required placeholder="Sector:" [formControl]="sectorO">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let sectorO of listNombreSectorVivienda" [value]="sectorO">
-                    {{ sectorO }}
+                  <mat-option *ngFor="let element of catSectorVivienda" [value]="element">
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("sectorO") }}</mat-error>
@@ -395,8 +392,8 @@
               <mat-form-field>
                 <mat-select placeholder="Tipo de Vivienda:" required [formControl]="tipoViviendaO">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let tipoViviendaO of listNombreTipoVivienda" [value]="tipoViviendaO">
-                    {{ tipoViviendaO }}
+                  <mat-option *ngFor="let element of catTipoVivienda" [value]="element">
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("tipoViviendaO") }}</mat-error>
@@ -414,8 +411,8 @@
               <mat-form-field>
                 <mat-select placeholder="Origen Ingreso:" required [formControl]="origenIngresos" (selectionChange)="setRelacionDependencia()">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let origenIngresos of listOrigenIngreso" [value]="origenIngresos">
-                    {{ origenIngresos }}
+                  <mat-option *ngFor="let element of catOrigenIngreso" [value]="element">
+                    {{ element }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("origenIngresos") }}</mat-error>
@@ -431,8 +428,8 @@
               <mat-form-field>
                 <mat-select placeholder="Actividad Económica:" required [formControl]="actividadEconomicaEmpresa">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let actividadC of listActividadEconomica" [value]="actividadC">
-                    {{ actividadC.nombre }}
+                  <mat-option *ngFor="let element of catActividadEconomica" [value]="element">
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -450,7 +447,12 @@
             </div>
             <div class="col-md-4">
               <mat-form-field>
-                <input matInput placeholder="Cargo:" [formControl]="cargo" required />
+                <mat-select placeholder="Cargo:" [formControl]="cargo" required>
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let element of catCargo" [value]="element">
+                    {{ element.nombre }}
+                  </mat-option>
+                </mat-select>
                 <mat-error>{{ getErrorMessage("cargo") }}</mat-error>
               </mat-form-field>
             </div>
@@ -458,8 +460,8 @@
               <mat-form-field>
                 <mat-select placeholder="Profesión:" [formControl]="profesion" required>
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let profesion of listNombreProfesion" [value]="profesion">
-                    {{ profesion.nombre }}
+                  <mat-option *ngFor="let element of catProfesion" [value]="element">
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("profesion") }}</mat-error>
@@ -471,8 +473,8 @@
               <mat-form-field>
                 <mat-select placeholder="Ocupación:" [formControl]="ocupacion" required>
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let ocupacion of listNombreOcupacion" [value]="ocupacion">
-                    {{ ocupacion.nombre }}
+                  <mat-option *ngFor="let element of catOcupacion" [value]="element">
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("ocupacion") }}</mat-error>
@@ -688,8 +690,8 @@
               <mat-form-field>
                 <mat-select placeholder="Parentesco:" [formControl]="parentescoR"  required>
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let referencia of listNombreTipoReferencia" [value]="referencia">
-                    {{ referencia }}
+                  <mat-option *ngFor="let element of catTipoReferencia" [value]="element">
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("parentescoR") }}</mat-error>

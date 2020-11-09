@@ -156,7 +156,7 @@ export class SoftbankService extends BaseService {
    * @author Oscar Romero - Developer five
    * @description Catalogos pais
    */
-  consultarPaisCS() {
+  public consultarPaisCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "pais" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
@@ -377,7 +377,7 @@ export class SoftbankService extends BaseService {
    * @author Jeroham Cadenas - Developer Twelve
    * @description Catalogos Actividad Economica
    */
-  consultarActividadEconomicaCS() {
+  public consultarActividadEconomicaCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "actividadeconomica" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
@@ -413,10 +413,6 @@ export class SoftbankService extends BaseService {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
-  /**
-   * @author Jeroham Cadenas - Developer Twelve
-   * @description Catalogos Vivienda
-   */
   /*consultarViviendaCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "vivienda" ;
     let wrapper =  "";
@@ -459,6 +455,12 @@ export class SoftbankService extends BaseService {
    */
   consultarTipoReferenciaCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tiporeferencia" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  }
+  consultarCargoOcupacion() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "cargoocupacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);

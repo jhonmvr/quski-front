@@ -5,14 +5,12 @@ export class TbQoDireccionCliente {
     barrio: string;
     callePrincipal: string;
     calleSegundaria: string;
-    canton: string;
     direccionEnvioCorrespondencia: Boolean;
     direccionLegal: Boolean;
     numeracion: string;
-    parroquia :string;
-    provincia : string ;
     referenciaUbicacion : string ;
     sector : string ;
+    divisionPolitica: string;
     tipoDireccion : string ;
     tipoVivienda : string ;
     tbQoCliente : TbQoCliente;

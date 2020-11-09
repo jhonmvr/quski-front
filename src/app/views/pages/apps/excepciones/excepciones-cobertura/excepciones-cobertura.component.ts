@@ -23,6 +23,7 @@ import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import 'hammerjs';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
 
 
 @Component({
@@ -34,8 +35,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
 
   //ENTIDADES
   private entidadNegociacion: TbQoNegociacion = null;
-  private entidadesOpcionesCreditos: Array<OpcionesDeCredito> = null;
-  private entidadCliente: TbQoCliente = null;
+  wrapper: NegociacionWrapper;
   private entidadExcepcion: TbQoExcepcion = null;
   private procesoEntidad: TbQoProceso;
   // STANDARD VARIABLES
@@ -360,14 +360,13 @@ export class ExcepcionesCoberturaComponent implements OnInit {
         this.pro.findByIdReferencia(this.idNegociacion, "NUEVO").subscribe( (dataProceso: any)=>{
           if(dataProceso.entidad != null){
             this.procesoEntidad = dataProceso.entidad;
-            this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
+            this.neg.traerNegociacionExistente(this.idNegociacion).subscribe((data: any) => {
               if (data.entidad) {
                 console.log('VALOR DE LA NEGOCIACION findNegociacionById ', JSON.stringify(data));
     
-    
+                this.wrapper = data.entidad
                 this.capturaHoraAsignacion('NEGOCIACION');
-                this.entidadNegociacion = data.entidad;
-                this.entidadCliente = data.entidad.tbQoCliente;
+                this.entidadNegociacion = this.wrapper.credito.tbQoNegociacion;
     
                 console.log('VALORES DE LA ENTIDAD NEGOSCIA==> .id', this.entidadNegociacion.id);
                 this.buscarExcepciones(this.entidadNegociacion.id);
@@ -379,12 +378,23 @@ export class ExcepcionesCoberturaComponent implements OnInit {
                 this.dataPopup.isNegociacion = true;
                 // this.buscarExcepcion(this.entidadNegociacion.id);
                 if (data) {
-    
-    
-                  this.telefonoDomicilio.setValue(this.entidadNegociacion.tbQoCliente.telefonoFijo);
-                  this.telefonoMovil.setValue(this.entidadNegociacion.tbQoCliente.telefonoMovil);
-                  this.telefonoAdicional.setValue(this.entidadNegociacion.tbQoCliente.telefonoAdicional);
-                  this.telefonoOficinaOtros.setValue(this.entidadNegociacion.tbQoCliente.telefonoTrabajo);
+                  let idtlf = 0;
+                  this.wrapper.telefonos.forEach(e=>{
+                    if(e.tipoTelefono == "M"){
+                      if(idtlf == 0){
+                        idtlf = e.id; 
+                      }else{
+                        this.telefonoMovil.setValue(e.numero);
+                      }
+                      this.telefonoAdicional.setValue(e.numero);
+                    }
+                    if(e.tipoTelefono == "F"){
+                      this.telefonoDomicilio.setValue(e.numero);
+                    }
+                    if(e.tipoTelefono == "CEL"){
+                      this.telefonoOficinaOtros.setValue(e.numero);
+                    }
+                  });
                   this.correoElectronico.setValue(this.entidadNegociacion.tbQoCliente.email);
                   this.estadoNegociacion.setValue(this.procesoEntidad.estadoProceso);
                   this.fechaCreacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
@@ -413,17 +423,6 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     });
     this.loadingSubject.next(false);
   }
-
-
-
-
-
-
-  public traerEntidadesOpciones(event: Array<OpcionesDeCredito>) {
-    this.entidadesOpcionesCreditos = new Array<OpcionesDeCredito>();
-    this.entidadesOpcionesCreditos = event;
-  }
-
 
   asignarAprobacion() {
     console.log('ASIGNAR APROBACION');

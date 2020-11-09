@@ -380,10 +380,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
                 //INPUT RIESGO ACUMULADO
 
                 // FORM CONTACTO
-                this.telefonoDomicilio.setValue(this.entidadCliente.telefonoFijo);
-                this.telefonoAdicional.setValue(this.entidadCliente.telefonoAdicional);
-                this.telefonoMovil.setValue(this.entidadCliente.telefonoMovil);
-                this.telefonoOficina.setValue(this.entidadCliente.telefonoTrabajo);
+
                 this.correo.setValue(this.entidadCliente.email);
                 //FORM DATOS NEGOCIACION
                 //this.motivoNoAceptacion.setValue(this.entidadNegociacion.situacion);
@@ -455,10 +452,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
     //DATOS CONTACTO CLIENTE 
 
-    this.telefonoDomicilio.setValue(this.entidadCliente.telefonoFijo);
-    this.telefonoAdicional.setValue(this.entidadCliente.telefonoAdicional);
-    this.telefonoMovil.setValue(this.entidadCliente.telefonoMovil);
-    this.telefonoOficina.setValue(this.entidadCliente.telefonoTrabajo);
+
     this.correo.setValue(this.entidadCliente.email);
 
     //DIRECCION DOMICILIO Y LABORAL
@@ -494,12 +488,12 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
     //DATOS ECONOMICOS DEL CLIENTE
     this.origenIngresos.setValue(this.entidadCliente.origenIngreso);
-    this.nombreEmpresa.setValue(this.entidadCliente.nombreEmpresa);
+
     this.actividadEconomicaCliente.setValue(this.entidadCliente.actividadEconomica);
-    this.relacionDependencia.setValue(this.entidadCliente.relacionDependencia);
-    this.cargo.setValue(this.entidadCliente.cargo);
+
+
     this.profesion.setValue(this.entidadCliente.profesion);
-    this.ocupacion.setValue(this.entidadCliente.ocupacion);
+
 
     //DATOS PATRIMONIOS
 

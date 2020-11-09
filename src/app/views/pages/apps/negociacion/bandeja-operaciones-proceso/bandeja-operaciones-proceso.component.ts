@@ -305,4 +305,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     });
     
   }
+  public irNegociacion(){
+    this.router.navigate(['negociacion/gestion-negociacion']);    
+  }
 }

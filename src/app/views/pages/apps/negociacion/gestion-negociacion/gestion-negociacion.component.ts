@@ -340,8 +340,14 @@ export class GestionNegociacionComponent implements OnInit {
     this.fechaDeNacimiento.setValue(cliente.fechaNacimiento);
     this.cargarEdad();
     this.nacionalidad.setValue(cliente.nacionalidad);
-    this.movil.setValue(cliente.telefonoMovil);
-    this.telefonoDomicilio.setValue(cliente.telefonoFijo);
+    wrapper.telefonos.forEach(e=>{
+      if(e.tipoTelefono == "F"){
+        this.telefonoDomicilio.setValue(e.numero);
+      }
+      if(e.tipoTelefono == "M"){
+        this.movil.setValue(e.numero);
+      }
+    });
     this.email.setValue(cliente.email);
     this.campania.setValue( cliente.campania );
     this.publicidad.setValue ( cliente.publicidad );
