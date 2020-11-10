@@ -1,25 +1,22 @@
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
-import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
-import { DireccionClienteService } from '../../../../../core/services/quski/direccion-cliente.service';
 import { TbQoIngresoEgresoCliente } from '../../../../../core/model/quski/TbQoIngresoEgresoCliente';
 import { ClienteCompletoWrapper } from '../../../../../core/model/wrapper/ClienteCompletoWrapper';
+import { TbQoDatoTrabajoCliente } from '../../../../../core/model/quski/TbQoDatoTrabajoCliente';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { TbQoDireccionCliente } from '../../../../../core/model/quski/TbQoDireccionCliente';
-import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { RelacionDependenciaEnum } from '../../../../../core/enum/RelacionDependenciaEnum';
+import { TbQoTelefonoCliente } from '../../../../../core/model/quski/TbQoTelefonoCliente';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { SeparacionBienesEnum } from '../../../../../core/enum/SeparacionBienesEnum';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { ParaDesarrolloEnum } from '../../../../../core/enum/ParaDesarrolloEnum';
 import { OrigenIngresosEnum } from '../../../../../core/enum/OrigenIngresosEnum';
 import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
-import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource, MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -41,6 +38,7 @@ export class GestionClienteComponent implements OnInit {
   /** @STANDAR_VARIABLES **/
   private loadingSubject = new BehaviorSubject<boolean>(false);
   private wrapper: ClienteCompletoWrapper;
+  private idNegociacion;
   public loading;
   public totalActivo: number = 0;
   public totalPasivo: number = 0;
@@ -232,23 +230,25 @@ export class GestionClienteComponent implements OnInit {
     this.fechaNacimiento.setValue(this.wrapper.cliente.fechaNacimiento);
     this.onChangeFechaNacimiento();
     this.nivelEducacion.setValue( this.catEducacion.find(x => x.codigo == this.wrapper.cliente.nivelEducacion) );
-    let idtlf = 0;
-    this.wrapper.telefonos.forEach(e=>{
-      if(e.tipoTelefono == "M"){
-        if(idtlf == 0){
-          idtlf = e.id; 
-        }else{
-          this.telefonoMovil.setValue(e.numero);
+    if(this.wrapper.telefonos){
+      let idtlf = 0;
+      this.wrapper.telefonos.forEach(e=>{
+        if(e.tipoTelefono == "M"){
+          if(idtlf == 0){
+            idtlf = e.id; 
+          }else{
+            this.telefonoMovil.setValue(e.numero);
+          }
+          this.telefonoAdicional.setValue(e.numero);
         }
-        this.telefonoAdicional.setValue(e.numero);
-      }
-      if(e.tipoTelefono == "F"){
-        this.telefonoFijo.setValue(e.numero);
-      }
-      if(e.tipoTelefono == "CEL"){
-        this.telefonoOtro.setValue(e.numero);
-      }
-    });
+        if(e.tipoTelefono == "F"){
+          this.telefonoFijo.setValue(e.numero);
+        }
+        if(e.tipoTelefono == "CEL"){
+          this.telefonoOtro.setValue(e.numero);
+        }
+      });
+    }
     this.nacionalidad.setValue( this.catPais.find( x => x.id == this.wrapper.cliente.nacionalidad) );
     this.email.setValue(this.wrapper.cliente.email);
     this.primerNombre.setValue(this.wrapper.cliente.primerNombre);
@@ -260,74 +260,95 @@ export class GestionClienteComponent implements OnInit {
     this.cargaFamiliar.setValue(this.wrapper.cliente.cargasFamiliares);
     this.separacionBienes.setValue(this.wrapper.cliente.separacionBienes);
     this.habilitarCampo();
-    this.catFiltradoLugarNacimiento.subscribe((data:any) =>{
-      this.lugarNacimiento.setValue( data.find(x=> x.id == this.wrapper.cliente.lugarNacimiento) );
-    });
+    if(this.wrapper.cliente.lugarNacimiento){
+      this.catFiltradoLugarNacimiento.subscribe((data:any) =>{
+        this.lugarNacimiento.setValue( data.find(x=> x.id == this.wrapper.cliente.lugarNacimiento) );
+      });
+    }
     this.edad.setValue(this.wrapper.cliente.edad);
     this.canalContacto.setValue(this.wrapper.cliente.canalContacto);
-    this.origenIngresos.setValue(this.wrapper.cliente.origenIngreso);
-    this.relacionDependencia.setValue(this.wrapper.datosTrabajo.esRelacionDependencia ? "SI": "NO");
-    this.setRelacionDependencia();
-    this.actividadEconomica.setValue(this.catActividadEconomica.find( x => x.id.toString() == this.wrapper.cliente.actividadEconomica) );
-    this.actividadEmpresa.setValue(this.wrapper.datosTrabajo.nombreEmpresa);
-    this.actividadEconomicaEmpresa.setValue(this.catActividadEconomica.find( x => x.id.toString() == this.wrapper.datosTrabajo.actividadEconomica) );
-    this.cargo.setValue(this.catCargo.find( x => x.codigo == this.wrapper.datosTrabajo.cargo));
-    this.profesion.setValue(this.catProfesion.find( x => x.codigo == this.wrapper.cliente.profesion));
-    this.ocupacion.setValue(this.catOcupacion.find( x => x.codigo == this.wrapper.datosTrabajo.ocupacion));
+    if(this.wrapper.datosTrabajo){
+      this.origenIngresos.setValue(this.wrapper.cliente.origenIngreso);
+      this.relacionDependencia.setValue(this.wrapper.datosTrabajo.esRelacionDependencia ? "SI": "NO");
+      this.setRelacionDependencia();
+      this.actividadEmpresa.setValue(this.wrapper.datosTrabajo.nombreEmpresa);
+      this.actividadEconomicaEmpresa.setValue(this.catActividadEconomica.find( x => x.id.toString() == this.wrapper.datosTrabajo.actividadEconomica) );
+      this.cargo.setValue(this.catCargo.find( x => x.codigo == this.wrapper.datosTrabajo.cargo));
+      this.ocupacion.setValue(this.catOcupacion.find( x => x.codigo == this.wrapper.datosTrabajo.ocupacion));
+    }
+    if(this.wrapper.cliente.actividadEconomica){
+      this.actividadEconomica.setValue(this.catActividadEconomica.find( x => x.id.toString() == this.wrapper.cliente.actividadEconomica) );
+    }
+    if(this.wrapper.cliente.profesion){
+      this.profesion.setValue(this.catProfesion.find( x => x.codigo == this.wrapper.cliente.profesion));
+    }
     this.direccionLegalDomicilio.setValue(true);
     this.direccionCorreoDomicilio.setValue(true);
     this.direccionLegalLaboral.setValue(false);
     this.direccionCorreoLaboral.setValue(false);
-    this.wrapper.direcciones.forEach(e=>{
-      if(e.tipoDireccion == "LABORAL"){
-        this.catFiltradoUbicacionLaboral.subscribe((data:any) =>{
-          this.ubicacionO.setValue( data.find(x=> x.id == e.divisionPolitica ) );
-        });
-        this.tipoViviendaO.setValue(this.catTipoVivienda.find( x => x.codigo == e.tipoVivienda));
-        this.callePrincipalO.setValue(e.callePrincipal.toUpperCase());
-        this.barrioO.setValue(e.barrio.toUpperCase());
-        this.numeracionO.setValue(e.numeracion.toUpperCase());
-        this.calleSecundariaO.setValue(e.calleSegundaria.toUpperCase());
-        this.referenciaUbicacionO.setValue(e.referenciaUbicacion.toUpperCase());
-        this.sectorO.setValue(this.catSectorVivienda.find( x => x.codigo == e.sector));
-        this.direccionLegalLaboral.setValue(e.direccionLegal);
-        this.direccionCorreoLaboral.setValue(e.direccionEnvioCorrespondencia);
-      }
-      if(e.tipoDireccion == "DOMICILIO"){
-        this.catFiltradoUbicacionDomicilio.subscribe((data:any) =>{
-          this.ubicacion.setValue( data.find(x=> x.id == e.divisionPolitica ) );
-        });
-        this.tipoVivienda.setValue( this.catTipoVivienda.find( x => x.codigo == e.tipoVivienda));
-        this.callePrincipal.setValue(e.callePrincipal);
-        this.numeracion.setValue(e.numeracion);
-        this.calleSecundaria.setValue(e.calleSegundaria);
-        this.referenciaUbicacion.setValue(e.referenciaUbicacion);
-        this.sector.setValue( this.catSectorVivienda.find( x => x.codigo == e.sector));
-        this.barrio.setValue(e.barrio);
-        this.direccionLegalDomicilio.setValue(e.direccionLegal);
-        this.direccionCorreoDomicilio.setValue(e.direccionEnvioCorrespondencia);
-      }
-    }); 
-    this.dataSourceIngresoEgreso.data = this.wrapper.ingresos;
+    if(this.wrapper.direcciones){
+      this.wrapper.direcciones.forEach(e=>{
+        if(e.tipoDireccion == "OFI"){
+          this.catFiltradoUbicacionLaboral.subscribe((data:any) =>{
+            this.ubicacionO.setValue( data.find(x=> x.id == e.divisionPolitica ) );
+          });
+          this.tipoViviendaO.setValue(this.catTipoVivienda.find( x => x.codigo == e.tipoVivienda));
+          this.callePrincipalO.setValue(e.callePrincipal.toUpperCase());
+          this.barrioO.setValue(e.barrio.toUpperCase());
+          this.numeracionO.setValue(e.numeracion.toUpperCase());
+          this.calleSecundariaO.setValue(e.calleSegundaria.toUpperCase());
+          this.referenciaUbicacionO.setValue(e.referenciaUbicacion.toUpperCase());
+          this.sectorO.setValue(this.catSectorVivienda.find( x => x.codigo == e.sector));
+          this.direccionLegalLaboral.setValue(e.direccionLegal);
+          this.direccionCorreoLaboral.setValue(e.direccionEnvioCorrespondencia);
+        }
+        if(e.tipoDireccion == "DOM"){
+          this.catFiltradoUbicacionDomicilio.subscribe((data:any) =>{
+            this.ubicacion.setValue( data.find(x=> x.id == e.divisionPolitica ) );
+          });
+          this.tipoVivienda.setValue( this.catTipoVivienda.find( x => x.codigo == e.tipoVivienda));
+          this.callePrincipal.setValue(e.callePrincipal);
+          this.numeracion.setValue(e.numeracion);
+          this.calleSecundaria.setValue(e.calleSegundaria);
+          this.referenciaUbicacion.setValue(e.referenciaUbicacion);
+          this.sector.setValue( this.catSectorVivienda.find( x => x.codigo == e.sector));
+          this.barrio.setValue(e.barrio);
+          this.direccionLegalDomicilio.setValue(e.direccionLegal);
+          this.direccionCorreoDomicilio.setValue(e.direccionEnvioCorrespondencia);
+        }
+      }); 
+    }
+    if(this.wrapper.ingresos){
+      this.dataSourceIngresoEgreso.data = this.wrapper.ingresos;
+      this.calcularIngresoEgreso();
+    }
     this.dataSourcePatrimonioActivo = new MatTableDataSource<TbQoPatrimonio>();
     this.dataSourcePatrimonioPasivo = new MatTableDataSource<TbQoPatrimonio>();
-    this.wrapper.patrimonios.forEach(e=>{
-      if(e.activos && !e.pasivos){
-        this.dataSourcePatrimonioActivo.data.push( e );              
-      }
-      if(!e.activos && e.pasivos){
-        this.dataSourcePatrimonioPasivo.data.push( e );              
-      }
-    });
-    this.dataSource.data = this.wrapper.referencias;
-    this.calcularActivo();
-    this.calcularPasivo();
-    this.calcularIngresoEgreso();
+    if(this.wrapper.patrimonios){
+      this.wrapper.patrimonios.forEach(e=>{
+        if(e.activos && !e.pasivos){
+          this.dataSourcePatrimonioActivo.data.push( e );              
+        }
+        if(!e.activos && e.pasivos){
+          this.dataSourcePatrimonioPasivo.data.push( e );              
+        }
+      });
+      this.calcularActivo();
+      this.calcularPasivo();
+    }
+    if(this.wrapper.referencias){
+      this.wrapper.referencias.forEach(e=>{
+        const referencia = this.catTipoReferencia.find(x => x.codigo == e.parentesco );
+        e.parentesco = referencia.nombre;
+      });
+      this.dataSource.data = this.wrapper.referencias;
+    }
   }
   private buscarCliente() {
     this.route.paramMap.subscribe((data: any) => {
       this.loadingSubject.next(true);
       if (data.params.origen == "NEG") {
+        this.idNegociacion = data.params.item
         this.cli.traerClienteByIdNegociacion(data.params.item).subscribe((data: any) => {
           if (data.entidad) {
             this.wrapper = data.entidad;
@@ -338,7 +359,7 @@ export class GestionClienteComponent implements OnInit {
           }
         }, error =>{ this.capturaError(error) });
       }else if(data.params.origen == "CED"){
-        this.cli.traerClienteBycedula(data.params.item).subscribe((data: any) => {
+        this.cli.traerClienteByCedula(data.params.item).subscribe((data: any) => {
           if (data.entidad) {
             this.wrapper = data.entidad;
             this.traerCatalogos();
@@ -736,7 +757,7 @@ export class GestionClienteComponent implements OnInit {
     this.separacionBienes.setValue('');
     this.separacionBienes.disable();
     this.catEstadoCivil.forEach(e=>{
-      if(this.estadoCivil.value.codigo == "C"){
+      if(this.estadoCivil.value && this.estadoCivil.value.codigo == "C"){
         this.separacionBienes.setValidators([Validators.required]);
         this.separacionBienes.enable();
         this.sinNoticeService.setNotice("SELECCIONE LA OPCION DE SEPARACIÒN DE BIENES ", 'warning');
@@ -1049,7 +1070,7 @@ export class GestionClienteComponent implements OnInit {
             }
             if (a > 0 && b > 0) {
               referencia.nombresCompletos = this.nombresCompletosR.value.toUpperCase();
-              referencia.parentesco = this.parentescoR.value.toUpperCase();
+              referencia.parentesco = this.parentescoR.value.nombre;
               referencia.direccion = this.direccionR.value.toUpperCase();
               referencia.telefonoMovil = this.telefonoMovilR.value;
               referencia.telefonoFijo = this.telefonoFijoR.value;
@@ -1097,6 +1118,7 @@ export class GestionClienteComponent implements OnInit {
     this.telefonoFijoR.setValue(element.telefonoFijo);
   }
   public guardar() {
+    console.log("CARGO ===> " ,this.cargo.value);
     this.loadingSubject.next(true);
     if (this.formCliente.valid) {
       if (this.formDatosContacto.valid) {
@@ -1125,41 +1147,73 @@ export class GestionClienteComponent implements OnInit {
                     this.wrapper.cliente.profesion = this.profesion.value ? this.profesion.value.codigo: null;
                     this.wrapper.cliente.segundoNombre = this.segundoNombre.value;
                     this.wrapper.cliente.separacionBienes = this.separacionBienes.value;
+                    if(!this.wrapper.datosTrabajo){
+                      this.wrapper.datosTrabajo = new TbQoDatoTrabajoCliente();
+                      this.wrapper.datosTrabajo.tbQoCliente = this.wrapper.cliente;
+                    }
                     this.wrapper.datosTrabajo.nombreEmpresa = this.actividadEmpresa.value;
-                    this.wrapper.datosTrabajo.cargo = this.cargo.value ? this.cargo.value.codigo: null;
+                    console.log("CARGO ===> " ,this.cargo.value.codigo);
+                    this.wrapper.datosTrabajo.cargo = this.cargo.value.codigo;
                     this.wrapper.datosTrabajo.actividadEconomica = this.actividadEconomica.value ? this.actividadEconomicaEmpresa.value.id: null;
                     this.wrapper.datosTrabajo.ocupacion = this.ocupacion.value ? this.ocupacion.value.codigo: null ;
                     this.wrapper.datosTrabajo.esprincipal = true;
                     this.wrapper.datosTrabajo.esRelacionDependencia = this.relacionDependencia.value == 'SI' ? true : false;
                     this.wrapper.datosTrabajo.origenIngreso = "2"; // this.origenIngresos.value;
-                    let idtlf = 0;
-                    this.wrapper.telefonos.forEach(e=>{
-                      if(e.tipoTelefono == "M"){
-                        if(idtlf == 0){
-                          idtlf = e.id; 
-                          e.numero = this.telefonoMovil.value;
-                        }else{
-                          e.numero = this.telefonoAdicional.value;
+                    if(!this.wrapper.telefonos){
+                      this.wrapper.telefonos = new Array<TbQoTelefonoCliente>()
+                      this.wrapper.telefonos[0] = new TbQoTelefonoCliente();
+                      this.wrapper.telefonos[0].numero = this.telefonoMovil.value;
+                      this.wrapper.telefonos[0].tipoTelefono = "M";
+                      this.wrapper.telefonos[0].tbQoCliente = this.wrapper.cliente;
+                      if(this.telefonoFijo.value){
+                        this.wrapper.telefonos[1] = new TbQoTelefonoCliente();
+                        this.wrapper.telefonos[1].numero = this.telefonoFijo.value;
+                        this.wrapper.telefonos[1].tipoTelefono = "F";
+                        this.wrapper.telefonos[1].tbQoCliente = this.wrapper.cliente;
+                      }
+                      if(this.telefonoOtro.value){
+                        this.wrapper.telefonos[2] = new TbQoTelefonoCliente();
+                        this.wrapper.telefonos[2].numero = this.telefonoOtro.value;
+                        this.wrapper.telefonos[2].tipoTelefono = "CEL";
+                        this.wrapper.telefonos[2].tbQoCliente = this.wrapper.cliente;
+                      }
+                      if(this.telefonoAdicional.value){
+                        this.wrapper.telefonos[3] = new TbQoTelefonoCliente();
+                        this.wrapper.telefonos[3].numero = this.telefonoAdicional.value;
+                        this.wrapper.telefonos[3].tipoTelefono = "M";
+                        this.wrapper.telefonos[3].tbQoCliente = this.wrapper.cliente;
+                      }
+                    }else{
+                      let idtlf = 0;
+                      this.wrapper.telefonos.forEach(e=>{
+                        if(e.tipoTelefono == "M"){
+                          if(idtlf == 0){
+                            idtlf = e.id; 
+                            e.numero = this.telefonoMovil.value;
+                          }else{
+                            e.numero = this.telefonoAdicional.value;
+                          }
                         }
-                      }
-                      if(e.tipoTelefono == "F"){
-                        e.numero = this.telefonoFijo.value;
-                      }
-                      if(e.tipoTelefono == "CEL"){
-                        e.numero = this.telefonoOtro.value;
-                      }
-                    });
-                    this.wrapper.telefonos
-                    if(!this.wrapper.direcciones && this.wrapper.direcciones.length < 1){
+                        if(e.tipoTelefono == "F"){
+                          e.numero = this.telefonoFijo.value;
+                        }
+                        if(e.tipoTelefono == "CEL"){
+                          e.numero = this.telefonoOtro.value;
+                        }
+                      });
+                    }
+                    if(!this.wrapper.direcciones){
                       console.log('Creando direcciones -> ', this.wrapper.direcciones);
                       this.wrapper.direcciones = new Array<TbQoDireccionCliente>();
                       this.wrapper.direcciones[0] = new TbQoDireccionCliente();
                       this.wrapper.direcciones[1] = new TbQoDireccionCliente();
-                      this.wrapper.direcciones[0].tipoDireccion = "LABORAL";
-                      this.wrapper.direcciones[1].tipoDireccion = "DOMICILIO";
+                      this.wrapper.direcciones[0].tipoDireccion = "OFI";
+                      this.wrapper.direcciones[1].tipoDireccion = "DOM";
+                      this.wrapper.direcciones[0].tbQoCliente = this.wrapper.cliente;
+                      this.wrapper.direcciones[1].tbQoCliente = this.wrapper.cliente;
                     }
                     this.wrapper.direcciones.forEach(e=>{
-                      if(e.tipoDireccion == "LABORAL"){
+                      if(e.tipoDireccion == "OFI"){
                         e.divisionPolitica = this.ubicacionO.value.id;
                         e.direccionEnvioCorrespondencia = this.direccionCorreoLaboral.value;
                         e.direccionLegal = this.direccionLegalLaboral.value;
@@ -1171,7 +1225,7 @@ export class GestionClienteComponent implements OnInit {
                         e.sector = this.sectorO.value? this.sectorO.value.codigo : null;
                         e.tipoVivienda = this.tipoViviendaO.value ? this.tipoViviendaO.value.codigo: null;
                       }
-                      if(e.tipoDireccion == "DOMICILIO"){
+                      if(e.tipoDireccion == "DOM"){
                         e.divisionPolitica = this.ubicacion.value.id;
                         e.direccionEnvioCorrespondencia = this.direccionCorreoDomicilio.value;
                         e.direccionLegal = this.direccionLegalDomicilio.value;
@@ -1184,12 +1238,43 @@ export class GestionClienteComponent implements OnInit {
                         e.tipoVivienda = this.tipoVivienda.value ? this.tipoVivienda.value.codigo: null;
                       }
                     });
-                    this.wrapper.ingresos = this.dataSourceIngresoEgreso.data;
+                    if(this.dataSourceIngresoEgreso.data){
+                      this.dataSourceIngresoEgreso.data.forEach(e=>{
+                        e.tbQoCliente = this.wrapper.cliente;
+                      });
+                      this.wrapper.ingresos = this.dataSourceIngresoEgreso.data;
+                    }
+                    if(this.dataSourcePatrimonioActivo.data){
+                      this.dataSourcePatrimonioActivo.data.forEach(e=>{
+                        e.tbQoCliente = this.wrapper.cliente;
+                      });
+                    }
+                    if(this.dataSourcePatrimonioPasivo.data){
+                      this.dataSourcePatrimonioPasivo.data.forEach(e=>{
+                        e.tbQoCliente = this.wrapper.cliente;
+                      });
+                    }
                     this.wrapper.patrimonios = this.dataSourcePatrimonioActivo.data.concat( this.dataSourcePatrimonioPasivo.data);
-                    this.wrapper.referencias = this.dataSource.data;
+                    if(this.dataSource.data){
+                      this.dataSource.data.forEach(e=>{
+                        e.tbQoCliente = this.wrapper.cliente;
+                      });
+                      this.wrapper.referencias = this.dataSource.data;
+                      this.dataSource.data.forEach(e=>{                        
+                        const codigo = this.catTipoReferencia.find( x => x.nombre == e.parentesco );
+                        e.parentesco = codigo.codigo;
+                        e.tbQoCliente = this.wrapper.cliente;
+                      });
+                    }
                     this.cli.registrarCliente( this.wrapper ).subscribe( (data: any) => {
-                      if(data.entidad){
-                        console.log('Final final -> ' ,data);
+                      if(data.entidad && data.entidad.isCore && data.entidad.isSoftbank){
+                        this.sinNoticeService.setNotice("CLIENTE REGISTRADO CORRECTAMENTE", 'success');
+                        this.loadingSubject.next(false);
+                        if(this.idNegociacion){
+                          this.router.navigate(['credito-nuevo/generar-credito/', this.idNegociacion]); 
+                        }else{
+                          this.router.navigate(['cliente/gestion-cliente/CED', this.wrapper.cliente.cedulaCliente]); 
+                        }
                       }else {
                         this.loadingSubject.next(false);
                         this.sinNoticeService.setNotice("NO SE PUDO REGISTRAR EL CLIENTE.", 'error');

@@ -7,7 +7,7 @@ export class TbQoPatrimonio{
     fechaCreacion: Date;
     fechaActualizacion: Date;
     pasivos: string;
-    tbQoCliente : TbQoCliente [];
+    tbQoCliente : TbQoCliente;
     
     constructor(){
     }

@@ -24,8 +24,8 @@ export class ClienteService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-  public traerClienteBycedula(cedula: string ) {
-    const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerClienteBycedula';
+  public traerClienteByCedula(cedula: string ) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerClienteByCedula';
     this.params = new HttpParams().set('cedula', cedula);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
