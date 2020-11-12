@@ -20,25 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
-export interface EnviarOperacion{
-  credito: TbQoCreditoNegociacion,
-  fechaCuota: Date,
-  pesoFunda: string,
-  numeroFunda: string,
-  totalPesoBrutoFunda: string,
-  tipoCuenta:string,
-  numeroCuenta: string,
-  tipoCliente:string,
-  firmanteOperacion:string,
-  identificacionCodeudor: string,
-  nombreCompletoCodeudor: string,
-  fechaNacimientoCodeudor: Date,
-  identificacionApoderado: string,
-  nombreCompletoApoderado: string,
-  fechaNacimientoApoderado: Date,
-  usuario: string,
-  idAgencia: number
-}
+
 @Component({
   selector: 'kt-generar-credito',
   templateUrl: './generar-credito.component.html',
@@ -354,26 +336,25 @@ export class GenerarCreditoComponent implements OnInit {
     console.log( " Validaciones de forms - > " + this.formInstruccion.valid);
     if(this.formInstruccion.valid && this.srcFunda && this.srcJoya){
       this.loadingSubject.next(true);
-      const wp : EnviarOperacion = { 
-        credito: this.operacionNuevo.credito,
-        fechaCuota: this.fechaCuota.value != null ? this.fechaCuota.value : null,
-        pesoFunda: this.pesoFunda.value.nombre,
-        numeroFunda: this.numeroFunda.value != null ? this.numeroFunda.value : null,
-        totalPesoBrutoFunda: this.totalPesoBrutoFunda.value,
-        tipoCuenta: this.tipoCuenta.value, // Todo: Agregar catalogo de tipo cuenta no existente.
-        numeroCuenta: this.numeroCuenta.value,
-        tipoCliente: this.tipoCliente.value.codigo,
-        firmanteOperacion:this.firmanteOperacion.value.codigo,
-        identificacionCodeudor: this.identificacionCodeudor.value != null ? this.identificacionCodeudor.value : null,
-        nombreCompletoCodeudor: this.nombreCompletoCodeudor.value != null ? this.nombreCompletoCodeudor.value : null,
-        fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value != null ? this.fechaNacimientoCodeudor.value : null,
-        identificacionApoderado: this.identificacionApoderado.value != null ? this.identificacionApoderado.value : null,
-        nombreCompletoApoderado: this.nombreCompletoApoderado.value != null ? this.nombreCompletoApoderado.value : null,
-        fechaNacimientoApoderado: this.fechaNacimientoApoderado.value != null ? this.fechaNacimientoApoderado.value : null,
-        usuario: atob(localStorage.getItem(environment.userKey)),
-        idAgencia: 2 // Todo: Donde consuto el numero de agencia? 
-      };
-      this.cre.crearOperacionNuevo( wp ).subscribe( (data: any) =>{
+      this.operacionNuevo.credito
+      
+      this.operacionNuevo.credito.pagoDia = this.fechaCuota.value != null ? this.fechaCuota.value : null;
+      this.operacionNuevo.credito.pesoFunda = this.pesoFunda.value.nombre;
+      this.operacionNuevo.credito.numeroFunda = this.numeroFunda.value != null ? this.numeroFunda.value : null;
+      this.operacionNuevo.credito.totalPesoBrutoConFunda = this.totalPesoBrutoFunda.value;
+      this.operacionNuevo.credito.idBanco = this.tipoCuenta.value; // Todo: Agregar catalogo de tipo cuenta no existente.
+      this.operacionNuevo.credito.numeroBanco =  this.numeroCuenta.value;
+      // this.operacionNuevo.credito.tipoCliente = this.tipoCliente.value.codigo; // Todo: Que hacer con este campo?
+      // this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value.codigo; // Todo: Que hacer con este campo?
+      this.operacionNuevo.credito.identificacionCodeudor = this.identificacionCodeudor.value != null ? this.identificacionCodeudor.value : null;
+      this.operacionNuevo.credito.nombreCompletoCodeudor = this.nombreCompletoCodeudor.value != null ? this.nombreCompletoCodeudor.value : null;
+      this.operacionNuevo.credito.fechaNacimientoCodeudor = this.fechaNacimientoCodeudor.value != null ? this.fechaNacimientoCodeudor.value : null;
+      this.operacionNuevo.credito.identificacionApoderado = this.identificacionApoderado.value != null ? this.identificacionApoderado.value : null;
+      this.operacionNuevo.credito.nombreCompletoApoderado = this.nombreCompletoApoderado.value != null ? this.nombreCompletoApoderado.value : null;
+      this.operacionNuevo.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value != null ? this.fechaNacimientoApoderado.value : null;
+      this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
+      this.operacionNuevo.credito.idAgencia = 2; // Todo: Donde consulto el numero de agencia? 
+      this.cre.crearOperacionNuevo( this.operacionNuevo.credito ).subscribe( (data: any) =>{
         if(data.entidad){
           this.operacionSoft = data.entidad;  
           this.cargarOperacion( this.operacionSoft );
@@ -472,6 +453,3 @@ export class GenerarCreditoComponent implements OnInit {
     }
   }
 }
-
-
-

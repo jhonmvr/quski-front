@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { TbQoCreditoNegociacion } from '../../model/quski/TbQoCreditoNegociacion';
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +28,11 @@ export class CreditoNegociacionService extends BaseService {
    * @author Jeroham Cadenas
    * @param data EnviarOperacion (Interface)
    */
-  public crearOperacionNuevo( data: any) {
+  public crearOperacionNuevo( data: TbQoCreditoNegociacion) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "crearOperacionNuevo" ;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, data, this.options);
+    let entidad = { entidad: data }
+    return this.http.post(serviceUrl, entidad, this.options);
   }
 
   public traerCreditoNegociacionExistente(id: number) {
