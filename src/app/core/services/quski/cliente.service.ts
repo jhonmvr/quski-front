@@ -5,19 +5,42 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from '../../model/page';
 import { TbQoCliente } from "../../model/quski/TbQoCliente";
 import { TbQoCotizador } from '../../model/quski/TbQoCotizador';
+import { ClienteCompletoWrapper } from '../../model/wrapper/ClienteCompletoWrapper';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClienteService extends BaseService {
- 
+  private urlRest =  'clienteRestController/';
 
   constructor(_http: HttpClient) {
     super();
     this.http = _http;
     this.setParameter();
   }
+  public traerClienteByIdNegociacion(id: number ) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerClienteByIdNegociacion';
+    this.params = new HttpParams().set('id', id.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  public traerClienteByCedula(cedula: string ) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerClienteByCedula';
+    this.params = new HttpParams().set('cedula', cedula);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  public registrarCliente(entidad: ClienteCompletoWrapper) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'registrarCliente';
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, entidad, this.options);
+  }
 
+
+
+
+
+  
   public persistEntity(cliente: TbQoCliente) {
     const serviceUrl =
       this.appResourcesUrl + 'clienteRestController/persistEntity';

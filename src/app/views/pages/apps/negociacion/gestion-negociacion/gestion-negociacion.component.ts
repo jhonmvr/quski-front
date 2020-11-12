@@ -19,7 +19,7 @@ import { RelativeDateAdapter } from './../../../../../core/util/relative.dateada
 import { GarantiaWrapper } from './../../../../../core/model/wrapper/GarantiaWrapper';
 import { EstadoExcepcionEnum } from './../../../../../core/enum/EstadoExcepcionEnum';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
-import { TbQoExcepcione } from './../../../../../core/model/quski/TbQoExcepcione';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { environment } from '../../../../../../../src/environments/environment';
 import { MatDialog, MatTableDataSource, MatStepper } from '@angular/material';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
@@ -118,7 +118,6 @@ export class GestionNegociacionComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService,
-    private noticeService: ReNoticeService,
     private subheaderService: SubheaderService
   ) {
     //  RELACIONANDO FORMULARIO DE BUSQUEDA
@@ -194,8 +193,8 @@ export class GestionNegociacionComponent implements OnInit {
   }
   private validarExcepciones(tmp: NegociacionWrapper){
     if(tmp.excepciones.length > 0){
-      let listPendientes: TbQoExcepcione[] = null;
-      let listInPendientes: TbQoExcepcione[] = null;
+      let listPendientes: TbQoExcepcion[] = null;
+      let listInPendientes: TbQoExcepcion[] = null;
       tmp.excepciones.forEach(e =>{
         if( e.estadoExcepcion == EstadoExcepcionEnum.PENDIENTE){
           listPendientes != null ? listPendientes.push(e) : listPendientes = [e];
@@ -341,8 +340,14 @@ export class GestionNegociacionComponent implements OnInit {
     this.fechaDeNacimiento.setValue(cliente.fechaNacimiento);
     this.cargarEdad();
     this.nacionalidad.setValue(cliente.nacionalidad);
-    this.movil.setValue(cliente.telefonoMovil);
-    this.telefonoDomicilio.setValue(cliente.telefonoFijo);
+    wrapper.telefonos.forEach(e=>{
+      if(e.tipoTelefono == "F"){
+        this.telefonoDomicilio.setValue(e.numero);
+      }
+      if(e.tipoTelefono == "M"){
+        this.movil.setValue(e.numero);
+      }
+    });
     this.email.setValue(cliente.email);
     this.campania.setValue( cliente.campania );
     this.publicidad.setValue ( cliente.publicidad );
@@ -370,7 +375,7 @@ export class GestionNegociacionComponent implements OnInit {
   }
   
   /** ********************************************* @POPUP ********************* **/
-  public notificarSobreExcepciones(list :TbQoExcepcione[]){
+  public notificarSobreExcepciones(list :TbQoExcepcion[]){
     const dialogRef = this.dialog.open(ListaExcepcionesComponent, {
       width: "700px",
       height: "auto",

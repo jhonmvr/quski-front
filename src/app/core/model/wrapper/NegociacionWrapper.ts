@@ -1,15 +1,17 @@
 import { TbQoCreditoNegociacion } from '../quski/TbQoCreditoNegociacion';
-import { TbQoExcepcione } from '../quski/TbQoExcepcione';
+import { TbQoExcepcion } from '../quski/TbQoExcepcion';
 import { TbQoProceso } from '../quski/TbQoProceso';
 import { TbQoRiesgoAcumulado } from '../quski/TbQoRiesgoAcumulado';
 import { TbQoTasacion } from '../quski/TbQoTasacion';
+import { TbQoTelefonoCliente } from '../quski/TbQoTelefonoCliente';
 import { TbQoVariablesCrediticia } from '../quski/TbQoVariablesCrediticia';
 export class NegociacionWrapper{
     variables : TbQoVariablesCrediticia[];
     riesgos : TbQoRiesgoAcumulado[];
     credito:  TbQoCreditoNegociacion;
     joyas: TbQoTasacion[];
-    excepciones: TbQoExcepcione[];
+    excepciones: TbQoExcepcion[];
+    telefonos: TbQoTelefonoCliente[];
     proceso: TbQoProceso
 
     excepcionBre: string;

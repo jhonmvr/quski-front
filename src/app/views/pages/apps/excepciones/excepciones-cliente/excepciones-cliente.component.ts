@@ -13,10 +13,11 @@ import { NegociacionService } from '../../../../../core/services/quski/negociaci
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
+import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
 
 
 
@@ -28,11 +29,11 @@ import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 export class ExcepcionesClienteComponent implements OnInit {
   [x: string]: any;
   // ENTIDADES
-
+  wrapper: NegociacionWrapper;
   private entidadCliente: TbQoCliente = null;
   private procesoEntidad: TbQoProceso;
   private entidadNegociacion: TbQoNegociacion = null;
-  private entidadExcepcion: TbQoExcepcione = null;
+  private entidadExcepcion: TbQoExcepcion = null;
 
 
   // STANDARD VARIABLES
@@ -43,7 +44,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   private idCliente: number;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public mensaje: any;
-  public listExepcion = new Array<TbQoExcepcione>();
+  public listExepcion = new Array<TbQoExcepcion>();
   public loading;
 
 
@@ -335,25 +336,17 @@ export class ExcepcionesClienteComponent implements OnInit {
       data.params.id
       if (data.params.id) {
         this.idNegociacion = data.params.id;
-        //| console.log('PARAMETRO=====> ', this.idNegociacion);
         this.pro.findByIdReferencia(this.idNegociacion, "NUEVO").subscribe( (dataProceso: any)=>{
           if(dataProceso.entidad != null){
             this.procesoEntidad = dataProceso.entidad;
-            this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
-              //console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
+            this.neg.traerNegociacionExistente(this.idNegociacion).subscribe((data: any) => {
     
-              this.entidadNegociacion = data.entidad;
-              //console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
+              this.wrapper = data.entidad;
+              this.entidadNegociacion = this.wrapper.credito.tbQoNegociacion
               this.buscarExcepcion(this.entidadNegociacion.id);
     
               if (data.entidad) {
-                //TRACKING
-                // console.log('TRACKING', JSON.stringify(data));
-                this.capturaHoraAsignacion('NEGOCIACION');
-    
-    
-                this.cedulaCliente = data.entidad.tbQoCliente.cedulaCliente;
-                this.cli.findClienteByIdentificacion(this.cedulaCliente).subscribe((data: any) => {
+                this.cli.findClienteByIdentificacion(this.entidadNegociacion.tbQoCliente.cedulaCliente).subscribe((data: any) => {
                   this.entidadCliente = data.entidad;
                   this.loadingSubject.next(false);
                   if (data) {
@@ -390,13 +383,25 @@ export class ExcepcionesClienteComponent implements OnInit {
                     //INPUT RIESGO ACUMULADO
     
                     // FORM CONTACTO
-                    this.telefonoDomicilio.setValue(this.entidadCliente.telefonoFijo);
-                    this.telefonoAdicional.setValue(this.entidadCliente.telefonoAdicional);
-                    this.telefonoMovil.setValue(this.entidadCliente.telefonoMovil);
-                    this.telefonoOficina.setValue(this.entidadCliente.telefonoTrabajo);
+                    let idtlf = 0;
+                  this.wrapper.telefonos.forEach(e=>{
+                    if(e.tipoTelefono == "M"){
+                      if(idtlf == 0){
+                        idtlf = e.id; 
+                      }else{
+                        this.telefonoMovil.setValue(e.numero);
+                      }
+                      this.telefonoAdicional.setValue(e.numero);
+                    }
+                    if(e.tipoTelefono == "F"){
+                      this.telefonoDomicilio.setValue(e.numero);
+                    }
+                    if(e.tipoTelefono == "CEL"){
+                      this.telefonoOficinaOtros.setValue(e.numero);
+                    }
+                  });
                     this.correo.setValue(this.entidadCliente.email);
                     //FORM DATOS NEGOCIACION
-    
                     this.estadoNegociacion.setValue(this.procesoEntidad.estadoProceso);
                     this.fechaDeCreacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
                     this.ultimaFechaDeActualizacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));

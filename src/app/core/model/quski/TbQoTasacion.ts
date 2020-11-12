@@ -16,6 +16,7 @@ export class TbQoTasacion{
     valorAvaluo : number;
     valorAplicable: number;
     valorRealizacion : number;
+    valorComercial: number;
     tienePiedras: string;
     detallePiedras: string;
     valorOro: number;

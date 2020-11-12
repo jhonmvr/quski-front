@@ -366,8 +366,7 @@ export class ListCotizarComponent implements OnInit {
     if (this.entidadCliente.nacionalidad) {
       this.nacionalidad.setValue(this.entidadCliente.nacionalidad);
     }
-    this.movil.setValue(this.entidadCliente.telefonoMovil);
-    this.telefonoDomicilio.setValue(this.entidadCliente.telefonoFijo);
+
     this.correoElectronico.setValue(this.entidadCliente.email);
     this.fechaNacimiento.setValue(this.entidadCliente.fechaNacimiento);
     this.capturaHoraAtencion('PROSPECCION');
@@ -416,7 +415,6 @@ export class ListCotizarComponent implements OnInit {
       if (softbank.telefonos != null) {
         softbank.telefonos.forEach(element => {
           if (element.codigoTipoTelefono === 'M') {
-            cliente.telefonoMovil = element.numero;
           }
 
 
@@ -425,7 +423,6 @@ export class ListCotizarComponent implements OnInit {
     } else {
       if (crm != null) {
         // setea crm y equifax
-        cliente.telefonoAdicional = crm.phoneOther;
 
         if (crm.cedulaC != null) {
           cliente.cedulaCliente = crm.cedulaC;
@@ -444,20 +441,16 @@ export class ListCotizarComponent implements OnInit {
         }
 
         if (crm.phoneHome != null && crm.phoneHome !== '') {
-          cliente.telefonoFijo = crm.phoneHome;
         } else {
           if (equifax.telefonofijo != null && equifax.telefonofijo !== '') {
-            cliente.telefonoFijo = equifax.telefonofijo;
           }
 
         }
 
 
         if (crm.phoneMobile != null && crm.phoneMobile !== '') {
-          cliente.telefonoMovil = crm.phoneMobile;
         } else {
           if (equifax.telefonomovil != null && equifax.telefonomovil !== '') {
-            cliente.telefonoMovil = equifax.telefonomovil;
           }
         }
 
@@ -468,8 +461,6 @@ export class ListCotizarComponent implements OnInit {
         cliente.nacionalidad = equifax.nacionalidad;
         cliente.genero = equifax.genero;
         cliente.email = equifax.correoelectronico;
-        cliente.telefonoMovil = equifax.telefonomovil;
-        cliente.telefonoFijo = equifax.telefonofijo;
         cliente.campania = equifax.codigocampania.toString();
         cliente.cedulaCliente = equifax.identificacion.toString();
         this.mensaje = equifax.mensaje;
@@ -510,8 +501,6 @@ export class ListCotizarComponent implements OnInit {
     if (this.entidadCliente) {
       entidadGuardarProspectoCRM.cedulaC = this.entidadCliente.cedulaCliente;
       entidadGuardarProspectoCRM.firstName = this.entidadCliente.primerNombre;
-      entidadGuardarProspectoCRM.phoneHome = this.entidadCliente.telefonoFijo;
-      entidadGuardarProspectoCRM.phoneMobile = this.entidadCliente.telefonoMovil;
       entidadGuardarProspectoCRM.leadSourceDescription = 'GESTION QUSKI';
       entidadGuardarProspectoCRM.emailAddress = this.entidadCliente.email;
       entidadGuardarProspectoCRM.emailAddressCaps = this.entidadCliente.email.toUpperCase();
@@ -1368,8 +1357,6 @@ export class ListCotizarComponent implements OnInit {
     cliente.primerNombre = this.nombresCompletos.value;
     cliente.campania = this.campania.value;
     cliente.nacionalidad = this.nacionalidad.value;
-    cliente.telefonoMovil = this.movil.value;
-    cliente.telefonoFijo = this.telefonoDomicilio.value;
     cliente.email = this.correoElectronico.value;
     cliente.fechaNacimiento = this.fechaNacimiento.value;
     cliente.edad = this.edad.value;

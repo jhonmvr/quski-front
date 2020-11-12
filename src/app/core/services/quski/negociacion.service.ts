@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
-//import { Http, Headers, Response, RequestOptions, HttpParams, ResponseContentType } from '@angular/http';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Page } from "../../model/page";
-import { DatePipe } from '@angular/common';
 import { TbQoNegociacion } from '../../model/quski/TbQoNegociacion';
 
 
@@ -21,16 +18,7 @@ export class NegociacionService extends BaseService {
     this.setParameter();
 
   }
-  /**
-   * @author Developer Twelve - Jeroham Cadenas
-   * @param idNegociacion number
-   */
-  public findNegociacionById(id: number ) {
-    const serviceUrl = this.appResourcesUrl + this.urlRest + 'getEntity';
-    this.params = new HttpParams().set('id', id.toString());
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
-  }
+
   public iniciarNegociacion(cedula: string, asesor: string) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'iniciarNegociacion';
     this.params = new HttpParams().set('cedula', cedula).set('asesor',asesor);

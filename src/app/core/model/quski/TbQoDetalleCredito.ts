@@ -1,4 +1,3 @@
-import { TbQoCliente } from './TbQoCliente'
 import { TbQoCotizador } from './TbQoCotizador'
 
 export class TbQoDetalleCredito {

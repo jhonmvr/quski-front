@@ -5,10 +5,15 @@
 <re-portlet>
 	<re-portlet-header [title]="'BANDEJA DE OPERACIONES EN PROCESO'" [class]="'kt-portlet__head--lg'">
 		<ng-container ktPortletTools>
-			<a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
+			<a href="javascript:void(0);" (click)="irNegociacion()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Ir Negociacion</span>
+				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">home
 				</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Limpiar</span>
+            </a>
+            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
+				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">layers_clear
+				</mat-icon>
 			</a>
 		</ng-container>
 	</re-portlet-header>
@@ -98,6 +103,10 @@
                             </ng-container>
                             
                         </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="codigoBpm">
+                        <mat-header-cell *matHeaderCellDef >Codigo Bpm</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.codigoBpm | uppercase  }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="codigoOperacion">
                         <mat-header-cell *matHeaderCellDef >Codigo Operacion</mat-header-cell>

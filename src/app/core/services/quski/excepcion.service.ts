@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { TbQoExcepcione } from '../../model/quski/TbQoExcepcione';
+import { TbQoExcepcion } from '../../model/quski/TbQoExcepcion';
 
 @Injectable({
   providedIn: 'root'
@@ -106,7 +106,7 @@ export class ExcepcionService extends BaseService {
    * @description Guarda o actualiza una excepcion { entidad }
    * @param tbQoExcepcione TbQoExcepcione
    */
-  public persistEntity(data: TbQoExcepcione) {
+  public persistEntity(data: TbQoExcepcion) {
     let serviceUrl = this.appResourcesUrl + this.restC + 'persistEntity';
     console.log('VALOR DE LA DIRECCION', serviceUrl, 'VALOR DE LA EXCEPCION ===>  ', data);
     let wrapper = { entidad: data };

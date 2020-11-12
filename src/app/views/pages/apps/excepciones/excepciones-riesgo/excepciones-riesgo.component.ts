@@ -17,12 +17,13 @@ import { environment } from '../../../../../../environments/environment';
 import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
-import { TbQoExcepcione } from '../../../../../core/model/quski/TbQoExcepcione';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
 @Component({
   selector: 'kt-excepciones-riesgo',
   templateUrl: './excepciones-riesgo.component.html',
@@ -35,7 +36,9 @@ export class ExcepcionesRiesgoComponent implements OnInit {
 
   public entidadCliente: TbQoCliente = null;
   private entidadNegociacion: TbQoNegociacion = null;
-  private entidadExcepcion: TbQoExcepcione = null;
+  private wrapper: NegociacionWrapper;
+
+  private entidadExcepcion: TbQoExcepcion = null;
   private procesoEntidad: TbQoProceso;
 
   // STANDARD VARIABLES
@@ -49,7 +52,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public mensaje: any;
-  public listExepcion = new Array<TbQoExcepcione>();
+  public listExepcion = new Array<TbQoExcepcion>();
   public loading;
 
 
@@ -411,10 +414,10 @@ export class ExcepcionesRiesgoComponent implements OnInit {
         this.pro.findByIdReferencia(this.idNegociacion, "NUEVO").subscribe( (dataProceso: any)=>{
           if(dataProceso.entidad != null){
             this.procesoEntidad = dataProceso.entidad;
-            this.neg.findNegociacionById(this.idNegociacion).subscribe((data: any) => {
+            this.neg.traerNegociacionExistente(this.idNegociacion).subscribe((data: any) => {
               // console.log('NEGOCIACION findNegociacionById ', JSON.stringify(data));
-    
-              this.entidadNegociacion = data.entidad;
+              this.wrapper = data.entidad
+              this.entidadNegociacion = this.wrapper.credito.tbQoNegociacion;
               this.buscarTasación();
               //console.log('id NEGOCIACION=====> ', this.entidadNegociacion.id);
               this.buscarExcepcion(this.entidadNegociacion.id);
@@ -465,10 +468,23 @@ export class ExcepcionesRiesgoComponent implements OnInit {
                     //INPUT RIESGO ACUMULADO
     
                     // FORM CONTACTO
-                    this.telefonoDomicilio.setValue(this.entidadCliente.telefonoFijo);
-                    this.telefonoAdicional.setValue(this.entidadCliente.telefonoAdicional);
-                    this.telefonoMovil.setValue(this.entidadCliente.telefonoMovil);
-                    this.telefonoOficina.setValue(this.entidadCliente.telefonoTrabajo);
+                    let idtlf = 0;
+                    this.wrapper.telefonos.forEach(e=>{
+                      if(e.tipoTelefono == "M"){
+                        if(idtlf == 0){
+                          idtlf = e.id; 
+                        }else{
+                          this.telefonoMovil.setValue(e.numero);
+                        }
+                        this.telefonoAdicional.setValue(e.numero);
+                      }
+                      if(e.tipoTelefono == "F"){
+                        this.telefonoDomicilio.setValue(e.numero);
+                      }
+                      if(e.tipoTelefono == "CEL"){
+                        this.telefonoOficina.setValue(e.numero);
+                      }
+                    });
                     this.correo.setValue(this.entidadCliente.email);
                     //FORM DATOS NEGOCIACION
                     this.motivoNoAceptacion.setValue(this.procesoEntidad.estadoProceso);

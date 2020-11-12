@@ -72,13 +72,13 @@ const routes: Routes = [
 			},
 			{
 				path: 'gestion-cliente',
-				component: GestionClienteComponent
+				redirectTo: 'lista-cliente',
+				pathMatch: 'full'
 			},
 			{
-				path: 'gestion-cliente/:id',
-				component: GestionClienteComponent
-			},
-			
+				path: 'gestion-cliente/:origen/:item',     // Ejem:  /NEG/130 
+				component: GestionClienteComponent		   // Ejem:  /CED/1760451987
+			}
 		]
 	}
 ];

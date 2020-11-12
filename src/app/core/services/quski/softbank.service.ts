@@ -7,7 +7,6 @@ import { EditarCliente } from '../../model/softbank/EditarCliente';
 import { SimulacionPrecancelacion } from '../../model/softbank/SimulacionPrecancelacion';
 import { OperacionCancelar } from '../../model/softbank/OperacionCancelar';
 import { OperacionAbono } from '../../model/softbank/OperacionAbono';
-import { OperacionCrear } from '../../model/softbank/OperacionCrear';
 import { SimulacionTablaAmortizacion } from '../../model/softbank/SimulacionTablaAmortizacion';
 import { ConsultaSolca } from '../../model/softbank/ConsultaSolca';
 import { OperacionRenovar } from '../../model/softbank/OperacionRenovar';
@@ -157,7 +156,7 @@ export class SoftbankService extends BaseService {
    * @author Oscar Romero - Developer five
    * @description Catalogos pais
    */
-  consultarPaisCS() {
+  public consultarPaisCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "pais" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
@@ -378,7 +377,7 @@ export class SoftbankService extends BaseService {
    * @author Jeroham Cadenas - Developer Twelve
    * @description Catalogos Actividad Economica
    */
-  consultarActividadEconomicaCS() {
+  public consultarActividadEconomicaCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "actividadeconomica" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
@@ -414,10 +413,6 @@ export class SoftbankService extends BaseService {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
   }
-  /**
-   * @author Jeroham Cadenas - Developer Twelve
-   * @description Catalogos Vivienda
-   */
   /*consultarViviendaCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "vivienda" ;
     let wrapper =  "";
@@ -460,6 +455,12 @@ export class SoftbankService extends BaseService {
    */
   consultarTipoReferenciaCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tiporeferencia" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  }
+  consultarCargoOcupacion() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "cargoocupacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
@@ -597,17 +598,17 @@ export class SoftbankService extends BaseService {
   /** 
    * ************************************* @CREDITOS_OPERACION
    */
-  /**
+ /**
    * @author Jeroham Cadenas - Developer Twelve
    * @description Crea una operacion nueva.
    * @param operacionCrear 
    */
-  operacionCrearCS( operacionCrear : OperacionCrear ) {
+  /*  operacionCrearCS( operacionCrear : OperacionCrear ) {
     let serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/crearOperacion" ;
     let wrapper =  operacionCrear;
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options);
-  } 
+  }  */
   /**
    * @author Jeroham Cadenas - Developer Twelve
    * @description Renova una operacion existente.

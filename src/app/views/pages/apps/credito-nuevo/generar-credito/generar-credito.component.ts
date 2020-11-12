@@ -1,66 +1,94 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { HabilitanteDialogComponent } from '../../../../partials/custom/habilitante/habilitante-dialog/habilitante-dialog.component';
+import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
+import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
+import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
+import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
+import { OperacionNuevoWrapper } from '../../../../../core/model/wrapper/OperacionNuevoWrapper';
+import { DialogDataHabilitante } from '../../../../../core/interfaces/dialog-data-habilitante';
+import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { OperacionSoft } from '../../../../../core/model/softbank/OperacionSoft';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
+import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
+import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
+import { environment } from '../../../../../../environments/environment';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
-import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
-import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
-import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { MatTableDataSource, MatPaginator, MatSort, MatDialog, MatStepper } from '@angular/material';
-import { Page } from '../../../../../core/model/page';
-import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
-import { HabilitanteDialogComponent } from '../../../../partials/custom/habilitante/habilitante-dialog/habilitante-dialog.component';
-import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
-import { environment } from '../../../../../../environments/environment';
-import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
-import { FundaService } from '../../../../../core/services/quski/funda.service';
-import { OperacionCrear } from '../../../../../core/model/softbank/OperacionCrear';
-import { DatosImpCom } from '../../../../../core/model/softbank/DatosImpCom';
-import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
-import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
-import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
-import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOferta';
-import { TrackingService } from '../../../../../core/services/quski/tracking.service';
-import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { ParametroService } from '../../../../../core/services/quski/parametro.service';
-import { DatosRegistro } from '../../../../../core/model/softbank/DatosRegistro';
-import { Garantias } from '../../../../../core/model/softbank/Garantias';
-import { DatosCuentaCliente } from '../../../../../core/model/softbank/DatosCuentaCliente';
-import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 
-
+export interface EnviarOperacion{
+  credito: TbQoCreditoNegociacion,
+  fechaCuota: Date,
+  pesoFunda: string,
+  numeroFunda: string,
+  totalPesoBrutoFunda: string,
+  tipoCuenta:string,
+  numeroCuenta: string,
+  tipoCliente:string,
+  firmanteOperacion:string,
+  identificacionCodeudor: string,
+  nombreCompletoCodeudor: string,
+  fechaNacimientoCodeudor: Date,
+  identificacionApoderado: string,
+  nombreCompletoApoderado: string,
+  fechaNacimientoApoderado: Date,
+  usuario: string,
+  idAgencia: number
+}
 @Component({
   selector: 'kt-generar-credito',
   templateUrl: './generar-credito.component.html',
   styleUrls: ['./generar-credito.component.scss'],
-  
+
 })
 
 
-export class GenerarCreditoComponent implements OnInit, AfterViewInit {
-  public formCreditoNuevo: FormGroup = new FormGroup({});
+export class GenerarCreditoComponent implements OnInit {
+  /** @VARIABLES_GLOBALES **/
+  public operacionNuevo: OperacionNuevoWrapper;
+  public loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
-  public codigoOperacion = new FormControl('');
-  public situacion = new FormControl('');
-  public cedulaCliente = new FormControl('');
-  public nombresCompletos = new FormControl('');
- ///fecha
-  public fechaCuota = new FormControl('');
-  fechaUtil:diferenciaEnDias;
-///operativa
-  public tipoCuenta = new FormControl('');
-  public numeroCuenta = new FormControl('');
-  public tipoCliente = new FormControl('');
-  public firmanteOperacion  = new FormControl('');
-  public identificacionApoderado = new FormControl('');
-  public nombresCompletosApoderado = new FormControl('');
-  public identificacionCodeudor = new FormControl('');
-  public nombresCompletosCodeudor = new FormControl('');
-  public fechaNacimientoCodeudor = new FormControl('');
-  // credito
+  @ViewChild('stepper', { static: true }) stepper: MatStepper;
+  public operacionSoft: OperacionSoft;
+  private fechaServer;
+  public existeCredito: boolean;
+  /** @FORM_INFORMACION **/
+  public formInformacion: FormGroup = new FormGroup({});
+  public codigoOperacion = new FormControl('', [Validators.required]);
+  public estadoOperacion = new FormControl('', [Validators.required]);
+  public cedulaCliente = new FormControl('', [Validators.required]);
+  public nombreCompleto = new FormControl('', [Validators.required]);
+  /** @FORM_FECHA_PAGO **/
+  public formFecha: FormGroup = new FormGroup({});
+  public fechaCuota = new FormControl('', [Validators.required]);
+  public fechaUtil: diferenciaEnDias;
+  /** @FORM_FUNDA **/
+  public formFunda: FormGroup = new FormGroup({});
+  public pesoFunda = new FormControl('', [Validators.required]);
+  public numeroFunda = new FormControl('');
+  public totalPesoBrutoFunda = new FormControl('');
+  /** @FORM_INSTRUCCION **/
+  public formInstruccion: FormGroup = new FormGroup({});
+  public tipoCuenta = new FormControl('', [Validators.required]);
+  public numeroCuenta = new FormControl('', Validators.required);
+  public tipoCliente = new FormControl('', [Validators.required]);
+  public firmanteOperacion = new FormControl('', [Validators.required]);
+  public identificacionCodeudor = new FormControl('', [Validators.required]);
+  public nombreCompletoCodeudor = new FormControl('', [Validators.required]);
+  public fechaNacimientoCodeudor = new FormControl('', [Validators.required]);
+  public identificacionApoderado = new FormControl('', [Validators.required]);
+  public nombreCompletoApoderado = new FormControl('', [Validators.required]);
+  public fechaNacimientoApoderado = new FormControl('', [Validators.required]);
+  /** @FORM_CREDITO **/
+  public formCredito: FormGroup = new FormGroup({});
   public tipoCartera = new FormControl('');
   public descripcionProducto = new FormControl('');
   public destinoOperacion = new FormControl('');
-  public estadoOperacion = new FormControl('');
+  public estadoOperacionSoft = new FormControl('');
   public tipoOperacion = new FormControl('');
   public plazo = new FormControl('');
   public fechaEfectiva = new FormControl('');
@@ -73,723 +101,377 @@ export class GenerarCreditoComponent implements OnInit, AfterViewInit {
   public riesgoTotalCliente = new FormControl('');
   public recibirCliente = new FormControl('');
   public netoCliente = new FormControl('');
-  ///Monto
-  public montoSolicitado = new FormControl('');
 
-  // control funda
-  public pesoFunda = new FormControl('');
-  public numeroFunda = new FormControl('');
-  public totalPesoNeto = new FormControl('');
-  public totalPesoBruto = new FormControl('');
-  public totalPesoBrutoFunda = new FormControl('');
-  public totalValorRealizacion = new FormControl('');
-  public totalValorAvaluo = new FormControl('');
-  public totalValorComercial = new FormControl('');
+  /** @TABLA_JOYAS **/
+  public displayedColumns = ['total','numeroPiezas', 'tipoOro', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto', 'tieneDescuento', 'descuentoPesoPiedra', 'descuentoSuelda', 'pesoNeto', 'valorOro', 'valorAvaluo', 'valorComercial', 'valorRealizacion'];
+  public dataSource = new MatTableDataSource<TbQoTasacion>();
+  public totalNumeroJoya: number;
+  public totalPesoB: number;
+  public totalPesoN: number;
+  public totalValorA: number;
+  public totalValorR: number;
+  public totalValorC: number;
+  public totalValorO: number;
+  /** @FOTOS_FUNDA_JOYA **/
+  private joyaFoto  = {idRol:"1",proceso:"FUNDA",estadoOperacion:"",tipoDocumento:"6"}
+  private fundaFoto = {idRol:"1",proceso:"FUNDA",estadoOperacion:"",tipoDocumento:"7"}
+  public srcJoya : string;
+  public srcFunda: string;
+  /** @CATALOGOS **/
+  public catTipoFunda: Array<any>;
+  public catFirmanteOperacion: Array<any>;
+  public catTipoCliente: Array<any>;
+  public catCuenta: Array<any>;
 
-  ///totalizado
-  totalMonto 
-  totalPesoN
-  totalPesoB
-  totalPBFunda
-  totalValorR
-  totalValorA
-  totalValorC
-  totalNumeroJoya
-  list=[]
-  listaPrecios=[2.50, 5.00, 10.00]
-
-  ///
-  consulta: ConsultaOferta;
-
-  ///
-  idCreditoNegociacion=96;
-  tbCreditoNegociacion:TbQoCreditoNegociacion;
-  edadCodeudor
-  tbQoCliente;
-  fechaServer;
-  pesosFundas = ['']
-  tiposCuentas = ['Cuenta de Ahorros']
-  tiposClientes = ['DEUDOR', 'CODEUDOR', 'APODERADO']
-  tiposCarteras =['']
-  destinosOperaciones = ['']
-  //observables
-  enableDiaPagoButton;
-  enableDiaPago = new BehaviorSubject<boolean>(false);
-  enableCodeudorButton;
-  enableCodeudor = new BehaviorSubject<boolean>(false);
-  enableApoderadoButton;
-  enableApoderado = new BehaviorSubject<boolean>(false);
-  enableTablaOfertaButton;
-  enableTablaOferta = new BehaviorSubject<boolean>(false);
-  clienteSoftbank
-  /// src 
-  srcJoya;
-  srcFunda;
-  srcTemporal;
-  //TABLA
-  displayedColumns = ['numeroPiezas', 'tipoOro',  'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto',
-  'tieneDescuento', 'descripcionDescuentos', 'descuentoPesoPiedra',  'descuentoSuelda',
-   'pesoNeto', 'valorOro', 'valorAvaluo', 'valorComercial', 'valorRealizacion'];
- /**Obligatorio paginacion */
- p = new Page();
- dataSource
- //:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
-
-
- ///////////////////////Objeto Funda para foto
- joyaFoto ={
-   idRol:"1",
-   proceso:"FUNDA",
-   estadoOperacion:"",
-
-   tipoDocumento:"6",
-   //documentoHabilitante:element.idDocumentoHabilitante
- }
-//////
-fundaFoto ={
-  idRol:"1",
-  proceso:"FUNDA",
-  estadoOperacion:"",
- 
-  tipoDocumento:"7",
-  //documentoHabilitante:element.idDocumentoHabilitante
-}
-
-datosImpCom: DatosImpCom;
-
-  // VARIABLES DE TRACKING
-  public horaAsignacionCreacion: Date = null;
-  public horaInicioCreacion: Date;
-  public horaAtencionCreacion: Date;
-  public horaFinalCreacion: Date = null;
-  public procesoCreacion: string;
-  public horaInicioDocumentosLegales: Date;
-  public horaAsignacionDocumentosLegales: Date;
-  public horaAtencionDocumentosLegales: Date;
-  public horaFinalDocumentosLegales: Date;
-  public actividad: string;
-  public procesoDocumentosLegales: string;
-
-
-operacion = new OperacionCrear()
-
- @ViewChild('paginator', { static: true })  paginator: MatPaginator;
- @ViewChild( 'stepper', { static: true })  stepper: MatStepper;
- totalResults: number;
- pageSize = 5;
- currentPage;
- proceso= "CREDITONUEVO"
- /**Obligatorio ordenamiento */
- @ViewChild('sort1', {static: true}) sort: MatSort;
   
 
-  constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, private tas: TasacionService,
-    public dialog: MatDialog, private dhs: DocumentoHabilitanteService, private pro: ProcesoService, private os: ObjectStorageService,
-    private fs: FundaService, private css: SoftbankService, private es: ExcepcionService, private tra: TrackingService, 
-    private par: ParametroService) { 
-    
-    
+
+
+  constructor(
+    private cre: CreditoNegociacionService,
+    private doc: DocumentoHabilitanteService,
+    private obj: ObjectStorageService,
+    private pro: ProcesoService,
+    private sof: SoftbankService,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private router: Router,
+    private sinNotSer: ReNoticeService,
+  ) {
+    //  RELACIONANDO FORMULARIOS
+    this.formInformacion.addControl("codigoOperacion", this.codigoOperacion);
+    this.formInformacion.addControl("estadoOperacion", this.estadoOperacion);
+    this.formInformacion.addControl("cedulaCliente", this.cedulaCliente);
+    this.formInformacion.addControl("nombreCompleto", this.nombreCompleto);
+    this.formFecha.addControl("fechaCuota", this.fechaCuota);
+    this.formFunda.addControl("pesoFunda", this.pesoFunda);
+    this.formFunda.addControl("numeroFunda", this.numeroFunda);
+    this.formFunda.addControl("totalPesoBrutoFunda", this.totalPesoBrutoFunda);
+    this.formInstruccion.addControl("tipoCuenta", this.tipoCuenta);
+    this.formInstruccion.addControl("numeroCuenta", this.numeroCuenta);
+    this.formInstruccion.addControl("tipoCliente", this.tipoCliente);
+    this.formInstruccion.addControl("firmanteOperacion", this.firmanteOperacion);
+    this.formCredito.addControl("tipoCartera", this.tipoCartera);
+    this.formCredito.addControl("descripcionProducto", this.descripcionProducto);
+    this.formCredito.addControl("destinoOperacion", this.destinoOperacion);
+    this.formCredito.addControl("estadoOperacionSoft", this.estadoOperacionSoft);
+    this.formCredito.addControl("tipoOperacion", this.tipoOperacion);
+    this.formCredito.addControl("plazo", this.plazo);
+    this.formCredito.addControl("fechaEfectiva", this.fechaEfectiva);
+    this.formCredito.addControl("fechaVencimiento", this.fechaVencimiento);
+    this.formCredito.addControl("montoFinanciado", this.montoFinanciado);
+    this.formCredito.addControl("valorDesembolso", this.valorDesembolso);
+    this.formCredito.addControl("totalInteres", this.totalInteres);
+    this.formCredito.addControl("cuotas", this.cuotas);
+    this.formCredito.addControl("pagarCliente", this.pagarCliente);
+    this.formCredito.addControl("riesgoTotalCliente", this.riesgoTotalCliente);
+    this.formCredito.addControl("recibirCliente", this.recibirCliente);
+    this.formCredito.addControl("netoCliente", this.netoCliente);   
   }
 
   ngOnInit() {
+    this.loading = this.loadingSubject.asObservable();
+    this.obtenerCatalogosSoftbank();
     this.setFechaSistema();
-    this.enableDiaPagoButton = this.enableDiaPago.asObservable();
-    this.enableDiaPago.next(false);
-    this.enableCodeudorButton = this.enableCodeudor.asObservable();
-    this.enableCodeudor.next(false);
-    this.enableApoderadoButton = this.enableApoderado.asObservable();
-    this.enableApoderado.next(false);
-    this.enableTablaOfertaButton = this.enableTablaOferta.asObservable();
-    this.enableTablaOferta.next(false);
-   
-  
-    this.cargarDatosOperacion()
-    
-    this.getJoyas();
-    
   }
-
-  
-  ngAfterViewInit(){
-    this.buscar();
-  }
- /**
-   * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
-   */
-  initiateTablePaginator(): void {
-    console.log("paginator ===>>",this.paginator)
-    this.dataSource = new MatTableDataSource();
-    this.paginator.pageSize = 5;
-    this.paginator.pageIndex = 0;
-    this.totalResults = 0;
-    this.dataSource.paginator = this.paginator;
-  }
-
-     /**
-   * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
-   */
-  getPaginacion(ordenarPor: string, tipoOrden: string, paginado: string,pagina): Page {
-    const p = new Page();
-    p.pageNumber = pagina;
-    p.pageSize = this.paginator.pageSize;
-    p.sortFields = ordenarPor;
-    p.sortDirections = tipoOrden;
-    p.isPaginated = paginado;
-    //console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
-    return p;
-  }
-
-
-     /**
-   * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
-   */
-  paged() {
-    this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',this.paginator.pageIndex)
-    this.cargarDatosOperacion();
-  }
-
-  
-   /**
-   * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
-   */
-  buscar() {
-    this.initiateTablePaginator();
-    this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',0);
-    this.cargarDatosOperacion();
-  }
-
-  cargarDatosOperacion(){
-   this.cns.getCreditoNegociacionById(this.idCreditoNegociacion).subscribe((data:any)=>{
-      if(data.entidad){
-        this.tbCreditoNegociacion = data.entidad
-        this.tbQoCliente = this.tbCreditoNegociacion.tbQoNegociacion.tbQoCliente
-        this.pro.findByIdReferencia( this.tbCreditoNegociacion.tbQoNegociacion.id, "NUEVO" ).subscribe( (dataProceso: any) =>{
-          if(dataProceso.entidad != null){
-            console.log("Pilas el data" , data.entidad)
-            console.log(this.tbQoCliente)
-            console.log(this.tbCreditoNegociacion.tbQoNegociacion)
-            this.codigoOperacion.setValue(data.entidad.codigo)
-            this.cedulaCliente.setValue(data.entidad.tbQoNegociacion.tbQoCliente.cedulaCliente)
-            this.nombresCompletos.setValue(data.entidad.tbQoNegociacion.tbQoCliente.apellidoPaterno.concat(" ",
-             data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno == null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.apellidoMaterno, 
-              " ", data.entidad.tbQoNegociacion.tbQoCliente.primerNombre
-             ," ", data.entidad.tbQoNegociacion.tbQoCliente.segundoNombre== null ? "" : data.entidad.tbQoNegociacion.tbQoCliente.segundoNombre))
-             this.situacion.setValue(dataProceso.entidad.estadoProceso == null ? "" : dataProceso.entidad.estadoProceso);
-             this.tipoCuenta.setValue("CUENTA DE AHORROS")
-             this.validateEdadTipo();
-             this.buscarExcepcionEdad();
-            this.consultarClienteCS();
-             if(data.entidad.tipo === "CUOTAS"){
-               console.log("deberia verse")
-              this.enableDiaPago.next(true);
-             }else{
-              this.enableDiaPago.next(false);
-             }
-          } 
-        });
-        
+  /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
+  private traerOperacion() {
+    this.route.paramMap.subscribe((json: any) => {
+      if (json.params.id) {
+        this.loadingSubject.next(true);
+        const id: number = json.params.id;
+        this.cre.traerCreditoNuevo(id).subscribe((data: any) => {
+          if (data.entidad) {
+            this.operacionNuevo = data.entidad;
+            this.validarOperacion(this.operacionNuevo);
+          }
+        }, error => { this.capturaError(error) });
+        this
+      } else {
+        this.loadingSubject.next(false);
+        this.salirDeGestion("Error al intentar ingresar al Credito.");
       }
-    })
-
-  }
-
-  getParams(){
-
-  }
-
-  setFechaSistema(){
-    this.cns.getSystemDate().subscribe((fechaSistema: any) => {
-     this.fechaServer = new Date( fechaSistema.entidad);
-     console.log(this.fechaServer) 
-    })
-  }
-
-  validacionFecha(){
-      this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value),new Date( this.fechaServer) )
-      if(Math.abs(this.fechaUtil.obtenerDias())>=30 && Math.abs(this.fechaUtil.obtenerDias())<=45 ){
-        console.log("Esta dentro del rango")
-
-      }else{
-        this.sinNoticeService.setNotice( "DEBE ESCOGER ENTRE 30 Y 45 DÍAS" , 'error');
-      }
-
-      console.log("los dias  de diferencia",this.fechaUtil.obtenerDias())
-      
-}
- getEdad(fechaValue){
-  this.fechaUtil = new diferenciaEnDias(new Date(fechaValue),new Date( this.fechaServer) )
-  return this.fechaUtil.obtenerDias()/365
- }
-
- validateEdadCodeudor(fechaCodeudor){
-    let edadCodeudor=this.getEdad(fechaCodeudor)
-   if(edadCodeudor>=65){
-    this.sinNoticeService.setNotice( "El CODEUDOR DEBE SER MENOR DE 65 AÑOS" , 'error');
-    
-    return true;
-  }else{
-    return false;
-  }
- }
-  
-validateEdadTipo(){
-  let edadCliente = this.getEdad(this.tbQoCliente.fechaNacimiento)
-  console.log(edadCliente)
-  if(edadCliente>65){
-
-    this.setTipoCliente("CODEUDOR")
-    console.log("entra pero no hace nada")
-    this.enableCodeudor.next(true);
-  }else {
-    this.setTipoCliente("DEUDOR")
-    console.log("entra en Deudor pero no hace nada")
-  }
-
-}
- validateTipoCliente(valueTipoCliente){
-   let edadCliente = this.getEdad(this.tbQoCliente.fechaNacimiento)
-   console.log(edadCliente)
-   console.log("=====> Execute Order 66", valueTipoCliente)
-
-    if (valueTipoCliente.toUpperCase()==="APODERADO" ){
-        this.enableApoderado.next(true)
-        this.enableCodeudor.next(false);
-    } else if (valueTipoCliente.toUpperCase()==="DEUDOR" ){
-      this.enableApoderado.next(false)
-      this.enableCodeudor.next(false);
-  }else if (valueTipoCliente.toUpperCase()==="CODEUDOR" ){
-    this.enableApoderado.next(false)
-    this.enableCodeudor.next(true);
-}
- }
-
-
- getMontoSugerido(){
-    this.enableTablaOferta.next(true)
- }
-
- getJoyas(){
-   this.tas.getTasacionByIdCredito(this.p,this.idCreditoNegociacion).subscribe((data:any)=>{
-     console.log("que pasa por la calle", data.list)
-     this.totalResults = data.totalResults;
-        this.dataSource = new MatTableDataSource<any>(data.list);
-        this.calcular()
-        console.log(this.totalNumeroJoya)
-        /*   
-       
-        */
-  
-        this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'info');
-   }, error=> {
-    this.sinNoticeService.setNotice("ERROR CARGANDO LAS JOYAS", 'error');
-   })
- }
-
- setTipoCliente(tipo){
-   console.log(tipo)
-   console.log(this.tiposClientes.find(p=>p==tipo))
-  this.tipoCliente.setValue( this.tiposClientes.find(p=>p==tipo))
- }
-
-
-
- cargarFotoJoya(){
-   this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.tbCreditoNegociacion.id, this.joyaFoto.tipoDocumento)
-  
-   this.srcJoya = this.srcTemporal
-   console.log("srcJoya"+this.srcJoya)
-  }
-
- cargarFotoFunda(){
-  
-  this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.tbCreditoNegociacion.id, this.joyaFoto.tipoDocumento)
-  this.srcFunda= this.srcTemporal
-
-}
-
- loadArchivoCliente(procesoS, estadoOperacionS, referenciaS,idTipoDocumentoS) {
-  let envioModel={
-    proceso:procesoS,
-    estadoOperacion:estadoOperacionS,
-    referencia:referenciaS,
-    tipoDocumento:idTipoDocumentoS,
-  };
-
-  if (envioModel.referencia) {
-    const dialogRef = this.dialog.open(HabilitanteDialogComponent, {
-      width: "auto",
-      height: "auto",
-      data: envioModel
     });
- 
-    dialogRef.afterClosed().subscribe(r => {
-      //console.log("===>>ertorno al cierre: " + JSON.stringify(r));
-      if (r) {
-        //console.log("===>>va a recargar: " );
-
-        this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE","success");
-        this.cargarFotoHabilitante(idTipoDocumentoS, procesoS, referenciaS);
-        //this.validateContratoByHabilitante('false');
-      }
-      //this.submit();
-    });
-  } else {
-    console.log("===>>errorrrr al cierre: ");
-    this.sinNoticeService.setNotice("ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO","error");
   }
-  
-}
-getPermiso(){
-  return true
-}
-cargarFotoHabilitante(tipoDocumento, proceso, referencia){
-  this.dhs.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso,referencia
-  ).subscribe((data:any)=>{
-    
-    console.log("===========>",data.entidad)
-     
-    this.os.getObjectById( data.entidad.objectId,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
-    console.log("data  del objeto", data)
-    this.srcTemporal = data.entidad
-    console.log(this.srcTemporal)
-  
-    })
-  })
-}
-calcular(){
-
-  this.totalPesoN =0;
-  this.totalPesoB =0;
-  this.totalPBFunda = 0
-  this.totalValorR = 0
-  this.totalValorA = 0
-  this.totalValorC = 0
-  this.totalNumeroJoya = 0
-  let ind = 0;
-  if (this.dataSource.data) {
-    //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
-    this.list=[];
-    this.dataSource.data.forEach(element => {
-      
-      ind = ind + 1;
-      this.list.push(ind);
-      
-    
-    this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-    this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
-    
-    this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
-    this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
-    this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
-    this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas)
-    });
-    
-  }
-}
-
-
-getFunda(pesoFun){
- 
-  this.fs.reservarFunda(pesoFun).subscribe((data:any)=>{
-    if(data.entidad){
-      this.numeroFunda.setValue(data.entidad.codigo);
-      this.totalPesoNeto.setValue(this.totalPesoN);
-      this.totalPesoBruto.setValue(this.totalPesoB);
-      this.totalPesoBrutoFunda.setValue(Number(this.totalPesoB)+ Number(data.entidad.peso));
-      this.totalValorRealizacion.setValue(this.totalValorR);
-      this.totalValorAvaluo.setValue(this.totalValorA)
-      this.totalValorComercial.setValue(this.totalValorC)
-      
-      console.log(data)
-    }else{
-      this.sinNoticeService.setNotice("No se encontro fundas", 'warning');
-    }
-  
-    //this.pesoFunda.setValue(this.totalPesoN);
-  
-  }
-  ) 
-}
-
-
-generarCredito(){
-  let datosRegistro: DatosRegistro;
-  let garantias: Garantias;
-  let datosCuentaCliente = new DatosCuentaCliente;
-  this.operacion.idTipoIdentificacion = 1;
-  this.operacion.identificacion = this.clienteSoftbank.identificacion;
-  this.operacion.nombreCliente =  this.clienteSoftbank.primerNombre.concat(" ",
-  this.clienteSoftbank.segundoNombre == null ? " " : this.clienteSoftbank.segundoNombre, 
-  " ",this.clienteSoftbank.primerApellido, " ",
-  this.clienteSoftbank.segundoApellido == null ? " " : this.clienteSoftbank.segundoApellido) 
-
-  //this.operacion.fechaNacimientoCliente = this.tbQoCliente.fechaNacimiento
-  console.log( new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate()).toString())
-  this.operacion.fechaEfectiva = diferenciaEnDias.convertirFechaAString(new Date())
-  this.stepper.selectedIndex = 4;
-  console.log("fecha" ,this.operacion.fechaEfectiva)
-  this.operacion.esProductoOro = false;
-  this.operacion.codigoTablaAmortizacionQuski = "A107";
-  this.operacion.codigoTipoCarteraQuski = "MO3";
-  this.operacion.codigoTipoPrestamo = "001";
-  this.operacion.montoFinanciado = Number(this.tbCreditoNegociacion.montoPreaprobado);
-  this.operacion.pagoDia = 24;
-  this.operacion.codigoGradoInteres = "";
-  //set datos registro
-  this.operacion.datosRegistro.fecha = diferenciaEnDias.convertirFechaAString(new Date())
-  this.operacion.datosRegistro.referencia = "0"
-  this.operacion.datosRegistro.codigoUsuario = "ADMIN"
-  this.operacion.datosRegistro.idAgencia=8
-  //Number(this.tbCreditoNegociacion.tbQoAgencia.id)
-  datosCuentaCliente.idBanco = 141
-  //this.clienteSoftbank.cuentasBancariasCliente[0].id
-  datosCuentaCliente.numero = this.numeroCuenta.value
-  datosCuentaCliente.esAhorros = true;
-  this.operacion.datosCuentaCliente.push(datosCuentaCliente)
-  this.operacion.garantias=[1,2]
-  //this.garantias =s
-  //this.operacion.datosCaptacion = null;
-  //this.operacion.datosEmision = null;
-  let datos = new DatosImpCom();
-  datos.codigo = "L";
-  datos.codigoFormaPagoQuski = "C";
-  //datos.tasa = 0.5;
-  datos.valor = 0.2;
-  this.operacion.datosImpCom.push( datos );
-  //this.operacion.datosReferencia = null;
-  //this.operacion.datosCuentaDebito = null;
-  /////////////////
-  console.log("datos operacion", this.operacion)
-  this.css.operacionCrearCS( this.operacion ).subscribe( (data:any) =>{
-    if (data) {
-      this.stepper.selectedIndex = 4;
-      console.log(data)
-      console.log("data de operacionCrearCS ----->" + JSON.stringify(data));
-    // this.tipoCartera = data.
-     //this.descripcionProducto.setValue(data.entidad.producto)
-     console.log(data.entidad)
-     this.sinNoticeService.setNotice( data.mensaje, 'error');
-     this.tipoCartera.setValue(this.operacion.codigoTipoCarteraQuski)
-     this.descripcionProducto.setValue(data.producto)
-     this.destinoOperacion.setValue(data.producto)
-     this.estadoOperacion.setValue(data.estado)
-     this.tipoOperacion.setValue(data.estado)
-     this.plazo.setValue(data.plazo)
-     this.fechaEfectiva.setValue(this.operacion.fechaEfectiva);
-     this.fechaVencimiento.setValue(new Date(this.tbCreditoNegociacion.fechaVencimiento))
-     this.montoFinanciado.setValue(data.montoEntregar);
-     this.valorDesembolso.setValue(data.montoEntregar)
-     this.pagarCliente.setValue(data.aPagarPorCliente)
-    // this.recibirCliente.setValue(data.)
-   //  valorDesembolso = new FormControl('');
-     this.totalInteres.setValue(data.totalInteresVencimiento);
-     this.cuotas.setValue(data.valorCuota);
-   //  this.costosOperacio
-  //   pagarCliente = new FormControl('');
-   //  riesgoTotalCliente = new FormControl('');
- //    recibirCliente = new FormControl('');
- //    netoCliente = new FormControl('');
- 
-      console.log(" Funciona ----> operacionCrearCS")
-    } else {
-      this.sinNoticeService.setNotice("No me trajo data 'operacionCrearCS' :'(", 'error');
-    }
-  }, error=>{
-    if (JSON.stringify(error).indexOf("codError") > 0){
-      let b = error.error;
-      this.sinNoticeService.setNotice(b.setmsgError,'error');
-    } else {
-      this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-    }
-  });
-}
-
-  consultarClienteCS(){
-  let entidadConsultaCliente  = new ConsultaCliente();
-  entidadConsultaCliente.identificacion = this.tbQoCliente.cedulaCliente;
-  entidadConsultaCliente.idTipoIdentificacion = 1;
-  this.css.consultarClienteCS( entidadConsultaCliente ).subscribe( (data : any) => {
-    console.log("cliente", data)
-    if (data) {
-      this.clienteSoftbank = data
-      console.log("ClienteSF",this.clienteSoftbank)
-      //console.log("consultarClienteCS --> Funciona");
-      console.log("Pitufo", data.cuentasBancariasCliente[0].cuenta)
-      console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
-      this.numeroCuenta.setValue(data.cuentasBancariasCliente[0].cuenta== null ? "" : data.cuentasBancariasCliente[0].cuenta)
-    } else {
-      this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
-    }
-
-  }, error =>{
-    if (JSON.stringify(error).indexOf("codError") > 0) {
-      let b = error.error;
-      this.sinNoticeService.setNotice(b.msgError, 'error');
-    } else {
-      this.sinNoticeService.setNotice("Error no fue cacturado en 'consultarClienteCS' :(", 'error');
-
-    }
-  });
-}
-buscarExcepcionEdad(){
-  console.log("Buscar excepcion",this.tbCreditoNegociacion.tbQoNegociacion.id)
-  this.es.findByTipoExcepcionAndIdNegociacionAndCaracteristica("EXCEPCION_CLIENTE",
-  this.tbCreditoNegociacion.tbQoNegociacion.id, "edad").subscribe((data:any)=>{
-    if(data){
-    console.log("se imprime",  data.list[0])
-      if(data.list[0].estadoExcepcion){
-        
-      }
-    }else{
-
-    }
-  })
-}
-
-anularFunda(){
-
-}
-
-
-/* ----------TRACKING-------*/
-private capturaHoraInicio(etapa: string) {
-  this.tra.getSystemDate().subscribe((hora: any) => {
-    if (hora.entidad) {
-      if (etapa == 'CREACION') {
-        this.horaInicioCreacion = hora.entidad;
-      }
-      if (etapa == 'DOCUMENTOS_LEGALES') {
-        this.horaInicioDocumentosLegales = hora.entidad;
-      }
-    }
-  });
-}
-
-private capturaHoraAsignacion(etapa: string) {
-  this.tra.getSystemDate().subscribe((hora: any) => {
-    if (hora.entidad) {
-      if (etapa == 'CREACION') {
-        this.horaAsignacionCreacion = hora.entidad;
-      }
-      if (etapa == 'DOCUMENTOS_LEGALES') {
-        this.horaAsignacionDocumentosLegales = hora.entidad;
-      }
-    }
-  });
-}
-private capturaHoraAtencion(etapa: string) {
-  this.tra.getSystemDate().subscribe((hora: any) => {
-    if (hora.entidad) {
-      if (etapa == 'CREACION') {
-        this.horaAtencionCreacion = hora.entidad;
-      }
-      if (etapa == 'DOCUMENTOS_LEGALES') {
-        this.horaAtencionDocumentosLegales = hora.entidad;
-      }
-    }
-  });
-}
-
-private capturaHoraFinal(etapa: string) {
-  this.tra.getSystemDate().subscribe((hora: any) => {
-    if (hora.entidad) {
-      if (etapa == 'CREACION') {
-        this.horaFinalCreacion = hora.entidad;
-        this.registroCreacion(this.tbCreditoNegociacion.id, this.horaInicioCreacion, this.horaAsignacionCreacion,
-          this.horaAtencionCreacion, this.horaFinalCreacion);
-      }
-      if (etapa == 'DOCUMENTOS_LEGALES') {
-        this.horaFinalDocumentosLegales = hora.entidad;
-        this.registroTasación(this.tbCreditoNegociacion.id, this.horaInicioDocumentosLegales, this.horaAsignacionDocumentosLegales,
-          this.horaAtencionDocumentosLegales, this.horaFinalDocumentosLegales);
-      }
-    }
-  });
-}
-private capturaDatosTraking() {
-  this.par.findByNombreTipoOrdered('COTIZACION', 'ACTIVIDAD', 'Y').subscribe((data: any) => {
-    if (data.entidades) {
-      this.actividad = data.entidades[0].nombre;
-      this.par.findByNombreTipoOrdered('PROSPECCION', 'PROCESO', 'Y').subscribe((data: any) => {
-        if (data.entidades) {
-          this.procesoCreacion = data.entidades[0].nombre;
-          this.par.findByNombreTipoOrdered('TASACION', 'PROCESO', 'Y').subscribe((data: any) => {
-            if (data.entidades) {
-              this.procesoDocumentosLegales = data.entidades[0].nombre;
+  private validarOperacion(data: OperacionNuevoWrapper) {
+    if (data.proceso.estadoProceso == "CREADO" || data.proceso.estadoProceso == "DEVUELTO" || data.proceso.estadoProceso == "EXCEPCIONADO") {
+      if (data.proceso.proceso == "NUEVO") {
+        if(data.excepciones){
+          data.excepciones.forEach(e=>{
+            if( e.tipoExcepcion == "EXCEPCION_CLIENTE"){
+              if(e.estadoExcepcion == "NEGADO"){
+                this.catTipoCliente.forEach( e=>{
+                  if(e.codigo == "SCD" ){
+                    this.tipoCliente.setValue( e );
+                    this.tipoCliente.disable();
+                  }
+                });
+                
+              }else{
+                this.catTipoCliente.forEach( e=>{
+                  if(e.codigo == 'DEU'){
+                    this.tipoCliente.setValue( e );
+                  }
+                });
+              }
+            }else{
+              this.catTipoCliente.forEach( e=>{
+                if(e.codigo == 'DEU'){
+                  this.tipoCliente.setValue( e );
+                }
+              });
             }
           });
+          this.cargarCampos(data);
         }
+      } else {
+        this.loadingSubject.next(false);
+        this.salirDeGestion("El credito al que intenta ingresar no es un credito Nuevo. No es posible entrar.");
+      }
+    } else {
+      this.loadingSubject.next(false);
+      this.salirDeGestion("El credito al que intenta ingresar se encuentra en estado \"" + data.proceso.estadoProceso.replace('_', ' ').toLocaleLowerCase() + "\". No es posible entrar. ");
+    }
+  }
+  private cargarCampos(data: OperacionNuevoWrapper) {
+    this.codigoOperacion.setValue(data.credito.codigo);
+    this.estadoOperacion.setValue(data.proceso.estadoProceso);
+    this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
+    this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
+    this.dataSource.data = data.joyas;
+    this.calcular();
+    this.loadingSubject.next(false);
+
+  }
+  private calcular() {
+    this.totalPesoN = 0;
+    this.totalPesoB = 0;
+    this.totalValorR = 0;
+    this.totalValorA = 0;
+    this.totalValorC = 0;
+    this.totalValorO = 0;
+    this.totalNumeroJoya = 0
+    if (this.dataSource.data) {
+      this.dataSource.data.forEach(element => {
+        this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
+        this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
+        this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
+        this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
+        this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
+        this.totalValorO = Number(this.totalValorO) + Number(element.valorOro);
+        this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas);
+        this.totalPesoBrutoFunda.setValue( this.totalPesoB );
       });
     }
-  });
-}
-public registroCreacion(codigoRegistro: number, fechaInicio: Date, fechaAsignacion: Date, fechaInicioAtencion: Date, fechaFin: Date) {
-  const tracking: TbQoTracking = new TbQoTracking();
- // this.loadingSubject.next(true);
-  tracking.actividad = this.actividad;
-  tracking.proceso = this.procesoCreacion;
-  tracking.observacion = '';
-  /*tracking.codigoRegistro = codigoRegistro;
-  tracking.usuario = atob(localStorage.getItem(environment.userKey))
-  tracking.fechaInicio = fechaInicio;
-  tracking.fechaAsignacion = fechaAsignacion;
-  tracking.fechaInicioAtencion = fechaInicioAtencion;*/
-  tracking.fechaFin = fechaFin;
-  this.tra.guardarTracking(tracking).subscribe((data: any) => {
-    if (data.entidad) {
-      console.log('data de tracking para Prospeccion ----> ', data.entidad);
-      this.loadingSubject.next(false);
-    } else {
-      this.loadingSubject.next(false);
-      this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING', 'error');
+  }
+  /** ********************************************* @FUNCIONALIDAD ********************* **/
+  private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
+    let pData = {
+      mensaje: dataMensaje,
+      titulo: dataTitulo ? dataTitulo : null
     }
-  }, error => {
+    const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+      width: "800px",
+      height: "auto",
+      data: pData
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      this.router.navigate(['negociacion/bandeja-operaciones']);
+    });
+  }
+  private capturaError(error: any) {
+    if (error.error) {
+      if (error.error.codError) {
+        this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
+      } else {
+        this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
+      }
+    } else if (error.statusText && error.status == 401) {
+      this.dialog.open(AuthDialogComponent, {
+        data: {
+          mensaje: "Error " + error.statusText + " - " + error.message
+        }
+      });
+    } else {
+      this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
+    }
+  }
+  private setFechaSistema() {
+    this.cre.getSystemDate().subscribe((fechaSistema: any) => {
+      this.fechaServer = new Date(fechaSistema.entidad);
+    })
+  }
+  public onChangeTipoCliente( element: any){
+    console.log("Holis? -> ",element.value);
+    if( element.value.codigo  == 'CYA' ||  element.value.codigo  == 'SAP' ||  element.value.codigo  == 'SCD'){
+      if(element.value.codigo == 'CYA' || element.value.codigo == 'SCD'){
+        console.log('aplicando -> codeudor');
+        this.formInstruccion.addControl("identificacionCodeudor", this.identificacionCodeudor);
+        this.formInstruccion.addControl("nombreCompletoCodeudor", this.nombreCompletoCodeudor);
+        this.formInstruccion.addControl("fechaNacimientoCodeudor", this.fechaNacimientoCodeudor);
+      }
+      if(element.value.codigo == 'CYA' || element.value.codigo == 'SAP'){
+        console.log('aplicando -> apoderado');
+        this.formInstruccion.addControl("identificacionApoderado", this.identificacionApoderado);
+        this.formInstruccion.addControl("nombreCompletoApoderado", this.nombreCompletoApoderado);
+        this.formInstruccion.addControl("fechaNacimientoApoderado", this.fechaNacimientoApoderado);
+      }
+    }
+  }
+  public validacionFecha() {
+    //Todo: Revisar
+    this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value), new Date(this.fechaServer))
+    if (Math.abs(this.fechaUtil.obtenerDias()) >= 30 && Math.abs(this.fechaUtil.obtenerDias()) <= 45) {
+      console.log("Esta dentro del rango")
+    } else {
+      this.sinNotSer.setNotice("DEBE ESCOGER ENTRE 30 Y 45 DÍAS", 'error');
+    }
+    console.log("los dias  de diferencia", this.fechaUtil.obtenerDias())
+  }
+  private obtenerCatalogosSoftbank() { 
+    this.sof.consultarTipoFundaCS().subscribe((data: any) => {
+      this.catTipoFunda = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      this.sof.consultarFirmanteOperacionCS().subscribe((data: any) => {
+        this.catFirmanteOperacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+        this.sof.consultarTipoClienteCS().subscribe((data: any) => {
+          this.catTipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+          this.catCuenta = ["Cuenta Ahorro"];
+          this.traerOperacion();
+        });
+      });
+    });
+  }
+  public validarEdadCodeudor(fechaCodeudor) { // Todo: Probar metodo
+    this.fechaUtil = new diferenciaEnDias(new Date(fechaCodeudor), new Date(this.fechaServer));
+    let edadCodeudor = this.fechaUtil.obtenerDias() / 365
+    if (edadCodeudor >= 65) {
+      this.sinNotSer.setNotice("El CODEUDOR DEBE SER MENOR DE 65 AÑOS", 'error');
+      this.fechaNacimientoCodeudor.reset();
+    } 
+  }
+  /** ********************************************* @OPERACION ********************* **/
+  public generarCredito() {
+    console.log( " Validaciones de forms - > " + this.formInstruccion.valid);
+    if(this.formInstruccion.valid && this.srcFunda && this.srcJoya){
+      this.loadingSubject.next(true);
+      const wp : EnviarOperacion = { 
+        credito: this.operacionNuevo.credito,
+        fechaCuota: this.fechaCuota.value != null ? this.fechaCuota.value : null,
+        pesoFunda: this.pesoFunda.value.nombre,
+        numeroFunda: this.numeroFunda.value != null ? this.numeroFunda.value : null,
+        totalPesoBrutoFunda: this.totalPesoBrutoFunda.value,
+        tipoCuenta: this.tipoCuenta.value, // Todo: Agregar catalogo de tipo cuenta no existente.
+        numeroCuenta: this.numeroCuenta.value,
+        tipoCliente: this.tipoCliente.value.codigo,
+        firmanteOperacion:this.firmanteOperacion.value.codigo,
+        identificacionCodeudor: this.identificacionCodeudor.value != null ? this.identificacionCodeudor.value : null,
+        nombreCompletoCodeudor: this.nombreCompletoCodeudor.value != null ? this.nombreCompletoCodeudor.value : null,
+        fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value != null ? this.fechaNacimientoCodeudor.value : null,
+        identificacionApoderado: this.identificacionApoderado.value != null ? this.identificacionApoderado.value : null,
+        nombreCompletoApoderado: this.nombreCompletoApoderado.value != null ? this.nombreCompletoApoderado.value : null,
+        fechaNacimientoApoderado: this.fechaNacimientoApoderado.value != null ? this.fechaNacimientoApoderado.value : null,
+        usuario: atob(localStorage.getItem(environment.userKey)),
+        idAgencia: 2 // Todo: Donde consuto el numero de agencia? 
+      };
+      this.cre.crearOperacionNuevo( wp ).subscribe( (data: any) =>{
+        if(data.entidad){
+          this.operacionSoft = data.entidad;  
+          this.cargarOperacion( this.operacionSoft );
+        }else{ 
+          this.loadingSubject.next(false);
+          this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
+        }
+      }, error =>{ this.capturaError(error); });
+    }else{
+      this.sinNotSer.setNotice('Complete todos los campos solicitados.', 'error');
+    }
+  } 
+  private cargarOperacion( data: OperacionSoft ){
+    this.tipoCartera.setValue( data.credito.tipoCarteraQuski );
+    this.descripcionProducto.setValue( data.credito.descripcionProducto );
+    this.destinoOperacion.setValue( data.credito.destinoOperacion );
+    this.estadoOperacionSoft.setValue( data.credito.estadoSoftbank );
+    this.tipoOperacion.setValue( data.credito.tipo );
+    this.plazo.setValue( data.credito.plazoCredito );
+    this.fechaEfectiva.setValue( data.credito.fechaEfectiva );
+    this.fechaVencimiento.setValue( data.credito.fechaVencimiento );
+    this.montoFinanciado.setValue( data.credito.montoPreaprobado );
+    this.valorDesembolso.setValue( data.credito.montoDesembolso );
+    this.totalInteres.setValue( data.credito.totalCostoNuevaOperacion );
+    this.cuotas.setValue( data.credito.valorCuota );
+    this.pagarCliente.setValue( data.credito.apagarCliente );
+    this.riesgoTotalCliente.setValue( data.credito.riesgoTotalCliente );
+    this.recibirCliente.setValue( data.credito.arecibirCliente );
+    this.netoCliente.setValue( data.credito.netoAlCliente );
+    this.numeroFunda.setValue( data.credito.numeroFunda );
+    this.sinNotSer.setNotice('NUMERO DE FUNDA ASIGNADO: '+ data.credito.numeroFunda, 'success');
+    this.stepper.selectedIndex = data.credito.tipo == 'CUOTAS' ? 4 : 3;
+    this.existeCredito = true;
     this.loadingSubject.next(false);
-    if (JSON.stringify(error).indexOf('codError') > 0) {
-      const b = error.error;
-      this.sinNoticeService.setNotice(b.msgError, 'error');
+
+  }
+  /** ********************************************* @FUNDA ********************* **/
+
+  public cargarFotoJoya() {
+    this.srcJoya = null;
+    this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.operacionNuevo.credito.id.toString(), this.joyaFoto.tipoDocumento);
+  }
+  public cargarFotoFunda() {
+    this.srcFunda = null;
+    this.loadArchivoCliente(this.fundaFoto.proceso, this.fundaFoto.estadoOperacion, this.operacionNuevo.credito.id.toString(), this.fundaFoto.tipoDocumento);
+  }
+  private loadArchivoCliente(procesoS: string, estadoOperacionS: string, referenciaS: string, idTipoDocumentoS: string) {
+    let envioModel : DialogDataHabilitante = {
+      proceso: procesoS,
+      estadoOperacion: estadoOperacionS,
+      referencia: referenciaS,
+      tipoDocumento: idTipoDocumentoS,
+      documentoHabilitante: null
+    };
+    if (envioModel.referencia) {
+      const dialogRef = this.dialog.open(HabilitanteDialogComponent, {
+        width: "auto",
+        height: "auto",
+        data: envioModel
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        if (r) {
+          this.sinNotSer.setNotice("ARCHIVO CARGADO CORRECTAMENTE", "success");
+          this.cargarFotoHabilitante(idTipoDocumentoS, procesoS, referenciaS);
+        }
+      });
     } else {
-      this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING', 'error');
+      this.sinNotSer.setNotice("ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO", "error");
     }
-  });
 
-}
-public registroTasación(codigoRegistro: number, fechaInicio: Date, fechaAsignacion: Date, fechaInicioAtencion: Date, fechaFin: Date) {
-  const tracking: TbQoTracking = new TbQoTracking();
-  tracking.actividad = this.actividad;
-  tracking.proceso = this.procesoDocumentosLegales;
-  tracking.observacion = '';
-  /*tracking.codigoRegistro = codigoRegistro;
-  tracking.usuario = atob(localStorage.getItem(environment.userKey))
-  tracking.fechaInicio = fechaInicio;
-  tracking.fechaAsignacion = fechaAsignacion;
-  tracking.fechaInicioAtencion = fechaInicioAtencion;*/
-  tracking.fechaFin = fechaFin;
-  this.tra.guardarTracking(tracking).subscribe((data: any) => {
-    if (data.entidad) {
-      console.log(' TRACKING TASACION ------>' + JSON.stringify(data.entidad));
-      this.loadingSubject.next(false);
-    } else {
-      this.loadingSubject.next(false);
-      this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING', 'error');
+  }
+  private cargarFotoHabilitante(tipoDocumento, proceso, referencia) {
+    this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).subscribe((data: any) => {
+      this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).subscribe((dataDos: any) => {
+        let file = JSON.parse( atob( dataDos.entidad ) );
+        console.log(" dataDos de respuesta  --> ", file);
+        if(file.typeAction == '6'){
+          console.log(" dataDos de respuesta  --> ", file.typeAction);
+          this.srcJoya = file.fileBase64;
+        }
+        if(file.typeAction == '7'){
+          console.log(" dataDos de respuesta  --> ", file.typeAction);
+          this.srcFunda= file.fileBase64;
+        }
+      });
+    });
+  }
+  public solicitarAprobacion(){
+    if(this.existeCredito){
+      this.pro.cambiarEstadoProceso(this.operacionNuevo.credito.tbQoNegociacion.id,"NUEVO","PENDIENTE_APROBACION").subscribe( (data: any) =>{
+        if(data.entidad){
+          console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+          this.router.navigate(['aprobador/bandeja-aprobador/']);
+        }
+      }, error =>{ this.capturaError( error ); });
     }
-  }, error => {
-    this.loadingSubject.next(false);
-    if (JSON.stringify(error).indexOf('codError') > 0) {
-      const b = error.error;
-      this.sinNoticeService.setNotice(b.msgError, 'error');
-    } else {
-      this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING', 'error');
-    }
-  });
+  }
 }
 
 
-
-
-
-
-}
-
- 
 
