@@ -1,0 +1,11 @@
+<h1>Seleccionar fecha</h1>
+
+<div>
+<mat-form-field>
+    <input matInput [matDatepicker]="pckFechaArribo" 
+    formControlName="fechaArribo" placeholder="Fecha ">
+    <mat-datepicker-toggle matSuffix [for]="pckFechaArribo"></mat-datepicker-toggle>
+    <mat-datepicker #pckFechaArribo></mat-datepicker>
+</mat-form-field>
+
+</div>

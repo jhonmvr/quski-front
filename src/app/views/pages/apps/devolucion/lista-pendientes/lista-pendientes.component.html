@@ -1,1 +1,120 @@
-<p>lista-pendientes works!</p>
+<div class="spinner-container" *ngIf="loading | async">
+    <mat-spinner class="spiner"></mat-spinner>
+</div>
+
+<re-portlet>
+    <re-portlet-header [title]="'SELECCION DE FECHA DE ARRIBO '" [class]="'kt-portlet__head--lg'">
+        
+		<ng-container ktPortletTools>
+           
+
+        </ng-container>
+    </re-portlet-header>
+    <re-portlet-body>
+        <!-- start::FILTERS & GROUP ACTIONS -->
+        <div class="kt-form">
+            <!-- start::FILTERS -->
+            <div class="kt-form__filtration">
+                <div class="row align-items-center">
+                   
+                    <div class="col-md-3 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="codigoOperacion" placeholder="Codigo Operacion " autocomplete="off">
+                        </mat-form-field>
+                      
+                    </div>
+                    <a href="javascript:void(0);" (click)="buscar()" matTooltip="Buscar" style="font-size: 12px; vertical-align: middle;">
+                        <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above" >search</mat-icon>
+                        <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar credito</span>
+                    </a>
+                 
+                </div>
+       
+              
+            </div>
+        </div> 
+        <!-- END FILTERS -->
+        
+        <!--START MAT TABLE-->
+        <div class="mat-table__wrapper">
+            <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
+            matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
+                <ng-container matColumnDef="accion">
+                    <mat-header-cell *matHeaderCellDef>
+                        Accion
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                        <a href="javascript:void(0);" [routerLink]="['../gestion-cliente', row.id]" color="primary" [ngClass]="['primary']">
+                            <mat-icon style="font-size: 16px;" class="green-icon"   matTooltipPosition="above" matTooltip="Editar cliente">remove_red_eye
+                            </mat-icon>
+                        </a>
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="fechaSolicitud">
+                <mat-header-cell *matHeaderCellDef>Fecha de la Solicitud</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.cliente}}</mat-cell>
+            </ng-container>
+                <ng-container matColumnDef="agenciaSolicitud">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Agencia de solicitud</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.nivelEducacion}} </mat-cell>
+                </ng-container>               
+                <ng-container matColumnDef="codigoOperacionMadre">
+                    <mat-header-cell *matHeaderCellDef>Codigo de operacion</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.estadoCivil}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="codigoOperacion">
+                    <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="nombreCliente">
+                <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="identificacion">
+                <mat-header-cell *matHeaderCellDef>Identificacion</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="fundaMadre">
+                <mat-header-cell *matHeaderCellDef>Funda Madre</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="fundaActual">
+                    <mat-header-cell *matHeaderCellDef>Funda Actual</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+                </ng-container>
+            <ng-container matColumnDef="ciudadTevcol">
+                    <mat-header-cell *matHeaderCellDef>Ciudad Tevcol</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.codigoAmortizacion}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="fechaArriboAgencia">
+                <mat-header-cell *matHeaderCellDef>Fecha Arribo Agencia</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="fechaAprobacion">
+                <mat-header-cell *matHeaderCellDef>Fecha de Aprobacion</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="valorAvaluo">
+                <mat-header-cell *matHeaderCellDef>Valor Avaluo</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="pesoBruto">
+                <mat-header-cell *matHeaderCellDef>Peso Bruto</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+            </ng-container>
+      
+            
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" 
+            [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+            </mat-paginator>
+            
+        </div>
+        <!--end MAT TABLE-->
+
+    </re-portlet-body>    
+    <re-portlet-footer></re-portlet-footer>
+</re-portlet>

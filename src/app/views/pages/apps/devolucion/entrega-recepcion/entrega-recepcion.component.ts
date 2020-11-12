@@ -1,34 +1,31 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatPaginator, MatSort, MatStepper, MatTableDataSource } from '@angular/material';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
-import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Page } from '../../../../../core/model/page';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
+import { DevolucionService } from '../../../../../core/services/quski/devolucion.service';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
-import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
-import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
-import { DevolucionService } from '../../../../../core/services/quski/devolucion.service';
 
 @Component({
-  selector: 'kt-solicitud-devolucion',
-  templateUrl: './solicitud-devolucion.component.html',
-  styleUrls: ['./solicitud-devolucion.component.scss']
+  selector: 'kt-entrega-recepcion',
+  templateUrl: './entrega-recepcion.component.html',
+  styleUrls: ['./entrega-recepcion.component.scss']
 })
-export class SolicitudDevolucionComponent implements OnInit{
-  public formCreditoNuevo: FormGroup = new FormGroup({});
+export class EntregaRecepcionComponent implements OnInit{
+  public formCancelacion: FormGroup = new FormGroup({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
   // datos operacion
   public codigoOperacion = new FormControl('');
   public procesoDev = new FormControl('');
 
 
-  proceso= "CREDITONUEVO"
+  proceso= "DEVOLUCION"
  //datos cliente
  public cedulaCliente = new FormControl('');
  public nombresCompletos = new FormControl('');
@@ -48,41 +45,12 @@ export class SolicitudDevolucionComponent implements OnInit{
  public valorCustodia = new FormControl('');
  public cedulaHeredero = new FormControl('');
  public nombreHeredero = new FormControl('');
- 
+ idDevolucion = 16
   fechaUtil:diferenciaEnDias;
   fechaServer;
 ///operativa
 
-joyasList  = [{"tipoOro": "18KILATES", 
-"tipoJoya":"VARIOS", 
-"estadoJoya":"BUEN ESTADOS",
-"descripcion":"ESA MISMA",
-"pesoBruto":"12.00",
-"tienePiedras": "NO",
-"detallePiedras":  "VARIOS",
-"descuentoPesoPiedra": "0.00",
-"pesoNeto": "11.30",
-"valorAvaluo":  "311.20",
-"fundaMadre" : "A0123",
-"fundaActual": "A0123",
-"ciudadTevcol": "Quito"
-},
-{"tipoOro": "18KILATES", 
-"tipoJoya":"VARIOS", 
-"estadoJoya":"BUEN ESTADOS",
-"descripcion":"PesoBruto",
-"pesoBruto":"12.00",
-"tienePiedras": "NO",
-"detallePiedras":  "VARIOS",
-"descuentoPesoPiedra": "0.00",
-"pesoNeto": "11.30",
-"valorAvaluo":  "311.20",
-"fundaMadre" : "A0123",
-"fundaActual": "A0123",
-"ciudadTevcol": "Quito"
-}
-  
-]
+joyasList  = []
  
   //url=;objeto=ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiIiwKICAgICJtb250b0ZpbmFuY2lhZG8iOiAiNzAwIiwKICAgICJhc2Vzb3IiOiAiSnVhbml0byIsCiAgICAiZXN0YWRvT3BlcmFjaW9uIjogICJDQU5DRUxBRE8iLAogICAgInRpcG9DcmVkaXRvIjogIiIsCiAgICAiY29kaWdvVGFibGFBbW9ydGl6YWNpb25RdXNraSI6IkEwMSIsCiAgICAiaW1wYWdvIjogIm5vIiwKICAgICJyZXRhbnF1ZW8iOiAibm8iLAogICAgImNvYmVydHVyYUluaWNpYWwiOiAiMTIwMCIsCiAgICAiY29iZXJ0dXJhQWN0dWFsIjogIjExMDAiLAogICAgImJsb3F1ZW8iOiIiLAogICAgImRpYXNNb3JhIjogIiIsCiAgICAiZXN0YWRvVWJpY2FjaW9uIjoiIiwKICAgICJlc3RhZG9Qcm9jZXNvIjoiIiwKICAgICJjb2RpZ29TZXJ2aWNpbyI6IiIsCiAgICAibWlncmFkbyI6ICIiCgp9
   ///
@@ -160,7 +128,7 @@ datos
  @ViewChild('sort1', {static: true}) sort: MatSort;
   
 
-  constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, private tas: TasacionService,
+  constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, 
     public dialog: MatDialog, private dhs: DocumentoHabilitanteService,
     private css: SoftbankService, 
     private par: ParametroService, private route: ActivatedRoute,
@@ -186,7 +154,6 @@ datos
     this.consultarAgencia();
     this.getParametros();
     this.cargarDatos();
-    this.getJoyas();
     console.log("el encode", )
     console.log(typeof(this.catalagoEstadosCiviles))
     console.log( this.catalagoEstadosCiviles)
@@ -224,65 +191,36 @@ datos
     return  btoa(unescape(encodeURIComponent(JSON.stringify(entrada))))
   }
   cargarDatos(){
-    
-    
     let listDatosCreditos = []
-    this.consultarClienteCS();
-    this.objetoCredito.fechaAprobacion = this.datos.fechaAprobacion
-    this.objetoCredito.fechaVencimiento = this.datos.fechaVencimiento
-    this.objetoCredito.monto = this.datos.montoFinanciado
-    listDatosCreditos.push(this.objetoCredito)
-    console.log(listDatosCreditos)
-    this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
-    this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)
-    console.log("datasource Credito"  , this.objetoCredito)
-    console.log(this.datos.nombreCliente)
-    this.procesoDev.setValue("DEVOLUCION")
-    this.nombresCompletos.setValue(this.datos.nombreCliente)
-    this.codigoOperacion.setValue(this.datos.numeroOperacion)
-
-    this .cedulaCliente.setValue(this.datos.idCliente)
-  }
-
-
-  consultarClienteCS(){
-    let entidadConsultaCliente = new ConsultaCliente();
-    
-    //console.log(" "  + cedula)
-    entidadConsultaCliente.identificacion = this.datos.idCliente;
-    entidadConsultaCliente.idTipoIdentificacion = 1;
-
-    this.css.consultarClienteCS(entidadConsultaCliente).subscribe((data: any) => {
-      if (data) {
-      console.log(data) 
-      console.log(data.codigoEstadoCivil)
-      this.nivelEducacion.setValue(this.buscarEnCatalogo(this.catalogoEducacion, data.codigoEducacion).nombre)
-      this.genero.setValue(this.buscarEnCatalogo(this.catalogoGenero, data.codigoSexo).nombre)
-      this.estadoCivil.setValue(this.buscarEnCatalogo(this.catalagoEstadosCiviles, data.codigoEstadoCivil).nombre)
-      this.fechaNacimiento.setValue(data.fechaNacimiento)
-      this.nacionalidad.setValue(this.catalogoPais.find(p=>p.id==data.idPais).nombre)
-      this.edad.setValue(Math.floor(this.getEdad(data.fechaNacimiento)))
-      //this.lugarNacimiento.setValue(this.catalogoPais.find(p=>p.idDivisionNivelBajo==data.idPais).nombre)
-
-      } else {
-        this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
+    this.devService.getDevolucion(this.idDevolucion).subscribe((data:any)=> {
+      if(data.entidad){
+        console.log("Hello", data.entidad)
+        this.codigoOperacion.setValue(data.entidad.codigoOperacion)
+        this.procesoDev.setValue("DEVOLUCION")
+        this.cedulaCliente.setValue(data.entidad.cedulaCliente)
+        this.estadoCivil.setValue(data.entidad.estadoCivil)
+        this.fechaNacimiento.setValue(data.entidad.fechaNacimiento)
+        this.nacionalidad.setValue(data.entidad.nacionalidad)
+        this.nivelEducacion.setValue(data.entidad.nivelEducacion)
+        this.nombresCompletos.setValue(data.entidad.nombreCliente)
+        this.observaciones.setValue(data.entidad.observaciones)
+        this.tipoCliente.setValue(data.entidad.tipoCliente)
+        this.agenciaEntrega.setValue(data.entidad.agenciaEntrega)
+        this.validateHeredero();
+        this.valorCustodia.setValue(data.entidad.valorCustodiaAprox)
+        this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
+        this.listTablaHeredero = this.decodeObjetoDatos(data.entidad.codeHerederos);
+        listDatosCreditos.push(this.decodeObjetoDatos(data.entidad.codeDetalleCredito))
+        this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
+        this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)
+        this.dataSourceHeredero=new MatTableDataSource<any>(this.listTablaHeredero);
       }
-
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("Error no fue cacturado en 'consultarClienteCS' :(", 'error');
-
-      }
-    });
+    })
+  
+  
   }
 
-  buscarEnCatalogo(nombreCatalogo, codigoObjeto){
-    return nombreCatalogo.find(p=>p.codigo==codigoObjeto)
 
-  }
 
   encriptarDatos(objeto){
     return btoa(unescape(encodeURIComponent(objeto)))
@@ -304,53 +242,7 @@ datos
     );
   }
 
-  registrarDevolucion(){
-    let tbQoDevolucion = new TbQoDevolucion()
-    tbQoDevolucion.codigo =  "";
-    tbQoDevolucion.asesor = "Asesor quemado"
-    tbQoDevolucion.idAgencia = localStorage.getItem("reAgencia")
-    tbQoDevolucion.nombreAgenciaSolicitud = "quemada"
-    tbQoDevolucion.aprobador = "";
-    tbQoDevolucion.nombreCliente= this.nombresCompletos.value
-    tbQoDevolucion.cedulaCliente = this.cedulaCliente.value
-    tbQoDevolucion.codigoOperacion =   this.codigoOperacion.value == null ? "" : this.codigoOperacion.value
-    tbQoDevolucion.nivelEducacion = this.nivelEducacion.value
-    tbQoDevolucion.estadoCivil = this.estadoCivil.value
-    tbQoDevolucion.separacionBienes = this.separacionBienes.value
-    tbQoDevolucion.estado = 'ACT'
-    tbQoDevolucion.fechaNacimiento = this.fechaNacimiento.value
-    tbQoDevolucion.nacionalidad = this.nacionalidad.value
-    tbQoDevolucion.genero = this.genero.value
-    tbQoDevolucion.lugarNacimiento = this.lugarNacimiento.value
-    tbQoDevolucion.tipoCliente = this.tipoCliente.value
-    tbQoDevolucion.observaciones = this.observaciones.value
-    tbQoDevolucion.agenciaEntrega = this.agenciaEntrega.value.nombre
-    console.log(this.agenciaEntrega.value)
-    tbQoDevolucion.agenciaEntregaId  = this.agenciaEntrega.value.id
-    console.log(this.encodeObjetos(this.joyasList))
-    console.log("XD", this.decodeObjetoDatos(this.encodeObjetos(this.joyasList)));
-    tbQoDevolucion.valorCustodiaAprox = 12.00
-    tbQoDevolucion.codeHerederos = this.encodeObjetos(this.listTablaHeredero)
-    tbQoDevolucion.codeDetalleCredito = this.encodeObjetos(this.objetoCredito)
-    tbQoDevolucion.codeDetalleGarantia = this.encodeObjetos(this.joyasList)
-    
-    this.devService.registrarDevolucion(tbQoDevolucion, "juan").subscribe((data:any)=>{
-      if(data.entidad){
-        this.sinNoticeService.setNotice(
-          "Guardado correctamente",
-          "success"
-        );
-       // this.router.navigate(["/midas-oro/cliente/list-cliente"]);
-      } else {
-        this.sinNoticeService.setNotice(
-          "Ocurrio un error al guardar",
-          "warning"
-        );
-        //console.log(rWClient);
-      }
-      
-    })
-  }
+  
 
    
 
@@ -369,12 +261,7 @@ getEdad(fechaValue){
 
 
 
- getJoyas(){
-  this.totalResults = this.joyasList.length;
-  console.log( this.joyasList)
-  this.dataSourceJoyas = new MatTableDataSource<any>(this.joyasList);
-   
- }
+
 
 
  
@@ -519,17 +406,22 @@ validateHeredero(){
 }
 }
 
-agregarEnTabla(){
-  let objetoHeredero = { cedula:"", nombre:""}
-  if(this.cedulaHeredero.value && this.nombreHeredero.value){
-    objetoHeredero.cedula= this.cedulaHeredero.value  
-    objetoHeredero.nombre= this.nombreHeredero.value
-    this.listTablaHeredero.push(objetoHeredero)
-    this.dataSourceHeredero=new MatTableDataSource<any>(this.listTablaHeredero);
-    console.log(this.listTablaHeredero)
-  }else{
-    this.sinNoticeService.setNotice("Debe agregar", 'error');
-  }
- 
+aprobar(){
+  this.devService.aprobarDevolucion(this.idDevolucion).subscribe((data:any)=> {
+    
+    console.log(data.entidad)
+  }, error => {
+    this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
+  })
 }
+
+rechazar(){
+  this.devService.aprobarDevolucion(this.idDevolucion).subscribe((data:any)=> {
+    
+    console.log(data.entidad)
+  }, error => {
+    this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
+  })
+}
+
 } 
