@@ -12,6 +12,7 @@ export class TbQoDevolucion {
     cedulaCliente: string;
     codigoOperacion: string;
     nivelEducacion: string;
+    estadoCivil: string;
     separacionBienes: string;
     estado: string;
     fechaNacimiento: string;
@@ -20,10 +21,13 @@ export class TbQoDevolucion {
     tipoCliente:string;
     observaciones:string;
     agenciaEntrega : string;
-    valorCustodia : string;
+    valorCustodiaAprox : number;
     codeHerederos : string;
     codeDetalleCredito: string;
     codeDetalleGarantia: string;
+    genero: string;
+    nombreAgenciaSolicitud : string;
+    agenciaEntregaId: number;
 
     constructor(){
         

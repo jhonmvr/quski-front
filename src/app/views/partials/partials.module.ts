@@ -115,6 +115,8 @@ import { ListaExcepcionesComponent } from './custom/popups/lista-excepciones/lis
 import { ReasignarUsuarioComponent } from './custom/popups/reasignar-usuario/reasignar-usuario.component';
 import { ConfirmarAccionComponent } from './custom/popups/confirmar-accion/confirmar-accion.component';
 
+import { AddFechaComponent } from './custom/add-fecha/add-fecha.component';
+
 
 
 
@@ -183,7 +185,8 @@ import { ConfirmarAccionComponent } from './custom/popups/confirmar-accion/confi
 		SolicitudDeExcepcionesComponent,
 		ListaExcepcionesComponent,
 		ReasignarUsuarioComponent,
-		ConfirmarAccionComponent
+		ConfirmarAccionComponent,
+		AddFechaComponent
 
 	],
 	exports: [
@@ -208,7 +211,7 @@ import { ConfirmarAccionComponent } from './custom/popups/confirmar-accion/confi
 		// topbar components
 		ContextMenu2Component,
 		ContextMenuComponent,
-
+		AddFechaComponent,
 		QuickPanelComponent,
 		ScrollTopComponent,
 		SearchResultComponent,
@@ -307,7 +310,8 @@ import { ConfirmarAccionComponent } from './custom/popups/confirmar-accion/confi
 		TablaOfertaCreditoComponent,
 		SolicitudDeExcepcionesComponent,
 		TablaTasacionComponent,
-		TablaOfertaCreditoComponent
+		TablaOfertaCreditoComponent,
+		AddFechaComponent
 
 	]
 })

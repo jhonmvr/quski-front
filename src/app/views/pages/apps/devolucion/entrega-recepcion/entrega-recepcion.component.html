@@ -133,11 +133,7 @@
                 </div>
                 <div class="col-md-4">
                     <mat-form-field>
-                        <mat-select placeholder="" [formControl]="tipoCliente" (selectionChange)="validateHeredero($event.value)">
-                            <mat-option *ngFor="let tipoCli of tipoClienteList " [value]="tipoCli">
-                                {{tipoCli}}
-                            </mat-option>
-                        </mat-select>                     
+                        <input matInput [formControl]="tipoCliente" readonly>                     
                     </mat-form-field>
                 </div> 
             </div>   
@@ -157,11 +153,9 @@
                 </div>
                 <div class="col-md-4">
                     <mat-form-field>
-                        <mat-select placeholder="" [formControl]="agenciaEntrega">
-                            <mat-option *ngFor="let agen of catalogoAgencia " [value]="agen">
-                                {{agen.nombre}}
-                            </mat-option>
-                        </mat-select>                     
+
+                        <input matInput [formControl]="agenciaEntrega" readonly>
+                                       
                     </mat-form-field>
                 </div> 
             </div>    
@@ -176,21 +170,14 @@
                 </div> 
             </div>  
             <div *ngIf="enableHerederoButton | async">
+           
+                    
                 <div class="row">
-                    
-                    <div class="col-md-6">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="cedulaHeredero" placeholder="Cedula Heredero">
-                        </mat-form-field>
-                    </div> 
-                    
-                    <div class="col-md-6">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="nombreHeredero"  placeholder="Nombre Heredero">
-                        </mat-form-field>
-                    </div> 
-                    <button (click)="agregarEnTabla()">Agregar  </button>
-                </div>  
+                <div class="col-md-6">
+                    <label style="font-weight:bold">Herederos :</label>
+                </div>
+           
+            </div>  
 
                 <div class="mat-table__wrapper">
                     <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceHeredero"
@@ -403,7 +390,8 @@
            
         </mat-vertical-stepper>
         <div>
-            <button mat-button  (click)="registrarDevolucion()">Solicitar Aprobacion</button>
+            <button mat-button  (click)="aprobar()">Aprobar</button>
+            <button mat-button  (click)="rechazar()">Rechazar</button>
         </div>
 
 	</re-portlet-body>
