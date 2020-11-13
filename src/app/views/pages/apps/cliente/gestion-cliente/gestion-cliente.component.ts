@@ -56,20 +56,21 @@ export class GestionClienteComponent implements OnInit {
   displayedColumnsII = ['Accion', 'Is', 'Valor'];
   dataSourceIngresoEgreso = new MatTableDataSource<TbQoIngresoEgresoCliente>();
   /** @CATALOGOS **/
-  public catActividadEconomica: Array<any>;    
+  public catActividadEconomica: Array<any>;  
+  public catActividadEconomicaMupi: Array<any>;   
   public catPais: Array<any>;    
   public catEducacion: Array<any>;
   public catGenero: Array<any>;
   public catEstadoCivil : Array<any>;
   public catSectorVivienda : Array<any>;
   public catTipoVivienda: Array<any>;
+  public catOrigenIngreso: Array<any>;
   public catProfesion: Array<any>;
   public catTipoReferencia: Array<any>;
   public catOcupacion: Array<any>;
   public catCargo: Array<any>;
   /** @ENUMS **/
   public catSeparacionBienes = Object.values(SeparacionBienesEnum);
-  public catOrigenIngreso = Object.values(OrigenIngresosEnum);
   /** @DIVISION_POLITICA **/
   private divicionPolitica: User[];
   public catFiltradoLugarNacimiento:  Observable<User[]>;
@@ -124,7 +125,8 @@ export class GestionClienteComponent implements OnInit {
   public direccionLegalLaboral = new FormControl('', []);
   public direccionCorreoLaboral = new FormControl('', []);
   public actividadEconomicaEmpresa = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public actividadEmpresa = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public actividadEconomicaMupi = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public nombreEmpresa = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public origenIngresos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public profesion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public ocupacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -197,8 +199,10 @@ export class GestionClienteComponent implements OnInit {
     this.formDatosDireccionLaboral.addControl("calleSecundariaO    ", this.calleSecundariaO);
     this.formDatosDireccionLaboral.addControl("referenciaUbicacionO", this.referenciaUbicacionO);
     this.formDatosEconomicos.addControl("relacionDependencia", this.relacionDependencia);
-    this.formDatosEconomicos.addControl("actividadEmpresa", this.actividadEmpresa);
-    this.formDatosEconomicos.addControl("actividadCliente", this.actividadEconomicaEmpresa);
+    this.formDatosEconomicos.addControl("nombreEmpresa", this.nombreEmpresa);
+    this.formDatosEconomicos.addControl("actividadEconomicaEmpresa", this.actividadEconomicaEmpresa);
+    this.formDatosEconomicos.addControl("actividadEconomicaMupi", this.actividadEconomicaMupi);
+
     this.formDatosEconomicos.addControl("ocupacion", this.ocupacion);
     this.formDatosEconomicos.addControl("cargo", this.cargo);
     this.formDatosEconomicos.addControl("profesion", this.profesion);
@@ -271,7 +275,7 @@ export class GestionClienteComponent implements OnInit {
       this.origenIngresos.setValue(this.wrapper.cliente.origenIngreso);
       this.relacionDependencia.setValue(this.wrapper.datosTrabajo.esRelacionDependencia ? "SI": "NO");
       this.setRelacionDependencia();
-      this.actividadEmpresa.setValue(this.wrapper.datosTrabajo.nombreEmpresa);
+      this.nombreEmpresa.setValue(this.wrapper.datosTrabajo.nombreEmpresa);
       this.actividadEconomicaEmpresa.setValue(this.catActividadEconomica.find( x => x.id.toString() == this.wrapper.datosTrabajo.actividadEconomica) );
       this.cargo.setValue(this.catCargo.find( x => x.codigo == this.wrapper.datosTrabajo.cargo));
       this.ocupacion.setValue(this.catOcupacion.find( x => x.codigo == this.wrapper.datosTrabajo.ocupacion));
@@ -382,78 +386,92 @@ export class GestionClienteComponent implements OnInit {
           const subActivi = nombreconsultaActividadEconomica.find(sa => sa.id == activi.idPadre) || {};
           return { nombre: activi.nombre + " / "+ subActivi.nombre, id: activi.id, idPadre: subActivi.id}; 
         });
-        this.css.consultarPaisCS().subscribe((data2: any)=> {
-          if (!data2.existeError) {
-            this.catPais = data2.catalogo;
-            this.css.consultarGeneroCS().subscribe((data:any)=>{
-              if (!data.existeError) {
-                this.catGenero = data.catalogo;
-                this.css.consultarEstadosCivilesCS().subscribe( (data: any) =>{
-                  if(!data.existeError){
-                    this.catEstadoCivil = data.catalogo;
-                    this.css.consultarSectorViviendaCS().subscribe((data: any)=>{
-                      if (!data.existeError) {
-                        this.catSectorVivienda = data.catalogo;
-                        this.css.consultarTipoViviendaCS().subscribe((data: any)=>{
+        this.css.consultarActividadEconomicaMupiCS().subscribe( (data: any) =>{
+          if(!data.existeError){
+            this.catActividadEconomicaMupi = data.catalogo;
+            this.css.consultarPaisCS().subscribe((data2: any)=> {
+              if (!data2.existeError) {
+                this.catPais = data2.catalogo;
+                this.css.consultarGeneroCS().subscribe((data:any)=>{
+                  if (!data.existeError) {
+                    this.catGenero = data.catalogo;
+                    this.css.consultarEstadosCivilesCS().subscribe( (data: any) =>{
+                      if(!data.existeError){
+                        this.catEstadoCivil = data.catalogo;
+                        this.css.consultarSectorViviendaCS().subscribe((data: any)=>{
                           if (!data.existeError) {
-                            this.catTipoVivienda = data.catalogo;
-                            this.css.consultarProfesionesCS().subscribe((data: any)=>{
+                            this.catSectorVivienda = data.catalogo;
+                            this.css.consultarTipoViviendaCS().subscribe((data: any)=>{
                               if (!data.existeError) {
-                                this.catProfesion = data.catalogo;
-                                this.css.consultarTipoReferenciaCS().subscribe((data: any )=>{
+                                this.catTipoVivienda = data.catalogo;
+                                this.css.consultarProfesionesCS().subscribe((data: any)=>{
                                   if (!data.existeError) {
-                                    this.catTipoReferencia = data.catalogo;
-                                    this.css.consultarOcupacionCS().subscribe((data: any)=> {
+                                    this.catProfesion = data.catalogo;
+                                    this.css.consultarTipoReferenciaCS().subscribe((data: any )=>{
                                       if (!data.existeError) {
-                                        this.catOcupacion = data.catalogo;
-                                        this.css.consultarCargoOcupacion().subscribe( (data: any) =>{
-                                          if (!data.existeError){
-                                            this.catCargo = data.catalogo;
-                                            this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
-                                              if (!data.existeError) {
-                                                const localizacion = data.catalogo;
-                                                let bprovinces = localizacion.filter(e => e.tipoDivision == "PROVINCIA");
-                                                let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
-                                                let bParroqui = localizacion.filter(e => e.tipoDivision == "PARROQUIA");
-                                                let ubicacion: User[]= bParroqui.map(parro => {
-                                                  const cant = bCantons.find(c => c.id == parro.idPadre) || {};
-                                                  const pro = bprovinces.find(p => p.id == cant.idPadre) || {};
-                                                  return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, id: parro.id };
-                                                });
-                                                this.divicionPolitica = ubicacion;
-                                                this.catFiltradoLugarNacimiento    = this.lugarNacimiento.valueChanges.pipe( startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
-                                                this.catFiltradoUbicacionDomicilio = this.ubicacion.valueChanges.pipe( startWith(''),       map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
-                                                this.catFiltradoUbicacionLaboral   = this.ubicacionO.valueChanges.pipe( startWith(''),      map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
-                                                this.css.consultarEducacionCS().subscribe( (data:any) =>{
-                                                  if(!data.existeError){
-                                                    this.catEducacion = data.catalogo;
-                                                    this.cargarCampos();
-                                                  }else{
+                                        this.catTipoReferencia = data.catalogo;
+                                        this.css.consultarOcupacionCS().subscribe((data: any)=> {
+                                          if (!data.existeError) {
+                                            this.catOcupacion = data.catalogo;
+                                            this.css.consultarCargoOcupacion().subscribe( (data: any) =>{
+                                              if (!data.existeError){
+                                                this.catCargo = data.catalogo;
+                                                this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
+                                                  if (!data.existeError) {
+                                                    const localizacion = data.catalogo;
+                                                    let bprovinces = localizacion.filter(e => e.tipoDivision == "PROVINCIA");
+                                                    let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
+                                                    let bParroqui = localizacion.filter(e => e.tipoDivision == "PARROQUIA");
+                                                    let ubicacion: User[]= bParroqui.map(parro => {
+                                                      const cant = bCantons.find(c => c.id == parro.idPadre) || {};
+                                                      const pro = bprovinces.find(p => p.id == cant.idPadre) || {};
+                                                      return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, id: parro.id };
+                                                    });
+                                                    this.divicionPolitica = ubicacion;
+                                                    this.catFiltradoLugarNacimiento    = this.lugarNacimiento.valueChanges.pipe( startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
+                                                    this.catFiltradoUbicacionDomicilio = this.ubicacion.valueChanges.pipe( startWith(''),       map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
+                                                    this.catFiltradoUbicacionLaboral   = this.ubicacionO.valueChanges.pipe( startWith(''),      map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
+                                                    this.css.consultarEducacionCS().subscribe( (data:any) =>{
+                                                      if(!data.existeError){
+                                                        this.catEducacion = data.catalogo;
+                                                        this.css.consultarOrigenIngresoCS().subscribe( (data: any) =>{
+                                                          if(!data.existeError){
+                                                            this.catOrigenIngreso = data.catalogo;
+                                                            this.cargarCampos();
+    
+                                                          }
+                                                        }, error =>{ this.capturaError( error )});
+                                                      }else{
+                                                        this.loadingSubject.next(false);
+                                                        this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');  
+                                                      }
+                                                    }, error => { this.capturaError(error) });
+                                                  } else{
                                                     this.loadingSubject.next(false);
-                                                    this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');  
-                                                  }
-                                                }, error => { this.capturaError(error) });
-                                              } else{
+                                                    this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
+                                                  } 
+                                                }, error => { this.capturaError(error) })
+                                              }else{
                                                 this.loadingSubject.next(false);
                                                 this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
-                                              } 
-                                            }, error => { this.capturaError(error) })
+                                              }
+                                            }, error => { this.capturaError(error) });
                                           }else{
                                             this.loadingSubject.next(false);
                                             this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
-                                          }
-                                        }, error => { this.capturaError(error) });
+                                          } 
+                                        }, error =>{ this.capturaError( error )});
                                       }else{
                                         this.loadingSubject.next(false);
                                         this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
-                                      } 
+                                      }
                                     }, error =>{ this.capturaError( error )});
                                   }else{
                                     this.loadingSubject.next(false);
                                     this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                                   }
                                 }, error =>{ this.capturaError( error )});
-                              }else{
+                              } else{
                                 this.loadingSubject.next(false);
                                 this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                               }
@@ -463,7 +481,7 @@ export class GestionClienteComponent implements OnInit {
                             this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                           }
                         }, error =>{ this.capturaError( error )});
-                      } else{
+                      }else{
                         this.loadingSubject.next(false);
                         this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                       }
@@ -472,17 +490,17 @@ export class GestionClienteComponent implements OnInit {
                     this.loadingSubject.next(false);
                     this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                   }
-                }, error =>{ this.capturaError( error )});
-              }else{
+                }, error => { this.capturaError(error); }); 
+              } else {
                 this.loadingSubject.next(false);
-                this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
-              }
-            }, error => { this.capturaError(error); }); 
-          } else {
+                this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');        
+              } 
+            }, error => { this.capturaError(error); })
+          }else{
             this.loadingSubject.next(false);
-            this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');        
-          } 
-        }, error => { this.capturaError(error); }); 
+            this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');
+          }
+        }, error =>{ this.capturaError( error )});
       } else {
         this.loadingSubject.next(false);
         this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');
@@ -728,12 +746,16 @@ export class GestionClienteComponent implements OnInit {
       return input.hasError('required') ? errorRequerido : '';
     }
     //Datos economicos clientes
-    if (pfield && pfield === 'actividadEmpresa') {
-      const input = this.actividadEmpresa;
+    if (pfield && pfield === 'nombreEmpresa') {
+      const input = this.nombreEmpresa;
       return input.hasError('required') ? errorRequerido : '';
     }
     if (pfield && pfield === 'actividadEconomicaEmpresa') {
       const input = this.actividadEconomicaEmpresa;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'actividadEconomicaMupi') {
+      const input = this.actividadEconomicaMupi;
       return input.hasError('required') ? errorRequerido : '';
     }
     if (pfield && pfield === 'ocupacion') {
@@ -773,18 +795,19 @@ export class GestionClienteComponent implements OnInit {
   }
   public setRelacionDependencia() {
     this.cargo.enable();
-    this.actividadEmpresa.enable();
+    this.nombreEmpresa.enable();
     this.cargo.setValue(null);
-    this.actividadEmpresa.setValue(null);
+    this.nombreEmpresa.setValue(null);
     const ingresoObtenido = this.origenIngresos.value;
     if (ingresoObtenido == OrigenIngresosEnum.EMPLEADO_PRIVADO.toString() || ingresoObtenido == OrigenIngresosEnum.EMPLEADO_PUBLICO.toString()) {
       this.relacionDependencia.setValue(RelacionDependenciaEnum.SI);
     } else {
+      //Todo: Agregar Validacion de actividad economica;
       this.relacionDependencia.setValue(RelacionDependenciaEnum.NO);
       this.cargo.setValue( this.catCargo.find( x => x.codigo == 'C1403') );
-      this.actividadEmpresa.setValue(null);
+      this.nombreEmpresa.setValue(null);
       this.cargo.disable();
-      this.actividadEmpresa.disable();
+      this.nombreEmpresa.disable();
     }
   }
   public direccionLegalD() {
@@ -1151,14 +1174,14 @@ export class GestionClienteComponent implements OnInit {
                       this.wrapper.datosTrabajo = new TbQoDatoTrabajoCliente();
                       this.wrapper.datosTrabajo.tbQoCliente = this.wrapper.cliente;
                     }
-                    this.wrapper.datosTrabajo.nombreEmpresa = this.actividadEmpresa.value;
-                    console.log("CARGO ===> " ,this.cargo.value.codigo);
+                    this.wrapper.datosTrabajo.nombreEmpresa = this.nombreEmpresa.value;
                     this.wrapper.datosTrabajo.cargo = this.cargo.value.codigo;
-                    this.wrapper.datosTrabajo.actividadEconomica = this.actividadEconomica.value ? this.actividadEconomicaEmpresa.value.id: null;
+                    this.wrapper.datosTrabajo.actividadEconomica = this.actividadEconomicaEmpresa.value ? this.actividadEconomicaEmpresa.value.id: null;
+                    this.wrapper.datosTrabajo.actividadEconomicaMupi = this.actividadEconomicaMupi.value ? this.actividadEconomicaMupi.value.id: null;
                     this.wrapper.datosTrabajo.ocupacion = this.ocupacion.value ? this.ocupacion.value.codigo: null ;
                     this.wrapper.datosTrabajo.esprincipal = true;
                     this.wrapper.datosTrabajo.esRelacionDependencia = this.relacionDependencia.value == 'SI' ? true : false;
-                    this.wrapper.datosTrabajo.origenIngreso = "2"; // this.origenIngresos.value;
+                    this.wrapper.datosTrabajo.origenIngreso = "2"; // Todo: this.origenIngresos.value;
                     if(!this.wrapper.telefonos){
                       this.wrapper.telefonos = new Array<TbQoTelefonoCliente>()
                       this.wrapper.telefonos[0] = new TbQoTelefonoCliente();
