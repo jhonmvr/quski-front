@@ -1,13 +1,11 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Page } from '../model/page';
-import { map } from 'rxjs/operators';
-import { AppConfig } from '../../app.config';
-
 import { Parametro } from '../model/Parametro';
-import { Observable, of } from 'rxjs';
+import { throwError } from 'rxjs';
 import { BaseWrapper } from '../model/basewrapper';
-import { GenericBaseWrapper } from '../model/generic-basewrapper';
 import { environment } from '../../../environments/environment';
+import { ReNoticeService } from './re-notice.service';
+import { AuthDialogComponent } from '../../views/partials/custom/auth-dialog/auth-dialog.component';
 
 export class BaseService {
   public headers: HttpHeaders;
@@ -43,7 +41,6 @@ export class BaseService {
   constructor() {
     this.params = new HttpParams();
     if (localStorage.getItem('reUser')) {
-      const u = localStorage.getItem('reUser');
       this.headers= new HttpHeaders({ 'Content-Type': 'application/json' });
       console.log("Hola, creaste los headers");
       if( localStorage.getItem( environment.authTokenKey ) ){
@@ -57,7 +54,7 @@ export class BaseService {
       };
     }
   }
-
+/* 
   public setParameter() {
            localStorage.setItem('setRE000', 'true');
            this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
@@ -87,9 +84,38 @@ export class BaseService {
            //parametros cloudstudio
            this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
            
-  }
+  } */
 
-   
+  public setParameter() {
+    localStorage.setItem('setRE000', 'true');
+    this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
+    //Url de acceso al rootcontext de seguridad core-security-web
+    this.segRootContextUrl = 'http://localhost:28080/core-security-web/';
+    //Url de acceso al resources de seguridad core-security-web
+    this.segResourcesUrl = 'http://localhost:28080/core-security-web/resources/';
+    //Full url para datos de usuario por rol core-security-web
+    this.userRolServiceUrl = 'http://localhost:28080/core-security-web/resources/usuarioRolRestController/getEntitiesByUsuario';
+    //Full url par datos del servicio core-security-web
+    //this.menuServiceUrl = 'http://localhost:28080/core-security-web/resources/authRolRestController/opciones/usuario';
+    //Path al rootcontext de la app 
+    this.appRootContextUrl = 'http://localhost:28080/quski-oro-rest/';
+    //Path al resources de la app
+    this.appResourcesUrl = 'http://localhost:28080/quski-oro-rest/resources/';
+    //Full url al servidor de websocket generic-relative-core
+    this.appWebSocketUrl = 'ws://localhost:28080/generic-relative-rest/relativews/';
+    //Path contextroot generic-relative-core
+    this.genericResourcesUrl = 'http://localhost:28080/generic-relative-rest/resources/';
+    //object storage 
+    this.mongoDb = atob(localStorage.getItem( environment.prefix + 'RE009')).replace(this.keyUnencrypt, '');
+    this.mongoAlertaColeccion = atob(localStorage.getItem( environment.prefix + 'RE010')).replace(this.keyUnencrypt, '');
+    //parametros quski
+    this.crmResourcesUrl = 'http://localhost:28080/quski-oro-satelite-crm-rest/resources/';
+
+
+    //parametros cloudstudio
+    this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
+    
+}
   
 
   public getSystemDate() {
@@ -154,14 +180,14 @@ export class BaseService {
     return this.http.post<any>(serviceUrl, dataEnvio, this.options);
   }
 
-   public manageGenericUrl(generic, wrapper: BaseWrapper, serviceUrl: string) {
+   public manageGenericUrl(wrapper: BaseWrapper, serviceUrl: string) {
     console.log('==> manageGenericUrlxx ' + JSON.stringify(wrapper));
     console.log('==> url ' + serviceUrl);
     this.options = { headers: this.headers };
     return this.http.post<BaseWrapper>(serviceUrl, wrapper, this.options);
   }
 
-  public generateToken(user: string, password: string) {
+  public generateToken() {
     
     // if (!localStorage.getItem(AppConfig.TOKEN_KEY)) {
     //   localStorage.removeItem(AppConfig.TOKEN_KEY);
@@ -173,57 +199,9 @@ export class BaseService {
     // }
   }
 
-  private getToken(user: string, password: string) {
-    // const headers = new Headers({
-    //   'Content-Type': AppConfig.contentTypeToken,
-    //   Authorization: 'Basic ' + this.segApiGwyCredential
-    // });
-    // const params = new HttpParams();
-    // if (AppConfig.grantContentTypeToken == 'client_credentials') {
-    //   params.set('grant_type', 'client_credentials');
-    // } else {
-    //   params.set('grant_type', 'password');
-    //   if (user) {
-    //     params.set('username', user);
-    //   }
-    //   if (password) {
-    //     params.set('password', password);
-    //   }
-    // }
-    // this.options = { headers: headers, params: params };
-    // return this.http.post(this.segApiUrlToken, {}, this.options);
-  }
 
-  private refreshToken() {
-    // if (localStorage.getItem(AppConfig.REFRESH_TOKEN_KEY)) {
-    //   const headers = new Headers({
-    //     'Content-Type': AppConfig.contentTypeToken,
-    //     Authorization: this.segApiGwyCredential
-    //   });
-    //   this.params.set('grant_type', 'refresh_token');
-    //   this.params.set(
-    //     'refresh_token',
-    //     localStorage.getItem(AppConfig.REFRESH_TOKEN_KEY)
-    //   );
-    //   this.options = { headers: headers };
-    //   return this.http.post(this.segApiUrlToken, this.options).pipe(
-    //     map(
-    //       (response: Response) => {
-    //         const entidad = response.json();
-    //         return entidad;
-    //       },
-    //       error => {
-    //         console.log(
-    //           '==>despues de buscar usuario error  ' + JSON.stringify(error)
-    //         );
-    //         return error;
-    //       }
-    //     )
-    //   );
-    // }
-  }
 
-  public callGenericServiceAPIJSON(data, service, version) {
+  public callGenericServiceAPIJSON() {
     // this.params = new HttpParams();
     // const headers = new Headers({
     //   'Content-Type': 'application/json',
@@ -241,7 +219,7 @@ export class BaseService {
     // );
   }
 
-  public callGenericServiceAPIJXML(data, service, version) {
+  public callGenericServiceAPIJXML() {
     // this.params = new HttpParams();
     // const headers = new Headers({
     //   'Content-Type': 'text/xml',
@@ -276,7 +254,7 @@ export class BaseService {
     );
   }
 
-  public notifyService(data) {
+  public notifyService() {
     // this.getTokenCore().subscribe(rData => {
     //   this.params = new HttpParams();
     //   const headers = new Headers({
@@ -294,31 +272,53 @@ export class BaseService {
     // });
   }
 
-  public notifyServiceSeguridad(data) {
+  public notifyServiceSeguridad() {
     // this.getToken(null, null).subscribe(token => {
     //   this.envioNotificacion(data, token).subscribe(respuesta => {});
     // });
   }
 
-  private envioNotificacion(data, token) {
-    // const headersLoc = new Headers({
-    //   'Content-Type': 'application/json',
-    //   Accept: 'application/json',
-    //   Authorization: AppConfig.authorizationPrefixApi + token.access_token
-    // });
-    // this.options = { headers: headersLoc };
-    // return this.http.post(this.notapiUrlNotificacion, data, this.options);
-  }
 
-  private getTokenCore() {
-    // const headers = new Headers({
-    //   'Content-Type': AppConfig.contentTypeToken,
-    //   Authorization: 'Basic ' + this.apiGwyCredential
-    // });
 
-    // const params = new HttpParams();
-    // params.set('grant_type', 'client_credentials');
-    // this.options = { headers: headers, params: params };
-    // return this.http.post(this.apiUrlToken, {}, this.options);
+  HandleError(error: any, sinNoticeService: ReNoticeService, dialog ) {
+    if (JSON.stringify(error).indexOf("codError") > 0) {
+      let b = error.error;
+      sinNoticeService.setNotice(b.msgError, 'error');
+    } else if(error.error instanceof  Blob){
+        sinNoticeService.setNotice("NO SE ENCUENTRA O NO EXISTE ", 'error');
+     }else if(error.error instanceof ProgressEvent){
+      sinNoticeService.setNotice("NO SE PUEDE ACCEDER AL SERVICIO REVISE SU CONEXIÓN A INTERNET O VPN", 'error');
+     }
+     else if(error instanceof HttpErrorResponse ){
+      if(error.status != 200 ){
+        if(error.message){
+          sinNoticeService.setNotice(error.message, 'error');
+        }else{
+          sinNoticeService.setNotice(error.error, 'error');
+          //console.log(error);
+        }
+      }
+    }
+    let errorMessage = '';
+    if (error.status === 401) {
+      errorMessage = 'Error: ' + error.statusText;
+      dialog.open(AuthDialogComponent, {
+        data: {
+          mensaje: "Error " + error.statusText + " - " + error.message
+        }
+      });
+    } else if (error.status === 403) {
+      errorMessage = 'Error: ' + error.statusText;
+      //this.securityService.resetPasswordRequired();
+    } else if (error.status === 500) {
+      errorMessage = 'Error: ' + error.statusText;
+    } else {
+      errorMessage = 'Error: ' +
+        (error.error.mensaje === undefined || error.error.mensaje === null ? error.message : error.error.mensaje);
+    }
+
+    return throwError(errorMessage);
   }
+  
+
 }

@@ -6,13 +6,18 @@ import { Page } from '../../model/page';
 
 
 
+
+import { tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { ReNoticeService } from '../re-notice.service';
 @Injectable({
   providedIn: 'root'
 })
 export class RiesgoAcumuladoService extends BaseService {
 
   urlRest = "riesgoAcumuladoRestController/";
-  constructor(_http: HttpClient) {
+  constructor(_http: HttpClient,
+    private dialog: MatDialog) {
     super();
     this.http = _http;
     this.setParameter();
@@ -40,7 +45,12 @@ export class RiesgoAcumuladoService extends BaseService {
     }
     this.params = this.params.set('idCliente', idCliente.toString()); 
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
     /**
    * @author Jeroham Cadenas.
@@ -51,7 +61,12 @@ export class RiesgoAcumuladoService extends BaseService {
     let serviceUrl = this.appResourcesUrl + this.urlRest +"persistEntities";
     let wrapper = { entidades: data };
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   // NO IMPLEMENTADO NO USAR 
@@ -59,7 +74,12 @@ export class RiesgoAcumuladoService extends BaseService {
   public riesgoAcumulado() {
     let serviceUrl = this.appResourcesUrl + "riesgoAcumuladoRestController/listAllEntities";
     this.options = { Headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 

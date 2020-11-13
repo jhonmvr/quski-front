@@ -49,7 +49,7 @@ export class ReasignarUsuarioComponent implements OnInit {
       } else {
         console.log('Me cai we :c');
       }
-    }, error =>{ this.capturaError( error ) });
+    });
   }
   public reasignar(row: Usuario){
     const mensaje = "Reasignarle la operacion al usuario, " + row.nombre;
@@ -72,22 +72,6 @@ export class ReasignarUsuarioComponent implements OnInit {
     });
     
   }
-  private capturaError(error: any) {
-    if (error.error) {
-      if (error.error.codError) {
-        this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-      } else {
-        this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-      }
-    } else if (error.statusText && error.status == 401) {
-      this.dialog.open(AuthDialogComponent, {
-        data: {
-          mensaje: "Error " + error.statusText + " - " + error.message
-        }
-      });
-    } else {
-      this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-    }
-  }
+  
 
 }

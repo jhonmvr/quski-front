@@ -167,7 +167,7 @@ export class GenerarCreditoComponent implements OnInit {
             this.operacionNuevo = data.entidad;
             this.validarOperacion(this.operacionNuevo);
           }
-        }, error => { this.capturaError(error) });
+        });
         this
       } else {
         this.loadingSubject.next(false);
@@ -261,23 +261,7 @@ export class GenerarCreditoComponent implements OnInit {
       this.router.navigate(['negociacion/bandeja-operaciones']);
     });
   }
-  private capturaError(error: any) {
-    if (error.error) {
-      if (error.error.codError) {
-        this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-      } else {
-        this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-      }
-    } else if (error.statusText && error.status == 401) {
-      this.dialog.open(AuthDialogComponent, {
-        data: {
-          mensaje: "Error " + error.statusText + " - " + error.message
-        }
-      });
-    } else {
-      this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-    }
-  }
+  
   private setFechaSistema() {
     this.cre.getSystemDate().subscribe((fechaSistema: any) => {
       this.fechaServer = new Date(fechaSistema.entidad);
@@ -362,7 +346,7 @@ export class GenerarCreditoComponent implements OnInit {
           this.loadingSubject.next(false);
           this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
         }
-      }, error =>{ this.capturaError(error); });
+      });
     }else{
       this.sinNotSer.setNotice('Complete todos los campos solicitados.', 'error');
     }
@@ -449,7 +433,7 @@ export class GenerarCreditoComponent implements OnInit {
           console.log('El nuevo estado -> ',data.entidad.estadoProceso);
           this.router.navigate(['aprobador/bandeja-aprobador/']);
         }
-      }, error =>{ this.capturaError( error ); });
+      });
     }
   }
 }

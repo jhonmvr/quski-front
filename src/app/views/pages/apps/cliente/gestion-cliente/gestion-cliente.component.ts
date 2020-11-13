@@ -361,7 +361,7 @@ export class GestionClienteComponent implements OnInit {
             this.loadingSubject.next(false);
             this.sinNoticeService.setNotice('NO EXISTE NEGOCIACION', 'error');   
           }
-        }, error =>{ this.capturaError(error) });
+        });
       }else if(data.params.origen == "CED"){
         this.cli.traerClienteByCedula(data.params.item).subscribe((data: any) => {
           if (data.entidad) {
@@ -371,7 +371,7 @@ export class GestionClienteComponent implements OnInit {
             this.loadingSubject.next(false);
             this.sinNoticeService.setNotice('NO EXISTE EL CLIENTE', 'error');   
           }
-        }, error =>{ this.capturaError(error) });
+        });
       }else{
       this.loadingSubject.next(false);
 
@@ -440,92 +440,75 @@ export class GestionClienteComponent implements OnInit {
                                                             this.cargarCampos();
     
                                                           }
-                                                        }, error =>{ this.capturaError( error )});
+                                                        });
                                                       }else{
                                                         this.loadingSubject.next(false);
                                                         this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');  
                                                       }
-                                                    }, error => { this.capturaError(error) });
+                                                    });
                                                   } else{
                                                     this.loadingSubject.next(false);
                                                     this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                                                   } 
-                                                }, error => { this.capturaError(error) })
+                                                })
                                               }else{
                                                 this.loadingSubject.next(false);
                                                 this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                                               }
-                                            }, error => { this.capturaError(error) });
+                                            });
                                           }else{
                                             this.loadingSubject.next(false);
                                             this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                                           } 
-                                        }, error =>{ this.capturaError( error )});
+                                        });
                                       }else{
                                         this.loadingSubject.next(false);
                                         this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                                       }
-                                    }, error =>{ this.capturaError( error )});
+                                    });
                                   }else{
                                     this.loadingSubject.next(false);
                                     this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                                   }
-                                }, error =>{ this.capturaError( error )});
+                                });
                               } else{
                                 this.loadingSubject.next(false);
                                 this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                               }
-                            }, error =>{ this.capturaError( error )});
+                            });
                           } else{
                             this.loadingSubject.next(false);
                             this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                           }
-                        }, error =>{ this.capturaError( error )});
+                        });
                       }else{
                         this.loadingSubject.next(false);
                         this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                       }
-                    }, error =>{ this.capturaError( error )});
+                    });
                   }else{
                     this.loadingSubject.next(false);
                     this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');   
                   }
-                }, error => { this.capturaError(error); }); 
+                }); 
               } else {
                 this.loadingSubject.next(false);
                 this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');        
               } 
-            }, error => { this.capturaError(error); })
+            })
           }else{
             this.loadingSubject.next(false);
             this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');
           }
-        }, error =>{ this.capturaError( error )});
+        });
       } else {
         this.loadingSubject.next(false);
         this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');
       }
-    }, error => { this.capturaError(error); });
+    });
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @FUNCIONALIDAD ** */
-  private capturaError(error: any) {
-    this.loadingSubject.next(false);
-    if (error.error) {
-      if (error.error.codError) {
-        this.sinNoticeService.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("ERROR EN CORE INTERNO", 'error');
-      }
-    } else if (error.statusText && error.status == 401) {
-      this.dialog.open(AuthDialogComponent, {
-        data: {
-          mensaje: "Error " + error.statusText + " - " + error.message
-        }
-      });
-    } else {
-      this.sinNoticeService.setNotice("ERROR EN CORE INTERNO", 'error');
-    }
-  }
+ 
   public onChangeFechaNacimiento() {
     this.loadingSubject.next(true);
     const fechaSeleccionada = new Date(
@@ -541,7 +524,7 @@ export class GestionClienteComponent implements OnInit {
               this.edad.get("edad").setErrors({ "server-error": "error" });
             }
             this.loadingSubject.next(false);
-      },error => { this.capturaError(error) });
+      });
     } else {
       this.sinNoticeService.setNotice(
         "El valor de la fecha es nulo",
@@ -1302,7 +1285,7 @@ export class GestionClienteComponent implements OnInit {
                         this.loadingSubject.next(false);
                         this.sinNoticeService.setNotice("NO SE PUDO REGISTRAR EL CLIENTE.", 'error');
                       }
-                    }, error =>{ this.capturaError(error) }); 
+                    }); 
                   } else {
                     this.loadingSubject.next(false);
                     this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS EN  LA SECCION DE REFERENCIAS PERSONALES", 'error');

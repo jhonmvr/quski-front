@@ -10,6 +10,9 @@ import { DatePipe } from '@angular/common';
 import { RelativeDateAdapter } from '../../util/relative.dateadapter';
 
 
+
+import { MatDialog } from '@angular/material';
+import { ReNoticeService } from '../re-notice.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +20,8 @@ export class JoyaService extends BaseService {
  
 
   dateFormat = new RelativeDateAdapter();
-  constructor(_http: HttpClient, private datePipe: DatePipe) {
+  constructor(_http: HttpClient,
+    private dialog: MatDialog, private datePipe: DatePipe) {
     super();
     this.http = _http;
     //this.config =_config;
@@ -31,7 +35,12 @@ export class JoyaService extends BaseService {
     let serviceUrl = this.appResourcesUrl + "tipoJoyaRestController/persistEntity";
     let wrapper = { entidad: tbMiTipoJoya }
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
     /* .pipe(
                 map((response: Response) => {
           let entidad = response.json();
@@ -54,7 +63,12 @@ export class JoyaService extends BaseService {
     ////console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params: this.params };
     console.log("options>>>" + JSON.stringify(this.options));
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
     /* .pipe(
         map((response: Response) => {
           
@@ -77,7 +91,12 @@ export class JoyaService extends BaseService {
       .set('isPaginated', "Y")
       .set('codigo', (codigoContrato == null ? "" : codigoContrato))
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   
@@ -91,7 +110,12 @@ export class JoyaService extends BaseService {
       .set('isPaginated', "Y")
       .set('idFunda', (idFunda == null ? "" : idFunda))
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
     
   }
 
@@ -100,7 +124,12 @@ export class JoyaService extends BaseService {
     this.params = new HttpParams()
       .set('codigoJoya', (codigoJoya == null ? "" : codigoJoya));
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public listByIdFunda(idFunda: number){
@@ -108,7 +137,12 @@ export class JoyaService extends BaseService {
     this.params = new HttpParams();
     this.params = this.params.set("idFunda",idFunda.toString());
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 
@@ -117,7 +151,12 @@ export class JoyaService extends BaseService {
     this.params = new HttpParams()
       .set('isPaginated', ('N'));
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public findByEstadoJoya(estado: string) {
@@ -125,7 +164,12 @@ export class JoyaService extends BaseService {
     this.params = new HttpParams()
       .set('estado', (estado == null ? "" : estado));
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public findAllTipoJoya(page: Page) {
@@ -147,7 +191,12 @@ export class JoyaService extends BaseService {
     }
 
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public findByEstadoMvCodigoTipo(p: Page, estadoJoya: string, estadoMvIn: string, codigoJoya: string, idTipoJoya: string) {
@@ -167,7 +216,12 @@ export class JoyaService extends BaseService {
     if (idTipoJoya && idTipoJoya !== "")
       this.params = this.params.set('idTipoJoya', (idTipoJoya == null ? "" : idTipoJoya));
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public changeEstadoById(id: string, estado: string, precioVenta: string) {
@@ -181,7 +235,12 @@ export class JoyaService extends BaseService {
       this.params = this.params.set('precioVenta', precioVenta);
     this.params = this.params.set('usuario', localStorage.getItem('reUser'));
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public changeEstadoInventarioByIdJoya(idJoya: string, estado: string) {
@@ -193,7 +252,12 @@ export class JoyaService extends BaseService {
       this.params = this.params.set('estado', estado);
     this.params = this.params.set('usuario', localStorage.getItem('reUser'));
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   public findByIdFunda(p: Page, idFunda: string) {
     let serviceUrl = this.appResourcesUrl + "joyaRestController/findByIdFunda";
@@ -213,7 +277,12 @@ export class JoyaService extends BaseService {
       this.params = this.params.set('idFunda', idFunda);
 
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public findByCodigoJoyaEstadosFechas(p: Page, pcodigoJoya: string, pestados: Array<String>, pfechaDesde, pfechaHasta) {
@@ -225,7 +294,12 @@ export class JoyaService extends BaseService {
     let wp = { codigoJoya: pcodigoJoya, estadosJoyaStr: pestados, fechaDesde: fd, fechaHasta: fh };
     console.log("======>findByCodigoJoyaEstadosFechas wrapper " + JSON.stringify( wp ));
     this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, wp, this.options);
+    return this.http.post(serviceUrl, wp, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 
@@ -236,7 +310,12 @@ export class JoyaService extends BaseService {
       this.params = this.params.set('idJoya', idJoya);
     }
     this.options = { headers: this.headers, params: this.params };
-    return this.http.delete(serviceUrl, this.options);
+    return this.http.delete(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public getEntity(id: string) {
@@ -246,7 +325,12 @@ export class JoyaService extends BaseService {
       this.params = this.params.set('id', id);
     }
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   findJoyaLoteByIdLote(idLote:any,p:Page){
@@ -254,12 +338,22 @@ export class JoyaService extends BaseService {
     this.setSearchParams(p);
     this.params = this.params.set('idLote',idLote);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl,  this.options);
+    return this.http.get(serviceUrl,  this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   findByCodigoOperacion(codigoOperacion: string) {
     let serviceUrl = this.appResourcesUrl + "joyaRestController/findBycodigoOperacion";
     this.params = this.params.set('codigoOperacion',codigoOperacion);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl,  this.options);
+    return this.http.get(serviceUrl,  this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 }

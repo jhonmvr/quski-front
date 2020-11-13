@@ -3,12 +3,17 @@ import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TbQoExcepcionRol } from '../../model/quski/TbQoExcepcionRol';
 
+
+import { tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { ReNoticeService } from '../re-notice.service';
 @Injectable({
   providedIn: 'root'
 })
 export class ExcepcionRolService extends BaseService {
   public restC = 'excepcionRolRestController/';
-  constructor(_http: HttpClient) {
+  constructor(_http: HttpClient,
+    private dialog: MatDialog) {
     super();
     this.http = _http;
     this.setParameter();
@@ -18,7 +23,12 @@ export class ExcepcionRolService extends BaseService {
     const serviceUrl = this.appResourcesUrl + this.restC + 'getEntity';
     this.params = new HttpParams().set('id', id.toString());
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public findByRolAndIdentificacion(rol: string, identificacion: string) {
@@ -29,7 +39,12 @@ export class ExcepcionRolService extends BaseService {
     this.params.set('identificacion', identificacion);
 
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public persistEntity(data: TbQoExcepcionRol) {
@@ -37,7 +52,12 @@ export class ExcepcionRolService extends BaseService {
     console.log('VALOR DE LA DIRECCION', serviceUrl, 'VALOR DE LA EXCEPCION ===>  ', data);
     let wrapper = { entidad: data };
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 }
