@@ -30,19 +30,17 @@ export class ReMessageComponent implements OnInit {
                 
                 if(notice.type=='success'){
                     config.panelClass =  ['success-snackbar'] ;
-                    config.duration = 5000;
                 }                    
                 else if(notice.type=='error'){                        
                     config.panelClass =  ['error-snackbar'] ;
                 }
                 else if(notice.type=='info'){                        
                     config.panelClass =  ['info-snackbar'] ;
-                    config.duration = 5000;
                 }
                 else if(notice.type=='warning'){                        
                     config.panelClass =  ['warning-snackbar'] ;
-                    config.duration = 5000;
                 }
+                config.duration = 5000;
                 this.snackBar.open(this.message,"cerrar",config);
               }
           } else {

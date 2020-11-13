@@ -5,6 +5,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { TbQoProceso } from '../../model/quski/TbQoProceso';
 import { WrapperBusqueda } from '../../model/wrapper/WrapperBusqueda';
 import { BusquedaAprobadorWrapper } from '../../model/wrapper/BusquedaAprobadorWrapper';
+import { tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { ReNoticeService } from '../re-notice.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +15,8 @@ import { BusquedaAprobadorWrapper } from '../../model/wrapper/BusquedaAprobadorW
 export class ProcesoService extends BaseService {
 
   urlRest = "procesoRestController/";
-  constructor(_http: HttpClient) {
+  constructor(_http: HttpClient,
+    private dialog: MatDialog) {
     super();
     this.http = _http;
     this.setParameter();
@@ -26,7 +30,12 @@ export class ProcesoService extends BaseService {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'getEntity';
     this.params = new HttpParams().set('id', id.toString());
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas
@@ -34,7 +43,12 @@ export class ProcesoService extends BaseService {
   public getActividades() {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'getActividades';
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas
@@ -42,7 +56,12 @@ export class ProcesoService extends BaseService {
   public getEstadosProceso() {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'getEstadosProceso';
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas
@@ -50,7 +69,12 @@ export class ProcesoService extends BaseService {
   public getProcesos() {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'getProcesos';
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas
@@ -62,7 +86,12 @@ export class ProcesoService extends BaseService {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'reasignarOperacion';
     this.params = new HttpParams().set('id', id.toString()).set('proceso', proceso).set('usuario',nuevoAsesor);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas
@@ -71,7 +100,12 @@ export class ProcesoService extends BaseService {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'cancelarNegociacion';
     this.params = new HttpParams().set('idNegociacion', idNegociacion.toString()).set('usuario', usuario);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
     /**
    * @author Jeroham Cadenas
@@ -80,7 +114,12 @@ export class ProcesoService extends BaseService {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'cambiarEstadoProceso';
     this.params = new HttpParams().set('idReferencia', idReferencia.toString()).set('proceso', proceso).set('newEstado', newEstado);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
     /**
    * @author Jeroham Cadenas
@@ -89,7 +128,12 @@ export class ProcesoService extends BaseService {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'findByIdReferencia';
     this.params = new HttpParams().set('id', id.toString()).set('proceso', proceso);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas
@@ -99,7 +143,12 @@ export class ProcesoService extends BaseService {
     let serviceUrl = this.appResourcesUrl + this.urlRest +"persistEntity";
     let wrapper = { entidad: entidad }
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas
@@ -108,7 +157,12 @@ export class ProcesoService extends BaseService {
   public buscarOperaciones(w: WrapperBusqueda) {
     let serviceUrl = this.appResourcesUrl + this.urlRest +"buscarOperaciones";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,w,this.options);
+    return this.http.post(serviceUrl,w,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
     /**
    * @author Jeroham Cadenas
@@ -118,7 +172,12 @@ export class ProcesoService extends BaseService {
     let serviceUrl = this.appResourcesUrl + this.urlRest +"buscarOperacionesAprobador";
     let wrapper =  w ;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
 
 

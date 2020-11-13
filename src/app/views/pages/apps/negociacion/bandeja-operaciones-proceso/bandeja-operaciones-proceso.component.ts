@@ -91,7 +91,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       if( data.entidad != null && data.entidad.operaciones != null){
         let operaciones: OperacionesProcesoWrapper[] = data.entidad.operaciones;
         operaciones.forEach(e=>{
-          if(e.idAgencia != 0){
+          if(e.idAgencia && this.catAgencia){
             this.catAgencia.forEach( c =>{
               if(e.idAgencia == c.id){
                 e.agencia = c.nombre;
@@ -122,7 +122,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         this.dataSource.data = null;
         console.log("Me cai en la busqueda :c");
       }
-    }, error => { this.capturaError(error); });
+    }, error => {this.pro.HandleError(error,this.sinNotSer,this.dialog); });
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @FUNCIONALIDAD ** */
   public getErrorMessage(pfield: string) {
@@ -173,7 +173,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       } else {
         console.log("Me cai en la Cat de agencia :c");
       }
-    }, error =>{ this.capturaError( error ) });
+    }, error =>{this.pro.HandleError( error,this.sinNotSer,this.dialog ) });
   }
   private cargarEnumBase(){
     this.loadingSubject.next(true);
@@ -188,15 +188,15 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
                 this.catActividad = dataActividad.entidades;
                 this.loadingSubject.next(false);
               }
-            }, error =>{ this.capturaError( error )});
+            }, error =>{this.pro.HandleError( error,this.sinNotSer,this.dialog )});
           }else {
             console.log("Me cai en la busqueda de enums de procesos :c");
           }
-        }, error => { this.capturaError(error) });
+        }, error => {this.pro.HandleError(error,this.sinNotSer,this.dialog) });
       } else{
         console.log("Me cai buscando Los estados de procesos :c ");
       }
-    }, error => { this.capturaError(error) });
+    }, error => {this.pro.HandleError(error,this.sinNotSer,this.dialog) });
   }
   public limpiarFiltros(){
     Object.keys(this.formFiltro.controls).forEach((name) => {

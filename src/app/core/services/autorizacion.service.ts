@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BaseService } from './base.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { BaseWrapper } from '../model/basewrapper';
@@ -23,10 +22,11 @@ import { Logout } from '../auth/_actions/auth.actions';
 @Injectable({
   providedIn: 'root'
 })
-export class AutorizacionService extends BaseService {
+export class AutorizacionService  {
 
+  http:HttpClient;
   constructor(_http:HttpClient,private router: Router,private store: Store<AppState>) {
-    super();
+    
     this.http=_http;
   }
 
@@ -137,7 +137,13 @@ export class AutorizacionService extends BaseService {
           }
       }
 
-
+      public findByPkurl(id: string, serviceUrl: string) {
+        let params = new HttpParams();
+        params = params.set('id', id);
+        let headers =  new HttpHeaders({ 'Content-Type': 'application/json' });
+        let options = { headers: headers, params: params };
+        return this.http.get(serviceUrl, options);
+      }
     getUserByToken(): Observable<User> {
         //console.log( "=====>mi getUserByToken " );
         const userId = atob(localStorage.getItem(environment.authKey));
@@ -177,8 +183,6 @@ export class AutorizacionService extends BaseService {
     public athorizate(aplicacion):Observable<Array<any>> {
       //console.log("===================>athorizate parametros "  );
       const userId = atob(localStorage.getItem(environment.authKey));
-      //console.log("athorizate parametros " +userId );
-      //console.log("url autorizacion " + this.menuServiceUrl );
       let params = new HttpParams();
       params=params.set("idUsuario", userId.trim() );
       params=params.set("idAplicacion", aplicacion);
@@ -188,7 +192,7 @@ export class AutorizacionService extends BaseService {
         'Content-Type': 'application/json' }),
         params:params
       };
-      return this.http.get( this.menuServiceUrl , optionsLoc).pipe(
+      return this.http.get( atob(environment.seg_r)+'authRolRestController/opciones/usuario', optionsLoc).pipe(
         map((response: MenuResponse) => {
         //console.log( "!!!!!!!!!!!!!!!==respuesta authorizacion: " + JSON.stringify(response) );
         let paginatedListx = response;//.json();
