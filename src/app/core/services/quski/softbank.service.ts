@@ -172,6 +172,12 @@ export class SoftbankService extends BaseService {
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options);
   } 
+  consultarOrigenIngresoCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "origenIngreso" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options);
+  } 
   /**
    * @author Oscar Romero - Developer five
    * @description Catalogos tipodireccion

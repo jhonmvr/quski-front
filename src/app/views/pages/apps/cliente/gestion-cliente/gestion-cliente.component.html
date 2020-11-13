@@ -410,7 +410,7 @@
                 <mat-select placeholder="Origen Ingreso:" required [formControl]="origenIngresos" (selectionChange)="setRelacionDependencia()">
                   <mat-option>--</mat-option>
                   <mat-option *ngFor="let element of catOrigenIngreso" [value]="element">
-                    {{ element }}
+                    {{ element.nombre }}
                   </mat-option>
                 </mat-select>
                 <mat-error>{{ getErrorMessage("origenIngresos") }}</mat-error>
@@ -418,20 +418,34 @@
             </div>
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput placeholder="Nombre de la empresa:" required [formControl]="actividadEmpresa"/>
-                <mat-error>{{ getErrorMessage("actividadEmpresa") }}</mat-error>
+                <input matInput placeholder="Nombre de la empresa:" required [formControl]="nombreEmpresa"/>
+                <mat-error>{{ getErrorMessage("nombreEmpresa") }}</mat-error>
               </mat-form-field>
             </div>
-            <div class="col-md-4">
-              <mat-form-field class="mat-form-field-fluid">
-                <mat-select placeholder="Actividad Económica:" required [formControl]="actividadEconomicaEmpresa">
-                  <mat-option>--</mat-option>
-                  <mat-option *ngFor="let element of catActividadEconomica" [value]="element">
-                    {{ element.nombre }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
+            <!-- <ng-container *ngIf="true; else elseTemplate">
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <mat-select placeholder="Actividad Económica:" required [formControl]="actividadEconomicaEmpresa">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let element of catActividadEconomica" [value]="element">
+                      {{ element.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <mat-select placeholder="Actividad Económica Mupi:" required [formControl]="actividadEconomicaMupi">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let element of catActividadEconomicaMupi" [value]="element">
+                      {{ element.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </ng-template> -->
           </div>
           <div class="form-group row">
             <div class="col-md-4">
