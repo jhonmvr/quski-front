@@ -104,6 +104,9 @@ export class GenerarCreditoComponent implements OnInit {
   public catFirmanteOperacion: Array<any>;
   public catTipoCliente: Array<any>;
   public catCuenta: Array<any>;
+  public catTipoJoya: Array<any>;
+  public catTipoOro: Array<any>;
+  public catEstadoJoya: Array<any>;
 
   
 
@@ -205,6 +208,8 @@ export class GenerarCreditoComponent implements OnInit {
             }
           });
           this.cargarCampos(data);
+        }else{
+          this.cargarCampos(data);
         }
       } else {
         this.loadingSubject.next(false);
@@ -220,6 +225,13 @@ export class GenerarCreditoComponent implements OnInit {
     this.estadoOperacion.setValue(data.proceso.estadoProceso);
     this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
+    if(data.joyas){
+      data.joyas.forEach(e=>{
+        e.tipoOro = this.catTipoOro.find(x => x.codigo == e.tipoOro );
+        e.tipoJoya = this.catTipoJoya.find(x => x.codigo == e.tipoJoya);
+        e.estadoJoya = this.catEstadoJoya.find( x => x.codigo == e.estadoJoya);
+      })
+    }
     this.dataSource.data = data.joyas;
     this.calcular();
     this.loadingSubject.next(false);
@@ -285,7 +297,6 @@ export class GenerarCreditoComponent implements OnInit {
     }
   }
   public validacionFecha() {
-    //Todo: Revisar
     this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value), new Date(this.fechaServer))
     if (Math.abs(this.fechaUtil.obtenerDias()) >= 30 && Math.abs(this.fechaUtil.obtenerDias()) <= 45) {
       console.log("Esta dentro del rango")
@@ -301,13 +312,24 @@ export class GenerarCreditoComponent implements OnInit {
         this.catFirmanteOperacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
         this.sof.consultarTipoClienteCS().subscribe((data: any) => {
           this.catTipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-          this.catCuenta = ["Cuenta Ahorro"];
-          this.traerOperacion();
+          this.sof.consultarBancosCS().subscribe( (data:any) =>{
+            this.catCuenta = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+            this.sof.consultarTipoJoyaCS().subscribe( (data:any) =>{
+              this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+              this.sof.consultarTipoOroCS().subscribe( (data:any) =>{
+                this.catTipoOro = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                this.sof.consultarEstadoJoyaCS().subscribe( (data:any) =>{
+                  this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                  this.traerOperacion();
+                });
+              });
+            });
+          });
         });
       });
     });
   }
-  public validarEdadCodeudor(fechaCodeudor) { // Todo: Probar metodo
+  public validarEdadCodeudor(fechaCodeudor) {
     this.fechaUtil = new diferenciaEnDias(new Date(fechaCodeudor), new Date(this.fechaServer));
     let edadCodeudor = this.fechaUtil.obtenerDias() / 365
     if (edadCodeudor >= 65) {
@@ -323,10 +345,10 @@ export class GenerarCreditoComponent implements OnInit {
       this.operacionNuevo.credito
       
       this.operacionNuevo.credito.pagoDia = this.fechaCuota.value != null ? this.fechaCuota.value : null;
-      this.operacionNuevo.credito.pesoFunda = this.pesoFunda.value.nombre;
+      this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
       this.operacionNuevo.credito.numeroFunda = this.numeroFunda.value != null ? this.numeroFunda.value : null;
       this.operacionNuevo.credito.totalPesoBrutoConFunda = this.totalPesoBrutoFunda.value;
-      this.operacionNuevo.credito.idBanco = this.tipoCuenta.value; // Todo: Agregar catalogo de tipo cuenta no existente.
+      this.operacionNuevo.credito.idBanco = this.tipoCuenta.value.id; 
       this.operacionNuevo.credito.numeroBanco =  this.numeroCuenta.value;
       // this.operacionNuevo.credito.tipoCliente = this.tipoCliente.value.codigo; // Todo: Que hacer con este campo?
       // this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value.codigo; // Todo: Que hacer con este campo?
@@ -337,7 +359,7 @@ export class GenerarCreditoComponent implements OnInit {
       this.operacionNuevo.credito.nombreCompletoApoderado = this.nombreCompletoApoderado.value != null ? this.nombreCompletoApoderado.value : null;
       this.operacionNuevo.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value != null ? this.fechaNacimientoApoderado.value : null;
       this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
-      this.operacionNuevo.credito.idAgencia = 2; // Todo: Donde consulto el numero de agencia? 
+
       this.cre.crearOperacionNuevo( this.operacionNuevo.credito ).subscribe( (data: any) =>{
         if(data.entidad){
           this.operacionSoft = data.entidad;  

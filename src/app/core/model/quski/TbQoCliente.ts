@@ -10,7 +10,6 @@ export class TbQoCliente {
   actividadEconomica: string;
   apellidoMaterno: string;
   apellidoPaterno: string;
-  apoderadoCliente: string;
   campania: string;
   canalContacto: string;
   cargasFamiliares: number;
@@ -26,7 +25,6 @@ export class TbQoCliente {
   lugarNacimiento: string;
   nacionalidad: string;
   nivelEducacion: string;
-  origenIngreso: string;
   primerNombre: string;
   profesion: string;
   publicidad: string;

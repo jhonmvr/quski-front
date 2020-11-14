@@ -195,18 +195,7 @@
             </div>
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput  numeric  numericType="number"  type="text"  placeholder="Télefono Adic.:" [formControl]="telefonoAdicional"/>
-                <mat-error>{{ getErrorMessage("telefonoAdicional") }}</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field class="mat-form-field-fluid">
                 <input placeholder="Télefono Móvil:" type= "text" matInput numeric numericType="number" required [formControl]="telefonoMovil" >
-                
-                  <mat-option *ngFor="let tM of tM " [value]="tM">
-                    {{tM}}
-                  </mat-option>
-                
                 <mat-error>{{ getErrorMessage("telefonoMovil") }}</mat-error>
               </mat-form-field>
             </div>
@@ -422,7 +411,7 @@
                 <mat-error>{{ getErrorMessage("nombreEmpresa") }}</mat-error>
               </mat-form-field>
             </div>
-            <!-- <ng-container *ngIf="true; else elseTemplate">
+            <ng-container *ngIf="this.origenIngresos.value.codigo == '1' || this.origenIngresos.value.codigo == '2'; else elseTemplate">
               <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
                   <mat-select placeholder="Actividad Económica:" required [formControl]="actividadEconomicaEmpresa">
@@ -445,7 +434,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-            </ng-template> -->
+            </ng-template>
           </div>
           <div class="form-group row">
             <div class="col-md-4">
