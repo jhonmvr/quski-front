@@ -486,7 +486,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     });
 
     //DATOS ECONOMICOS DEL CLIENTE
-    this.origenIngresos.setValue(this.entidadCliente.origenIngreso);
+   // this.origenIngresos.setValue(this.entidadCliente.origenIngreso);
 
     this.actividadEconomicaCliente.setValue(this.entidadCliente.actividadEconomica);
 

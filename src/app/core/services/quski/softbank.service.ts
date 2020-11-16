@@ -660,7 +660,7 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Bancos
    */
   consultarBancosCS() {
-    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "bancos" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "banco" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options).pipe(

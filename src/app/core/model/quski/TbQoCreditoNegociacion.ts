@@ -36,6 +36,7 @@ export class TbQoCreditoNegociacion {
     arecibirCliente: number;
     apagarCliente: number;
     numeroFunda: number;
+    codigoTipoFunda: string;
     pesoFunda: string;
     descripcionProducto: string;
     constructor(idNegociacion?: number) {
