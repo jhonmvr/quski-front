@@ -4,7 +4,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { AuthDialogComponent } from '../../auth-dialog/auth-dialog.component';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { ConfirmarAccionComponent } from '../confirmar-accion/confirmar-accion.component';
 

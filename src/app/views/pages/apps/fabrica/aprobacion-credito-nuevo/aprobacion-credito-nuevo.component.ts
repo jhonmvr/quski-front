@@ -16,7 +16,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { environment } from '../../../../../../../src/environments/environment';
-import { AuthDialogComponent } from './../../../../partials/custom/auth-dialog/auth-dialog.component';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
@@ -568,29 +567,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
         } */
       }
 
-    }, error => {
-      if (error.error) {
-        if (error.error.codError) {
-          this.sinNoticeService.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice('Error al cargar Credito Negociacion', 'error');
-        }
-      } else if (error.statusText && error.status == 401) {
-        this.dialog.open(AuthDialogComponent, {
-          data: {
-            mensaje: 'Error ' + error.statusText + ' - ' + error.message
-          }
-        });
-      } else {
-        this.sinNoticeService.setNotice('Error al cargar tipo oro', 'error');
-      }
     });
-
-
-
-
-
-
 
   }
 

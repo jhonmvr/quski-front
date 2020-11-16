@@ -8,7 +8,6 @@ import { SoftbankService } from './../../../../../core/services/quski/softbank.s
 import { environment } from '../../../../../../environments/environment';
 import { Router } from '@angular/router';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
-import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
 import { BusquedaAprobadorWrapper } from './../../../../../core/model/wrapper/BusquedaAprobadorWrapper';
 import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 

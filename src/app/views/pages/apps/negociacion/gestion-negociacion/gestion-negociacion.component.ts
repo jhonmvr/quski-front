@@ -4,7 +4,6 @@ import { ErrorCargaInicialComponent } from './../../../../partials/custom/popups
 import { ListaExcepcionesComponent } from './../../../../partials/custom/popups/lista-excepciones/lista-excepciones.component';
 import { VerCotizacionesComponent } from './../../../../partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
 import { CalculadoraEntradaWrapper } from './../../../../../core/model/wrapper/CalculadoraEntradaWrapper';
-import { AuthDialogComponent } from './../../../../partials/custom/auth-dialog/auth-dialog.component';
 import { DataInjectExcepciones } from './../../../../../core/model/wrapper/DataInjectExcepciones';
 import { TbQoCreditoNegociacion } from './../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
@@ -90,6 +89,10 @@ export class GestionNegociacionComponent implements OnInit {
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public montoSolicitado = new FormControl('', []);
 
+  tbQoCliente;
+
+  telefonoMovil;
+  telefonoFijo;
   // TABLA DE TASACION
   // ---- @TODO: Crear un data source para la tabla 
   dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
@@ -163,6 +166,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.componenteRiesgo = false;
     this.desactivarCampos();
     this.inicioDeFlujo();
+
   }
   /** ********************************************* @ENTRADA ********************* **/
   private inicioDeFlujo() {
@@ -235,27 +239,25 @@ export class GestionNegociacionComponent implements OnInit {
   }
   /** ********************************************* @PARTE_1 ********************* **/
   public buscarCliente() {
-    if (this.formBusqueda.valid) {
-      this.loadingSubject.next(true);
-      const cedula = this.identificacion.value;
-      this.limpiarNegociacion();
-      this.neg.iniciarNegociacion(cedula, this.usuario).subscribe((wrapper: any) => {
+    if (this.formBusqueda.invalid) {
+      this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'warning');
+      return;
+    }      
+      this.neg.iniciarNegociacion(this.identificacion.value, this.usuario).subscribe((wrapper: any) => {
         if (wrapper.entidad.respuesta) {
+          this.limpiarNegociacion();
           this.negoW = wrapper.entidad;
-          console.log("NEGOCIACION INICIADA -> ", wrapper.entidad);
-          if (this.negoW.excepcionBre == "" || this.negoW.excepcionBre == null) {
-            this.cargarValores(this.negoW);
-          } else {
+         
+          if (this.negoW.excepcionBre){
             this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
-          }
+            return;
+          } 
+          this.cargarValores(this.negoW);
         } else {
-          this.abrirPopupDeAutorizacion(cedula);
+          //this.abrirPopupDeAutorizacion(cedula);
         }
       });
-    } else {
-      this.myStepper.selectedIndex = 0;
-      this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'error');
-    }
+ 
   }
   private iniciarNegociacionEquifax( cedula: string ){
     this.loadingSubject.next(true);
@@ -334,24 +336,38 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   private cargarValores(wrapper: NegociacionWrapper) {
-    const cliente = wrapper.credito.tbQoNegociacion.tbQoCliente;
-    this.cedula.setValue(cliente.cedulaCliente);
-    this.nombresCompletos.setValue(cliente.nombreCompleto);
-    this.fechaDeNacimiento.setValue(cliente.fechaNacimiento);
+    this.tbQoCliente= wrapper.credito.tbQoNegociacion.tbQoCliente;
+    this.cedula.setValue(this.tbQoCliente.cedulaCliente);
+    this.identificacion.setValue(this.tbQoCliente.cedulaCliente);
+    this.nombresCompletos.setValue(this.tbQoCliente.nombreCompleto);
+    this.fechaDeNacimiento.setValue(this.tbQoCliente.fechaNacimiento);
     this.cargarEdad();
-    this.nacionalidad.setValue(cliente.nacionalidad);
-    wrapper.telefonos.forEach(e=>{
+    this.nacionalidad.setValue(this.tbQoCliente.nacionalidad);
+    if(wrapper.telefonos){
+      wrapper.telefonos.forEach(e=>{
       if(e.tipoTelefono == "F"){
         this.telefonoDomicilio.setValue(e.numero);
+        this.telefonoFijo = {
+          id:e.id,
+          tipoTelefono:e.tipoTelefono,
+          numero:e.numero
+        }
       }
       if(e.tipoTelefono == "M"){
         this.movil.setValue(e.numero);
+        this.telefonoMovil = {
+          id:e.id,
+          tipoTelefono:e.tipoTelefono,
+          numero:e.numero
+        }
       }
     });
-    this.email.setValue(cliente.email);
-    this.campania.setValue( cliente.campania );
-    this.publicidad.setValue ( cliente.publicidad );
-    this.aprobacionMupi.setValue( cliente.aprobacionMupi );
+    }
+    
+    this.email.setValue(this.tbQoCliente.email);
+    this.campania.setValue(this.tbQoCliente.campania );
+    this.publicidad.setValue (this.tbQoCliente.publicidad );
+    this.aprobacionMupi.setValue(this.tbQoCliente.aprobacionMupi );
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
     if(wrapper.joyas != null){
@@ -698,4 +714,64 @@ export class GestionNegociacionComponent implements OnInit {
 
   }
 
+
+  updateCliente(event,control){
+    console.log("=========>",event,control);
+
+    if(control.invalid || (event instanceof  KeyboardEvent && event.key !='Tab') ){
+      return;
+    }
+    if(this.tbQoCliente && this.tbQoCliente.id){
+      console.log("guardad")
+      if( this.telefonoFijo){
+        this.telefonoFijo.numero = this.telefonoDomicilio.value
+      }else if(this.telefonoDomicilio.value){
+        this.telefonoFijo ={
+          tipoTelefono:'F',
+          numero:this.telefonoDomicilio.value
+        }
+      }
+      if( this.telefonoMovil){
+        this.telefonoMovil.numero = this.movil.value
+      }else if (this.movil.value){
+        this.telefonoMovil ={
+          tipoTelefono:'M',
+          numero:this.movil.value
+        }
+      }
+     
+      let cliente = {
+        id: this.tbQoCliente.id,
+        cedulaCliente:this.tbQoCliente.cedulaCliente,
+        aprobacionMupi: this.aprobacionMupi.value,
+        campania:this.campania.value,
+        fechaNacimiento:this.fechaDeNacimiento.value,
+        nacionalidad:this.nacionalidad.value,
+        publicidad:this.publicidad.value,
+        tbQoTelefonoClientes: new Array()
+      };
+
+      if(this.telefonoMovil){
+        cliente.tbQoTelefonoClientes.push(this.telefonoMovil);
+      }
+      if(this.telefonoFijo){
+        cliente.tbQoTelefonoClientes.push(this.telefonoFijo);
+      }
+      this.neg.updateCliente(cliente).subscribe( p =>{
+        if(p.entidad && p.entidad.tbQoTelefonoClientes){
+          p.entidad.tbQoTelefonoClientes.forEach(element => {
+            if(element.tipoTelefono =='M'){
+              this.telefonoMovil =element;
+            }
+            if(element.tipoTelefono =='F'){
+              this.telefonoFijo =element;
+            }          
+          });
+          
+        }
+      });
+    }else{
+      console.log("no guardar")
+    }
+  }
 }

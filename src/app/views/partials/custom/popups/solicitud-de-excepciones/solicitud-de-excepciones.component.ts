@@ -7,7 +7,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { BehaviorSubject } from 'rxjs';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
-import { AuthDialogComponent } from '../../auth-dialog/auth-dialog.component';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { environment } from '../../../../../../../src/environments/environment';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';

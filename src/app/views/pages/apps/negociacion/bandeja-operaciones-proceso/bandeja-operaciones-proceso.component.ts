@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { WrapperBusqueda } from '../../../../../core/model/wrapper/WrapperBusqueda';
-import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 
 export interface Agencia{

@@ -302,11 +302,11 @@ export class BaseService {
     let errorMessage = '';
     if (error.status === 401) {
       errorMessage = 'Error: ' + error.statusText;
-      dialog.open(AuthDialogComponent, {
+     /*  dialog.open(AuthDialogComponent, {
         data: {
           mensaje: "Error " + error.statusText + " - " + error.message
         }
-      });
+      }); */
     } else if (error.status === 403) {
       errorMessage = 'Error: ' + error.statusText;
       //this.securityService.resetPasswordRequired();

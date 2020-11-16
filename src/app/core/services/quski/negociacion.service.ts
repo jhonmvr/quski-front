@@ -98,4 +98,17 @@ export class NegociacionService extends BaseService {
       )
     );
   }
+
+  updateCliente(cliente: any) {
+    const serviceUrl = this.appResourcesUrl + 'clienteRestController/updateCliente';
+
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, cliente, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+
 }

@@ -2,8 +2,6 @@ import { HabilitanteDialogComponent } from '../../../../partials/custom/habilita
 import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
-import { AuthDialogComponent } from '../../../../partials/custom/auth-dialog/auth-dialog.component';
-import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { OperacionNuevoWrapper } from '../../../../../core/model/wrapper/OperacionNuevoWrapper';
 import { DialogDataHabilitante } from '../../../../../core/interfaces/dialog-data-habilitante';
 import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
