@@ -184,7 +184,7 @@
       <mat-step label="Datos de contacto" [stepControl]="formDatosContacto">
         <form [formGroup]="formDatosContacto">
           <div class="form-group row">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <mat-form-field class="mat-form-field-fluid">
                 <input matInput numeric numericType="number" type="text" placeholder="Tel&#233;fono Domicilio:" [formControl]="telefonoFijo"/>
                 <mat-option *ngFor="let tF of tF " [value]="tF">
@@ -193,7 +193,7 @@
                 <mat-error>{{ getErrorMessage("telefonoFijo") }}</mat-error>
               </mat-form-field>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <mat-form-field class="mat-form-field-fluid">
                 <input placeholder="Télefono Móvil:" type= "text" matInput numeric numericType="number" required [formControl]="telefonoMovil" >
                 <mat-error>{{ getErrorMessage("telefonoMovil") }}</mat-error>
@@ -201,13 +201,13 @@
             </div>
           </div>
           <div class="form-group row">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <mat-form-field class="mat-form-field-fluid">
                 <input matInput numeric numericType="number" type="text" placeholder="Télefono Oficina/Otros:" [formControl]="telefonoOtro" />
                 <mat-error>{{ getErrorMessage("telefonoOtro") }}</mat-error>
               </mat-form-field>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <mat-form-field class="mat-form-field-fluid">
                 <input matInput placeholder="Correo electr&#243;nico" [formControl]="email" required/>
                 <mat-error>{{ getErrorMessage("email") }}</mat-error>
@@ -677,13 +677,78 @@
           </div>
         </div> 
       </mat-step>
+      <mat-step label="Cuentas Bancarias">
+        <div class="row">
+          <div class="col-md-10">
+            <form [formGroup]="formCuentas">
+              <div class="form-group row">
+                <div class="col-md-4 ">
+                  <mat-form-field class="mat-form-field-fluid">
+                      <mat-select required placeholder="Tipo de cuenta" [formControl]="tipoCuenta">
+                          <mat-option *ngFor="let element of catCuenta" [value]="element">
+                              {{element.nombre }}
+                          </mat-option>
+                      </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4 ">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input matInput required [formControl]="numeroCuenta" placeholder="Numero de Cuenta">
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-checkbox [formControl]="esAhorro"> Es Ahorro? </mat-checkbox>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="offset-md-4 col-md-5">
+                  <a href="javascript:void(0);" (click)="nuevaCuenta()" matTooltip="Agregar" style="font-size: 12px; vertical-align: middle;">
+                    <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
+                    <span style="position: relative; top: -10px; margin-left: 5px;">Agregar Cuenta</span>
+                  </a>
+                </div>
+              </div>
+            </form>
+            <mat-table  #table  class="mat-elevation-z8"  [dataSource]="dataSourceCuentas"  style="max-width: 760px;">
+              <ng-container matColumnDef="Accion">
+                <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <a (click)="deleteCuenta(element)"> <mat-icon matTooltip="Borrar">delete</mat-icon> </a>
+                  <a (click)="editarCuenta(element)"> <mat-icon matTooltip="Editar">edit</mat-icon> </a>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="banco">
+                <mat-header-cell *matHeaderCellDef> Banco </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.banco }} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="cuenta">
+                <mat-header-cell *matHeaderCellDef> Cuenta </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.cuenta }} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="esAhorros">
+                <mat-header-cell *matHeaderCellDef> Es Ahorro? </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.esAhorros ? 'SI' : 'NO' }} </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsCuentas"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsCuentas"></mat-row>
+             
+            </mat-table>
+          </div>
+        </div> 
+      </mat-step>
       <!-- Referencias personales -->
       <mat-step label="Referencias Personales" [stepControl]="formDatosReferenciasPersonales">
         <form [formGroup]="formDatosReferenciasPersonales">
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput placeholder="Nombres Completos:" [formControl]="nombresCompletosR" required/>
+                <input matInput placeholder="Nombres:" [formControl]="apellidosRef" required/>
+                <mat-error>{{ getErrorMessage("nombresCompletosR") }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="mat-form-field-fluid">
+                <input matInput placeholder="Apellidos:" [formControl]="nombresRef" required/>
                 <mat-error>{{ getErrorMessage("nombresCompletosR") }}</mat-error>
               </mat-form-field>
             </div>
@@ -739,9 +804,13 @@
               <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
               <mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </mat-cell>
             </ng-container>
-            <ng-container matColumnDef="NombresCompletos">
-              <mat-header-cell *matHeaderCellDef>Nombres Completos</mat-header-cell>
-              <mat-cell *matCellDef="let element">{{ element.nombresCompletos }}</mat-cell>
+            <ng-container matColumnDef="nombresRef">
+              <mat-header-cell *matHeaderCellDef>Nombres</mat-header-cell>
+              <mat-cell *matCellDef="let element">{{ element.nombresRef }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="apellidosRef">
+              <mat-header-cell *matHeaderCellDef>Apellidos</mat-header-cell>
+              <mat-cell *matCellDef="let element">{{ element.apellidosRef }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="Parentesco">
               <mat-header-cell *matHeaderCellDef> Parentesco </mat-header-cell>
