@@ -227,15 +227,24 @@ export class GenerarCreditoComponent implements OnInit {
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     if(data.joyas){
       data.joyas.forEach(e=>{
-        e.tipoOro = this.catTipoOro.find(x => x.codigo == e.tipoOro );
-        e.tipoJoya = this.catTipoJoya.find(x => x.codigo == e.tipoJoya);
-        e.estadoJoya = this.catEstadoJoya.find( x => x.codigo == e.estadoJoya);
+        console.log("Catalogos -> ", this.catTipoOro );
+        let objetoOro = this.catTipoOro.find(x => x.codigo == e.tipoOro );
+        e.tipoOro = objetoOro.nombre;
+        let objetoJoya = this.catTipoJoya.find(x => x.codigo == e.tipoJoya);
+        e.tipoJoya = objetoJoya.nombre;
+        let objetoEstado = this.catEstadoJoya.find( x => x.codigo == e.estadoJoya);
+        e.estadoJoya = objetoEstado.nombre;
       })
+      this.dataSource.data = data.joyas;
     }
-    this.dataSource.data = data.joyas;
+    let bancosCliente = new Array<any>(); 
+    data.cuentas.forEach(e=>{
+      bancosCliente.push( this.catCuenta.find(c => c.id == e.banco ) );
+    });
+    this.numeroCuenta.disable();
+    this.catCuenta = bancosCliente;
     this.calcular();
     this.loadingSubject.next(false);
-
   }
   private calcular() {
     this.totalPesoN = 0;
@@ -273,14 +282,19 @@ export class GenerarCreditoComponent implements OnInit {
       this.router.navigate(['negociacion/bandeja-operaciones']);
     });
   }
-  
   private setFechaSistema() {
     this.cre.getSystemDate().subscribe((fechaSistema: any) => {
       this.fechaServer = new Date(fechaSistema.entidad);
     })
   }
+  public buscarNumero(){
+    this.operacionNuevo.cuentas.forEach(e=>{
+      if(e.banco == this.tipoCuenta.value.id){
+        this.numeroCuenta.setValue( e.cuenta );
+      }
+    });
+  }
   public onChangeTipoCliente( element: any){
-    console.log("Holis? -> ",element.value);
     if( element.value.codigo  == 'CYA' ||  element.value.codigo  == 'SAP' ||  element.value.codigo  == 'SCD'){
       if(element.value.codigo == 'CYA' || element.value.codigo == 'SCD'){
         console.log('aplicando -> codeudor');
@@ -339,7 +353,6 @@ export class GenerarCreditoComponent implements OnInit {
   }
   /** ********************************************* @OPERACION ********************* **/
   public generarCredito() {
-    console.log( " Validaciones de forms - > " + this.formInstruccion.valid);
     if(this.formInstruccion.valid && this.srcFunda && this.srcJoya){
       this.loadingSubject.next(true);
       this.operacionNuevo.credito
@@ -348,8 +361,7 @@ export class GenerarCreditoComponent implements OnInit {
       this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
       this.operacionNuevo.credito.numeroFunda = this.numeroFunda.value != null ? this.numeroFunda.value : null;
       this.operacionNuevo.credito.totalPesoBrutoConFunda = this.totalPesoBrutoFunda.value;
-      this.operacionNuevo.credito.idBanco = this.tipoCuenta.value.id; 
-      this.operacionNuevo.credito.numeroBanco =  this.numeroCuenta.value;
+      this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
       // this.operacionNuevo.credito.tipoCliente = this.tipoCliente.value.codigo; // Todo: Que hacer con este campo?
       // this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value.codigo; // Todo: Que hacer con este campo?
       this.operacionNuevo.credito.identificacionCodeudor = this.identificacionCodeudor.value != null ? this.identificacionCodeudor.value : null;
@@ -436,13 +448,10 @@ export class GenerarCreditoComponent implements OnInit {
     this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).subscribe((data: any) => {
       this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).subscribe((dataDos: any) => {
         let file = JSON.parse( atob( dataDos.entidad ) );
-        console.log(" dataDos de respuesta  --> ", file);
         if(file.typeAction == '6'){
-          console.log(" dataDos de respuesta  --> ", file.typeAction);
           this.srcJoya = file.fileBase64;
         }
         if(file.typeAction == '7'){
-          console.log(" dataDos de respuesta  --> ", file.typeAction);
           this.srcFunda= file.fileBase64;
         }
       });

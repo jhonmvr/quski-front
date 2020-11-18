@@ -13,8 +13,7 @@ export class TbQoCreditoNegociacion {
     idAgencia: number;
     pagoDia: Date; 
     totalPesoBrutoConFunda: number;
-    idBanco: number;
-    numeroBanco: string;
+    numeroCuenta: string;
     identificacionCodeudor: string; 
     nombreCompletoCodeudor: string; 
     fechaNacimientoCodeudor: Date;
