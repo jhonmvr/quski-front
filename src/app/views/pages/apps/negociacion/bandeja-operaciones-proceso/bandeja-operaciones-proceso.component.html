@@ -5,16 +5,7 @@
 <re-portlet>
 	<re-portlet-header [title]="'BANDEJA DE OPERACIONES EN PROCESO'" [class]="'kt-portlet__head--lg'">
 		<ng-container ktPortletTools>
-			<a href="javascript:void(0);" (click)="irNegociacion()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
-                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Ir Negociacion</span>
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">home
-				</mat-icon>
-            </a>
-            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
-                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">layers_clear
-				</mat-icon>
-			</a>
+			
 		</ng-container>
 	</re-portlet-header>
 	<re-portlet-body>
@@ -74,6 +65,18 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div >
+                            <a href="javascript:void(0);" (click)="irNegociacion()" matTooltip="Nueva Negociacion" style="font-size: 12px; vertical-align: middle;">
+                                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon"></span>
+                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">post_add
+                                </mat-icon>
+                            </a>
+                            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
+                                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon"></span>
+                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">layers_clear
+                                </mat-icon>
+                            </a>
+                        </div>
                         <div class="col-4 offset-5">
                             <button mat-raised-button color="basic" (click)="buscar(null,null)">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>

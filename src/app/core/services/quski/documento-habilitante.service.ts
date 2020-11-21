@@ -6,13 +6,16 @@ import { HttpParams, HttpClient } from "@angular/common/http";
 import { Page } from '../../../core/model/page';
 import { tap } from "rxjs/operators";
 
+
+import { MatDialog } from '@angular/material';
 @Injectable({
   providedIn: "root"
 })
 export class DocumentoHabilitanteService extends BaseService {
 
   constructor(
-    _http: HttpClient, private ns: ReNoticeService) {
+    _http: HttpClient,
+    private dialog: MatDialog, private ns: ReNoticeService) {
     super();
     this.http = _http;
     this.setParameter();
@@ -106,7 +109,12 @@ export class DocumentoHabilitanteService extends BaseService {
     }
 
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public findByRolTipoDocumentoProcesoEstadoOperacion(
@@ -125,7 +133,12 @@ export class DocumentoHabilitanteService extends BaseService {
       this.params = this.params.set("estadoOperacion", estadoOperacion);
     }
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 
@@ -185,7 +198,12 @@ export class DocumentoHabilitanteService extends BaseService {
     }
 
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   /**
@@ -265,7 +283,12 @@ export class DocumentoHabilitanteService extends BaseService {
       "downloadHabilitantePlantilla parametros " + JSON.stringify(this.params)
     );
     //return this.http.get(serviceUrl, { params: this.params, responseType: 'blob' as 'json' });
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 
@@ -280,7 +303,12 @@ export class DocumentoHabilitanteService extends BaseService {
     this.params = this.params.set('identificacion', identificacionCliente);
     this.options = { headers: this.headers, params: this.params };
 
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   /**
@@ -296,7 +324,12 @@ export class DocumentoHabilitanteService extends BaseService {
     this.params = this.params.set('codigoVentaLote', codigo);
     this.options = { headers: this.headers, params: this.params };
 
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
 
   }
 
@@ -313,7 +346,12 @@ export class DocumentoHabilitanteService extends BaseService {
     this.params = this.params.set('codigoJoya', codigo);
     this.options = { headers: this.headers, params: this.params };
 
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
 
   }
 
@@ -329,7 +367,12 @@ export class DocumentoHabilitanteService extends BaseService {
     this.params = this.params.set("idReferencia", idReferencia);
     this.params = this.params.set("format", format);
     this.options = { responseType: 'arraybuffer',headers: this.headers,  params: this.params };
-    return this.http.post(serviceUrl,{}, this.options);
+    return this.http.post(serviceUrl,{}, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   
@@ -341,7 +384,12 @@ export class DocumentoHabilitanteService extends BaseService {
     this.params = this.params = this.params.set("referencia", referencia)
 
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public getFileFromMongo(){

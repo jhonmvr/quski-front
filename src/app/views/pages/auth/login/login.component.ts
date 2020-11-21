@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private ws:WebsocketUtilService
 	) {
-		this.authRelative.setParameter();
+		//this.authRelative.setParameter();
 		this.unsubscribe = new Subject();
 	}
 

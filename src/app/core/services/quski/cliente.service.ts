@@ -6,6 +6,9 @@ import { Page } from '../../model/page';
 import { TbQoCliente } from "../../model/quski/TbQoCliente";
 import { TbQoCotizador } from '../../model/quski/TbQoCotizador';
 import { ClienteCompletoWrapper } from '../../model/wrapper/ClienteCompletoWrapper';
+import { MatDialog } from '@angular/material';
+import { ReNoticeService } from '../re-notice.service';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +16,8 @@ import { ClienteCompletoWrapper } from '../../model/wrapper/ClienteCompletoWrapp
 export class ClienteService extends BaseService {
   private urlRest =  'clienteRestController/';
 
-  constructor(_http: HttpClient) {
+  constructor(_http: HttpClient,
+    private dialog: MatDialog) {
     super();
     this.http = _http;
     this.setParameter();
@@ -22,18 +26,33 @@ export class ClienteService extends BaseService {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerClienteByIdNegociacion';
     this.params = new HttpParams().set('id', id.toString());
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   public traerClienteByCedula(cedula: string ) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerClienteByCedula';
     this.params = new HttpParams().set('cedula', cedula);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   public registrarCliente(entidad: ClienteCompletoWrapper) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'registrarCliente';
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, entidad, this.options);
+    return this.http.post(serviceUrl, entidad, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 
@@ -46,7 +65,12 @@ export class ClienteService extends BaseService {
       this.appResourcesUrl + 'clienteRestController/persistEntity';
     const wrapper = { entidad: cliente };
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   public crearClienteConRelaciones(cliente: TbQoCliente, idNegociacion) {
     this.params = new HttpParams().set('idNegociacion', idNegociacion);
@@ -55,14 +79,24 @@ export class ClienteService extends BaseService {
       this.appResourcesUrl + 'clienteRestController/crearCliente';
     const wrapper = { entidad: cliente };
     this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 
   /*   public obtenerWrapperCliente() {
       let serviceUrl = this.appResourcesUrl + "clienteRestController/obtenerCliente";
       this.options = { Headers: this.headers, params: this.params };
-      return this.http.get(serviceUrl, this.options);
+      return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
     } 
   */
 
@@ -80,7 +114,12 @@ export class ClienteService extends BaseService {
       this.appResourcesUrl + 'clienteRestController/findClienteByIdentificacionCotizacion';
     this.params = new HttpParams().set('identificacion', identificacion);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
  * @description Busca cliente por identificacion 
@@ -94,7 +133,12 @@ export class ClienteService extends BaseService {
     const serviceUrl = this.appResourcesUrl + 'clienteRestController/findClienteByIdentificacion';
     this.params = new HttpParams().set('identificacion', identificacion);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public validateContratoByIdCliente(idCliente: string) {
@@ -102,7 +146,12 @@ export class ClienteService extends BaseService {
       this.appResourcesUrl + 'contratoRestController/validateContratoByIdCliente';
     this.params = new HttpParams().set('idCliente', idCliente);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   public clienteByIdentificacionList(p: Page, identificacion: string) {
     const serviceUrl =
@@ -111,7 +160,12 @@ export class ClienteService extends BaseService {
     this.setSearchParams(p);
     this.params = this.params.set('identificacion', identificacion);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public guardarCotizacion(cotizacion: TbQoCotizador) {
@@ -119,7 +173,12 @@ export class ClienteService extends BaseService {
       this.appResourcesUrl + 'cotizacionRestController/persistEntity';
     const wrapper = { entidad: cotizacion };
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   findClienteByParams(
@@ -187,21 +246,36 @@ export class ClienteService extends BaseService {
       this.params = this.params.set('estado', estado);
     }
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   consultarPasivos(idCliente) {
     let serviceUrl = this.appResourcesUrl + "patrimonioWrapperRestController/obtenerPasivos";
     this.params = this.params.set('idCliente', idCliente);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   consultarUbicaciones(nombre) {
     let serviceUrl = this.appResourcesUrl + "parroquiaRestController/listAllParroquiaByCantonProvincia";
     this.params = this.params.set('nombre', nombre);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @description METODO que realiza la busqueda del cliente en la calculadora Quski
@@ -220,13 +294,23 @@ export class ClienteService extends BaseService {
       .set('tipoConsulta', "")
       .set('calificacion', "");
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   crearClienSoftBank(clienteSoftBank: any) {
      const serviceUrl ='http://201.183.238.73:1991/api/cliente/crear';
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, clienteSoftBank, this.options);
+    return this.http.post(serviceUrl, clienteSoftBank, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 

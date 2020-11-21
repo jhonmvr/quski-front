@@ -92,7 +92,7 @@ export class BandejaAprobadorComponent implements OnInit {
         this.dataSource.data = null;
         console.log("Me cai en la busqueda :c");
       }
-    }, error => { this.capturaError(error); });
+    });
   }
    /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @FUNCIONALIDAD ** */
    public getErrorMessage(pfield: string) {
@@ -117,24 +117,7 @@ export class BandejaAprobadorComponent implements OnInit {
               "";
     }
   }
-  private capturaError(error: any) {
-    if (error.error) {
-      if (error.error.codError) {
-        this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-      } else {
-        this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-      }
-    } else if (error.statusText && error.status == 401) {
-      this.dialog.open(AuthDialogComponent, {
-        data: {
-          mensaje: "Error " + error.statusText + " - " + error.message
-        }
-      });
-    } else {
-      this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-    }
-    this.loadingSubject.next(false);
-  }
+
   private cargarCatalogos(){
     this.loadingSubject.next(true);
     this.sof.consultarAgenciasCS().subscribe( (data: any) =>{
@@ -149,13 +132,13 @@ export class BandejaAprobadorComponent implements OnInit {
             this.proceso.disable();
             console.log("Me cai buscando Los estados de procesos :c ");
           }
-        }, error => { this.capturaError(error) });
+        });
       } else {
         this.loadingSubject.next(false);
         this.agencia.disable();
         console.log("Me cai en la Cat de agencia :c");
       }
-    }, error =>{ this.capturaError( error ) });
+    });
   }
   public limpiarFiltros(){
     Object.keys(this.formFiltro.controls).forEach((name) => {

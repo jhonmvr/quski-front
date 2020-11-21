@@ -5,13 +5,18 @@ import { DatePipe } from '@angular/common';
 import { PersonaConsulta } from '../../model/calculadora/personaConsulta';
 import { ConsultaOferta } from '../../model/calculadora/consultaOferta';
 
+
+import { tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { ReNoticeService } from '../re-notice.service';
 @Injectable({
   providedIn: 'root'
 })
 export class IntegracionService extends BaseService {
 
   urlRest = "integracionRestController/";
-  constructor(_http: HttpClient) {
+  constructor(_http: HttpClient,
+    private dialog: MatDialog) {
     super();
     this.http = _http;
     this.setParameter();
@@ -35,7 +40,12 @@ export class IntegracionService extends BaseService {
       .set('tipoConsulta', consulta.tipoConsulta)
       .set('calificacion', consulta.calificacion);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * 
@@ -79,7 +89,12 @@ export class IntegracionService extends BaseService {
       .set('numeroPiezas', consulta.numeroPiezas.toString())
       .set('descuentoSuelda', consulta.descuentoSuelda.toString());
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 }

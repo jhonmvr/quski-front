@@ -4,6 +4,9 @@ import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from "../../model/page";
 import { DatePipe } from '@angular/common';
+import { MatDialog } from '@angular/material';
+import { ReNoticeService } from '../re-notice.service';
+import { tap } from 'rxjs/operators';
 
 
 @Injectable({
@@ -12,7 +15,8 @@ import { DatePipe } from '@angular/common';
 export class CatalogoService extends BaseService {
 
   urlRest = "catalogoRestController/";
-  constructor(_http: HttpClient) {
+  constructor(_http: HttpClient,
+    private dialog: MatDialog) {
     super();
     this.http = _http;
     this.setParameter();
@@ -22,14 +26,24 @@ export class CatalogoService extends BaseService {
     let serviceUrl = this.appResourcesUrl + "catalogoRestController/persistEntity";
     let wrapper = { entidad: tbqoCatalogo }
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   public findCatalogoByNombre(nombre: string) {
     const serviceUrl =
       this.appResourcesUrl + 'catalogoRestController/CatalogoByNombres';
     this.params = new HttpParams().set('nombre', nombre);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public findCatalogoByTipo(tipo: string) {
@@ -37,7 +51,12 @@ export class CatalogoService extends BaseService {
       this.appResourcesUrl + 'catalogoRestController/CatalogoByTipo';
     this.params = new HttpParams().set('tipo', tipo);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public findNegociacionById(id: string) {
@@ -45,6 +64,11 @@ export class CatalogoService extends BaseService {
       this.appResourcesUrl + 'negociacionRestController/getEntity';
     this.params = new HttpParams().set('id', id);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 }

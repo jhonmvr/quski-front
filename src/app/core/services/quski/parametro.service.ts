@@ -5,12 +5,17 @@ import { Page } from '../../model/page';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 
+
+import { tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { ReNoticeService } from '../re-notice.service';
 @Injectable({
   providedIn: 'root'
 })
 export class ParametroService extends BaseService {
   private rest = "parametroRestController";
-  constructor(_http:HttpClient  ) {
+  constructor(_http: HttpClient,
+    private dialog: MatDialog) {
     super();
         this.http=_http;
         this.setParameter();
@@ -21,14 +26,24 @@ export class ParametroService extends BaseService {
       console.log("==> parametros obtenidos " +  this.params.toString() );
       let url=atob(AppConfig.cpu);
       console.log("==> url " +  url );
-      return this.http.get(url, this.options); 
+      return this.http.get(url, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    ); 
   }  
   
 public findByNombre(nombre:string){
   this.params = new HttpParams().set("nombre", nombre);
   //console.log("==> parametros obtenidos " +  this.params.toString() );
   this.options = { headers: this.headers, params:this.params };
-  return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/getEntityByNombre", this.options);
+  return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/getEntityByNombre", this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
 }
   /** 
    *  
@@ -43,13 +58,23 @@ public findByNombre(nombre:string){
     this.params=this.params.set("ordered", ordered);
     //console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params:this.params };
-    return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/findByNombreTipoOrdered", this.options);
+    return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/findByNombreTipoOrdered", this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   public findByTipo(tipo:string){
     this.params = new HttpParams();
     this.params=this.params.set("tipo", tipo);
     this.options = { headers: this.headers, params:this.params };
-    return this.http.get(this.genericResourcesUrl  +this.rest + "/findByNombreTipoOrdered", this.options);
+    return this.http.get(this.genericResourcesUrl  +this.rest + "/findByNombreTipoOrdered", this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public addDaysToDate(fecha:string, dias:string){
@@ -59,7 +84,12 @@ public findByNombre(nombre:string){
     this.params=this.params.set("format", environment.DATE_FORMAT);
     //console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params:this.params };
-    return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/addDaysToDate", this.options);
+    return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/addDaysToDate", this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public countDaysBetweenDate(fechaIni:string, fechaFin:string){
@@ -69,14 +99,24 @@ public findByNombre(nombre:string){
     this.params=this.params.set("format", environment.DATE_FORMAT);
     //console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params:this.params };
-    return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/countDaysBetweenDate", this.options);
+    return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/countDaysBetweenDate", this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public getPaises(){
     let url = this.genericResourcesUrl  +this.rest + "/getPaises";
     this.params = new HttpParams();
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(url, this.options);
+    return this.http.get(url, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   
   public findByParam(nombre:string, tipo:string, estado:string,caracteristicaUno:string, caracteristicaDos:string, page:Page ){
@@ -97,14 +137,24 @@ public findByNombre(nombre:string){
     this.params=this.params.append("isPaginated", page.isPaginated);
     //console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params:this.params };
-    return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/listByParamEntities", this.options);
+    return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/listByParamEntities", this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 public findTipos(){
   this.params = new HttpParams();
   this.params=this.params.append("isPaginated", "N");
   this.options = { headers: this.headers, params:this.params };
-    return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/listAllTipos", this.options);
+    return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/listAllTipos", this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
 }
 
 
@@ -118,7 +168,12 @@ public findTipos(){
       this.params = this.params.set('formato', formato);
     }
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(url, this.options);
+    return this.http.get(url, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   public calcularEdad(fechaIncio: string, formato: string) {
     const url = this.appResourcesUrl  + this.rest + '/calcularEdad';
@@ -130,7 +185,12 @@ public findTipos(){
       this.params = this.params.set('formato', formato);
     }
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(url, this.options);
+    return this.http.get(url, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 }

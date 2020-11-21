@@ -96,7 +96,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
         this.sinNotSer.setNotice('ERROR EN BASE PARA TRAER LA LISTA DE CATALOGOS','error');
       }
       this.loadingSubject.next(false)
-    }, error=>{this.capturaError(error); this.loadingSubject.next(false)});
+    });
   }
   enviarSolicitud(){
     if(this.formExcepciones.valid){
@@ -115,7 +115,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
           this.sinNotSer.setNotice('ERROR AL GENERAR SOLICITUD','error');
 
         }
-      }, error=>{ this.capturaError(error); this.loadingSubject.next(false)});   
+      });   
     }else {
       this.sinNotSer.setNotice('EL CAMPO DE OBSERVACION ES OBLIGATORIO','error');
     }
@@ -154,23 +154,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
     console.log("Holis?")
     this.abrirSubBotones = true;
   }
-  private capturaError(error:any){
-    if (error.error) {
-      if (error.error.codError) {
-        this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-      } else {
-        this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-      }
-    } else if (error.statusText && error.status == 401) {
-      this.dialog.open(AuthDialogComponent, {
-        data: {
-          mensaje: "Error " + error.statusText + " - " + error.message
-        }
-      });
-    } else {
-      this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-    }
-  }
+  
   public getErrorMessage(pfield: string) {
     const errorRequerido = 'El campo de observacion es obligatorio';
     const errorLogitudExedida = 'La longitud sobrepasa el limite de 200 caracteres';

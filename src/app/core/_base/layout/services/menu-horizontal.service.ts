@@ -21,7 +21,7 @@ export class MenuHorizontalService {
 	 * @param menuConfigService: MenuConfigService
 	 */
 	constructor(private menuConfigService: MenuConfigService, private authRelative:AutorizacionService) {
-		authRelative.setParameter();
+		//authRelative.setParameter();
 		this.loadMenu();
 	}
 

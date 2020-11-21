@@ -189,7 +189,7 @@ export class GestionNegociacionComponent implements OnInit {
       }else{
         this.salirDeGestion("La negociacion que esta buscando, no existe, fue cerrada o cancelada");
       }
-    }, error =>{ this.capturaError(error)});
+    });
   }
   private validarExcepciones(tmp: NegociacionWrapper){
     if(tmp.excepciones.length > 0){
@@ -231,7 +231,7 @@ export class GestionNegociacionComponent implements OnInit {
         this.limpiarCamposBusqueda();
         this.sinNotSer.setNotice('NO SE PUDO INICIAR NEGOCIACION, CLIENTE NO ENCONTRADO EN EQUIFAX','error')
       }
-    }, error =>{ this.capturaError(error)});
+    });
   }
   /** ********************************************* @PARTE_1 ********************* **/
   public buscarCliente() {
@@ -251,7 +251,7 @@ export class GestionNegociacionComponent implements OnInit {
         } else {
           this.abrirPopupDeAutorizacion(cedula);
         }
-      }, error => { this.capturaError(error) });
+      });
     } else {
       this.myStepper.selectedIndex = 0;
       this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'error');
@@ -274,7 +274,7 @@ export class GestionNegociacionComponent implements OnInit {
         this.limpiarCamposBusqueda();
         this.sinNotSer.setNotice('NO SE PUDO INICIAR NEGOCIACION, CLIENTE NO ENCONTRADO EN EQUIFAX','error')
       }
-    }, error =>{ this.capturaError(error)});
+    });
   }
   private limpiarNegociacion() {
     Object.keys(this.formBusqueda.controls).forEach((name) => {
@@ -434,31 +434,12 @@ export class GestionNegociacionComponent implements OnInit {
         } else {
           this.sinNotSer.setNotice("Error cancelando la negociacion.", 'error')
         }
-      }, error => {
-        this.capturaError(error);
-        this.sinNotSer.setNotice("reintentando cerrar negoacion");
       });
     } else {
       this.abrirSalirGestion(pData);
     }
   }
-  private capturaError(error: any) {
-    if (error.error) {
-      if (error.error.codError) {
-        this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-      } else {
-        this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-      }
-    } else if (error.statusText && error.status == 401) {
-      this.dialog.open(AuthDialogComponent, {
-        data: {
-          mensaje: "Error " + error.statusText + " - " + error.message
-        }
-      });
-    } else {
-      this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-    }
-  }
+  
   private limpiarCamposTasacion() {
     Object.keys(this.formTasacion.controls).forEach((name) => {
       const control = this.formTasacion.controls[name];
@@ -545,7 +526,7 @@ export class GestionNegociacionComponent implements OnInit {
       this.par.getDiffBetweenDateInicioActual(convertFechas.format(fechaSeleccionada, "input"), "dd/MM/yyy").subscribe((rDiff: any) => {
         const diff: YearMonthDay = rDiff.entidad;
         this.edad.setValue( diff.year );
-      },error => {this.capturaError(error)});
+      });
     }
   }
   /** ********************************************* @CATALOGOS ********************* **/
@@ -558,7 +539,7 @@ export class GestionNegociacionComponent implements OnInit {
       }else{
         this.catPublicidad.push("CATALOGO NO CARGADO");
       }
-    }, error => { this.capturaError(error); });
+    });
   }
   private obtenerCatalogosSoftbank() { 
     this.loadingSubject.next(true);
@@ -596,7 +577,7 @@ export class GestionNegociacionComponent implements OnInit {
           this.loadingSubject.next(false);
           this.sinNotSer.setNotice('ERROR AL CARGAR EL PRECIO DEL ORO', 'error');
         }
-      }, error => { this.capturaError(error); });
+      });
     }
   }
   cargarJoya() {
@@ -633,7 +614,7 @@ export class GestionNegociacionComponent implements OnInit {
         }
         this.loadingSubject.next(false);
         this.limpiarCamposTasacion();
-      }, error => { this.capturaError(error); });
+      });
     } else {
       this.sinNotSer.setNotice('COMPLETE CORRECTAMENTE EL FORMULARIO', 'warning');
     }
@@ -672,7 +653,7 @@ export class GestionNegociacionComponent implements OnInit {
         this.sinNotSer.setNotice('ERROR DESCONOCIDO', 'error');
       }
       this.loadingSubject.next(false);
-    }, error => { this.capturaError(error); });
+    });
   }
   /** ********************************************** @OPCIONES ***************************************/
   /**
@@ -709,7 +690,7 @@ export class GestionNegociacionComponent implements OnInit {
         if (data.entidad != null) {
           this.dataSourceCreditoNegociacion.data = data.entidad.opciones;
         }
-      }, error => { this.capturaError(error); });
+      });
 
     } else {
       this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');

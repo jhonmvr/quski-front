@@ -12,6 +12,10 @@ import { ConsultaSolca } from '../../model/softbank/ConsultaSolca';
 import { OperacionRenovar } from '../../model/softbank/OperacionRenovar';
 import { ClienteSoftbank } from '../../model/softbank/ClienteSoftbank';
 
+
+import { tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { ReNoticeService } from '../re-notice.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +25,8 @@ export class SoftbankService extends BaseService {
   urlRestPrestamo = "api/prestamo/";
   urlRestCatalogo = "api/catalogo/";
   urlRestCredito = "api/credito/";
-  constructor(_http: HttpClient) {
+  constructor(_http: HttpClient,
+    private dialog: MatDialog) {
     super();
     this.http = _http;
     this.setParameter();
@@ -40,7 +45,12 @@ export class SoftbankService extends BaseService {
     const serviceUrl = this.softBaseBankUrl + this.urlRestCliente + 'consultar';
     const wrapper = consultaCliente ;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -51,7 +61,12 @@ export class SoftbankService extends BaseService {
     const serviceUrl = this.softBaseBankUrl + this.urlRestCliente + 'consultar';
     const wrapper = consultaCliente ;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -62,7 +77,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCliente + "referencia" ;
     let wrapper =  consultaCliente 
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -73,7 +93,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCliente + "ingresosegresos" ;
     let wrapper =  consultaCliente 
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -84,7 +109,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCliente + "direcciontelefono" ;
     let wrapper =  consultaCliente 
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -95,7 +125,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCliente + "crear" ;
     let wrapper =  crearCliente 
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -106,7 +141,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCliente + "editar" ;
     let wrapper =  editarCliente 
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
 
   /**
@@ -120,7 +160,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "agencia" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -130,7 +175,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "gradointeres" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -140,7 +190,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipofunda" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
    /**
    * @author Oscar Romero - Developer five
@@ -150,7 +205,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadooperacionquski" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -160,7 +220,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "pais" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Oscar Romero - Developer five
@@ -170,7 +235,23 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "ocupacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  } 
+  consultarOrigenIngresoCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "origenIngreso" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Oscar Romero - Developer five
@@ -180,7 +261,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipodireccion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Oscar Romero - Developer five
@@ -190,7 +276,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipotelefono" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -200,7 +291,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "impcom" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -210,7 +306,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipojoya" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -220,7 +321,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadojoya" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -230,7 +336,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadoproceso" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -240,7 +351,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadoubicacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -250,7 +366,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipooro" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -260,7 +381,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipocobertura" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -270,7 +396,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipocliente" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }    
   /**
    * @author Oscar Romero - Developer five
@@ -280,7 +411,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "sexo" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -290,7 +426,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "firmanteoperacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
    /**
    * @author Oscar Romero - Developer five
@@ -300,7 +441,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipovivienda" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -310,7 +456,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipopago" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -320,7 +471,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "formapago" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Oscar Romero - Developer five
@@ -330,7 +486,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "motivodevolucionaprobacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Oscar Romero - Developer five
@@ -340,7 +501,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "actividadeconomicamupi" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
    /**
    * @author Oscar Romero - Developer five
@@ -350,7 +516,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "motivodevoluciongarantia" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -361,7 +532,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "asesor" ;
     let wrapper =  {  "idAgencia": 2};
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -371,7 +547,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "rubro" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -381,7 +562,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "actividadeconomica" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -391,7 +577,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "educacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -401,7 +592,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "sectorvivienda" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -411,13 +607,23 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadocivil" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /*consultarViviendaCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "vivienda" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }*/
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -427,7 +633,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "profesion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -437,17 +648,27 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipoidentificacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
    * @description Catalogos Bancos
    */
   consultarBancosCS() {
-    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "bancos" ;
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "banco" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -457,13 +678,23 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tiporeferencia" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   consultarCargoOcupacion() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "cargoocupacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -473,7 +704,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipoprestamo" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -483,7 +719,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tipocartera" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -493,7 +734,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "tablaamortizacion" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -503,7 +749,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "divisionpolitica" ;
     let wrapper =  {};
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -513,7 +764,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "divisionpoliticaconsolidado" ;
     let wrapper =  "";
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   /**
@@ -528,7 +784,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/tablaamortizacion" ;
     let wrapper =  {numeroOperacion} ;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -539,7 +800,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "simularprecancelacion" ;
     let wrapper =  simulacionPrecancelacion;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -550,7 +816,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/cancelar" ;
     let wrapper = operacionCancelar;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -561,7 +832,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/abono" ;
     let wrapper = operacionAbono;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * Consulta las operaciones activas del cliente
@@ -571,7 +847,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/consulta" ;
     let wrapper =  consultaCliente;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -582,7 +863,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/riesgoacumulado" ;
     let wrapper =  consultaCliente;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -593,7 +879,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestPrestamo + "operacion/rubro" ;
     let wrapper = {numeroOperacion};
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /** 
    * ************************************* @CREDITOS_OPERACION
@@ -607,7 +898,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/crearOperacion" ;
     let wrapper =  operacionCrear;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }  */
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -618,7 +914,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "operacion/renovar" ;
     let wrapper =  operacionRenovar;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -629,7 +930,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "operacion/aprobar" ;
     let wrapper =  {numeroOperacion};
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * @author Jeroham Cadenas - Developer Twelve
@@ -640,7 +946,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "operacion/negar" ;
     let wrapper =  {numeroOperacion};
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * ********************************@CREDITO_SIMULACION
@@ -654,7 +965,12 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "simulacion/tablaamortizacion" ;
     let wrapper =  simulacionTablaAmortizacion;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
   /**
    * ********************************@CREDITO_CONSULTA
@@ -669,6 +985,11 @@ export class SoftbankService extends BaseService {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "calcular/solca" ;
     let wrapper =  consultaSolca;
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl,wrapper,this.options);
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   } 
 }

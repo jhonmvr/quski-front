@@ -80,12 +80,12 @@
                     </ng-container>
                     <ng-container matColumnDef="tipoJoya">
                         <mat-header-cell *matHeaderCellDef >Tipo de Joya</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.tipoJoya}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.tipoJoya }} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
                     <ng-container matColumnDef="estadoJoya">
                         <mat-header-cell *matHeaderCellDef >Estado de Joya</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.estadoJoya}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.estadoJoya }} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
                     <ng-container matColumnDef="descripcion">
@@ -221,9 +221,9 @@
                     <div class="row">
                         <div class="col-md-3 ">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required placeholder="Tipo de cuenta" [formControl]="tipoCuenta">
+                                <mat-select required placeholder="Banco del cliente" [formControl]="tipoCuenta" (selectionChange)="buscarNumero()">
                                     <mat-option *ngFor="let element of catCuenta" [value]="element">
-                                        {{element}}
+                                        {{element.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

@@ -3,12 +3,17 @@ import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TbQoExcepcion } from '../../model/quski/TbQoExcepcion';
 
+
+import { tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { ReNoticeService } from '../re-notice.service';
 @Injectable({
   providedIn: 'root'
 })
 export class ExcepcionService extends BaseService {
   public restC = 'excepcionesRestController/';
-  constructor(_http: HttpClient) {
+  constructor(_http: HttpClient,
+    private dialog: MatDialog) {
     super();
     this.http = _http;
     this.setParameter();
@@ -24,7 +29,12 @@ export class ExcepcionService extends BaseService {
     const serviceUrl = this.appResourcesUrl + this.restC + 'getEntity';
     this.params = new HttpParams().set('id', id.toString());
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas
@@ -37,7 +47,12 @@ export class ExcepcionService extends BaseService {
     const serviceUrl = this.appResourcesUrl + this.restC + 'findByIdNegociacion';
     this.params = new HttpParams().set('idNegociacion', idNegociacion.toString());
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas
@@ -55,7 +70,12 @@ export class ExcepcionService extends BaseService {
     this.params.set('tipoExcepcion', tipoExcepcion);
     this.params.set('estadoExcepcion', estadoExcepcion);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas
@@ -69,7 +89,12 @@ export class ExcepcionService extends BaseService {
     this.params = new HttpParams();
     this.params.set('idCliente', idCliente);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas
@@ -85,7 +110,12 @@ export class ExcepcionService extends BaseService {
     this.params.set('tipoExcepcion', tipoExcepcion);
     this.params.set('idNegociacion', idNegociacion);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public findByTipoExcepcionAndIdNegociacionAndCaracteristica(tipoExcepcion: string, idNegociacion: any, caracteristica: string) {
@@ -96,7 +126,12 @@ export class ExcepcionService extends BaseService {
     this.params = this.params.set('idNegociacion', idNegociacion);
     this.params = this.params.set('caracteristica', caracteristica);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   /**
@@ -111,7 +146,12 @@ export class ExcepcionService extends BaseService {
     console.log('VALOR DE LA DIRECCION', serviceUrl, 'VALOR DE LA EXCEPCION ===>  ', data);
     let wrapper = { entidad: data };
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options);
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 

@@ -20,25 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
-export interface EnviarOperacion{
-  credito: TbQoCreditoNegociacion,
-  fechaCuota: Date,
-  pesoFunda: string,
-  numeroFunda: string,
-  totalPesoBrutoFunda: string,
-  tipoCuenta:string,
-  numeroCuenta: string,
-  tipoCliente:string,
-  firmanteOperacion:string,
-  identificacionCodeudor: string,
-  nombreCompletoCodeudor: string,
-  fechaNacimientoCodeudor: Date,
-  identificacionApoderado: string,
-  nombreCompletoApoderado: string,
-  fechaNacimientoApoderado: Date,
-  usuario: string,
-  idAgencia: number
-}
+
 @Component({
   selector: 'kt-generar-credito',
   templateUrl: './generar-credito.component.html',
@@ -122,6 +104,9 @@ export class GenerarCreditoComponent implements OnInit {
   public catFirmanteOperacion: Array<any>;
   public catTipoCliente: Array<any>;
   public catCuenta: Array<any>;
+  public catTipoJoya: Array<any>;
+  public catTipoOro: Array<any>;
+  public catEstadoJoya: Array<any>;
 
   
 
@@ -185,7 +170,7 @@ export class GenerarCreditoComponent implements OnInit {
             this.operacionNuevo = data.entidad;
             this.validarOperacion(this.operacionNuevo);
           }
-        }, error => { this.capturaError(error) });
+        });
         this
       } else {
         this.loadingSubject.next(false);
@@ -223,6 +208,8 @@ export class GenerarCreditoComponent implements OnInit {
             }
           });
           this.cargarCampos(data);
+        }else{
+          this.cargarCampos(data);
         }
       } else {
         this.loadingSubject.next(false);
@@ -238,10 +225,26 @@ export class GenerarCreditoComponent implements OnInit {
     this.estadoOperacion.setValue(data.proceso.estadoProceso);
     this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
-    this.dataSource.data = data.joyas;
+    if(data.joyas){
+      data.joyas.forEach(e=>{
+        console.log("Catalogos -> ", this.catTipoOro );
+        let objetoOro = this.catTipoOro.find(x => x.codigo == e.tipoOro );
+        e.tipoOro = objetoOro.nombre;
+        let objetoJoya = this.catTipoJoya.find(x => x.codigo == e.tipoJoya);
+        e.tipoJoya = objetoJoya.nombre;
+        let objetoEstado = this.catEstadoJoya.find( x => x.codigo == e.estadoJoya);
+        e.estadoJoya = objetoEstado.nombre;
+      })
+      this.dataSource.data = data.joyas;
+    }
+    let bancosCliente = new Array<any>(); 
+    data.cuentas.forEach(e=>{
+      bancosCliente.push( this.catCuenta.find(c => c.id == e.banco ) );
+    });
+    this.numeroCuenta.disable();
+    this.catCuenta = bancosCliente;
     this.calcular();
     this.loadingSubject.next(false);
-
   }
   private calcular() {
     this.totalPesoN = 0;
@@ -279,30 +282,19 @@ export class GenerarCreditoComponent implements OnInit {
       this.router.navigate(['negociacion/bandeja-operaciones']);
     });
   }
-  private capturaError(error: any) {
-    if (error.error) {
-      if (error.error.codError) {
-        this.sinNotSer.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-      } else {
-        this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-      }
-    } else if (error.statusText && error.status == 401) {
-      this.dialog.open(AuthDialogComponent, {
-        data: {
-          mensaje: "Error " + error.statusText + " - " + error.message
-        }
-      });
-    } else {
-      this.sinNotSer.setNotice("ERROR EN CORE INTERNO", 'error');
-    }
-  }
   private setFechaSistema() {
     this.cre.getSystemDate().subscribe((fechaSistema: any) => {
       this.fechaServer = new Date(fechaSistema.entidad);
     })
   }
+  public buscarNumero(){
+    this.operacionNuevo.cuentas.forEach(e=>{
+      if(e.banco == this.tipoCuenta.value.id){
+        this.numeroCuenta.setValue( e.cuenta );
+      }
+    });
+  }
   public onChangeTipoCliente( element: any){
-    console.log("Holis? -> ",element.value);
     if( element.value.codigo  == 'CYA' ||  element.value.codigo  == 'SAP' ||  element.value.codigo  == 'SCD'){
       if(element.value.codigo == 'CYA' || element.value.codigo == 'SCD'){
         console.log('aplicando -> codeudor');
@@ -319,7 +311,6 @@ export class GenerarCreditoComponent implements OnInit {
     }
   }
   public validacionFecha() {
-    //Todo: Revisar
     this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value), new Date(this.fechaServer))
     if (Math.abs(this.fechaUtil.obtenerDias()) >= 30 && Math.abs(this.fechaUtil.obtenerDias()) <= 45) {
       console.log("Esta dentro del rango")
@@ -335,13 +326,24 @@ export class GenerarCreditoComponent implements OnInit {
         this.catFirmanteOperacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
         this.sof.consultarTipoClienteCS().subscribe((data: any) => {
           this.catTipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-          this.catCuenta = ["Cuenta Ahorro"];
-          this.traerOperacion();
+          this.sof.consultarBancosCS().subscribe( (data:any) =>{
+            this.catCuenta = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+            this.sof.consultarTipoJoyaCS().subscribe( (data:any) =>{
+              this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+              this.sof.consultarTipoOroCS().subscribe( (data:any) =>{
+                this.catTipoOro = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                this.sof.consultarEstadoJoyaCS().subscribe( (data:any) =>{
+                  this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                  this.traerOperacion();
+                });
+              });
+            });
+          });
         });
       });
     });
   }
-  public validarEdadCodeudor(fechaCodeudor) { // Todo: Probar metodo
+  public validarEdadCodeudor(fechaCodeudor) {
     this.fechaUtil = new diferenciaEnDias(new Date(fechaCodeudor), new Date(this.fechaServer));
     let edadCodeudor = this.fechaUtil.obtenerDias() / 365
     if (edadCodeudor >= 65) {
@@ -351,29 +353,26 @@ export class GenerarCreditoComponent implements OnInit {
   }
   /** ********************************************* @OPERACION ********************* **/
   public generarCredito() {
-    console.log( " Validaciones de forms - > " + this.formInstruccion.valid);
     if(this.formInstruccion.valid && this.srcFunda && this.srcJoya){
       this.loadingSubject.next(true);
-      const wp : EnviarOperacion = { 
-        credito: this.operacionNuevo.credito,
-        fechaCuota: this.fechaCuota.value != null ? this.fechaCuota.value : null,
-        pesoFunda: this.pesoFunda.value.nombre,
-        numeroFunda: this.numeroFunda.value != null ? this.numeroFunda.value : null,
-        totalPesoBrutoFunda: this.totalPesoBrutoFunda.value,
-        tipoCuenta: this.tipoCuenta.value, // Todo: Agregar catalogo de tipo cuenta no existente.
-        numeroCuenta: this.numeroCuenta.value,
-        tipoCliente: this.tipoCliente.value.codigo,
-        firmanteOperacion:this.firmanteOperacion.value.codigo,
-        identificacionCodeudor: this.identificacionCodeudor.value != null ? this.identificacionCodeudor.value : null,
-        nombreCompletoCodeudor: this.nombreCompletoCodeudor.value != null ? this.nombreCompletoCodeudor.value : null,
-        fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value != null ? this.fechaNacimientoCodeudor.value : null,
-        identificacionApoderado: this.identificacionApoderado.value != null ? this.identificacionApoderado.value : null,
-        nombreCompletoApoderado: this.nombreCompletoApoderado.value != null ? this.nombreCompletoApoderado.value : null,
-        fechaNacimientoApoderado: this.fechaNacimientoApoderado.value != null ? this.fechaNacimientoApoderado.value : null,
-        usuario: atob(localStorage.getItem(environment.userKey)),
-        idAgencia: 2 // Todo: Donde consuto el numero de agencia? 
-      };
-      this.cre.crearOperacionNuevo( wp ).subscribe( (data: any) =>{
+      this.operacionNuevo.credito
+      
+      this.operacionNuevo.credito.pagoDia = this.fechaCuota.value != null ? this.fechaCuota.value : null;
+      this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
+      this.operacionNuevo.credito.numeroFunda = this.numeroFunda.value != null ? this.numeroFunda.value : null;
+      this.operacionNuevo.credito.totalPesoBrutoConFunda = this.totalPesoBrutoFunda.value;
+      this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
+      // this.operacionNuevo.credito.tipoCliente = this.tipoCliente.value.codigo; // Todo: Que hacer con este campo?
+      // this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value.codigo; // Todo: Que hacer con este campo?
+      this.operacionNuevo.credito.identificacionCodeudor = this.identificacionCodeudor.value != null ? this.identificacionCodeudor.value : null;
+      this.operacionNuevo.credito.nombreCompletoCodeudor = this.nombreCompletoCodeudor.value != null ? this.nombreCompletoCodeudor.value : null;
+      this.operacionNuevo.credito.fechaNacimientoCodeudor = this.fechaNacimientoCodeudor.value != null ? this.fechaNacimientoCodeudor.value : null;
+      this.operacionNuevo.credito.identificacionApoderado = this.identificacionApoderado.value != null ? this.identificacionApoderado.value : null;
+      this.operacionNuevo.credito.nombreCompletoApoderado = this.nombreCompletoApoderado.value != null ? this.nombreCompletoApoderado.value : null;
+      this.operacionNuevo.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value != null ? this.fechaNacimientoApoderado.value : null;
+      this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
+
+      this.cre.crearOperacionNuevo( this.operacionNuevo.credito ).subscribe( (data: any) =>{
         if(data.entidad){
           this.operacionSoft = data.entidad;  
           this.cargarOperacion( this.operacionSoft );
@@ -381,7 +380,7 @@ export class GenerarCreditoComponent implements OnInit {
           this.loadingSubject.next(false);
           this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
         }
-      }, error =>{ this.capturaError(error); });
+      });
     }else{
       this.sinNotSer.setNotice('Complete todos los campos solicitados.', 'error');
     }
@@ -449,13 +448,10 @@ export class GenerarCreditoComponent implements OnInit {
     this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).subscribe((data: any) => {
       this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).subscribe((dataDos: any) => {
         let file = JSON.parse( atob( dataDos.entidad ) );
-        console.log(" dataDos de respuesta  --> ", file);
         if(file.typeAction == '6'){
-          console.log(" dataDos de respuesta  --> ", file.typeAction);
           this.srcJoya = file.fileBase64;
         }
         if(file.typeAction == '7'){
-          console.log(" dataDos de respuesta  --> ", file.typeAction);
           this.srcFunda= file.fileBase64;
         }
       });
@@ -468,10 +464,7 @@ export class GenerarCreditoComponent implements OnInit {
           console.log('El nuevo estado -> ',data.entidad.estadoProceso);
           this.router.navigate(['aprobador/bandeja-aprobador/']);
         }
-      }, error =>{ this.capturaError( error ); });
+      });
     }
   }
 }
-
-
-
