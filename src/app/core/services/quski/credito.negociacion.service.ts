@@ -34,6 +34,18 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
+  public consultarTablaAmortizacion( numeroOperacion: string, agencia: number, usuario: string) {
+    this.setParameter();
+    const serviceUrl = this.appResourcesUrl + 'creditoNegociacionRestController/consultarTablaAmortizacion';
+    this.params = new HttpParams().set('numeroOperacion', numeroOperacion).set('usuario', usuario).set('agencia', agencia.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
   /**
    * @author Jeroham Cadenas
    * @param data EnviarOperacion (Interface)

@@ -109,7 +109,7 @@ export class GestionClienteComponent implements OnInit {
   public callePrincipal = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public numeracion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public barrio = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public calleSecundaria = new FormControl('', [Validators.maxLength(50)]);
+  public calleSecundaria = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public formDatosDireccionDomicilio: FormGroup = new FormGroup({});
   public tipoVivienda = new FormControl('', Validators.required);
   public sector = new FormControl('', Validators.required);
@@ -120,7 +120,7 @@ export class GestionClienteComponent implements OnInit {
   public callePrincipalO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public numeracionO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public barrioO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public calleSecundariaO = new FormControl('', [Validators.maxLength(50)]);
+  public calleSecundariaO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public tipoViviendaO = new FormControl('', Validators.required);
   public formDatosDireccionLaboral: FormGroup = new FormGroup({});
   public sectorO = new FormControl('', Validators.required);
@@ -145,19 +145,19 @@ export class GestionClienteComponent implements OnInit {
   public avaluoPasivo = new FormControl('', [Validators.maxLength(50)]);
   public formDatosPatrimonioPasivos: FormGroup = new FormGroup({});
   public pasivo = new FormControl('', [Validators.maxLength(50)]);
-  public telefonoMovilR = new FormControl('', [Validators.minLength(10), Validators.maxLength(10)]);
-  public telefonoFijoR = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
-  public nombresRef = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
-  public apellidosRef = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
-
+  
   public formCuentas: FormGroup = new FormGroup({});
   public tipoCuenta = new FormControl('', [Validators.maxLength(50)]);
-  public numeroCuenta = new FormControl('', [Validators.minLength(16), Validators.maxLength(20)]);
-  public esAhorro = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
-
+  public numeroCuenta = new FormControl('', [Validators.maxLength(20)]);
+  public esAhorro = new FormControl('', []);
+  
   public formDatosReferenciasPersonales: FormGroup = new FormGroup({});
-  public parentescoR = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
-  public direccionR = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
+  public telefonoFijoR = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
+  public telefonoMovilR = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+  public apellidosRef = new FormControl('', [Validators.required,  Validators.maxLength(50)]);
+  public nombresRef = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public parentescoR = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public direccionR = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public element;
 
   constructor(
@@ -465,7 +465,13 @@ export class GestionClienteComponent implements OnInit {
     });
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @FUNCIONALIDAD ** */
-
+  public numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
   public onChangeFechaNacimiento() {
     this.loadingSubject.next(true);
     const fechaSeleccionada = new Date(
@@ -1004,7 +1010,6 @@ export class GestionClienteComponent implements OnInit {
       let control = this.formDatosReferenciasPersonales.controls[name];
       control.setErrors(null);
       control.setValue(null);
-      control.updateValueAndValidity();
     });
     Object.keys(this.formDatosIngreso.controls).forEach((name) => {
       let control = this.formDatosIngreso.controls[name];
@@ -1016,13 +1021,11 @@ export class GestionClienteComponent implements OnInit {
       let control = this.formDatosEgreso.controls[name];
       control.setErrors(null);
       control.setValue(null);
-      control.updateValueAndValidity();
     });
     Object.keys(this.formCuentas.controls).forEach((name) => {
       let control = this.formCuentas.controls[name];
       control.setErrors(null);
       control.setValue(null);
-      control.updateValueAndValidity();
     });
   }
   public nuevaReferencia() {
@@ -1040,8 +1043,8 @@ export class GestionClienteComponent implements OnInit {
               b = Number(this.telefonoFijoR.value);
             }
             if (a > 0 && b > 0) {
-              referencia.apellidosRef = this.apellidosRef.value.toUpperCase();
-              referencia.nombresRef = this.nombresRef.value.toUpperCase();
+              referencia.apellidos = this.apellidosRef.value.toUpperCase();
+              referencia.nombres = this.nombresRef.value.toUpperCase();
               referencia.parentesco = this.parentescoR.value.nombre;
               referencia.direccion = this.direccionR.value.toUpperCase();
               referencia.telefonoMovil = this.telefonoMovilR.value;
@@ -1067,7 +1070,7 @@ export class GestionClienteComponent implements OnInit {
           this.sinNoticeService.setNotice("PARENTESCO NO VALIDO", 'error');
         }
       } else {
-        this.sinNoticeService.setNotice("NOMBRE COMPLETO NO VALIDO", 'error');
+        this.sinNoticeService.setNotice("NOMBRE O APELLIDO NO VALIDO", 'error');
       }
     } else {
       this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'error');
@@ -1094,7 +1097,7 @@ export class GestionClienteComponent implements OnInit {
     if (this.formCuentas.valid) {
       cuenta.banco = this.tipoCuenta.value.nombre;
       cuenta.cuenta = this.numeroCuenta.value;
-      cuenta.esAhorros = this.esAhorro.value;
+      cuenta.esAhorros = this.esAhorro.value == true ? true : false ;
       cuenta.tbQoCliente = this.wrapper.cliente;
       if (this.element) {
         const index = this.dataSourceCuentas.data.indexOf(this.element);

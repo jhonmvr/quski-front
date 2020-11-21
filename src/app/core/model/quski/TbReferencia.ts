@@ -3,8 +3,8 @@ import { TbQoCliente } from "./TbQoCliente";
 export class TbReferencia{
      id: number;
      // nombresCompletos : string;  
-     nombresRef: string;
-     apellidosRef: string;
+     nombres: string;
+     apellidos: string;
      parentesco : string;
      direccion : string;
      telefonoMovil : string;

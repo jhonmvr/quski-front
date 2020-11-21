@@ -1,7 +1,7 @@
 
 export class CuotasAmortizacion{
   cuota : number;
-  fechaPago : Date ;
+  fechaPago : any ;
   saldoCapital : number ;
   capital : number  ;
   interes : number ;
