@@ -57,8 +57,8 @@ export class DevolucionService extends BaseService {
   public busquedaSeleccionarFechas(devOpeWrap){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/buscarDevolucion";  
     const wrapper = { entidad: devOpeWrap };
-    this.options = { headers: this.headers};
-    return this.http.post(serviceUrl, wrapper, this.options);
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
   }
 
   public registrarFechaArribo(arrayIdDevoluciones, fechaArribo:Date)

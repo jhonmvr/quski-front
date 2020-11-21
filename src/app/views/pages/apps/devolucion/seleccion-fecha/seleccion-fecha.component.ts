@@ -172,25 +172,26 @@ export class SeleccionFechaComponent implements OnInit {
   }
 
   seleccionarFecha(){
+    if( this.selection && this.selection.selected && this.selection.selected.length>0 ){
+      const dialogRef = this.dialog.open(AddFechaComponent, {
+        height: '500px',
+        width: '700px',
+        data: this.selection.selected
+      });
 
-    const dialogRef = this.dialog.open(AddFechaComponent, {
-      width: '650px',
-      height: 'auto',
-      data: this.dataSource.data
-    });
+
+
+  
 
     dialogRef.afterClosed().subscribe((resultado) => {
       if (resultado) {
-        //console.log("resultado dialog " + JSON.stringify(resultado.id));
-        //CAMBIAR POR EL METODO QUE TRAE TODAS LAS JOYAS POR ID COTIZACION
-     
-          //console.log("data>>>>>>>>>>>>>>>>>" + JSON.stringify(data));
-        //  this.limpiarCampos();
+        this.eliminarSelect();
+        this.buscar();
   
 
       }
 
     });
   }
-
+  }
 }
