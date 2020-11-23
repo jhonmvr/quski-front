@@ -23,7 +23,7 @@ export class TbQoTasacion{
     id : number;
     fechaActualizacion : Date;
     fechaCreacion : Date;
-    tbQoCreditoNegociacion : TbQoCreditoNegociacion;
+    tbQoCreditoNegociacion : any;
     constructor(){
         this.tbQoCreditoNegociacion = new TbQoCreditoNegociacion();
     } 

@@ -28,7 +28,7 @@
 							</mat-form-field>
 						</div>
 						<div class=" offset-md-1 col-md-4">
-							<button mat-raised-button color="primary" matStepperNext (click)="buscarCliente()">
+							<button mat-raised-button color="primary"  (click)="buscarCliente()">
 								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
 								</mat-icon>
 								<span class="white-icon">Buscar cliente </span>
@@ -137,8 +137,8 @@
 						<span class="ng-tns-c22-3 ng-star-inserted">Aprobado Web MUPI</span>
 						<div class="col-md-6">
 							<mat-radio-group [formControl]="aprobacionMupi">
-								<mat-radio-button  (click)="updateCliente($event, aprobacionMupi)"  (keydown)="updateCliente($event, aprobacionMupi)"  value="SI">SI</mat-radio-button>
-								<mat-radio-button  (click)="updateCliente($event, aprobacionMupi)"  (keydown)="updateCliente($event, aprobacionMupi)"  value="NO">NO</mat-radio-button>
+								<mat-radio-button  (click)="updateCliente($event, aprobacionMupi)"  (keydown)="updateCliente($event, aprobacionMupi)"  value="S">SI</mat-radio-button>
+								<mat-radio-button  (click)="updateCliente($event, aprobacionMupi)"  (keydown)="updateCliente($event, aprobacionMupi)"  value="N">NO</mat-radio-button>
 							</mat-radio-group>
 						</div>
 					</div>
@@ -173,8 +173,7 @@
 						</div>
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Peso neto:" [formControl]="pesoNeto"
-									(focusout)="setPrecioOro()">
+								<input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
 							</mat-form-field>
 						</div>
 						<div class="col-md-4">
@@ -223,40 +222,40 @@
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput numeric numericType="number" type="text"
-									placeholder="N&#250;mero de piezas:" [formControl]="tienePiedras">
+									placeholder="Tiene priedras:" [formControl]="tienePiedras">
 							</mat-form-field>
 						</div>
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput numeric numericType="number" type="text"
-									placeholder="N&#250;mero de piezas:" [formControl]="detallePiedras">
+									placeholder="Detalle piedras:" [formControl]="detallePiedras">
 							</mat-form-field>
 						</div>
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Valor oro:" [formControl]="valorOro" readonly>
+								<input matInput placeholder="Precio oro:" [formControl]="valorOro" readonly>
+							</mat-form-field>
+						</div>
+				<!-- 		<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Valor Aplicable:" [formControl]="valorAplicable" readonly>
 							</mat-form-field>
 						</div>
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Valor oro:" [formControl]="valorAplicable" readonly>
+								<input matInput placeholder="precio oro:" [formControl]="precioOro" readonly>
 							</mat-form-field>
 						</div>
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Valor oro:" [formControl]="precioOro" readonly>
+								<input matInput placeholder="valor avaluo:" [formControl]="valorAvaluo" readonly>
 							</mat-form-field>
 						</div>
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Valor oro:" [formControl]="valorAvaluo" readonly>
+								<input matInput placeholder="valor realizacion:" [formControl]="valorRealizacion" readonly>
 							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Valor oro:" [formControl]="valorRealizacion" readonly>
-							</mat-form-field>
-						</div>
+						</div> -->
 					</div>
 					<div class="row mt-3">
 						<div class="col-xl-8">

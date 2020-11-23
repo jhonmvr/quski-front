@@ -44,7 +44,7 @@ export class CalculadoraService extends BaseService {
       )
     );
   }
-  public consultarPreciosJoya(consulta: ConsultaPrecioJoya) {
+  public consultarPreciosJoya(consulta) {
     const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOferta';
     const wrapper = { entidad: consulta };
     this.options = { headers: this.headers };
