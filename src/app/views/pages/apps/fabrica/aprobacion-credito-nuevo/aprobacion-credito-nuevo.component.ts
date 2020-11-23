@@ -206,7 +206,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   public aPagarCliente = new FormControl('', []);
   public riesgoTotalCliente = new FormControl('', []);
   public aRecibirCliente = new FormControl('', []);
-  public netoAlCliente = new FormControl('', []);
+  public totalCostoNuevaOperacion = new FormControl('', []);
 
   //FORM INSTRUCCION OPERATIVA
   public formInstruccionOperativa: FormGroup = new FormGroup({});
@@ -516,7 +516,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
     this.dataSourceTasacion = new MatTableDataSource(this.entidadJoyas);
     //DATOS CREDITO NUEVO 
-    this.montoPreaprobado.setValue(this.entidadCreditoNegociacion.montoPreaprobado);
+    this.montoPreaprobado.setValue(this.entidadCreditoNegociacion.montoSolicitado);
     this.montoSolicitado.setValue(this.entidadCreditoNegociacion.montoSolicitado);
     this.montoDiferido.setValue(this.entidadCreditoNegociacion.montoDiferido);
     this.plazo.setValue(this.entidadCreditoNegociacion.plazoCredito);
@@ -537,10 +537,10 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.solca.setValue(this.entidadCreditoNegociacion.solca);
     this.formaPagoSolca.setValue(this.entidadCreditoNegociacion.formaPagoSolca);
     this.montoDesembolsoBallon.setValue(this.entidadCreditoNegociacion.montoDesembolsoBallon); */
-    this.aPagarCliente.setValue(this.entidadCreditoNegociacion.apagarCliente);
+    this.aPagarCliente.setValue(this.entidadCreditoNegociacion.aPagarCliente);
     this.riesgoTotalCliente.setValue(this.entidadCreditoNegociacion.riesgoTotalCliente);
-    this.aRecibirCliente.setValue(this.entidadCreditoNegociacion.arecibirCliente);
-    this.netoAlCliente.setValue(this.entidadCreditoNegociacion.netoAlCliente);
+    this.aRecibirCliente.setValue(this.entidadCreditoNegociacion.aRecibirCliente);
+    this.totalCostoNuevaOperacion.setValue(this.entidadCreditoNegociacion.totalCostoNuevaOperacion);
 
 
 

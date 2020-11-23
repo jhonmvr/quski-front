@@ -17,7 +17,7 @@
   </re-portlet-header>
   <re-portlet-body>
 
-    <mat-vertical-stepper [linear]="false" #stepper>
+    <mat-vertical-stepper [linear]="true" #stepper>
       <mat-step label="Datos Personales" [stepControl]="formCliente">
         <form [formGroup]="formCliente">
           <div class="row mb-5">
@@ -28,12 +28,12 @@
           <div class="form-group row">
             <div class="col-md-6 col-sm-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput placeholder="Nombres Completos:" [formControl]="nombresCompletos" />
+                <input matInput placeholder="Nombres Completos:" [formControl]="nombresCompletos" readonly/>
               </mat-form-field>
             </div>
             <div class="col-md-6 col-sm-4">
                 <mat-form-field class="mat-form-field-fluid">
-                <input #ide matInput numeric numericType="number"  type="text"  placeholder="C.I " [formControl]="identificacion" required/>
+                <input #ide matInput numeric numericType="number"  type="text"  placeholder="C.I " [formControl]="identificacion" readonly/>
                 <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
               </mat-form-field>
             </div>
@@ -155,7 +155,7 @@
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input  matInput placeholder="Edad:" [formControl]="edad"readonly/>
+                <input  matInput placeholder="Edad:" [formControl]="edad" readonly/>
               </mat-form-field>
             </div>
             <div class="col-md-4">
@@ -184,33 +184,31 @@
       <mat-step label="Datos de contacto" [stepControl]="formDatosContacto">
         <form [formGroup]="formDatosContacto">
           <div class="form-group row">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput numeric numericType="number" type="text" placeholder="Tel&#233;fono Domicilio:" [formControl]="telefonoFijo"/>
-                <mat-option *ngFor="let tF of tF " [value]="tF">
-                  {{tF}}
-                </mat-option>
-                <mat-error>{{ getErrorMessage("telefonoFijo") }}</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field class="mat-form-field-fluid">
-                <input placeholder="Télefono Móvil:" type= "text" matInput numeric numericType="number" required [formControl]="telefonoMovil" >
+                <input placeholder="Télefono Móvil:" required [formControl]="telefonoMovil"  autocomplete="off" matInput numeric numericType="number"
+                (keypress)="numberOnly($event)" >
                 <mat-error>{{ getErrorMessage("telefonoMovil") }}</mat-error>
               </mat-form-field>
             </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput numeric numericType="number" type="text" placeholder="Télefono Oficina/Otros:" [formControl]="telefonoOtro" />
-                <mat-error>{{ getErrorMessage("telefonoOtro") }}</mat-error>
+                <input placeholder="Tel&#233;fono Domicilio:" [formControl]="telefonoFijo"  autocomplete="off" matInput numeric numericType="number"
+                (keypress)="numberOnly($event)" />
+                <mat-error>{{ getErrorMessage("telefonoFijo") }}</mat-error>
               </mat-form-field>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <mat-form-field class="mat-form-field-fluid">
                 <input matInput placeholder="Correo electr&#243;nico" [formControl]="email" required/>
                 <mat-error>{{ getErrorMessage("email") }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="mat-form-field-fluid">
+                <input placeholder="Télefono Oficina/Otros:" [formControl]="telefonoOtro" autocomplete="off" matInput numeric numericType="number"
+                (keypress)="numberOnly($event)" />
+                <mat-error>{{ getErrorMessage("telefonoOtro") }}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -275,7 +273,7 @@
             </div>
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput placeholder="Calle Secundaria:" [formControl]="calleSecundaria"/>
+                <input matInput required placeholder="Calle Secundaria:" [formControl]="calleSecundaria"/>
                 <mat-error>{{ getErrorMessage("calleSecundaria") }}</mat-error>
               </mat-form-field>
             </div>
@@ -361,7 +359,7 @@
             </div>
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput  placeholder="Calle Secundaria:"  [formControl]="calleSecundariaO"  />
+                <input matInput  placeholder="Calle Secundaria:" required   [formControl]="calleSecundariaO"  />
                 <mat-error>{{ getErrorMessage("calleSecundariaO") }}</mat-error>
               </mat-form-field>
             </div>
@@ -493,7 +491,8 @@
               <div class="form-group row">
                 <div class="col-md-12">
                   <mat-form-field class="mat-form-field-fluid">
-                    <input matInput placeholder="Valor De Ingreso:" autocomplete="off"  [formControl]="valorIngreso"/>
+                    <input placeholder="Valor De Ingreso:" [formControl]="valorIngreso"  autocomplete="off" matInput numeric numericType="number"
+                    (keypress)="numberOnly($event)" />
                     <mat-error>{{ getErrorMessage("valorIngreso") }}</mat-error>
                   </mat-form-field>
                 </div>
@@ -513,7 +512,8 @@
               <div class="form-group row">
                 <div class="col-md-12">
                   <mat-form-field class="mat-form-field-fluid">
-                    <input matInput placeholder="Valor De Egreso:" autocomplete="off"  [formControl]="valorEgreso"/>
+                    <input placeholder="Valor De Egreso:" [formControl]="valorEgreso" autocomplete="off" matInput numeric numericType="number"
+                    (keypress)="numberOnly($event)" />
                     <mat-error>{{ getErrorMessage("valorIngreso") }}</mat-error>
                   </mat-form-field>
                 </div>
@@ -582,7 +582,8 @@
                 </div>
                 <div class="col-md-5">
                   <mat-form-field class="mat-form-field-fluid">
-                    <input matInput placeholder="Avaluo:" autocomplete="off"  [formControl]="avaluoActivo" type="text"/>
+                    <input placeholder="Avaluo:" [formControl]="avaluoActivo"  autocomplete="off" matInput numeric numericType="number"
+                    (keypress)="numberOnly($event)" />
                   </mat-form-field>
                 </div>
               </div>
@@ -606,7 +607,7 @@
               </ng-container>
               <ng-container matColumnDef="Activo">
                 <mat-header-cell *matHeaderCellDef> Activo </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.activos }} </mat-cell>
+                <mat-cell *matCellDef="let element"> {{ element.activos | titlecase }} </mat-cell>
                 <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
               </ng-container>
               <ng-container matColumnDef="Avaluo">
@@ -633,7 +634,8 @@
                 </div>
                 <div class="col-md-5">
                   <mat-form-field class="mat-form-field-fluid">
-                    <input matInput placeholder="Avaluo:" autocomplete="off"  [formControl]="avaluoPasivo" type="text"/>
+                    <input placeholder="Avaluo:" [formControl]="avaluoPasivo" autocomplete="off" matInput numeric numericType="number"
+                    (keypress)="numberOnly($event)" />
                   </mat-form-field>
                 </div>
               </div>
@@ -659,7 +661,7 @@
 
               <ng-container matColumnDef="Pasivo">
                 <mat-header-cell *matHeaderCellDef> Pasivo </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.pasivos }}</mat-cell>
+                <mat-cell *matCellDef="let element"> {{ element.pasivos | titlecase }}</mat-cell>
                 <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
               </ng-container>
 
@@ -677,13 +679,79 @@
           </div>
         </div> 
       </mat-step>
+      <mat-step label="Cuentas Bancarias">
+        <div class="row">
+          <div class="col-md-10">
+            <form [formGroup]="formCuentas">
+              <div class="form-group row">
+                <div class="col-md-4 ">
+                  <mat-form-field class="mat-form-field-fluid">
+                      <mat-select required placeholder="Tipo de cuenta" [formControl]="tipoCuenta">
+                          <mat-option *ngFor="let element of catCuenta" [value]="element">
+                              {{element.nombre }}
+                          </mat-option>
+                      </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4 ">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input [formControl]="numeroCuenta" placeholder="Numero de Cuenta" required  autocomplete="off" matInput numeric numericType="number"
+                        (keypress)="numberOnly($event)" >
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-checkbox [formControl]="esAhorro"> Es Ahorro? </mat-checkbox>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="offset-md-4 col-md-5">
+                  <a href="javascript:void(0);" (click)="nuevaCuenta()" matTooltip="Agregar" style="font-size: 12px; vertical-align: middle;">
+                    <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
+                    <span style="position: relative; top: -10px; margin-left: 5px;">Agregar Cuenta</span>
+                  </a>
+                </div>
+              </div>
+            </form>
+            <mat-table  #table  class="mat-elevation-z8"  [dataSource]="dataSourceCuentas"  style="max-width: 760px;">
+              <ng-container matColumnDef="Accion">
+                <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <a (click)="deleteCuenta(element)"> <mat-icon matTooltip="Borrar">delete</mat-icon> </a>
+                  <a (click)="editarCuenta(element)"> <mat-icon matTooltip="Editar">edit</mat-icon> </a>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="banco">
+                <mat-header-cell *matHeaderCellDef> Banco </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.banco }} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="cuenta">
+                <mat-header-cell *matHeaderCellDef> Cuenta </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.cuenta }} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="esAhorros">
+                <mat-header-cell *matHeaderCellDef> Es Ahorro? </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.esAhorros ? 'SI' : 'NO' }} </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsCuentas"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsCuentas"></mat-row>
+             
+            </mat-table>
+          </div>
+        </div> 
+      </mat-step>
       <!-- Referencias personales -->
       <mat-step label="Referencias Personales" [stepControl]="formDatosReferenciasPersonales">
         <form [formGroup]="formDatosReferenciasPersonales">
           <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput placeholder="Nombres Completos:" [formControl]="nombresCompletosR" required/>
+                <input matInput placeholder="Nombres:" [formControl]="apellidosRef" required/>
+                <mat-error>{{ getErrorMessage("nombresCompletosR") }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="mat-form-field-fluid">
+                <input matInput placeholder="Apellidos:" [formControl]="nombresRef" required/>
                 <mat-error>{{ getErrorMessage("nombresCompletosR") }}</mat-error>
               </mat-form-field>
             </div>
@@ -704,17 +772,17 @@
                 <mat-error>{{ getErrorMessage("direccionR") }}</mat-error>
               </mat-form-field>
             </div>
-          </div>
-          <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput numeric numericType="number" type="text" placeholder="Teléfono Movil:" [formControl]="telefonoMovilR" required/>
+                <input placeholder="Teléfono Movil:" [formControl]="telefonoMovilR" required  autocomplete="off" matInput numeric numericType="number"
+                (keypress)="numberOnly($event)" />
                 <mat-error>{{ getErrorMessage("telefonoMovilR") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput numeric numericType="number" type="text" placeholder="Teléfono Fijo:" [formControl]="telefonoFijoR" required/>
+                <input placeholder="Teléfono Fijo:" [formControl]="telefonoFijoR" required  autocomplete="off" matInput numeric numericType="number"
+                (keypress)="numberOnly($event)" />
                 <mat-error>{{ getErrorMessage("telefonoFijoR") }}</mat-error>
               </mat-form-field>
             </div>
@@ -739,17 +807,21 @@
               <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
               <mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </mat-cell>
             </ng-container>
-            <ng-container matColumnDef="NombresCompletos">
-              <mat-header-cell *matHeaderCellDef>Nombres Completos</mat-header-cell>
-              <mat-cell *matCellDef="let element">{{ element.nombresCompletos }}</mat-cell>
+            <ng-container matColumnDef="nombresRef">
+              <mat-header-cell *matHeaderCellDef>Nombres</mat-header-cell>
+              <mat-cell *matCellDef="let element">{{ element.nombres  | titlecase  }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="apellidosRef">
+              <mat-header-cell *matHeaderCellDef>Apellidos</mat-header-cell>
+              <mat-cell *matCellDef="let element">{{ element.apellidos  | titlecase }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="Parentesco">
               <mat-header-cell *matHeaderCellDef> Parentesco </mat-header-cell>
-              <mat-cell *matCellDef="let element">{{ element.parentesco }}</mat-cell>
+              <mat-cell *matCellDef="let element">{{ element.parentesco  | titlecase }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="Direccion">
               <mat-header-cell *matHeaderCellDef> Dirección </mat-header-cell>
-              <mat-cell *matCellDef="let element">{{ element.direccion }}</mat-cell>
+              <mat-cell *matCellDef="let element">{{ element.direccion  | titlecase }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="TelefonoMovil">
               <mat-header-cell *matHeaderCellDef>Teléfono Movil</mat-header-cell>

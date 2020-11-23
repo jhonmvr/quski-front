@@ -116,6 +116,7 @@ import { ReasignarUsuarioComponent } from './custom/popups/reasignar-usuario/rea
 import { ConfirmarAccionComponent } from './custom/popups/confirmar-accion/confirmar-accion.component';
 
 import { AddFechaComponent } from './custom/add-fecha/add-fecha.component';
+import { TablaAmortizacionComponent } from './custom/popups/tabla-amortizacion/tabla-amortizacion.component';
 
 
 
@@ -186,7 +187,8 @@ import { AddFechaComponent } from './custom/add-fecha/add-fecha.component';
 		ListaExcepcionesComponent,
 		ReasignarUsuarioComponent,
 		ConfirmarAccionComponent,
-		AddFechaComponent
+		AddFechaComponent,
+		TablaAmortizacionComponent
 
 	],
 	exports: [
@@ -311,7 +313,8 @@ import { AddFechaComponent } from './custom/add-fecha/add-fecha.component';
 		SolicitudDeExcepcionesComponent,
 		TablaTasacionComponent,
 		TablaOfertaCreditoComponent,
-		AddFechaComponent
+		AddFechaComponent,
+		TablaAmortizacionComponent
 
 	]
 })
