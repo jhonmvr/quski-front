@@ -107,12 +107,11 @@ export class GestionNegociacionComponent implements OnInit {
     'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
     'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
     'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
-    'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipoOferta', 'porcetajeFlujoPlaneado',
-    'dividendoFlujoPlaneado', 'dividendoProrrateoServiciosDiferido'];
+    'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
+    'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
 
 
   constructor(
-    private sof: SoftbankService,
     private par: ParametroService,
     private pro: ProcesoService,
     private cal: CalculadoraService,
@@ -447,8 +446,7 @@ export class GestionNegociacionComponent implements OnInit {
     } else {
       this.abrirSalirGestion(pData);
     }
-  }
-  
+  } 
   private limpiarCamposTasacion() {
     Object.keys(this.formTasacion.controls).forEach((name) => {
       const control = this.formTasacion.controls[name];
