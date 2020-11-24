@@ -385,7 +385,7 @@
 			<mat-step [stepControl]="formOpcionesCredito">
 				<ng-template matStepLabel>Detalle Opciones de crédito</ng-template>
 				<mat-table #table class="tableOpciones"	[dataSource]="dataSourceCreditoNegociacion">
-					<ng-container matColumnDef="Accion" sticky>
+					<ng-container matColumnDef="Accion">
 						<mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
 						<mat-cell *matCellDef="let element"></mat-cell>
 					</ng-container>

@@ -112,6 +112,7 @@ export class GestionNegociacionComponent implements OnInit {
 
 
   constructor(
+    private sof: SoftbankService,
     private par: ParametroService,
     private pro: ProcesoService,
     private cal: CalculadoraService,
@@ -394,7 +395,6 @@ export class GestionNegociacionComponent implements OnInit {
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
     });
   }
-  
   /** ********************************************* @POPUP ********************* **/
   public notificarSobreExcepciones(list :TbQoExcepcion[]){
     const dialogRef = this.dialog.open(ListaExcepcionesComponent, {
@@ -441,7 +441,6 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, cancelar: boolean = false, dataTitulo?: string) {
     let pData = {
@@ -561,14 +560,11 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-
   /** ********************************************** @TASASION ***************************************/
-
   public setPrecioOro() {
     if ( this.tipoOro.value){
       this.valorOro.setValue(this.tipoOro.value.valorOro)
     }
-    
   }
   cargarJoya() {
     if (this.formTasacion.invalid) {
@@ -607,8 +603,6 @@ export class GestionNegociacionComponent implements OnInit {
       });
     
   }
-
-
   editar(element: TbQoTasacion) {
     this.tipoOro.setValue(element.tipoOro);
     this.pesoNeto.setValue(element.pesoNeto);
