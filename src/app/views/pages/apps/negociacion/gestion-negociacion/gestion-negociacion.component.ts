@@ -161,13 +161,26 @@ export class GestionNegociacionComponent implements OnInit {
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-
+    this.loadCatalogo();
     this.obtenerCatalogosCore();
     this.componenteVariable = false;
     this.componenteRiesgo = false;
     this.desactivarCampos();
     this.inicioDeFlujo();
 
+  }
+
+
+  loadCatalogo(){
+   
+    this.sof.consultarTipoJoyaCS().subscribe((data: any) => {
+      this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      
+    });
+    this.sof.consultarEstadoJoyaCS().subscribe((data: any) => {
+      this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      this.loadingSubject.next(false);
+    });
   }
   /** ********************************************* @ENTRADA ********************* **/
   private inicioDeFlujo() {
