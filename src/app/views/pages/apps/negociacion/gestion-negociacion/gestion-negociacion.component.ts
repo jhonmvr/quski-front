@@ -107,8 +107,8 @@ export class GestionNegociacionComponent implements OnInit {
     'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
     'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
     'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
-    'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipoOferta', 'porcetajeFlujoPlaneado',
-    'dividendoFlujoPlaneado', 'dividendoProrrateoServiciosDiferido'];
+    'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
+    'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
 
 
   constructor(
@@ -395,7 +395,6 @@ export class GestionNegociacionComponent implements OnInit {
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
     });
   }
-  
   /** ********************************************* @POPUP ********************* **/
   public notificarSobreExcepciones(list :TbQoExcepcion[]){
     const dialogRef = this.dialog.open(ListaExcepcionesComponent, {
@@ -442,7 +441,6 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, cancelar: boolean = false, dataTitulo?: string) {
     let pData = {
@@ -460,8 +458,7 @@ export class GestionNegociacionComponent implements OnInit {
     } else {
       this.abrirSalirGestion(pData);
     }
-  }
-  
+  } 
   private limpiarCamposTasacion() {
     Object.keys(this.formTasacion.controls).forEach((name) => {
       const control = this.formTasacion.controls[name];
@@ -563,14 +560,11 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-
   /** ********************************************** @TASASION ***************************************/
-
   public setPrecioOro() {
     if ( this.tipoOro.value){
       this.valorOro.setValue(this.tipoOro.value.valorOro)
     }
-    
   }
   cargarJoya() {
     if (this.formTasacion.invalid) {
@@ -613,8 +607,6 @@ export class GestionNegociacionComponent implements OnInit {
       });
     
   }
-
-
   editar(element: TbQoTasacion) {
     this.tipoOro.setValue(element.tipoOro);
     this.pesoNeto.setValue(element.pesoNeto);

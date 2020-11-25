@@ -1,9 +1,4 @@
-  .example-container {
-    max-width: 100%;
-    height: 120px;
-    overflow-x: scroll;
-    overflow-y: scroll;
-  }
+
   .spiner{
     display: block;
     position: fixed;
@@ -45,10 +40,6 @@
     height: fit-content !important; //quita fondo cuando sobrepone
   }
   
-  .example-container > * {
-    width: 100%;
-  }
-  
   table{
     width: 100%;
   }
@@ -60,36 +51,37 @@
   .white-icon svg {
       fill: white;
   }
-  
-  .blue-icon {
-    color:#3399ff;
-  }
-  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
   .blue-icon svg {
       fill: #3399ff;
   }
-
-  .textArea {
-    color: black;
-    background-color: white;
-    border-color: silver;
-    font-weight: 400;
-  }
-  
   .warning {
     color: white;
     background-color: #cc8b00;
     border-color: white;
     font-weight: 400;
   }
-
   .error-snackbar {
     color: white;
     background-color: red;
     border-color: white;
     font-weight: 400;
   }    
-  .text-align {   
+  .mat-header-cell {
+    flex-direction: column;
     justify-content: center;
     font-size: smaller;
+    
+  }
+  .mat-cell {
+    text-align: center;
+    justify-content:center;
+    font-size: smaller;
+  }
+
+  .tableOpciones{
+    overflow: auto;
+  }
+  .mat-header-cell, .mat-footer-cell, .mat-cell {
+    min-width: 80px;
+    box-sizing: border-box;
   }
