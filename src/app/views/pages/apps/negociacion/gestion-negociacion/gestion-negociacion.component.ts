@@ -583,8 +583,8 @@ export class GestionNegociacionComponent implements OnInit {
       joya.numeroPiezas = this.numeroPiezas.value;
       joya.pesoBruto = this.pesoBruto.value;
       joya.pesoNeto = this.pesoNeto.value;
-      joya.tipoJoya = this.tipoJoya.value.nombre;
-      joya.tipoOro = this.tipoJoya.value.nombre;
+      joya.tipoJoya = this.tipoJoya.value.codigo;
+      joya.tipoOro = this.tipoOro.value.codigo;
       joya.tienePiedras = this.tienePiedras.value =='S'?true:false;
       joya.detallePiedras = this.detallePiedras.value;
       joya.pesoNeto = Number(joya.pesoBruto) - (Number(joya.descuentoPesoPiedra) + Number(joya.descuentoSuelda));
@@ -649,34 +649,12 @@ export class GestionNegociacionComponent implements OnInit {
    */
   public calcularOpciones() {
     if (this.dataSourceTasacion.data.length > 0) {
-      const consulta = new CalculadoraEntradaWrapper();
-      consulta.parametroRiesgo.fechaNacimiento = this.negoW.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento.toString();
-      consulta.parametroRiesgo.identificacionCliente = this.negoW.credito.tbQoNegociacion.tbQoCliente.cedulaCliente;
-      consulta.descuentosOperacion = null;
-      consulta.garantias = new Array<GarantiaWrapper>();
-      this.dataSourceTasacion.data.forEach(e => {
-        const g = new GarantiaWrapper();
-        g.descripcion = e.descripcion;
-        g.descuentoPesoPiedras = e.descuentoPesoPiedra;
-        g.descuentoSuelda = e.descuentoSuelda;
-        g.detallePiedras = e.detallePiedras;
-        g.estadoJoya = e.estadoJoya;
-        g.numeroPiezas = e.numeroPiezas;
-        g.pesoGr = e.pesoBruto;
-        g.pesoNeto = e.pesoNeto;
-        g.precioOro = e.precioOro;
-        g.tienePiedras = e.tienePiedras;
-        g.tipoJoya = e.tipoJoya;
-        g.tipoOroKilataje = e.tipoOro;
-        g.valorAplicable = e.valorAplicable;
-        g.valorAvaluo = e.valorAvaluo;
-        g.valorOro = e.valorOro;
-        g.valorRealizacion = e.valorRealizacion;
-        consulta.garantias.push(g);
-      });
-      this.cal.simularOferta(consulta).subscribe((data: any) => {
-        if (data.entidad != null) {
-          this.dataSourceCreditoNegociacion.data = data.entidad.opciones;
+     
+      this.cal.simularOferta(this.negoW.credito.id).subscribe((data: any) => {
+        if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
+          && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
+          && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
+          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
       });
 
