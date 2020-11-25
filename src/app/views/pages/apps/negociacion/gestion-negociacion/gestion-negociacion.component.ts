@@ -585,12 +585,16 @@ export class GestionNegociacionComponent implements OnInit {
       joya.descripcion = this.descripcion.value;
       joya.descuentoPesoPiedra = this.descuentoPiedra.value;
       joya.descuentoSuelda = this.descuentoSuelda.value;
-      joya.estadoJoya = this.estado.value;
+      joya.estadoJoya = this.estado.value.codigo;
       joya.numeroPiezas = this.numeroPiezas.value;
       joya.pesoBruto = this.pesoBruto.value;
       joya.pesoNeto = this.pesoNeto.value;
       joya.tipoJoya = this.tipoJoya.value.nombre;
       joya.tipoOro = this.tipoJoya.value.nombre;
+      joya.tienePiedras = this.tienePiedras.value =='S'?true:false;
+      joya.detallePiedras = this.detallePiedras.value;
+      joya.pesoNeto = Number(joya.pesoBruto) - (Number(joya.descuentoPesoPiedra) + Number(joya.descuentoSuelda));
+      joya.valorOro = this.valorOro.value;
       //joya.valorAvaluo = this.valorAvaluo.value;
       //joya.valorOro = this.valorOro.value;
       joya.valorRealizacion = this.valorRealizacion.value;

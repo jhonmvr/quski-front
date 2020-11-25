@@ -221,8 +221,11 @@
 						</div>
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput numeric numericType="number" type="text"
-									placeholder="Tiene priedras:" [formControl]="tienePiedras">
+								<mat-select placeholder="Tiene priedras:" [formControl]="tienePiedras">
+									<mat-option value="S">SI</mat-option>
+									<mat-option value="N">NO</mat-option>
+								</mat-select>
+								<mat-error></mat-error>
 							</mat-form-field>
 						</div>
 						<div class="col-md-4">
