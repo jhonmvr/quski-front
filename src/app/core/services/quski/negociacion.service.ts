@@ -124,4 +124,19 @@ export class NegociacionService extends BaseService {
     );
   }
 
+
+  guardarOpcionCredito(selected: any[], idCredito) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'guardarOpcionCredito';
+    this.params = new HttpParams().set('asesor',atob(localStorage.getItem(environment.userKey)));
+    this.params = this.params.set('idCredito',idCredito);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, selected,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+
+
 }

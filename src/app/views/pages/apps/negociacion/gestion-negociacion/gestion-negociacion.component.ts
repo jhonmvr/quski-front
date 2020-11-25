@@ -29,6 +29,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { response } from 'express';
 //import { DataTableDataSource } from 'src/app/views/partials/content/widgets/general/data-table/data-table.data-source';
 
 @Component({
@@ -38,6 +40,7 @@ import { ProcesoService } from '../../../../../core/services/quski/proceso.servi
 })
 export class GestionNegociacionComponent implements OnInit {
   // VARIABLES PUBLICAS
+  selection = new SelectionModel<any>(true, []);
   public loading;
   public usuario: string;
   public loadingSubject = new BehaviorSubject<boolean>(false);
@@ -51,6 +54,8 @@ export class GestionNegociacionComponent implements OnInit {
   public catTipoJoya: Array<any>;
   public catTipoOro: Array<any>;
   public catEstadoJoya: Array<any>;
+
+  opcionCredito;
 
   // FORMULARIO BUSQUEDA
   public formBusqueda: FormGroup = new FormGroup({});
@@ -722,6 +727,41 @@ export class GestionNegociacionComponent implements OnInit {
       });
     }else{
       console.log("no guardar")
+    }
+  }
+
+
+  seleccionarCredito(element){
+    this.opcionCredito = element;
+  }
+
+
+  checkboxLabel(row?): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSourceCreditoNegociacion.data.length;
+    return numSelected === numRows;
+  }
+
+
+  guardarCredito(){
+    if (this.selection.hasValue){
+      let opcionCredito:any = this.selection.selected;
+      let rubros  = new Array();
+      opcionCredito.forEach(e=>{
+        let name = Object.keys(e);
+        let rubro = {}
+      });
+      this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
+        //navegar a cliente
+
+      });
     }
   }
 }

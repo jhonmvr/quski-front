@@ -390,7 +390,13 @@
 				<mat-table #table class="tableOpciones"	[dataSource]="dataSourceCreditoNegociacion">
 					<ng-container matColumnDef="Accion">
 						<mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
-						<mat-cell *matCellDef="let element"></mat-cell>
+						<mat-cell *matCellDef="let row">
+							<mat-checkbox (click)="$event.stopPropagation()"
+							(change)="$event ? selection.toggle(row) : null"
+							[checked]="selection.isSelected(row)"
+							[aria-label]="checkboxLabel(row)">
+			  				</mat-checkbox>	
+						</mat-cell>
 					</ng-container>
 					<ng-container matColumnDef="plazo">
 						<mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
@@ -557,7 +563,7 @@
 						</div>
 						<div class="col-md-3">
 							<button mat-raised-button color="primary">
-								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search (click)="guardarCredito()"
 								</mat-icon>
 								<span class="white-icon">Aplicar Monto</span>
 							</button>
