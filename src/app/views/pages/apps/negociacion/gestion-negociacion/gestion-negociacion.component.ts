@@ -29,6 +29,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { TbQoCliente } from 'src/app/core/model/quski/TbQoCliente';
 //import { DataTableDataSource } from 'src/app/views/partials/content/widgets/general/data-table/data-table.data-source';
 
 @Component({
@@ -90,7 +91,7 @@ export class GestionNegociacionComponent implements OnInit {
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public montoSolicitado = new FormControl('', []);
 
-  tbQoCliente;
+  public tbQoCliente: TbQoCliente;
 
   telefonoMovil;
   telefonoFijo;
@@ -257,7 +258,8 @@ export class GestionNegociacionComponent implements OnInit {
     if (this.formBusqueda.invalid) {
       this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'warning');
       return;
-    }      
+    }    
+    this.loadingSubject.next(true);  
     console.log("entra a negociacion")
       this.neg.iniciarNegociacion(this.identificacion.value, this.usuario).subscribe((wrapper: any) => {
         if (wrapper.entidad.respuesta) {
@@ -373,7 +375,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.email.setValue(this.tbQoCliente.email);
     this.campania.setValue(this.tbQoCliente.campania );
     this.publicidad.setValue (this.tbQoCliente.publicidad );
-    this.aprobacionMupi.setValue(this.tbQoCliente.aprobacionMupi );
+    this.aprobacionMupi.setValue(this.tbQoCliente.aprobacionMupi ? this.tbQoCliente.aprobacionMupi == 'SI' ? 'S' : 'N'  : null );
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
     if(wrapper.joyas != null){
