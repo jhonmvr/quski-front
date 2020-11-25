@@ -752,6 +752,7 @@ export class GestionNegociacionComponent implements OnInit {
 
 
   guardarCredito(){
+    this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
     if (this.selection.hasValue){
       let opcionCredito:any = this.selection.selected;
       let rubros  = new Array();
@@ -760,8 +761,7 @@ export class GestionNegociacionComponent implements OnInit {
         let rubro = {}
       });
       this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
-        //navegar a cliente
-
+        // this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
       });
     }
   }
