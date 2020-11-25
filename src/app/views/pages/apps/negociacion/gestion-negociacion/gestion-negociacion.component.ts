@@ -29,12 +29,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
-<<<<<<< HEAD
-import { TbQoCliente } from 'src/app/core/model/quski/TbQoCliente';
-=======
 import { SelectionModel } from '@angular/cdk/collections';
 import { response } from 'express';
->>>>>>> 13b8966c7fdf213b31fb1602dc5cd56df8e24615
 //import { DataTableDataSource } from 'src/app/views/partials/content/widgets/general/data-table/data-table.data-source';
 
 @Component({
@@ -99,7 +95,7 @@ export class GestionNegociacionComponent implements OnInit {
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public montoSolicitado = new FormControl('', []);
 
-  public tbQoCliente: TbQoCliente;
+  public tbQoCliente;
 
   telefonoMovil;
   telefonoFijo;
