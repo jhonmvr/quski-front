@@ -214,8 +214,6 @@ export class GenerarCreditoComponent implements OnInit {
     });
     this.numeroCuenta.disable();
     this.catCuenta = bancosCliente;
-    this.firmanteOperacion.setValue( this.catFirmanteOperacion.find(t=> t.codigo == data.credito.firmanteOperacion) );
-    this.tipoCliente.setValue( this.catTipoCliente.find(t=> t.codigo == data.credito.tipoCliente) );
     if(data.excepciones){
       data.excepciones.forEach(e=>{
         if( e.tipoExcepcion == "EXCEPCION_CLIENTE"){
@@ -230,6 +228,9 @@ export class GenerarCreditoComponent implements OnInit {
     this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
     this.calcular();
     if( data.credito.numeroFunda && data.credito.estadoSoftbank && data.credito.numeroOperacion){
+      this.firmanteOperacion.setValue( this.catFirmanteOperacion.find(t=> t.codigo == data.credito.firmanteOperacion) );
+      this.tipoCliente.setValue( this.catTipoCliente.find(t=> t.codigo == data.credito.tipoCliente) );
+
       data.credito.codigoTipoFunda ? this.pesoFunda.setValue( this.catTipoFunda.find(f => f.codigo == data.credito.codigoTipoFunda ) ) : null;
       let cuenta = data.cuentas.find( e => e.cuenta == data.credito.numeroCuenta );
       this.tipoCuenta.setValue( cuenta ?this.catCuenta.find(c => c.id == cuenta.banco ) : null );
