@@ -27,10 +27,11 @@ import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { response } from 'express';
+import { map, startWith } from 'rxjs/operators';
 //import { DataTableDataSource } from 'src/app/views/partials/content/widgets/general/data-table/data-table.data-source';
 
 @Component({
@@ -54,6 +55,8 @@ export class GestionNegociacionComponent implements OnInit {
   public catTipoJoya: Array<any>;
   public catTipoOro: Array<any>;
   public catEstadoJoya: Array<any>;
+  catPais;
+  filteredPais: Observable<Pais[]>;
 
   opcionCredito;
 
@@ -129,6 +132,7 @@ export class GestionNegociacionComponent implements OnInit {
     private sinNotSer: ReNoticeService,
     private subheaderService: SubheaderService
   ) {
+    
     //  RELACIONANDO FORMULARIO DE BUSQUEDA
     this.formBusqueda.addControl("identificacion", this.identificacion);
     //  RELACIONANDO FORMULARIO DE CLIENTE
@@ -136,7 +140,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.formDatosCliente.addControl("fechaNacimiento", this.fechaDeNacimiento);
     this.formDatosCliente.addControl("nombresCompletos", this.nombresCompletos);
     this.formDatosCliente.addControl("edad", this.edad);
-    this.formDatosCliente.addControl("nacionalidad", new FormControl('', Validators.required));
+    this.formDatosCliente.addControl("nacionalidad", this.nacionalidad);
     this.formDatosCliente.addControl("movil", this.movil);
     this.formDatosCliente.addControl("telefonoDomicilio", this.telefonoDomicilio);
     this.formDatosCliente.addControl("email", this.email);
@@ -179,6 +183,11 @@ export class GestionNegociacionComponent implements OnInit {
 
   loadCatalogo(){
    
+
+    this.sof.consultarPaisCS().subscribe((data: any) => {
+      this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      
+    });
     this.sof.consultarTipoJoyaCS().subscribe((data: any) => {
       this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
       
@@ -358,14 +367,14 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   private cargarValores(wrapper) {
-    this.catTipoOro = wrapper.tipoOro;
+    //this.catTipoOro = wrapper.tipoOro;
     this.tbQoCliente= wrapper.credito.tbQoNegociacion.tbQoCliente;
     this.cedula.setValue(this.tbQoCliente.cedulaCliente);
     this.identificacion.setValue(this.tbQoCliente.cedulaCliente);
     this.nombresCompletos.setValue(this.tbQoCliente.nombreCompleto);
     this.fechaDeNacimiento.setValue(this.tbQoCliente.fechaNacimiento);
     this.cargarEdad();
-    this.nacionalidad.setValue(this.tbQoCliente.nacionalidad);
+    this.nacionalidad.setValue(this.catPais.find(p=> p.id == this.tbQoCliente.nacionalidad));
     if(wrapper.telefonoMovil){
       this.movil.setValue(wrapper.telefonoMovil.numero);
       this.telefonoMovil = wrapper.telefonoMovil;
@@ -678,41 +687,7 @@ export class GestionNegociacionComponent implements OnInit {
       return;
     }
     if(this.tbQoCliente && this.tbQoCliente.id){
-      console.log("guardad")
-      if( this.telefonoFijo){
-        this.telefonoFijo.numero = this.telefonoDomicilio.value
-      }else if(this.telefonoDomicilio.value){
-        this.telefonoFijo ={
-          tipoTelefono:'F',
-          numero:this.telefonoDomicilio.value
-        }
-      }
-      if( this.telefonoMovil){
-        this.telefonoMovil.numero = this.movil.value
-      }else if (this.movil.value){
-        this.telefonoMovil ={
-          tipoTelefono:'M',
-          numero:this.movil.value
-        }
-      }
-     
-      let cliente = {
-        id: this.tbQoCliente.id,
-        cedulaCliente:this.tbQoCliente.cedulaCliente,
-        aprobacionMupi: this.aprobacionMupi.value,
-        campania:this.campania.value,
-        fechaNacimiento:this.fechaDeNacimiento.value,
-        nacionalidad:this.nacionalidad.value,
-        publicidad:this.publicidad.value,
-        tbQoTelefonoClientes: new Array()
-      };
-
-      if(this.telefonoMovil){
-        cliente.tbQoTelefonoClientes.push(this.telefonoMovil);
-      }
-      if(this.telefonoFijo){
-        cliente.tbQoTelefonoClientes.push(this.telefonoFijo);
-      }
+    let cliente = this.buildCliente();
       this.neg.updateCliente(cliente).subscribe( p =>{
         if(p.entidad && p.entidad.tbQoTelefonoClientes){
           p.entidad.tbQoTelefonoClientes.forEach(element => {
@@ -731,6 +706,44 @@ export class GestionNegociacionComponent implements OnInit {
     }
   }
 
+  buildCliente(){
+    console.log("guardad")
+    if( this.telefonoFijo){
+      this.telefonoFijo.numero = this.telefonoDomicilio.value
+    }else if(this.telefonoDomicilio.value){
+      this.telefonoFijo ={
+        tipoTelefono:'F',
+        numero:this.telefonoDomicilio.value
+      }
+    }
+    if( this.telefonoMovil){
+      this.telefonoMovil.numero = this.movil.value
+    }else if (this.movil.value){
+      this.telefonoMovil ={
+        tipoTelefono:'M',
+        numero:this.movil.value
+      }
+    }
+   
+    let cliente = {
+      id: this.tbQoCliente.id,
+      cedulaCliente:this.tbQoCliente.cedulaCliente,
+      aprobacionMupi: this.aprobacionMupi.value,
+      campania:this.campania.value,
+      fechaNacimiento:this.fechaDeNacimiento.value,
+      nacionalidad:this.nacionalidad.value.id,
+      publicidad:this.publicidad.value,
+      tbQoTelefonoClientes: new Array()
+    };
+
+    if(this.telefonoMovil){
+      cliente.tbQoTelefonoClientes.push(this.telefonoMovil);
+    }
+    if(this.telefonoFijo){
+      cliente.tbQoTelefonoClientes.push(this.telefonoFijo);
+    }
+    return cliente;
+  }
 
   seleccionarCredito(element){
     this.opcionCredito = element;
@@ -752,17 +765,37 @@ export class GestionNegociacionComponent implements OnInit {
 
 
   guardarCredito(){
-    this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
     if (this.selection.hasValue){
-      let opcionCredito:any = this.selection.selected;
-      let rubros  = new Array();
-      opcionCredito.forEach(e=>{
-        let name = Object.keys(e);
-        let rubro = {}
-      });
       this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
-        // this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
+         this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
       });
     }
   }
+
+  verPrecio(){
+    if(this.formDatosCliente.invalid){
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'error');
+    }
+    let cliente = this.buildCliente();
+    this.neg.verPrecios(cliente).subscribe(resp=>{
+      this.catTipoOro = resp.entidades;
+    })
+  }
+
+
+  
+  private _filter(value: Pais): Pais[] {
+    const filterValue = this._normalizeValue(value.nombre);
+    return this.catPais.filter(pais => this._normalizeValue(pais.nombre).includes(filterValue));
+  }
+
+  private _normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
+  }
+}
+
+export class Pais{
+  id;
+  codigo;
+  nombre;
 }
