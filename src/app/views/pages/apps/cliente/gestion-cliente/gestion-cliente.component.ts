@@ -356,7 +356,7 @@ export class GestionClienteComponent implements OnInit {
     if (this.wrapper.referencias) {
       this.wrapper.referencias.forEach(e => {
         const referencia = this.catTipoReferencia.find(x => x.codigo == e.parentesco);
-        e.parentesco = referencia.nombre;
+        e.parentesco = referencia ? referencia.nombre : 'error' ;
       });
       this.dataSource.data = this.wrapper.referencias;
     }
@@ -1282,7 +1282,7 @@ export class GestionClienteComponent implements OnInit {
                           this.loadingSubject.next(false);
                           this.sinNoticeService.setNotice("NO SE PUDO REGISTRAR EL CLIENTE EN SOFTBANK", 'error');
                           if (this.idNegociacion) {
-                            this.router.navigate(['negociacion/bandeja-operaciones']);
+                            this.router.navigate(['credito-nuevo/generar-credito/', this.idNegociacion]);
                           } else {
                             this.router.navigate(['negociacion/bandeja-operaciones']);
                           }
