@@ -26,6 +26,8 @@ export class TbQoCreditoNegociacion {
     nombreCompletoApoderado: string; 
     nombreCompletoCodeudor: string; 
     numeroCuenta: string;
+    tipoCliente: string;
+    firmanteOperacion: string;
     numeroFunda: number;
     numeroOperacion: string;
     pagoDia: Date; 

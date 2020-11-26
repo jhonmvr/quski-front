@@ -214,7 +214,8 @@ export class GenerarCreditoComponent implements OnInit {
     });
     this.numeroCuenta.disable();
     this.catCuenta = bancosCliente;
-    this.tipoCliente.setValue( this.catTipoCliente.find(t=> t.codigo == "DEU") );
+    this.firmanteOperacion.setValue( this.catFirmanteOperacion.find(t=> t.codigo == data.credito.firmanteOperacion) );
+    this.tipoCliente.setValue( this.catTipoCliente.find(t=> t.codigo == data.credito.tipoCliente) );
     if(data.excepciones){
       data.excepciones.forEach(e=>{
         if( e.tipoExcepcion == "EXCEPCION_CLIENTE"){
@@ -225,11 +226,11 @@ export class GenerarCreditoComponent implements OnInit {
         }
       });
     }
+    this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.id.toString());
+    this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
     this.calcular();
     if( data.credito.numeroFunda && data.credito.estadoSoftbank && data.credito.numeroOperacion){
       data.credito.codigoTipoFunda ? this.pesoFunda.setValue( this.catTipoFunda.find(f => f.codigo == data.credito.codigoTipoFunda ) ) : null;
-      this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.id.toString());
-      this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
       let cuenta = data.cuentas.find( e => e.cuenta == data.credito.numeroCuenta );
       this.tipoCuenta.setValue( cuenta ?this.catCuenta.find(c => c.id == cuenta.banco ) : null );
 
@@ -354,8 +355,8 @@ export class GenerarCreditoComponent implements OnInit {
       this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
       this.operacionNuevo.credito.numeroFunda = anular ? 0 : this.numeroFunda.value;
       this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
-      // this.operacionNuevo.credito.tipoCliente = this.tipoCliente.value.codigo; // Todo: Que hacer con este campo?
-      // this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value.codigo; // Todo: Que hacer con este campo?
+      this.operacionNuevo.credito.tipoCliente = this.tipoCliente.value.codigo; // Todo: Que hacer con este campo?
+      this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value.codigo; // Todo: Que hacer con este campo?
       this.operacionNuevo.credito.identificacionCodeudor  = this.identificacionCodeudor.value != null ? this.identificacionCodeudor.value : null;
       this.operacionNuevo.credito.nombreCompletoCodeudor  = this.nombreCompletoCodeudor.value != null ? this.nombreCompletoCodeudor.value : null;
       this.operacionNuevo.credito.fechaNacimientoCodeudor = this.fechaNacimientoCodeudor.value != null ? this.fechaNacimientoCodeudor.value : null;
