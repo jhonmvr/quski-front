@@ -60,12 +60,7 @@ export class GenerarCreditoComponent implements OnInit {
   public numeroCuenta = new FormControl('', Validators.required);
   public tipoCliente = new FormControl('', [Validators.required]);
   public firmanteOperacion = new FormControl('', [Validators.required]);
-  public identificacionCodeudor = new FormControl('', [Validators.required]);
-  public nombreCompletoCodeudor = new FormControl('', [Validators.required]);
-  public fechaNacimientoCodeudor = new FormControl('', [Validators.required]);
-  public identificacionApoderado = new FormControl('', [Validators.required]);
-  public nombreCompletoApoderado = new FormControl('', [Validators.required]);
-  public fechaNacimientoApoderado = new FormControl('', [Validators.required]);
+  
   /** @FORM_CREDITO **/
   public formCredito: FormGroup = new FormGroup({});
   public tipoCartera = new FormControl('');
@@ -195,6 +190,7 @@ export class GenerarCreditoComponent implements OnInit {
   private cargarCampos(data: OperacionNuevoWrapper) {
     console.log('OperacionNuevoWrapper de entrada ->', data);
     this.agencia = 2;
+    this.firmanteOperacion.setValue( this.catFirmanteOperacion.find(t=> t.codigo != null).nombre );
     this.codigoOperacion.setValue(data.credito.codigo);
     this.estadoOperacion.setValue(data.proceso.estadoProceso);
     this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
@@ -228,7 +224,6 @@ export class GenerarCreditoComponent implements OnInit {
     this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
     this.calcular();
     if( data.credito.numeroFunda && data.credito.estadoSoftbank && data.credito.numeroOperacion){
-      this.firmanteOperacion.setValue( this.catFirmanteOperacion.find(t=> t.codigo == data.credito.firmanteOperacion) );
       this.tipoCliente.setValue( this.catTipoCliente.find(t=> t.codigo == data.credito.tipoCliente) );
 
       data.credito.codigoTipoFunda ? this.pesoFunda.setValue( this.catTipoFunda.find(f => f.codigo == data.credito.codigoTipoFunda ) ) : null;
@@ -289,22 +284,6 @@ export class GenerarCreditoComponent implements OnInit {
       }
     });
   }
-  public onChangeTipoCliente( element: any){
-    if( element.value.codigo  == 'CYA' ||  element.value.codigo  == 'SAP' ||  element.value.codigo  == 'SCD'){
-      if(element.value.codigo == 'CYA' || element.value.codigo == 'SCD'){
-        console.log('aplicando -> codeudor');
-        this.formInstruccion.addControl("identificacionCodeudor", this.identificacionCodeudor);
-        this.formInstruccion.addControl("nombreCompletoCodeudor", this.nombreCompletoCodeudor);
-        this.formInstruccion.addControl("fechaNacimientoCodeudor", this.fechaNacimientoCodeudor);
-      }
-      if(element.value.codigo == 'CYA' || element.value.codigo == 'SAP'){
-        console.log('aplicando -> apoderado');
-        this.formInstruccion.addControl("identificacionApoderado", this.identificacionApoderado);
-        this.formInstruccion.addControl("nombreCompletoApoderado", this.nombreCompletoApoderado);
-        this.formInstruccion.addControl("fechaNacimientoApoderado", this.fechaNacimientoApoderado);
-      }
-    }
-  }
   public validacionFecha() {
     this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value), new Date(this.fechaServer))
     if (Math.abs(this.fechaUtil.obtenerDias()) >= 30 && Math.abs(this.fechaUtil.obtenerDias()) <= 45) {
@@ -338,14 +317,7 @@ export class GenerarCreditoComponent implements OnInit {
       });
     });
   }
-  public validarEdadCodeudor(fechaCodeudor) {
-    this.fechaUtil = new diferenciaEnDias(new Date(fechaCodeudor), new Date(this.fechaServer));
-    let edadCodeudor = this.fechaUtil.obtenerDias() / 365
-    if (edadCodeudor >= 65) {
-      this.sinNotSer.setNotice("El CODEUDOR DEBE SER MENOR DE 65 AÑOS", 'error');
-      this.fechaNacimientoCodeudor.reset();
-    } 
-  }
+
   /** ********************************************* @OPERACION ********************* **/
   public generarCredito(anular?: boolean ) {
     if(this.formInstruccion.valid && this.srcFunda && this.srcJoya){
@@ -356,14 +328,6 @@ export class GenerarCreditoComponent implements OnInit {
       this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
       this.operacionNuevo.credito.numeroFunda = anular ? 0 : this.numeroFunda.value;
       this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
-      this.operacionNuevo.credito.tipoCliente = this.tipoCliente.value.codigo; // Todo: Que hacer con este campo?
-      this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value.codigo; // Todo: Que hacer con este campo?
-      this.operacionNuevo.credito.identificacionCodeudor  = this.identificacionCodeudor.value != null ? this.identificacionCodeudor.value : null;
-      this.operacionNuevo.credito.nombreCompletoCodeudor  = this.nombreCompletoCodeudor.value != null ? this.nombreCompletoCodeudor.value : null;
-      this.operacionNuevo.credito.fechaNacimientoCodeudor = this.fechaNacimientoCodeudor.value != null ? this.fechaNacimientoCodeudor.value : null;
-      this.operacionNuevo.credito.identificacionApoderado = this.identificacionApoderado.value != null ? this.identificacionApoderado.value : null;
-      this.operacionNuevo.credito.nombreCompletoApoderado = this.nombreCompletoApoderado.value != null ? this.nombreCompletoApoderado.value : null;
-      this.operacionNuevo.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value != null ? this.fechaNacimientoApoderado.value : null;
       this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
       this.operacionNuevo.credito.idAgencia = this.agencia;
 
@@ -395,9 +359,8 @@ export class GenerarCreditoComponent implements OnInit {
     this.deudaInicial.setValue( data.deudaInicial );
     this.sinNotSer.setNotice('NUMERO DE FUNDA ASIGNADO: '+ data.numeroFunda, 'success');
     this.stepper.selectedIndex = data.tipo == 'CUOTAS' ? 4 : 3;
-    this.riesgoTotalCliente.setValue("No tengo"); 
-    this.fechaVencimiento.setValue("No tengo"); 
-    this.fechaEfectiva.setValue("No tengo"); 
+    this.fechaVencimiento.setValue( data.fechaVencimiento ); 
+    this.fechaEfectiva.setValue( data.fechaEfectiva); 
     if(!this.operacionSoft){
       this.cre.consultarTablaAmortizacion( data.numeroOperacion, this.agencia, atob(localStorage.getItem(environment.userKey) ))
         .subscribe( (data:any) =>{

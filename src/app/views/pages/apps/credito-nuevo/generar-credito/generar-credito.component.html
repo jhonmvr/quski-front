@@ -219,7 +219,7 @@
             <mat-step label="Datos Instruccion Operativa" [stepControl]="formInstruccion">
                 <form [formGroup]="formInstruccion">
                     <div class="row">
-                        <div class="col-md-3 ">
+                        <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select required placeholder="Banco del cliente" [formControl]="tipoCuenta" (selectionChange)="buscarNumero()">
                                     <mat-option *ngFor="let element of catCuenta" [value]="element">
@@ -228,80 +228,16 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-3 ">
+                        <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input matInput required [formControl]="numeroCuenta" placeholder="Numero de Cuenta">
                             </mat-form-field>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required placeholder="Tipo de Garante" [formControl]="tipoCliente" (selectionChange)="onChangeTipoCliente($event)">
-                                    <mat-option *ngFor="let element of catTipoCliente " [value]="element">
-                                        {{element.nombre}}
-                                    </mat-option>
-                                </mat-select>
+                                <input matInput required [formControl]="firmanteOperacion" placeholder="Firmante Operacion">
                             </mat-form-field>
                         </div>
-                        <div class="col-md-3 ">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required placeholder="Firmante Operacion" [formControl]="firmanteOperacion">
-                                    <mat-option *ngFor="let element of catFirmanteOperacion " [value]="element">
-                                        {{element.nombre}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <ng-container *ngIf="this.tipoCliente.value.codigo == 'CYA' || this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'SCD';">
-                            <div class="offset-md-5 col-md-7">
-                                <mat-card-title> Datos de Garante</mat-card-title>
-                            </div>
-                            <ng-container *ngIf="this.tipoCliente.value.codigo == 'CYA' || this.tipoCliente.value.codigo == 'SCD'">
-                                <div class="col-md-4 ">
-                                    <mat-form-field class="mat-form-field-fluid">
-                                        <input matInput [formControl]="identificacionCodeudor" placeholder="Identificacion (Codeudor)">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-4 ">
-                                    <mat-form-field class="mat-form-field-fluid">
-                                        <input matInput [formControl]="nombreCompletoCodeudor" placeholder="Nombre Completo (Codeudor)">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-4">
-                                    <mat-form-field class="mat-form-field-fluid">
-                                        <input (dateChange)="validarEdadCodeudor($event.value)" matInput
-                                            #inputFechaNacimientoCodeudor [matDatepicker]="pickerFechaNacimientoCodeudor"
-                                            placeholder="Fecha de Nacimiento (Codeudor)" [formControl]="fechaNacimientoCodeudor" />
-                                        <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimientoCodeudor">
-                                        </mat-datepicker-toggle>
-                                        <mat-datepicker #pickerFechaNacimientoCodeudor></mat-datepicker>
-                                    </mat-form-field>
-                                </div>
-                            </ng-container>
-                            <ng-container *ngIf="this.tipoCliente.value.codigo == 'CYA' || this.tipoCliente.value.codigo == 'SAP'">
-                                <div class="col-md-4">
-                                    <mat-form-field class="mat-form-field-fluid">
-                                        <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (Apoderado)">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-4">
-                                    <mat-form-field class="mat-form-field-fluid">
-                                        <input matInput [formControl]="nombreCompletoApoderado" placeholder="Nombre Completo (Apoderado)">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-4">
-                                    <mat-form-field class="mat-form-field-fluid">
-                                        <input (dateChange)="validarEdadCodeudor($event.value)" matInput
-                                            #inputFechaNacimientoApoderado [matDatepicker]="pickerFechaNacimientoApoderado"
-                                            placeholder="Fecha de Nacimiento (Apoderado)" [formControl]="fechaNacimientoApoderado" />
-                                        <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimientoApoderado">
-                                        </mat-datepicker-toggle>
-                                        <mat-datepicker #pickerFechaNacimientoApoderado></mat-datepicker>
-                                    </mat-form-field>
-                                </div>
-                            </ng-container>
-                        </ng-container>
                     </div>
                     <div class="row mb-5">
                         <div  class="offset-md-5 col-md-4" >
