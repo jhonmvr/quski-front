@@ -1,31 +1,33 @@
-import { TbQoCliente } from '../quski/TbQoCliente';
 import { TbQoCreditoNegociacion } from '../quski/TbQoCreditoNegociacion';
+import { TbQoCuentaBancariaCliente } from '../quski/TbQoCuentaBancariaCliente';
+import { TbQoDatoTrabajoCliente } from '../quski/TbQoDatoTrabajoCliente';
 import { TbQoDireccionCliente } from '../quski/TbQoDireccionCliente';
 import { TbQoExcepcion } from '../quski/TbQoExcepcion';
 import { TbQoIngresoEgresoCliente } from '../quski/TbQoIngresoEgresoCliente';
-import { TbQoPatrimonioCliente } from '../quski/TbQoPatrimonioCliente';
+import { TbQoPatrimonio } from '../quski/TbQoPatrimonio';
 import { TbQoProceso } from '../quski/TbQoProceso';
 import { TbQoRiesgoAcumulado } from '../quski/TbQoRiesgoAcumulado';
 import { TbQoTasacion } from '../quski/TbQoTasacion';
+import { TbQoTelefonoCliente } from '../quski/TbQoTelefonoCliente';
 import { TbQoVariablesCrediticia } from '../quski/TbQoVariablesCrediticia';
 import { TbReferencia } from '../quski/TbReferencia';
 export class AprobacionWrapper {
-    joyas: TbQoTasacion[];
-    variables: TbQoVariablesCrediticia[];
-    riesgos: TbQoRiesgoAcumulado[];
-    referencias: TbReferencia[];
-    ingresosEgresos: TbQoIngresoEgresoCliente[];
-    direcciones: TbQoDireccionCliente[];
-    patrimonios: TbQoPatrimonioCliente[];
-    cliente: TbQoCliente;
     credito: TbQoCreditoNegociacion;
     proceso: TbQoProceso;
-
-
-    excepciones: TbQoExcepcion[];
-
-    excepcionBre: string;
-    respuesta: boolean;
+    telefonos: Array<TbQoTelefonoCliente>;
+    direcciones: Array<TbQoDireccionCliente>;
+    trabajos: Array<TbQoDatoTrabajoCliente>;
+    patrimonios: Array<TbQoPatrimonio>;
+    ingresosEgresos: Array<TbQoIngresoEgresoCliente>;
+    referencias: Array<TbReferencia>;
+    excepciones: Array<TbQoExcepcion>;
+    variables: Array<TbQoVariablesCrediticia>;
+    riesgos: Array<TbQoRiesgoAcumulado>;
+    joyas: Array<TbQoTasacion>;
+    cuenta: TbQoCuentaBancariaCliente;
+    existeError: boolean;
+    mensaje: string;
+    
     constructor() {
 
     }

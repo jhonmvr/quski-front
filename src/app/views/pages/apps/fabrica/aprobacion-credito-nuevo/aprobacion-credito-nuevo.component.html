@@ -20,1075 +20,812 @@
 
   <re-portlet-body>
     <mat-vertical-stepper>
-      <mat-step>
-        <ng-template matStepLabel>Información Operación</ng-template>
-        <div [formGroup]="formOperacion">
-          <div class="row">
-            <div class="col-6">
-              <mat-form-field>
-                <input matInput [formControl]="codigoOperacion" placeholder="Código Operación " />
-              </mat-form-field>
-            </div>
+      <mat-step label="Información Operación">
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input matInput [formControl]="nombresCompletoCliente" placeholder="Nombre Del Cliente" />
+            </mat-form-field>
           </div>
-          <div class="row">
-            <div class="col">
-              <mat-form-field>
-                <input matInput [formControl]="proceso" placeholder="Proceso" />
-              </mat-form-field>
-            </div>
+          <div class="col-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input matInput [formControl]="codigoBpm" placeholder="Código BPM" />
+            </mat-form-field>
           </div>
-
-          <div class="row">
-            <div class="col">
-              <mat-form-field>
-                <input matInput [formControl]="cliente" placeholder="Cliente" />
-              </mat-form-field>
-            </div>
+          <div class="col-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input matInput [formControl]="proceso" placeholder="Proceso" />
+            </mat-form-field>
           </div>
         </div>
       </mat-step>
-      <mat-step>
-        <ng-template matStepLabel>Habilitantes</ng-template>
+
+      <mat-step label="Datos Del Cliente">
+        <mat-tab-group mat-align-tabs="start">
+
+          <mat-tab label="Datos Personales del Cliente">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="tipoIdentificacion" placeholder="Tipo de Identificacion:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="identificacion" placeholder="RUC/C.I./Pasaporte:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="aprobacionMupi" placeholder="Aprobado Web Mupi:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="nombresCompletos" placeholder="Nombres Completos:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="primerNombre" placeholder="Primer Nombre:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]=" segundoNombre" placeholder="Segundo Nombre:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="apellidoPaterno" placeholder="Apellido Paterno:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="apellidoMaterno" placeholder="Apellido Materno:" matInput />
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="separacionDeBienes" placeholder="Separacion de bienes" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="genero" placeholder="Género:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="estadoCivil" placeholder="Estado Civil:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="cargaFamiliar" placeholder="Cargas familiares" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="nacionalidad" placeholder="Nacionalidad:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="lugarDeNacimiento" placeholder="Lugar de nacimiento:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="edad" placeholder="Edad:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="nivelEducacion" placeholder="Nivel de educación:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="actividadEconomica" placeholder="Actividad Ecónomica:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="fechaUltimaActualizazion" placeholder="Fecha Última Actualización:" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Datos de Contacto">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="telefonoDomicilio" placeholder="Telefono Domicilio:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="telefonoMovil" placeholder="Telefono Movil:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="telefonoOficina" placeholder="Telefono de Oficina/Otros:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="correo" placeholder="Correo Electronico:" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Dirección Domicilio">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-checkbox [formControl]="direccionLegalDomicilio">Es Dirección Legal</mat-checkbox>
+              </div>
+              <div class="col-md-4">
+                <mat-checkbox [formControl]="direccionCorreoDomicilio">Es Dirección Envio Correspondencia</mat-checkbox>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Parroquia / Canton / Provincia :"[formControl]= "ubicacion" >
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Barrio:" [formControl]="barrio"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Sector:" [formControl]="sector"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Calle Principal:" [formControl]="callePrincipal"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput  placeholder="Numeración:"[formControl]="numeracion"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput  placeholder="Calle Secundaria:" [formControl]="calleSecundaria"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Referencia Ubicación:" [formControl]="referenciaUbicacion"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Tipo de Vivienda:" [formControl]="tipoVivienda"/>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Dirección Laboral">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-checkbox [formControl]="direccionLegalLaboral">Es Dirección Legal</mat-checkbox>
+              </div>
+              <div class="col-md-4">
+                <mat-checkbox [formControl]="direccionCorreoLaboral">Es Dirección Envio Correspondencia</mat-checkbox>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Parroquia / Canton / Provincia :"[formControl]= "ubicacionLaboral" >
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Barrio:" [formControl]="barrioLaboral"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Sector:" [formControl]="sectorLaboral"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Calle Principal:" [formControl]="callePrincipalLaboral"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput  placeholder="Numeración:"[formControl]="numeracionLaboral"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput  placeholder="Calle Secundaria:" [formControl]="calleSecundariaLaboral"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Referencia Ubicación:" [formControl]="referenciaUbicacionLaboral"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input matInput placeholder="Tipo de Vivienda:" [formControl]="tipoViviendaLaboral"/>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Datos Economicos">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="origenIngresos" placeholder="Origen Ingresos:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="nombreEmpresa" placeholder="Nombre Empresa:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="actividadEconomicaEmpresa" placeholder="Actividad Económica:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="actividadEconomicaEmpresa" placeholder="Actividad Económica:" matInput  *ngIf="this.origenIngresos.value.codigo == '1' || this.origenIngresos.value.codigo == '2'" />
+                  <input [formControl]="actividadEconomicaMupi" placeholder="Actividad Económica Mupi:" matInput *ngIf="this.origenIngresos.value.codigo != '1' && this.origenIngresos.value.codigo != '2'"/>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="relacionDependencia" placeholder="Relación de Dependencia:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="cargo" placeholder="Cargo:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="profesion" placeholder="Profesión:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="ocupacion" placeholder="Ocupación:" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Patrimonio">
+            <mat-table  #table  class="mat-elevation-z8"  [dataSource]="dataSourcePatrimonioActivo"  style="max-width: 760px;">
+              <ng-container matColumnDef="Activo">
+                <mat-header-cell *matHeaderCellDef> Activo </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.activos | titlecase }} </mat-cell>
+                <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+              </ng-container>
+              <ng-container matColumnDef="Avaluo">
+                <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
+                <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
+              </ng-container>
+              <mat-header-row
+                *matHeaderRowDef="displayedColumnsActivo"
+              ></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsActivo"></mat-row>
+              <mat-footer-row
+                *matFooterRowDef="displayedColumnsActivo; sticky: true"
+              ></mat-footer-row>
+            </mat-table>
+            <mat-table  #table  class="mat-elevation-z8"  [dataSource]="dataSourcePatrimonioPasivo"  style="max-width: 760px;">
+              <ng-container matColumnDef="Pasivo">
+                <mat-header-cell *matHeaderCellDef> Pasivo </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.pasivos | titlecase }}</mat-cell>
+                <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="Avaluo">
+                <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }}</mat-cell>
+                <mat-footer-cell *matFooterCellDef>  {{ totalPasivo | currency: "USD":true:"1.2" }} </mat-footer-cell>
+              </ng-container>
+    
+              <mat-header-row *matHeaderRowDef="displayedColumnsPasivo"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsPasivo"></mat-row>
+              <mat-footer-row *matFooterRowDef="displayedColumnsPasivo; sticky: true"></mat-footer-row>
+
+            </mat-table>
+          </mat-tab>
+
+          <mat-tab label="Ingresos Egresos">
+            <mat-table  #table class="mat-elevation-z8"  [dataSource]="dataSourceIngresoEgreso" style="max-width: 760px;">
+              
+              <ng-container matColumnDef="Is">
+                <mat-header-cell *matHeaderCellDef> Actividad </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <ng-container *ngIf="element.esIngreso else elseTemplate">
+                    Ingreso
+                  </ng-container>
+                  <ng-template #elseTemplate>Egreso</ng-template>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="Valor">
+                <mat-header-cell *matHeaderCellDef> Valor </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.valor | currency: "USD":true:"1.2" }}
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef>
+                  {{ totalValorIngresoEgreso | currency: "USD":true:"1.2" }}
+                </mat-footer-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="displayedColumnsII"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsII"></mat-row>
+              <mat-footer-row *matFooterRowDef="displayedColumnsII"></mat-footer-row>
+            </mat-table>
+          </mat-tab>
+
+          <mat-tab label="Referencias Personales">
+            <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceReferencia">
+              <ng-container matColumnDef="N">
+                <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
+                <mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="nombresRef">
+                <mat-header-cell *matHeaderCellDef>Nombres</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element.nombres  | titlecase  }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="apellidosRef">
+                <mat-header-cell *matHeaderCellDef>Apellidos</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element.apellidos  | titlecase }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Parentesco">
+                <mat-header-cell *matHeaderCellDef> Parentesco </mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element.parentesco  | titlecase }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Direccion">
+                <mat-header-cell *matHeaderCellDef> Dirección </mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element.direccion  | titlecase }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="TelefonoMovil">
+                <mat-header-cell *matHeaderCellDef>Teléfono Movil</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element.telefonoMovil }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="TelefonoFijo">
+                <mat-header-cell *matHeaderCellDef>Teléfono Fijo</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element.telefonoFijo }}</mat-cell>
+              </ng-container>
+  
+              <mat-header-row *matHeaderRowDef="displayedColumnsReferencia"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsReferencia"></mat-row>
+            </mat-table>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-step>
+
+      <mat-step label="Datos De Negociación">
+        <mat-tab-group mat-align-tabs="start">
+          <mat-tab label="Datos Adicionales de la Operación">
+            <div class="row">
+              <div class="offset-md-4 col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="tipoProceso" placeholder="Tipo Proceso:" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Variables crediticias">
+            <kt-tabla-variables-crediticias *ngIf="this.crediW;" [base]='this.crediW.variables'></kt-tabla-variables-crediticias>
+          </mat-tab>
+
+          <mat-tab label="Riesgo acumulado">
+            <kt-tabla-riesgo-acumulado *ngIf="this.crediW;" [base]="this.crediW.riesgos"></kt-tabla-riesgo-acumulado>          
+          </mat-tab>
+
+          <mat-tab label="Tasacion">
+            <mat-table #table [dataSource]="dataSourceTasacion">
+              <ng-container matColumnDef="NumeroPiezas">
+                <mat-header-cell *matHeaderCellDef>N. de piezas</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.numeroPiezas }} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="TipoOro">
+                <mat-header-cell *matHeaderCellDef> Tipo de oro </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.tipoOro }} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="TipoJoya">
+                <mat-header-cell *matHeaderCellDef> Tipo de joya </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.tipoJoya}}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="EstadoJoya">
+                <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.estadoJoya }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Descripcion">
+                <mat-header-cell *matHeaderCellDef>Descripci&#243;n</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.descripcion }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="PesoBruto">
+                <mat-header-cell *matHeaderCellDef>Peso bruto</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.pesoBruto }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="DescuentoPesoPiedra">
+                <mat-header-cell *matHeaderCellDef>Descuento piedra</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.descuentoPesoPiedra }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="DescuentoSuelda">
+                <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.descuentoSuelda }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="PesoNeto">
+                <mat-header-cell *matHeaderCellDef>Peso neto</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.pesoNeto }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="precioOro">
+                <mat-header-cell *matHeaderCellDef>Precio Oro</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.valorOro }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="ValorAvaluo">
+                <mat-header-cell *matHeaderCellDef>Valor aval&#250;o</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.valorAvaluo }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="ValorAplicable">
+                <mat-header-cell *matHeaderCellDef> Valor comercial</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.valorAplicable }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="ValorRealizacion">
+                <mat-header-cell *matHeaderCellDef>Valor realizaciòn</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.valorRealizacion}}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="tienePiedras">
+                <mat-header-cell *matHeaderCellDef> Tiene Piedras </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.tienePiedras}}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="detallePiedras">
+                <mat-header-cell *matHeaderCellDef>Detalle Piedras</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.detallePiedras}}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="ValorOro">
+                <mat-header-cell *matHeaderCellDef>Valor oro</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.valorOro }}</mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
+            </mat-table>
+            <div class="row">
+              <div class="offset-md-3 col-md-3">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="numeroFunda" placeholder="Número Funda:" matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field class="mat-form-field-fluid">
+                  <input [formControl]="tipoFunda" placeholder="Peso de la Funda:" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-tab>
+
+        </mat-tab-group>
+      </mat-step>
+
+
+      <mat-step label="Datos de crédito nuevo">
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="montoPreaprobado" placeholder="Monto Pre Aprobado:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="montoSolicitado" placeholder="Monto Solicitado:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="montoDiferido" placeholder="Monto Diferido:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="plazo" placeholder="Plazo:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="tipoOperacion" placeholder="Tipo Operación:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="tipoOferta" placeholder="Tipo Oferta:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="costoCustodia" placeholder="Costo Custodia:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoCustodia" placeholder="Forma de Pago Custodia:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="costoTransporte" placeholder="Costo Transporte:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoTransporte" placeholder="Forma de Pago Transporte:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="costoValoracion" placeholder="Costo Valoración:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoValoracion" placeholder="Forma de Pago Valoración:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="costoTasacion" placeholder="Costo Tasación:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoTasacion" placeholder="Forma de Pago Tasación:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="costoResguardo" placeholder="Costo Resguardo:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoResguardo" placeholder="Forma de Pago Resguardo:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="costoSeguro" placeholder="Costo Seguro:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoSeguro" placeholder="Forma de Pago Seguro:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="solca" placeholder="Solca:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoSolca" placeholder="Forma de Pago Solca:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="montoDesembolsoBallon" placeholder="Monto Desembolso Balloon:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="aPagarCliente" placeholder="A Pagar Cliente:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="riesgoTotalCliente" placeholder="Riesgo total Cliente:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="aRecibirCliente" placeholder="A Recibir Cliente:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="totalCostoNuevaOperacion" placeholder="Total Costo Nueva Operacion:" matInput />
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-step>
+
+      <mat-step label="Datos Instrucción Operativa">
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input matInput [formControl]="tipoCuenta" placeholder="Tipo de Cuenta:" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="numeroCuenta" placeholder="Número de Cuenta:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="firmaRegularizada" placeholder="Firma Regularizada :" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="diaPagoFijo" placeholder="Día Pago Fijo:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="firmadaOperacion" placeholder="Firmada Operación:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="tipoCliente" placeholder="Tipo Cliente:" matInput />
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-step>
+
+      <mat-step label="Datos De la Operación Nueva">
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="tipoCartera" placeholder="Tipo de Cartera:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="numeroOperacion" placeholder="Número de la operación:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="descripcionProducto" placeholder="Descripción del Producto:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="destinoOperacion" placeholder="Destino Operación:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="estadoOperacion" placeholder="Estado de la Operación:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="tipoOperacionNueva" placeholder="Tipo Operación :" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="plazoNueva" placeholder="Plazo :" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-3 col-md-offset-3">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="fechaVencimiento" placeholder="Fecha de vencimiento:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="fechaEfectiva" placeholder="Fecha Efectiva:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="valorDesembolso" placeholder="Valor Desembolso:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="montoFinanciado" placeholder="Monto Financiado:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="cuota" placeholder="Cuota:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="totalInteres" placeholder="Total Interés:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="fechaTrabajoGad" placeholder="Fecha de Trabajo GAD:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="capitalInteres" placeholder="Capital + Interés:" matInput />
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-step>
+
+      <mat-step label="Habilitantes">
         <re-habilitante></re-habilitante>
       </mat-step>
-      <mat-step>
-        <ng-template matStepLabel>Datos De contacto Del Cliente</ng-template>
-        <div class=" kt-form">
 
-          <mat-horizontal-stepper>
-            <mat-step label="Datos Personales del Cliente">
-              <form [formGroup]="formDatosPersonalesCliente">
-                <div class="row">
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="tipoIdentificacion" placeholder="Tipo de Identificacion:" matInput />
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="ruc" placeholder="RUC/C.I./Pasaporte:" matInput />
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="aprobadoWeb" placeholder="Aprobado Web Mupi:" matInput />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <mat-form-field>
-                      <input [formControl]="nombresCompletos" placeholder="Nombres Completos:" matInput />
-                    </mat-form-field>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="primerNombre" placeholder="Primer Nombre:" matInput />
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]=" segundoNombre" placeholder="Segundo Nombre:" matInput />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="apellidoPaterno" placeholder="Apellido Paterno:" matInput />
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="apellidoMaterno" placeholder="Apellido Materno:" matInput />
-                    </mat-form-field>
-                  </div>
-
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="separacionDeBienes" placeholder="Separacion de bienes" matInput />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="genero" placeholder="Género:" matInput />
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="estadoCivil" placeholder="Estado Civil:" matInput />
-                    </mat-form-field>
-                  </div>
-
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="cargaFamiliar" placeholder="Cargas familiares" matInput />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="nacionalidad" placeholder="Nacionalidad:" matInput />
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="lugarDeNacimiento" placeholder="Lugar de nacimiento:" matInput />
-                    </mat-form-field>
-                  </div>
-
-                </div>
-
-                <div class="row">
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="edad" placeholder="Edad:" matInput />
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento:" matInput />
-                    </mat-form-field>
-                  </div>
-
-                </div>
-                <div class="row">
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="nivelEducacion" placeholder="Nivel de educación:" matInput />
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="actividadEconomica" placeholder="Actividad Ecónomica:" matInput />
-                    </mat-form-field>
-                  </div>
-
-                </div>
-                <div class="row">
-                  <div class="col-md-4">
-                    <mat-form-field>
-                      <input [formControl]="fechaUltimaActualizazion" placeholder="Fecha Última Actualización:"
-                        matInput />
-                    </mat-form-field>
-                  </div>
-                </div>
-
-              </form>
-            </mat-step>
-            <mat-step label="Datos de Contacto del Cliente" state="chat">
-              <div class=" kt-form">
-                <div [formGroup]="formDatosContactoCliente">
-                  <div class="row">
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="telefonoDomicilio" placeholder="Telefono Domicilio:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="telefonoAdicional" placeholder="Telefono Adicional:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="telefonoMovil" placeholder="Telefono Movil:" matInput />
-                      </mat-form-field>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="telefonoOficina" placeholder="Telefono de Oficina/Otros:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="correo" placeholder="Correo Electronico:" matInput />
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </mat-step>
-            <mat-step label="Dirección Domicilio">
-              <div class=" kt-form">
-                <div [formGroup]="formDatosDireccionDomicilio">
-                  <div class="row">
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="direccionLegal" placeholder="Es Dirección Legal:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-6">
-                      <mat-form-field>
-                        <input [formControl]="direccionEnvioCorrespondencia"
-                          placeholder="Es Dirección Envio Correspondencia:" matInput />
-                      </mat-form-field>
-                    </div>
-
-                  </div>
-
-                  <div class="row">
-                    <div class="col">
-                      <mat-form-field>
-                        <input [formControl]="ubicacion" placeholder="Ubicación (Provincia/Cantón/Parroquia):"
-                          matInput />
-                      </mat-form-field>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="callePrincipal" placeholder="Calle Principal:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="numeracion" placeholder="Numeración:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="calleSecundaria" placeholder="Calle Secundaria:" matInput />
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="referencia" placeholder="Referencia Ubicación:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="barrio" placeholder="Barrio:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="sector" placeholder="Sector:" matInput />
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </mat-step>
-            <mat-step label="Dirección Laboral">
-              <div class=" kt-form">
-                <div [formGroup]="formDatosDireccionLaboral">
-                  <div class="row">
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="direccionLegalLaboral" placeholder="Es Dirección Legal:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-6">
-                      <mat-form-field>
-                        <input [formControl]="direccionEnvioCorrespondenciaLaboral"
-                          placeholder="Es Dirección Envio Correspondencia:" matInput />
-                      </mat-form-field>
-                    </div>
-
-                  </div>
-
-                  <div class="row">
-                    <div class="col">
-                      <mat-form-field>
-                        <input [formControl]="ubicacionLaboral" placeholder="Ubicación (Provincia/Cantón/Parroquia):"
-                          matInput />
-                      </mat-form-field>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="callePrincipalLaboral" placeholder="Calle Principal:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="numeracionLaboral" placeholder="Numeración:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="calleSecundariaLaboral" placeholder="Calle Secundaria:" matInput />
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="referenciaLaboral" placeholder="Referencia Ubicación:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="barrioLaboral" placeholder="Barrio:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="sectorLaboral" placeholder="Sector:" matInput />
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="correoLaboral" placeholder="Correo Electrónico:" matInput />
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </mat-step>
-            <mat-step label="Datos Económicos del Cliente">
-              <div class=" kt-form">
-                <div [formGroup]="formDatosEconomicosCliente">
-                  <div class="row">
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="origenIngresos" placeholder="Origen Ingresos:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="nombreEmpresa" placeholder="Nombre Empresa:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="actividadEconomicaCliente" placeholder="Actividad Económica:" matInput />
-                      </mat-form-field>
-                    </div>
-
-                  </div>
-
-
-                  <div class="row">
-                    <div class="col">
-                      <mat-form-field>
-                        <input [formControl]="relacionDependencia" placeholder="Relación de Dependencia:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="cargo" placeholder="Cargo:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="profesion" placeholder="Profesión:" matInput />
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                      <mat-form-field>
-                        <input [formControl]="ocupacion" placeholder="Ocupación:" matInput />
-                      </mat-form-field>
-                    </div>
-                  </div>
-
-
-                </div>
-              </div>
-            </mat-step>
-            <mat-step label="Patrimonio">
-              <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourcePatrimonio" style="max-width: 760px;">
-                <ng-container matColumnDef="Accion">
-                  <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
-                  <mat-cell *matCellDef="let element">
-                    <a>
-                      <mat-icon matTooltip="Borrar">delete</mat-icon>
-                    </a>
-                    <a>
-                      <mat-icon matTooltip="Editar">edit</mat-icon>
-                    </a>
-                  </mat-cell>
-                  <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                </ng-container>
-                <ng-container matColumnDef="Activo">
-                  <mat-header-cell *matHeaderCellDef> Activo </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{ element.activos }} </mat-cell>
-                  <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
-                </ng-container>
-                <ng-container matColumnDef="Avaluo">
-                  <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
-                  <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
-                </ng-container>
-                <ng-container matColumnDef="Pasivo">
-                  <mat-header-cell *matHeaderCellDef> Pasivo </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
-                  <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
-                </ng-container>
-                <ng-container matColumnDef="Ifis">
-                  <mat-header-cell *matHeaderCellDef> Ifis </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
-                  <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
-                </ng-container>
-                <ng-container matColumnDef="Infocorp">
-                  <mat-header-cell *matHeaderCellDef> Infocorp </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
-                  <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
-                </ng-container>
-                <mat-header-row *matHeaderRowDef="displayedColumnsPatrimonio"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumnsPatrimonio"></mat-row>
-                <mat-footer-row *matFooterRowDef="displayedColumnsPatrimonio; sticky: true"></mat-footer-row>
-              </mat-table>
-            </mat-step>
-            <mat-step label="Ingresos Egresos">
-              <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceIngresoEgreso"
-                style="max-width: 760px;">
-                <ng-container matColumnDef="Accion">
-                  <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
-                  <mat-cell *matCellDef="let element">
-                    <a>
-                      <mat-icon matTooltip="Borrar">delete</mat-icon>
-                    </a>
-                    <a>
-                      <mat-icon matTooltip="Editar">edit</mat-icon>
-                    </a>
-                  </mat-cell>
-                  <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                </ng-container>
-                <ng-container matColumnDef="Ingreso">
-                  <mat-header-cell *matHeaderCellDef> Ingreso </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{ element.activos }} </mat-cell>
-                  <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
-                </ng-container>
-                <ng-container matColumnDef="Egreso">
-                  <mat-header-cell *matHeaderCellDef> Egreso </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
-                  <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="displayedColumnsII"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumnsII"></mat-row>
-                <mat-footer-row *matFooterRowDef="displayedColumnsII; sticky: true"></mat-footer-row>
-              </mat-table>
-            </mat-step>
-            <mat-step label="Referencias Personales">
-              <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceReferencia">
-                <ng-container matColumnDef="Accion">
-                  <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
-                  <mat-cell *matCellDef="let element">
-                    <a (click)="deleteReferencia(element)">
-                      <mat-icon matTooltip="Borrar">delete</mat-icon>
-                    </a>
-                    <a (click)="editarReferencia(element)">
-                      <mat-icon matTooltip="Editar">edit</mat-icon>
-                    </a>
-                  </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="N">
-                  <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
-                  <mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="NombresCompletos">
-                  <mat-header-cell *matHeaderCellDef>Nombres Completos</mat-header-cell>
-                  <mat-cell *matCellDef="let element">{{ element.nombresCompletos }}</mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="Parentesco">
-                  <mat-header-cell *matHeaderCellDef> Parentesco </mat-header-cell>
-                  <mat-cell *matCellDef="let element">{{ element.parentesco }}</mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="Direccion">
-                  <mat-header-cell *matHeaderCellDef> Dirección </mat-header-cell>
-                  <mat-cell *matCellDef="let element">{{ element.direccion }}</mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="TelefonoMovil">
-                  <mat-header-cell *matHeaderCellDef>Teléfono Movil</mat-header-cell>
-                  <mat-cell *matCellDef="let element">{{ element.telefonoMovil }}</mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="TelefonoFijo">
-                  <mat-header-cell *matHeaderCellDef>Teléfono Fijo</mat-header-cell>
-                  <mat-cell *matCellDef="let element">{{ element.telefonoFijo }}</mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="displayedColumnsReferencia"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumnsReferencia"></mat-row>
-              </mat-table>
-            </mat-step>
-
-            <!-- Icon overrides. -->
-            <ng-template matStepperIcon="phone">
-              <mat-icon>call_end</mat-icon>
-            </ng-template>
-            <ng-template matStepperIcon="chat">
-              <mat-icon>forum</mat-icon>
-            </ng-template>
-          </mat-horizontal-stepper>
-        </div>
-
-      </mat-step>
-      <mat-step>
-        <ng-template matStepLabel>Datos De Negociación</ng-template>
-        <div class="kt-form">
-          <mat-horizontal-stepper>
-            <mat-step>
-              <ng-template matStepLabel>Datos Adicionales de la Negociación</ng-template>
-              <div class=" kt-form">
-
-                <mat-horizontal-stepper>
-                  <mat-step label="Datos Adicionales de la Operación">
-                    <div [formGroup]=" formDatosAdicionalesOperacion">
-                      <div class="row">
-                        <div class="col-md-4">
-                          <mat-form-field>
-                            <input [formControl]="tipoProceso" placeholder="Tipo Proceso:" matInput />
-                          </mat-form-field>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <mat-form-field>
-                            <input [formControl]="calificacionMupi" placeholder="Calificacion Mupi:" matInput />
-                          </mat-form-field>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <mat-form-field>
-                            <input [formControl]="apareceraExcepciones"
-                              placeholder="Aparecerá todas las exepciones del crédito:" matInput />
-                          </mat-form-field>
-                        </div>
-                      </div>
-                    </div>
-
-
-                  </mat-step>
-                  <mat-step>
-                    <ng-template matStepLabel>Variables crediticias </ng-template>
-                    <div class="row mt-2">
-                      <div class="col-md-8">
-                        <ng-container *ngIf="componenteVariable == true">
-                          <kt-tabla-variables-crediticias [base]='this.crediNegoW.variables'>
-
-                          </kt-tabla-variables-crediticias>
-                        </ng-container>
-                      </div>
-                    </div>
-                  </mat-step>
-                  <mat-step>
-                    <ng-template matStepLabel>Riesgo acumulado </ng-template>
-                    <div class="row mt-2">
-                      <div class="col-md-8">
-                        <ng-container *ngIf="this.crediNegoW  && crediNegoW.riesgos">
-                          <kt-tabla-riesgo-acumulado [base]='this.crediNegoW.riesgos'>
-
-                          </kt-tabla-riesgo-acumulado>
-                        </ng-container>
-                      </div>
-                    </div>
-                  </mat-step>
-                  <mat-step label="Tasación" state="chat">
-                    <div [formGroup]=" formTasacion">
-
-                      <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceTasacion">
-                        <ng-container matColumnDef="NumeroPiezas">
-                          <mat-header-cell *matHeaderCellDef class="text-align">N. de piezas</mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align"> {{element.numeroPiezas}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="TipoOro">
-                          <mat-header-cell *matHeaderCellDef class="text-align"> Tipo de oro </mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align"> {{ element.tipoOro }}
-                          </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="TipoJoya">
-                          <mat-header-cell *matHeaderCellDef class="text-align"> Tipo de joya </mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align"> {{element.tipoJoya}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="Estado">
-                          <mat-header-cell *matHeaderCellDef class="text-align">Estado</mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align"> {{element.estadoJoya}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="Descripcion">
-                          <mat-header-cell *matHeaderCellDef class="text-align">Descripci&#243;n</mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align"> {{element.descripcion}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="PesoBruto">
-                          <mat-header-cell *matHeaderCellDef class="text-align">Peso bruto</mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align"> {{ element.pesoBruto }} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="DescuentoPiedra">
-                          <mat-header-cell *matHeaderCellDef class="text-align">Descuento piedra</mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align"> {{ element.descuentoPesoPiedra}}
-                          </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="DescuentoSuelda">
-                          <mat-header-cell *matHeaderCellDef class="text-align">Descuento suelda</mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align"> {{ element.descuentoSuelda }}
-                          </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="PesoNeto">
-                          <mat-header-cell *matHeaderCellDef class="text-align">Peso neto</mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align"> {{element.pesoNeto}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="ValorAvaluo">
-                          <mat-header-cell *matHeaderCellDef class="text-align">Valor aval&#250;o</mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align">{{ element.valorAvaluo }}</mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="ValorComercial">
-                          <mat-header-cell *matHeaderCellDef class="text-align"> Valor comercial</mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align">{{ element.valorComercial }}</mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="ValorRealizacion">
-                          <mat-header-cell *matHeaderCellDef class="text-align">Valor realizaciòn</mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align"> {{element.valorRealizacion}}
-                          </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="ValorOro">
-                          <mat-header-cell *matHeaderCellDef class="text-align">Valor oro</mat-header-cell>
-                          <mat-cell *matCellDef="let element" class="text-align">{{ element.valorOro}} </mat-cell>
-                        </ng-container>
-
-                        <mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
-                      </mat-table>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <mat-form-field>
-                            <input [formControl]="numeroFunda" placeholder="Número Funda Nuevo:" matInput />
-                          </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                          <mat-form-field>
-                            <input [formControl]="pesoFunda" placeholder="Peso de la Funda (Gr):" matInput />
-                          </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                          <mat-form-field>
-                            <input [formControl]="pesoNeto" placeholder="Peso Neto(Gr):" matInput />
-                          </mat-form-field>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <mat-form-field>
-                            <input [formControl]="totalPesoBruto" placeholder="Total Peso Bruto (Gr):" matInput />
-                          </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                          <mat-form-field>
-                            <input [formControl]="totalPesoBrutoFunda" placeholder="Peso Bruto Total (Con Funda) (Gr):"
-                              matInput />
-                          </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                          <mat-form-field>
-                            <input [formControl]="totalRealizacion" placeholder="Total De Realización:" matInput />
-                          </mat-form-field>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <mat-form-field>
-                            <input [formControl]="totalValorAvaluo" placeholder="Total Valor Avaluo:" matInput />
-                          </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                          <mat-form-field>
-                            <input [formControl]="totalValorComercial" placeholder="Total Valor Comercial:" matInput />
-                          </mat-form-field>
-                        </div>
-
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div mat-card-avatar class="example-header-image"></div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div mat-card-avatar class="example-header-image"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </mat-step>
-
-
-                </mat-horizontal-stepper>
-              </div>
-            </mat-step>
-
-          </mat-horizontal-stepper>
-
-        </div>
-      </mat-step>
-
-      <mat-step>
-        <ng-template matStepLabel>Datos del crédito nuevo </ng-template>
-        <div [formGroup]="formCreditoNuevo">
+      <mat-step label="Resultado de la operación">
+        <form [formGroup]="formResultadoOperacion">
           <div class="row">
             <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="montoPreaprobado" placeholder="Monto Pre Aprobado:" matInput />
+              <mat-form-field class="mat-form-field-fluid">
+                <input [formControl]="motivoDevolucion" placeholder="Motivo Devolución:" matInput />
               </mat-form-field>
             </div>
             <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="montoSolicitado" placeholder="Monto Solicitado:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="montoDiferido" placeholder="Monto Diferido:" matInput />
+              <mat-form-field class="mat-form-field-fluid">
+                <input [formControl]="codigoCash" placeholder="Códgo Cash:" matInput />
               </mat-form-field>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="plazo" placeholder="Plazo:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="tipoOperacion" placeholder="Tipo Operación:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="tipoOferta" placeholder="Tipo Oferta:" matInput />
-              </mat-form-field>
+          <div class="row mt-3">
+            <div class="col-md-8">
+              <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
+                placeholder="Observaciones: " matInput></textarea>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="costoCustodia" placeholder="Costo Custodia:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="formaPagoCustodia" placeholder="Forma de Pago Custodia:" matInput />
-              </mat-form-field>
-            </div>
-
+          <div class="row mt-3">
+            <div class="offset-md-3 col-md-3">
+							<button mat-raised-button color="primary" (click)="aprobar()">
+								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+								</mat-icon>
+								<span class="white-icon">Aprobar</span>
+							</button>
+						</div>
           </div>
-
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="costoTransporte" placeholder="Costo Transporte:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="formaPagoTransporte" placeholder="Forma de Pago Transporte:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="costoValoracion" placeholder="Costo Valoración:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="formaPagoValoracion" placeholder="Forma de Pago Valoración:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="costoTasacion" placeholder="Costo Tasación:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="formaPagoTasacion" placeholder="Forma de Pago Tasación:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="costoResguardo" placeholder="Costo Resguardo:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="formaPagoResguardo" placeholder="Forma de Pago Resguardo:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="costoSeguro" placeholder="Costo Seguro:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="formaPagoSeguro" placeholder="Forma de Pago Seguro:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="solca" placeholder="Solca:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="formaPagoSolca" placeholder="Forma de Pago Solca:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="montoDesembolsoBallon" placeholder="Monto Desembolso Balloon:" matInput />
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-3">
-              <mat-form-field>
-                <input [formControl]="aPagarCliente" placeholder="A Pagar Cliente:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-3">
-              <mat-form-field>
-                <input [formControl]="riesgoTotalCliente" placeholder="Riesgo total Cliente:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-3">
-              <mat-form-field>
-                <input [formControl]="aRecibirCliente" placeholder="A Recibir Cliente:" matInput />
-              </mat-form-field>
-            </div>
-
-            <div class="col-md-3">
-              <mat-form-field>
-                <input [formControl]="totalCostoNuevaOperacion" placeholder="Total Costo Nueva Operacion:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-        </div>
-      </mat-step>
-
-      <mat-step>
-        <ng-template matStepLabel>Datos Instrucción Operativa </ng-template>
-        <form [formGroup]="formInstruccionOperativa">
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input matInput [formControl]="tipoCuenta" placeholder="Tipo de Cuenta:" />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="numeroCuenta" placeholder="Número de Cuenta:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="firmaRegularizada" placeholder="Firma Regularizada :" matInput />
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="diaPagoFijo" placeholder="Día Pago Fijo:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="firmadaOperacion" placeholder="Firmada Operación:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="tipoCliente" placeholder="Tipo Cliente:" matInput />
-              </mat-form-field>
-            </div>
+          <div class="row mt-3">
+            <div class="offset-md-3 col-md-3">
+							<button mat-raised-button color="warn" (click)="devolver()">
+								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+								</mat-icon>
+								<span class="white-icon">Devolver</span>
+							</button>
+						</div>
           </div>
         </form>
       </mat-step>
 
-      <mat-step>
-        <ng-template matStepLabel>Datos De la Operación Nueva </ng-template>
-        <div [formGroup]="formDatosOperacionNueva">
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="tipoCartera" placeholder="Tipo de Cartera:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="numeroOperacion" placeholder="Número de la operación:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="descripcionProducto" placeholder="Descripción del Producto:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="destinoOperacion" placeholder="Destino Operación:" matInput />
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="estadoOperacion" placeholder="Estado de la Operación:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="tipoOperacionNueva" placeholder="Tipo Operación :" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="plazoNueva" placeholder="Plazo :" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-
-          <div class="row">
-            <div class="col-md-3 col-md-offset-3">
-              <mat-form-field>
-                <input [formControl]="fechaVencimiento" placeholder="Fecha de vencimiento:" matInput />
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="fechaEfectiva" placeholder="Fecha Efectiva:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="valorDesembolso" placeholder="Valor Desembolso:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="montoFinanciado" placeholder="Monto Financiado:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="cuota" placeholder="Cuota:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="totalInteres" placeholder="Total Interés:" matInput />
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="fechaTrabajoGad" placeholder="Fecha de Trabajo GAD:" matInput />
-              </mat-form-field>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <mat-form-field>
-                <input [formControl]="capitalInteres" placeholder="Capital + Interés:" matInput />
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-      </mat-step>
-      <mat-step>
-        <ng-template matStepLabel>Resultado de la operación</ng-template>
-        <div class="kt-form">
-          <form [formGroup]="formResultadoOperacion">
-
-            <div class="row">
-              <div class="col-md-4">
-                <mat-form-field>
-                  <input [formControl]="motivoDevolucion" placeholder="Motivo Devolución:" matInput />
-                </mat-form-field>
-              </div>
-              <div class="col-md-4">
-                <mat-form-field>
-                  <input [formControl]="codigoCash" placeholder="Códgo Cash:" matInput />
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row mt-3">
-              <div class="col-md-8">
-                <mat-label> Observación Del Asesor: </mat-label>
-                <textarea class="form-control border" [formControl]="observacionAsesor" rows="5"
-                  placeholder="Observaciones: " matInput>{{ observacionAsesor }}</textarea>
-              </div>
-            </div>
-            <div class="row mt-3">
-              <div class="col-xl-8">
-                <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
-                  placeholder="Observaciones: " matInput>{{ observacionAprobador }}</textarea>
-              </div>
-            </div>
-            <div class="row mt-3">
-              <div class=" offset-3 offset-lg-2 col-xl-8">
-                <mat-radio-group [formControl]="radioB">
-                  <mat-radio-button value="APROBADO">Aprobar</mat-radio-button>
-                  <mat-radio-button value="NEGADO">Rechazar</mat-radio-button>
-                </mat-radio-group>
-              </div>
-            </div>
-          </form>
-        </div>
-      </mat-step>
     </mat-vertical-stepper>
   </re-portlet-body>
   <re-portlet-footer></re-portlet-footer>
