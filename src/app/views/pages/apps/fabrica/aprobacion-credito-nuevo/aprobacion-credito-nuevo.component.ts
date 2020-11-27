@@ -23,7 +23,7 @@ import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { TbQoDireccionCliente } from '../../../../../core/model/quski/TbQoDireccionCliente';
 import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
 import { throwIfEmpty } from 'rxjs/operators';
-import { TbQoPatrimonio } from 'src/app/core/model/quski/TbQoPatrimonio';
+import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
 
 
 @Component({
