@@ -182,19 +182,39 @@
 						</div>
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
+								<input matInput placeholder="Precio oro:" [formControl]="valorOro" readonly>
 							</mat-form-field>
 						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Peso bruto:" [formControl]="pesoBruto">
-								<mat-error>{{ getErrorMessage('pesoBruto')  }}</mat-error>
-							</mat-form-field>
-						</div>
+					
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput numeric numericType="number" type="text"
-									placeholder="N&#250;mero de piezas:" [formControl]="numeroPiezas">
+									placeholder="N&#250;mero de piezas:" [formControl]="numeroPiezas" (keypress)="numberOnly($event)" >
+							</mat-form-field>
+						</div>
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Peso bruto:" [formControl]="pesoBruto" (keyup)="setPesoNeto()">
+								<mat-error>{{ getErrorMessage('pesoBruto')  }}</mat-error>
+							</mat-form-field>
+						</div>
+					
+					
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra" (keyup)="setPesoNeto()">
+								<mat-error>{{ getErrorMessage('descuentoPiedra') }}</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Descuento suelda:" [formControl]="descuentoSuelda" (keyup)="setPesoNeto()">
+								<mat-error>{{getErrorMessage('descuentoSuelda')  }}</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
 							</mat-form-field>
 						</div>
 						<div class="col-md-4">
@@ -206,6 +226,7 @@
 								</mat-select>
 							</mat-form-field>
 						</div>
+							
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<mat-select placeholder="Estado" [formControl]="estado">
@@ -218,36 +239,20 @@
 						</div>
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra">
-								<mat-error>{{ getErrorMessage('descuentoPiedra') }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Descuento suelda:" [formControl]="descuentoSuelda">
-								<mat-error>{{getErrorMessage('descuentoSuelda')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<mat-select placeholder="Tiene priedras:" [formControl]="tienePiedras">
+								<mat-select placeholder="Tiene priedras:" [formControl]="tienePiedras" (selectionChange)="selectTienePiedras()">
 									<mat-option value="S">SI</mat-option>
 									<mat-option value="N">NO</mat-option>
 								</mat-select>
 								<mat-error></mat-error>
 							</mat-form-field>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-4" *ngIf="tienePiedras.value == 'S'">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput numeric numericType="number" type="text"
 									placeholder="Detalle piedras:" [formControl]="detallePiedras">
 							</mat-form-field>
 						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Precio oro:" [formControl]="valorOro" readonly>
-							</mat-form-field>
-						</div>
+				
 				<!-- 		<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput placeholder="Valor Aplicable:" [formControl]="valorAplicable" readonly>
@@ -269,11 +274,9 @@
 							</mat-form-field>
 						</div> -->
 					</div>
-					<div class="row mt-3">
-						<div class="col-xl-8">
+					<div class="row">
 							<textarea class="form-control border" [formControl]="descripcion" rows="5"
 								placeholder="Descripci&#243;n " matInput></textarea>
-						</div>
 					</div>
 					<div class="row">
 						<div class="offset-5 col-2">
@@ -400,8 +403,8 @@
 					<ng-container matColumnDef="Accion">
 						<mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
 						<mat-cell *matCellDef="let row">
-							<mat-checkbox (click)="$event.stopPropagation()"
-							(change)="$event ? selection.toggle(row) : null"
+							<mat-checkbox (click)="$event.stopPropagation() && masterToggle(row)"
+							(change)="$event ? masterToggle(row): null"
 							[checked]="selection.isSelected(row)"
 							[aria-label]="checkboxLabel(row)">
 			  				</mat-checkbox>	

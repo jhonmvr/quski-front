@@ -32,6 +32,7 @@ import { ProcesoService } from '../../../../../core/services/quski/proceso.servi
 import { SelectionModel } from '@angular/cdk/collections';
 import { response } from 'express';
 import { map, startWith } from 'rxjs/operators';
+import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 //import { DataTableDataSource } from 'src/app/views/partials/content/widgets/general/data-table/data-table.data-source';
 
 @Component({
@@ -78,19 +79,19 @@ export class GestionNegociacionComponent implements OnInit {
   public aprobacionMupi = new FormControl('', []);
   // FORMULARIO TASACION
   public formTasacion: FormGroup = new FormGroup({});
-  public tipoOro = new FormControl('', []);
-  public pesoNeto = new FormControl('', []);
-  public pesoBruto = new FormControl('', []);
-  public numeroPiezas = new FormControl('', []);
-  public tipoJoya = new FormControl('', []);
-  public estado = new FormControl('', []);
-  public descuentoPiedra = new FormControl('', []);
-  public descuentoSuelda = new FormControl('', []);
-  public valorOro = new FormControl('', []);
-  public tienePiedras = new FormControl('', []);
-  public detallePiedras = new FormControl('', []);
-  public valorAplicable = new FormControl('', []);
-  public precioOro = new FormControl('', []);
+  public tipoOro = new FormControl('', [Validators.required]);
+  public pesoNeto = new FormControl('', [Validators.required,ValidateDecimal]);
+  public pesoBruto = new FormControl('', [Validators.required,ValidateDecimal]);
+  public numeroPiezas = new FormControl('', [Validators.required]);
+  public tipoJoya = new FormControl('', [Validators.required]);
+  public estado = new FormControl('', [Validators.required]);
+  public descuentoPiedra = new FormControl('', [Validators.required,ValidateDecimal]);
+  public descuentoSuelda = new FormControl('', [Validators.required,ValidateDecimal]);
+  public valorOro = new FormControl('', [Validators.required]);
+  public tienePiedras = new FormControl('', [Validators.required]);
+  public detallePiedras = new FormControl('', [Validators.required]);
+  public valorAplicable = new FormControl('', [Validators.required]);
+  public precioOro = new FormControl('', [Validators.required]);
   public valorAvaluo = new FormControl('', []);
   public valorRealizacion = new FormControl('', []);
   public descripcion = new FormControl('', []);
@@ -779,6 +780,7 @@ export class GestionNegociacionComponent implements OnInit {
     let cliente = this.buildCliente();
     this.neg.verPrecios(cliente).subscribe(resp=>{
       this.catTipoOro = resp.entidades;
+      this.myStepper.selectedIndex =4;
     })
   }
 
@@ -792,6 +794,31 @@ export class GestionNegociacionComponent implements OnInit {
   private _normalizeValue(value: string): string {
     return value.toLowerCase().replace(/\s/g, '');
   }
+
+  selectTienePiedras(){
+    if(this.tienePiedras.value =='S'){
+      this.formTasacion.addControl("detallePiedras", this.detallePiedras);
+    }else{
+      this.formTasacion.removeControl("detallePiedras");
+    }
+  }
+
+  masterToggle(event) {
+ 
+    this.selection.clear()        
+    this.selection.select(event)
+    
+}
+
+setPesoNeto(){
+  try{
+    this.pesoNeto.setValue((Number(this.pesoBruto.value) - (Number(this.descuentoSuelda.value)+ Number (this.descuentoPiedra.value))))
+  }catch{
+    this.pesoNeto.setValue('0');
+  }
+  
+}
+  
 }
 
 export class Pais{
