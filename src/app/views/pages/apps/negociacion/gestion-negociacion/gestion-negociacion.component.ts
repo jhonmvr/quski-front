@@ -76,11 +76,11 @@ export class GestionNegociacionComponent implements OnInit {
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
   public email = new FormControl('', [Validators.required, Validators.email]);
   public campania = new FormControl('', []);
-  public aprobacionMupi = new FormControl('', []);
+  public aprobacionMupi = new FormControl('', [Validators.required]);
   // FORMULARIO TASACION
   public formTasacion: FormGroup = new FormGroup({});
   public tipoOro = new FormControl('', [Validators.required]);
-  public pesoNeto = new FormControl('', [Validators.required,ValidateDecimal]);
+  public pesoNeto = new FormControl('', [Validators.required,ValidateDecimal,Validators.min(1)]);
   public pesoBruto = new FormControl('', [Validators.required,ValidateDecimal]);
   public numeroPiezas = new FormControl('', [Validators.required]);
   public tipoJoya = new FormControl('', [Validators.required]);
@@ -94,7 +94,7 @@ export class GestionNegociacionComponent implements OnInit {
   public precioOro = new FormControl('', [Validators.required]);
   public valorAvaluo = new FormControl('', []);
   public valorRealizacion = new FormControl('', []);
-  public descripcion = new FormControl('', []);
+  public descripcion = new FormControl('', [Validators.required]);
 
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public montoSolicitado = new FormControl('', []);
@@ -536,12 +536,74 @@ export class GestionNegociacionComponent implements OnInit {
       const input = this.email;
       return input.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo + this.email.errors.maxlength.requiredLength : '';
     }
-
+    if (pfield && pfield == "aprobacionMupi") {
+      const input = this.email;
+      return input.hasError('required') ? errorRequerido :  '';
+    }
 
     if (pfield && pfield === 'movil') {
       const input = this.movil;
       return input.hasError('required') ? errorRequerido : input.hasError('pattern') ? errorNumero : input.hasError('maxlength') ? errorLogitudExedida : input.hasError('minlength') ? errorInsuficiente : '';
     }
+
+    if (pfield && pfield === 'telefonoDomicilio') {
+      const input = this.formDatosCliente.get('telefonoDomicilio');
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('pattern')
+          ? errorNumero
+          : input.hasError('maxlength')
+            ? errorLogitudExedida
+            : input.hasError('minlength')
+              ? errorInsuficiente
+              : '';
+    }
+
+    if (pfield && pfield === 'tipoOro') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'numeroPiezas') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'pesoBruto') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'descuentoPiedra') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'descuentoSuelda') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'pesoNeto') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'tipoJoya') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'estado') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'tienePiedras') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'detallePiedras') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'descripcion') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+
   }
   public numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;

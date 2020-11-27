@@ -85,3 +85,236 @@
     min-width: 80px;
     box-sizing: border-box;
   }
+.tableTasacion{
+  overflow: auto;
+  width: 100%;
+}
+  .mat-column-Accion {
+    flex: 0 0 80px;
+  }
+
+  .mat-column-NumeroPiezas {
+    flex: 0 0 50px;
+  }
+
+  .mat-column-TipoOro {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-TipoJoya {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-EstadoJoya {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-Descripcion {
+    flex: 0 0 500px;
+  }
+
+  .mat-column-PesoBruto {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-DescuentoPesoPiedra {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-DescuentoSuelda {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-PesoNeto {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-precioOro {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-ValorAvaluo {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-ValorAplicable {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-ValorRealizacion {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-tienePiedras {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-detallePiedras {
+    flex: 0 0 250px;
+  }
+
+  .mat-column-ValorOro {
+    flex: 0 0 100px;
+  }
+
+  // tabla negociacion
+
+  .tableNegociacion{
+    width: 100%;
+  }
+  
+  .tableNegociacion.mat-column-Accion {
+    flex: 0 0 50px;
+  }
+
+  .mat-column-plazo {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-periodoPlazo {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-periodicidadPlazo {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-montoFinanciado {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-valorARecibir {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-valorAPagar {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-costoCustodia {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-costoFideicomiso {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-costoSeguro {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-costoTasacion {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-costoTransporte {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-costoValoracion {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-impuestoSolca {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoImpuestoSolca {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoCapital {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoCustodia {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoFideicomiso {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoInteres {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoMora {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoGastoCobranza {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoSeguro {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoTasador {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoTransporte {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoValoracion {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-saldoInteres {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-saldoMora {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-gastoCobranza {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-cuota {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-saldoCapitalRenov {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-montoPrevioDesembolso {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-totalGastosNuevaOperacion {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-totalCostosOperacionAnterior {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-custodiaDevengada {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-formaPagoCustodiaDevengada {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-tipooferta {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-porcentajeflujoplaneado {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-dividendoflujoplaneado {
+    flex: 0 0 100px;
+  }
+
+  .mat-column-dividendosprorrateoserviciosdiferido {
+    flex: 0 0 100px;
+  }
