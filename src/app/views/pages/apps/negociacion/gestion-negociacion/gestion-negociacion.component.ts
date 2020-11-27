@@ -32,6 +32,7 @@ import { ProcesoService } from '../../../../../core/services/quski/proceso.servi
 import { SelectionModel } from '@angular/cdk/collections';
 import { response } from 'express';
 import { map, startWith } from 'rxjs/operators';
+import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 //import { DataTableDataSource } from 'src/app/views/partials/content/widgets/general/data-table/data-table.data-source';
 
 @Component({
@@ -75,25 +76,25 @@ export class GestionNegociacionComponent implements OnInit {
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
   public email = new FormControl('', [Validators.required, Validators.email]);
   public campania = new FormControl('', []);
-  public aprobacionMupi = new FormControl('', []);
+  public aprobacionMupi = new FormControl('', [Validators.required]);
   // FORMULARIO TASACION
   public formTasacion: FormGroup = new FormGroup({});
-  public tipoOro = new FormControl('', []);
-  public pesoNeto = new FormControl('', []);
-  public pesoBruto = new FormControl('', []);
-  public numeroPiezas = new FormControl('', []);
-  public tipoJoya = new FormControl('', []);
-  public estado = new FormControl('', []);
-  public descuentoPiedra = new FormControl('', []);
-  public descuentoSuelda = new FormControl('', []);
-  public valorOro = new FormControl('', []);
-  public tienePiedras = new FormControl('', []);
-  public detallePiedras = new FormControl('', []);
-  public valorAplicable = new FormControl('', []);
-  public precioOro = new FormControl('', []);
+  public tipoOro = new FormControl('', [Validators.required]);
+  public pesoNeto = new FormControl('', [Validators.required,ValidateDecimal,Validators.min(1)]);
+  public pesoBruto = new FormControl('', [Validators.required,ValidateDecimal]);
+  public numeroPiezas = new FormControl('', [Validators.required]);
+  public tipoJoya = new FormControl('', [Validators.required]);
+  public estado = new FormControl('', [Validators.required]);
+  public descuentoPiedra = new FormControl('', [Validators.required,ValidateDecimal]);
+  public descuentoSuelda = new FormControl('', [Validators.required,ValidateDecimal]);
+  public valorOro = new FormControl('', [Validators.required]);
+  public tienePiedras = new FormControl('', [Validators.required]);
+  public detallePiedras = new FormControl('', [Validators.required]);
+  public valorAplicable = new FormControl('', [Validators.required]);
+  public precioOro = new FormControl('', [Validators.required]);
   public valorAvaluo = new FormControl('', []);
   public valorRealizacion = new FormControl('', []);
-  public descripcion = new FormControl('', []);
+  public descripcion = new FormControl('', [Validators.required]);
 
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public montoSolicitado = new FormControl('', []);
@@ -535,12 +536,74 @@ export class GestionNegociacionComponent implements OnInit {
       const input = this.email;
       return input.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo + this.email.errors.maxlength.requiredLength : '';
     }
-
+    if (pfield && pfield == "aprobacionMupi") {
+      const input = this.email;
+      return input.hasError('required') ? errorRequerido :  '';
+    }
 
     if (pfield && pfield === 'movil') {
       const input = this.movil;
       return input.hasError('required') ? errorRequerido : input.hasError('pattern') ? errorNumero : input.hasError('maxlength') ? errorLogitudExedida : input.hasError('minlength') ? errorInsuficiente : '';
     }
+
+    if (pfield && pfield === 'telefonoDomicilio') {
+      const input = this.formDatosCliente.get('telefonoDomicilio');
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('pattern')
+          ? errorNumero
+          : input.hasError('maxlength')
+            ? errorLogitudExedida
+            : input.hasError('minlength')
+              ? errorInsuficiente
+              : '';
+    }
+
+    if (pfield && pfield === 'tipoOro') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'numeroPiezas') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'pesoBruto') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'descuentoPiedra') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'descuentoSuelda') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'pesoNeto') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'tipoJoya') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'estado') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'tienePiedras') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'detallePiedras') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'descripcion') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+
   }
   public numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -779,6 +842,7 @@ export class GestionNegociacionComponent implements OnInit {
     let cliente = this.buildCliente();
     this.neg.verPrecios(cliente).subscribe(resp=>{
       this.catTipoOro = resp.entidades;
+      this.myStepper.selectedIndex =4;
     })
   }
 
@@ -792,6 +856,31 @@ export class GestionNegociacionComponent implements OnInit {
   private _normalizeValue(value: string): string {
     return value.toLowerCase().replace(/\s/g, '');
   }
+
+  selectTienePiedras(){
+    if(this.tienePiedras.value =='S'){
+      this.formTasacion.addControl("detallePiedras", this.detallePiedras);
+    }else{
+      this.formTasacion.removeControl("detallePiedras");
+    }
+  }
+
+  masterToggle(event) {
+ 
+    this.selection.clear()        
+    this.selection.select(event)
+    
+}
+
+setPesoNeto(){
+  try{
+    this.pesoNeto.setValue((Number(this.pesoBruto.value) - (Number(this.descuentoSuelda.value)+ Number (this.descuentoPiedra.value))))
+  }catch{
+    this.pesoNeto.setValue('0');
+  }
+  
+}
+  
 }
 
 export class Pais{
