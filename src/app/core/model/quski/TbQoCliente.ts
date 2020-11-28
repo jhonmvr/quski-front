@@ -33,6 +33,10 @@ export class TbQoCliente {
   aprobacionMupi: string;
   nombreCompleto: string;
 
+  ingresos: number;
+  egresos: number;
+  pasivos: number;
+  activos: number;
 
 
   tbQoArchivoClientes: null;

@@ -7,7 +7,10 @@ export class TbQoIngresoEgresoCliente{
     valor: number;
     tbQoCliente : TbQoCliente;
 
-    constructor(){
+    constructor(valor: number, esIngreso: boolean){
+        this.valor = valor;
+        this.esEgreso = esIngreso ? false : true;
+        this.esIngreso = esIngreso ? true : false;
         this.tbQoCliente = new TbQoCliente();
     }
 }
