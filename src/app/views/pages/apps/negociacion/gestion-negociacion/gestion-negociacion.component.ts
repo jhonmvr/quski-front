@@ -829,9 +829,12 @@ export class GestionNegociacionComponent implements OnInit {
 
   guardarCredito(){
     if (this.selection.hasValue){
-      this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
-         this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
-      });
+      if(confirm("ESTA SEGURO DE GENERAR LA SOLICITUD DE CREDITO?")){
+        this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
+          this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
+       });
+      }
+      
     }
   }
 

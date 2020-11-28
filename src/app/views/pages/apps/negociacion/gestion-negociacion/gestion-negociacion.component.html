@@ -1,6 +1,4 @@
-<div class="spinner-container" *ngIf="loading | async">
-	<mat-spinner class="spiner"></mat-spinner>
-</div>
+
 
 <re-portlet>
 	<re-portlet-header [title]="'Negociación'" [class]="'kt-portlet__head--lg'">
@@ -28,7 +26,7 @@
 							</mat-form-field>
 						</div>
 						<div class=" offset-md-1 col-md-4">
-							<button mat-raised-button color="primary"  (click)="buscarCliente()">
+							<button mat-stroked-button color="primary"  (click)="buscarCliente()">
 								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
 								</mat-icon>
 								<span class="white-icon">Buscar cliente </span>
@@ -54,7 +52,7 @@
 							</mat-form-field>
 						</div>
 						<div *ngIf="negoW != null" class="col-md-3">
-							<button mat-raised-button
+							<button mat-stroked-button
 								(click)="abrirPopupVerCotizacion(negoW.credito.tbQoNegociacion.tbQoCliente.cedulaCliente)">
 								<mat-icon style="font-size: 32px" matTooltipPosition="above" class="blue-icon">
 									remove_red_eye
@@ -161,7 +159,7 @@
 				<ng-container *ngIf="componenteRiesgo">
 					<kt-tabla-riesgo-acumulado [base]="negoW.riesgos"></kt-tabla-riesgo-acumulado>
 				</ng-container>
-				<button mat-raised-button color="primary" (click)="verPrecio()" matTooltip="Ver precio">
+				<button mat-stroked-button color="primary" (click)="verPrecio()" matTooltip="Ver precio">
 					<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">visibility</mat-icon>
 					<span class="white-icon">Ver  Precios</span>
 				</button>
@@ -289,7 +287,7 @@
 					</div>
 					<div class="row">
 						<div class="offset-5 col-2">
-							<button mat-raised-button color="primary" (click)="cargarJoya()">
+							<button mat-stroked-button color="primary" (click)="cargarJoya()">
 								<mat-icon style="font-size: 32px" class="white-icon" matTooltipPosition="above">add_circle_outline
 								</mat-icon>
 								<span class="white-icon">Agregar</span>
@@ -399,7 +397,7 @@
 				</mat-table>
 				<div class="row">
 					<div class="offset-5 col-2">
-						<button mat-raised-button color="primary" matStepperNext (click)="calcularOpciones()">
+						<button mat-stroked-button color="primary" matStepperNext (click)="calcularOpciones()">
 							<mat-icon style="font-size: 32px" class="white-icon" matTooltipPosition="above">add_circle_outline</mat-icon>
 							<span class="white-icon">Calcular Opciones</span>
 						</button>
@@ -408,6 +406,7 @@
 			</mat-step>
 			<mat-step [stepControl]="formOpcionesCredito">
 				<ng-template matStepLabel>Detalle Opciones de crédito</ng-template>
+				<mat-progress-bar mode="indeterminate" *ngIf="loading | async"></mat-progress-bar>
 				<mat-table #tableNegociacion class="tableOpciones"	[dataSource]="dataSourceCreditoNegociacion">
 					<ng-container matColumnDef="Accion">
 						<mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
@@ -583,19 +582,27 @@
 							</mat-form-field>
 						</div>
 						<div class="col-md-3">
-							<button mat-raised-button color="primary" (click)="guardarCredito()">
-								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search 
+							<button mat-stroked-button color="primary" matTooltip="Recalcula las opciones con el monto solicitado" matTooltipPosition="above">
+								<mat-icon style="font-size: 24px;" class="white-icon" >crop_rotate 
 								</mat-icon>
 								<span class="white-icon">Aplicar Monto</span>
 							</button>
 						</div>
 						<div class="offset-md-3 col-md-3">
-							<button mat-raised-button color="warn" (click)="abrirPopupExcepciones()">
-								<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+							<button mat-stroked-button color="primary" (click)="abrirPopupExcepciones()" matTooltip="RSolicitar Excepcion de cobertura" matTooltipPosition="above">
+								<mat-icon style="font-size: 24px;" class="white-icon" >search
 								</mat-icon>
 								<span class="white-icon">Solicitar Cobertura</span>
 							</button>
 						</div>
+					</div>
+					<div class="row">
+
+						<button mat-raised-button color="accent" (click)="guardarCredito()" style="align-self: center;">
+							<mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">add_task
+							</mat-icon>
+							<span class="white-icon">Cargar Opcion de credito</span>
+						</button>
 					</div>
 				</form>
 			</mat-step>

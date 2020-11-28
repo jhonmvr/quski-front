@@ -151,7 +151,7 @@
                     <div class="row mt-3">
                         <div class="col-md-4 ">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Peso De la Funda: " [formControl]="pesoFunda">
+                                <mat-select placeholder="Peso De la Funda: " [formControl]="pesoFunda" (selectionChange)="obtenerNumeroFunda()">
                                     <mat-option *ngFor="let element of catTipoFunda" [value]="element">
                                         {{element.nombre}}
                                     </mat-option>
