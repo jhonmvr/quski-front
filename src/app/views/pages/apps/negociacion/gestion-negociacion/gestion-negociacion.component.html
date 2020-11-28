@@ -150,15 +150,21 @@
 			</mat-step>
 			<mat-step>
 				<ng-template matStepLabel>Variables Crediticias</ng-template>
-				<ng-container *ngIf="componenteVariable == true">
+				<ng-container *ngIf="componenteVariable">
 					<kt-tabla-variables-crediticias [base]="negoW.variables"></kt-tabla-variables-crediticias>
 				</ng-container>
+				<div class="row"  *ngIf="!componenteVariable">
+					<strong>PRIMERO DEBES BUSCAR UN CLIENTE</strong>
+				</div>
 			</mat-step>
 			<mat-step>
 				<ng-template matStepLabel>Riesgo Acumulado</ng-template>
 				<ng-container *ngIf="componenteRiesgo">
 					<kt-tabla-riesgo-acumulado [base]="negoW.riesgos"></kt-tabla-riesgo-acumulado>
 				</ng-container>
+				<div class="row"  *ngIf="!componenteRiesgo">
+					<strong> EL CLIENTE NO TIENE RIESGO</strong>
+				</div>
 				<button mat-stroked-button color="primary" (click)="verPrecio()" matTooltip="Ver precio">
 					<mat-icon style="font-size: 24px;" color="primary" matTooltipPosition="above">visibility</mat-icon>
 					<span color="primary">Ver  Precios</span>

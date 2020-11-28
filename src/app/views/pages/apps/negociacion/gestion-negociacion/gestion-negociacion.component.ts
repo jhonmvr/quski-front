@@ -844,6 +844,8 @@ export class GestionNegociacionComponent implements OnInit {
   verPrecio(){
     if(this.formDatosCliente.invalid){
       this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'error');
+      this.myStepper.selectedIndex =1;
+      return;
     }
     let cliente = this.buildCliente();
     this.neg.verPrecios(cliente).subscribe(resp=>{
