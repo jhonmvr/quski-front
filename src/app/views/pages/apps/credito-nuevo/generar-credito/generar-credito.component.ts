@@ -324,6 +324,26 @@ export class GenerarCreditoComponent implements OnInit {
   }
 
   /** ********************************************* @OPERACION ********************* **/
+  public obtenerNumeroFunda() {
+    this.loadingSubject.next(true);
+    this.operacionNuevo.credito
+    
+    this.operacionNuevo.credito.pagoDia = this.fechaCuota.value? this.fechaCuota.value : null;
+    this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
+    this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
+    this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
+    this.operacionNuevo.credito.idAgencia = this.agencia;
+
+    this.cre.crearOperacionNuevo( this.operacionNuevo.credito ).subscribe( (data: any) =>{
+      if(data.entidad){
+        this.operacionSoft = data.entidad;  
+        this.cargarOperacion( this.operacionSoft.credito );
+      }else{ 
+        this.loadingSubject.next(false);
+        this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
+      }
+    },er=>{this.loadingSubject.next(false)});
+  }
   public generarCredito(anular?: boolean ) {
     if(this.formInstruccion.valid && this.srcFunda && this.srcJoya){
       this.loadingSubject.next(true);

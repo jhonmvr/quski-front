@@ -828,11 +828,17 @@ export class GestionNegociacionComponent implements OnInit {
 
 
   guardarCredito(){
-    if (this.selection.hasValue){
-      this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
-         this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
-      });
+    if (this.selection.selected.length == 0){
+      this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO",'warning');
+      return;
     }
+      if(confirm("ESTA SEGURO DE GENERAR LA SOLICITUD DE CREDITO?")){
+        this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
+          this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
+       });
+      }
+      
+    
   }
 
   verPrecio(){
