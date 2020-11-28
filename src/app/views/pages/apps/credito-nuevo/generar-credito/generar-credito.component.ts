@@ -117,6 +117,12 @@ export class GenerarCreditoComponent implements OnInit {
     private router: Router,
     private sinNotSer: ReNoticeService,
   ) {
+    this.cre.setParameter();
+    this.doc.setParameter();
+    this.obj.setParameter();
+    this.pro.setParameter();
+    this.sof.setParameter();
+
     //  RELACIONANDO FORMULARIOS
     this.formInformacion.addControl("codigoOperacion", this.codigoOperacion);
     this.formInformacion.addControl("estadoOperacion", this.estadoOperacion);
@@ -128,7 +134,6 @@ export class GenerarCreditoComponent implements OnInit {
     this.formFunda.addControl("totalPesoBrutoFunda", this.totalPesoBrutoFunda);
     this.formInstruccion.addControl("tipoCuenta", this.tipoCuenta);
     this.formInstruccion.addControl("numeroCuenta", this.numeroCuenta);
-    this.formInstruccion.addControl("tipoCliente", this.tipoCliente);
     this.formInstruccion.addControl("firmanteOperacion", this.firmanteOperacion);
     this.formCredito.addControl("tipoCartera", this.tipoCartera);
     this.formCredito.addControl("descripcionProducto", this.descripcionProducto);
