@@ -49,8 +49,8 @@ export class GestionClienteComponent implements OnInit {
   /** @TABLA_PATRIMONIO **/
   displayedColumnsActivo = ['Accion', 'Activo', 'Avaluo'];
   displayedColumnsPasivo = ['Accion', 'Pasivo', 'Avaluo'];
-  dataSourcePatrimonioActivo: MatTableDataSource<TbQoPatrimonio>;
-  dataSourcePatrimonioPasivo: MatTableDataSource<TbQoPatrimonio>;
+  dataSourcePatrimonioActivo = new MatTableDataSource<TbQoPatrimonio>();
+  dataSourcePatrimonioPasivo = new MatTableDataSource<TbQoPatrimonio>();
   /** @TABLA_INGRESO_EGRESO **/
   displayedColumnsII = ['Accion', 'Is', 'Valor'];
   dataSourceIngresoEgreso = new MatTableDataSource<TbQoIngresoEgresoCliente>();

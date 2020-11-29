@@ -225,10 +225,10 @@ export class GenerarCreditoComponent implements OnInit {
         }
       });
     }
-    this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.id.toString());
-    this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
     this.calcular();
     if( data.credito.numeroFunda && data.credito.estadoSoftbank && data.credito.numeroOperacion){
+      this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.id.toString());
+      this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
       this.tipoCliente.setValue( this.catTipoCliente.find(t=> t.codigo == data.credito.tipoCliente) );
 
       data.credito.codigoTipoFunda ? this.pesoFunda.setValue( this.catTipoFunda.find(f => f.codigo == data.credito.codigoTipoFunda ) ) : null;
@@ -327,7 +327,6 @@ export class GenerarCreditoComponent implements OnInit {
   public obtenerNumeroFunda() {
     this.loadingSubject.next(true);
     this.operacionNuevo.credito
-    
     this.operacionNuevo.credito.pagoDia = this.fechaCuota.value? this.fechaCuota.value : null;
     this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
     this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
