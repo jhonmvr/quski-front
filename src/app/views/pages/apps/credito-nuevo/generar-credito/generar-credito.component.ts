@@ -333,10 +333,10 @@ export class GenerarCreditoComponent implements OnInit {
     this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
     this.operacionNuevo.credito.idAgencia = this.agencia;
 
-    this.cre.crearOperacionNuevo( this.operacionNuevo.credito ).subscribe( (data: any) =>{
+    this.cre.numeroDeFunda( this.operacionNuevo.credito ).subscribe( (data: any) =>{
       if(data.entidad){
-        this.operacionSoft = data.entidad;  
-        this.cargarOperacion( this.operacionSoft.credito );
+        
+        this.numeroFunda.setValue( data.entidad.numeroFunda ); 
       }else{ 
         this.loadingSubject.next(false);
         this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');

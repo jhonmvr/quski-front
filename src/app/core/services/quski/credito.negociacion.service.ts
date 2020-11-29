@@ -85,4 +85,16 @@ export class CreditoNegociacionService extends BaseService {
     );
   }
 
+  public numeroDeFunda(data) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest + "optenerNumeroDeFunda" ;
+    this.options = { headers: this.headers };
+    let entidad = { entidad: data }
+    return this.http.post(serviceUrl, entidad, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+
 }
