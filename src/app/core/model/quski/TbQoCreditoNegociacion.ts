@@ -51,7 +51,6 @@ export class TbQoCreditoNegociacion {
     costoValoracion: number;
     cuota: number;
     custodiaDevengada: number;
-    destinoOperacion: string;
     dividendoFlujoPlaneado: number;
     dividendoProrrateo: number;
     formaPagoCapital:string;

@@ -17,8 +17,6 @@ export class AprobacionWrapper {
     telefonos: Array<TbQoTelefonoCliente>;
     direcciones: Array<TbQoDireccionCliente>;
     trabajos: Array<TbQoDatoTrabajoCliente>;
-    patrimonios: Array<TbQoPatrimonio>;
-    ingresosEgresos: Array<TbQoIngresoEgresoCliente>;
     referencias: Array<TbReferencia>;
     excepciones: Array<TbQoExcepcion>;
     variables: Array<TbQoVariablesCrediticia>;

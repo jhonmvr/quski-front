@@ -206,8 +206,7 @@ export class BandejaAprobadorComponent implements OnInit {
           if(row.id != null){
             if(row.proceso =="NUEVO"){
               this.limpiarFiltros();
-              this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.codigoBpm.replace('NUEV','')]);    
-              console.log('id credito -> ', row.codigoBpm.replace('NUEV', '') );
+              this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.id]);    
             }
             if(row.proceso =="RENOVACION"){
               this.sinNotSer.setNotice("APROBACION RENOVACION, SIN DESARROLLO","error");
