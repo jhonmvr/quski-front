@@ -19,6 +19,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
+import { ConfirmarAccionComponent } from 'src/app/views/partials/custom/popups/confirmar-accion/confirmar-accion.component';
 
 
 @Component({
@@ -465,10 +466,24 @@ export class GenerarCreditoComponent implements OnInit {
   }
   public solicitarAprobacion(){
     if(this.existeCredito){
-      this.pro.cambiarEstadoProceso(this.operacionNuevo.credito.tbQoNegociacion.id,"NUEVO","PENDIENTE_APROBACION").subscribe( (data: any) =>{
-        if(data.entidad){
-          console.log('El nuevo estado -> ',data.entidad.estadoProceso);
-          this.router.navigate(['negociacion/bandeja-operaciones']);
+      let mensaje = "Solicitar la aprobacion del credito: " + this.operacionNuevo.credito.codigo;
+      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        width: "800px",
+        height: "auto",
+        data: mensaje
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        this.loadingSubject.next(true);
+        if(r){
+          this.pro.cambiarEstadoProceso(this.operacionNuevo.credito.tbQoNegociacion.id,"NUEVO","PENDIENTE_APROBACION").subscribe( (data: any) =>{
+            if(data.entidad){
+              console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+              this.router.navigate(['negociacion/bandeja-operaciones']);
+            }
+          });
+        }else{
+          this.loadingSubject.next(false);
+          this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
         }
       });
     }

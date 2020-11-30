@@ -16,6 +16,7 @@ import { ClienteSoftbank } from '../../model/softbank/ClienteSoftbank';
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ReNoticeService } from '../re-notice.service';
+import { OperacionAprobar } from '../../model/softbank/OperacioAprobar';
 @Injectable({
   providedIn: 'root'
 })
@@ -936,9 +937,8 @@ export class SoftbankService extends BaseService {
    * @description Aprueba una operacion pendiente de ser aprobada.
    * @param numeroOperacion 
    */
-  operacionAprobarCS( numeroOperacion : string ) {
+  operacionAprobarCS( wrapper: OperacionAprobar ) {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "operacion/aprobar" ;
-    let wrapper =  {numeroOperacion};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options).pipe(
       tap( // Log the result or error

@@ -1,11 +1,15 @@
 export class DatosRegistro{
     
  
-    fecha: string                         //2020-02-24,
-    referencia: string                    //0,
-    codigoUsuario: string                 //0,
-    idAgencia: number                     //2
-    constructor(){
+    fecha: string                        
+    referencia: string                   
+    codigoUsuario: string                 
+    idAgencia: number                     
 
+    constructor( fecha: string, codigoUsuario: string, idAgencia: number){
+        this.fecha = fecha;            
+        this.referencia = "Aprobando operacion" ;                  
+        this.codigoUsuario = codigoUsuario   ;             
+        this.idAgencia =  idAgencia ; 
     }
 }
