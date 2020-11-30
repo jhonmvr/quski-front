@@ -6,7 +6,9 @@ import { AprobacionWrapper } from '../../../../../core/model/wrapper/AprobacionW
 import { CatalogosWrapper } from './../../../../../core/model/wrapper/CatalogosWrapper';
 import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
 import { ProcesoService } from './../../../../../core/services/quski/proceso.service';
+import { OperacionAprobar } from '../../../../../core/model/softbank/OperacioAprobar';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { DatosRegistro } from '../../../../../core/model/softbank/DatosRegistro';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
 import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
@@ -16,8 +18,6 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { OperacionAprobar } from 'src/app/core/model/softbank/OperacioAprobar';
-import { DatosRegistro } from 'src/app/core/model/softbank/DatosRegistro';
 
 
 

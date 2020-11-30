@@ -11,8 +11,6 @@ import { SimulacionTablaAmortizacion } from '../../model/softbank/SimulacionTabl
 import { ConsultaSolca } from '../../model/softbank/ConsultaSolca';
 import { OperacionRenovar } from '../../model/softbank/OperacionRenovar';
 import { ClienteSoftbank } from '../../model/softbank/ClienteSoftbank';
-
-
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ReNoticeService } from '../re-notice.service';

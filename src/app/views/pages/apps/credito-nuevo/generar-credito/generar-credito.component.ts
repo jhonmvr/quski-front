@@ -1,6 +1,7 @@
 import { HabilitanteDialogComponent } from '../../../../partials/custom/habilitante/habilitante-dialog/habilitante-dialog.component';
 import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { TablaAmortizacionComponent } from '../../../../partials/custom/popups/tabla-amortizacion/tabla-amortizacion.component';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { OperacionNuevoWrapper } from '../../../../../core/model/wrapper/OperacionNuevoWrapper';
@@ -19,7 +20,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { ConfirmarAccionComponent } from 'src/app/views/partials/custom/popups/confirmar-accion/confirmar-accion.component';
 
 
 @Component({
