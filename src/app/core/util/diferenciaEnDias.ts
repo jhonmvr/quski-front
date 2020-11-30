@@ -14,7 +14,7 @@ export class diferenciaEnDias{
         
     }
 
-    static convertirStringAFecha(fecha:string){
+     convertirStringAFecha(fecha:string){
         if(fecha){
             let pipe = new DatePipe('en-US');
             let fechaI = pipe.transform(fecha, 'yyyy-MM-dd');
@@ -28,7 +28,7 @@ export class diferenciaEnDias{
        
     }
 
-    static convertirFechaAString(fecha:Date){
+     convertirFechaAString(fecha:Date){
         if(fecha){
             let dia:string = fecha.getDate().toString();
             let mes:string =(fecha.getMonth()+1).toString();
@@ -45,7 +45,7 @@ export class diferenciaEnDias{
             return ano+"-"+mes+"-"+dia;
         }
     }
-    static convertirFechaAStringDiaMesYear(fecha:Date){
+     convertirFechaAStringDiaMesYear(fecha:Date){
         if(fecha){
             let dia:string = fecha.getDate().toString();
             let mes:string =(fecha.getMonth()+1).toString();

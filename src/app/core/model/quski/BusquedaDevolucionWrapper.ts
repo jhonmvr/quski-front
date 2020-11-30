@@ -5,7 +5,7 @@ export class BusquedaDevolucionWrapper{
     agencia: string                                   //"null",
     fechaAprobacionDesde: Date                                       //0
     fechaAprobacionHasta: Date
-    ProcesoEnum: String
+    estado: String
     numberPage: number
     numberItems: number
     constructor(){

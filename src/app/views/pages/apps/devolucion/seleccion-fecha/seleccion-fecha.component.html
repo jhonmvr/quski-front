@@ -1,6 +1,6 @@
-<div class="spinner-container" *ngIf="loading | async">
-    <mat-spinner class="spiner"></mat-spinner>
-</div>
+
+
+<mat-progress-bar mode="indeterminate" *ngIf="loading | async"></mat-progress-bar>
 
 <re-portlet>
     <re-portlet-header [title]="'SELECCION DE FECHA DE ARRIBO '" [class]="'kt-portlet__head--lg'">
@@ -36,7 +36,7 @@
             
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <mat-select placeholder="Agencia" formControlName="agencia" >
+                            <mat-select placeholder="Agencia" [formControl]="agencia" >
                                 <mat-option>--</mat-option>
                                 <mat-option *ngFor="let ag of agenciasCatalogo" [value]="ag">
                                   {{ ag}}
@@ -49,7 +49,7 @@
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field>
                             <input matInput [matDatepicker]="pckFechaCreacionDesde" 
-                            formControlName="fechaCreacionDesde" placeholder="Fecha de aprobacion desde">
+                            [formControl]="fechaCreacionDesde" placeholder="Fecha de aprobacion desde">
                             <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionDesde"></mat-datepicker-toggle>
                             <mat-datepicker #pckFechaCreacionDesde></mat-datepicker>
                         </mat-form-field>
@@ -57,7 +57,7 @@
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field>
                             <input matInput [matDatepicker]="pckFechaCreacionFin" 
-                            formControlName="fechaCreacionFin" placeholder="Fecha de aprobacion hasta">
+                            [formControl]="fechaCreacionFin" placeholder="Fecha de aprobacion hasta">
                             <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionFin"></mat-datepicker-toggle>
                             <mat-datepicker #pckFechaCreacionFin></mat-datepicker>
                         </mat-form-field>
@@ -78,65 +78,65 @@
                     <mat-header-cell *matHeaderCellDef>
                         Accion
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation() &&  masterToggle(row) "
-                        (change)="$event ? masterToggle(row) : null" [checked]="isCheck(row)">
-                      </mat-checkbox>
+                    <mat-cell *matCellDef="let row" style="text-align: center !important;">
+                        <mat-checkbox [checked]="isCheck(row)" (click)="$event.stopPropagation() 
+                        && addRemove(row)" (change)="$event ? selection.toggle(row) : null">
+                        </mat-checkbox>
                     </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="fechaSolicitud">
                 <mat-header-cell *matHeaderCellDef>Fecha de la Solicitud</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.cliente}}</mat-cell>
+                <mat-cell *matCellDef="let element"> {{element.fechaSolicitud}}</mat-cell>
             </ng-container>
                 <ng-container matColumnDef="agenciaSolicitud">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Agencia de solicitud</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.nivelEducacion}} </mat-cell>
+                    <mat-cell *matCellDef="let element">{{element.nombreAgenciaSolicitud}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="agenciaEntrega">
-                    <mat-header-cell *matHeaderCellDef>Codigo de la operacion madre</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.genero}} </mat-cell>
+                    <mat-header-cell *matHeaderCellDef>Agencia entrega</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.agenciaEntrega}} </mat-cell>
                 </ng-container>
                 
                 <ng-container matColumnDef="codigoOperacionMadre">
-                    <mat-header-cell *matHeaderCellDef>Codigo de operacion</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.estadoCivil}} </mat-cell>
+                    <mat-header-cell *matHeaderCellDef>Codigo de operacion Madre</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.codigoOperacionMadre}} </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="codigoOperacion">
-                    <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                    <mat-header-cell *matHeaderCellDef>Codigo Operacion</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.codigoOperacion}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="nombreCliente">
                 <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.nombreCliente}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="identificacion">
                 <mat-header-cell *matHeaderCellDef>Identificacion</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.identificacion}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="fundaMadre">
                 <mat-header-cell *matHeaderCellDef>Funda Madre</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.fundaMadre}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="fundaActual">
                     <mat-header-cell *matHeaderCellDef>Funda Actual</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+                    <mat-cell *matCellDef="let element">{{element.fundaActual}} </mat-cell>
                 </ng-container>
             <ng-container matColumnDef="ciudadTevcol">
                     <mat-header-cell *matHeaderCellDef>Ciudad Tevcol</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.codigoAmortizacion}} </mat-cell>
+                    <mat-cell *matCellDef="let element">{{element.ciudadTevcol}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="fechaArriboAgencia">
                 <mat-header-cell *matHeaderCellDef>Fecha Arribo Agencia</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaArriboAgencia}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="nombreAsesor">
                 <mat-header-cell *matHeaderCellDef>Nombre Asesor</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.asesor}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="fechaAprobacion">
                 <mat-header-cell *matHeaderCellDef>Fecha de Aprobacion</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaAprobacion}} </mat-cell>
             </ng-container>
       
             
@@ -149,7 +149,7 @@
             
         </div>
 
-        <a href="javascript:void(0);" (click)="seleecionarFecha()" matTooltip="Seleccionar Fecha de Arribo"
+        <a href="javascript:void(0);" (click)="seleccionarFecha()" matTooltip="Seleccionar Fecha de Arribo"
         style="font-size: 12px; vertical-align: middle;">
         <mat-icon style="font-size: 32px" matTooltipPosition="above">move_to_inbox</mat-icon>
         <span style="position: relative;top: -10px;margin-left: 5px;">Seleccionar Fecha</span>

@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialogRef } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
+import { diferenciaEnDias } from '../../../../core/util/diferenciaEnDias';
 import { DevolucionService } from '../../../../core/services/quski/devolucion.service';
 
 @Component({
@@ -11,7 +13,7 @@ import { DevolucionService } from '../../../../core/services/quski/devolucion.se
 export class AddFechaComponent implements OnInit {
 
   idDevolucionesSubject:BehaviorSubject<any>=new BehaviorSubject<any>("");
-
+  fechaUtil: diferenciaEnDias
 
   @Input("idDevoluciones") set idDevoluciones(value: Number[]) {
     this.idDevolucionesSubject.next(value);
@@ -21,20 +23,30 @@ export class AddFechaComponent implements OnInit {
   }
  
   fechaArribo = new FormControl('', []);
-  constructor(private devSev: DevolucionService) { }
+  constructor(private devSev: DevolucionService,  public dialogRef: MatDialogRef<AddFechaComponent>) { }
 
   ngOnInit() {
+
+    console.log("hello",this.idDevoluciones)
   }
 
+  registrarFecha(){
+    this.fechaUtil = new diferenciaEnDias(new Date(this.fechaArribo.value))
+    if(this.fechaArribo.value){
+      console.log("registrar",this.fechaUtil)
+      this.dialogRef.close(this.fechaUtil.convertirFechaAString(this.fechaArribo.value));
+    }
+    else{
+      console.log("fallamos")
+    }
 
-
-  registrarFecha(arrayIdDevolucion: Number[]){
-    this.devSev.registrarFechaArribo(arrayIdDevolucion, this.fechaArribo.value).subscribe((data:any)=>{
-      if(data){
-        console.log(data)
-      }  
-    
-    })
-    
   }
+  
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  salir(): void {
+    this.dialogRef.close();
+ }
 }
