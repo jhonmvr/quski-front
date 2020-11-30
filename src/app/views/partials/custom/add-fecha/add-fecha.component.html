@@ -2,10 +2,25 @@
 
 <div>
 <mat-form-field>
-    <input matInput [matDatepicker]="pckFechaArribo" 
-    formControlName="fechaArribo" placeholder="Fecha ">
+    <input matInput [matDatepicker]="pckFechaArribo" autocomplete="off"
+    [formControl]="fechaArribo" placeholder="Fecha ">
     <mat-datepicker-toggle matSuffix [for]="pckFechaArribo"></mat-datepicker-toggle>
     <mat-datepicker #pckFechaArribo></mat-datepicker>
 </mat-form-field>
 
+
+
 </div>
+
+
+<a href="javascript:void(0);" (click)="registrarFecha()" matTooltip="Seleccionar Fecha de Arribo"
+style="font-size: 12px; vertical-align: middle;">
+<mat-icon style="font-size: 32px" matTooltipPosition="above">move_to_inbox</mat-icon>
+<span style="position: relative;top: -10px;margin-left: 5px;">Aceptar</span>
+</a>
+
+<a href="javascript:void(0);" (click)="salir()" matTooltip="cerrar"
+style="font-size: 12px; vertical-align: middle;">
+<mat-icon style="font-size: 32px" matTooltipPosition="above">save</mat-icon>
+<span style="position: relative;top: -10px;margin-left: 5px;">Cancelar</span>
+</a>

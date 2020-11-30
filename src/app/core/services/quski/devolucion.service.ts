@@ -7,6 +7,8 @@ import { BaseService } from '../base.service';
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ReNoticeService } from '../re-notice.service';
+import { BusquedaDevolucionWrapper } from '../../model/quski/BusquedaDevolucionWrapper';
+import { RegistroFechaArribo } from '../../model/wrapper/registroFechaArribo';
 @Injectable({
   providedIn: 'root'
 })
@@ -84,11 +86,11 @@ export class DevolucionService extends BaseService {
     );
   }
 
-  public busquedaSeleccionarFechas(devOpeWrap){
+  public busquedaSeleccionarFechas(busquedaDevolucionWrapper: BusquedaDevolucionWrapper){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/buscarDevolucion";  
-    const wrapper = { entidad: devOpeWrap };
-    this.options = { headers: this.headers};
-    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, busquedaDevolucionWrapper, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
@@ -96,13 +98,14 @@ export class DevolucionService extends BaseService {
     );
   }
 
-  public registrarFechaArribo(arrayIdDevoluciones, fechaArribo:Date)
+  public registrarFechaArribo(objeto: RegistroFechaArribo)
   {
-    let serviceUrl = this.appResourcesUrl + "devolucionRestController/registrarFechaArribo";
-    this.params = this.params.set('arrayDevoluciones', arrayIdDevoluciones);  
-   
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl,  this.options).pipe(
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/registrarFechaArribo";  
+
+      
+
+    this.options = { headers: this.headers,  params: this.params };
+    return this.http.post(serviceUrl, objeto ,this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
