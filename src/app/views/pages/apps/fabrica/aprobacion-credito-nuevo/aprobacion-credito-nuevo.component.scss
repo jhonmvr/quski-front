@@ -92,7 +92,21 @@ table{
   border-color: white;
   font-weight: 400;
 }    
-.text-align {   
+.mat-header-cell {
+  flex-direction: column;
   justify-content: center;
-  font-size: smaller;
+  //font-size: smaller;
+  
+}
+
+.mat-cell {
+  text-align: center;
+  justify-content:center;
+  //font-size: smaller;
+}
+.mat-footer-cell{
+  font-weight: bold;
+  text-align: center;
+  justify-content:center;
+  //font-size: smaller;
 }

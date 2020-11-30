@@ -49,8 +49,8 @@ export class GestionClienteComponent implements OnInit {
   /** @TABLA_PATRIMONIO **/
   displayedColumnsActivo = ['Accion', 'Activo', 'Avaluo'];
   displayedColumnsPasivo = ['Accion', 'Pasivo', 'Avaluo'];
-  dataSourcePatrimonioActivo: MatTableDataSource<TbQoPatrimonio>;
-  dataSourcePatrimonioPasivo: MatTableDataSource<TbQoPatrimonio>;
+  dataSourcePatrimonioActivo = new MatTableDataSource<TbQoPatrimonio>();
+  dataSourcePatrimonioPasivo = new MatTableDataSource<TbQoPatrimonio>();
   /** @TABLA_INGRESO_EGRESO **/
   displayedColumnsII = ['Accion', 'Is', 'Valor'];
   dataSourceIngresoEgreso = new MatTableDataSource<TbQoIngresoEgresoCliente>();
@@ -109,7 +109,7 @@ export class GestionClienteComponent implements OnInit {
   public callePrincipal = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public numeracion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public barrio = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public calleSecundaria = new FormControl('', [Validators.maxLength(50)]);
+  public calleSecundaria = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public formDatosDireccionDomicilio: FormGroup = new FormGroup({});
   public tipoVivienda = new FormControl('', Validators.required);
   public sector = new FormControl('', Validators.required);
@@ -120,7 +120,7 @@ export class GestionClienteComponent implements OnInit {
   public callePrincipalO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public numeracionO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public barrioO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public calleSecundariaO = new FormControl('', [Validators.maxLength(50)]);
+  public calleSecundariaO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public tipoViviendaO = new FormControl('', Validators.required);
   public formDatosDireccionLaboral: FormGroup = new FormGroup({});
   public sectorO = new FormControl('', Validators.required);
@@ -145,19 +145,19 @@ export class GestionClienteComponent implements OnInit {
   public avaluoPasivo = new FormControl('', [Validators.maxLength(50)]);
   public formDatosPatrimonioPasivos: FormGroup = new FormGroup({});
   public pasivo = new FormControl('', [Validators.maxLength(50)]);
-  public telefonoMovilR = new FormControl('', [Validators.minLength(10), Validators.maxLength(10)]);
-  public telefonoFijoR = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
-  public nombresRef = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
-  public apellidosRef = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
-
+  
   public formCuentas: FormGroup = new FormGroup({});
   public tipoCuenta = new FormControl('', [Validators.maxLength(50)]);
-  public numeroCuenta = new FormControl('', [Validators.minLength(16), Validators.maxLength(20)]);
-  public esAhorro = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
-
+  public numeroCuenta = new FormControl('', [Validators.maxLength(20)]);
+  public esAhorro = new FormControl('', []);
+  
   public formDatosReferenciasPersonales: FormGroup = new FormGroup({});
-  public parentescoR = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
-  public direccionR = new FormControl('', [Validators.minLength(3), Validators.maxLength(50)]);
+  public telefonoFijoR = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
+  public telefonoMovilR = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+  public apellidosRef = new FormControl('', [Validators.required,  Validators.maxLength(50)]);
+  public nombresRef = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public parentescoR = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public direccionR = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public element;
 
   constructor(
@@ -243,7 +243,7 @@ export class GestionClienteComponent implements OnInit {
     this.nombresCompletos.disable();
     this.identificacion.setValue(this.wrapper.cliente.cedulaCliente);
     this.identificacion.disable();
-    this.fechaNacimiento.setValue(this.wrapper.cliente.fechaNacimiento);
+    this.fechaNacimiento.setValue( new Date(this.wrapper.cliente.fechaNacimiento) );
     this.onChangeFechaNacimiento();
     this.nivelEducacion.setValue(this.catEducacion.find(x => x.codigo == this.wrapper.cliente.nivelEducacion));
     if (this.wrapper.telefonos) {
@@ -281,10 +281,11 @@ export class GestionClienteComponent implements OnInit {
       this.origenIngresos.setValue(this.catOrigenIngreso.find(x => x.codigo == this.wrapper.datosTrabajo.origenIngreso));
       this.relacionDependencia.setValue(this.wrapper.datosTrabajo.esRelacionDependencia ? "SI" : "NO");
       this.nombreEmpresa.setValue(this.wrapper.datosTrabajo.nombreEmpresa);
-      this.actividadEconomicaEmpresa.setValue(this.catActividadEconomica.find(x => x.id.toString() == this.wrapper.datosTrabajo.actividadEconomica));
       this.cargo.setValue(this.catCargo.find(x => x.codigo == this.wrapper.datosTrabajo.cargo));
       this.ocupacion.setValue(this.catOcupacion.find(x => x.codigo == this.wrapper.datosTrabajo.ocupacion));
       this.setRelacionDependencia();
+      this.actividadEconomicaMupi.setValue( this.catActividadEconomicaMupi.find(x => x.codigo == this.wrapper.datosTrabajo.actividadEconomicaMupi ));
+      this.actividadEconomicaEmpresa.setValue(this.catActividadEconomica.find(x => x.id.toString() == this.wrapper.datosTrabajo.actividadEconomica));
     }
     if (this.wrapper.cliente.actividadEconomica) {
       this.actividadEconomica.setValue(this.catActividadEconomica.find(x => x.id.toString() == this.wrapper.cliente.actividadEconomica));
@@ -328,23 +329,24 @@ export class GestionClienteComponent implements OnInit {
         }
       });
     }
-    if (this.wrapper.ingresos) {
-      this.dataSourceIngresoEgreso.data = this.wrapper.ingresos;
+    if (this.wrapper.cliente.ingresos) {
+      this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( this.wrapper.cliente.ingresos, true ) )  
       this.calcularIngresoEgreso();
     }
-    this.dataSourcePatrimonioActivo = new MatTableDataSource<TbQoPatrimonio>();
-    this.dataSourcePatrimonioPasivo = new MatTableDataSource<TbQoPatrimonio>();
-    if (this.wrapper.patrimonios) {
-      this.wrapper.patrimonios.forEach(e => {
-        if (e.activos && !e.pasivos) {
-          this.dataSourcePatrimonioActivo.data.push(e);
-        }
-        if (!e.activos && e.pasivos) {
-          this.dataSourcePatrimonioPasivo.data.push(e);
-        }
-      });
-      this.calcularActivo();
+    if (this.wrapper.cliente.egresos) {
+      this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( this.wrapper.cliente.egresos, false ) )  
+      this.calcularIngresoEgreso();
+    }
+    
+    if (this.wrapper.cliente.pasivos) {
+      this.dataSourcePatrimonioPasivo = new MatTableDataSource<TbQoPatrimonio>();
+      this.dataSourcePatrimonioPasivo.data.push( new TbQoPatrimonio(this.wrapper.cliente.pasivos, false) );
       this.calcularPasivo();
+    }
+    if (this.wrapper.cliente.activos) {
+      this.dataSourcePatrimonioActivo = new MatTableDataSource<TbQoPatrimonio>();
+      this.dataSourcePatrimonioActivo.data.push( new TbQoPatrimonio(this.wrapper.cliente.activos, false) );
+      this.calcularActivo();
     }
     if(this.wrapper.cuentas){
       this.dataSourceCuentas.data = this.wrapper.cuentas;
@@ -356,7 +358,7 @@ export class GestionClienteComponent implements OnInit {
     if (this.wrapper.referencias) {
       this.wrapper.referencias.forEach(e => {
         const referencia = this.catTipoReferencia.find(x => x.codigo == e.parentesco);
-        e.parentesco = referencia.nombre;
+        e.parentesco = referencia ? referencia.nombre : 'error' ;
       });
       this.dataSource.data = this.wrapper.referencias;
     }
@@ -368,22 +370,22 @@ export class GestionClienteComponent implements OnInit {
       if (data.params.origen == "NEG") {
         this.idNegociacion = data.params.item
         this.cli.traerClienteByIdNegociacion(data.params.item).subscribe((data: any) => {
-          if (data.entidad) {
+          if (!data.entidad.existeError) {
             this.wrapper = data.entidad;
             this.traerCatalogos();
           } else {
             this.loadingSubject.next(false);
-            this.sinNoticeService.setNotice('NO EXISTE NEGOCIACION', 'error');
+            this.sinNoticeService.setNotice('NO EXISTE CLEINTE: ' + data.entidad.mensaje, 'error');
           }
         });
       } else if (data.params.origen == "CED") {
         this.cli.traerClienteByCedula(data.params.item).subscribe((data: any) => {
-          if (data.entidad) {
+          if (!data.entidad.existeError) {
             this.wrapper = data.entidad;
             this.traerCatalogos();
           } else {
             this.loadingSubject.next(false);
-            this.sinNoticeService.setNotice('NO EXISTE EL CLIENTE', 'error');
+            this.sinNoticeService.setNotice('NO EXISTE CLEINTE: ' + data.entidad.mensaje, 'error');
           }
         });
       } else {
@@ -465,7 +467,13 @@ export class GestionClienteComponent implements OnInit {
     });
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @FUNCIONALIDAD ** */
-
+  public numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
   public onChangeFechaNacimiento() {
     this.loadingSubject.next(true);
     const fechaSeleccionada = new Date(
@@ -792,10 +800,9 @@ export class GestionClienteComponent implements OnInit {
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @PASIVOS @ACTIVOS @INGRESOS @EGRESOS @PATRIMONIO ** */
   public nuevoActivo() {
     this.valorValidacion = 0;
-    const patrimonioCliente = new TbQoPatrimonio;
     if (this.formDatosPatrimonioActivos.valid) {
       if (this.avaluoActivo.value > this.valorValidacion && this.activo.value != "" && this.activo.value != null) {
-        patrimonioCliente.avaluo = this.avaluoActivo.value;
+        const patrimonioCliente = new TbQoPatrimonio( this.avaluoActivo.value, true );
         patrimonioCliente.activos = this.activo.value.toUpperCase();
         if (this.element) {
           const index = this.dataSourcePatrimonioActivo.data.indexOf(this.element);
@@ -818,10 +825,9 @@ export class GestionClienteComponent implements OnInit {
   }
   public nuevoPasivo() {
     this.valorValidacion = 0;
-    const patrimonioCliente = new TbQoPatrimonio;
     if (this.formDatosPatrimonioPasivos.valid) {
       if (this.avaluoPasivo.value > this.valorValidacion && this.pasivo.value != null && this.pasivo.value != "") {
-        patrimonioCliente.avaluo = this.avaluoPasivo.value;
+        const patrimonioCliente = new TbQoPatrimonio( this.avaluoPasivo.value, false );
         patrimonioCliente.pasivos = this.pasivo.value.toUpperCase();
         if (this.element) {
           const index = this.dataSourcePatrimonioPasivo.data.indexOf(this.element);
@@ -846,12 +852,9 @@ export class GestionClienteComponent implements OnInit {
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
     this.valorEgreso.setValue(null);
-    const ingresoEgreso = new TbQoIngresoEgresoCliente;
     if (this.formDatosIngreso.valid) {
       if (this.valorIngreso.value > this.valorValidacion) {
-        ingresoEgreso.valor = this.valorIngreso.value;
-        ingresoEgreso.esIngreso = true;
-        ingresoEgreso.esEgreso = false;
+        const ingresoEgreso = new TbQoIngresoEgresoCliente( this.valorIngreso.value, true );
         if (this.element) {
           const index = this.dataSourceIngresoEgreso.data.indexOf(this.element);
           this.dataSourceIngresoEgreso.data.splice(index, 1);
@@ -876,12 +879,9 @@ export class GestionClienteComponent implements OnInit {
     this.valorValidacion = 0;
     this.sinNoticeService.setNotice(null);
     this.valorIngreso.setValue(null);
-    const ingresoEgreso = new TbQoIngresoEgresoCliente;
     if (this.formDatosEgreso.valid) {
       if (this.valorEgreso.value > this.valorValidacion) {
-        ingresoEgreso.valor = this.valorEgreso.value;
-        ingresoEgreso.esIngreso = false;
-        ingresoEgreso.esEgreso = true;
+        const ingresoEgreso = new TbQoIngresoEgresoCliente( this.valorEgreso.value, false);
         if (this.element) {
           const index = this.dataSourceIngresoEgreso.data.indexOf(this.element);
           this.dataSourceIngresoEgreso.data.splice(index, 1);
@@ -1004,7 +1004,6 @@ export class GestionClienteComponent implements OnInit {
       let control = this.formDatosReferenciasPersonales.controls[name];
       control.setErrors(null);
       control.setValue(null);
-      control.updateValueAndValidity();
     });
     Object.keys(this.formDatosIngreso.controls).forEach((name) => {
       let control = this.formDatosIngreso.controls[name];
@@ -1016,13 +1015,11 @@ export class GestionClienteComponent implements OnInit {
       let control = this.formDatosEgreso.controls[name];
       control.setErrors(null);
       control.setValue(null);
-      control.updateValueAndValidity();
     });
     Object.keys(this.formCuentas.controls).forEach((name) => {
       let control = this.formCuentas.controls[name];
       control.setErrors(null);
       control.setValue(null);
-      control.updateValueAndValidity();
     });
   }
   public nuevaReferencia() {
@@ -1040,8 +1037,8 @@ export class GestionClienteComponent implements OnInit {
               b = Number(this.telefonoFijoR.value);
             }
             if (a > 0 && b > 0) {
-              referencia.apellidosRef = this.apellidosRef.value.toUpperCase();
-              referencia.nombresRef = this.nombresRef.value.toUpperCase();
+              referencia.apellidos = this.apellidosRef.value.toUpperCase();
+              referencia.nombres = this.nombresRef.value.toUpperCase();
               referencia.parentesco = this.parentescoR.value.nombre;
               referencia.direccion = this.direccionR.value.toUpperCase();
               referencia.telefonoMovil = this.telefonoMovilR.value;
@@ -1067,7 +1064,7 @@ export class GestionClienteComponent implements OnInit {
           this.sinNoticeService.setNotice("PARENTESCO NO VALIDO", 'error');
         }
       } else {
-        this.sinNoticeService.setNotice("NOMBRE COMPLETO NO VALIDO", 'error');
+        this.sinNoticeService.setNotice("NOMBRE O APELLIDO NO VALIDO", 'error');
       }
     } else {
       this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'error');
@@ -1094,7 +1091,7 @@ export class GestionClienteComponent implements OnInit {
     if (this.formCuentas.valid) {
       cuenta.banco = this.tipoCuenta.value.nombre;
       cuenta.cuenta = this.numeroCuenta.value;
-      cuenta.esAhorros = this.esAhorro.value;
+      cuenta.esAhorros = this.esAhorro.value == true ? true : false ;
       cuenta.tbQoCliente = this.wrapper.cliente;
       if (this.element) {
         const index = this.dataSourceCuentas.data.indexOf(this.element);
@@ -1153,6 +1150,20 @@ export class GestionClienteComponent implements OnInit {
                       this.wrapper.cliente.profesion = this.profesion.value ? this.profesion.value.codigo : null;
                       this.wrapper.cliente.segundoNombre = this.segundoNombre.value;
                       this.wrapper.cliente.separacionBienes = this.separacionBienes.value;
+                      this.wrapper.cliente.pasivos = this.totalPasivo;
+                      this.wrapper.cliente.activos = this.totalActivo;
+                      let totalEgreso = 0;
+                      let totalIngreso = 0;
+                      this.dataSourceIngresoEgreso.data.forEach(e=>{
+                        if( e.esEgreso ){
+                          totalEgreso = totalEgreso + e.valor;
+                        }
+                        if( e.esIngreso ){
+                          totalIngreso = totalIngreso + e.valor;
+                        }
+                      });
+                      this.wrapper.cliente.ingresos = totalIngreso;
+                      this.wrapper.cliente.egresos = totalEgreso;
                       if (!this.wrapper.datosTrabajo) {
                         this.wrapper.datosTrabajo = new TbQoDatoTrabajoCliente();
                         this.wrapper.datosTrabajo.origenIngreso = this.origenIngresos.value.codigo;
@@ -1233,23 +1244,6 @@ export class GestionClienteComponent implements OnInit {
                           e.tipoVivienda = this.tipoVivienda.value ? this.tipoVivienda.value.codigo : null;
                         }
                       });
-                      if (this.dataSourceIngresoEgreso.data) {
-                        this.dataSourceIngresoEgreso.data.forEach(e => {
-                          e.tbQoCliente = this.wrapper.cliente;
-                        });
-                        this.wrapper.ingresos = this.dataSourceIngresoEgreso.data;
-                      }
-                      if (this.dataSourcePatrimonioActivo.data) {
-                        this.dataSourcePatrimonioActivo.data.forEach(e => {
-                          e.tbQoCliente = this.wrapper.cliente;
-                        });
-                      }
-                      if (this.dataSourcePatrimonioPasivo.data) {
-                        this.dataSourcePatrimonioPasivo.data.forEach(e => {
-                          e.tbQoCliente = this.wrapper.cliente;
-                        });
-                      }
-                      this.wrapper.patrimonios = this.dataSourcePatrimonioActivo.data.concat(this.dataSourcePatrimonioPasivo.data);
                       if(this.dataSourceCuentas.data){
                         this.dataSourceCuentas.data.forEach(e=>{
                           const item = this.catCuenta.find(x => x.nombre == e.banco );
@@ -1279,7 +1273,7 @@ export class GestionClienteComponent implements OnInit {
                           this.loadingSubject.next(false);
                           this.sinNoticeService.setNotice("NO SE PUDO REGISTRAR EL CLIENTE EN SOFTBANK", 'error');
                           if (this.idNegociacion) {
-                            this.router.navigate(['negociacion/bandeja-operaciones']);
+                            this.router.navigate(['credito-nuevo/generar-credito/', this.idNegociacion]);
                           } else {
                             this.router.navigate(['negociacion/bandeja-operaciones']);
                           }

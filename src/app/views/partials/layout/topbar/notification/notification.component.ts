@@ -9,7 +9,6 @@ import { environment } from '../../../../../../environments/environment';
 import { WebsocketUtilService } from '../../../../../core/services/websocket-util.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatDialog } from '@angular/material';
-import { AuthDialogComponent } from '../../../custom/auth-dialog/auth-dialog.component';
 
 @Component({
 	selector: 'kt-notification',
@@ -134,18 +133,6 @@ export class NotificationComponent implements OnInit, OnDestroy {
 					this.noticeService.setNotice("Error al cargar las notificaciones o alertas", 'error');
 				}
 			});
-		}, error=>{
-			if(  error.error ){
-				this.noticeService.setNotice(error.error.codError + ' - ' + error.error.msgError  , 'error');
-			} else if(  error.statusText && error.status==401 ){
-				this.dialog.open(AuthDialogComponent, {
-					data: {
-						mensaje:"Error " + error.statusText + " - " + error.message
-					}
-				});
-			} else {
-				this.noticeService.setNotice("Error al cargar las notificaciones o alertas", 'error');
-			}
 		});
 	}
 

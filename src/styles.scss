@@ -16,3 +16,22 @@
 .position-static {
 	position: static;
 }
+.success-snackbar.mat-snack-bar-container {
+	background: #43a047;
+	color: aliceblue;
+  }
+  .error-snackbar.mat-snack-bar-container {
+	background: #d32f2f;
+	color: aliceblue;
+  }
+  .info-snackbar.mat-snack-bar-container {
+	background: rgb(23, 105, 170);
+	color: aliceblue;
+  }
+  .warning-snackbar.mat-snack-bar-container {
+	background: #ffa000;
+	color: aliceblue;
+  }
+  .mat-simple-snackbar-action {
+	color: aliceblue !important;
+  }

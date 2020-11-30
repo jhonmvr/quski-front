@@ -6,7 +6,6 @@ import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/m
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { SubheaderService } from '../../../../../core/_base/layout';
-import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 

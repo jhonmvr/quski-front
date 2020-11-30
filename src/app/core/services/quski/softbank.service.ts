@@ -52,6 +52,16 @@ export class SoftbankService extends BaseService {
       )
     );
   }
+  public traerCatalogos() {
+    let serviceUrl = this.appResourcesUrl + "softbankClienteRestController/traerCatalogos";
+    this.options = { Headers: this.headers };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
   /**
    * @author Jeroham Cadenas - Developer Twelve
    * @description Consultar cliente Softbank

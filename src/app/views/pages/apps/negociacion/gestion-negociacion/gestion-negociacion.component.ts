@@ -4,7 +4,6 @@ import { ErrorCargaInicialComponent } from './../../../../partials/custom/popups
 import { ListaExcepcionesComponent } from './../../../../partials/custom/popups/lista-excepciones/lista-excepciones.component';
 import { VerCotizacionesComponent } from './../../../../partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
 import { CalculadoraEntradaWrapper } from './../../../../../core/model/wrapper/CalculadoraEntradaWrapper';
-import { AuthDialogComponent } from './../../../../partials/custom/auth-dialog/auth-dialog.component';
 import { DataInjectExcepciones } from './../../../../../core/model/wrapper/DataInjectExcepciones';
 import { TbQoCreditoNegociacion } from './../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
@@ -28,8 +27,13 @@ import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { response } from 'express';
+import { map, startWith } from 'rxjs/operators';
+import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
+//import { DataTableDataSource } from 'src/app/views/partials/content/widgets/general/data-table/data-table.data-source';
 
 @Component({
   selector: 'kt-gestion-negociacion',
@@ -38,6 +42,7 @@ import { ProcesoService } from '../../../../../core/services/quski/proceso.servi
 })
 export class GestionNegociacionComponent implements OnInit {
   // VARIABLES PUBLICAS
+  selection = new SelectionModel<any>(true, []);
   public loading;
   public usuario: string;
   public loadingSubject = new BehaviorSubject<boolean>(false);
@@ -51,6 +56,10 @@ export class GestionNegociacionComponent implements OnInit {
   public catTipoJoya: Array<any>;
   public catTipoOro: Array<any>;
   public catEstadoJoya: Array<any>;
+  catPais;
+  filteredPais: Observable<Pais[]>;
+
+  opcionCredito;
 
   // FORMULARIO BUSQUEDA
   public formBusqueda: FormGroup = new FormGroup({});
@@ -67,35 +76,39 @@ export class GestionNegociacionComponent implements OnInit {
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
   public email = new FormControl('', [Validators.required, Validators.email]);
   public campania = new FormControl('', []);
-  public aprobacionMupi = new FormControl('', []);
+  public aprobacionMupi = new FormControl('', [Validators.required]);
   // FORMULARIO TASACION
   public formTasacion: FormGroup = new FormGroup({});
-  public tipoOro = new FormControl('', []);
-  public pesoNeto = new FormControl('', []);
-  public pesoBruto = new FormControl('', []);
-  public numeroPiezas = new FormControl('', []);
-  public tipoJoya = new FormControl('', []);
-  public estado = new FormControl('', []);
-  public descuentoPiedra = new FormControl('', []);
-  public descuentoSuelda = new FormControl('', []);
-  public valorOro = new FormControl('', []);
-  public tienePiedras = new FormControl('', []);
-  public detallePiedras = new FormControl('', []);
-  public valorAplicable = new FormControl('', []);
-  public precioOro = new FormControl('', []);
+  public tipoOro = new FormControl('', [Validators.required]);
+  public pesoNeto = new FormControl('', [Validators.required,ValidateDecimal,Validators.min(1)]);
+  public pesoBruto = new FormControl('', [Validators.required,ValidateDecimal]);
+  public numeroPiezas = new FormControl('', [Validators.required]);
+  public tipoJoya = new FormControl('', [Validators.required]);
+  public estado = new FormControl('', [Validators.required]);
+  public descuentoPiedra = new FormControl('', [Validators.required,ValidateDecimal]);
+  public descuentoSuelda = new FormControl('', [Validators.required,ValidateDecimal]);
+  public valorOro = new FormControl('', [Validators.required]);
+  public tienePiedras = new FormControl('', [Validators.required]);
+  public detallePiedras = new FormControl('', [Validators.required]);
+  public valorAplicable = new FormControl('', [Validators.required]);
+  public precioOro = new FormControl('', [Validators.required]);
   public valorAvaluo = new FormControl('', []);
   public valorRealizacion = new FormControl('', []);
-  public descripcion = new FormControl('', []);
+  public descripcion = new FormControl('', [Validators.required]);
 
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public montoSolicitado = new FormControl('', []);
 
+  public tbQoCliente;
+
+  telefonoMovil;
+  telefonoFijo;
   // TABLA DE TASACION
   // ---- @TODO: Crear un data source para la tabla 
   dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
   displayedColumnsTasacion = ['Accion', 'NumeroPiezas', 'TipoOro', 'TipoJoya', 'EstadoJoya', 'Descripcion',
     'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'tienePiedras', 'detallePiedras', 'ValorOro'];
-  private elementJoya: TbQoTasacion = null;
+  private elementJoya;
 
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
   displayedColumnsCreditoNegociacion = ['Accion', 'plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
@@ -103,8 +116,8 @@ export class GestionNegociacionComponent implements OnInit {
     'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
     'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
     'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
-    'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipoOferta', 'porcetajeFlujoPlaneado',
-    'dividendoFlujoPlaneado', 'dividendoProrrateoServiciosDiferido'];
+    'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
+    'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
 
 
   constructor(
@@ -120,6 +133,7 @@ export class GestionNegociacionComponent implements OnInit {
     private sinNotSer: ReNoticeService,
     private subheaderService: SubheaderService
   ) {
+    
     //  RELACIONANDO FORMULARIO DE BUSQUEDA
     this.formBusqueda.addControl("identificacion", this.identificacion);
     //  RELACIONANDO FORMULARIO DE CLIENTE
@@ -127,7 +141,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.formDatosCliente.addControl("fechaNacimiento", this.fechaDeNacimiento);
     this.formDatosCliente.addControl("nombresCompletos", this.nombresCompletos);
     this.formDatosCliente.addControl("edad", this.edad);
-    this.formDatosCliente.addControl("nacionalidad", new FormControl('', Validators.required));
+    this.formDatosCliente.addControl("nacionalidad", this.nacionalidad);
     this.formDatosCliente.addControl("movil", this.movil);
     this.formDatosCliente.addControl("telefonoDomicilio", this.telefonoDomicilio);
     this.formDatosCliente.addControl("email", this.email);
@@ -147,22 +161,42 @@ export class GestionNegociacionComponent implements OnInit {
     this.formTasacion.addControl("valorOro", this.valorOro);
     this.formTasacion.addControl("tienePiedras", this.tienePiedras);
     this.formTasacion.addControl("detallePiedras", this.detallePiedras);
-    this.formTasacion.addControl("valorAplicable", this.valorAplicable);
-    this.formTasacion.addControl("precioOro", this.precioOro);
-    this.formTasacion.addControl("valorAvaluo", this.valorAvaluo);
+    //this.formTasacion.addControl("valorAplicable", this.valorAplicable);
+    //this.formTasacion.addControl("precioOro", this.precioOro);
+    //this.formTasacion.addControl("valorAvaluo", this.valorAvaluo);
+    
     this.formOpcionesCredito.addControl("montoSolicitado", this.montoSolicitado);
   }
 
   ngOnInit() {
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
-    this.usuario = atob(localStorage.getItem(environment.userKey))
-    this.obtenerCatalogosSoftbank();
+    this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.loadCatalogo();
     this.obtenerCatalogosCore();
     this.componenteVariable = false;
     this.componenteRiesgo = false;
     this.desactivarCampos();
     this.inicioDeFlujo();
+
+  }
+
+
+  loadCatalogo(){
+   
+
+    this.sof.consultarPaisCS().subscribe((data: any) => {
+      this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      
+    });
+    this.sof.consultarTipoJoyaCS().subscribe((data: any) => {
+      this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      
+    });
+    this.sof.consultarEstadoJoyaCS().subscribe((data: any) => {
+      this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      this.loadingSubject.next(false);
+    });
   }
   /** ********************************************* @ENTRADA ********************* **/
   private inicioDeFlujo() {
@@ -235,27 +269,27 @@ export class GestionNegociacionComponent implements OnInit {
   }
   /** ********************************************* @PARTE_1 ********************* **/
   public buscarCliente() {
-    if (this.formBusqueda.valid) {
-      this.loadingSubject.next(true);
-      const cedula = this.identificacion.value;
-      this.limpiarNegociacion();
-      this.neg.iniciarNegociacion(cedula, this.usuario).subscribe((wrapper: any) => {
+    if (this.formBusqueda.invalid) {
+      this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'warning');
+      return;
+    }    
+    this.loadingSubject.next(true);  
+    console.log("entra a negociacion")
+      this.neg.iniciarNegociacion(this.identificacion.value, this.usuario).subscribe((wrapper: any) => {
         if (wrapper.entidad.respuesta) {
+          this.limpiarNegociacion();
           this.negoW = wrapper.entidad;
-          console.log("NEGOCIACION INICIADA -> ", wrapper.entidad);
-          if (this.negoW.excepcionBre == "" || this.negoW.excepcionBre == null) {
-            this.cargarValores(this.negoW);
-          } else {
+          this.myStepper.selectedIndex = 1;
+          if (this.negoW.excepcionBre){
             this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
-          }
+            return;
+          } 
+          this.cargarValores(this.negoW);
         } else {
-          this.abrirPopupDeAutorizacion(cedula);
+          //this.abrirPopupDeAutorizacion(cedula);
         }
       });
-    } else {
-      this.myStepper.selectedIndex = 0;
-      this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'error');
-    }
+ 
   }
   private iniciarNegociacionEquifax( cedula: string ){
     this.loadingSubject.next(true);
@@ -333,25 +367,29 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-  private cargarValores(wrapper: NegociacionWrapper) {
-    const cliente = wrapper.credito.tbQoNegociacion.tbQoCliente;
-    this.cedula.setValue(cliente.cedulaCliente);
-    this.nombresCompletos.setValue(cliente.nombreCompleto);
-    this.fechaDeNacimiento.setValue(cliente.fechaNacimiento);
+  private cargarValores(wrapper) {
+    //this.catTipoOro = wrapper.tipoOro;
+    this.tbQoCliente= wrapper.credito.tbQoNegociacion.tbQoCliente;
+    this.cedula.setValue(this.tbQoCliente.cedulaCliente);
+    this.identificacion.setValue(this.tbQoCliente.cedulaCliente);
+    this.nombresCompletos.setValue(this.tbQoCliente.nombreCompleto);
+    this.fechaDeNacimiento.setValue(this.tbQoCliente.fechaNacimiento);
     this.cargarEdad();
-    this.nacionalidad.setValue(cliente.nacionalidad);
-    wrapper.telefonos.forEach(e=>{
-      if(e.tipoTelefono == "F"){
-        this.telefonoDomicilio.setValue(e.numero);
-      }
-      if(e.tipoTelefono == "M"){
-        this.movil.setValue(e.numero);
-      }
-    });
-    this.email.setValue(cliente.email);
-    this.campania.setValue( cliente.campania );
-    this.publicidad.setValue ( cliente.publicidad );
-    this.aprobacionMupi.setValue( cliente.aprobacionMupi );
+    this.nacionalidad.setValue(this.catPais.find(p=> p.id == this.tbQoCliente.nacionalidad));
+    if(wrapper.telefonoMovil){
+      this.movil.setValue(wrapper.telefonoMovil.numero);
+      this.telefonoMovil = wrapper.telefonoMovil;
+    }
+    if(wrapper.telefonoDomicilio){
+      this.telefonoDomicilio.setValue(wrapper.telefonoDomicilio.numero);
+      this.telefonoFijo = wrapper.telefonoDomicilio;
+    }
+  
+    
+    this.email.setValue(this.tbQoCliente.email);
+    this.campania.setValue(this.tbQoCliente.campania );
+    this.publicidad.setValue (this.tbQoCliente.publicidad );
+    this.aprobacionMupi.setValue(this.tbQoCliente.aprobacionMupi ? this.tbQoCliente.aprobacionMupi == 'SI' ? 'S' : 'N'  : null );
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
     if(wrapper.joyas != null){
@@ -373,7 +411,6 @@ export class GestionNegociacionComponent implements OnInit {
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
     });
   }
-  
   /** ********************************************* @POPUP ********************* **/
   public notificarSobreExcepciones(list :TbQoExcepcion[]){
     const dialogRef = this.dialog.open(ListaExcepcionesComponent, {
@@ -420,7 +457,6 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, cancelar: boolean = false, dataTitulo?: string) {
     let pData = {
@@ -438,8 +474,7 @@ export class GestionNegociacionComponent implements OnInit {
     } else {
       this.abrirSalirGestion(pData);
     }
-  }
-  
+  } 
   private limpiarCamposTasacion() {
     Object.keys(this.formTasacion.controls).forEach((name) => {
       const control = this.formTasacion.controls[name];
@@ -501,12 +536,74 @@ export class GestionNegociacionComponent implements OnInit {
       const input = this.email;
       return input.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo + this.email.errors.maxlength.requiredLength : '';
     }
-
+    if (pfield && pfield == "aprobacionMupi") {
+      const input = this.email;
+      return input.hasError('required') ? errorRequerido :  '';
+    }
 
     if (pfield && pfield === 'movil') {
       const input = this.movil;
       return input.hasError('required') ? errorRequerido : input.hasError('pattern') ? errorNumero : input.hasError('maxlength') ? errorLogitudExedida : input.hasError('minlength') ? errorInsuficiente : '';
     }
+
+    if (pfield && pfield === 'telefonoDomicilio') {
+      const input = this.formDatosCliente.get('telefonoDomicilio');
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('pattern')
+          ? errorNumero
+          : input.hasError('maxlength')
+            ? errorLogitudExedida
+            : input.hasError('minlength')
+              ? errorInsuficiente
+              : '';
+    }
+
+    if (pfield && pfield === 'tipoOro') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'numeroPiezas') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'pesoBruto') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'descuentoPiedra') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'descuentoSuelda') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'pesoNeto') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'tipoJoya') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'estado') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'tienePiedras') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'detallePiedras') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'descripcion') {
+      const input = this.movil;
+      return input.hasError('required') ? errorRequerido : '';
+    }
+
   }
   public numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -541,83 +638,52 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-  private obtenerCatalogosSoftbank() { 
-    this.loadingSubject.next(true);
-    this.sof.consultarTipoOroCS().subscribe((data: any) => {
-      this.catTipoOro = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-      this.sof.consultarTipoJoyaCS().subscribe((data: any) => {
-        this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-        this.sof.consultarEstadoJoyaCS().subscribe((data: any) => {
-          this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-          this.loadingSubject.next(false);
-        });
-      });
-    });
-  }
   /** ********************************************** @TASASION ***************************************/
-
   public setPrecioOro() {
-    if (this.tipoOro.value && this.pesoNeto.value && this.fechaDeNacimiento.value && this.negoW.credito.tbQoNegociacion.tbQoCliente.cedulaCliente) {
-      this.loadingSubject.next(true);
-      const fecha = this.negoW.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento.toString();
-      const cedula = this.negoW.credito.tbQoNegociacion.tbQoCliente.cedulaCliente;
-      const tipo = this.tipoOro.value.nombre;
-      const peso = this.pesoNeto.value;
-      const consulta = new ConsultaPrecioJoya(cedula, fecha, peso, tipo);
-
-      this.cal.consultarPreciosJoya(consulta).subscribe((data: any) => {
-        const precioJoya: GarantiaWrapper = data.entidad ? data.entidad : null;
-        if (data.entidad != null) {
-          this.valorOro.setValue(precioJoya.valorOro);
-          this.valorAvaluo.setValue(precioJoya.valorAvaluo);
-          this.valorAplicable.setValue(precioJoya.valorAplicable);
-          this.valorRealizacion.setValue(precioJoya.valorRealizacion);
-          this.loadingSubject.next(false);
-        } else {
-          this.loadingSubject.next(false);
-          this.sinNotSer.setNotice('ERROR AL CARGAR EL PRECIO DEL ORO', 'error');
-        }
-      });
+    if ( this.tipoOro.value){
+      this.valorOro.setValue(this.tipoOro.value.valorOro)
     }
   }
   cargarJoya() {
-    if (this.formTasacion.valid) {
-      this.loadingSubject.next(true);
-      const joya = new TbQoTasacion();
+    if (this.formTasacion.invalid) {
+      this.sinNotSer.setNotice('COMPLETE CORRECTAMENTE EL FORMULARIO', 'warning');
+    }
+
+    if(!this.negoW.credito.id){
+      this.sinNotSer.setNotice('COMPLETE CORRECTAMENTE LA INFORMACION DEL CLIENTE', 'warning');
+    }
+      //this.loadingSubject.next(true);
+      let joya = new TbQoTasacion();
       joya.descripcion = this.descripcion.value;
       joya.descuentoPesoPiedra = this.descuentoPiedra.value;
       joya.descuentoSuelda = this.descuentoSuelda.value;
-      joya.estadoJoya = this.estado.value;
+      joya.estadoJoya = this.estado.value.codigo;
       joya.numeroPiezas = this.numeroPiezas.value;
       joya.pesoBruto = this.pesoBruto.value;
       joya.pesoNeto = this.pesoNeto.value;
-      joya.tipoJoya = this.tipoJoya.value.nombre;
-      joya.tipoOro = this.tipoJoya.value.nombre;
-      joya.valorAvaluo = this.valorAvaluo.value;
+      joya.tipoJoya = this.tipoJoya.value.codigo;
+      joya.tipoOro = this.tipoOro.value.codigo;
+      joya.tienePiedras = this.tienePiedras.value =='S'?true:false;
+      joya.detallePiedras = this.detallePiedras.value;
+      joya.pesoNeto = Number(joya.pesoBruto) - (Number(joya.descuentoPesoPiedra) + Number(joya.descuentoSuelda));
       joya.valorOro = this.valorOro.value;
+      //joya.valorAvaluo = this.valorAvaluo.value;
+      //joya.valorOro = this.valorOro.value;
       joya.valorRealizacion = this.valorRealizacion.value;
-      joya.tbQoCreditoNegociacion = this.negoW.credito;
-      if (this.elementJoya != null) {
+      joya.tbQoCreditoNegociacion = {id:this.negoW.credito.id};
+      if (this.elementJoya) {
         joya.id = this.elementJoya.id;
-        const index = this.dataSourceTasacion.data.indexOf(this.elementJoya);
-        this.dataSourceTasacion.data.splice(index, 1);
+       // const index = this.dataSourceTasacion.data.indexOf(this.elementJoya);
+       // this.dataSourceTasacion.data.splice(index, 1);
         this.elementJoya = null;
       }
-      this.tas.persistEntity(joya).subscribe((data: any) => {
-        if (data && data.entidad) {
-          const dataC = this.dataSourceTasacion.data;
-          dataC.push(data.entidad);
-          this.dataSourceTasacion.data = dataC;
+      this.neg.agregarJoya(joya).subscribe((data: any) => {
+          this.dataSourceTasacion = new MatTableDataSource<any>(data.entidades);
           this.sinNotSer.setNotice('SE GUARDO LA JOYA TASADA', 'success');
-        } else {
-          this.sinNotSer.setNotice('ERROR AL GUARDAR PRECIO ORO', 'success');
-        }
-        this.loadingSubject.next(false);
+        //this.loadingSubject.next(false);
         this.limpiarCamposTasacion();
       });
-    } else {
-      this.sinNotSer.setNotice('COMPLETE CORRECTAMENTE EL FORMULARIO', 'warning');
-    }
+    
   }
   editar(element: TbQoTasacion) {
     this.tipoOro.setValue(element.tipoOro);
@@ -636,7 +702,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.valorAvaluo.setValue(element.valorAvaluo);
     this.valorRealizacion.setValue(element.valorRealizacion);
     this.descripcion.setValue(element.descripcion);
-    this.elementJoya = element;
+    this.elementJoya = element.id;
   }
   eliminar(element: TbQoTasacion) {
     this.loadingSubject.next(true);
@@ -661,34 +727,12 @@ export class GestionNegociacionComponent implements OnInit {
    */
   public calcularOpciones() {
     if (this.dataSourceTasacion.data.length > 0) {
-      const consulta = new CalculadoraEntradaWrapper();
-      consulta.parametroRiesgo.fechaNacimiento = this.negoW.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento.toString();
-      consulta.parametroRiesgo.identificacionCliente = this.negoW.credito.tbQoNegociacion.tbQoCliente.cedulaCliente;
-      consulta.descuentosOperacion = null;
-      consulta.garantias = new Array<GarantiaWrapper>();
-      this.dataSourceTasacion.data.forEach(e => {
-        const g = new GarantiaWrapper();
-        g.descripcion = e.descripcion;
-        g.descuentoPesoPiedras = e.descuentoPesoPiedra;
-        g.descuentoSuelda = e.descuentoSuelda;
-        g.detallePiedras = e.detallePiedras;
-        g.estadoJoya = e.estadoJoya;
-        g.numeroPiezas = e.numeroPiezas;
-        g.pesoGr = e.pesoBruto;
-        g.pesoNeto = e.pesoNeto;
-        g.precioOro = e.precioOro;
-        g.tienePiedras = e.tienePiedras;
-        g.tipoJoya = e.tipoJoya;
-        g.tipoOroKilataje = e.tipoOro;
-        g.valorAplicable = e.valorAplicable;
-        g.valorAvaluo = e.valorAvaluo;
-        g.valorOro = e.valorOro;
-        g.valorRealizacion = e.valorRealizacion;
-        consulta.garantias.push(g);
-      });
-      this.cal.simularOferta(consulta).subscribe((data: any) => {
-        if (data.entidad != null) {
-          this.dataSourceCreditoNegociacion.data = data.entidad.opciones;
+     
+      this.cal.simularOferta(this.negoW.credito.id).subscribe((data: any) => {
+        if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
+          && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
+          && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
+          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
       });
 
@@ -698,4 +742,157 @@ export class GestionNegociacionComponent implements OnInit {
 
   }
 
+
+  updateCliente(event,control){
+    console.log("=========>",event,control);
+
+    if(control.invalid || (event instanceof  KeyboardEvent && event.key !='Tab') ){
+      return;
+    }
+    if(this.tbQoCliente && this.tbQoCliente.id){
+    let cliente = this.buildCliente();
+      this.neg.updateCliente(cliente).subscribe( p =>{
+        if(p.entidad && p.entidad.tbQoTelefonoClientes){
+          p.entidad.tbQoTelefonoClientes.forEach(element => {
+            if(element.tipoTelefono =='M'){
+              this.telefonoMovil =element;
+            }
+            if(element.tipoTelefono =='F'){
+              this.telefonoFijo =element;
+            }          
+          });
+          
+        }
+      });
+    }else{
+      console.log("no guardar")
+    }
+  }
+
+  buildCliente(){
+    console.log("guardad")
+    if( this.telefonoFijo){
+      this.telefonoFijo.numero = this.telefonoDomicilio.value
+    }else if(this.telefonoDomicilio.value){
+      this.telefonoFijo ={
+        tipoTelefono:'F',
+        numero:this.telefonoDomicilio.value
+      }
+    }
+    if( this.telefonoMovil){
+      this.telefonoMovil.numero = this.movil.value
+    }else if (this.movil.value){
+      this.telefonoMovil ={
+        tipoTelefono:'M',
+        numero:this.movil.value
+      }
+    }
+   
+    let cliente = {
+      id: this.tbQoCliente.id,
+      cedulaCliente:this.tbQoCliente.cedulaCliente,
+      aprobacionMupi: this.aprobacionMupi.value,
+      campania:this.campania.value,
+      fechaNacimiento:this.fechaDeNacimiento.value,
+      nacionalidad:this.nacionalidad.value.id,
+      publicidad:this.publicidad.value,
+      tbQoTelefonoClientes: new Array()
+    };
+
+    if(this.telefonoMovil){
+      cliente.tbQoTelefonoClientes.push(this.telefonoMovil);
+    }
+    if(this.telefonoFijo){
+      cliente.tbQoTelefonoClientes.push(this.telefonoFijo);
+    }
+    return cliente;
+  }
+
+  seleccionarCredito(element){
+    this.opcionCredito = element;
+  }
+
+
+  checkboxLabel(row?): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSourceCreditoNegociacion.data.length;
+    return numSelected === numRows;
+  }
+
+
+  guardarCredito(){
+    if (this.selection.selected.length == 0){
+      this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO",'warning');
+      return;
+    }
+      if(confirm("ESTA SEGURO DE GENERAR LA SOLICITUD DE CREDITO?")){
+        this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
+          this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
+       });
+      }
+      
+    
+  }
+
+  verPrecio(){
+    if(this.formDatosCliente.invalid){
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'error');
+      this.myStepper.selectedIndex =1;
+      return;
+    }
+    let cliente = this.buildCliente();
+    this.neg.verPrecios(cliente).subscribe(resp=>{
+      this.catTipoOro = resp.entidades;
+      this.myStepper.selectedIndex =4;
+    })
+  }
+
+
+  
+  private _filter(value: Pais): Pais[] {
+    const filterValue = this._normalizeValue(value.nombre);
+    return this.catPais.filter(pais => this._normalizeValue(pais.nombre).includes(filterValue));
+  }
+
+  private _normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
+  }
+
+  selectTienePiedras(){
+    if(this.tienePiedras.value =='S'){
+      this.formTasacion.addControl("detallePiedras", this.detallePiedras);
+    }else{
+      this.formTasacion.removeControl("detallePiedras");
+    }
+  }
+
+  masterToggle(event) {
+ 
+    this.selection.clear()        
+    this.selection.select(event)
+    
+}
+
+setPesoNeto(){
+  try{
+    this.pesoNeto.setValue((Number(this.pesoBruto.value) - (Number(this.descuentoSuelda.value)+ Number (this.descuentoPiedra.value))))
+  }catch{
+    this.pesoNeto.setValue('0');
+  }
+  
+}
+  
+}
+
+export class Pais{
+  id;
+  codigo;
+  nombre;
 }

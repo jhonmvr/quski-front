@@ -9,7 +9,6 @@ import { TituloContratoService } from '../../../../../core/services/quski/titulo
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { SubheaderService } from '../../../../../core/_base/layout';
 
-import { AuthDialogComponent } from '../../../../../views/partials/custom/auth-dialog/auth-dialog.component';
 
 
 
@@ -145,21 +144,7 @@ export class ListClienteComponent implements OnInit {
       } else {
         this.sinNoticeService.setNotice("NO SE ENCONTRAR REGISTROS", 'success');
       }
-    }, error => {
-      this.loadingSubject.next(false);
-      if(  error.error ){
-				this.noticeService.setNotice(error.error.codError + ' - ' + error.error.msgError  , 'error');
-			} else if(  error.statusText && error.status==401 ){
-				this.dialog.open(AuthDialogComponent, {
-					data: {
-						mensaje:"Error " + error.statusText + " - " + error.message
-					}
-				});
-			} else {
-				this.noticeService.setNotice("Error al cargar las notificaciones o alertas", 'error');
-			}
-    }
-    );
+    });
   }
 
   editarUsuario() {

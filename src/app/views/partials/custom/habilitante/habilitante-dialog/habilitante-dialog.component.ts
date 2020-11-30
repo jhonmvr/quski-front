@@ -31,12 +31,12 @@ export class HabilitanteDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogDataHabilitante,
     private upload: ReFileUploadService, private os:ObjectStorageService
   ) {
-    console.log( "===>cargando dialog habilitante: " + JSON.stringify(this.data));
+/*     console.log( "===>cargando dialog habilitante: " + JSON.stringify(this.data));
     console.log("===>contraro relate referencia: " + this.data.referencia);
     console.log("===>contraro relate tipoDocumento: " + this.data.tipoDocumento);
     console.log("===>contraro relate proceso: " + this.data.proceso);
     console.log("===>contraro relate estadoOperacion: " +this.data.estadoOperacion);
-    console.log("===>contraro relate idhabilitante: " +this.data.documentoHabilitante);
+    console.log("===>contraro relate idhabilitante: " +this.data.documentoHabilitante); */
     this.upload.setParameter();
     this.os.setParameter();
   }
@@ -56,7 +56,7 @@ export class HabilitanteDialogComponent implements OnInit {
       let file = <File>event.target.files[0];
       let mimeType = file.type;
       let mimeSize = file.size;
-      if (mimeType.match('\.pdf') != null   || mimeType.match('\.png') != null) {
+      if (mimeType.match('\.pdf') != null   ||  mimeType.match('\.png') != null) {
         if (mimeSize < 500000) {
           reader.readAsDataURL(file);
           reader.onload = () => {
@@ -91,7 +91,7 @@ export class HabilitanteDialogComponent implements OnInit {
         this.dataUpload =null;
         this.uploadSubject.next(false);
         console.log("entra aqui")
-        this.sinNoticeService.setNotice("Formato no permitido. Ingrese un .PDF", 'error');
+        this.sinNoticeService.setNotice("Formato no permitido.", 'error');
       }
     } else {
       this.uploadSubject.next(false);

@@ -8,6 +8,8 @@ import { TbQoNegociacion } from '../../model/quski/TbQoNegociacion';
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ReNoticeService } from '../re-notice.service';
+import { TbQoTasacion } from '../../model/quski/TbQoTasacion';
+import { environment } from '../../../../../src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -98,4 +100,55 @@ export class NegociacionService extends BaseService {
       )
     );
   }
+
+  updateCliente(cliente: any) {
+    const serviceUrl = this.appResourcesUrl + 'clienteRestController/updateCliente';
+
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, cliente, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+  agregarJoya(joya: TbQoTasacion) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'agregarJoya';
+    this.params = new HttpParams().set('asesor',atob(localStorage.getItem(environment.userKey)));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, joya,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+
+
+  guardarOpcionCredito(selected: any[], idCredito) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'guardarOpcionCredito';
+    this.params = new HttpParams().set('asesor',atob(localStorage.getItem(environment.userKey)));
+    this.params = this.params.set('idCredito',idCredito);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, selected,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+
+  verPrecios(cliente) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'verPrecio';
+    this.params = new HttpParams().set('asesor',atob(localStorage.getItem(environment.userKey)));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, cliente,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+
+
 }

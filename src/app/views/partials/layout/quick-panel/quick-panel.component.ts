@@ -9,7 +9,6 @@ import { WebsocketUtilService } from '../../../../core/services/websocket-util.s
 import { environment } from '../../../../../environments/environment';
 import { ReNoticeService } from '../../../../core/services/re-notice.service';
 import { MatDialog } from '@angular/material';
-import { AuthDialogComponent } from '../../custom/auth-dialog/auth-dialog.component';
 
 @Component({
 	selector: 'kt-quick-panel',
@@ -94,20 +93,6 @@ export class QuickPanelComponent {
 				//console.log("AAAAAAAAAAAAAAA>pta " + JSON.stringify( data ) );
 				this.setData( data );
 			});
-		}, error=>{
-			if(  error.error ){
-				this.noticeService.setNotice(error.error.codError + ' - ' + error.error.msgError  , 'error');
-			} else if(  error.statusText && error.status==401 ){
-				
-				this.dialog.open(AuthDialogComponent, {
-					data: {
-						mensaje:"Error " + error.statusText + " - " + error.message
-					}
-				});
-				
-			} else {
-				this.noticeService.setNotice("Error al cargar las notificaciones o alertas", 'error');
-			}
 		});
 	}
 

@@ -120,11 +120,11 @@ export class HabilitanteComponent implements OnInit {
     public dialog: MatDialog  ) {
     //console.log("===========> entra en componente habilitantes");
     this.uploading = this.uploadSubject.asObservable();
-    console.log("cargando rol: " + this.rol);
+    /* console.log("cargando rol: " + this.rol);
     console.log("cargando proceso: " + this.proceso);
     console.log("cargando referencia: " + this.referencia);
     console.log("cargando estadoOperacion: " + this.estadoOperacion);
-    console.log("cargando tipoDocumento: " + this.tipoDocumento);
+    console.log("cargando tipoDocumento: " + this.tipoDocumento); */
     this.dh.setParameter();
     this.os.setParameter();
     this.procesoSubject.subscribe(()=>{
@@ -201,12 +201,12 @@ export class HabilitanteComponent implements OnInit {
   }
 
   submit() {
-    console.log("loadDocumentoHabilitante cargando rol: " + this.rol);
+    /* console.log("loadDocumentoHabilitante cargando rol: " + this.rol);
     console.log("loadDocumentoHabilitante cargando proceso: " + this.proceso);
     console.log("loadDocumentoHabilitante cargando referencia: " + this.referencia);
     console.log("loadDocumentoHabilitante cargando estadoOperacion: " + this.estadoOperacion);
     console.log("loadDocumentoHabilitante cargando tipoDocumento: " + this.tipoDocumento);
-    console.log("==>entra a documentos habilitantes loadDocumentoHabilitante");
+    console.log("==>entra a documentos habilitantes loadDocumentoHabilitante"); */
     //this.uploadSubject.next(false);
     this.dataSourcesHabilitantes = new MatTableDataSource<any>();
     this.dh.findByRolTipoDocumentoReferenciaProcesoEstadoOperacion(localStorage.getItem(environment.rolKey),this.tipoDocumento, this.referencia,
