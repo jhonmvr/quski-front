@@ -61,6 +61,7 @@ import { DialogoAprobarPagosComponent } from './gestion-credito/aprobar-pagos/di
 import { DialogoRechazarPagosComponent } from './gestion-credito/aprobar-pagos/dialogo-rechazar-pagos/dialogo-rechazar-pagos.component';
 import { DialogoAprobarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-aprobar-bloqueo-fondos/dialogo-aprobar-bloqueo-fondos.component';
 import { DialogoRechazarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos.component';
+import { DetalleCreditoComponent } from './detalle-credito/detalle-credito.component';
 
 
 
@@ -83,6 +84,10 @@ const routes: Routes = [
 			{
 				path: 'generar-credito/:id',
 				component: GenerarCreditoComponent
+			},
+			{
+				path: 'detalle-credito/:numeroOperacion',
+				component: DetalleCreditoComponent
 			},
 
 			{
@@ -132,7 +137,8 @@ const routes: Routes = [
 	  UploadFileComponent,
 	  DialogoRechazarPagosComponent,
 	  DialogoAprobarBloqueoFondosComponent,
-	  DialogoRechazarBloqueoFondosComponent
+	  DialogoRechazarBloqueoFondosComponent,
+	  DetalleCreditoComponent
 	],
   imports: [
 	CommonModule,
