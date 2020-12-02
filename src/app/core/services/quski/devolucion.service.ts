@@ -8,7 +8,7 @@ import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ReNoticeService } from '../re-notice.service';
 import { BusquedaDevolucionWrapper } from '../../model/quski/BusquedaDevolucionWrapper';
-import { RegistroFechaArribo } from '../../model/wrapper/registroFechaArribo';
+// import { RegistroFechaArribo } from '../../model/wrapper/registroFechaArribo';
 @Injectable({
   providedIn: 'root'
 })
@@ -98,7 +98,7 @@ export class DevolucionService extends BaseService {
     );
   }
 
-  public registrarFechaArribo(objeto: RegistroFechaArribo)
+  /* public registrarFechaArribo(objeto: RegistroFechaArribo)
   {
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/registrarFechaArribo";  
 
@@ -112,6 +112,6 @@ export class DevolucionService extends BaseService {
       )
     );
 
-  }
+  } */
 
 }

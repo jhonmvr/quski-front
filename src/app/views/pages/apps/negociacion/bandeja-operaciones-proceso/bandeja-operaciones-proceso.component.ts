@@ -2,9 +2,7 @@ import { ReasignarUsuarioComponent } from '../../../../partials/custom/popups/re
 import { OperacionesProcesoWrapper } from '../../../../../core/model/wrapper/OperacionesProcesoWrapper';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../../src/environments/environment';
-import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SubheaderService } from '../../../../../core/_base/layout';
 import { MatDialog, MatPaginator, MatTableDataSource } from '@angular/material';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
