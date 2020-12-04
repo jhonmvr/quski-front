@@ -51,6 +51,7 @@ import { VerCotizacionesComponent } from '../../../../views/partials/custom/popu
 import { BandejaOperacionesProcesoComponent } from './bandeja-operaciones-proceso/bandeja-operaciones-proceso.component';
 import { ListaExcepcionesComponent } from '../../../../views/partials/custom/popups/lista-excepciones/lista-excepciones.component';
 import { ReasignarUsuarioComponent } from '../../../../views/partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
+import { DetalleNegociacionComponent } from './detalle-negociacion/detalle-negociacion.component';
 
 const routes: Routes = [
 	{
@@ -66,8 +67,10 @@ const routes: Routes = [
 			},{
 				path: 'gestion-negociacion',
 				component: GestionNegociacionComponent
-			},
-			{
+			},{
+				path: 'detalle-negociacion/:id',
+				component: DetalleNegociacionComponent
+			},{
 				path: 'bandeja-operaciones',
 				component: BandejaOperacionesProcesoComponent
 			},
@@ -132,7 +135,8 @@ const routes: Routes = [
 	declarations: [
 		GestionNegociacionComponent,
 		NegociacionComponent,
-		BandejaOperacionesProcesoComponent
+		BandejaOperacionesProcesoComponent,
+		DetalleNegociacionComponent
 	],
 	entryComponents: [	
 		ErrorCargaInicialComponent,

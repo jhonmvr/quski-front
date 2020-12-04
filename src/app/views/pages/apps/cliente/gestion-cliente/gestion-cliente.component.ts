@@ -284,8 +284,14 @@ export class GestionClienteComponent implements OnInit {
       this.cargo.setValue(this.catCargo.find(x => x.codigo == this.wrapper.datosTrabajo.cargo));
       this.ocupacion.setValue(this.catOcupacion.find(x => x.codigo == this.wrapper.datosTrabajo.ocupacion));
       this.setRelacionDependencia();
-      this.actividadEconomicaMupi.setValue( this.catActividadEconomicaMupi.find(x => x.codigo == this.wrapper.datosTrabajo.actividadEconomicaMupi ));
-      this.actividadEconomicaEmpresa.setValue(this.catActividadEconomica.find(x => x.id.toString() == this.wrapper.datosTrabajo.actividadEconomica));
+      this.actividadEconomicaMupi.setValue( 
+        this.catActividadEconomicaMupi.find(x => x.codigo == this.wrapper.datosTrabajo.actividadEconomicaMupi) ? 
+          this.catActividadEconomicaMupi.find(x => x.codigo == this.wrapper.datosTrabajo.actividadEconomicaMupi) :
+            this.catActividadEconomicaMupi.find(x => x.esPorDefecto == true ) );
+      this.actividadEconomicaEmpresa.setValue(
+        this.catActividadEconomica.find(x => x.id.toString() == this.wrapper.datosTrabajo.actividadEconomica) ? 
+          this.catActividadEconomica.find(x => x.id.toString() == this.wrapper.datosTrabajo.actividadEconomica) : 
+            this.catActividadEconomica.find(x => x.esPorDefecto == true) );
     }
     if (this.wrapper.cliente.actividadEconomica) {
       this.actividadEconomica.setValue(this.catActividadEconomica.find(x => x.id.toString() == this.wrapper.cliente.actividadEconomica));

@@ -1,6 +1,7 @@
 import { HabilitanteDialogComponent } from '../../../../partials/custom/habilitante/habilitante-dialog/habilitante-dialog.component';
 import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { TablaAmortizacionComponent } from '../../../../partials/custom/popups/tabla-amortizacion/tabla-amortizacion.component';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { OperacionNuevoWrapper } from '../../../../../core/model/wrapper/OperacionNuevoWrapper';
@@ -465,12 +466,29 @@ export class GenerarCreditoComponent implements OnInit {
   }
   public solicitarAprobacion(){
     if(this.existeCredito){
-      this.pro.cambiarEstadoProceso(this.operacionNuevo.credito.tbQoNegociacion.id,"NUEVO","PENDIENTE_APROBACION").subscribe( (data: any) =>{
-        if(data.entidad){
-          console.log('El nuevo estado -> ',data.entidad.estadoProceso);
-          this.router.navigate(['negociacion/bandeja-operaciones']);
+      let mensaje = "Solicitar la aprobacion del credito: " + this.operacionNuevo.credito.codigo;
+      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        width: "800px",
+        height: "auto",
+        data: mensaje
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        this.loadingSubject.next(true);
+        if(r){
+          this.pro.cambiarEstadoProceso(this.operacionNuevo.credito.tbQoNegociacion.id,"NUEVO","PENDIENTE_APROBACION").subscribe( (data: any) =>{
+            if(data.entidad){
+              console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+              this.router.navigate(['negociacion/bandeja-operaciones']);
+            }
+          });
+        }else{
+          this.loadingSubject.next(false);
+          this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
         }
       });
     }
+  }
+  private cargarDocumento(){
+
   }
 }

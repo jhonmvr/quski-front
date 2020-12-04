@@ -6,7 +6,9 @@ import { AprobacionWrapper } from '../../../../../core/model/wrapper/AprobacionW
 import { CatalogosWrapper } from './../../../../../core/model/wrapper/CatalogosWrapper';
 import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
 import { ProcesoService } from './../../../../../core/services/quski/proceso.service';
+import { OperacionAprobar } from '../../../../../core/model/softbank/OperacioAprobar';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { DatosRegistro } from '../../../../../core/model/softbank/DatosRegistro';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
 import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
@@ -18,6 +20,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
 
+
 @Component({
   selector: 'app-aprobacion-credito-nuevo',
   templateUrl: './aprobacion-credito-nuevo.component.html',
@@ -27,6 +30,9 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   // VARIABLES PUBLICAS  
   public loading;
   public usuario: string;
+  public agencia: number;
+  public fechaActual: string;
+
   public loadingSubject = new BehaviorSubject<boolean>(false);
   public crediW: AprobacionWrapper;
   public catalogos: CatalogosWrapper;
@@ -267,6 +273,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.subheaderService.setTitle('Aprobación De Credito');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.agencia = 2;
+    this.traerFecha();
     this.traerCreditoNegociacion();
     this.formDisable.disable();
   }
@@ -300,6 +308,13 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
         });
       } else {
         this.sinNotSer.setNotice('ERROR AL CARGAR CREDITO', 'error');
+      }
+    });
+  }
+  private traerFecha(){
+    this.sof.getSystemDate().subscribe( (hora: any) =>{
+      if (hora.entidad) {
+        this.fechaActual = hora.entidad;
       }
     });
   }
@@ -444,14 +459,29 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         this.loadingSubject.next(true);
         if(r){
-          // DEVUELTO
-          this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id,"NUEVO","APROBADO").subscribe( (data: any) =>{
-            if(data.entidad){
-              console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+          let datos  = new DatosRegistro( this.fechaActual, this.usuario, this.agencia );
+          let wrapper: OperacionAprobar = new OperacionAprobar( this.crediW.credito.numeroOperacion, datos );
+          this.sof.operacionAprobarCS( wrapper ).subscribe( (data: any) =>{
+            if(!data.existeError){
+              this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id,"NUEVO","APROBADO").subscribe( (data: any) =>{
+                if(data.entidad){
+                  console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+                  this.loadingSubject.next(false);
+                  this.router.navigate(['aprobador']);  
+                }else{
+                  this.loadingSubject.next(false);
+                  this.sinNotSer.setNotice('ERROR INTERNO','error');
+                }
+              });
+            }else{
               this.loadingSubject.next(false);
-              this.router.navigate(['aprobador']);  
+              this.sinNotSer.setNotice('ERROR EN SOFTBANK','error');
             }
+          }, error =>{
+            this.loadingSubject.next(false);
+            this.sinNotSer.setNotice('ERROR EN SOFTBANK','error');
           });
+          
         }else{
           this.loadingSubject.next(false);
           this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');

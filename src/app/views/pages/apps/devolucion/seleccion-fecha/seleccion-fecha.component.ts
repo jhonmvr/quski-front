@@ -11,8 +11,8 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { AddFechaComponent } from '../../../../partials/custom/add-fecha/add-fecha.component';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
-import { RegistroFechaArribo } from '../../../../../core/model/wrapper/registroFechaArribo';
-
+/* import { RegistroFechaArribo } from '../../../../../core/model/wrapper/registroFechaArribo';
+ */
 @Component({
   selector: 'kt-seleccion-fecha',
   templateUrl: './seleccion-fecha.component.html',
@@ -197,7 +197,7 @@ export class SeleccionFechaComponent implements OnInit {
     
   
 
-    dialogRef.afterClosed().subscribe((resultado) => {
+    /* dialogRef.afterClosed().subscribe((resultado) => {
       if (resultado) {
         console.log(resultado)
         let listIdDevolucion =[];
@@ -224,7 +224,7 @@ export class SeleccionFechaComponent implements OnInit {
 
       }
 
-    });
+    }); */
   }else {
     console.log("esta mandando vacio")
   }
