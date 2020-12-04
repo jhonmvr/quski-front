@@ -28,6 +28,8 @@ export class TbQoDevolucion {
     genero: string;
     nombreAgenciaSolicitud : string;
     agenciaEntregaId: number;
+    pesoBruto: number;
+    valorAvaluo: number;
 
     constructor(){
         

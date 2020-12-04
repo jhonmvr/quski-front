@@ -13,12 +13,12 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 
 @Component({
-  selector: 'kt-entrega-recepcion',
-  templateUrl: './entrega-recepcion.component.html',
-  styleUrls: ['./entrega-recepcion.component.scss']
+  selector: 'kt-aprobacion-cancelacion',
+  templateUrl: './aprobacion-cancelacion.component.html',
+  styleUrls: ['./aprobacion-cancelacion.component.scss']
 })
-export class EntregaRecepcionComponent implements OnInit{
-  public formCancelacion: FormGroup = new FormGroup({});
+export class AprobacionCancelacionComponent  implements OnInit{
+  public formCreditoNuevo: FormGroup = new FormGroup({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
   // datos operacion
   public codigoOperacion = new FormControl('');
@@ -101,19 +101,8 @@ joyasList  = []
 objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIyMDIwLTEwLTEyIiwKICAgICJmZWNoYVZlbmNpbWllbnRvIjogIjIwMjAtMTEtMTAiLAogICAgIm1vbnRvRmluYW5jaWFkbyI6ICI3MDAiLAogICAgImFzZXNvciI6ICJKdWFuaXRvIiwKICAgICJlc3RhZG9PcGVyYWNpb24iOiAgIkNBTkNFTEFETyIsCiAgICAidGlwb0NyZWRpdG8iOiAiIiwKICAgICJjb2RpZ29UYWJsYUFtb3J0aXphY2lvblF1c2tpIjoiQTAxIiwKICAgICJpbXBhZ28iOiAibm8iLAogICAgInJldGFucXVlbyI6ICJubyIsCiAgICAiY29iZXJ0dXJhSW5pY2lhbCI6ICIxMjAwIiwKICAgICJjb2JlcnR1cmFBY3R1YWwiOiAiMTEwMCIsCiAgICAiYmxvcXVlbyI6IiIsCiAgICAiZGlhc01vcmEiOiAiIiwKICAgICJlc3RhZG9VYmljYWNpb24iOiIiLAogICAgImVzdGFkb1Byb2Nlc28iOiIiLAogICAgImNvZGlnb1NlcnZpY2lvIjoiIiwKICAgICJtaWdyYWRvIjogIiIKCn0='
 datos
   // VARIABLES DE TRACKING
-  public horaAsignacionCreacion: Date = null;
-  public horaInicioCreacion: Date;
-  public horaAtencionCreacion: Date;
-  public horaFinalCreacion: Date = null;
-  public procesoCreacion: string;
-  public horaInicioDocumentosLegales: Date;
-  public horaAsignacionDocumentosLegales: Date;
-  public horaAtencionDocumentosLegales: Date;
-  public horaFinalDocumentosLegales: Date;
-  public actividad: string;
-  public procesoDocumentosLegales: string;
-  public catalago
-
+  disableAprobacionCancelacionButton;
+  disableAprobacionCancelacion = new BehaviorSubject<boolean>(false);
 
  @ViewChild('paginator', { static: true })  paginator: MatPaginator;
  @ViewChild( 'stepper', { static: true })  stepper: MatStepper;
@@ -142,25 +131,14 @@ datos
     this.enableHerederoButton = this.enableHeredero.asObservable();
     this.enableHeredero.next(false);
     this.setFechaSistema();
-    
+    this.disableAprobacionCancelacionButton = this.disableAprobacionCancelacion.asObservable();
+    this.disableAprobacionCancelacion.next(true);
     this.datos = this.decodeObjetoDatos(this.objetoDatos);
-  
-    this.consultarEstadosCivilesCS();
-    this.consultarEducacionCS();
-    this.consultaGeneroCS();
-    this.consultarLugaresCS();
-    this.consultarPaisCS();
-    this.consultarTipoCliente();
-    this.consultarAgencia();
     this.getParametros();
     this.cargarDatos();
     console.log("el encode", )
     console.log(typeof(this.catalagoEstadosCiviles))
     console.log( this.catalagoEstadosCiviles)
-
-   
-   
-    
   }
 
   
@@ -206,6 +184,7 @@ datos
         this.observaciones.setValue(data.entidad.observaciones)
         this.tipoCliente.setValue(data.entidad.tipoCliente)
         this.agenciaEntrega.setValue(data.entidad.agenciaEntrega)
+        this.genero.setValue(data.entidad.genero)
         this.validateHeredero();
         this.valorCustodia.setValue(data.entidad.valorCustodiaAprox)
         this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
@@ -214,6 +193,7 @@ datos
         this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
         this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)
         this.dataSourceHeredero=new MatTableDataSource<any>(this.listTablaHeredero);
+        this.validarReversoPerfeccionamiento();
       }
     })
   
@@ -242,6 +222,11 @@ datos
     );
   }
 
+  
+
+   
+
+
 setFechaSistema(){
   this.cns.getSystemDate().subscribe((fechaSistema: any) => {
    this.fechaServer = new Date( fechaSistema.entidad);
@@ -254,12 +239,6 @@ getEdad(fechaValue){
   return this.fechaUtil.obtenerDias()/365
  }
 
-
-
-
-
-
- 
 
 /*
 calcular(){
@@ -297,100 +276,6 @@ calcular(){
 
 /* ----------TRACKING-------*/
 
-
-
-
-consultaGeneroCS(){
-  this.css.consultarGeneroCS().subscribe((data:any)=>{
-    //console.log("me trajo data de catalogos de GENERO ----->" + JSON.stringify(data))
-    if (!data.existeError) {
-
-      //this.listNombreGenero = data.catalogo;
-      console.log(" GENERO -----> " , data )
-      this.catalogoGenero=data.catalogo
-
-    } else {
-      //console.log("No me trajo data de catalogos de GENERO ----->" + JSON.stringify(data));
-    } error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.setmsgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-      }
-    }
-  });
-}
-
-consultarEstadosCivilesCS(){
-  this.css.consultarEstadosCivilesCS().subscribe((data: any)=> {
-    //console.log("Consulta de catalogos de estado civil ----->" + JSON.stringify(data));
-    if (!data.existeError) {
-      //this.listNombreEstadoCivil = data.catalogo;
-      console.log(data)
-      this.catalagoEstadosCiviles = data.catalogo
-      
-      
-    } else {
-      //console.log("No me trajo data de catalogos de ESTADO CIVIL ----->" + JSON.stringify(data));
-    } error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.setmsgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-      }
-    }
-  });
-}
-consultarEducacionCS(){
-  this.css.consultarEducacionCS().subscribe((data:any)=> {
-    if(!data.existeError){
-      this.catalogoEducacion = data.catalogo
-    }
-  })
-}
-
-consultarPaisCS(){
-  this.css.consultarPaisCS().subscribe((data:any)=> {
-    if(!data.existeError){
-      console.log(data)
-      this.catalogoPais = data.catalogo
-    }
-  })
-}
-
-consultarLugaresCS(){
-  
-    this.css.consultarDivicionPoliticaConsolidadaCS().subscribe((data:any)=>{
-      if(!data.existeError){
-        console.log(data)
-        this.catalogoLugarNacimiento = data.divisionPoliticaConsolidado
-      }
-    })
-
-}
-
-
-consultarTipoCliente(){
-  this.css.consultarTipoClienteCS().subscribe((data:any)=>{
-    if(!data.existeError){
-      console.log(data)
-      this.catalogoTipoCliente = data.catalogo
-    }
-  })
-}
-
-
-consultarAgencia(){
-  this.css.consultarAgenciasCS().subscribe((data:any)=>{
-    if(!data.existeError){
-      console.log(data)
-      this.catalogoAgencia = data.catalogo
-    }
-  })
-}
-
 validateHeredero(){
   if (this.tipoCliente.value.toUpperCase()==="HEREDERO" ){
     this.enableHeredero.next(true)
@@ -401,22 +286,63 @@ validateHeredero(){
 }
 }
 
-aprobar(){
-  this.devService.aprobarDevolucion(this.idDevolucion).subscribe((data:any)=> {
-    
-    console.log(data.entidad)
-  }, error => {
-    this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
+
+aprobarCancelacionSolicitud(){
+  this.devService.aprobacionCancelacionSolicitud(this.idDevolucion).subscribe((data:any)=>{
+    if(data.entidad){
+      this.sinNoticeService.setNotice("Se ha aprobado la cancelacion", "success")
+      this.disableAprobacionCancelacion.next(false);
+      console.log("Exito")
+
+    }else{
+      this.sinNoticeService.setNotice("Error al registrar", "error")
+    }
+
   })
 }
 
-rechazar(){
-  this.devService.aprobarDevolucion(this.idDevolucion).subscribe((data:any)=> {
-    
-    console.log(data.entidad)
-  }, error => {
-    this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
+
+rechazarCancelacionSolicitud(){
+  this.devService.rechazarCancelacionSolicitud(this.idDevolucion).subscribe((data:any)=>{
+    if(data.entidad){
+      this.sinNoticeService.setNotice("Se ha rechazado la cancelacion", "success")
+      this.disableAprobacionCancelacion.next(false);
+      console.log("Exito")
+
+    }else{
+      this.sinNoticeService.setNotice("Error al registrar", "error")
+    }
+
   })
 }
+
+validarReversoPerfeccionamiento(){
+  //console.log("Ver reversar local"+localStorage.getItem('re1001'))
+  this.devService.validarAprobarCancelacionSolicitud(this.idDevolucion).subscribe((data:any)=>{
+   
+  if(data && data.entidad === true){
+    
+        this.disableAprobacionCancelacion.next(true);
+      
+       
+        //console.log("deberia verse")
+      }
+  else{
+  this.disableAprobacionCancelacion.next(false);
+  this.sinNoticeService.setNotice("La solicitud no posee los estados necesarios", "error")
+  //console.log("aqui no deber[ia entrar")
+      }
+    },()=>{
+      this.disableAprobacionCancelacion.next(false);
+
+      //console.log("peor aqui")
+    });
+   
+   
+  
+}
+
+
+
 
 } 

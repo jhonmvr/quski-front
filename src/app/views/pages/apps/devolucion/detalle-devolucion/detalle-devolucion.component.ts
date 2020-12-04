@@ -13,12 +13,12 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 
 @Component({
-  selector: 'kt-entrega-recepcion',
-  templateUrl: './entrega-recepcion.component.html',
-  styleUrls: ['./entrega-recepcion.component.scss']
+  selector: 'kt-detalle-devolucion',
+  templateUrl: './detalle-devolucion.component.html',
+  styleUrls: ['./detalle-devolucion.component.scss']
 })
-export class EntregaRecepcionComponent implements OnInit{
-  public formCancelacion: FormGroup = new FormGroup({});
+export class DetalleDevolucionComponent implements OnInit{
+  public formCreditoNuevo: FormGroup = new FormGroup({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
   // datos operacion
   public codigoOperacion = new FormControl('');
@@ -144,14 +144,7 @@ datos
     this.setFechaSistema();
     
     this.datos = this.decodeObjetoDatos(this.objetoDatos);
-  
-    this.consultarEstadosCivilesCS();
-    this.consultarEducacionCS();
-    this.consultaGeneroCS();
-    this.consultarLugaresCS();
-    this.consultarPaisCS();
-    this.consultarTipoCliente();
-    this.consultarAgencia();
+
     this.getParametros();
     this.cargarDatos();
     console.log("el encode", )
@@ -206,6 +199,7 @@ datos
         this.observaciones.setValue(data.entidad.observaciones)
         this.tipoCliente.setValue(data.entidad.tipoCliente)
         this.agenciaEntrega.setValue(data.entidad.agenciaEntrega)
+        this.genero.setValue(data.entidad.genero)
         this.validateHeredero();
         this.valorCustodia.setValue(data.entidad.valorCustodiaAprox)
         this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
@@ -241,6 +235,11 @@ datos
       }
     );
   }
+
+  
+
+   
+
 
 setFechaSistema(){
   this.cns.getSystemDate().subscribe((fechaSistema: any) => {
@@ -299,50 +298,6 @@ calcular(){
 
 
 
-
-consultaGeneroCS(){
-  this.css.consultarGeneroCS().subscribe((data:any)=>{
-    //console.log("me trajo data de catalogos de GENERO ----->" + JSON.stringify(data))
-    if (!data.existeError) {
-
-      //this.listNombreGenero = data.catalogo;
-      console.log(" GENERO -----> " , data )
-      this.catalogoGenero=data.catalogo
-
-    } else {
-      //console.log("No me trajo data de catalogos de GENERO ----->" + JSON.stringify(data));
-    } error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.setmsgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-      }
-    }
-  });
-}
-
-consultarEstadosCivilesCS(){
-  this.css.consultarEstadosCivilesCS().subscribe((data: any)=> {
-    //console.log("Consulta de catalogos de estado civil ----->" + JSON.stringify(data));
-    if (!data.existeError) {
-      //this.listNombreEstadoCivil = data.catalogo;
-      console.log(data)
-      this.catalagoEstadosCiviles = data.catalogo
-      
-      
-    } else {
-      //console.log("No me trajo data de catalogos de ESTADO CIVIL ----->" + JSON.stringify(data));
-    } error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.setmsgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-      }
-    }
-  });
-}
 consultarEducacionCS(){
   this.css.consultarEducacionCS().subscribe((data:any)=> {
     if(!data.existeError){
@@ -360,36 +315,7 @@ consultarPaisCS(){
   })
 }
 
-consultarLugaresCS(){
-  
-    this.css.consultarDivicionPoliticaConsolidadaCS().subscribe((data:any)=>{
-      if(!data.existeError){
-        console.log(data)
-        this.catalogoLugarNacimiento = data.divisionPoliticaConsolidado
-      }
-    })
 
-}
-
-
-consultarTipoCliente(){
-  this.css.consultarTipoClienteCS().subscribe((data:any)=>{
-    if(!data.existeError){
-      console.log(data)
-      this.catalogoTipoCliente = data.catalogo
-    }
-  })
-}
-
-
-consultarAgencia(){
-  this.css.consultarAgenciasCS().subscribe((data:any)=>{
-    if(!data.existeError){
-      console.log(data)
-      this.catalogoAgencia = data.catalogo
-    }
-  })
-}
 
 validateHeredero(){
   if (this.tipoCliente.value.toUpperCase()==="HEREDERO" ){
@@ -401,22 +327,6 @@ validateHeredero(){
 }
 }
 
-aprobar(){
-  this.devService.aprobarDevolucion(this.idDevolucion).subscribe((data:any)=> {
-    
-    console.log(data.entidad)
-  }, error => {
-    this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
-  })
-}
 
-rechazar(){
-  this.devService.aprobarDevolucion(this.idDevolucion).subscribe((data:any)=> {
-    
-    console.log(data.entidad)
-  }, error => {
-    this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
-  })
-}
 
 } 

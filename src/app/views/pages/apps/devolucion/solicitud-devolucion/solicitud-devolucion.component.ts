@@ -28,7 +28,7 @@ export class SolicitudDevolucionComponent implements OnInit{
   public procesoDev = new FormControl('');
 
 
-  proceso= "CREDITONUEVO"
+  proceso= "DEVOLUCION"
  //datos cliente
  public cedulaCliente = new FormControl('');
  public nombresCompletos = new FormControl('');
@@ -145,7 +145,9 @@ datos
   public actividad: string;
   public procesoDocumentosLegales: string;
   public catalago
-
+  totalPesoNeto
+  totalPesoBruto
+  totalValorAvaluo 
 
  @ViewChild('paginator', { static: true })  paginator: MatPaginator;
  @ViewChild( 'stepper', { static: true })  stepper: MatStepper;
@@ -305,6 +307,7 @@ datos
   }
 
   registrarDevolucion(){
+    this.calcular()
     let tbQoDevolucion = new TbQoDevolucion()
     tbQoDevolucion.codigo =  "";
     tbQoDevolucion.asesor = "Asesor quemado"
@@ -333,7 +336,8 @@ datos
     tbQoDevolucion.codeHerederos = this.encodeObjetos(this.listTablaHeredero)
     tbQoDevolucion.codeDetalleCredito = this.encodeObjetos(this.objetoCredito)
     tbQoDevolucion.codeDetalleGarantia = this.encodeObjetos(this.joyasList)
-    
+    tbQoDevolucion.pesoBruto = this.totalPesoBruto
+    tbQoDevolucion.valorAvaluo = this.totalValorAvaluo
     this.devService.registrarDevolucion(tbQoDevolucion, "juan").subscribe((data:any)=>{
       if(data.entidad){
         this.sinNoticeService.setNotice(
@@ -379,43 +383,29 @@ getEdad(fechaValue){
 
  
 
-/*
+
 calcular(){
 
-  this.totalPesoN =0;
-  this.totalPesoB =0;
-  this.totalPBFunda = 0
-  this.totalValorR = 0
-  this.totalValorA = 0
-  this.totalValorC = 0
-  this.totalNumeroJoya = 0
+  this.totalPesoNeto =0;
+  this.totalPesoBruto =0;
+  
+  this.totalValorAvaluo = 0
+ 
   let ind = 0;
-  if (this.dataSource.data) {
+  if (this.dataSourceJoyas.data) {
     //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
-    this.list=[];
-    this.dataSource.data.forEach(element => {
-      
-      ind = ind + 1;
-      this.list.push(ind);
-      
     
-    this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-    this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
-    
-    this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
-    this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
-    this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
-    this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas)
+    this.joyasList.forEach(element => {
+    this.totalPesoNeto = Number(this.totalPesoNeto) + Number(element.pesoNeto);
+    this.totalPesoBruto = Number(this.totalPesoBruto) + Number(element.pesoBruto);
+    this.totalValorAvaluo = Number(this.totalValorAvaluo) + Number(element.valorAvaluo);
     });
     
   }
 }
 
-*/
 
 /* ----------TRACKING-------*/
-
-
 
 
 consultaGeneroCS(){

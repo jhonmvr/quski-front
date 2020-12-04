@@ -3,7 +3,7 @@
 </div>
 
 <re-portlet>
-    <re-portlet-header [title]="'SELECCION DE FECHA DE ARRIBO '" [class]="'kt-portlet__head--lg'">
+    <re-portlet-header [title]="'PENDIENTE DE ARRIBO'" [class]="'kt-portlet__head--lg'">
         
 		<ng-container ktPortletTools>
            
@@ -19,13 +19,13 @@
                    
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="codigoOperacion" placeholder="Codigo Operacion " autocomplete="off">
+                            <input matInput [formControl]="codigoOperacion" placeholder="Código Operación " autocomplete="off">
                         </mat-form-field>
                       
                     </div>
                     <a href="javascript:void(0);" (click)="buscar()" matTooltip="Buscar" style="font-size: 12px; vertical-align: middle;">
                         <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above" >search</mat-icon>
-                        <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar credito</span>
+                        <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar</span>
                     </a>
                  
                 </div>
@@ -39,69 +39,65 @@
         <div class="mat-table__wrapper">
             <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
             matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
-                <ng-container matColumnDef="accion">
-                    <mat-header-cell *matHeaderCellDef>
-                        Accion
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let row">
-                        <a href="javascript:void(0);" [routerLink]="['../gestion-cliente', row.id]" color="primary" [ngClass]="['primary']">
-                            <mat-icon style="font-size: 16px;" class="green-icon"   matTooltipPosition="above" matTooltip="Editar cliente">remove_red_eye
-                            </mat-icon>
-                        </a>
-                    </mat-cell>
-                </ng-container>
+            <ng-container matColumnDef="accion">
+                <mat-header-cell *matHeaderCellDef>
+                    Acción
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" style="text-align: center !important;">
+                    <mat-checkbox [checked]="isCheck(row)" (click)="$event.stopPropagation() 
+                    && addRemove(row)" (change)="$event ? selection.toggle(row) : null">
+                    </mat-checkbox>
+                </mat-cell>
+            </ng-container>
                 <ng-container matColumnDef="fechaSolicitud">
                 <mat-header-cell *matHeaderCellDef>Fecha de la Solicitud</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.cliente}}</mat-cell>
+                <mat-cell *matCellDef="let element"> {{element.fechaSolicitud}}</mat-cell>
             </ng-container>
-                <ng-container matColumnDef="agenciaSolicitud">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Agencia de solicitud</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.nivelEducacion}} </mat-cell>
-                </ng-container>               
+                           
                 <ng-container matColumnDef="codigoOperacionMadre">
-                    <mat-header-cell *matHeaderCellDef>Codigo de operacion</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.estadoCivil}} </mat-cell>
+                    <mat-header-cell *matHeaderCellDef>Código de operacion Madre</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.codigoOperacionMadre}} </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="codigoOperacion">
-                    <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                    <mat-header-cell *matHeaderCellDef>Código Operacion</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.codigoOperacion}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="nombreCliente">
                 <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.nombreCliente}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="identificacion">
-                <mat-header-cell *matHeaderCellDef>Identificacion</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                <mat-header-cell *matHeaderCellDef>Identificación</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.cedulaCliente}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="fundaMadre">
                 <mat-header-cell *matHeaderCellDef>Funda Madre</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.fundaMadre}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="fundaActual">
                     <mat-header-cell *matHeaderCellDef>Funda Actual</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+                    <mat-cell *matCellDef="let element">{{element.fundaActual}} </mat-cell>
                 </ng-container>
             <ng-container matColumnDef="ciudadTevcol">
                     <mat-header-cell *matHeaderCellDef>Ciudad Tevcol</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.codigoAmortizacion}} </mat-cell>
+                    <mat-cell *matCellDef="let element">{{element.ciudadTevcol}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="fechaArriboAgencia">
                 <mat-header-cell *matHeaderCellDef>Fecha Arribo Agencia</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaArriboAgencia}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="fechaAprobacion">
-                <mat-header-cell *matHeaderCellDef>Fecha de Aprobacion</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+                <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaAprobacion}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="valorAvaluo">
-                <mat-header-cell *matHeaderCellDef>Valor Avaluo</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+                <mat-header-cell *matHeaderCellDef>Valor Avalúo</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.valorAvaluao | number: '1.2'}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="pesoBruto">
                 <mat-header-cell *matHeaderCellDef>Peso Bruto</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.edad}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.pesoBruto | number: '1.2'}} </mat-cell>
             </ng-container>
       
             
@@ -113,6 +109,12 @@
             </mat-paginator>
             
         </div>
+
+        <a href="javascript:void(0);" (click)="confirmarArribo()" matTooltip="Confirmar Arribo"
+        style="font-size: 12px; vertical-align: middle;">
+        <mat-icon style="font-size: 32px" matTooltipPosition="above">move_to_inbox</mat-icon>
+        <span style="position: relative;top: -10px;margin-left: 5px;">Confirmar arribo</span>
+        </a>
         <!--end MAT TABLE-->
 
     </re-portlet-body>    

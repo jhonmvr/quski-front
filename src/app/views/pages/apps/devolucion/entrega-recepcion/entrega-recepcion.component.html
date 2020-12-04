@@ -1,5 +1,5 @@
 <re-portlet>
-    <re-portlet-header [title]="'Generar Credito'" [class]="'kt-portlet__head--lg'">
+    <re-portlet-header [title]="'Entrega Recepcion'" [class]="'kt-portlet__head--lg'">
 
 
     </re-portlet-header>
@@ -382,18 +382,15 @@
 
            
             <mat-step label = "Documento Habilitantes">
-             <re-habilitante [proceso]="proceso" [useType]="'FORM'" [referencia]="'2'" [rol]="'1'">
+             <re-habilitante [proceso]="'DEVOLUCION'" [estadoOperacion]="'ARRIBO'" [useType]="'FORM'" [tipoDocumento]="'9'"
+              [referencia]="idDevolucion" [rol]="'1'">
                 </re-habilitante> 
               
                 
             </mat-step>
            
         </mat-vertical-stepper>
-        <div>
-            <button mat-button  (click)="aprobar()">Aprobar</button>
-            <button mat-button  (click)="rechazar()">Rechazar</button>
-        </div>
-
+   
 	</re-portlet-body>
 
 </re-portlet>

@@ -240,9 +240,6 @@ datos
 
   
 
-   
-
-
 setFechaSistema(){
   this.cns.getSystemDate().subscribe((fechaSistema: any) => {
    this.fechaServer = new Date( fechaSistema.entidad);
@@ -254,13 +251,6 @@ getEdad(fechaValue){
   this.fechaUtil = new diferenciaEnDias(new Date(fechaValue),new Date( this.fechaServer) )
   return this.fechaUtil.obtenerDias()/365
  }
-
-
-
-
-
-
- 
 
 /*
 calcular(){
