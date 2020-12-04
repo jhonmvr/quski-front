@@ -488,4 +488,7 @@ export class GenerarCreditoComponent implements OnInit {
       });
     }
   }
+  private cargarDocumento(){
+
+  }
 }
