@@ -758,15 +758,16 @@ export class GestionNegociacionComponent implements OnInit {
   /**
    * calcularOpciones
    */
-  public calcularOpciones() {
+  public calcularOpciones(montoSolicitado) {
     if (this.dataSourceTasacion.data.length > 0) {
-     
-      this.cal.simularOferta(this.negoW.credito.id).subscribe((data: any) => {
+      
+      this.cal.simularOferta(this.negoW.credito.id,montoSolicitado).subscribe((data: any) => {
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
           this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
+        this.myStepper.selectedIndex = 6;
       });
 
     } else {

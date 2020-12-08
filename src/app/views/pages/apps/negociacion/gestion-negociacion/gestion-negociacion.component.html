@@ -595,7 +595,7 @@
 							</mat-form-field>
 						</div>
 						<div class="col-md-2">
-							<button mat-stroked-button color="primary" matTooltip="Recalcula las opciones con el monto solicitado" matTooltipPosition="above">
+							<button mat-stroked-button color="primary" (click)="calcularOpciones(this.montoSolicitado.value)"  matTooltip="Recalcula las opciones con el monto solicitado" matTooltipPosition="above">
 								<mat-icon style="font-size: 24px;" color="primary" >crop_rotate 
 								</mat-icon>
 								<span color="primary">Aplicar Monto</span>
