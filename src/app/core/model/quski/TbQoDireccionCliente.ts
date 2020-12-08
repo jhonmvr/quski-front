@@ -8,6 +8,7 @@ export class TbQoDireccionCliente {
     direccionEnvioCorrespondencia: Boolean;
     direccionLegal: Boolean;
     numeracion: string;
+    estado: string;
     referenciaUbicacion : string ;
     sector : string ;
     divisionPolitica: string;

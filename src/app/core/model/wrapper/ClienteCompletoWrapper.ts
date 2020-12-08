@@ -10,7 +10,7 @@ export class ClienteCompletoWrapper{
     direcciones : Array<TbQoDireccionCliente> ;
     referencias : Array<TbReferencia> ;
     telefonos : Array<TbQoTelefonoCliente> ;
-    datosTrabajo : TbQoDatoTrabajoCliente;
+    datosTrabajos : Array<TbQoDatoTrabajoCliente>;
     cuentas : Array<TbQoCuentaBancariaCliente> ;
     isSoftbank: boolean;
     constructor( ){
