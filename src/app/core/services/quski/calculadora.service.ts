@@ -26,7 +26,9 @@ export class CalculadoraService extends BaseService {
     const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOferta';
    this.params = new HttpParams();
    this.params = this.params.set('idCredito',idCredito);
-   this.params = this.params.set('montoSolicitado',montoSolicitado);
+   if(montoSolicitado != undefined){
+    this.params = this.params.set('montoSolicitado',montoSolicitado);
+   }
    this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

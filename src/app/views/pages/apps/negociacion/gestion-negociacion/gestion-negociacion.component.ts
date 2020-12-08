@@ -760,14 +760,17 @@ export class GestionNegociacionComponent implements OnInit {
    */
   public calcularOpciones(montoSolicitado) {
     if (this.dataSourceTasacion.data.length > 0) {
-      
+      this.loadingSubject.next(true);
       this.cal.simularOferta(this.negoW.credito.id,montoSolicitado).subscribe((data: any) => {
+        this.loadingSubject.next(false);
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
           this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
         this.myStepper.selectedIndex = 6;
+      },err=>{
+        this.loadingSubject.next(false);
       });
 
     } else {

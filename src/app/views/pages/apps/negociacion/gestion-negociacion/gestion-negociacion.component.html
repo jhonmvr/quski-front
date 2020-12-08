@@ -203,52 +203,6 @@
 					<div class="row">
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
-								<mat-select placeholder="Tiene priedras:" [formControl]="tienePiedras" (selectionChange)="selectTienePiedras()">
-									<mat-option value="S">SI</mat-option>
-									<mat-option value="N">NO</mat-option>
-								</mat-select>
-								<mat-error>{{ getErrorMessage('tienePiedras')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-8" *ngIf="tienePiedras.value == 'S'">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput numeric numericType="number" type="text"
-									placeholder="Detalle piedras:" [formControl]="detallePiedras">
-								<mat-error>{{ getErrorMessage('detallePiedras')  }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Peso bruto:" [formControl]="pesoBruto" (keyup)="setPesoNeto()">
-								<mat-error>{{ getErrorMessage('pesoBruto')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Descuento suelda:" [formControl]="descuentoSuelda" (keyup)="setPesoNeto()">
-								<mat-error>{{getErrorMessage('descuentoSuelda')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid" *ngIf="tienePiedras.value == 'S'">
-								<input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra" (keyup)="setPesoNeto()">
-								<mat-error>{{ getErrorMessage('descuentoPiedra') }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
-								<mat-error>{{ getErrorMessage('pesoNeto')  }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
 								<mat-select placeholder="Tipo de joya:" [formControl]="tipoJoya">
 									<mat-option>--</mat-option>
 									<mat-option *ngFor="let tipoJoya of catTipoJoya" [value]="tipoJoya">
@@ -291,6 +245,56 @@
 							</mat-form-field>
 						</div> -->
 					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Peso bruto:" [formControl]="pesoBruto" (keyup)="setPesoNeto()">
+								<mat-error>{{ getErrorMessage('pesoBruto')  }}</mat-error>
+							</mat-form-field>
+						</div>
+						
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Descuento suelda:" [formControl]="descuentoSuelda" (keyup)="setPesoNeto()">
+								<mat-error>{{getErrorMessage('descuentoSuelda')  }}</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+					<div class="row">
+						
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<mat-select placeholder="Tiene priedras:" [formControl]="tienePiedras" (selectionChange)="selectTienePiedras()">
+									<mat-option value="S">SI</mat-option>
+									<mat-option value="N">NO</mat-option>
+								</mat-select>
+								<mat-error>{{ getErrorMessage('tienePiedras')  }}</mat-error>
+							</mat-form-field>
+						</div>
+						
+						<div class="col-md-4" *ngIf="tienePiedras.value == 'S'">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput numeric numericType="number" type="text"
+									placeholder="Detalle piedras:" [formControl]="detallePiedras">
+								<mat-error>{{ getErrorMessage('detallePiedras')  }}</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid" *ngIf="tienePiedras.value == 'S'">
+								<input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra" (keyup)="setPesoNeto()">
+								<mat-error>{{ getErrorMessage('descuentoPiedra') }}</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
+								<mat-error>{{ getErrorMessage('pesoNeto')  }}</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+		
 					<div class="row">
 						<mat-form-field class="col-md-12">
 							<textarea class="form-control border" [formControl]="descripcion" rows="5"
