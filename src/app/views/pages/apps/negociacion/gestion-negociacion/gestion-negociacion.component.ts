@@ -412,9 +412,10 @@ export class GestionNegociacionComponent implements OnInit {
   
     
     this.email.setValue(this.tbQoCliente.email);
-    this.campania.setValue(this.tbQoCliente.campania );
-    this.publicidad.setValue (this.tbQoCliente.publicidad );
-    this.aprobacionMupi.setValue(this.tbQoCliente.aprobacionMupi ? this.tbQoCliente.aprobacionMupi == 'SI' ? 'S' : 'N'  : null );
+    this.campania.setValue('');
+    this.publicidad.setValue ('');
+    //this.aprobacionMupi.setValue(this.tbQoCliente.aprobacionMupi ? this.tbQoCliente.aprobacionMupi == 'SI' ? 'S' : 'N'  : null );
+    this.aprobacionMupi.setValue('');
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
     if(wrapper.joyas != null){
@@ -671,12 +672,15 @@ export class GestionNegociacionComponent implements OnInit {
     }
   }
   cargarJoya() {
+    console.log('formulario tasacion ===>>>',this.formTasacion)
     if (this.formTasacion.invalid) {
       this.sinNotSer.setNotice('COMPLETE CORRECTAMENTE EL FORMULARIO', 'warning');
+      return;
     }
 
-    if(!this.negoW.credito.id){
+    if( this.negoW == null || !this.negoW.credito || !this.negoW.credito.id){
       this.sinNotSer.setNotice('COMPLETE CORRECTAMENTE LA INFORMACION DEL CLIENTE', 'warning');
+      return;
     }
       //this.loadingSubject.next(true);
       let joya = new TbQoTasacion();
@@ -897,8 +901,10 @@ export class GestionNegociacionComponent implements OnInit {
   selectTienePiedras(){
     if(this.tienePiedras.value =='S'){
       this.formTasacion.addControl("detallePiedras", this.detallePiedras);
+      this.formTasacion.addControl("descuentoPiedra", this.descuentoPiedra);
     }else{
       this.formTasacion.removeControl("detallePiedras");
+      this.formTasacion.removeControl("descuentoPiedra");
     }
   }
 
@@ -911,7 +917,8 @@ export class GestionNegociacionComponent implements OnInit {
 
 setPesoNeto(){
   try{
-    this.pesoNeto.setValue((Number(this.pesoBruto.value) - (Number(this.descuentoSuelda.value)+ Number (this.descuentoPiedra.value))))
+    let v = (Number(this.pesoBruto.value) - (Number(this.descuentoSuelda.value)+ Number (this.descuentoPiedra.value)))
+    this.pesoNeto.setValue(v.toFixed(2));
   }catch{
     this.pesoNeto.setValue('0');
   }

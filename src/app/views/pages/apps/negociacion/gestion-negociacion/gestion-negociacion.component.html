@@ -199,18 +199,30 @@
 								<mat-error>{{ getErrorMessage('numeroPiezas')  }}</mat-error>
 							</mat-form-field>
 						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<mat-select placeholder="Tiene priedras:" [formControl]="tienePiedras" (selectionChange)="selectTienePiedras()">
+									<mat-option value="S">SI</mat-option>
+									<mat-option value="N">NO</mat-option>
+								</mat-select>
+								<mat-error>{{ getErrorMessage('tienePiedras')  }}</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-8" *ngIf="tienePiedras.value == 'S'">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput numeric numericType="number" type="text"
+									placeholder="Detalle piedras:" [formControl]="detallePiedras">
+								<mat-error>{{ getErrorMessage('detallePiedras')  }}</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+					<div class="row">
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput placeholder="Peso bruto:" [formControl]="pesoBruto" (keyup)="setPesoNeto()">
 								<mat-error>{{ getErrorMessage('pesoBruto')  }}</mat-error>
-							</mat-form-field>
-						</div>
-					
-					
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra" (keyup)="setPesoNeto()">
-								<mat-error>{{ getErrorMessage('descuentoPiedra') }}</mat-error>
 							</mat-form-field>
 						</div>
 						<div class="col-md-4">
@@ -220,11 +232,21 @@
 							</mat-form-field>
 						</div>
 						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid" *ngIf="tienePiedras.value == 'S'">
+								<input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra" (keyup)="setPesoNeto()">
+								<mat-error>{{ getErrorMessage('descuentoPiedra') }}</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
 								<mat-error>{{ getErrorMessage('pesoNeto')  }}</mat-error>
 							</mat-form-field>
 						</div>
+					</div>
+					<div class="row">
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<mat-select placeholder="Tipo de joya:" [formControl]="tipoJoya">
@@ -246,22 +268,7 @@
 								<mat-error>{{ getErrorMessage('estado')  }}</mat-error>
 							</mat-form-field>
 						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<mat-select placeholder="Tiene priedras:" [formControl]="tienePiedras" (selectionChange)="selectTienePiedras()">
-									<mat-option value="S">SI</mat-option>
-									<mat-option value="N">NO</mat-option>
-								</mat-select>
-								<mat-error>{{ getErrorMessage('tienePiedras')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4" *ngIf="tienePiedras.value == 'S'">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput numeric numericType="number" type="text"
-									placeholder="Detalle piedras:" [formControl]="detallePiedras">
-								<mat-error>{{ getErrorMessage('detallePiedras')  }}</mat-error>
-							</mat-form-field>
-						</div>
+					
 				
 				<!-- 		<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
@@ -373,7 +380,7 @@
 					</ng-container>
 					<ng-container matColumnDef="tienePiedras">
 						<mat-header-cell *matHeaderCellDef> Tiene Piedras </mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.tienePiedras}}</mat-cell>
+						<mat-cell *matCellDef="let element"> {{ element.tienePiedras?'SI':'NO'}}</mat-cell>
                         <mat-footer-cell *matFooterCellDef></mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="detallePiedras">

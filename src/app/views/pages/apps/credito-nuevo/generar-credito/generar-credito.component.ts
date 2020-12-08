@@ -103,8 +103,15 @@ export class GenerarCreditoComponent implements OnInit {
   public catTipoOro: Array<any>;
   public catEstadoJoya: Array<any>;
 
-  
-
+  //negociacion
+  dataSourceCreditoNegociacion = new MatTableDataSource<any>();
+  displayedColumnsCreditoNegociacion = ['plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
+  'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
+  'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
+  'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
+  'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
+  'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
+  'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
 
 
   constructor(
@@ -239,6 +246,12 @@ export class GenerarCreditoComponent implements OnInit {
       this.buscarNumero();
       this.cargarOperacion( data.credito );
     }
+    //cargar datos negociacion
+    let x = new Array()
+    x.push(data.credito);
+    this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(x);
+
+
     this.loadingSubject.next(false);
   }
   private calcular() {
@@ -382,7 +395,7 @@ export class GenerarCreditoComponent implements OnInit {
     this.numeroFunda.setValue( data.numeroFunda ); 
     this.numeroOperacion.setValue( data.numeroOperacion );
     this.deudaInicial.setValue( data.deudaInicial );
-    this.sinNotSer.setNotice('NUMERO DE FUNDA ASIGNADO: '+ data.numeroFunda, 'success');
+    //this.sinNotSer.setNotice('NUMERO DE FUNDA ASIGNADO: '+ data.numeroFunda, 'success');
     this.stepper.selectedIndex = data.tipo == 'CUOTAS' ? 4 : 3;
     this.fechaVencimiento.setValue( data.fechaVencimiento ); 
     this.fechaEfectiva.setValue( data.fechaEfectiva); 
