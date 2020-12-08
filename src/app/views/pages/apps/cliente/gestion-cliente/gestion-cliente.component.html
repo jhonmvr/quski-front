@@ -17,7 +17,7 @@
   </re-portlet-header>
   <re-portlet-body>
 
-    <mat-vertical-stepper [linear]="true" #stepper>
+    <mat-vertical-stepper [linear]="false" #stepper>
       <mat-step label="Datos Personales" [stepControl]="formCliente">
         <form [formGroup]="formCliente">
           <div class="row mb-5">
@@ -173,7 +173,11 @@
             </div>
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput placeholder="Canal de Contacto:" [formControl]="canalContacto"/>
+                <mat-select placeholder="Canal de Contacto:" [formControl]="canalContacto">
+                  <mat-option *ngFor="let element of catMotivoVisita" [value]="element" required>
+                    {{ element.nombre }}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
           </div>
@@ -686,56 +690,21 @@
               <div class="form-group row">
                 <div class="col-md-4 ">
                   <mat-form-field class="mat-form-field-fluid">
-                      <mat-select required placeholder="Tipo de cuenta" [formControl]="tipoCuenta">
-                          <mat-option *ngFor="let element of catCuenta" [value]="element">
-                              {{element.nombre }}
-                          </mat-option>
-                      </mat-select>
+                      <input [formControl]="tipoCuenta" placeholder="Tipo de cuenta" matInput>
                   </mat-form-field>
                 </div>
                 <div class="col-md-4 ">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input [formControl]="numeroCuenta" placeholder="Numero de Cuenta" required  autocomplete="off" matInput numeric numericType="number"
-                        (keypress)="numberOnly($event)" >
+                        <input [formControl]="numeroCuenta" placeholder="Numero de Cuenta" matInput>
                     </mat-form-field>
                 </div>
-                <div class="col-md-4">
-                  <mat-checkbox [formControl]="esAhorro"> Es Ahorro? </mat-checkbox>
-                </div>
-              </div>
-              <div class="form-group row">
-                <div class="offset-md-4 col-md-5">
-                  <a href="javascript:void(0);" (click)="nuevaCuenta()" matTooltip="Agregar" style="font-size: 12px; vertical-align: middle;">
-                    <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
-                    <span style="position: relative; top: -10px; margin-left: 5px;">Agregar Cuenta</span>
-                  </a>
+                <div class="col-md-4 ">
+                  <mat-form-field class="mat-form-field-fluid">
+                      <input [formControl]="esAhorro" placeholder="Es Ahorro?" matInput>
+                  </mat-form-field>
                 </div>
               </div>
             </form>
-            <mat-table  #table  class="mat-elevation-z8"  [dataSource]="dataSourceCuentas"  style="max-width: 760px;">
-              <ng-container matColumnDef="Accion">
-                <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
-                <mat-cell *matCellDef="let element">
-                  <a (click)="deleteCuenta(element)"> <mat-icon matTooltip="Borrar">delete</mat-icon> </a>
-                  <a (click)="editarCuenta(element)"> <mat-icon matTooltip="Editar">edit</mat-icon> </a>
-                </mat-cell>
-              </ng-container>
-              <ng-container matColumnDef="banco">
-                <mat-header-cell *matHeaderCellDef> Banco </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.banco }} </mat-cell>
-              </ng-container>
-              <ng-container matColumnDef="cuenta">
-                <mat-header-cell *matHeaderCellDef> Cuenta </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.cuenta }} </mat-cell>
-              </ng-container>
-              <ng-container matColumnDef="esAhorros">
-                <mat-header-cell *matHeaderCellDef> Es Ahorro? </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.esAhorros ? 'SI' : 'NO' }} </mat-cell>
-              </ng-container>
-              <mat-header-row *matHeaderRowDef="displayedColumnsCuentas"></mat-header-row>
-              <mat-row *matRowDef="let row; columns: displayedColumnsCuentas"></mat-row>
-             
-            </mat-table>
           </div>
         </div> 
       </mat-step>

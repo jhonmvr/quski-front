@@ -70,6 +70,7 @@ export class GestionClienteComponent implements OnInit {
   public catProfesion: Array<any>;
   public catCuenta: Array<any>;
   public catTipoReferencia: Array<any>;
+  public catMotivoVisita: Array<any>;
   public catOcupacion: Array<any>;
   public catCargo: Array<any>;
   /** @ENUMS **/
@@ -241,6 +242,9 @@ export class GestionClienteComponent implements OnInit {
     console.log(' thiswrapper -> ', this.wrapper);
     this.nombresCompletos.setValue(this.wrapper.cliente.nombreCompleto);
     this.nombresCompletos.disable();
+    this.numeroCuenta.disable();
+    this.esAhorro.disable();
+    this.tipoCuenta.disable();
     this.identificacion.setValue(this.wrapper.cliente.cedulaCliente);
     this.identificacion.disable();
     this.fechaNacimiento.setValue( new Date(this.wrapper.cliente.fechaNacimiento) );
@@ -277,6 +281,8 @@ export class GestionClienteComponent implements OnInit {
     }
     this.edad.setValue(this.wrapper.cliente.edad);
     this.canalContacto.setValue(this.wrapper.cliente.canalContacto);
+    this.canalContacto.setValue(this.catMotivoVisita.find(x => x.codigo == this.wrapper.cliente.canalContacto));
+
     if (this.wrapper.datosTrabajo) {
       this.origenIngresos.setValue(this.catOrigenIngreso.find(x => x.codigo == this.wrapper.datosTrabajo.origenIngreso));
       this.relacionDependencia.setValue(this.wrapper.datosTrabajo.esRelacionDependencia ? "SI" : "NO");
@@ -355,11 +361,10 @@ export class GestionClienteComponent implements OnInit {
       this.calcularActivo();
     }
     if(this.wrapper.cuentas){
-      this.dataSourceCuentas.data = this.wrapper.cuentas;
-      this.dataSourceCuentas.data.forEach(e=>{
-        const item = this.catCuenta.find(x => x.id == e.banco);
-        e.banco = item.nombre; 
-      })
+      let item = this.catCuenta.find(x => x.id == this.wrapper.cuentas[0].banco);
+      this.tipoCuenta.setValue( item.nombre );
+      this.numeroCuenta.setValue( this.wrapper.cuentas[0].cuenta );
+      this.esAhorro.setValue( this.wrapper.cuentas[0].esAhorros ? 'SI':'NO' );
     }
     if (this.wrapper.referencias) {
       this.wrapper.referencias.forEach(e => {
@@ -429,34 +434,37 @@ export class GestionClienteComponent implements OnInit {
                           this.catTipoReferencia = !data.existeError ? data.catalogo : "Error al cargar catalogo";
                           this.css.consultarOcupacionCS().subscribe((data: any) => {
                             this.catOcupacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-                            this.css.consultarCargoOcupacion().subscribe((data: any) => {
-                              this.catCargo = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-                              this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
-                                if (!data.existeError) {
-                                  const localizacion = data.catalogo;
-                                  let bprovinces = localizacion.filter(e => e.tipoDivision == "PROVINCIA");
-                                  let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
-                                  let bParroqui = localizacion.filter(e => e.tipoDivision == "PARROQUIA");
-                                  let ubicacion: User[] = bParroqui.map(parro => {
-                                    const cant = bCantons.find(c => c.id == parro.idPadre) || {};
-                                    const pro = bprovinces.find(p => p.id == cant.idPadre) || {};
-                                    return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, id: parro.id };
-                                  });
-                                  this.divicionPolitica = ubicacion;
-                                  this.catFiltradoLugarNacimiento = this.lugarNacimiento.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
-                                  this.catFiltradoUbicacionDomicilio = this.ubicacion.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
-                                  this.catFiltradoUbicacionLaboral = this.ubicacionO.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
-                                  this.css.consultarEducacionCS().subscribe((data: any) => {
-                                    this.catEducacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-                                    this.css.consultarOrigenIngresoCS().subscribe((data: any) => {
-                                      this.catOrigenIngreso = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-                                      this.cargarCampos();
+                            this.css.consultarMotivoVisita().subscribe((data: any) => {
+                              this.catMotivoVisita = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                              this.css.consultarCargoOcupacion().subscribe((data: any) => {
+                                this.catCargo = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                                this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
+                                  if (!data.existeError) {
+                                    const localizacion = data.catalogo;
+                                    let bprovinces = localizacion.filter(e => e.tipoDivision == "PROVINCIA");
+                                    let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
+                                    let bParroqui = localizacion.filter(e => e.tipoDivision == "PARROQUIA");
+                                    let ubicacion: User[] = bParroqui.map(parro => {
+                                      const cant = bCantons.find(c => c.id == parro.idPadre) || {};
+                                      const pro = bprovinces.find(p => p.id == cant.idPadre) || {};
+                                      return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, id: parro.id };
                                     });
-                                  });
-                                } else {
-                                  this.loadingSubject.next(false);
-                                  this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');
-                                }
+                                    this.divicionPolitica = ubicacion;
+                                    this.catFiltradoLugarNacimiento = this.lugarNacimiento.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
+                                    this.catFiltradoUbicacionDomicilio = this.ubicacion.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
+                                    this.catFiltradoUbicacionLaboral = this.ubicacionO.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
+                                    this.css.consultarEducacionCS().subscribe((data: any) => {
+                                      this.catEducacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                                      this.css.consultarOrigenIngresoCS().subscribe((data: any) => {
+                                        this.catOrigenIngreso = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                                        this.cargarCampos();
+                                      });
+                                    });
+                                  } else {
+                                    this.loadingSubject.next(false);
+                                    this.sinNoticeService.setNotice('Catalogos de softbank no se encuentran disponibles', 'error');
+                                  }
+                                });
                               });
                             });
                           });

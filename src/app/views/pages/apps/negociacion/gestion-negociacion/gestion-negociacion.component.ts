@@ -30,8 +30,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { SelectionModel } from '@angular/cdk/collections';
-import { response } from 'express';
-import { map, startWith } from 'rxjs/operators';
+
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 //import { DataTableDataSource } from 'src/app/views/partials/content/widgets/general/data-table/data-table.data-source';
 
@@ -58,6 +57,13 @@ export class GestionNegociacionComponent implements OnInit {
   public catEstadoJoya: Array<any>;
   catPais;
   filteredPais: Observable<Pais[]>;
+  public totalNumeroJoya: number;
+  public totalPesoB: number;
+  public totalPesoN: number;
+  public totalValorA: number;
+  public totalValorR: number;
+  public totalValorC: number;
+  public totalValorO: number;
 
   opcionCredito;
 
@@ -106,8 +112,7 @@ export class GestionNegociacionComponent implements OnInit {
   // TABLA DE TASACION
   // ---- @TODO: Crear un data source para la tabla 
   dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
-  displayedColumnsTasacion = ['Accion', 'NumeroPiezas', 'TipoOro', 'TipoJoya', 'EstadoJoya', 'Descripcion',
-    'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'tienePiedras', 'detallePiedras', 'ValorOro'];
+  displayedColumnsTasacion = ['Accion', 'NumeroPiezas', 'TipoOro', 'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'valorComercial', 'tienePiedras', 'detallePiedras','TipoJoya', 'EstadoJoya', 'Descripcion',];
   private elementJoya;
 
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
@@ -249,6 +254,26 @@ export class GestionNegociacionComponent implements OnInit {
       }
     } else{
       this.cargarValores(tmp);
+    }
+  }
+  private calcular() {
+    this.totalPesoN = 0;
+    this.totalPesoB = 0;
+    this.totalValorR = 0;
+    this.totalValorA = 0;
+    this.totalValorC = 0;
+    this.totalValorO = 0;
+    this.totalNumeroJoya = 0
+    if (this.dataSourceTasacion.data) {
+      this.dataSourceTasacion.data.forEach(element => {
+        this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
+        this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
+        this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
+        this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
+        this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
+        this.totalValorO = Number(this.totalValorO) + Number(element.valorOro);
+        this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas);
+      });
     }
   }
   private iniciarNegociacionFromCot(id : number ){
@@ -395,7 +420,8 @@ export class GestionNegociacionComponent implements OnInit {
     if(wrapper.joyas != null){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
       this.dataSourceCreditoNegociacion.data.push( wrapper.credito );
-      this.dataSourceTasacion.data = wrapper.joyas
+      this.dataSourceTasacion.data = wrapper.joyas;
+      this.calcular();
       this.sinNotSer.setNotice("NEGOCIACION -> \"" + wrapper.credito.codigo + "\" Cargada correctamente.", "success");
     }else{
       this.sinNotSer.setNotice("SE HA INICIADO UNA NEGOCIACION -> \"" + wrapper.credito.codigo + "\". ", "success");
@@ -682,6 +708,7 @@ export class GestionNegociacionComponent implements OnInit {
           this.sinNotSer.setNotice('SE GUARDO LA JOYA TASADA', 'success');
         //this.loadingSubject.next(false);
         this.limpiarCamposTasacion();
+        this.calcular();
       });
     
   }
@@ -714,6 +741,8 @@ export class GestionNegociacionComponent implements OnInit {
         this.dataSourceTasacion.data = dataC;
         if (this.dataSourceTasacion.data.length < 1) {
           this.dataSourceTasacion = null;
+        }else{
+          this.calcular();
         }
       } else {
         this.sinNotSer.setNotice('ERROR DESCONOCIDO', 'error');
