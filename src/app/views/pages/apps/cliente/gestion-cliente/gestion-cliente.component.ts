@@ -291,6 +291,8 @@ export class GestionClienteComponent implements OnInit {
         e.estado = "INA";
       }
     });
+    let countOfi: number= 0;
+    let countDom: number= 0;
     !this.wrapper.datosTrabajos ? null  : this.wrapper.datosTrabajos.forEach(t=>{
       if( t.esprincipal && t.estado == 'ACT'){
         this.origenIngresos.setValue(this.catOrigenIngreso.find(x => x.codigo == t.origenIngreso));
@@ -319,7 +321,7 @@ export class GestionClienteComponent implements OnInit {
       }
     }); 
     !this.wrapper.direcciones ? null    : this.wrapper.direcciones.forEach(e => {
-      if (e.tipoDireccion == "OFI" && e.estado == 'ACT') {
+      if (e.tipoDireccion == "OFI" && e.estado == 'ACT' && countOfi < 1) {
         this.catFiltradoUbicacionLaboral.subscribe((data: any) => {
           this.ubicacionO.setValue(data.find(x => x.id == e.divisionPolitica));
         });
@@ -332,7 +334,8 @@ export class GestionClienteComponent implements OnInit {
         this.sectorO.setValue(this.catSectorVivienda.find(x => x.codigo == e.sector));
         this.direccionLegalLaboral.setValue(e.direccionLegal);
         this.direccionCorreoLaboral.setValue(e.direccionEnvioCorrespondencia);
-      }else if (e.tipoDireccion == "DOM" && e.estado == 'ACT') {
+        countOfi++;
+      }else if (e.tipoDireccion == "DOM" && e.estado == 'ACT' && countDom < 1) {
         this.catFiltradoUbicacionDomicilio.subscribe((data: any) => {
           this.ubicacion.setValue(data.find(x => x.id == e.divisionPolitica));
         });
@@ -345,8 +348,10 @@ export class GestionClienteComponent implements OnInit {
         this.barrio.setValue(e.barrio);
         this.direccionLegalDomicilio.setValue(e.direccionLegal);
         this.direccionCorreoDomicilio.setValue(e.direccionEnvioCorrespondencia);
+        countDom++;
       } else{
         e.estado = 'INA';
+        e.barrio = 'No Espeficicado';
       }
     });
     !this.wrapper.cuentas ? null        : this.wrapper.cuentas.forEach(e=>{
@@ -370,7 +375,12 @@ export class GestionClienteComponent implements OnInit {
         e.parentesco = referencia ? referencia.nombre : 'error' ;
         refe.push( e );
         countRefer++;
-      }else{e.estado = 'INA'}
+      }else{
+        e.estado = 'INA';
+        e.telefonoFijo = e.telefonoFijo ? e.telefonoFijo : "0999999999";
+        e.apellidos = e.apellidos ? e.apellidos : 'No definido';
+        e.telefonoMovil = e.telefonoMovil ? e.telefonoMovil : '0999999999';
+      }
     });
     this.dataSource.data = refe;
     this.dataSourcePatrimonioPasivo.data.push( new TbQoPatrimonio(this.wrapper.cliente.pasivos, false) );
@@ -1092,11 +1102,11 @@ export class GestionClienteComponent implements OnInit {
     const data = this.dataSource.data;
     this.dataSource.data = data;
   }
-  public editarReferencia(element) {
+  public editarReferencia(element : TbReferencia ) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
-    this.apellidosRef.setValue(element.apellidosRef);
-    this.nombresRef.setValue(element.nombresRef);
+    this.apellidosRef.setValue(element.apellidos);
+    this.nombresRef.setValue(element.nombres);
     this.parentescoR.setValue( this.catTipoReferencia.find (x => x.nombre == element.parentesco) );
     this.direccionR.setValue(element.direccion);
     this.telefonoMovilR.setValue(element.telefonoMovil);

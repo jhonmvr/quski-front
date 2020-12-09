@@ -358,10 +358,8 @@ export class GenerarCreditoComponent implements OnInit {
     },er=>{this.loadingSubject.next(false)});
   }
   public generarCredito(anular?: boolean ) {
-    if(this.formInstruccion.valid && this.srcFunda && this.srcJoya){
-      this.loadingSubject.next(true);
-      this.operacionNuevo.credito
-      
+    if(this.formFunda.valid && this.srcFunda && this.srcJoya){
+      this.loadingSubject.next(true);      
       this.operacionNuevo.credito.pagoDia = this.fechaCuota.value != null ? this.fechaCuota.value : null;
       this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
       this.operacionNuevo.credito.numeroFunda = anular ? 0 : this.numeroFunda.value;
