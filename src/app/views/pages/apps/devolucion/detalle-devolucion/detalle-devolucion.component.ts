@@ -13,12 +13,12 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 
 @Component({
-  selector: 'kt-entrega-recepcion',
-  templateUrl: './entrega-recepcion.component.html',
-  styleUrls: ['./entrega-recepcion.component.scss']
+  selector: 'kt-detalle-devolucion',
+  templateUrl: './detalle-devolucion.component.html',
+  styleUrls: ['./detalle-devolucion.component.scss']
 })
-export class EntregaRecepcionComponent implements OnInit{
-  public formCancelacion: FormGroup = new FormGroup({});
+export class DetalleDevolucionComponent implements OnInit{
+  public formCreditoNuevo: FormGroup = new FormGroup({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
   // datos operacion
   public codigoOperacion = new FormControl('');
@@ -45,16 +45,13 @@ export class EntregaRecepcionComponent implements OnInit{
  public valorCustodia = new FormControl('');
  public cedulaHeredero = new FormControl('');
  public nombreHeredero = new FormControl('');
- idDevolucion
+ idDevolucion = 16
   fechaUtil:diferenciaEnDias;
   fechaServer;
 ///operativa
 
 joyasList  = []
-
-totalPesoBruto
-totalPesoNeto
-totalValorAvaluo
+ 
   //url=;objeto=ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiIiwKICAgICJtb250b0ZpbmFuY2lhZG8iOiAiNzAwIiwKICAgICJhc2Vzb3IiOiAiSnVhbml0byIsCiAgICAiZXN0YWRvT3BlcmFjaW9uIjogICJDQU5DRUxBRE8iLAogICAgInRpcG9DcmVkaXRvIjogIiIsCiAgICAiY29kaWdvVGFibGFBbW9ydGl6YWNpb25RdXNraSI6IkEwMSIsCiAgICAiaW1wYWdvIjogIm5vIiwKICAgICJyZXRhbnF1ZW8iOiAibm8iLAogICAgImNvYmVydHVyYUluaWNpYWwiOiAiMTIwMCIsCiAgICAiY29iZXJ0dXJhQWN0dWFsIjogIjExMDAiLAogICAgImJsb3F1ZW8iOiIiLAogICAgImRpYXNNb3JhIjogIiIsCiAgICAiZXN0YWRvVWJpY2FjaW9uIjoiIiwKICAgICJlc3RhZG9Qcm9jZXNvIjoiIiwKICAgICJjb2RpZ29TZXJ2aWNpbyI6IiIsCiAgICAibWlncmFkbyI6ICIiCgp9
   ///
   
@@ -145,7 +142,9 @@ datos
     this.enableHerederoButton = this.enableHeredero.asObservable();
     this.enableHeredero.next(false);
     this.setFechaSistema();
+    
     this.datos = this.decodeObjetoDatos(this.objetoDatos);
+
     this.getParametros();
     this.cargarDatos();
     console.log("el encode", )
@@ -200,16 +199,15 @@ datos
         this.observaciones.setValue(data.entidad.observaciones)
         this.tipoCliente.setValue(data.entidad.tipoCliente)
         this.agenciaEntrega.setValue(data.entidad.agenciaEntrega)
-        this.edad.setValue(this.getEdad(data.entidad.fechaNacimiento).toFixed(0))
+        this.genero.setValue(data.entidad.genero)
         this.validateHeredero();
-        this.valorCustodia.setValue(data.entidad.valorCustodiaAprox.toFixed(2))
+        this.valorCustodia.setValue(data.entidad.valorCustodiaAprox)
         this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
         this.listTablaHeredero = this.decodeObjetoDatos(data.entidad.codeHerederos);
         listDatosCreditos.push(this.decodeObjetoDatos(data.entidad.codeDetalleCredito))
         this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
         this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)
         this.dataSourceHeredero=new MatTableDataSource<any>(this.listTablaHeredero);
-        this.calcularTotalizados();
       }
     })
   
@@ -228,8 +226,8 @@ datos
       (params: Params) => {
       
        
-        this.idDevolucion = params.get('idDevolucion');
-        console.log("parametro", this.idDevolucion)
+        this.parametroObjeto = params.get('objeto');
+     
        
       },
       error => {
@@ -237,6 +235,11 @@ datos
       }
     );
   }
+
+  
+
+   
+
 
 setFechaSistema(){
   this.cns.getSystemDate().subscribe((fechaSistema: any) => {
@@ -249,37 +252,68 @@ getEdad(fechaValue){
   this.fechaUtil = new diferenciaEnDias(new Date(fechaValue),new Date( this.fechaServer) )
   return this.fechaUtil.obtenerDias()/365
  }
+
+
+
+
+
+
  
- calcularTotalizados(){
 
-  this.totalPesoNeto =0;
-  this.totalPesoBruto =0; 
-  this.totalValorAvaluo = 0
+/*
+calcular(){
 
+  this.totalPesoN =0;
+  this.totalPesoB =0;
+  this.totalPBFunda = 0
+  this.totalValorR = 0
+  this.totalValorA = 0
+  this.totalValorC = 0
+  this.totalNumeroJoya = 0
   let ind = 0;
-  if (this.dataSourceJoyas.data) {
+  if (this.dataSource.data) {
     //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
- 
-    this.joyasList.forEach(element => {
+    this.list=[];
+    this.dataSource.data.forEach(element => {
       
-
-     
-    this.totalPesoNeto = Number(this.totalPesoNeto) + Number(element.pesoNeto);
-    this.totalPesoBruto = Number(this.totalPesoBruto) + Number(element.pesoBruto);
-    this.totalValorAvaluo = Number(this.totalValorAvaluo) + Number(element.valorAvaluo);
-
+      ind = ind + 1;
+      this.list.push(ind);
+      
+    
+    this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
+    this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
+    
+    this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
+    this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
+    this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
+    this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas)
     });
     
   }
-  console.log("XD" , this.totalPesoNeto)
 }
 
-
+*/
 
 /* ----------TRACKING-------*/
 
 
 
+consultarEducacionCS(){
+  this.css.consultarEducacionCS().subscribe((data:any)=> {
+    if(!data.existeError){
+      this.catalogoEducacion = data.catalogo
+    }
+  })
+}
+
+consultarPaisCS(){
+  this.css.consultarPaisCS().subscribe((data:any)=> {
+    if(!data.existeError){
+      console.log(data)
+      this.catalogoPais = data.catalogo
+    }
+  })
+}
 
 
 
@@ -291,19 +325,6 @@ validateHeredero(){
   this.enableHeredero.next(false)
   
 }
-}
-
-guardar(){
-  this.devService.guardarEntregaRecepcion(this.idDevolucion).subscribe((data:any)=> {
-    this.sinNoticeService.setNotice(
-      "Guardado correctamente",
-      "success"
-    );
-    this.router.navigate(['negociacion/bandeja-operaciones'    ]);
-    console.log(data.entidad)
-  }, error => {
-    this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
-  })
 }
 
 

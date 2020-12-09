@@ -32,7 +32,8 @@ export class TbQoCliente {
   separacionBienes: string;
   aprobacionMupi: string;
   nombreCompleto: string;
-
+  usuario:string;
+  agencia:number;
   ingresos: number;
   egresos: number;
   pasivos: number;

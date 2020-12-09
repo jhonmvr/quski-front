@@ -45,7 +45,7 @@
                 </form>
             </mat-step>
 
-            <ng-container *ngIf="this.operacionNuevo && this.operacionNuevo.credito.tipo == 'CUOTAS'">
+            <ng-container *ngIf="this.operacionNuevo && this.operacionNuevo.credito.periodoPlazo == 'C'">
                 <mat-step label="Día de pago" [stepControl]="formFecha">  
                     <form [formGroup]="formFecha">
                         <div class="col-md-4">

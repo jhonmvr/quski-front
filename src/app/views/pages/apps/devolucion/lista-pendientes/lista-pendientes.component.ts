@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
+import { SelectionModel } from '@angular/cdk/collections';
 import { Page } from '../../../../../core/model/page';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { DevolucionService } from '../../../../../core/services/quski/devolucion.service';
@@ -17,28 +18,15 @@ export class ListaPendientesComponent implements OnInit {
   //public formFiltros: FormGroup = new FormGroup({});
   loading;
   loadingSubject = new BehaviorSubject<boolean>(false);
-
+  selection = new SelectionModel<any>(true, []);
  
   idReferenciaHab:string="1";
 
   codigoOperacion = new FormControl('', []);
-  codigoOperacionMadre = new FormControl('', []);
-  agencia = new FormControl('', []);
-  proceso = new FormControl('', []);
-  estado = new FormControl('', []); 
-  fechaCreacionDesde = new FormControl('', []);
-  fechaCreacionFin = new FormControl('', []);
-  fechaVencimientoDesde = new FormControl('', []);
-  fechaVencimientoFin = new FormControl('', []);
-  fechaAprobacionDesde = new FormControl('', []);
-  fechaAprobacionFin = new FormControl('', []);
-  tipoCredito = new FormControl('', []);
-  cliente = new FormControl('', []);
-  cedulaCliente = new FormControl('', []);
-  plazo = new FormControl('', []);
-  opciones = ['SI', 'NO']
 
-  displayedColumns = ['accion', 'fechaSolicitud', 'agenciaSolicitud', 'codigoOperacionMadre', 'codigoOperacion',
+
+
+  displayedColumns = ['accion', 'fechaSolicitud', 'codigoOperacionMadre', 'codigoOperacion',
    'nombreCliente', 'identificacion', 'fundaMadre' , 'fundaActual', 'ciudadTevcol' ,  'fechaArriboAgencia',  'fechaAprobacion', 'valorAvaluo', 'pesoBruto'];
   /**Obligatorio paginacion */
   p = new Page();
@@ -67,8 +55,9 @@ export class ListaPendientesComponent implements OnInit {
   
     this.loading = this.loadingSubject.asObservable();
     // Set title to page breadCrumbs
-    this.subheaderService.setTitle('Gestion credito');
+    this.subheaderService.setTitle('Pendiente de arribo');
     this.initiateTablePaginator();
+    this.buscar();
     //Se ejecuta cuando se hace click en el ordenamiento en el mattable
     this.sort.sortChange.subscribe(() => {
       console.log("sort changed "  );
@@ -108,7 +97,7 @@ export class ListaPendientesComponent implements OnInit {
    * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
    */
   paged() {
-    this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',this.paginator.pageIndex)
+   // this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',this.paginator.pageIndex)
   //  this.submit();
   }
 
@@ -117,57 +106,87 @@ export class ListaPendientesComponent implements OnInit {
    * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
    */
   buscar() {
-    this.initiateTablePaginator();
+    
     this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',0);
-   // this.submit();
+    this.submit();
   }
-/*
+
 
   submit() {
-    //console.log("====> paged: " + JSON.stringify( this.p ));
+
     this.loadingSubject.next(true);
     this.dataSource = null;
-    this.clienteService.findClienteByParams(this.p, this.identificacionCliente.value, this.nombreCliente.value, this.apellidoCliente.value
-      ,null,null,null,null,null,null,null,null,null).subscribe((data: any) => {
-      this.loadingSubject.next(false);
-      //console.log("====> datos: " + JSON.stringify( data ));
-      if (data.list) {
-       
-        this.totalResults = data.totalResults;
-    //    this.dataSource = new MatTableDataSource<TbQoCliente>(data.list);
-        //this.dataSource.paginator=this.paginator;
-        this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'info');
-      } else {
-        this.sinNoticeService.setNotice("NO SE ENCONTRAR REGISTROS", 'success');
+    this.ds.busquedaArribo(this.p, this.codigoOperacion.value == null? "": this.codigoOperacion.value).subscribe((data:any)=>{
+      if(data){
+        console.log(data.list)
+        this.dataSource=new MatTableDataSource<any>(data.list);
+        this.loadingSubject.next(false);
       }
-    }, error => {
-      this.loadingSubject.next(false);
-      if(  error.error ){
-				this.noticeService.setNotice(error.error.codError + ' - ' + error.error.msgError  , 'error');
-			} else if(  error.statusText && error.status==401 ){
-				this.dialog.open(AuthDialogComponent, {
-					data: {
-						mensaje:"Error " + error.statusText + " - " + error.message
-					}
-				});
-			} else {
-				this.noticeService.setNotice("Error al cargar las notificaciones o alertas", 'error');
-			}
+    })
+  }
+
+
+
+
+
+isCheck(row): boolean {
+  if (this.selection.selected.find(c => c.id == row.id)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+addRemove(row) {
+  if (this.selection.isSelected(row.id)) {
+    this.selection.deselect(row.id);
+    console.log(row.id)
+  } else {
+    this.selection.select(row.id);
+  }
+}
+
+eliminarSelect() {
+  this.selection.clear();
+}
+
+confirmarArribo(){
+  if( this.selection && this.selection.selected && this.selection.selected.length>0 ){
+    let listFundaPeso =[];
+    let listIdDevolucion = [];
+    console.log("seleccion" ,this.selection.selected[0])
+    console.log(typeof( this.selection.selected))
+    let fundaPeso = {
+      "funda" : "",
+      "peso" : ""
     }
-    );
-  }
+ 
+    this.selection
+    this.selection.selected.forEach(x=> listFundaPeso.push( "\n Funda: " + x.fundaActual + "      peso: " + x.pesoBruto.toFixed(2).toString().padStart(13, " ") ))
+    this.selection.selected.forEach(x=> listIdDevolucion.push(x.id))
+    console.log(this.selection.selected[0])
+     if (confirm('Usted confirma la recepción de las fundas:  ' + listFundaPeso  )) {
+      this.ds.registrarArribo(listIdDevolucion).subscribe((data:any)=>{
+        if(data){
+          console.log(data)
+          this.noticeService.setNotice("Se ha registrado exitosamente" , "success")
+          this.eliminarSelect();
+          this.buscar();
+        } else {
+          this.eliminarSelect();
+          this.buscar();
+          this.noticeService.setNotice("Error al registrar" , "error")
+        } 
+      
+      })
+   // }
+}
 
-  editarUsuario() {
-    [{
-      path: 'add/:id',
-    
-    }]
 
-  }
+ 
+  
 
-  test(){
-    console.log( "====> valor proceso " + this.identificacionCliente.value );
-    this.proceso=this.identificacionCliente.value;
-  }
-*/
+
+}
+}
 }

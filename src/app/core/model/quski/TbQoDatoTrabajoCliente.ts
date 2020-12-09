@@ -8,6 +8,7 @@ export class TbQoDatoTrabajoCliente{
      esRelacionDependencia : boolean;
      nombreEmpresa: string;
      esprincipal : boolean;
+     estado : string;
      idSoftbank: number;
      ocupacion: string;
      origenIngreso: string;

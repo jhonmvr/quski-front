@@ -204,6 +204,8 @@ export class GenerarCreditoComponent implements OnInit {
     console.log('OperacionNuevoWrapper de entrada ->', data);
     this.agencia = 2;
     this.firmanteOperacion.setValue( this.catFirmanteOperacion.find(t=> t.codigo != null).nombre );
+    this.firmanteOperacion.disable();
+
     this.codigoOperacion.setValue(data.credito.codigo);
     this.estadoOperacion.setValue(data.proceso.estadoProceso);
     this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
@@ -217,12 +219,10 @@ export class GenerarCreditoComponent implements OnInit {
       e.estadoJoya = objetoEstado.nombre;
     })
     this.dataSource.data = data.joyas;
-    let bancosCliente = new Array<any>(); 
-    data.cuentas.forEach(e=>{
-      bancosCliente.push( this.catCuenta.find(c => c.id == e.banco ) );
-    });
+    this.numeroCuenta.setValue( data.cuentas[0].cuenta);
+    this.tipoCuenta.setValue( this.catCuenta.find( x => x.id == data.cuentas[0].banco) );
+    this.tipoCuenta.disable();
     this.numeroCuenta.disable();
-    this.catCuenta = bancosCliente;
     if(data.excepciones){
       data.excepciones.forEach(e=>{
         if( e.tipoExcepcion == "EXCEPCION_CLIENTE"){
@@ -358,10 +358,8 @@ export class GenerarCreditoComponent implements OnInit {
     },er=>{this.loadingSubject.next(false)});
   }
   public generarCredito(anular?: boolean ) {
-    if(this.formInstruccion.valid && this.srcFunda && this.srcJoya){
-      this.loadingSubject.next(true);
-      this.operacionNuevo.credito
-      
+    if(this.formFunda.valid && this.srcFunda && this.srcJoya){
+      this.loadingSubject.next(true);      
       this.operacionNuevo.credito.pagoDia = this.fechaCuota.value != null ? this.fechaCuota.value : null;
       this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
       this.operacionNuevo.credito.numeroFunda = anular ? 0 : this.numeroFunda.value;
