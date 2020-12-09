@@ -71,16 +71,12 @@ export class BandejaAprobadorComponent implements OnInit {
         console.log("Holis, soy la data -> ", data.entidad.operaciones);
         let operaciones: OperacionesAprobadorWrapper[] = data.entidad.operaciones;
         operaciones.forEach(e=>{
-          this.catAgencia.forEach( c =>{
-            if(e.idAgencia == c.id){
-              e.nombreAgencia = c.nombre;
-            }
-          });
-          e.proceso = e.proceso.replace("_"," ").replace("_"," ").replace("_"," ").replace("_"," ").replace("_"," ");
-          e.nombreCliente = e.nombreCliente.replace("_"," ").replace("_"," ").replace("_"," ").replace("_"," ").replace("_"," ");
-          if(e.aprobador == null || e.aprobador == "" || e.aprobador == "null"){
-            e.aprobador = "Libre";
-          }
+          e.nombreAgencia = !e.idAgencia || e.idAgencia == 0 ? 'Sin Agencia' : this.catAgencia.find(a => a.id == e.idAgencia) ? this.catAgencia.find(a => a.id == e.idAgencia).nombre : 'Sin Agencia' ;  
+          e.proceso = e.proceso.replace(/_/gi," ");
+          e.nombreCliente = e.nombreCliente.replace(/_/gi," ");
+          e.aprobador = e.aprobador ? e.aprobador.toUpperCase() == 'NULL' ? 'Libre' : e.aprobador : 'Libre';
+          e.codigoOperacion = !e.codigoOperacion || e.codigoOperacion.toUpperCase() == 'NULL' ? 'Sin Codigo' : e.codigoOperacion;
+          e.fechaSolicitud = !e.fechaSolicitud || e.fechaSolicitud == '0001-01-01' ? 'No Aplica' : e.fechaSolicitud;
         });
         this.dataSource.data = operaciones;
         this.paginator.length = data.entidad.result;
@@ -116,7 +112,6 @@ export class BandejaAprobadorComponent implements OnInit {
               "";
     }
   }
-
   private cargarCatalogos(){
     this.loadingSubject.next(true);
     this.sof.consultarAgenciasCS().subscribe( (data: any) =>{

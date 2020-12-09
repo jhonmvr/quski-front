@@ -113,7 +113,7 @@
                     </ng-container>
                     <ng-container matColumnDef="codigoOperacion">
                         <mat-header-cell *matHeaderCellDef >Codigo Operacion</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.codigoOperacion | uppercase  }}</mat-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.codigoOperacion | titlecase  }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="nombreCliente">
                         <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
@@ -133,7 +133,7 @@
                     </ng-container>
                     <ng-container matColumnDef="agencia">
                         <mat-header-cell *matHeaderCellDef>Agencia</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.agencia }}</mat-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.agencia | titlecase }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="estadoProceso">
                         <mat-header-cell *matHeaderCellDef>Estado Proceso</mat-header-cell>
