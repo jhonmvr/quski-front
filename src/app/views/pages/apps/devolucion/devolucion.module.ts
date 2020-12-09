@@ -43,6 +43,7 @@ import { EntregaRecepcionComponent } from './entrega-recepcion/entrega-recepcion
 import { DetalleDevolucionComponent } from './detalle-devolucion/detalle-devolucion.component';
 import { CancelacionSolicitudDevolucionComponent } from './cancelacion-solicitud-devolucion/cancelacion-solicitud-devolucion.component';
 import { AprobacionCancelacionComponent } from './aprobacion-cancelacion/aprobacion-cancelacion.component';
+import { VerificacionFirmaComponent } from './verificacion-firma/verificacion-firma.component';
 
 const routes: Routes = [
 	{
@@ -109,6 +110,13 @@ const routes: Routes = [
 				path: 'aprobacion-cancelacion-solicitud',
 				component: AprobacionCancelacionComponent
 			},
+			{
+				path: 'verificacion-firmas/:idDevolucion',
+				component: VerificacionFirmaComponent
+			},	{
+				path: 'verificacion-firmas',
+				component: VerificacionFirmaComponent
+			},
 
 
 		
@@ -118,7 +126,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [SolicitudDevolucionComponent, DevolucionComponent, SeleccionFechaComponent, ListaPendientesComponent, AprobacionSolicitudComponent, ListaPendientesComponent, EntregaRecepcionComponent, DetalleDevolucionComponent, CancelacionSolicitudDevolucionComponent, AprobacionCancelacionComponent],
+  declarations: [SolicitudDevolucionComponent, DevolucionComponent, SeleccionFechaComponent, ListaPendientesComponent, AprobacionSolicitudComponent, ListaPendientesComponent, EntregaRecepcionComponent, DetalleDevolucionComponent, CancelacionSolicitudDevolucionComponent, AprobacionCancelacionComponent, VerificacionFirmaComponent],
   imports: [
     CommonModule,
 		RouterModule.forChild(routes),
