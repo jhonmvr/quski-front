@@ -40,6 +40,10 @@ import { SeleccionFechaComponent } from './seleccion-fecha/seleccion-fecha.compo
 import { ListaPendientesComponent } from './lista-pendientes/lista-pendientes.component';
 import { AprobacionSolicitudComponent } from './aprobacion-solicitud/aprobacion-solicitud.component';
 import { EntregaRecepcionComponent } from './entrega-recepcion/entrega-recepcion.component';
+import { DetalleDevolucionComponent } from './detalle-devolucion/detalle-devolucion.component';
+import { CancelacionSolicitudDevolucionComponent } from './cancelacion-solicitud-devolucion/cancelacion-solicitud-devolucion.component';
+import { AprobacionCancelacionComponent } from './aprobacion-cancelacion/aprobacion-cancelacion.component';
+import { VerificacionFirmaComponent } from './verificacion-firma/verificacion-firma.component';
 
 const routes: Routes = [
 	{
@@ -61,6 +65,10 @@ const routes: Routes = [
 				component: AprobacionSolicitudComponent
 			},
 			{
+				path: 'aprobar-solicitud-devolucion/:idDevolucion',
+				component: AprobacionSolicitudComponent
+			},
+			{
 				path: 'set-arribo',
 				component: SeleccionFechaComponent
 			},
@@ -68,6 +76,49 @@ const routes: Routes = [
 				path: 'pendientes-arribo',
 				component: ListaPendientesComponent
 			},
+
+			{
+				path: 'entrega-recepcion',
+				component: EntregaRecepcionComponent
+			},
+			{
+				path: 'entrega-recepcion/:idDevolucion',
+				component: EntregaRecepcionComponent
+			},
+			
+			{
+				path: 'detalle-devolucion/:idDevolucion',
+				component: DetalleDevolucionComponent
+			},
+			{
+				path: 'detalle-devolucion',
+				component: DetalleDevolucionComponent
+			},
+
+			{
+				path: 'cancelacion-solicitud',
+				component: CancelacionSolicitudDevolucionComponent
+			},
+			{
+				path: 'cancelacion-solicitud/:idDevolucion',
+				component: CancelacionSolicitudDevolucionComponent
+			},
+			{
+				path: 'aprobacion-cancelacion-solicitud/:idDevolucion',
+				component: AprobacionCancelacionComponent
+			},	{
+				path: 'aprobacion-cancelacion-solicitud',
+				component: AprobacionCancelacionComponent
+			},
+			{
+				path: 'verificacion-firmas/:idDevolucion',
+				component: VerificacionFirmaComponent
+			},	{
+				path: 'verificacion-firmas',
+				component: VerificacionFirmaComponent
+			},
+
+
 		
 
 		]
@@ -75,7 +126,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [SolicitudDevolucionComponent, DevolucionComponent, SeleccionFechaComponent, ListaPendientesComponent, AprobacionSolicitudComponent, ListaPendientesComponent, EntregaRecepcionComponent],
+  declarations: [SolicitudDevolucionComponent, DevolucionComponent, SeleccionFechaComponent, ListaPendientesComponent, AprobacionSolicitudComponent, ListaPendientesComponent, EntregaRecepcionComponent, DetalleDevolucionComponent, CancelacionSolicitudDevolucionComponent, AprobacionCancelacionComponent, VerificacionFirmaComponent],
   imports: [
     CommonModule,
 		RouterModule.forChild(routes),
