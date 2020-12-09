@@ -199,32 +199,8 @@
 								<mat-error>{{ getErrorMessage('numeroPiezas')  }}</mat-error>
 							</mat-form-field>
 						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Peso bruto:" [formControl]="pesoBruto" (keyup)="setPesoNeto()">
-								<mat-error>{{ getErrorMessage('pesoBruto')  }}</mat-error>
-							</mat-form-field>
-						</div>
-					
-					
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra" (keyup)="setPesoNeto()">
-								<mat-error>{{ getErrorMessage('descuentoPiedra') }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Descuento suelda:" [formControl]="descuentoSuelda" (keyup)="setPesoNeto()">
-								<mat-error>{{getErrorMessage('descuentoSuelda')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
-								<mat-error>{{ getErrorMessage('pesoNeto')  }}</mat-error>
-							</mat-form-field>
-						</div>
+					</div>
+					<div class="row">
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<mat-select placeholder="Tipo de joya:" [formControl]="tipoJoya">
@@ -246,22 +222,7 @@
 								<mat-error>{{ getErrorMessage('estado')  }}</mat-error>
 							</mat-form-field>
 						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<mat-select placeholder="Tiene priedras:" [formControl]="tienePiedras" (selectionChange)="selectTienePiedras()">
-									<mat-option value="S">SI</mat-option>
-									<mat-option value="N">NO</mat-option>
-								</mat-select>
-								<mat-error>{{ getErrorMessage('tienePiedras')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4" *ngIf="tienePiedras.value == 'S'">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput numeric numericType="number" type="text"
-									placeholder="Detalle piedras:" [formControl]="detallePiedras">
-								<mat-error>{{ getErrorMessage('detallePiedras')  }}</mat-error>
-							</mat-form-field>
-						</div>
+					
 				
 				<!-- 		<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
@@ -285,6 +246,56 @@
 						</div> -->
 					</div>
 					<div class="row">
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Peso bruto:" [formControl]="pesoBruto" (keyup)="setPesoNeto()">
+								<mat-error>{{ getErrorMessage('pesoBruto')  }}</mat-error>
+							</mat-form-field>
+						</div>
+						
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Descuento suelda:" [formControl]="descuentoSuelda" (keyup)="setPesoNeto()">
+								<mat-error>{{getErrorMessage('descuentoSuelda')  }}</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+					<div class="row">
+						
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<mat-select placeholder="Tiene priedras:" [formControl]="tienePiedras" (selectionChange)="selectTienePiedras()">
+									<mat-option value="S">SI</mat-option>
+									<mat-option value="N">NO</mat-option>
+								</mat-select>
+								<mat-error>{{ getErrorMessage('tienePiedras')  }}</mat-error>
+							</mat-form-field>
+						</div>
+						
+						<div class="col-md-4" *ngIf="tienePiedras.value == 'S'">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput numeric numericType="number" type="text"
+									placeholder="Detalle piedras:" [formControl]="detallePiedras">
+								<mat-error>{{ getErrorMessage('detallePiedras')  }}</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid" *ngIf="tienePiedras.value == 'S'">
+								<input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra" (keyup)="setPesoNeto()">
+								<mat-error>{{ getErrorMessage('descuentoPiedra') }}</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
+								<mat-error>{{ getErrorMessage('pesoNeto')  }}</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+		
+					<div class="row">
 						<mat-form-field class="col-md-12">
 							<textarea class="form-control border" [formControl]="descripcion" rows="5"
 							placeholder="Descripci&#243;n " matInput></textarea>
@@ -292,7 +303,7 @@
 						</mat-form-field>
 					</div>
 					<div class="row">
-						<div class="offset-5 col-2">
+						<div class="offset-5 col-2 mb-5">
 							<button mat-stroked-button color="primary" (click)="cargarJoya()">
 								<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline
 								</mat-icon>
@@ -303,7 +314,7 @@
 				</form>
 
 				
-				<mat-table id="tableTasacion" class="mat-elevation-z8" [dataSource]="dataSourceTasacion">
+				<mat-table *ngIf="dataSourceTasacion.data" id="tableTasacion" class="mat-elevation-z8" [dataSource]="dataSourceTasacion">
 					<ng-container matColumnDef="Accion" sticky>
 						<mat-header-cell *matHeaderCellDef>Acci&#243;n</mat-header-cell>
 						<mat-cell *matCellDef="let element">
@@ -314,63 +325,47 @@
 								<mat-icon matTooltip="Editar">edit</mat-icon>
 							</a>
 						</mat-cell>
-						<td align="left" mat-footer-cell *matFooterCellDef>&#8212; </td>
+                        <mat-footer-cell *matFooterCellDef>  Total:  </mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="NumeroPiezas">
 						<mat-header-cell *matHeaderCellDef>N. de piezas</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.numeroPiezas }} </mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef> </td>
+                        <mat-footer-cell *matFooterCellDef>  {{ totalNumeroJoya  }}</mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="TipoOro">
 						<mat-header-cell *matHeaderCellDef> Tipo de oro </mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.tipoOro }} </mat-cell>
-						<td align="left" mat-footer-cell *matFooterCellDef>&#8212; </td>
-					</ng-container>
-					<ng-container matColumnDef="TipoJoya">
-						<mat-header-cell *matHeaderCellDef> Tipo de joya </mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.tipoJoya}}</mat-cell>
-						<td align="left" mat-footer-cell *matFooterCellDef>&#8212; </td>
-					</ng-container>
-					<ng-container matColumnDef="EstadoJoya">
-						<mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.estadoJoya }}</mat-cell>
-						<td align="left" mat-footer-cell *matFooterCellDef>&#8212; </td>
-
-					</ng-container>
-					<ng-container matColumnDef="Descripcion">
-						<mat-header-cell *matHeaderCellDef>Descripci&#243;n</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.descripcion }}</mat-cell>
-						<td align="left" mat-footer-cell *matFooterCellDef>&#8212; </td>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="PesoBruto">
 						<mat-header-cell *matHeaderCellDef>Peso bruto</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.pesoBruto }}</mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef> </td>
+                        <mat-footer-cell *matFooterCellDef> {{ totalPesoB  }} </mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="DescuentoPesoPiedra">
 						<mat-header-cell *matHeaderCellDef>Descuento piedra</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.descuentoPesoPiedra }}</mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef></td>
+                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="DescuentoSuelda">
 						<mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.descuentoSuelda }}</mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef> </td>
+                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="PesoNeto">
 						<mat-header-cell *matHeaderCellDef>Peso neto</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.pesoNeto }}</mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef> </td>
+                        <mat-footer-cell *matFooterCellDef> {{ totalPesoN  }} </mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="precioOro">
 						<mat-header-cell *matHeaderCellDef>Precio Oro</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.valorOro }}</mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef> </td>
+                        <mat-footer-cell *matFooterCellDef> {{ totalValorO  }}  </mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="ValorAvaluo">
 						<mat-header-cell *matHeaderCellDef>Valor aval&#250;o</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.valorAvaluo }}</mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef></td>
+                        <mat-footer-cell *matFooterCellDef> {{ totalValorA | currency: "USD":true:"1.2" }} </mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="ValorAplicable">
 						<mat-header-cell *matHeaderCellDef> Valor comercial</mat-header-cell>
@@ -380,29 +375,45 @@
 					<ng-container matColumnDef="ValorRealizacion">
 						<mat-header-cell *matHeaderCellDef>Valor realizaciòn</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.valorRealizacion}}</mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef> </td>
+                        <mat-footer-cell *matFooterCellDef> {{ totalValorR | currency: "USD":true:"1.2" }}  </mat-footer-cell>
+					</ng-container>
+					<ng-container matColumnDef="valorComercial">
+						<mat-header-cell *matHeaderCellDef>Valor Comercial</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.valorComercial }}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> {{ totalValorC | currency: "USD":true:"1.2" }} </mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="tienePiedras">
 						<mat-header-cell *matHeaderCellDef> Tiene Piedras </mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.tienePiedras}}</mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef> </td>
+						<mat-cell *matCellDef="let element"> {{ element.tienePiedras?'SI':'NO'}}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="detallePiedras">
 						<mat-header-cell *matHeaderCellDef>Detalle Piedras</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.detallePiedras}}</mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef> </td>
+                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
 					</ng-container>
-					<ng-container matColumnDef="ValorOro">
-						<mat-header-cell *matHeaderCellDef>Valor oro</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.valorOro }}</mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef></td>
+					<ng-container matColumnDef="TipoJoya">
+						<mat-header-cell *matHeaderCellDef> Tipo de joya </mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.tipoJoya}}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
 					</ng-container>
+					<ng-container matColumnDef="EstadoJoya">
+						<mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.estadoJoya }}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+					</ng-container>
+					<ng-container matColumnDef="Descripcion">
+						<mat-header-cell *matHeaderCellDef>Descripci&#243;n</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.descripcion }}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+					</ng-container>
+
 					<mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
 					<mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
 					<mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
 				</mat-table>
-				<div class="row">
-					<div class="offset-5 col-2">
+				<div *ngIf="dataSourceTasacion.data" class="row">
+					<div class="offset-5 col-2 mt-3">
 						<button mat-stroked-button color="primary" matStepperNext (click)="calcularOpciones()">
 							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
 							<span color="primary">Calcular Opciones</span>
@@ -580,15 +591,15 @@
 					<mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>
 				</mat-table>
 				<form [formGroup]="formOpcionesCredito">
-					<div class="row">
-						<div class="col-md-3">
+					<div class="row mt-3">
+						<div class="col-md-2">
 							<mat-form-field class="mat-form-field-fluid">
 								<input [formControl]="montoSolicitado" placeholder="Monto solicitado" autocomplete="off"
 									matInput numeric numericType="number" (keypress)="numberOnly($event)">
 							</mat-form-field>
 						</div>
-						<div class="col-md-3">
-							<button mat-stroked-button color="primary" matTooltip="Recalcula las opciones con el monto solicitado" matTooltipPosition="above">
+						<div class="col-md-2">
+							<button mat-stroked-button color="primary" (click)="calcularOpciones(this.montoSolicitado.value)"  matTooltip="Recalcula las opciones con el monto solicitado" matTooltipPosition="above">
 								<mat-icon style="font-size: 24px;" color="primary" >crop_rotate 
 								</mat-icon>
 								<span color="primary">Aplicar Monto</span>
@@ -602,13 +613,14 @@
 							</button>
 						</div>
 					</div>
-					<div class="row">
-
-						<button mat-raised-button color="accent" (click)="guardarCredito()" style="align-self: center;">
-							<mat-icon style="font-size: 24px;" color="primary" matTooltipPosition="above">add_task
-							</mat-icon>
-							<span color="primary">Cargar Opcion de credito</span>
-						</button>
+					<div class="row mt-3">
+						<div class="col-3 offset-5">
+							<button mat-raised-button color="accent" (click)="guardarCredito()" style="align-self: center;">
+								<mat-icon style="font-size: 24px;" color="primary" matTooltipPosition="above">add_task
+								</mat-icon>
+								<span color="primary">Cargar Opcion de credito</span>
+							</button>
+						</div>
 					</div>
 				</form>
 			</mat-step>

@@ -30,8 +30,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { SelectionModel } from '@angular/cdk/collections';
-import { response } from 'express';
-import { map, startWith } from 'rxjs/operators';
+
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 //import { DataTableDataSource } from 'src/app/views/partials/content/widgets/general/data-table/data-table.data-source';
 
@@ -58,6 +57,13 @@ export class GestionNegociacionComponent implements OnInit {
   public catEstadoJoya: Array<any>;
   catPais;
   filteredPais: Observable<Pais[]>;
+  public totalNumeroJoya: number;
+  public totalPesoB: number;
+  public totalPesoN: number;
+  public totalValorA: number;
+  public totalValorR: number;
+  public totalValorC: number;
+  public totalValorO: number;
 
   opcionCredito;
 
@@ -106,8 +112,7 @@ export class GestionNegociacionComponent implements OnInit {
   // TABLA DE TASACION
   // ---- @TODO: Crear un data source para la tabla 
   dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
-  displayedColumnsTasacion = ['Accion', 'NumeroPiezas', 'TipoOro', 'TipoJoya', 'EstadoJoya', 'Descripcion',
-    'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'tienePiedras', 'detallePiedras', 'ValorOro'];
+  displayedColumnsTasacion = ['Accion', 'NumeroPiezas', 'TipoOro', 'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'valorComercial', 'tienePiedras', 'detallePiedras','TipoJoya', 'EstadoJoya', 'Descripcion',];
   private elementJoya;
 
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
@@ -226,7 +231,7 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   private validarExcepciones(tmp: NegociacionWrapper){
-    if(tmp.excepciones.length > 0){
+    if(tmp.excepciones && tmp.excepciones.length > 0){
       let listPendientes: TbQoExcepcion[] = null;
       let listInPendientes: TbQoExcepcion[] = null;
       tmp.excepciones.forEach(e =>{
@@ -249,6 +254,26 @@ export class GestionNegociacionComponent implements OnInit {
       }
     } else{
       this.cargarValores(tmp);
+    }
+  }
+  private calcular() {
+    this.totalPesoN = 0;
+    this.totalPesoB = 0;
+    this.totalValorR = 0;
+    this.totalValorA = 0;
+    this.totalValorC = 0;
+    this.totalValorO = 0;
+    this.totalNumeroJoya = 0
+    if (this.dataSourceTasacion.data) {
+      this.dataSourceTasacion.data.forEach(element => {
+        this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
+        this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
+        this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
+        this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
+        this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
+        this.totalValorO = Number(this.totalValorO) + Number(element.valorOro);
+        this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas);
+      });
     }
   }
   private iniciarNegociacionFromCot(id : number ){
@@ -387,15 +412,17 @@ export class GestionNegociacionComponent implements OnInit {
   
     
     this.email.setValue(this.tbQoCliente.email);
-    this.campania.setValue(this.tbQoCliente.campania );
-    this.publicidad.setValue (this.tbQoCliente.publicidad );
-    this.aprobacionMupi.setValue(this.tbQoCliente.aprobacionMupi ? this.tbQoCliente.aprobacionMupi == 'SI' ? 'S' : 'N'  : null );
+    this.campania.setValue('');
+    this.publicidad.setValue ('');
+    //this.aprobacionMupi.setValue(this.tbQoCliente.aprobacionMupi ? this.tbQoCliente.aprobacionMupi == 'SI' ? 'S' : 'N'  : null );
+    this.aprobacionMupi.setValue('');
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
     if(wrapper.joyas != null){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
       this.dataSourceCreditoNegociacion.data.push( wrapper.credito );
-      this.dataSourceTasacion.data = wrapper.joyas
+      this.dataSourceTasacion.data = wrapper.joyas;
+      this.calcular();
       this.sinNotSer.setNotice("NEGOCIACION -> \"" + wrapper.credito.codigo + "\" Cargada correctamente.", "success");
     }else{
       this.sinNotSer.setNotice("SE HA INICIADO UNA NEGOCIACION -> \"" + wrapper.credito.codigo + "\". ", "success");
@@ -645,12 +672,15 @@ export class GestionNegociacionComponent implements OnInit {
     }
   }
   cargarJoya() {
+    console.log('formulario tasacion ===>>>',this.formTasacion)
     if (this.formTasacion.invalid) {
       this.sinNotSer.setNotice('COMPLETE CORRECTAMENTE EL FORMULARIO', 'warning');
+      return;
     }
 
-    if(!this.negoW.credito.id){
+    if( this.negoW == null || !this.negoW.credito || !this.negoW.credito.id){
       this.sinNotSer.setNotice('COMPLETE CORRECTAMENTE LA INFORMACION DEL CLIENTE', 'warning');
+      return;
     }
       //this.loadingSubject.next(true);
       let joya = new TbQoTasacion();
@@ -682,6 +712,7 @@ export class GestionNegociacionComponent implements OnInit {
           this.sinNotSer.setNotice('SE GUARDO LA JOYA TASADA', 'success');
         //this.loadingSubject.next(false);
         this.limpiarCamposTasacion();
+        this.calcular();
       });
     
   }
@@ -714,6 +745,8 @@ export class GestionNegociacionComponent implements OnInit {
         this.dataSourceTasacion.data = dataC;
         if (this.dataSourceTasacion.data.length < 1) {
           this.dataSourceTasacion = null;
+        }else{
+          this.calcular();
         }
       } else {
         this.sinNotSer.setNotice('ERROR DESCONOCIDO', 'error');
@@ -725,15 +758,19 @@ export class GestionNegociacionComponent implements OnInit {
   /**
    * calcularOpciones
    */
-  public calcularOpciones() {
+  public calcularOpciones(montoSolicitado) {
     if (this.dataSourceTasacion.data.length > 0) {
-     
-      this.cal.simularOferta(this.negoW.credito.id).subscribe((data: any) => {
+      this.loadingSubject.next(true);
+      this.cal.simularOferta(this.negoW.credito.id,montoSolicitado).subscribe((data: any) => {
+        this.loadingSubject.next(false);
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
           this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
+        this.myStepper.selectedIndex = 6;
+      },err=>{
+        this.loadingSubject.next(false);
       });
 
     } else {
@@ -868,8 +905,10 @@ export class GestionNegociacionComponent implements OnInit {
   selectTienePiedras(){
     if(this.tienePiedras.value =='S'){
       this.formTasacion.addControl("detallePiedras", this.detallePiedras);
+      this.formTasacion.addControl("descuentoPiedra", this.descuentoPiedra);
     }else{
       this.formTasacion.removeControl("detallePiedras");
+      this.formTasacion.removeControl("descuentoPiedra");
     }
   }
 
@@ -882,7 +921,8 @@ export class GestionNegociacionComponent implements OnInit {
 
 setPesoNeto(){
   try{
-    this.pesoNeto.setValue((Number(this.pesoBruto.value) - (Number(this.descuentoSuelda.value)+ Number (this.descuentoPiedra.value))))
+    let v = (Number(this.pesoBruto.value) - (Number(this.descuentoSuelda.value)+ Number (this.descuentoPiedra.value)))
+    this.pesoNeto.setValue(v.toFixed(2));
   }catch{
     this.pesoNeto.setValue('0');
   }
