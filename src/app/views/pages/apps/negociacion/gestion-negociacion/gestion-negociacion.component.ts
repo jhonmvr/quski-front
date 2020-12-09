@@ -231,7 +231,7 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   private validarExcepciones(tmp: NegociacionWrapper){
-    if(tmp.excepciones.length > 0){
+    if(tmp.excepciones && tmp.excepciones.length > 0){
       let listPendientes: TbQoExcepcion[] = null;
       let listInPendientes: TbQoExcepcion[] = null;
       tmp.excepciones.forEach(e =>{

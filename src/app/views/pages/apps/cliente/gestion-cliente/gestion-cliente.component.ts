@@ -13,6 +13,7 @@ import { SeparacionBienesEnum } from '../../../../../core/enum/SeparacionBienesE
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
@@ -22,7 +23,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { map, startWith } from 'rxjs/operators';
-import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
 
 export interface User {
   nombre: string;
@@ -40,6 +40,8 @@ export class GestionClienteComponent implements OnInit {
   private wrapper: ClienteCompletoWrapper;
   private idNegociacion;
   public loading;
+  usuario
+  agencia
   public totalActivo: number = 0;
   public totalPasivo: number = 0;
   public totalValorIngresoEgreso: number = 0;
@@ -237,6 +239,8 @@ export class GestionClienteComponent implements OnInit {
   ngOnInit() {
     this.subheaderService.setTitle("Gestion de Cliente");
     this.loading = this.loadingSubject.asObservable();
+    this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.agencia = 2;
     this.buscarCliente();
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
@@ -1140,6 +1144,8 @@ export class GestionClienteComponent implements OnInit {
                     this.wrapper.cliente.profesion = this.profesion.value ? this.profesion.value.codigo : null;
                     this.wrapper.cliente.segundoNombre = this.segundoNombre.value;
                     this.wrapper.cliente.separacionBienes = this.separacionBienes.value;
+                    this.wrapper.cliente.usuario = this.usuario;
+                    this.wrapper.cliente.agencia = this.agencia;
                     this.wrapper.cliente.pasivos = this.totalPasivo;
                     this.wrapper.cliente.activos = this.totalActivo;
                     let totalEgreso = 0;
