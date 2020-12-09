@@ -311,25 +311,26 @@ export class GestionNegociacionComponent implements OnInit {
           } 
           this.cargarValores(this.negoW);
         } else {
-          //this.abrirPopupDeAutorizacion(cedula);
+          this.abrirPopupDeAutorizacion(this.identificacion.value);
         }
       });
  
   }
   private iniciarNegociacionEquifax( cedula: string ){
-    this.loadingSubject.next(true);
+    //this.loadingSubject.next(true);
     this.neg.iniciarNegociacionEquifax( cedula, this.usuario).subscribe( (wrapper: any) =>{
       if (wrapper.entidad.respuesta) {
+        this.limpiarNegociacion();
         this.negoW = wrapper.entidad;
-        console.log("NEGOCIACION INICIADA POR EQUIFAX-> ", wrapper.entidad);
-        if (this.negoW.excepcionBre == "") {
-          this.myStepper.selectedIndex = 1;
-          this.cargarValores(this.negoW);
-        } else {
+        this.myStepper.selectedIndex = 1;
+        if (this.negoW.excepcionBre){
           this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
-        }
+          return;
+        } 
+        this.cargarValores(this.negoW);
+        
       } else {
-        this.loadingSubject.next(false);
+        //this.loadingSubject.next(false);
         this.limpiarCamposBusqueda();
         this.sinNotSer.setNotice('NO SE PUDO INICIAR NEGOCIACION, CLIENTE NO ENCONTRADO EN EQUIFAX','error')
       }

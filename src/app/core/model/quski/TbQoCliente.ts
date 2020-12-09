@@ -50,9 +50,9 @@ export class TbQoCliente {
   tbQoIngresoEgresoClientes: TbQoIngresoEgresoCliente[];
   tbQoRiesgoAcumulados: null;
   constructor() {
-    this.tbQoIngresoEgresoClientes = new Array<TbQoIngresoEgresoCliente>();
-    this.tbQoPatrimonios = new Array<TbQoPatrimonio>();
-    this.tbQoReferenciaPersonals = new Array<TbReferencia>();
-    this.tbQoDireccionClientes = new Array<TbQoDireccionCliente>();
+    //this.tbQoIngresoEgresoClientes = new Array<TbQoIngresoEgresoCliente>();
+    //this.tbQoPatrimonios = new Array<TbQoPatrimonio>();
+    //this.tbQoReferenciaPersonals = new Array<TbReferencia>();
+    //this.tbQoDireccionClientes = new Array<TbQoDireccionCliente>();
   }
 }
