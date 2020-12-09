@@ -200,7 +200,6 @@ export class BandejaAprobadorComponent implements OnInit {
         if(r){
           if(row.id != null){
             if(row.proceso =="NUEVO"){
-              this.limpiarFiltros();
               this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.id]);    
             }
             if(row.proceso =="RENOVACION"){
@@ -210,8 +209,7 @@ export class BandejaAprobadorComponent implements OnInit {
             }
             if(row.proceso =="COTIZACION"){
               this.sinNotSer.setNotice("ERROR, CONTACTE SOPORTE","error");
-              this.limpiarFiltros();
-              this.router.navigate(['aprobador']);    
+              this.limpiarFiltros();   
             }
             if(row.proceso =="PAGO"){
               this.sinNotSer.setNotice("APROBACION PAGO, SIN DESARROLLO","error");
@@ -219,10 +217,12 @@ export class BandejaAprobadorComponent implements OnInit {
               this.router.navigate(['aprobador']);    
             }
             if(row.proceso =="DEVOLUCION"){
-              this.sinNotSer.setNotice("APROBACION DEVOLUCION, SIN DESARROLLO","error");
-              this.limpiarFiltros();
-              this.router.navigate(['aprobador']);    
+              this.router.navigate(['devolucion/aprobar-solicitud-devolucion/', row.id]);
             }
+            if(row.proceso =="CANCELACION DEVOLUCION"){
+              this.router.navigate(['devolucion/aprobacion-cancelacion-solicitud/', row.id]);
+            }
+            
             if(row.proceso =="VERIFICACION TELEFONICA"){
               this.sinNotSer.setNotice("APROBACION VERIFICACION TELEFONICA, SIN DESARROLLO","error");
               this.limpiarFiltros();
