@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatPaginator, MatSort, MatStepper, MatTableDataSource } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
 import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
@@ -14,6 +14,7 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { DevolucionService } from '../../../../../core/services/quski/devolucion.service';
+import { ValidateCedula } from '../../../../../core/util/validate.util';
 
 @Component({
   selector: 'kt-solicitud-devolucion',
@@ -21,7 +22,8 @@ import { DevolucionService } from '../../../../../core/services/quski/devolucion
   styleUrls: ['./solicitud-devolucion.component.scss']
 })
 export class SolicitudDevolucionComponent implements OnInit{
-  public formCreditoNuevo: FormGroup = new FormGroup({});
+  public heredero: FormGroup = new FormGroup({});
+  public devolucionForm: FormGroup = new FormGroup({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
   // datos operacion
   public codigoOperacion = new FormControl('');
@@ -42,12 +44,12 @@ export class SolicitudDevolucionComponent implements OnInit{
  public edad = new FormControl('');
 
  //GESTION DEVOLUCION
- public tipoCliente = new FormControl('');
+ public tipoCliente = new FormControl('', [Validators.required]);
  public observaciones = new FormControl('');
- public agenciaEntrega = new FormControl('');
+ public agenciaEntrega = new FormControl('', [Validators.required]);
  public valorCustodia = new FormControl('');
- public cedulaHeredero = new FormControl('');
- public nombreHeredero = new FormControl('');
+ public cedulaHeredero = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
+ public nombreHeredero =  new FormControl('', [Validators.required]);
  
   fechaUtil:diferenciaEnDias;
   fechaServer;
@@ -168,7 +170,12 @@ datos
     private par: ParametroService, private route: ActivatedRoute,
     private router: Router,
     private devService: DevolucionService) { 
-    
+      this.heredero.addControl("cedulaHeredero", this.cedulaHeredero);
+      this.heredero.addControl("nombreHeredero", this.nombreHeredero);
+      this.devolucionForm.addControl("tipoCliente", this.tipoCliente);
+      this.devolucionForm.addControl("observaciones", this.observaciones);
+      this.devolucionForm.addControl("agenciaEntrega", this.agenciaEntrega);
+      this.devolucionForm.addControl("valorCustodia", this.valorCustodia);
     
   }
 
@@ -307,11 +314,14 @@ datos
   }
 
   registrarDevolucion(){
-    this.calcular()
+    if (this.devolucionForm.invalid) {
+      this.sinNoticeService.setNotice('Llene los datos requeridos', 'warning');
+      return;
+    } 
     let tbQoDevolucion = new TbQoDevolucion()
     tbQoDevolucion.codigo =  "";
     tbQoDevolucion.asesor = "Asesor quemado"
-    tbQoDevolucion.idAgencia = localStorage.getItem("reAgencia")
+    tbQoDevolucion.idAgencia = localStorage.getItem("reAgencia") == null ? "" : localStorage.getItem("reAgencia")
     tbQoDevolucion.nombreAgenciaSolicitud = "quemada"
     tbQoDevolucion.aprobador = "";
     tbQoDevolucion.nombreCliente= this.nombresCompletos.value
@@ -344,7 +354,7 @@ datos
           "Guardado correctamente",
           "success"
         );
-       // this.router.navigate(["/midas-oro/cliente/list-cliente"]);
+        this.router.navigate(['negociacion/bandeja-operaciones'    ]);
       } else {
         this.sinNoticeService.setNotice(
           "Ocurrio un error al guardar",
@@ -377,7 +387,8 @@ getEdad(fechaValue){
   this.totalResults = this.joyasList.length;
   console.log( this.joyasList)
   this.dataSourceJoyas = new MatTableDataSource<any>(this.joyasList);
-   
+  this.calcular()
+  console.log(this.totalValorAvaluo)
  }
 
 
@@ -510,6 +521,14 @@ validateHeredero(){
 }
 
 agregarEnTabla(){
+  if (this.cedulaHeredero.invalid) {
+    this.sinNoticeService.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'warning');
+    return;
+  }  
+  if (this.nombreHeredero.invalid) {
+    this.sinNoticeService.setNotice('INGRESE NOMBRE DEL HEREDERO', 'warning');
+    return;
+  } 
   let objetoHeredero = { cedula:"", nombre:""}
   if(this.cedulaHeredero.value && this.nombreHeredero.value){
     objetoHeredero.cedula= this.cedulaHeredero.value  
@@ -518,8 +537,42 @@ agregarEnTabla(){
     this.dataSourceHeredero=new MatTableDataSource<any>(this.listTablaHeredero);
     console.log(this.listTablaHeredero)
   }else{
-    this.sinNoticeService.setNotice("Debe agregar", 'error');
+    this.sinNoticeService.setNotice("Debe agregar el nombre del heredero", 'error');
   }
  
 }
+public getErrorMessage(pfield: string) { //@TODO: Revisar campos 
+  const errorRequerido = 'Ingresar valores';
+  const errorNumero = 'Ingresar solo numeros'; 
+  const maximo = "El maximo de caracteres es: ";
+  const invalidIdentification = 'La identificacion no es valida';
+  const errorLogitudExedida = 'La longitud sobrepasa el limite';
+  const errorInsuficiente = 'La longitud es insuficiente';
+  if (pfield && pfield === "cedulaHeredero") {
+    const input = this.cedulaHeredero.value 
+    return input.hasError("required")
+      ? errorRequerido
+      : input.hasError("pattern")
+        ? errorNumero
+        : input.hasError("invalid-identification")
+          ? invalidIdentification
+          : input.hasError("maxlength")
+            ? errorLogitudExedida
+            : input.hasError("minlength")
+              ? errorInsuficiente
+              : "";
+  }
+  if (pfield && pfield === 'nombresCompletos') {
+    const input = this.nombresCompletos;
+    return input.hasError('required') ? errorRequerido : '';
+  }
+
+  if (pfield && pfield === 'nombreHerederos') {
+    const input = this.nombreHeredero;
+    return input.hasError('required') ? errorRequerido : '';
+  }
+
+}
+
+
 } 

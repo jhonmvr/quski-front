@@ -8,7 +8,7 @@
 		<ng-container ktPortletTools>
             <a href="javascript:void(0);" (click)="buscar()" matTooltip="Buscar" style="font-size: 12px; vertical-align: middle;">
                 <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above" >search</mat-icon>
-                <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar credito</span>
+                <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar </span>
             </a>
         
 
@@ -23,25 +23,25 @@
                    
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="codigoOperacion" placeholder="Codigo Operacion " autocomplete="off">
+                            <input matInput [formControl]="codigoOperacion" placeholder="Codigo Operación " autocomplete="off">
                         </mat-form-field>
                       
                     </div>
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="identificacion" placeholder="Identificacion " autocomplete="off">
+                            <input matInput [formControl]="identificacion" placeholder="Identificación " autocomplete="off">
                         </mat-form-field>
                       
                     </div>
             
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <mat-select placeholder="Agencia" [formControl]="agencia" >
-                                <mat-option>--</mat-option>
-                                <mat-option *ngFor="let ag of agenciasCatalogo" [value]="ag">
-                                  {{ ag}}
+                            <mat-select placeholder="Agencia" [formControl]="agencia">
+                               
+                                <mat-option *ngFor="let agen of catalogoAgencia " [value]="agen">
+                                    {{agen.nombre}}
                                 </mat-option>
-                              </mat-select>
+                            </mat-select>   
                         </mat-form-field>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field>
                             <input matInput [matDatepicker]="pckFechaCreacionDesde" 
-                            [formControl]="fechaCreacionDesde" placeholder="Fecha de aprobacion desde">
+                            [formControl]="fechaCreacionDesde" placeholder="Fecha de aprobación desde">
                             <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionDesde"></mat-datepicker-toggle>
                             <mat-datepicker #pckFechaCreacionDesde></mat-datepicker>
                         </mat-form-field>
@@ -57,7 +57,7 @@
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field>
                             <input matInput [matDatepicker]="pckFechaCreacionFin" 
-                            [formControl]="fechaCreacionFin" placeholder="Fecha de aprobacion hasta">
+                            [formControl]="fechaCreacionFin" placeholder="Fecha de aprobación hasta">
                             <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionFin"></mat-datepicker-toggle>
                             <mat-datepicker #pckFechaCreacionFin></mat-datepicker>
                         </mat-form-field>
@@ -65,7 +65,10 @@
                     </div>
               
                 </div>
-              
+                <a href="javascript:void(0);" (click)="descargarExcel()" matTooltip="Buscar" style="font-size: 12px; vertical-align: middle;">
+                    <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above" >cloud_download</mat-icon>
+                    <span style="position: relative;top: -10px;margin-left: 5px;" class="cloud_download">Descargar excel </span>
+                </a>
             </div>
         </div> 
         <!-- END FILTERS -->
@@ -98,12 +101,12 @@
                 </ng-container>
                 
                 <ng-container matColumnDef="codigoOperacionMadre">
-                    <mat-header-cell *matHeaderCellDef>Codigo de operacion Madre</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>Código de operación Madre</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.codigoOperacionMadre}} </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="codigoOperacion">
-                    <mat-header-cell *matHeaderCellDef>Codigo Operacion</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>Código Operación</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.codigoOperacion}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="nombreCliente">
@@ -111,8 +114,8 @@
                 <mat-cell *matCellDef="let element">{{element.nombreCliente}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="identificacion">
-                <mat-header-cell *matHeaderCellDef>Identificacion</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.identificacion}} </mat-cell>
+                <mat-header-cell *matHeaderCellDef>Identificación</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.cedulaCliente}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="fundaMadre">
                 <mat-header-cell *matHeaderCellDef>Funda Madre</mat-header-cell>
@@ -135,7 +138,7 @@
                 <mat-cell *matCellDef="let element">{{element.asesor}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="fechaAprobacion">
-                <mat-header-cell *matHeaderCellDef>Fecha de Aprobacion</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
                 <mat-cell *matCellDef="let element">{{element.fechaAprobacion}} </mat-cell>
             </ng-container>
       

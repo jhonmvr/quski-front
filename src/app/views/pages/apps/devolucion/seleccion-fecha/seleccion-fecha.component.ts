@@ -11,6 +11,8 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { AddFechaComponent } from '../../../../partials/custom/add-fecha/add-fecha.component';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { RegistroFechaArribo } from '../../../../../core/model/wrapper/registroFechaArribo';
 /* import { RegistroFechaArribo } from '../../../../../core/model/wrapper/registroFechaArribo';
  */
 @Component({
@@ -31,17 +33,13 @@ export class SeleccionFechaComponent implements OnInit {
   agencia = new FormControl('', []);
   proceso = new FormControl('', []);
   estado = new FormControl('', []); 
-  fechaCreacionDesde = new FormControl('', []);
-  fechaCreacionFin = new FormControl('', []);
-  fechaVencimientoDesde = new FormControl('', []);
-  fechaVencimientoFin = new FormControl('', []);
   fechaAprobacionDesde = new FormControl('', []);
   fechaAprobacionFin = new FormControl('', []);
   tipoCredito = new FormControl('', []);
   cliente = new FormControl('', []);
   cedulaCliente = new FormControl('', []);
-  plazo = new FormControl('', []);
-  opciones = ['SI', 'NO']
+ 
+  catalogoAgencia
   busquedaDevWrapper = new BusquedaDevolucionWrapper
 
   fechaUtil:diferenciaEnDias;
@@ -68,6 +66,7 @@ export class SeleccionFechaComponent implements OnInit {
     private sinNoticeService: ReNoticeService,
     private subheaderService: SubheaderService,
     private noticeService:ReNoticeService,
+    private css:SoftbankService,
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<AddFechaComponent>,
     @Inject(MAT_DIALOG_DATA) public data) {
@@ -77,8 +76,7 @@ export class SeleccionFechaComponent implements OnInit {
   ngOnInit() {
   
     this.loading = this.loadingSubject.asObservable();
-    // Set title to page breadCrumbs
-    this.subheaderService.setTitle('Gestion credito');
+    this.consultarAgencia();
     this.initiateTablePaginator();
     //Se ejecuta cuando se hace click en el ordenamiento en el mattable
     this.sort.sortChange.subscribe(() => {
@@ -141,17 +139,17 @@ export class SeleccionFechaComponent implements OnInit {
 
   submit() {
     
-    this.busquedaDevWrapper.codigoOperacion = this.codigoOperacion.value.toUpperCase()
-    this.busquedaDevWrapper.agencia = this.agencia.value.toUpperCase()
-    this.busquedaDevWrapper.fechaAprobacionDesde = this.fechaAprobacionDesde.value
-    this.busquedaDevWrapper.fechaAprobacionHasta = this.fechaAprobacionFin.value
-    this.busquedaDevWrapper.identificacion = this.cedulaCliente.value
+    let codigoOperacion = this.codigoOperacion.value.toUpperCase()
+    let agencia = this.agencia.value.nombre
+    let fechaAprobacionDesde = this.fechaAprobacionDesde.value
+    let fechaAprobacionHasta = this.fechaAprobacionFin.value
+    let identificacion = this.cedulaCliente.value
 
 
     //console.log("====> paged: " + JSON.stringify( this.p ));
     this.loadingSubject.next(true);
     this.dataSource = null;
-    this.ds.busquedaSeleccionarFechas(this.busquedaDevWrapper).subscribe((data:any)=>{
+    this.ds.busquedaSeleccionarFechas(this.p, codigoOperacion, agencia,fechaAprobacionDesde,fechaAprobacionHasta, identificacion ).subscribe((data:any)=>{
       if(data){
         console.log(data.list)
         this.dataSource=new MatTableDataSource<any>(data.list);
@@ -197,12 +195,11 @@ export class SeleccionFechaComponent implements OnInit {
     
   
 
-    /* dialogRef.afterClosed().subscribe((resultado) => {
+     dialogRef.afterClosed().subscribe((resultado) => {
       if (resultado) {
         console.log(resultado)
         let listIdDevolucion =[];
         this.selection.selected.forEach(x=> listIdDevolucion.push(x.id))
-        
         console.log("XD",listIdDevolucion)
         let objetoRegistroFechaArribo = new RegistroFechaArribo
         objetoRegistroFechaArribo.fechaArribo = resultado;
@@ -211,10 +208,11 @@ export class SeleccionFechaComponent implements OnInit {
         this.ds.registrarFechaArribo(objetoRegistroFechaArribo).subscribe((data:any)=>{
           if(data){
             console.log(data)
-
+            this.sinNoticeService.setNotice("Se ha registrado con exito", "success")
             this.eliminarSelect();
             this.buscar();
           } else {
+            this.sinNoticeService.setNotice("Error al registrar", "error")
             this.eliminarSelect();
             this.buscar();
           } 
@@ -222,16 +220,31 @@ export class SeleccionFechaComponent implements OnInit {
         })
         
 
+      }else {
+        this.sinNoticeService.setNotice("No se capturo la fecha", "error")
+        this.eliminarSelect();
+        this.buscar();
       }
-
-    }); */
-  }else {
-    console.log("esta mandando vacio")
-  }
-  }
-
-
+    })
 
     
+  }else{
+    this.sinNoticeService.setNotice("No selecciono devoluciones", "warning")
+  }
+}
+  
+
+  consultarAgencia(){
+    this.css.consultarAgenciasCS().subscribe((data:any)=>{
+      if(!data.existeError){
+        console.log(data)
+        this.catalogoAgencia = data.catalogo
+      }
+    })
+  }
+
+    descargarExcel(){
+
+    }
   
 }

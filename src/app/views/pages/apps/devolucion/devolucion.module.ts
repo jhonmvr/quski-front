@@ -64,6 +64,10 @@ const routes: Routes = [
 				component: AprobacionSolicitudComponent
 			},
 			{
+				path: 'aprobar-solicitud-devolucion/:idDevolucion',
+				component: AprobacionSolicitudComponent
+			},
+			{
 				path: 'set-arribo',
 				component: SeleccionFechaComponent
 			},
@@ -76,7 +80,15 @@ const routes: Routes = [
 				path: 'entrega-recepcion',
 				component: EntregaRecepcionComponent
 			},
+			{
+				path: 'entrega-recepcion/:idDevolucion',
+				component: EntregaRecepcionComponent
+			},
 			
+			{
+				path: 'detalle-devolucion/:idDevolucion',
+				component: DetalleDevolucionComponent
+			},
 			{
 				path: 'detalle-devolucion',
 				component: DetalleDevolucionComponent
@@ -87,9 +99,17 @@ const routes: Routes = [
 				component: CancelacionSolicitudDevolucionComponent
 			},
 			{
+				path: 'cancelacion-solicitud/:idDevolucion',
+				component: CancelacionSolicitudDevolucionComponent
+			},
+			{
+				path: 'aprobacion-cancelacion-solicitud/:idDevolucion',
+				component: AprobacionCancelacionComponent
+			},	{
 				path: 'aprobacion-cancelacion-solicitud',
 				component: AprobacionCancelacionComponent
 			},
+
 
 		
 

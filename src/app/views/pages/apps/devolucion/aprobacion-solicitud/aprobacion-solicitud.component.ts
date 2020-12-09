@@ -47,11 +47,20 @@ export class AprobacionSolicitudComponent implements OnInit{
  public valorCustodia = new FormControl('');
  public cedulaHeredero = new FormControl('');
  public nombreHeredero = new FormControl('');
- idDevolucion = 16
+ idDevolucion
   fechaUtil:diferenciaEnDias;
   fechaServer;
 ///operativa
+//totalizados
 
+totalPesoNeto;
+totalPesoBruto;
+totalValorAvaluo;
+
+disableAprobacionButton;
+disableAprobacion = new BehaviorSubject<boolean>(false);
+
+//
 joyasList  = []
  
   //url=;objeto=ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiIiwKICAgICJtb250b0ZpbmFuY2lhZG8iOiAiNzAwIiwKICAgICJhc2Vzb3IiOiAiSnVhbml0byIsCiAgICAiZXN0YWRvT3BlcmFjaW9uIjogICJDQU5DRUxBRE8iLAogICAgInRpcG9DcmVkaXRvIjogIiIsCiAgICAiY29kaWdvVGFibGFBbW9ydGl6YWNpb25RdXNraSI6IkEwMSIsCiAgICAiaW1wYWdvIjogIm5vIiwKICAgICJyZXRhbnF1ZW8iOiAibm8iLAogICAgImNvYmVydHVyYUluaWNpYWwiOiAiMTIwMCIsCiAgICAiY29iZXJ0dXJhQWN0dWFsIjogIjExMDAiLAogICAgImJsb3F1ZW8iOiIiLAogICAgImRpYXNNb3JhIjogIiIsCiAgICAiZXN0YWRvVWJpY2FjaW9uIjoiIiwKICAgICJlc3RhZG9Qcm9jZXNvIjoiIiwKICAgICJjb2RpZ29TZXJ2aWNpbyI6IiIsCiAgICAibWlncmFkbyI6ICIiCgp9
@@ -100,8 +109,6 @@ joyasList  = []
  dataSourceHeredero =new MatTableDataSource;
  //:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
 
-objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIyMDIwLTEwLTEyIiwKICAgICJmZWNoYVZlbmNpbWllbnRvIjogIjIwMjAtMTEtMTAiLAogICAgIm1vbnRvRmluYW5jaWFkbyI6ICI3MDAiLAogICAgImFzZXNvciI6ICJKdWFuaXRvIiwKICAgICJlc3RhZG9PcGVyYWNpb24iOiAgIkNBTkNFTEFETyIsCiAgICAidGlwb0NyZWRpdG8iOiAiIiwKICAgICJjb2RpZ29UYWJsYUFtb3J0aXphY2lvblF1c2tpIjoiQTAxIiwKICAgICJpbXBhZ28iOiAibm8iLAogICAgInJldGFucXVlbyI6ICJubyIsCiAgICAiY29iZXJ0dXJhSW5pY2lhbCI6ICIxMjAwIiwKICAgICJjb2JlcnR1cmFBY3R1YWwiOiAiMTEwMCIsCiAgICAiYmxvcXVlbyI6IiIsCiAgICAiZGlhc01vcmEiOiAiIiwKICAgICJlc3RhZG9VYmljYWNpb24iOiIiLAogICAgImVzdGFkb1Byb2Nlc28iOiIiLAogICAgImNvZGlnb1NlcnZpY2lvIjoiIiwKICAgICJtaWdyYWRvIjogIiIKCn0='
-datos
   // VARIABLES DE TRACKING
   public horaAsignacionCreacion: Date = null;
   public horaInicioCreacion: Date;
@@ -143,10 +150,9 @@ datos
   ngOnInit() {
     this.enableHerederoButton = this.enableHeredero.asObservable();
     this.enableHeredero.next(false);
+    this.disableAprobacionButton = this.disableAprobacion.asObservable();
+    this.disableAprobacion.next(true);
     this.setFechaSistema();
-    
-    this.datos = this.decodeObjetoDatos(this.objetoDatos);
-
     this.getParametros();
     this.cargarDatos();
     console.log("el encode", )
@@ -202,14 +208,16 @@ datos
         this.tipoCliente.setValue(data.entidad.tipoCliente)
         this.agenciaEntrega.setValue(data.entidad.agenciaEntrega)
         this.genero.setValue(data.entidad.genero)
+        this.edad.setValue(this.getEdad(data.entidad.fechaNacimiento).toFixed(0))
         this.validateHeredero();
-        this.valorCustodia.setValue(data.entidad.valorCustodiaAprox)
+        this.valorCustodia.setValue(data.entidad.valorCustodiaAprox.toFixed(2))
         this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
         this.listTablaHeredero = this.decodeObjetoDatos(data.entidad.codeHerederos);
         listDatosCreditos.push(this.decodeObjetoDatos(data.entidad.codeDetalleCredito))
         this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
         this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)
         this.dataSourceHeredero=new MatTableDataSource<any>(this.listTablaHeredero);
+        this.calcularTotalizados();
       }
     })
   
@@ -228,8 +236,8 @@ datos
       (params: Params) => {
       
        
-        this.parametroObjeto = params.get('objeto');
-     
+        this.idDevolucion = params.get('idDevolucion');
+        console.log("parametro", this.idDevolucion)
        
       },
       error => {
@@ -252,39 +260,30 @@ getEdad(fechaValue){
   return this.fechaUtil.obtenerDias()/365
  }
 
-/*
-calcular(){
 
-  this.totalPesoN =0;
-  this.totalPesoB =0;
-  this.totalPBFunda = 0
-  this.totalValorR = 0
-  this.totalValorA = 0
-  this.totalValorC = 0
-  this.totalNumeroJoya = 0
+ calcularTotalizados(){
+
+  this.totalPesoNeto =0;
+  this.totalPesoBruto =0;
+ 
+  this.totalValorAvaluo = 0
+
   let ind = 0;
-  if (this.dataSource.data) {
+  if (this.dataSourceJoyas.data) {
     //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
-    this.list=[];
-    this.dataSource.data.forEach(element => {
+ 
+    this.joyasList.forEach(element => {
       
-      ind = ind + 1;
-      this.list.push(ind);
-      
-    
-    this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-    this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
-    
-    this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
-    this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
-    this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
-    this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas)
+
+
+    this.totalPesoNeto = Number(this.totalPesoNeto) + Number(element.pesoNeto);
+    this.totalPesoBruto = Number(this.totalPesoBruto) + Number(element.pesoBruto);
+    this.totalValorAvaluo = Number(this.totalValorAvaluo) + Number(element.valorAvaluo);
+
     });
     
   }
 }
-
-*/
 
 /* ----------TRACKING-------*/
 
@@ -323,8 +322,16 @@ aprobar(){
   this.devService.aprobarDevolucion(this.idDevolucion).subscribe((data:any)=> {
     
     console.log(data.entidad)
+
+    this.sinNoticeService.setNotice(
+      "Se ha aprobado correctamente",
+      "success"
+    );
+    this.disableAprobacion.next(false)
+    this.router.navigate(['aprobador/bandeja-aprobador'    ]);
   }, error => {
     this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
+    this.disableAprobacion.next(true)
   })
 }
 
@@ -332,8 +339,16 @@ rechazar(){
   this.devService.aprobarDevolucion(this.idDevolucion).subscribe((data:any)=> {
     
     console.log(data.entidad)
+    this.sinNoticeService.setNotice(
+      "Se ha rechazado correctamente",
+      "success"
+    );
+    this.disableAprobacion.next(false)
+    this.router.navigate(['aprobador/bandeja-aprobador'    ]);
+
   }, error => {
-    this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
+    this.sinNoticeService.setNotice("Error en el rechazo", 'error');
+    this.disableAprobacion.next(true)
   })
 }
 

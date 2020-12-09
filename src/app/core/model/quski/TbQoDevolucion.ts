@@ -26,6 +26,8 @@ export class TbQoDevolucion {
     codeDetalleCredito: string;
     codeDetalleGarantia: string;
     genero: string;
+    fundaActual: string;
+    fundaMadre: string;
     nombreAgenciaSolicitud : string;
     agenciaEntregaId: number;
     pesoBruto: number;

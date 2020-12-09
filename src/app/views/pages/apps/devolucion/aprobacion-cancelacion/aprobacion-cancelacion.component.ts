@@ -186,7 +186,7 @@ datos
         this.agenciaEntrega.setValue(data.entidad.agenciaEntrega)
         this.genero.setValue(data.entidad.genero)
         this.validateHeredero();
-        this.valorCustodia.setValue(data.entidad.valorCustodiaAprox)
+        this.valorCustodia.setValue(data.entidad.valorCustodiaAprox.toFixed(2))
         this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
         this.listTablaHeredero = this.decodeObjetoDatos(data.entidad.codeHerederos);
         listDatosCreditos.push(this.decodeObjetoDatos(data.entidad.codeDetalleCredito))

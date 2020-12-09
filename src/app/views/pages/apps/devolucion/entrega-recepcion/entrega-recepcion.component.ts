@@ -45,13 +45,16 @@ export class EntregaRecepcionComponent implements OnInit{
  public valorCustodia = new FormControl('');
  public cedulaHeredero = new FormControl('');
  public nombreHeredero = new FormControl('');
- idDevolucion = 16
+ idDevolucion
   fechaUtil:diferenciaEnDias;
   fechaServer;
 ///operativa
 
 joyasList  = []
- 
+
+totalPesoBruto
+totalPesoNeto
+totalValorAvaluo
   //url=;objeto=ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiIiwKICAgICJtb250b0ZpbmFuY2lhZG8iOiAiNzAwIiwKICAgICJhc2Vzb3IiOiAiSnVhbml0byIsCiAgICAiZXN0YWRvT3BlcmFjaW9uIjogICJDQU5DRUxBRE8iLAogICAgInRpcG9DcmVkaXRvIjogIiIsCiAgICAiY29kaWdvVGFibGFBbW9ydGl6YWNpb25RdXNraSI6IkEwMSIsCiAgICAiaW1wYWdvIjogIm5vIiwKICAgICJyZXRhbnF1ZW8iOiAibm8iLAogICAgImNvYmVydHVyYUluaWNpYWwiOiAiMTIwMCIsCiAgICAiY29iZXJ0dXJhQWN0dWFsIjogIjExMDAiLAogICAgImJsb3F1ZW8iOiIiLAogICAgImRpYXNNb3JhIjogIiIsCiAgICAiZXN0YWRvVWJpY2FjaW9uIjoiIiwKICAgICJlc3RhZG9Qcm9jZXNvIjoiIiwKICAgICJjb2RpZ29TZXJ2aWNpbyI6IiIsCiAgICAibWlncmFkbyI6ICIiCgp9
   ///
   
@@ -142,16 +145,7 @@ datos
     this.enableHerederoButton = this.enableHeredero.asObservable();
     this.enableHeredero.next(false);
     this.setFechaSistema();
-    
     this.datos = this.decodeObjetoDatos(this.objetoDatos);
-  
-    this.consultarEstadosCivilesCS();
-    this.consultarEducacionCS();
-    this.consultaGeneroCS();
-    this.consultarLugaresCS();
-    this.consultarPaisCS();
-    this.consultarTipoCliente();
-    this.consultarAgencia();
     this.getParametros();
     this.cargarDatos();
     console.log("el encode", )
@@ -206,14 +200,16 @@ datos
         this.observaciones.setValue(data.entidad.observaciones)
         this.tipoCliente.setValue(data.entidad.tipoCliente)
         this.agenciaEntrega.setValue(data.entidad.agenciaEntrega)
+        this.edad.setValue(this.getEdad(data.entidad.fechaNacimiento).toFixed(0))
         this.validateHeredero();
-        this.valorCustodia.setValue(data.entidad.valorCustodiaAprox)
+        this.valorCustodia.setValue(data.entidad.valorCustodiaAprox.toFixed(2))
         this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
         this.listTablaHeredero = this.decodeObjetoDatos(data.entidad.codeHerederos);
         listDatosCreditos.push(this.decodeObjetoDatos(data.entidad.codeDetalleCredito))
         this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
         this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)
         this.dataSourceHeredero=new MatTableDataSource<any>(this.listTablaHeredero);
+        this.calcularTotalizados();
       }
     })
   
@@ -232,8 +228,8 @@ datos
       (params: Params) => {
       
        
-        this.parametroObjeto = params.get('objeto');
-     
+        this.idDevolucion = params.get('idDevolucion');
+        console.log("parametro", this.idDevolucion)
        
       },
       error => {
@@ -253,143 +249,39 @@ getEdad(fechaValue){
   this.fechaUtil = new diferenciaEnDias(new Date(fechaValue),new Date( this.fechaServer) )
   return this.fechaUtil.obtenerDias()/365
  }
-
-
-
-
-
-
  
+ calcularTotalizados(){
 
-/*
-calcular(){
+  this.totalPesoNeto =0;
+  this.totalPesoBruto =0; 
+  this.totalValorAvaluo = 0
 
-  this.totalPesoN =0;
-  this.totalPesoB =0;
-  this.totalPBFunda = 0
-  this.totalValorR = 0
-  this.totalValorA = 0
-  this.totalValorC = 0
-  this.totalNumeroJoya = 0
   let ind = 0;
-  if (this.dataSource.data) {
+  if (this.dataSourceJoyas.data) {
     //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
-    this.list=[];
-    this.dataSource.data.forEach(element => {
+ 
+    this.joyasList.forEach(element => {
       
-      ind = ind + 1;
-      this.list.push(ind);
-      
-    
-    this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-    this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
-    
-    this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
-    this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
-    this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
-    this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas)
+
+     
+    this.totalPesoNeto = Number(this.totalPesoNeto) + Number(element.pesoNeto);
+    this.totalPesoBruto = Number(this.totalPesoBruto) + Number(element.pesoBruto);
+    this.totalValorAvaluo = Number(this.totalValorAvaluo) + Number(element.valorAvaluo);
+
     });
     
   }
+  console.log("XD" , this.totalPesoNeto)
 }
 
-*/
+
 
 /* ----------TRACKING-------*/
 
 
 
 
-consultaGeneroCS(){
-  this.css.consultarGeneroCS().subscribe((data:any)=>{
-    //console.log("me trajo data de catalogos de GENERO ----->" + JSON.stringify(data))
-    if (!data.existeError) {
 
-      //this.listNombreGenero = data.catalogo;
-      console.log(" GENERO -----> " , data )
-      this.catalogoGenero=data.catalogo
-
-    } else {
-      //console.log("No me trajo data de catalogos de GENERO ----->" + JSON.stringify(data));
-    } error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.setmsgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-      }
-    }
-  });
-}
-
-consultarEstadosCivilesCS(){
-  this.css.consultarEstadosCivilesCS().subscribe((data: any)=> {
-    //console.log("Consulta de catalogos de estado civil ----->" + JSON.stringify(data));
-    if (!data.existeError) {
-      //this.listNombreEstadoCivil = data.catalogo;
-      console.log(data)
-      this.catalagoEstadosCiviles = data.catalogo
-      
-      
-    } else {
-      //console.log("No me trajo data de catalogos de ESTADO CIVIL ----->" + JSON.stringify(data));
-    } error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.setmsgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("No se pudo capturar el error :c", 'error');
-      }
-    }
-  });
-}
-consultarEducacionCS(){
-  this.css.consultarEducacionCS().subscribe((data:any)=> {
-    if(!data.existeError){
-      this.catalogoEducacion = data.catalogo
-    }
-  })
-}
-
-consultarPaisCS(){
-  this.css.consultarPaisCS().subscribe((data:any)=> {
-    if(!data.existeError){
-      console.log(data)
-      this.catalogoPais = data.catalogo
-    }
-  })
-}
-
-consultarLugaresCS(){
-  
-    this.css.consultarDivicionPoliticaConsolidadaCS().subscribe((data:any)=>{
-      if(!data.existeError){
-        console.log(data)
-        this.catalogoLugarNacimiento = data.divisionPoliticaConsolidado
-      }
-    })
-
-}
-
-
-consultarTipoCliente(){
-  this.css.consultarTipoClienteCS().subscribe((data:any)=>{
-    if(!data.existeError){
-      console.log(data)
-      this.catalogoTipoCliente = data.catalogo
-    }
-  })
-}
-
-
-consultarAgencia(){
-  this.css.consultarAgenciasCS().subscribe((data:any)=>{
-    if(!data.existeError){
-      console.log(data)
-      this.catalogoAgencia = data.catalogo
-    }
-  })
-}
 
 validateHeredero(){
   if (this.tipoCliente.value.toUpperCase()==="HEREDERO" ){
@@ -401,22 +293,19 @@ validateHeredero(){
 }
 }
 
-aprobar(){
-  this.devService.aprobarDevolucion(this.idDevolucion).subscribe((data:any)=> {
-    
+guardar(){
+  this.devService.guardarEntregaRecepcion(this.idDevolucion).subscribe((data:any)=> {
+    this.sinNoticeService.setNotice(
+      "Guardado correctamente",
+      "success"
+    );
+    this.router.navigate(['negociacion/bandeja-operaciones'    ]);
     console.log(data.entidad)
   }, error => {
     this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
   })
 }
 
-rechazar(){
-  this.devService.aprobarDevolucion(this.idDevolucion).subscribe((data:any)=> {
-    
-    console.log(data.entidad)
-  }, error => {
-    this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
-  })
-}
+
 
 } 
