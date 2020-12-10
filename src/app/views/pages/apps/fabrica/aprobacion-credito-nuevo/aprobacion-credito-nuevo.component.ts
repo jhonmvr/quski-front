@@ -518,4 +518,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
       this.sinNotSer.setNotice('COMPLETE LOS CAMPOS DE RESULTADO DE OPERACION CORRECTAMENTE','error');
     }
   }
+  public regresar(){
+    this.router.navigate(['aprobador']);
+  }
 }

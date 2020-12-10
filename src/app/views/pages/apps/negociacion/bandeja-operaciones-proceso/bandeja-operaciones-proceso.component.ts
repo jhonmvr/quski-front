@@ -88,27 +88,13 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       if( data.entidad != null && data.entidad.operaciones != null){
         let operaciones: OperacionesProcesoWrapper[] = data.entidad.operaciones;
         operaciones.forEach(e=>{
-          if(e.idAgencia && this.catAgencia){
-            this.catAgencia.forEach( c =>{
-              if(e.idAgencia == c.id){
-                e.agencia = c.nombre;
-              }
-            });
-          }else{
-            e.agencia = "Sin Agencia";
-          }
-          
-          if(e.actividad ==" " || e.actividad =="null"){
-            e.actividad = "Sin Tracking";
-          }else{
-            e.actividad = e.actividad.replace(/_/gi," ");
-          }
+          e.agencia = !e.idAgencia || e.idAgencia == 0 ? 'Sin Agencia' : this.catAgencia.find( a => a.id == e.idAgencia ) ? this.catAgencia.find( a => a.id == e.idAgencia ).nombre : 'Sin Agencia';
+          e.actividad = !e.actividad || e.actividad == ' ' || e.actividad.toUpperCase() == 'NULL' ? 'Sin Actividad' : e.actividad.replace(/_/gi," ");
+          e.codigoOperacion = !e.codigoOperacion || e.codigoOperacion.toUpperCase() == 'NULL' ? "Sin Codigo Softbank": e.codigoOperacion;
+          e.montoPreaprobado = !e.montoPreaprobado || e.montoPreaprobado == '0' ? 'No Aplica' : e.montoPreaprobado;
           e.estadoProceso = e.estadoProceso.replace(/_/gi," ");
           e.nombreCliente = e.nombreCliente.replace(/_/gi," ");
           e.proceso = e.proceso.replace(/_/gi," ");
-          if(e.montoPreaprobado == "0"){
-            e.montoPreaprobado = "No Aplica";
-          }
         });
         this.dataSource.data = operaciones;
         this.paginator.length = data.entidad.result;
