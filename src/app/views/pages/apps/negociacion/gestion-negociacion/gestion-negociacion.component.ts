@@ -3,6 +3,7 @@ import { SolicitudDeExcepcionesComponent } from './../../../../partials/custom/p
 import { ErrorCargaInicialComponent } from './../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { ListaExcepcionesComponent } from './../../../../partials/custom/popups/lista-excepciones/lista-excepciones.component';
 import { VerCotizacionesComponent } from './../../../../partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
+import { ConfirmarAccionComponent } from './../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { CalculadoraEntradaWrapper } from './../../../../../core/model/wrapper/CalculadoraEntradaWrapper';
 import { DataInjectExcepciones } from './../../../../../core/model/wrapper/DataInjectExcepciones';
 import { TbQoCreditoNegociacion } from './../../../../../core/model/quski/TbQoCreditoNegociacion';
@@ -32,7 +33,6 @@ import { ProcesoService } from '../../../../../core/services/quski/proceso.servi
 import { SelectionModel } from '@angular/cdk/collections';
 
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
-//import { DataTableDataSource } from 'src/app/views/partials/content/widgets/general/data-table/data-table.data-source';
 
 @Component({
   selector: 'kt-gestion-negociacion',
@@ -224,6 +224,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.neg.traerNegociacionExistente( id ).subscribe( (wrapper: any) =>{
       if(wrapper.entidad.respuesta){
         this.negoW = wrapper.entidad;
+        this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.mensajeDeDevolucion( this.negoW.credito.codigo) : null ;
         this.validarExcepciones(this.negoW);
       }else{
         this.salirDeGestion("La negociacion que esta buscando, no existe, fue cerrada o cancelada");
@@ -459,6 +460,18 @@ export class GestionNegociacionComponent implements OnInit {
     dialogRef.afterClosed().subscribe(r => {
       this.router.navigate(['negociacion/bandeja-operaciones']);
     });
+  }
+  public mensajeDeDevolucion( codigo: string ){
+    this.loadingSubject.next(false);
+    let mensaje = 'El credito fue devuelto por favor. Corrija los problemas presentado por el aprobador.';
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+      dialogRef.afterClosed().subscribe(r => {
+        this.loadingSubject.next(false);
+      });
   }
   public abrirPopupExcepciones(data: DataInjectExcepciones = null) {
     this.loadingSubject.next(false);

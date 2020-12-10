@@ -274,7 +274,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = 2;
-    this.traerFecha();
     this.traerCreditoNegociacion();
     this.formDisable.disable();
   }
@@ -311,13 +310,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
       }
     });
   }
-  private traerFecha(){
-    this.sof.getSystemDate().subscribe( (hora: any) =>{
-      if (hora.entidad) {
-        this.fechaActual = hora.entidad;
-      }
-    });
-  }
   private setearValores(ap: AprobacionWrapper) {
     /** @OPERACION */
     this.codigoBpm.setValue(ap.credito.codigo);
@@ -338,6 +330,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.nacionalidad.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad);
     this.lugarDeNacimiento.setValue(ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento);
     this.edad.setValue(ap.credito.tbQoNegociacion.tbQoCliente.edad);
+    this.fechaActual = ap.credito.fechaCreacion.toString();
     this.fechaNacimiento.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento);
     this.nivelEducacion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nivelEducacion);
     this.actividadEconomica.setValue(ap.credito.tbQoNegociacion.tbQoCliente.actividadEconomica);
@@ -519,6 +512,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     }
   }
   public regresar(){
-    this.router.navigate(['aprobador']);
+    this.router.navigate(['aprobador']);  
   }
 }

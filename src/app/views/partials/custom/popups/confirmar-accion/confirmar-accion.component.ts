@@ -12,6 +12,7 @@ export interface EntryData{
 })
 export class ConfirmarAccionComponent implements OnInit {
   valores: EntryData;
+  cancelar: boolean = true;
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: string,
     public dialogRefGuardar: MatDialogRef<any>,
@@ -21,9 +22,17 @@ export class ConfirmarAccionComponent implements OnInit {
     this.cargarValores();
   }
   private cargarValores(){
-    this.valores = { 
-      mensaje: '¿Esta seguro que desea realizar la siguiente acción?: ' + this.data,
-      titulo: 'CONFIRMAR ACCION'
+    if( this.data == 'El credito fue devuelto por favor. Corrija los problemas presentado por el aprobador.'){
+      this.valores = { 
+        mensaje: this.data,
+        titulo: 'MENSAJE DEL APROBADOR'
+      }
+      this.cancelar = false;
+    }else{
+      this.valores = { 
+        mensaje: '¿Esta seguro que desea realizar la siguiente acción?: ' + this.data,
+        titulo: 'CONFIRMAR ACCION'
+      }
     }
 
   }
