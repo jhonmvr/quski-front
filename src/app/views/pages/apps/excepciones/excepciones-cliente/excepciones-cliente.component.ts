@@ -303,29 +303,6 @@ export class ExcepcionesClienteComponent implements OnInit {
   /******************************************** @EVENT   *********************************************************/
 
   public submit(flujo: string) {
-    this.loadingSubject.next(true);
-    this.asignarAprobacion();
-    //console.log('INICIA EL SUBMIT', this.entidadExcepcion);
-    this.exs.persistEntity(this.entidadExcepcion).subscribe((data: any) => {
-      //console.log('GUARDA', JSON.stringify(data));
-      this.capturaHoraFinal('NEGOCIACION');
-      this.router.navigate(['asesor/bandeja-principal']);
-      this.sinNoticeService.setNotice('SE GUARDO LA EXCEPCION CORRECTAMENTE', 'success');
-    }, error => {
-      if (error.error) {
-        if (error.error.codError) {
-          this.sinNoticeService.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice('Error al guardar la excepcion', 'error');
-        }
-      } else if (error.statusText && error.status == 401) {
-
-        this.sinNoticeService.setNotice('Error al guardar la excepcion', 'error');
-      } else {
-        this.sinNoticeService.setNotice('Error al guardar la excepción', 'error');
-      }
-    });
-
   }
   /**
    * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION
@@ -351,8 +328,7 @@ export class ExcepcionesClienteComponent implements OnInit {
                   this.loadingSubject.next(false);
                   if (data) {
                     // FORM OPERACION
-                    this.nombresCompletos.setValue(this.entidadCliente.primerNombre + ' ' + this.entidadCliente.segundoNombre
-                      + ' ' + this.entidadCliente.apellidoPaterno + ' ' + this.entidadCliente.apellidoMaterno);
+                    this.nombresCompletos.setValue(this.entidadCliente.nombreCompleto);
                     this.idCliente = data.id;
                     this.identificacion.setValue(this.entidadCliente.cedulaCliente);
     
@@ -434,6 +410,16 @@ export class ExcepcionesClienteComponent implements OnInit {
 
       }
     });
+  }
+
+
+
+  aprobarExcepcion(){
+    //this.exs.aprobarExcepcion(this.id)
+  }
+
+  rechazarEcepcion(){
+
   }
 
 }

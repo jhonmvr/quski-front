@@ -23,7 +23,7 @@ export class BandejaExcepcionesComponent implements OnInit {
   public loading;
   usuario: string;
   //VARIABLES DE LA TABLA
-  displayedColumnsExcepciones = ['accion', 'tipoExcepcion', 'nombreCliente'];
+  displayedColumnsExcepciones = ['accion', 'tipoExcepcion', 'nombreCliente','identificacion'];
   dataSourceExcepcionRol = new MatTableDataSource<TbQoExcepcionRol>();
   private agregar = new Array<TbQoExcepcionRol>();
 
@@ -103,7 +103,7 @@ export class BandejaExcepcionesComponent implements OnInit {
     console.log('ELEMENT===> ', element);
 
     if (element.tipoExcepcion == 'EXCEPCION_CLIENTE') {
-      console.log('ingresa a EXCEPCION_CLIENTE====> ', element.idNegociacion);
+      console.log('ingresa a EXCEPCION_CLIENTE====> ', btoa(JSON.stringify(element)) );
       this.router.navigate(['./excepciones/excepcion-cliente/', element.idNegociacion]);
 
     } else if (element.tipoExcepcion == 'EXCEPCION_RIESGO') {
