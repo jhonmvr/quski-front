@@ -7,6 +7,7 @@ import { TbQoExcepcionRol } from '../../model/quski/TbQoExcepcionRol';
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ReNoticeService } from '../re-notice.service';
+import { environment } from '../../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -31,12 +32,12 @@ export class ExcepcionRolService extends BaseService {
     );
   }
 
-  public findByRolAndIdentificacion(rol: string, identificacion: string) {
+  public findByRolAndIdentificacion(user: string, identificacion: string) {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + this.restC + 'findByRolAndIdentificacion';
     this.params = new HttpParams();
-    this.params.set('rol', rol);
-    this.params.set('identificacion', identificacion);
+    this.params = this.params.set('rol', localStorage.getItem(environment.rolName));
+    this.params = this.params.set('identificacion', identificacion);
 
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(

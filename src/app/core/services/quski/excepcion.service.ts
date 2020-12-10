@@ -154,6 +154,17 @@ export class ExcepcionService extends BaseService {
     );
   }
 
+  public solicitarExcepcion(data: TbQoExcepcion) {
+    let serviceUrl = this.appResourcesUrl +'negociacionRestController/solicitarExcepcion';
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, data, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+
 
 
 
