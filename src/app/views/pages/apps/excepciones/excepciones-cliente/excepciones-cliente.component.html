@@ -35,7 +35,7 @@
                         <div class="col-md-6">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input [formControl]="identificacion" placeholder="C.I." matInput numeric
-                                    numericType="number" (keypress)="numberOnly($event)" />
+                                    numericType="number" readonly />
                             </mat-form-field>
                         </div>
                     </div>
@@ -331,11 +331,9 @@
                         </div>
                         <div class="row mt-3">
                             <div class=" offset-3 offset-lg-2 col-xl-8">
-                                <mat-radio-group [formControl]="radioB" (change)="capturaHoraAtencion()">
-                                    <mat-radio-button value="APROBADO">Aprobar Excepcion</mat-radio-button>
-                                    <mat-radio-button value="NEGADO">Negar Excepcion</mat-radio-button>
-                                </mat-radio-group>
-
+                                <button mat-button mat-raised-button color="primary" (click)="aprobarExcepcion()">Aprobar Excepcion</button>
+                                <button mat-button mat-raised-button color="primary" (click)="rechazarEcepcion()">Negar Excepcion</button>
+                              
 
 
                             </div>

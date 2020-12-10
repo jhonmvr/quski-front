@@ -37,7 +37,9 @@ export class ExcepcionRolService extends BaseService {
     const serviceUrl = this.appResourcesUrl + this.restC + 'findByRolAndIdentificacion';
     this.params = new HttpParams();
     this.params = this.params.set('rol', localStorage.getItem(environment.rolName));
-    this.params = this.params.set('identificacion', identificacion);
+    if(identificacion){
+      this.params = this.params.set('identificacion', identificacion);
+    }
 
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
