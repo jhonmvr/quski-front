@@ -117,6 +117,7 @@ import { ConfirmarAccionComponent } from './custom/popups/confirmar-accion/confi
 
 import { AddFechaComponent } from './custom/add-fecha/add-fecha.component';
 import { TablaAmortizacionComponent } from './custom/popups/tabla-amortizacion/tabla-amortizacion.component';
+import { DevolucionCreditoComponent } from './custom/popups/devolucion-credito/devolucion-credito.component';
 
 
 
@@ -188,7 +189,8 @@ import { TablaAmortizacionComponent } from './custom/popups/tabla-amortizacion/t
 		ReasignarUsuarioComponent,
 		ConfirmarAccionComponent,
 		AddFechaComponent,
-		TablaAmortizacionComponent
+		TablaAmortizacionComponent,
+		DevolucionCreditoComponent
 
 	],
 	exports: [
@@ -303,6 +305,7 @@ import { TablaAmortizacionComponent } from './custom/popups/tabla-amortizacion/t
 		SolicitudAutorizacionDialogComponent,
 		MensajeExcepcionComponent,
 		MensajeEdadComponent,
+		DevolucionCreditoComponent,
 		CargarFotoDialogComponent,
 		DetallesComponent,
 		TablaDetalleCreditoComponent,

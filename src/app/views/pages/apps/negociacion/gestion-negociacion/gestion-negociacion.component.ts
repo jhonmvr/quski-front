@@ -1,22 +1,19 @@
 import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/popups/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { SolicitudDeExcepcionesComponent } from './../../../../partials/custom/popups/solicitud-de-excepciones/solicitud-de-excepciones.component';
 import { ErrorCargaInicialComponent } from './../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { DevolucionCreditoComponent } from './../../../../partials/custom/popups/devolucion-credito/devolucion-credito.component';
 import { ListaExcepcionesComponent } from './../../../../partials/custom/popups/lista-excepciones/lista-excepciones.component';
 import { VerCotizacionesComponent } from './../../../../partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
-import { ConfirmarAccionComponent } from './../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
-import { CalculadoraEntradaWrapper } from './../../../../../core/model/wrapper/CalculadoraEntradaWrapper';
 import { DataInjectExcepciones } from './../../../../../core/model/wrapper/DataInjectExcepciones';
 import { TbQoCreditoNegociacion } from './../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { NegociacionService } from './../../../../../core/services/quski/negociacion.service';
 import { CalculadoraService } from './../../../../../core/services/quski/calculadora.service';
-import { ConsultaPrecioJoya } from './../../../../../core/model/wrapper/ConsultaPrecioJoya';
 import { NegociacionWrapper } from './../../../../../core/model/wrapper/NegociacionWrapper';
 import { ParametroService } from './../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
 import { TasacionService } from './../../../../../core/services/quski/tasacion.service';
 import { RelativeDateAdapter } from './../../../../../core/util/relative.dateadapter';
-import { GarantiaWrapper } from './../../../../../core/model/wrapper/GarantiaWrapper';
 import { EstadoExcepcionEnum } from './../../../../../core/enum/EstadoExcepcionEnum';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
@@ -56,6 +53,7 @@ export class GestionNegociacionComponent implements OnInit {
   public catTipoOro: Array<any>;
   public catEstadoJoya: Array<any>;
   catPais;
+  private catMotivoDevolucion: Array<any>;
   filteredPais: Observable<Pais[]>;
   public totalNumeroJoya: number;
   public totalPesoB: number;
@@ -194,6 +192,10 @@ export class GestionNegociacionComponent implements OnInit {
       this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
       
     });
+    this.sof.consultarMotivoDevolucionAprobacionCS().subscribe((data: any) => {
+      this.catMotivoDevolucion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      
+    });
     this.sof.consultarTipoJoyaCS().subscribe((data: any) => {
       this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
       
@@ -224,8 +226,9 @@ export class GestionNegociacionComponent implements OnInit {
     this.neg.traerNegociacionExistente( id ).subscribe( (wrapper: any) =>{
       if(wrapper.entidad.respuesta){
         this.negoW = wrapper.entidad;
-        this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.mensajeDeDevolucion( this.negoW.credito.codigo) : null ;
+        this.negoW.proceso.proceso == 'NUEVO' ? null : this.salirDeGestion('Error al buscar proceso relacionado a la operacion');
         this.validarExcepciones(this.negoW);
+        this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : null ;
       }else{
         this.salirDeGestion("La negociacion que esta buscando, no existe, fue cerrada o cancelada");
       }
@@ -461,17 +464,24 @@ export class GestionNegociacionComponent implements OnInit {
       this.router.navigate(['negociacion/bandeja-operaciones']);
     });
   }
-  public mensajeDeDevolucion( codigo: string ){
+  public popupDevolucion( ){
     this.loadingSubject.next(false);
-    let mensaje = 'El credito fue devuelto por favor. Corrija los problemas presentado por el aprobador.';
-    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+    this.aprobacionMupi.setValue( this.negoW.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi);
+    this.publicidad.setValue( this.negoW.credito.tbQoNegociacion.tbQoCliente.publicidad );
+    this.campania.setValue( this.negoW.credito.tbQoNegociacion.tbQoCliente.campania );
+    this.identificacion.disable();
+    let entryData = {
+      titulo: 'Algo',
+      mensajeAprobador: this.negoW.credito.descripcionDevuelto, 
+      motivoDevolucion: this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto) ? this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto).nombre : 'No definido',
+      aprobador: this.negoW.proceso.usuario,
+      codigoBpm: this.negoW.credito.codigo
+    }
+    const dialogRef = this.dialog.open(DevolucionCreditoComponent, {
       width: "800px",
       height: "auto",
-      data: mensaje
+      data: entryData
     });
-      dialogRef.afterClosed().subscribe(r => {
-        this.loadingSubject.next(false);
-      });
   }
   public abrirPopupExcepciones(data: DataInjectExcepciones = null) {
     this.loadingSubject.next(false);

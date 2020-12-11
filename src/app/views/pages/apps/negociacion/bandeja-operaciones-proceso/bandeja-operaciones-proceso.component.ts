@@ -50,7 +50,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   dataSource = new MatTableDataSource<OperacionesProcesoWrapper>();
-  displayedColumns = ['Accion', 'codigoBpm', 'codigoOperacion', 'nombreCliente', 'cedulaCliente', 'montoPreaprobado', 'fechaCreacion', 'agencia', 'estadoProceso', 'proceso', 'asesor', 'usuarioEjecutor','actividad'];
+  displayedColumns = ['Accion', 'codigoBpm', 'codigoOperacion', 'nombreCliente', 'cedulaCliente', 'montoFinanciado', 'fechaCreacion', 'agencia', 'estadoProceso', 'proceso', 'asesor', 'usuarioEjecutor','actividad'];
 
   constructor(
     private pro: ProcesoService,
@@ -91,7 +91,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
           e.agencia = !e.idAgencia || e.idAgencia == 0 ? 'Sin Agencia' : this.catAgencia.find( a => a.id == e.idAgencia ) ? this.catAgencia.find( a => a.id == e.idAgencia ).nombre : 'Sin Agencia';
           e.actividad = !e.actividad || e.actividad == ' ' || e.actividad.toUpperCase() == 'NULL' ? 'Sin Actividad' : e.actividad.replace(/_/gi," ");
           e.codigoOperacion = !e.codigoOperacion || e.codigoOperacion.toUpperCase() == 'NULL' ? "Sin Codigo Softbank": e.codigoOperacion;
-          e.montoPreaprobado = !e.montoPreaprobado || e.montoPreaprobado == '0' ? 'No Aplica' : e.montoPreaprobado;
+          e.montoFinanciado = !e.montoFinanciado || e.montoFinanciado == '0' ? 'No Aplica' : e.montoFinanciado+'$';
           e.estadoProceso = e.estadoProceso.replace(/_/gi," ");
           e.nombreCliente = e.nombreCliente.replace(/_/gi," ");
           e.proceso = e.proceso.replace(/_/gi," ");

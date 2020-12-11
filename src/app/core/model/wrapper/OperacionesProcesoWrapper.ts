@@ -4,7 +4,7 @@ export class OperacionesProcesoWrapper {
     codigoOperacion: string;
     nombreCliente: string;
     cedulaCliente: string;
-    montoPreaprobado: any;
+    montoFinanciado: any;
     fechaCreacion: Date;
     idAgencia: number;
     agencia: string;  // Se completa este campo en front.

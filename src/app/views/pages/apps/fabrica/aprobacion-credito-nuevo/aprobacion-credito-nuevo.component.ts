@@ -165,7 +165,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   public observacionAprobador = new FormControl('', [Validators.required]);
 
   constructor(
-    private cne: CreditoNegociacionService,
+    private cre: CreditoNegociacionService,
     private sof: SoftbankService,
     private pro: ProcesoService,
     private sinNotSer: ReNoticeService,
@@ -295,7 +295,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
         this.loadingSubject.next(true);
-        this.cne.traerCreditoNegociacionExistente(data.params.id).subscribe((data: any) => {
+        this.cre.traerCreditoNegociacionExistente(data.params.id).subscribe((data: any) => {
           console.log('Credito --> ', data.entidad);
           if (!data.entidad.existeError) {
             this.crediW = data.entidad;
@@ -458,9 +458,15 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
             if(!data.existeError){
               this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id,"NUEVO","APROBADO").subscribe( (data: any) =>{
                 if(data.entidad){
-                  console.log('El nuevo estado -> ',data.entidad.estadoProceso);
-                  this.loadingSubject.next(false);
-                  this.router.navigate(['aprobador']);  
+                  this.cre.devolverAprobar( this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe( (data : any) =>{
+                    this.loadingSubject.next(false);
+                    if(data.entidad){
+                      console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+                      this.router.navigate(['aprobador']);  
+                    }else{
+                      this.sinNotSer.setNotice('Error actualizando el credito','error');
+                    }
+                  });
                 }else{
                   this.loadingSubject.next(false);
                   this.sinNotSer.setNotice('ERROR INTERNO','error');
@@ -497,9 +503,15 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
         if(r){
           this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id,"NUEVO","DEVUELTO").subscribe( (data: any) =>{
             if(data.entidad){
-              console.log('El nuevo estado -> ',data.entidad.estadoProceso);
-              this.loadingSubject.next(false);
-              this.router.navigate(['aprobador']);  
+              this.cre.devolverAprobar( this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe( (data : any) =>{
+                this.loadingSubject.next(false);
+                if(data.entidad){
+                  console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+                  this.router.navigate(['aprobador']);  
+                }else{
+                  this.sinNotSer.setNotice('Error actualizando el credito','error');
+                }
+              });
             }
           });
         }else{
