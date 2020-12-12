@@ -802,8 +802,6 @@ export class GestionNegociacionComponent implements OnInit {
     }
 
   }
-
-
   updateCliente(event,control){
     console.log("=========>",event,control);
 
@@ -829,7 +827,6 @@ export class GestionNegociacionComponent implements OnInit {
       console.log("no guardar")
     }
   }
-
   buildCliente(){
     console.log("guardad")
     if( this.telefonoFijo){
@@ -868,26 +865,20 @@ export class GestionNegociacionComponent implements OnInit {
     }
     return cliente;
   }
-
   seleccionarCredito(element){
     this.opcionCredito = element;
   }
-
-
   checkboxLabel(row?): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
-
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSourceCreditoNegociacion.data.length;
     return numSelected === numRows;
   }
-
-
   guardarCredito(){
     if (this.selection.selected.length == 0){
       this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO",'warning');

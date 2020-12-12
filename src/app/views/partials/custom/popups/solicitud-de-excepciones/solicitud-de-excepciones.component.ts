@@ -104,7 +104,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
       excepcion.idAsesor = this.usuario;
       excepcion.tipoExcepcion = this.tipoExcep;
       excepcion.observacionAsesor = this.observacionAsesor.value;
-      excepcion.mensajeBre = this.dataExcepciones.mensajeBre; // TODO: Cambiar a campo de mensaje de bre. 
+      excepcion.mensajeBre = this.dataExcepciones.mensajeBre; 
       excepcion.tbQoNegociacion = new TbQoNegociacion();
       excepcion.tbQoNegociacion.id = this.dataExcepciones.idNegociacion;
       this.exc.solicitarExcepcion(excepcion).subscribe( (data:any)=>{
@@ -112,7 +112,6 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
           this.salir(data.entidad);
         } else{
           this.sinNotSer.setNotice('ERROR AL GENERAR SOLICITUD','error');
-
         }
       });   
     }else {
