@@ -1,14 +1,17 @@
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { CalculadoraService } from '../../../../../core/services/quski/calculadora.service';
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
+import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../../src/environments/environment';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatTableDataSource } from '@angular/material';
+import { MatDialog, MatTableDataSource } from '@angular/material';
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import 'hammerjs';
@@ -23,6 +26,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading;
   public observacion;
+  public excepcion: TbQoExcepcion;
   public usuario;
   public agencia;
   public excepcionado: boolean;
@@ -61,7 +65,9 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     private router: Router,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
+    private dialog: MatDialog,
     private neg: NegociacionService,
+    private exc: ExcepcionService,
     private cal: CalculadoraService
 
   ) {
@@ -91,11 +97,12 @@ export class ExcepcionesCoberturaComponent implements OnInit {
         this.neg.traerNegociacionExistente(data.params.id).subscribe( (data: any)=>{
           if(data.entidad){
             this.wp = data.entidad;
-            this.wp.credito && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ? 
-              this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success') :
-                this.sinNoticeService.setNotice('ERROR CARGANDO EXCEPCION','error');
-            this.cargarCampos(this.wp);
+            this.excepcion = this.wp.excepciones.find(e => e.tipoExcepcion == 'EXCEPCION_COBERTURA' && e.estadoExcepcion == 'PENDIENTE'); 
+            this.wp.credito && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' && this.excepcion ?  
+            this.cargarCampos(this.wp) : this.sinNoticeService.setNotice('ERROR CARGANDO EXCEPCION','error');
+            this.loadingSubject.next(false);
           }else{
+            this.loadingSubject.next(false);
             this.sinNoticeService.setNotice('ERROR CARGANDO NEGOCIACION','error');
           }
         });
@@ -103,6 +110,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     }, error =>{this.loadingSubject.next(false)});
   }
   private cargarCampos( wp: NegociacionWrapper){
+    this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success')
     this.formDisable.disable();
     this.cliente.setValue( wp.credito.tbQoNegociacion.tbQoCliente.nombreCompleto );
     this.cedula.setValue( wp.credito.tbQoNegociacion.tbQoCliente.cedulaCliente );
@@ -115,7 +123,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>(); 
     this.dataSourceCreditoNegociacion.data.push( wp.credito );
     this.observacionAsesor.disable();
-    this.observacion = this.wp.excepciones.find(e => e.tipoExcepcion == 'EXCEPCION_COBERTURA') ? this.wp.excepciones.find(e => e.tipoExcepcion == 'EXCEPCION_COBERTURA').observacionAsesor : this.sinNoticeService.setNotice('ERROR CARGANDO LA EXCEPCION','error');
+    this.observacion = this.excepcion.observacionAsesor;
     this.loadingSubject.next(false);
   }
   public formatLabel(value: number) {
@@ -142,11 +150,43 @@ export class ExcepcionesCoberturaComponent implements OnInit {
 
   }
   public negar(){ 
-    console.log('ME FUI A NEGAR')
-    this.excepcionado = false;
-    this.simulado = false;
+    if(this.observacionAprobador.valid){
+      console.log('ME FUI A NEGAR')
+      this.excepcionado = false;
+      this.simulado = false;
+      let mensaje = 'Negar la excepcion de cobertura para: ' + this.wp.credito.codigo+'?'; 
+      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        width: "800px",
+        height: "auto",
+        data: mensaje
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        if(r){
+          this.exc.negarExcepcion(this.excepcion.id, this.observacionAprobador.value, this.usuario).subscribe( (data: any) =>{
+            if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error al negar la excepcion','error')}
+          });
+        }
+      });
+    }else{ this.sinNoticeService.setNotice('COMPLETE EL CAMPO DE OBSERVACION','error') }
   }
   public aprobar(){ 
-    console.log('ME FUI A APROBAR')
+    if(this.observacionAprobador.valid && this.cobertura.valid){
+      console.log('ME FUI A APROBAR')
+      let mensaje = 'Aprobar la excepcion de cobertura para: ' + this.wp.credito.codigo+'?'; 
+      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        width: "800px",
+        height: "auto",
+        data: mensaje
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        if(r){
+          this.exc.aprobarCobertura(this.excepcion.id, this.observacionAprobador.value, this.usuario, this.cobertura.value).subscribe( (data: any) =>{
+            if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error  al aprobar la excepcion','error')}
+          });
+        }
+      });
+    }else{ this.sinNoticeService.setNotice('COMPLETE EL CAMPO DE OBSERVACION','error') }
   }
+  
+
 }

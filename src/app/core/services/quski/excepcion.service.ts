@@ -36,6 +36,28 @@ export class ExcepcionService extends BaseService {
       )
     );
   }
+  public negarExcepcion(idExc: number, obsAprobador: string, aprobador: string) {
+    const serviceUrl = this.appResourcesUrl + this.restC + 'negarExcepcion';
+    this.params = new HttpParams().set('idExc', idExc.toString()).set('obsAprobador', obsAprobador).set('aprobador', aprobador);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+  public aprobarCobertura(idExc: number, obsAprobador: string, aprobador: string, cobertura: string) {
+    const serviceUrl = this.appResourcesUrl + this.restC + 'aprobarCobertura';
+    this.params = new HttpParams().set('idExc', idExc.toString()).set('obsAprobador', obsAprobador).set('aprobador', aprobador).set('cobertura', cobertura);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
   /**
    * @author Jeroham Cadenas
    * @date 14/Julio/2020
