@@ -42,7 +42,7 @@ export class SeleccionFechaComponent implements OnInit {
   catalogoAgencia
   busquedaDevWrapper = new BusquedaDevolucionWrapper
 
-  fechaUtil:diferenciaEnDias;
+  fechaUtil = new diferenciaEnDias;
   displayedColumns = ['accion', 'fechaSolicitud', 'agenciaSolicitud', 'agenciaEntrega', 'codigoOperacionMadre', 'codigoOperacion',
    'nombreCliente', 'identificacion', 'fundaMadre' , 'fundaActual', 'ciudadTevcol' ,  'fechaArriboAgencia', 'nombreAsesor', 'fechaAprobacion'];
   /**Obligatorio paginacion */
@@ -122,7 +122,7 @@ export class SeleccionFechaComponent implements OnInit {
    */
   paged() {
     this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',this.paginator.pageIndex)
-  //  this.submit();
+    this.submit();
   }
 
   
@@ -131,27 +131,28 @@ export class SeleccionFechaComponent implements OnInit {
    */
   buscar() {
     this.initiateTablePaginator();
-   
     this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',0);
     this.submit();
   }
 
 
   submit() {
-    
-    let codigoOperacion = this.codigoOperacion.value.toUpperCase()
-    let agencia = this.agencia.value.nombre
-    let fechaAprobacionDesde = this.fechaAprobacionDesde.value
-    let fechaAprobacionHasta = this.fechaAprobacionFin.value
-    let identificacion = this.cedulaCliente.value
+ 
 
-
-    //console.log("====> paged: " + JSON.stringify( this.p ));
+    console.log("XD" , this.codigoOperacion.value)
+  
+    console.log("====> paged: " + JSON.stringify( this.p ));
     this.loadingSubject.next(true);
     this.dataSource = null;
-    this.ds.busquedaSeleccionarFechas(this.p, codigoOperacion, agencia,fechaAprobacionDesde,fechaAprobacionHasta, identificacion ).subscribe((data:any)=>{
+    this.p.pageNumber = this.paginator.pageIndex;
+    this.ds.busquedaSeleccionarFechas(this.p, this.codigoOperacion.value == null ? "" : this.codigoOperacion.value, 
+    this.agencia.value.nombre == null ? "" : this.agencia.value.nombre ,this.fechaUtil.convertirFechaAString(this.fechaAprobacionDesde.value  == null ? "" : this.fechaAprobacionDesde.value),
+    this.fechaUtil.convertirFechaAString(this.fechaAprobacionFin.value  == null ? "" : this.fechaAprobacionFin.value), 
+    this.cedulaCliente.value   == null ? "" : this.cedulaCliente.value ).subscribe((data:any)=>{
       if(data){
         console.log(data.list)
+
+        this.paginator.length = data.totalResults;
         this.dataSource=new MatTableDataSource<any>(data.list);
         this.loadingSubject.next(false);
       }
@@ -190,11 +191,6 @@ export class SeleccionFechaComponent implements OnInit {
         width: '700px',
         
       });
-
-   
-    
-  
-
      dialogRef.afterClosed().subscribe((resultado) => {
       if (resultado) {
         console.log(resultado)
@@ -218,10 +214,8 @@ export class SeleccionFechaComponent implements OnInit {
           } 
         
         })
-        
-
       }else {
-        this.sinNoticeService.setNotice("No se capturo la fecha", "error")
+       
         this.eliminarSelect();
         this.buscar();
       }

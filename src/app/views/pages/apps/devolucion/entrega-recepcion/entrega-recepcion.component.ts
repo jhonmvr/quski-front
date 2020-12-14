@@ -201,6 +201,7 @@ datos
         this.tipoCliente.setValue(data.entidad.tipoCliente)
         this.agenciaEntrega.setValue(data.entidad.agenciaEntrega)
         this.edad.setValue(this.getEdad(data.entidad.fechaNacimiento).toFixed(0))
+        this.genero.setValue(data.entidad.genero);
         this.validateHeredero();
         this.valorCustodia.setValue(data.entidad.valorCustodiaAprox.toFixed(2))
         this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)

@@ -221,6 +221,14 @@ export class DevolucionService extends BaseService {
   }
 
 
+  existeCancelacionCancelacion(idDevolucion: any) {
+    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/existeProcesoCancelacionVigente";
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+
+
   public guardarEntregaRecepcion(id){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/guardarEntregaRecepcion";
     this.params = this.params.set('idDevolucion', id);  
@@ -235,6 +243,19 @@ export class DevolucionService extends BaseService {
 
   public aprobarVerificacionFirmas(id){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/aprobarVerificacionFirmas";
+    this.params = this.params.set('idDevolucion', id);  
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, null, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+
+  
+  public rechazarVerificacionFirmas(id){
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/rechazarVerificacionFirmas";
     this.params = this.params.set('idDevolucion', id);  
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, null, this.options).pipe(

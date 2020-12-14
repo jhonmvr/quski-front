@@ -45,10 +45,14 @@ export class AprobacionCancelacionComponent  implements OnInit{
  public valorCustodia = new FormControl('');
  public cedulaHeredero = new FormControl('');
  public nombreHeredero = new FormControl('');
- idDevolucion = 16
+ idDevolucion 
   fechaUtil:diferenciaEnDias;
   fechaServer;
-///operativa
+///operativ
+totalPesoBruto;
+totalPesoNeto;
+totalValorAvaluo
+
 
 joyasList  = []
  
@@ -186,6 +190,7 @@ datos
         this.agenciaEntrega.setValue(data.entidad.agenciaEntrega)
         this.genero.setValue(data.entidad.genero)
         this.validateHeredero();
+        this.edad.setValue(this.getEdad(data.entidad.fechaNacimiento).toFixed(0))
         this.valorCustodia.setValue(data.entidad.valorCustodiaAprox.toFixed(2))
         this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
         this.listTablaHeredero = this.decodeObjetoDatos(data.entidad.codeHerederos);
@@ -193,7 +198,8 @@ datos
         this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
         this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)
         this.dataSourceHeredero=new MatTableDataSource<any>(this.listTablaHeredero);
-        this.validarReversoPerfeccionamiento();
+        this.calcularTotalizados();
+        this.validarAprobacion();
       }
     })
   
@@ -205,15 +211,14 @@ datos
   encriptarDatos(objeto){
     return btoa(unescape(encodeURIComponent(objeto)))
   }
-
   getParametros(): void {
    
     this.route.paramMap.subscribe(
       (params: Params) => {
       
        
-        this.parametroObjeto = params.get('objeto');
-     
+        this.idDevolucion = params.get('idDevolucion');
+        console.log("parametro", this.idDevolucion)
        
       },
       error => {
@@ -240,39 +245,31 @@ getEdad(fechaValue){
  }
 
 
-/*
-calcular(){
+ calcularTotalizados(){
 
-  this.totalPesoN =0;
-  this.totalPesoB =0;
-  this.totalPBFunda = 0
-  this.totalValorR = 0
-  this.totalValorA = 0
-  this.totalValorC = 0
-  this.totalNumeroJoya = 0
+  this.totalPesoNeto =0;
+  this.totalPesoBruto =0;
+ 
+  this.totalValorAvaluo = 0
+
   let ind = 0;
-  if (this.dataSource.data) {
+  if (this.dataSourceJoyas.data) {
     //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
-    this.list=[];
-    this.dataSource.data.forEach(element => {
+ 
+    this.joyasList.forEach(element => {
       
-      ind = ind + 1;
-      this.list.push(ind);
-      
-    
-    this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-    this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
-    
-    this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
-    this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
-    this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
-    this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas)
+
+
+    this.totalPesoNeto = Number(this.totalPesoNeto) + Number(element.pesoNeto);
+    this.totalPesoBruto = Number(this.totalPesoBruto) + Number(element.pesoBruto);
+    this.totalValorAvaluo = Number(this.totalValorAvaluo) + Number(element.valorAvaluo);
+
     });
     
   }
 }
 
-*/
+
 
 /* ----------TRACKING-------*/
 
@@ -316,7 +313,7 @@ rechazarCancelacionSolicitud(){
   })
 }
 
-validarReversoPerfeccionamiento(){
+validarAprobacion(){
   //console.log("Ver reversar local"+localStorage.getItem('re1001'))
   this.devService.validarAprobarCancelacionSolicitud(this.idDevolucion).subscribe((data:any)=>{
    

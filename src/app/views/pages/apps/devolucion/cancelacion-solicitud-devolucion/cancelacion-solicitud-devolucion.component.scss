@@ -1,91 +1,118 @@
-table {
+.example-table {
+    overflow: auto;
+    min-height: 300px;
+  }
+  
+  .mat-table-sticky {
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  .mat-table {
+    overflow: auto;
+    max-height: 300px;
     width: 100%;
-}
+  }
 
-.mat-column-id {
-    display: none;
-}
+
+  .mat-footer-row {
+
+    justify-content: start;
+  }
+
+
 
 .mat-column-tipoOro {
-    width: 150px;
+    flex: 0 0 100px;
+    justify-content: start;
    
 }
 
 
 .mat-column-tipoJoya {
-    width: 150px;
+    flex: 0 0 100px;
+    justify-content: start;
 
 }
 
 .mat-column-estadoJoya {
-    width: 150px;
+    flex: 0 0 100px;
+    justify-content: start;
 
 }
 
 .mat-column-descripcion {
-    width: 150px;
+    flex: 0 0 100px;
+    justify-content: start;
   
 }
 .mat-column-pesoBruto {
-    width: 150px;
-    justify-content: flex-end;
-    text-align: right;
+    flex: 0 0 75px;
+    justify-content: start;
+
 }
 .mat-column-pesoNeto {
-    width: 150px;
-    justify-content: flex-end;
-    text-align: right;
+    flex: 0 0 75px;
+    justify-content: start;
+   
 }
 .mat-column-valorAvaluo {
-    width: 150px;
-    justify-content: flex-end;
-    text-align: right;
+    flex: 0 0 75px;
+    justify-content: start;
+ 
 }
 
 
 
 .mat-column-tienePiedras {
-    width: 150px;
+    flex: 0 0 75px;
+    justify-content: start;
  
 }
 
 .mat-column-detallePiedras {
-    width: 150px;
+    flex: 0 0 100px;
+    justify-content: start;
 
 }
 
 .mat-column-descuentoPesoPiedra {
-    width: 150px;
+    flex: 0 0 100px;
+    justify-content: start;
 
 }
 
 .mat-column-numeroFundaMadre {
-    width: 150px;
+    flex: 0 0 100px;
+    justify-content: start;
 
 }
 
 .mat-column-numeroFundaActual {
-    width: 150px;
+    flex: 0 0 100px;
+    justify-content: start;
 
 }
 .mat-column-ciudadTevcol {
-    width: 150px;
+    flex: 0 0 100px;
+    justify-content: start;
 
 }
 
 
 
 .mat-column-cedula {
-    width: 150px;
+   width: 150px;
+    justify-content: start;
   
 }
 
 .mat-column-nombre {
     width: 150px;
+    justify-content: start;
   
 }
 
 .mat-column-monto {
-    width: 150px;
-   text-align: right;
+    flex: 0 0 100px;
+    justify-content: start;
 }

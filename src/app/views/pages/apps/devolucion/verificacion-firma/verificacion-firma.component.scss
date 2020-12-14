@@ -1,0 +1,118 @@
+.example-table {
+    overflow: auto;
+    min-height: 300px;
+  }
+  
+  .mat-table-sticky {
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  .mat-table {
+    overflow: auto;
+    max-height: 300px;
+    width: 100%;
+  }
+
+
+  .mat-footer-row {
+
+    justify-content: start;
+  }
+
+
+
+.mat-column-tipoOro {
+    flex: 0 0 100px;
+    justify-content: start;
+   
+}
+
+
+.mat-column-tipoJoya {
+    flex: 0 0 100px;
+    justify-content: start;
+
+}
+
+.mat-column-estadoJoya {
+    flex: 0 0 100px;
+    justify-content: start;
+
+}
+
+.mat-column-descripcion {
+    flex: 0 0 100px;
+    justify-content: start;
+  
+}
+.mat-column-pesoBruto {
+    flex: 0 0 75px;
+    justify-content: start;
+
+}
+.mat-column-pesoNeto {
+    flex: 0 0 75px;
+    justify-content: start;
+   
+}
+.mat-column-valorAvaluo {
+    flex: 0 0 75px;
+    justify-content: start;
+ 
+}
+
+
+
+.mat-column-tienePiedras {
+    flex: 0 0 75px;
+    justify-content: start;
+ 
+}
+
+.mat-column-detallePiedras {
+    flex: 0 0 100px;
+    justify-content: start;
+
+}
+
+.mat-column-descuentoPesoPiedra {
+    flex: 0 0 100px;
+    justify-content: start;
+
+}
+
+.mat-column-numeroFundaMadre {
+    flex: 0 0 100px;
+    justify-content: start;
+
+}
+
+.mat-column-numeroFundaActual {
+    flex: 0 0 100px;
+    justify-content: start;
+
+}
+.mat-column-ciudadTevcol {
+    flex: 0 0 100px;
+    justify-content: start;
+
+}
+
+
+
+.mat-column-cedula {
+   width: 150px;
+    justify-content: start;
+  
+}
+
+.mat-column-nombre {
+    width: 150px;
+    justify-content: start;
+  
+}
+
+.mat-column-monto {
+    flex: 0 0 100px;
+    justify-content: start;
+}

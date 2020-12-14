@@ -97,8 +97,8 @@ export class ListaPendientesComponent implements OnInit {
    * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
    */
   paged() {
-   // this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',this.paginator.pageIndex)
-  //  this.submit();
+  this.p=this.getPaginacion(this.sort.active, this.sort.direction, 'Y',this.paginator.pageIndex)
+  this.submit();
   }
 
   
@@ -119,6 +119,7 @@ export class ListaPendientesComponent implements OnInit {
     this.ds.busquedaArribo(this.p, this.codigoOperacion.value == null? "": this.codigoOperacion.value).subscribe((data:any)=>{
       if(data){
         console.log(data.list)
+        this.paginator.length = data.totalResults;
         this.dataSource=new MatTableDataSource<any>(data.list);
         this.loadingSubject.next(false);
       }

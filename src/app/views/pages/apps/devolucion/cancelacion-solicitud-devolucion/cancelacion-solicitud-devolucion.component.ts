@@ -46,7 +46,7 @@ export class CancelacionSolicitudDevolucionComponent implements OnInit{
  public valorCustodia = new FormControl('');
  public cedulaHeredero = new FormControl('');
  public nombreHeredero = new FormControl('');
- idDevolucion = 22
+ idDevolucion
   fechaUtil:diferenciaEnDias;
   fechaServer;
 ///operativa
@@ -56,9 +56,9 @@ joyasList  = []
   //url=;objeto=ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiIiwKICAgICJtb250b0ZpbmFuY2lhZG8iOiAiNzAwIiwKICAgICJhc2Vzb3IiOiAiSnVhbml0byIsCiAgICAiZXN0YWRvT3BlcmFjaW9uIjogICJDQU5DRUxBRE8iLAogICAgInRpcG9DcmVkaXRvIjogIiIsCiAgICAiY29kaWdvVGFibGFBbW9ydGl6YWNpb25RdXNraSI6IkEwMSIsCiAgICAiaW1wYWdvIjogIm5vIiwKICAgICJyZXRhbnF1ZW8iOiAibm8iLAogICAgImNvYmVydHVyYUluaWNpYWwiOiAiMTIwMCIsCiAgICAiY29iZXJ0dXJhQWN0dWFsIjogIjExMDAiLAogICAgImJsb3F1ZW8iOiIiLAogICAgImRpYXNNb3JhIjogIiIsCiAgICAiZXN0YWRvVWJpY2FjaW9uIjoiIiwKICAgICJlc3RhZG9Qcm9jZXNvIjoiIiwKICAgICJjb2RpZ29TZXJ2aWNpbyI6IiIsCiAgICAibWlncmFkbyI6ICIiCgp9
   ///
   //TOTALIZADOS
-  totalPesoN;
-  totalPesoB;
-  totalValorA;
+  totalPesoNeto;
+  totalPesoBruto;
+  totalValorAvaluo;
   
   //observables
   objetoCredito ={
@@ -143,16 +143,16 @@ datos
   }
 
   ngOnInit() {
+    this.getParametros();
     this.enableHerederoButton = this.enableHeredero.asObservable();
     this.enableHeredero.next(false);
     this.disableCancelacionButton = this.disableCancelacion.asObservable();
     this.disableCancelacion.next(true);
     this.setFechaSistema();
-    
     this.datos = this.decodeObjetoDatos(this.objetoDatos);
-
-    this.getParametros();
     this.cargarDatos();
+   this.validateExisteProcesoCancelacion();
+    this.validateCancelacion();
     console.log("el encode", )
     console.log(typeof(this.catalagoEstadosCiviles))
     console.log( this.catalagoEstadosCiviles)
@@ -211,7 +211,7 @@ datos
         this.separacionBienes.setValue(data.entidad.separacionBienes)
         this.validateHeredero();
         this.lugarNacimiento.setValue(data.entidad.lugarNacimiento)
-        this.valorCustodia.setValue(data.entidad.valorCustodiaAprox)
+        this.valorCustodia.setValue(data.entidad.valorCustodiaAprox.toFixed(2))
         this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
         this.listTablaHeredero = this.decodeObjetoDatos(data.entidad.codeHerederos);
         listDatosCreditos.push(this.decodeObjetoDatos(data.entidad.codeDetalleCredito))
@@ -239,13 +239,16 @@ datos
       (params: Params) => {
       
        
-        this.parametroObjeto = params.get('objeto');
+        this.idDevolucion = params.get('idDevolucion');
+        console.log("parametro", this.idDevolucion)
+       
       },
       error => {
         this.sinNoticeService.setNotice('Ocurrio un error al obtener el codigo del contrato: ' + JSON.stringify(error), 'error');
       }
     );
   }
+
 
 setFechaSistema(){
   this.cns.getSystemDate().subscribe((fechaSistema: any) => {
@@ -260,26 +263,24 @@ getEdad(fechaValue){
  }
 
 
+ calcularTotalizados(){
 
-calcularTotalizados(){
-
-  this.totalPesoN =0;
-  this.totalPesoB =0;
+  this.totalPesoNeto =0;
+  this.totalPesoBruto =0;
  
-  this.totalValorA = 0
+  this.totalValorAvaluo = 0
 
   let ind = 0;
   if (this.dataSourceJoyas.data) {
     //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
-    this.list=[];
+ 
     this.joyasList.forEach(element => {
       
-      ind = ind + 1;
-      this.list.push(ind);
 
-    this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-    this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
-    this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
+
+    this.totalPesoNeto = Number(this.totalPesoNeto) + Number(element.pesoNeto);
+    this.totalPesoBruto = Number(this.totalPesoBruto) + Number(element.pesoBruto);
+    this.totalValorAvaluo = Number(this.totalValorAvaluo) + Number(element.valorAvaluo);
 
     });
     
@@ -312,6 +313,8 @@ anularSolicitud(){
       this.sinNoticeService.setNotice("Se ha registrado la solicitud de cancelacion", "success")
       this.disableCancelacion.next(false);
       console.log("Exito")
+      this.router.navigate(['negociacion/bandeja-operaciones'    ]);
+     
 
     }else{
       this.sinNoticeService.setNotice("Error al registrar", "error")
@@ -321,6 +324,38 @@ anularSolicitud(){
   })
 }
 
+  validateExisteProcesoCancelacion(){
+    this.devService.existeCancelacionCancelacion(this.idDevolucion).subscribe((data:any)=>{
+      if(data.entidad){
+        console.log("La validacion", data)
+      
+        this.sinNoticeService.setNotice("Ya existe un proceso de cancelación para la devolución", "warning")
+        this.disableCancelacion.next(false);
+      }else {
+        console.log("Deberia ser False")
+        this.disableCancelacion.next(true);
+      }
+    })
+  }
 
+  /*Valida si la cancelacion cumple con los estados requeridos
+  */
+  validateCancelacion(){
+ 
+      this.devService.validarCancelacionSolicitud(this.idDevolucion).subscribe((data:any)=>{
+        if(data.entidad.bandera){
+          console.log("La validacion", data)
+          this.disableCancelacion.next(true);
+          
+        }else {
+          console.log("Deberia ser False")
+          this.sinNoticeService.setNotice( data.entidad.mensaje, "warning")
+          this.disableCancelacion.next(false);
+        }
+      })
+
+    
+ 
+  }
 
 } 

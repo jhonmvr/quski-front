@@ -191,7 +191,12 @@
                             <mat-error>{{ getErrorMessage("nombreHeredo") }}</mat-error>
                         </mat-form-field>
                     </div> 
-                    <button (click)="agregarEnTabla()">Agregar  </button>
+                    
+                    <button mat-stroked-button color="primary" (click)="agregarEnTabla()">
+                        <mat-icon style="font-size: 24px;" color="primary" matTooltipPosition="above">search
+                        </mat-icon>
+                        <span color="primary">Agregar </span>
+                    </button>
                 </div>  
 
                 <div class="mat-table__wrapper">

@@ -29,7 +29,7 @@
                     </div>
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="identificacion" placeholder="Identificación " autocomplete="off">
+                            <input matInput [formControl]="cedulaCliente" placeholder="Identificación " autocomplete="off">
                         </mat-form-field>
                       
                     </div>
@@ -49,7 +49,7 @@
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field>
                             <input matInput [matDatepicker]="pckFechaCreacionDesde" 
-                            [formControl]="fechaCreacionDesde" placeholder="Fecha de aprobación desde">
+                            [formControl]="fechaAprobacionDesde" placeholder="Fecha de aprobación desde">
                             <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionDesde"></mat-datepicker-toggle>
                             <mat-datepicker #pckFechaCreacionDesde></mat-datepicker>
                         </mat-form-field>
@@ -57,7 +57,7 @@
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field>
                             <input matInput [matDatepicker]="pckFechaCreacionFin" 
-                            [formControl]="fechaCreacionFin" placeholder="Fecha de aprobación hasta">
+                            [formControl]="fechaAprobacionFin" placeholder="Fecha de aprobación hasta">
                             <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionFin"></mat-datepicker-toggle>
                             <mat-datepicker #pckFechaCreacionFin></mat-datepicker>
                         </mat-form-field>
@@ -89,7 +89,7 @@
                 </ng-container>
                 <ng-container matColumnDef="fechaSolicitud">
                 <mat-header-cell *matHeaderCellDef>Fecha de la Solicitud</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.fechaSolicitud}}</mat-cell>
+                <mat-cell *matCellDef="let element"> {{element.fechaSolicitud  | date : 'yyyy/MM/dd'}}</mat-cell>
             </ng-container>
                 <ng-container matColumnDef="agenciaSolicitud">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Agencia de solicitud</mat-header-cell>
@@ -131,7 +131,7 @@
             </ng-container>
             <ng-container matColumnDef="fechaArriboAgencia">
                 <mat-header-cell *matHeaderCellDef>Fecha Arribo Agencia</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaArriboAgencia}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaArriboAgencia  | date : 'yyyy/MM/dd'}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="nombreAsesor">
                 <mat-header-cell *matHeaderCellDef>Nombre Asesor</mat-header-cell>
@@ -139,7 +139,7 @@
             </ng-container>
             <ng-container matColumnDef="fechaAprobacion">
                 <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaAprobacion}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaAprobacion  | date : 'yyyy/MM/dd'}} </mat-cell>
             </ng-container>
       
             
