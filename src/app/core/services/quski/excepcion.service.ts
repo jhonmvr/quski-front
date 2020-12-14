@@ -11,6 +11,7 @@ import { ReNoticeService } from '../re-notice.service';
   providedIn: 'root'
 })
 export class ExcepcionService extends BaseService {
+
   public restC = 'excepcionesRestController/';
   constructor(_http: HttpClient,
     private dialog: MatDialog) {
@@ -165,7 +166,9 @@ export class ExcepcionService extends BaseService {
     );
   }
 
-
+  aprobarExcepcion(excepcion: any) {
+    throw new Error('Method not implemented.');
+  }
 
 
 
