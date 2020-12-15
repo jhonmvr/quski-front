@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -95,7 +95,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   public observacionAsesor = new FormControl('', []);
   public excAprobada = new FormControl('', []);
   public excNegada = new FormControl('', []);
-  public observacionAprobador = new FormControl('', []);
+  public observacionAprobador = new FormControl('', [Validators.required]);
   public radioB = new FormControl('', []);
 
 
@@ -402,6 +402,10 @@ export class ExcepcionesClienteComponent implements OnInit {
 
 
   aprobarExcepcion(aprueba){
+    if(this.observacionAprobador.invalid){
+      this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE EL LOS CAMPOS OBLIGATORIOS','warning');
+      return;
+    }
     this.exs.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(p=>{
       this.router.navigate(['../../aprobador/bandeja-excepciones']);
     },error=>{
