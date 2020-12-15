@@ -102,17 +102,13 @@ export class BandejaExcepcionesComponent implements OnInit {
     this.loadingSubject.next(true);
     if (element.tipoExcepcion == 'EXCEPCION_CLIENTE') {
       console.log('ingresa a EXCEPCION_CLIENTE====> ', btoa(JSON.stringify(element)) );
-      this.router.navigate(['./excepciones/excepcion-cliente/', btoa(JSON.stringify(element))]);
-
+      this.router.navigate(['./excepciones/excepcion-cliente/', btoa(JSON.stringify(element))])
     } else if (element.tipoExcepcion == 'EXCEPCION_RIESGO') {
       console.log('ingresa a EXCEPCION_RIESGO');
       this.router.navigate(['./excepciones/excepcion-riesgo/', btoa(JSON.stringify(element))]);
-
-
     } else if (element.tipoExcepcion == 'EXCEPCION_COBERTURA') {
       console.log('ingresa a EXCEPCION_COBERTURA');
-      this.router.navigate(['./excepciones/excepcion-cobertura/', btoa(JSON.stringify(element))]);
-
+      this.router.navigate(['./excepciones/excepcion-cobertura/', btoa(JSON.stringify(element))])
     }
 
 

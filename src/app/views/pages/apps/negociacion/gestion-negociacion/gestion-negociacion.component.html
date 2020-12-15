@@ -3,15 +3,19 @@
 <re-portlet>
 	<re-portlet-header [title]="'Negociación'" [class]="'kt-portlet__head--lg'">
 		<ng-container ktPortletTools>
+			<a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
+				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+					arrow_back</mat-icon>
+				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+			</a>
 			<a href="javascript:void(0);" matTooltip="Guardar" (click)="guardarCredito()" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
-				</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Guardar</span>
+				<mat-icon class="blue-icon" style="font-size: 24px;" color="primary" matTooltipPosition="above">add_task</mat-icon>
+				<span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Negociar</span>
 			</a>
 		</ng-container>
 	</re-portlet-header>
 	<re-portlet-body>
-		<mat-vertical-stepper [linear]="false" #stepper>
+		<mat-vertical-stepper [linear]="true" #stepper>
 			<!--   ****************************** PRIMERA PARTE DE NEGOCIACION ***************************   -->
 			<mat-step [stepControl]="formBusqueda">
 				<ng-template matStepLabel>Busqueda de Cliente</ng-template>
@@ -614,11 +618,9 @@
 						</div>
 					</div>
 					<div class="row mt-3">
-						<div class="col-3 offset-5">
+						<div class="col-3 offset-4">
 							<button mat-raised-button color="accent" (click)="guardarCredito()" style="align-self: center;">
-								<mat-icon style="font-size: 24px;" color="primary" matTooltipPosition="above">add_task
-								</mat-icon>
-								<span color="primary">Cargar Opcion de credito</span>
+								<span color="primary">Negociar</span>
 							</button>
 						</div>
 					</div>

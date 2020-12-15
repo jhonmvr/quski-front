@@ -230,16 +230,12 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   }
   public verDetalle(row: OperacionesProcesoWrapper ){
     if(row.id != null){
-      this.sinNotSer.setNotice("HISTORIA DE VER DETALLE AUN NO EXISTE","error");
-      console.log('Me fui jiji ->',row.id);
-      this.limpiarFiltros();
-      this.router.navigate(['negociacion/bandeja-operaciones']);    
+      this.router.navigate(['negociacion/detalle-negociacion/', row.id]);    
     }
   }
   public verOperacion(row: OperacionesProcesoWrapper ){
     if(row.id != null){
       if(row.proceso == 'NUEVO'){
-        console.log('Me fui jiji ->',row.id);
         this.router.navigate(['negociacion/gestion-negociacion/NEG/',row.id]);    
       }
       if(row.proceso == 'RENOVACION'){

@@ -94,10 +94,12 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.loadingSubject.next(true);
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
-        this.neg.traerNegociacionExistente(data.params.id).subscribe( (data: any)=>{
+        let excepcionRol = JSON.parse(atob(data.params.id));
+        this.neg.traerNegociacionExistente(excepcionRol.idNegociacion).subscribe( (data: any)=>{
           if(data.entidad){
             this.wp = data.entidad;
-            this.excepcion = this.wp.excepciones.find(e => e.tipoExcepcion == 'EXCEPCION_COBERTURA' && e.estadoExcepcion == 'PENDIENTE'); 
+            this.excepcion = this.wp.excepciones.find(e => e.id == excepcionRol.id ); 
+            console.log('Hola x2?')
             this.wp.credito && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' && this.excepcion ?  
             this.cargarCampos(this.wp) : this.sinNoticeService.setNotice('ERROR CARGANDO EXCEPCION','error');
             this.loadingSubject.next(false);
@@ -108,6 +110,9 @@ export class ExcepcionesCoberturaComponent implements OnInit {
         });
       }
     }, error =>{this.loadingSubject.next(false)});
+  }
+  regresar(){
+    this.router.navigate(['aprobador/bandeja-excepciones']);
   }
   private cargarCampos( wp: NegociacionWrapper){
     this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success')
@@ -120,9 +125,8 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.telefonoMovil.setValue( wp.telefonoMovil ? wp.telefonoMovil.numero : null );
     this.email.setValue( wp.credito.tbQoNegociacion.tbQoCliente.email );
     this.dataSourceTasacion.data = wp.joyas;
-    this.dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>(); 
-    this.dataSourceCreditoNegociacion.data.push( wp.credito );
     this.observacionAsesor.disable();
+    this.calcularOpciones();
     console.log('Mi excepcion --> ', this.excepcion);
     this.observacion = this.excepcion.observacionAsesor;
     this.loadingSubject.next(false);
@@ -148,6 +152,23 @@ export class ExcepcionesCoberturaComponent implements OnInit {
           this.loadingSubject.next(false);
         });
         this.loadingSubject.next(false);
+  }
+  public calcularOpciones() {
+    if (this.dataSourceTasacion.data.length > 0) {
+      this.loadingSubject.next(true);
+      this.cal.simularOferta(this.wp.credito.id, null, null).subscribe((data: any) => {
+        this.loadingSubject.next(false);
+        if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
+          && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
+          && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
+            this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+        }
+      },err=>{
+        this.loadingSubject.next(false);
+      });
+    } else {
+      this.sinNoticeService.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
+    }
 
   }
   public negar(){ 

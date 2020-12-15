@@ -128,7 +128,6 @@ export class GestionNegociacionComponent implements OnInit {
   constructor(
     private sof: SoftbankService,
     private par: ParametroService,
-    private pro: ProcesoService,
     private cal: CalculadoraService,
     private neg: NegociacionService,
     private tas: TasacionService,
@@ -230,7 +229,7 @@ export class GestionNegociacionComponent implements OnInit {
         this.negoW = wrapper.entidad;
         this.negoW.proceso.proceso == 'NUEVO' ? null : this.salirDeGestion('Error al buscar proceso relacionado a la operacion');
         this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : this.validarExcepciones(this.negoW);
-        this.cargarValores(this.negoW);
+        this.cargarValores(this.negoW, true);
       }else{
         this.salirDeGestion("La negociacion que esta buscando, no existe, fue cerrada o cancelada");
       }
@@ -278,12 +277,8 @@ export class GestionNegociacionComponent implements OnInit {
             this.calcularOpciones( null );
           });
         } 
-
       });
-    
     } 
-    
-    
   }
   private calcular() {
     this.totalPesoN = 0;
@@ -311,7 +306,7 @@ export class GestionNegociacionComponent implements OnInit {
         this.negoW = wrapper.entidad;
         console.log("NEGOCIACION INICIADA POR COT-> ", wrapper.entidad);
         if (this.negoW.excepcionBre == "") {
-          this.cargarValores(this.negoW);
+          this.cargarValores(this.negoW, false);
         } else {
           this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
         }
@@ -338,7 +333,7 @@ export class GestionNegociacionComponent implements OnInit {
             this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
             return;
           } 
-          this.cargarValores(this.negoW);
+          this.cargarValores(this.negoW, false);
         } else {
           this.abrirPopupDeAutorizacion(this.identificacion.value);
         }
@@ -356,7 +351,7 @@ export class GestionNegociacionComponent implements OnInit {
           this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
           return;
         } 
-        this.cargarValores(this.negoW);
+        this.cargarValores(this.negoW, false);
         
       } else {
         //this.loadingSubject.next(false);
@@ -422,8 +417,7 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-  private cargarValores(wrapper) {
-    //this.catTipoOro = wrapper.tipoOro;
+  private cargarValores(wrapper, cargar: boolean) {
     this.tbQoCliente= wrapper.credito.tbQoNegociacion.tbQoCliente;
     this.cedula.setValue(this.tbQoCliente.cedulaCliente);
     this.identificacion.setValue(this.tbQoCliente.cedulaCliente);
@@ -444,8 +438,9 @@ export class GestionNegociacionComponent implements OnInit {
     this.email.setValue(this.tbQoCliente.email);
     this.campania.setValue('');
     this.publicidad.setValue ('');
-    //this.aprobacionMupi.setValue(this.tbQoCliente.aprobacionMupi ? this.tbQoCliente.aprobacionMupi == 'SI' ? 'S' : 'N'  : null );
-    this.aprobacionMupi.setValue('');
+    this.aprobacionMupi.setValue( cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi : '');
+    this.publicidad.setValue( cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.publicidad : '');
+    this.campania.setValue( cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.campania : '');
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
     if(wrapper.joyas != null){
@@ -491,9 +486,6 @@ export class GestionNegociacionComponent implements OnInit {
   }
   public popupDevolucion( ){
     this.loadingSubject.next(false);
-    this.aprobacionMupi.setValue( this.negoW.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi);
-    this.publicidad.setValue( this.negoW.credito.tbQoNegociacion.tbQoCliente.publicidad );
-    this.campania.setValue( this.negoW.credito.tbQoNegociacion.tbQoCliente.campania );
     this.identificacion.disable();
     let entryData = {
       titulo: 'Algo',
@@ -812,9 +804,6 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   /** ********************************************** @OPCIONES ***************************************/
-  /**
-   * calcularOpciones
-   */
   public calcularOpciones(montoSolicitado) {
     if (this.dataSourceTasacion.data.length > 0) {
       this.loadingSubject.next(true);
@@ -826,7 +815,6 @@ export class GestionNegociacionComponent implements OnInit {
             this.selection = new SelectionModel<any>(true, []);
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
-
         this.myStepper.selectedIndex = 5;
       },err=>{
         this.loadingSubject.next(false);
@@ -924,10 +912,10 @@ export class GestionNegociacionComponent implements OnInit {
           this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
        });
       }
-      
-    
   }
-
+  regresar(){
+    this.router.navigate(['negociacion/']);
+  }
   verPrecio(){
     if(this.formDatosCliente.invalid){
       this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'error');
@@ -940,14 +928,10 @@ export class GestionNegociacionComponent implements OnInit {
       this.myStepper.selectedIndex =4;
     })
   }
-
-
-  
   private _filter(value: Pais): Pais[] {
     const filterValue = this._normalizeValue(value.nombre);
     return this.catPais.filter(pais => this._normalizeValue(pais.nombre).includes(filterValue));
   }
-
   private _normalizeValue(value: string): string {
     return value.toLowerCase().replace(/\s/g, '');
   }
