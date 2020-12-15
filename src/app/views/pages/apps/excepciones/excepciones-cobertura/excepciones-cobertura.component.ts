@@ -25,7 +25,7 @@ import 'hammerjs';
 export class ExcepcionesCoberturaComponent implements OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading;
-  public observacion;
+  public observacion: string;
   public excepcion: TbQoExcepcion;
   public usuario;
   public agencia;
@@ -123,6 +123,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>(); 
     this.dataSourceCreditoNegociacion.data.push( wp.credito );
     this.observacionAsesor.disable();
+    console.log('Mi excepcion --> ', this.excepcion);
     this.observacion = this.excepcion.observacionAsesor;
     this.loadingSubject.next(false);
   }
