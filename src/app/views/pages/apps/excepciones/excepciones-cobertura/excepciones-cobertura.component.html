@@ -24,22 +24,22 @@
             <mat-step label="Informacion de operacion">
                 <div class="row">
                     <div class="col-md-6">
-                        <mat-form-field>
+                        <mat-form-field  class="mat-form-field-fluid">
                             <input matInput [formControl]="cliente" placeholder="Cliente: " />
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
-                        <mat-form-field>
+                        <mat-form-field  class="mat-form-field-fluid">
                             <input matInput [formControl]="cedula" placeholder="Cedula: " />
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
-                        <mat-form-field>
+                        <mat-form-field  class="mat-form-field-fluid">
                             <input matInput [formControl]="proceso" placeholder="Proceso: " />
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
-                        <mat-form-field>
+                        <mat-form-field  class="mat-form-field-fluid">
                             <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion: " />
                         </mat-form-field>
                     </div>
@@ -48,17 +48,17 @@
             <mat-step label="Datos Contacto Cliente">
                 <div class="row">
                     <div class="col-md-6">
-                        <mat-form-field>
+                        <mat-form-field  class="mat-form-field-fluid">
                             <input matInput [formControl]="telefonoMovil" placeholder="Teléfono Móvil " />
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
-                        <mat-form-field>
+                        <mat-form-field  class="mat-form-field-fluid">
                             <input matInput [formControl]="telefonoDomicilio" placeholder="Teléfono Domicilio " />
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
-                        <mat-form-field>
+                        <mat-form-field  class="mat-form-field-fluid">
                             <input matInput [formControl]="email" placeholder="Correo Eléctronico " />
                         </mat-form-field>
                     </div>
@@ -319,67 +319,90 @@
             <mat-step label="Excepción">
                 <form [formGroup]="formDatosExcepcion">
                     <div class="row mt-2">
-                        <div class="col-5">
+                        <div class="col-8">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Observacion Del Asesor: </mat-label>
                                 <textarea class="form-control border" rows="5"
                                 placeholder="Observacion Del Asesor: " matInput> {{ observacion }}</textarea>
                             </mat-form-field>
                         </div>
-                        <div class="col-5 offset-1">
+                        <div class="col-8">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Observacion Del Aprobador: </mat-label>
                                 <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
                                 placeholder="Observacion Del Aprobador: " matInput></textarea>
                             </mat-form-field>
                         </div>
-                        <div class="col-1 offset-4 mt-3">
-                            <button mat-raised-button color='primary' (click)="excepcionar(true)"> Excepcionar </button>
-                        </div>
-                        <div class="col-2 offset-1 mt-3">
-                            <button mat-raised-button color='warn' (click)="excepcionar(false)"> Negar </button>
-                        </div>
+                        
                     </div>
-                    <div class="row mt-5" *ngIf="excepcionado">
-                        <div class="col-4 offset-4">
-                            <mat-label><strong> Porcentaje de Cobertura: </strong></mat-label>
-                            <mat-slider thumbLabel [formControl]="cobertura" [displayWith]="formatLabel" tickInterval="1" min="1" max="100"></mat-slider>
+                    <div class="row mt-5">
+                        <div class="col-4">
+                            <mat-form-field  class="mat-form-field-fluid">
+                                <input matInput [formControl]="cobertura" placeholder="Porcentaje Cobertura: " (keypress)="numberOnly($event)" />
+                            </mat-form-field>
                         </div>
-                    </div>
-                    <div class="row mt-3" *ngIf="excepcionado">
-                        <div class="col-4 offset-5">
+                        <div class="col-4">
                             <button mat-raised-button (click)="simular()"> Simular Cobertura </button>
                         </div>
                     </div>
-                    <div class="row" *ngIf="simulado">
-                        <div class="offset-2 col-6 mt-5">
+                    <div class="row mt-5">
+                        <div class="col-6" *ngIf="simulado">
                             <mat-table [dataSource]="dataSourceCobertura">
-                            <ng-container matColumnDef="plazo">
-                                <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.plazo }}</mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="montoCredito">
-                                <mat-header-cell *matHeaderCellDef>Monto Credito</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.montoCredito }}</mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="riesgoAcumulado">
-                                <mat-header-cell *matHeaderCellDef>Riesgo Acumulado</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.riesgoAcumulado }}</mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="valorDesembolso">
-                                <mat-header-cell *matHeaderCellDef>Valor Desembolso</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.valorDesembolso }}</mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="cuota">
-                                <mat-header-cell *matHeaderCellDef>Cuota</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.cuota }}</mat-cell>
-                            </ng-container>
-                            <mat-header-row *matHeaderRowDef="displayedColumnsCobertura"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumnsCobertura"></mat-row>
-                        </mat-table>
+                                <ng-container matColumnDef="plazo">
+                                    <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{ element.plazo }}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="montoCredito">
+                                    <mat-header-cell *matHeaderCellDef>Monto Credito</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{ element.montoCredito }}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="riesgoAcumulado">
+                                    <mat-header-cell *matHeaderCellDef>Riesgo Acumulado</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{ element.riesgoAcumulado }}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="valorDesembolso">
+                                    <mat-header-cell *matHeaderCellDef>Valor Desembolso</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{ element.valorDesembolso }}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="cuota">
+                                    <mat-header-cell *matHeaderCellDef>Cuota</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{ element.cuota }}</mat-cell>
+                                </ng-container>
+                                <mat-header-row *matHeaderRowDef="displayedColumnsCobertura"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumnsCobertura"></mat-row>
+                            </mat-table>
                         </div>
-                        <div class="col-4 offset-4 mt2">
-                            <button mat-raised-button color='primary' (click)="aprobar()"> Aprobar </button>
+                        <div class="col-6">
+                            <div class="row mt-5">
+                                <div class="col-4">
+                                    <mat-form-field  class="mat-form-field-fluid">
+                                        <input matInput [formControl]="coberturaActual" placeholder="Cobertura Actual: "/>
+                                    </mat-form-field>
+                                </div>
+                                <div class="offset-1 col-4">
+                                    <mat-form-field  class="mat-form-field-fluid">
+                                        <input matInput [formControl]="montoActual" placeholder="Monto Actual: "/>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-4 ">
+                                    <mat-form-field  class="mat-form-field-fluid">
+                                        <input matInput [formControl]="valorComercial" placeholder="Valor Comercial: "/>
+                                    </mat-form-field>
+                                </div>
+                                <div class="offset-1 col-4">
+                                    <mat-form-field  class="mat-form-field-fluid">
+                                        <input matInput [formControl]="valorAvaluo" placeholder="Valor Avaluo: "/>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 offset-2 mt-2" *ngIf="simulado">
+                            <button mat-raised-button color='primary' (click)="aprobar()"> Aprobar Excepcion </button>
+                        </div>
+                        <div class="col-2 offset-1">
+                            <button mat-raised-button color='warn' (click)="negar()"> Negar </button>
                         </div>
                     </div>
                 </form>

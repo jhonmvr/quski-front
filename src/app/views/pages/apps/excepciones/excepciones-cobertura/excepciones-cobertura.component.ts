@@ -29,7 +29,6 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   public excepcion: TbQoExcepcion;
   public usuario;
   public agencia;
-  public excepcionado: boolean;
   public simulado: boolean;
 
   public wp: NegociacionWrapper = null;
@@ -41,6 +40,8 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   public telefonoDomicilio = new FormControl('', []);
   public telefonoMovil = new FormControl('', []);
   public email = new FormControl('', []);
+
+
 
   dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
   displayedColumnsTasacion = ['NumeroPiezas', 'TipoOro', 'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'valorComercial', 'tienePiedras', 'detallePiedras','TipoJoya', 'EstadoJoya', 'Descripcion',];
@@ -56,9 +57,14 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   displayedColumnsCobertura = ['plazo','montoCredito','riesgoAcumulado','valorDesembolso','cuota'];
 
   public formDatosExcepcion: FormGroup = new FormGroup({});
-  public cobertura = new FormControl('', [Validators.required]);
+  public cobertura = new FormControl('', [Validators.required, ]);
   public observacionAprobador = new FormControl('', [Validators.required]);
   public observacionAsesor = new FormControl('', []);
+
+  public coberturaActual = new FormControl('', []);
+  public montoActual = new FormControl('', []);
+  public valorComercial = new FormControl('', []);
+  public valorAvaluo = new FormControl('', []);
 
   constructor(
     private route: ActivatedRoute,
@@ -84,11 +90,21 @@ export class ExcepcionesCoberturaComponent implements OnInit {
 
   ngOnInit() {
     this.wp = null;
-    this.subheaderService.setTitle('Excepción de Cobertura');
     this.loading = this.loadingSubject.asObservable();
     this.busquedaNegociacion();
     this.usuario = localStorage.getItem(atob(environment.userKey));
     this.agencia = 2;
+  }
+  private camposAdicinales(wp: NegociacionWrapper){
+    let totalValorAvaluo: number = 0;
+    let totalValorComercial: number = 0;
+    !this.wp.joyas ? null : this.wp.joyas.forEach(e=>{
+      totalValorAvaluo += e.valorAvaluo;
+      totalValorComercial += e.valorComercial;
+    }); 
+    this.coberturaActual.setValue( this.wp.variables.find( v => v.codigo == 'Cobertura') ? this.wp.variables.find( v => v.codigo == 'Cobertura').valor : 'No aplica');
+    this.valorComercial.setValue( totalValorComercial );
+    this.valorAvaluo.setValue( totalValorAvaluo );
   }
   private busquedaNegociacion(){
     this.loadingSubject.next(true);
@@ -111,12 +127,13 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       }
     }, error =>{this.loadingSubject.next(false)});
   }
-  regresar(){
+  public regresar(){
     this.router.navigate(['aprobador/bandeja-excepciones']);
   }
   private cargarCampos( wp: NegociacionWrapper){
     this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success')
     this.formDisable.disable();
+    this.subheaderService.setTitle('Operacion: '+this.wp.credito.codigo);
     this.cliente.setValue( wp.credito.tbQoNegociacion.tbQoCliente.nombreCompleto );
     this.cedula.setValue( wp.credito.tbQoNegociacion.tbQoCliente.cedulaCliente );
     this.fechaCreacion.setValue( wp.credito.tbQoNegociacion.fechaCreacion );
@@ -127,25 +144,16 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.dataSourceTasacion.data = wp.joyas;
     this.observacionAsesor.disable();
     this.calcularOpciones();
+    this.camposAdicinales( wp );
     console.log('Mi excepcion --> ', this.excepcion);
     this.observacion = this.excepcion.observacionAsesor;
     this.loadingSubject.next(false);
   }
-  public formatLabel(value: number) {
-    return value+'%';
-  }
-  public slideChange(event) {
-    console.log('valor capturado es ', event);
-  }
-  public excepcionar( resp: boolean){
-    !this.observacionAprobador.valid ? this.sinNoticeService.setNotice('COMPLETE EL CAMPO DE OBSERVACION','error') : resp ? this.sinNoticeService.setNotice('ESCOJA UN PORCENTAJE DE COBERTURA','success') : this.negar();
-    this.excepcionado = this.observacionAprobador.valid && resp ? resp : false;
-  }
   public simular(){ 
     this.loadingSubject.next(true);
     console.log('COBERTURA ---> ', this.cobertura.value )
-    !this.cobertura.valid ? 
-      this.sinNoticeService.setNotice('SELECCIONE UNA COBERTURA CORRECTA','error'):
+    !this.cobertura.valid && this.observacionAprobador.valid  && this.cobertura.value >= 80 ? 
+      this.sinNoticeService.setNotice('COMPLETE LA SECCION CORRECTAMENTE','error'):
         this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{
           !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
           this.simulado = data.entidades ? true : false;
@@ -161,6 +169,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
+            this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado);
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
       },err=>{
@@ -171,10 +180,16 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     }
 
   }
+  public numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
   public negar(){ 
     if(this.observacionAprobador.valid){
       console.log('ME FUI A NEGAR')
-      this.excepcionado = false;
       this.simulado = false;
       let mensaje = 'Negar la excepcion de cobertura para: ' + this.wp.credito.codigo+'?'; 
       const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
@@ -209,6 +224,4 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       });
     }else{ this.sinNoticeService.setNotice('COMPLETE EL CAMPO DE OBSERVACION','error') }
   }
-  
-
 }
