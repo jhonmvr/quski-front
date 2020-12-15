@@ -121,6 +121,8 @@ export class GestionNegociacionComponent implements OnInit {
     'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
     'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
     'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
+  riesgoTotal: any;
+  coberturaExcepcionada;
 
 
   constructor(
@@ -239,26 +241,39 @@ export class GestionNegociacionComponent implements OnInit {
       let listPendientes: TbQoExcepcion[] = null;
       let listInPendientes: TbQoExcepcion[] = null;
       tmp.excepciones.forEach(e =>{
-        if( e.estadoExcepcion == EstadoExcepcionEnum.PENDIENTE){
-          listPendientes != null ? listPendientes.push(e) : listPendientes = [e];
-        }else if(e.estadoExcepcion == EstadoExcepcionEnum.APROBADO){
-          listInPendientes != null ? listInPendientes.push(e) : listInPendientes = [e];
-        } else if(e.estadoExcepcion == EstadoExcepcionEnum.NEGADO){
-          listInPendientes != null ? listInPendientes.push(e) : listInPendientes = [e];
-        }else{
-        this.salirDeGestion("ERROR DE DESARROLLO, EXISTE EXCEPCION SIN UN ESTADO DEFINIDO", false, "ERROR DESARROLLO");
-        }
+        if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.NEGADO  && e.tipoExcepcion == 'EXCEPCION_CLIENTE'){
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE CLIENTE'}
+          });
+          dialogRef.afterClosed().subscribe(r => {
+            this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
+            return;
+          });
+        } else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.NEGADO  && e.tipoExcepcion == 'EXCEPCION_RIESGO'){
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE RIESGO'}
+          });
+          dialogRef.afterClosed().subscribe(r => {
+            this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
+            return;
+          });
+        }else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.APROBADO  && e.tipoExcepcion == 'EXCEPCION_COBERTURA'){
+          this.coberturaExcepcionada = tmp.credito.cobertura;
+        } 
+
       });
-      if(listPendientes != null){
-        this.salirDeGestion("Esta negociacion posee una excepcion pendiente. Espere que su excepcion sea revisada y aprobada.", false, "EXCEPCION PENDIENTE ACTIVA");
-      } else if( listInPendientes != null){
-        this.notificarSobreExcepciones( listInPendientes );
-      }else{
-        this.salirDeGestion("ERROR DE DESARROLLO DESCONOCIDO", false, "ERROR DESARROLLO");
-      }
-    } else{
-      this.cargarValores(tmp);
-    }
+    
+    } 
+    this.cargarValores(tmp);
+    
   }
   private calcular() {
     this.totalPesoN = 0;
@@ -461,7 +476,7 @@ export class GestionNegociacionComponent implements OnInit {
       data: data
     });
     dialogRef.afterClosed().subscribe(r => {
-      this.router.navigate(['negociacion/bandeja-operaciones']);
+      //this.router.navigate(['negociacion/bandeja-operaciones']);
     });
   }
   public popupDevolucion( ){
@@ -515,13 +530,13 @@ export class GestionNegociacionComponent implements OnInit {
       titulo: dataTitulo ? dataTitulo : null
     }
     if (cancelar) {
-      this.pro.cancelarNegociacion(this.negoW.credito.tbQoNegociacion.id, this.usuario).subscribe((data: any) => {
+      /* this.pro.cancelarNegociacion(this.negoW.credito.tbQoNegociacion.id, this.usuario).subscribe((data: any) => {
         if (data.entidad) {
           this.abrirSalirGestion(pData);
         } else {
           this.sinNotSer.setNotice("Error cancelando la negociacion.", 'error')
         }
-      });
+      }); */
     } else {
       this.abrirSalirGestion(pData);
     }
@@ -707,6 +722,14 @@ export class GestionNegociacionComponent implements OnInit {
       return;
     }
       //this.loadingSubject.next(true);
+      if(this.negoW.excepciones.find(ex=> (ex.tipoExcepcion == 'EXCEPCION_COBERTURA' || ex.tipoExcepcion == 'EXCEPCION_RIESGO')
+       && ex.estadoExcepcion == EstadoExcepcionEnum.APROBADO) ){
+        if( !confirm("USTED TIENE UNA EXCEPCION APROBADA. SI CAMBIA LAS GARANTIAS ESTA EXCEPCION SE ANULARA") ){
+          return;
+        }
+       }
+       
+      this.selection = new SelectionModel<any>(true, []);
       let joya = new TbQoTasacion();
       joya.descripcion = this.descripcion.value;
       joya.descuentoPesoPiedra = this.descuentoPiedra.value;
@@ -785,13 +808,15 @@ export class GestionNegociacionComponent implements OnInit {
   public calcularOpciones(montoSolicitado) {
     if (this.dataSourceTasacion.data.length > 0) {
       this.loadingSubject.next(true);
-      this.cal.simularOferta(this.negoW.credito.id,montoSolicitado).subscribe((data: any) => {
+      this.cal.simularOferta(this.negoW.credito.id,montoSolicitado,this.riesgoTotal).subscribe((data: any) => {
         this.loadingSubject.next(false);
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
-          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+            this.selection = new SelectionModel<any>(true, []);
+            this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
+
         this.myStepper.selectedIndex = 6;
       },err=>{
         this.loadingSubject.next(false);

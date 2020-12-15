@@ -22,12 +22,15 @@ export class CalculadoraService extends BaseService {
     this.setParameter();
 
   }
-  public simularOferta(idCredito, montoSolicitado ) {
+  public simularOferta(idCredito, montoSolicitado, riesgoTotal ) {
     const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOferta';
    this.params = new HttpParams();
    this.params = this.params.set('idCredito',idCredito);
    if(montoSolicitado != undefined){
     this.params = this.params.set('montoSolicitado',montoSolicitado);
+   }
+   if(riesgoTotal != undefined){
+    this.params = this.params.set('riesgoTotal',riesgoTotal);
    }
    this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
