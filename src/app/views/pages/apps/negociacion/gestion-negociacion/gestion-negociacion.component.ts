@@ -267,6 +267,17 @@ export class GestionNegociacionComponent implements OnInit {
           });
         }else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.APROBADO  && e.tipoExcepcion == 'EXCEPCION_COBERTURA'){
           this.coberturaExcepcionada = tmp.credito.cobertura;
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE COBERTURA'}
+          });
+          dialogRef.afterClosed().subscribe(r => {
+            this.calcularOpciones( null );
+            this.myStepper.selectedIndex = 5;
+          });
         } 
 
       });
