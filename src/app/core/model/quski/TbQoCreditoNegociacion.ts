@@ -92,7 +92,7 @@ export class TbQoCreditoNegociacion {
     totalValorRealizacion: number;
     valorAPagar:number;
     valorARecibir: number;
-
+    cobertura;
     constructor(idNegociacion?: number) {
         this.tbQoNegociacion = new TbQoNegociacion();
         this.tbQoNegociacion.id = idNegociacion > 0 ? idNegociacion : null;

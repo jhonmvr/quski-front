@@ -99,6 +99,8 @@ export class ExcepcionesClienteComponent implements OnInit {
   public radioB = new FormControl('', []);
 
 
+  excepcion;
+
   constructor(
     private neg: NegociacionService,
     private cli: ClienteService,
@@ -312,7 +314,8 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.route.paramMap.subscribe((data: any) => {
       data.params.id
       if (data.params.id) {
-        this.idNegociacion = data.params.id;
+        this.excepcion = JSON.parse(atob(data.params.id));
+        this.idNegociacion = this.excepcion.idNegociacion;
         this.pro.findByIdReferencia(this.idNegociacion, "NUEVO").subscribe( (dataProceso: any)=>{
           if(dataProceso.entidad != null){
             this.procesoEntidad = dataProceso.entidad;
@@ -415,7 +418,7 @@ export class ExcepcionesClienteComponent implements OnInit {
 
 
   aprobarExcepcion(){
-    //this.exs.aprobarExcepcion(this.id)
+    this.exs.aprobarExcepcion(this.excepcion,)
   }
 
   rechazarEcepcion(){
