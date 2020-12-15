@@ -218,7 +218,7 @@
                     </form>
                 </div>
             </mat-step>
-            <mat-step>
+          <!--   <mat-step>
                 <ng-template matStepLabel>Datos De Negociación</ng-template>
                 <div class="kt-form">
                     <form [formGroup]="formDatosNegociacion">
@@ -266,7 +266,7 @@
                         </div>
                     </form>
                 </div>
-            </mat-step>
+            </mat-step> -->
             <mat-step>
                 <ng-template matStepLabel>Variables crediticias </ng-template>
                 <div class="row mt-2">
@@ -331,8 +331,8 @@
                         </div>
                         <div class="row mt-3">
                             <div class=" offset-3 offset-lg-2 col-xl-8">
-                                <button mat-button mat-raised-button color="primary" (click)="aprobarExcepcion()">Aprobar Excepcion</button>
-                                <button mat-button mat-raised-button color="primary" (click)="rechazarEcepcion()">Negar Excepcion</button>
+                                <button mat-button mat-raised-button color="primary" (click)="aprobarExcepcion('SI')">Aprobar Excepcion</button>
+                                <button mat-button mat-raised-button color="primary" (click)="aprobarExcepcion('NO')">Negar Excepcion</button>
                               
 
 
