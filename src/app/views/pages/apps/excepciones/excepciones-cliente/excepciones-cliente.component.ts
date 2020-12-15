@@ -403,7 +403,9 @@ export class ExcepcionesClienteComponent implements OnInit {
 
   aprobarExcepcion(aprueba){
     this.exs.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(p=>{
-
+      this.router.navigate(['../../aprobador/bandeja-excepciones']);
+    },error=>{
+      this.router.navigate(['../../aprobador/bandeja-excepciones']);
     });
   }
 
