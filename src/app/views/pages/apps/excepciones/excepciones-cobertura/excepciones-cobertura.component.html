@@ -76,8 +76,10 @@
             <mat-step label="Riesgo Acumulado">
                 <div class="row mt-2">
                     <div class="col">
-                        <kt-tabla-riesgo-acumulado *ngIf="wp && wp.riesgos" [base]='wp.riesgos'>
-                        </kt-tabla-riesgo-acumulado>
+                        <kt-tabla-riesgo-acumulado *ngIf="wp && wp.riesgos;" [base]='wp.riesgos'></kt-tabla-riesgo-acumulado>
+                        <div class="row"  *ngIf="!wp || !wp.riesgos;">
+                            <strong> EL CLIENTE NO TIENE RIESGO</strong>
+                        </div>
                     </div>
                 </div>
             </mat-step>
@@ -324,7 +326,7 @@
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Observacion Del Asesor: </mat-label>
                                 <textarea class="form-control border" rows="5"
-                                placeholder="Observacion Del Asesor: " matInput> {{ observacionAsesor }}</textarea>
+                                placeholder="Observacion Del Asesor: " matInput> {{ observacion }}</textarea>
                             </mat-form-field>
                         </div>
                         <div class="col-5 offset-1">
