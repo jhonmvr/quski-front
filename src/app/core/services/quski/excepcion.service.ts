@@ -7,6 +7,7 @@ import { TbQoExcepcion } from '../../model/quski/TbQoExcepcion';
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ReNoticeService } from '../re-notice.service';
+import { environment } from '../../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -188,8 +189,20 @@ export class ExcepcionService extends BaseService {
     );
   }
 
-  aprobarExcepcion(excepcion: any) {
-    throw new Error('Method not implemented.');
+  aprobarExcepcion(id, obsAprobador,aprobado) {
+    let serviceUrl = this.appResourcesUrl +'excepcionesRestController/excepcionCliente';
+    this.params = new HttpParams();
+    this.params = this.params.set('id', id);
+    this.params = this.params.set('obsAprobador', obsAprobador);
+    this.params = this.params.set('aprobador', localStorage.getItem(atob(environment.userKey)));
+    this.params = this.params.set('aprobado', aprobado);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
 
