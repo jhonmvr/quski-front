@@ -229,8 +229,8 @@ export class GestionNegociacionComponent implements OnInit {
       if(wrapper.entidad.respuesta){
         this.negoW = wrapper.entidad;
         this.negoW.proceso.proceso == 'NUEVO' ? null : this.salirDeGestion('Error al buscar proceso relacionado a la operacion');
-        this.validarExcepciones(this.negoW);
-        this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : null ;
+        this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : this.validarExcepciones(this.negoW);
+        this.cargarValores(this.negoW);
       }else{
         this.salirDeGestion("La negociacion que esta buscando, no existe, fue cerrada o cancelada");
       }
@@ -276,14 +276,13 @@ export class GestionNegociacionComponent implements OnInit {
           });
           dialogRef.afterClosed().subscribe(r => {
             this.calcularOpciones( null );
-            this.myStepper.selectedIndex = 5;
           });
         } 
 
       });
     
     } 
-    this.cargarValores(tmp);
+    
     
   }
   private calcular() {
@@ -828,7 +827,7 @@ export class GestionNegociacionComponent implements OnInit {
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
 
-        this.myStepper.selectedIndex = 6;
+        this.myStepper.selectedIndex = 5;
       },err=>{
         this.loadingSubject.next(false);
       });
