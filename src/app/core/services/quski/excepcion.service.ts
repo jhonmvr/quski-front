@@ -194,7 +194,7 @@ export class ExcepcionService extends BaseService {
     this.params = new HttpParams();
     this.params = this.params.set('id', id);
     this.params = this.params.set('obsAprobador', obsAprobador);
-    if(!atob(localStorage.getItem(environment.userKey))){
+    if(atob(localStorage.getItem(environment.userKey))){
       this.params = this.params.set('aprobador', atob(localStorage.getItem(environment.userKey)));
     }
     this.params = this.params.set('aprobado', aprobado);

@@ -30,6 +30,7 @@ import { ProcesoService } from '../../../../../core/services/quski/proceso.servi
 import { SelectionModel } from '@angular/cdk/collections';
 
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'kt-gestion-negociacion',
@@ -246,7 +247,7 @@ export class GestionNegociacionComponent implements OnInit {
             height: "auto",
             data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
             +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
-            ,titulo:'EXCEPCION DE CLIENTE'}
+            ,titulo:'EXCEPCION DE CLIENTE NEGADA'}
           });
           dialogRef.afterClosed().subscribe(r => {
             this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
@@ -258,11 +259,22 @@ export class GestionNegociacionComponent implements OnInit {
             height: "auto",
             data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
             +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
-            ,titulo:'EXCEPCION DE RIESGO'}
+            ,titulo:'EXCEPCION DE RIESGO NEGADA'}
           });
           dialogRef.afterClosed().subscribe(r => {
             this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
             return;
+          });
+        } else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.APROBADO  && e.tipoExcepcion == 'EXCEPCION_RIESGO'){
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE RIESGO APROBADA'}
+          });
+          dialogRef.afterClosed().subscribe(r => {
+            this.riesgoTotal = 0;
           });
         }else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.APROBADO  && e.tipoExcepcion == 'EXCEPCION_COBERTURA'){
           this.coberturaExcepcionada = tmp.credito.cobertura;
@@ -443,6 +455,12 @@ export class GestionNegociacionComponent implements OnInit {
     this.campania.setValue( cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.campania : '');
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
+    if(this.negoW.riesgos){
+      this.riesgoTotal = 0;
+       this.negoW.riesgos.forEach(element => {
+        this.riesgoTotal =this.riesgoTotal  + element.saldo;
+       });
+    }
     if(wrapper.joyas != null){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
       this.dataSourceCreditoNegociacion.data.push( wrapper.credito );
@@ -749,6 +767,12 @@ export class GestionNegociacionComponent implements OnInit {
       //joya.valorOro = this.valorOro.value;
       joya.valorRealizacion = this.valorRealizacion.value;
       joya.tbQoCreditoNegociacion = {id:this.negoW.credito.id};
+     if(this.negoW.riesgos){
+      this.riesgoTotal = 0 ;
+      this.negoW.riesgos.forEach(p=>{
+        this.riesgoTotal = this.riesgoTotal + p.saldo;
+      })
+     }
       if (this.elementJoya) {
         joya.id = this.elementJoya.id;
        // const index = this.dataSourceTasacion.data.indexOf(this.elementJoya);
@@ -808,6 +832,10 @@ export class GestionNegociacionComponent implements OnInit {
       this.loadingSubject.next(true);
       this.cal.simularOferta(this.negoW.credito.id,montoSolicitado,this.riesgoTotal).subscribe((data: any) => {
         this.loadingSubject.next(false);
+        if(data.entidad.simularResult.codigoError>3){
+          this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
+          this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
+        }
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
