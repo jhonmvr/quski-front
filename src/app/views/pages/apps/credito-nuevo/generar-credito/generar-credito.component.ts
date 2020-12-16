@@ -336,7 +336,6 @@ export class GenerarCreditoComponent implements OnInit {
       });
     });
   }
-
   /** ********************************************* @OPERACION ********************* **/
   public obtenerNumeroFunda() {
     this.loadingSubject.next(true);

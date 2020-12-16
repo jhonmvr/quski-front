@@ -724,13 +724,12 @@ export class GestionNegociacionComponent implements OnInit {
       return;
     }
       //this.loadingSubject.next(true);
-      if(this.negoW.excepciones.find(ex=> (ex.tipoExcepcion == 'EXCEPCION_COBERTURA' || ex.tipoExcepcion == 'EXCEPCION_RIESGO')
+      if(this.negoW.excepciones && this.negoW.excepciones.find(ex=> (ex.tipoExcepcion == 'EXCEPCION_COBERTURA' || ex.tipoExcepcion == 'EXCEPCION_RIESGO')
        && ex.estadoExcepcion == EstadoExcepcionEnum.APROBADO) ){
         if( !confirm("USTED TIENE UNA EXCEPCION APROBADA. SI CAMBIA LAS GARANTIAS ESTA EXCEPCION SE ANULARA") ){
           return;
         }
        }
-       
       this.selection = new SelectionModel<any>(true, []);
       let joya = new TbQoTasacion();
       joya.descripcion = this.descripcion.value;

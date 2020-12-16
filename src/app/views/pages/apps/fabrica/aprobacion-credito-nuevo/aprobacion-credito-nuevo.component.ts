@@ -37,6 +37,13 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   public crediW: AprobacionWrapper;
   public catalogos: CatalogosWrapper;
   catMotivoDevolucionAprobacion: any;
+  public totalNumeroJoya: number;
+  public totalPesoB: number;
+  public totalPesoN: number;
+  public totalValorA: number;
+  public totalValorR: number;
+  public totalValorC: number;
+  public totalValorO: number;
 
 
   /** @OPERACION */
@@ -110,8 +117,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
   /** @DATOS_NEGOCIACION */
   public tipoProceso = new FormControl('', []);
-  dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
-  displayedColumnsTasacion = ['NumeroPiezas', 'TipoOro', 'TipoJoya', 'EstadoJoya', 'Descripcion','PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'tienePiedras', 'detallePiedras', 'ValorOro'];
+  public displayedColumns = ['total','numeroPiezas', 'tipoOro', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto', 'tieneDescuento', 'descuentoPesoPiedra', 'descuentoSuelda', 'pesoNeto', 'valorOro', 'valorAvaluo', 'valorComercial', 'valorRealizacion'];
+  public dataSource = new MatTableDataSource<TbQoTasacion>();
   public numeroFunda = new FormControl('', []);
   public tipoFunda = new FormControl('', []);
 
@@ -317,23 +324,23 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.nombresCompletoCliente.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     /** @DATOS_CLIENTE */
     this.identificacion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
-    this.aprobacionMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi);
+    this.aprobacionMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S'? 'SI': 'NO' );
     this.nombresCompletos.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     this.primerNombre.setValue(ap.credito.tbQoNegociacion.tbQoCliente.primerNombre);
     this.segundoNombre.setValue(ap.credito.tbQoNegociacion.tbQoCliente.segundoNombre);
     this.apellidoPaterno.setValue(ap.credito.tbQoNegociacion.tbQoCliente.apellidoPaterno);
     this.apellidoMaterno.setValue(ap.credito.tbQoNegociacion.tbQoCliente.apellidoMaterno);
     this.separacionDeBienes.setValue(ap.credito.tbQoNegociacion.tbQoCliente.separacionBienes ? ap.credito.tbQoNegociacion.tbQoCliente.separacionBienes : 'NO APLICA' );
-    this.genero.setValue(ap.credito.tbQoNegociacion.tbQoCliente.genero);
-    this.estadoCivil.setValue(ap.credito.tbQoNegociacion.tbQoCliente.estadoCivil);
+    this.genero.setValue( this.catalogos.catSexo.find( c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.genero).nombre );
+    this.estadoCivil.setValue( this.catalogos.catEstadoCivil.find( c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.estadoCivil).nombre );
     this.cargaFamiliar.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cargasFamiliares);
-    this.nacionalidad.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad);
-    this.lugarDeNacimiento.setValue(ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento);
+    this.nacionalidad.setValue( this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nombre);
+    this.lugarDeNacimiento.setValue(this.catalogos.catDivicionPolitica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento).nombre );
     this.edad.setValue(ap.credito.tbQoNegociacion.tbQoCliente.edad);
     this.fechaActual = ap.credito.fechaCreacion.toString();
     this.fechaNacimiento.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento);
-    this.nivelEducacion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nivelEducacion);
-    this.actividadEconomica.setValue(ap.credito.tbQoNegociacion.tbQoCliente.actividadEconomica);
+    this.nivelEducacion.setValue(this.catalogos.catEducacion.find( c => c.codigo ==  ap.credito.tbQoNegociacion.tbQoCliente.nivelEducacion).nombre);
+    this.actividadEconomica.setValue( this.catalogos.catActividadEconomica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.actividadEconomica ).nombre );
     this.fechaUltimaActualizazion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaActualizacion);
     this.correo.setValue(ap.credito.tbQoNegociacion.tbQoCliente.email);
     !ap.telefonos ? null : ap.telefonos.forEach(e => {
@@ -349,39 +356,39 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     });
     !ap.direcciones ? null : ap.direcciones.forEach(e => {
         if (e.tipoDireccion == "OFI") {
-          this.ubicacionLaboral.setValue(this.catalogos.catDivicionPolitica.find(x => x.id == e.divisionPolitica));
-          this.tipoViviendaLaboral.setValue(this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda));
+          this.ubicacionLaboral.setValue(this.catalogos.catDivicionPolitica.find(x => x.id == e.divisionPolitica).nombre);
+          this.tipoViviendaLaboral.setValue(this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda).nombre);
           this.callePrincipalLaboral.setValue(e.callePrincipal.toUpperCase());
           this.barrioLaboral.setValue(e.barrio ? e.barrio.toUpperCase() : null);
           this.numeracionLaboral.setValue(e.numeracion.toUpperCase());
           this.calleSecundariaLaboral.setValue(e.calleSegundaria.toUpperCase());
           this.referenciaUbicacionLaboral.setValue(e.referenciaUbicacion.toUpperCase());
-          this.sectorLaboral.setValue(this.catalogos.catSectorvivienda.find(x => x.codigo == e.sector));
+          this.sectorLaboral.setValue(this.catalogos.catSectorvivienda.find(x => x.codigo == e.sector).nombre);
           this.direccionLegalLaboral.setValue(e.direccionLegal);
           this.direccionCorreoLaboral.setValue(e.direccionEnvioCorrespondencia);
         }
         if (e.tipoDireccion == "DOM") {
-          this.ubicacion.setValue(this.catalogos.catDivicionPolitica.find(x => x.id == e.divisionPolitica));
-          this.tipoVivienda.setValue(this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda));
+          this.ubicacion.setValue(this.catalogos.catDivicionPolitica.find(x => x.id == e.divisionPolitica).nombre);
+          this.tipoVivienda.setValue(this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda).nombre);
           this.callePrincipal.setValue(e.callePrincipal);
           this.numeracion.setValue(e.numeracion);
           this.calleSecundaria.setValue(e.calleSegundaria);
           this.referenciaUbicacion.setValue(e.referenciaUbicacion);
-          this.sector.setValue(this.catalogos.catSectorvivienda.find(x => x.codigo == e.sector));
+          this.sector.setValue(this.catalogos.catSectorvivienda.find(x => x.codigo == e.sector).nombre);
           this.barrio.setValue(e.barrio);
           this.direccionLegalDomicilio.setValue(e.direccionLegal);
           this.direccionCorreoDomicilio.setValue(e.direccionEnvioCorrespondencia);
         }
     });
     !ap.trabajos ? null : ap.trabajos.forEach( e=>{
-      this.origenIngresos.setValue(this.catalogos.catOrigenIngreso.find(x => x.codigo == e.origenIngreso));
+      this.origenIngresos.setValue(this.catalogos.catOrigenIngreso.find(x => x.codigo == e.origenIngreso).nombre);
       this.relacionDependencia.setValue(e.esRelacionDependencia ? "SI" : "NO");
       this.nombreEmpresa.setValue(e.nombreEmpresa);
-      this.cargo.setValue(this.catalogos.catCargo.find(x => x.codigo == e.cargo));
-      this.ocupacion.setValue(this.catalogos.catOcupacion.find(x => x.codigo == e.ocupacion));
-      this.actividadEconomicaMupi.setValue( this.catalogos.catActividadEconomicaMupi.find(x => x.codigo == e.actividadEconomicaMupi ));
-      this.actividadEconomicaEmpresa.setValue(this.catalogos.catActividadEconomica.find(x => x.id.toString() == e.actividadEconomica));
-      this.profesion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.profesion);
+      this.cargo.setValue(this.catalogos.catCargo.find(x => x.codigo == e.cargo).nombre);
+      this.ocupacion.setValue(this.catalogos.catOcupacion.find(x => x.codigo == e.ocupacion).nombre);
+      this.actividadEconomicaMupi.setValue( this.catalogos.catActividadEconomicaMupi.find(x => x.codigo == e.actividadEconomicaMupi ).nombre);
+      this.actividadEconomicaEmpresa.setValue(this.catalogos.catActividadEconomica.find(x => x.id.toString() == e.actividadEconomica).nombre);
+      this.profesion.setValue(this.catalogos.catProfesion.find( c => c.codigo = ap.credito.tbQoNegociacion.tbQoCliente.profesion).nombre );
     });
     this.dataSourcePatrimonioActivo = new  MatTableDataSource<TbQoPatrimonio>();
     this.dataSourcePatrimonioPasivo = new  MatTableDataSource<TbQoPatrimonio>();
@@ -393,9 +400,10 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.dataSourceReferencia.data = ap.referencias;
     this.numeroFunda.setValue( ap.credito.numeroFunda ) ;
     this.tipoFunda.setValue( ap.credito.codigoTipoFunda );
-    this.dataSourceTasacion.data = ap.joyas;
-    this.tipoProceso.setValue( ap.proceso.proceso );
+    this.dataSource.data = ap.joyas;
 
+    this.tipoProceso.setValue( ap.proceso.proceso );
+    this.calcular();
     /** @DATOS_CREDITO_NUEVO */
     this.plazo.setValue( ap.credito.plazoCredito);
     this.tipoOferta.setValue( ap.credito.tipoOferta == "N" ? 'NUEVO' : ap.credito.tipoOferta);
@@ -440,6 +448,26 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
 
     this.loadingSubject.next(false);
+  }
+  private calcular() {
+    this.totalPesoN = 0;
+    this.totalPesoB = 0;
+    this.totalValorR = 0;
+    this.totalValorA = 0;
+    this.totalValorC = 0;
+    this.totalValorO = 0;
+    this.totalNumeroJoya = 0
+    if (this.dataSource.data) {
+      this.dataSource.data.forEach(element => {
+        this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
+        this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
+        this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
+        this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
+        this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
+        this.totalValorO = Number(this.totalValorO) + Number(element.valorOro);
+        this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas);
+      });
+    }
   }
   public aprobar(){
     if( this.observacionAprobador.value && this.codigoCash.value ){
