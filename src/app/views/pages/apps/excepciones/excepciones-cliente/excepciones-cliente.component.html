@@ -283,10 +283,10 @@
                 <ng-template matStepLabel>Riesgo Acumulado </ng-template>
                 <div class="row mt-2">
                     <div class="col">
-                        <ng-container *ngIf="dataPopup">
-                            <kt-tabla-riesgo-acumulado [idCliente]="entidadCliente.id" [isPaged]="false">
-                            </kt-tabla-riesgo-acumulado>
-                        </ng-container>
+                        <kt-tabla-riesgo-acumulado *ngIf="riesgos;" [base]='riesgos'></kt-tabla-riesgo-acumulado>
+                        <div class="row"  *ngIf="!riesgos;">
+                            <strong> EL CLIENTE NO TIENE RIESGO</strong>
+                        </div>
                     </div>
                 </div>
             </mat-step>
@@ -329,13 +329,19 @@
                                     matInput>{{ observacionAprobador }}</textarea>
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class=" offset-3 offset-lg-2 col-xl-8">
+                    <br>
+                        <div class="row">
+                            <div class="col-md-2">
+
+                            </div>
+                            <div class="col-md-3">
                                 <button mat-button mat-raised-button color="primary" (click)="aprobarExcepcion('SI')">Aprobar Excepcion</button>
-                                <button mat-button mat-raised-button color="primary" (click)="aprobarExcepcion('NO')">Negar Excepcion</button>
-                              
+                            </div>
+                            <div class="col-md-2">
 
-
+                            </div>
+                            <div class="col-md-3">
+                                <button mat-button mat-raised-button color="warn" (click)="aprobarExcepcion('NO')">Negar Excepcion</button>
                             </div>
                         </div>
                     </form>

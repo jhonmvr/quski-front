@@ -74,13 +74,13 @@ export class GestionNegociacionComponent implements OnInit {
   public cedula = new FormControl('', []);
   public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public publicidad = new FormControl('', [Validators.required]);
-  public fechaDeNacimiento = new FormControl('', []);
-  public edad = new FormControl('', []);
-  public nacionalidad = new FormControl('', []);
+  public fechaDeNacimiento = new FormControl('', [Validators.required]);
+  public edad = new FormControl('', [Validators.required]);
+  public nacionalidad = new FormControl('', [Validators.required]);
   public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
   public email = new FormControl('', [Validators.required, Validators.email]);
-  public campania = new FormControl('', []);
+  public campania = new FormControl('', [Validators.required]);
   public aprobacionMupi = new FormControl('', [Validators.required]);
   // FORMULARIO TASACION
   public formTasacion: FormGroup = new FormGroup({});
@@ -455,8 +455,8 @@ export class GestionNegociacionComponent implements OnInit {
     this.campania.setValue( cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.campania : '');
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
+    this.riesgoTotal = 0;
     if(this.negoW.riesgos){
-      this.riesgoTotal = 0;
        this.negoW.riesgos.forEach(element => {
         this.riesgoTotal =this.riesgoTotal  + element.saldo;
        });
@@ -542,6 +542,15 @@ export class GestionNegociacionComponent implements OnInit {
         }
       }
     });
+  }
+
+
+  solicitarCobertura(){
+    if(this.dataSourceTasacion.data && this.dataSourceTasacion.data.length > 0){
+      this.abrirPopupExcepciones();
+    }else{
+      this.sinNotSer.setNotice('REGISTRE ALMENOS UNA JOYA EN TASACION','warning');
+    }
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, cancelar: boolean = false, dataTitulo?: string) {

@@ -162,7 +162,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
         this.loadingSubject.next(false);
   }
   public calcularOpciones() {
-    if (this.dataSourceTasacion.data.length > 0) {
+    if (this.dataSourceTasacion && this.dataSourceTasacion.data && this.dataSourceTasacion.data.length > 0) {
       this.loadingSubject.next(true);
       this.cal.simularOferta(this.wp.credito.id, null, null).subscribe((data: any) => {
         this.loadingSubject.next(false);

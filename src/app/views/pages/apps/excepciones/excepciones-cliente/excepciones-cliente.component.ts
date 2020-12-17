@@ -47,7 +47,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   public listExepcion = new Array<TbQoExcepcion>();
   public loading;
 
-
+  riesgos;
 
   // VARIABLES DE TRACKING
   public horaInicioExcepcion: Date;
@@ -166,10 +166,11 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.loading = this.loadingSubject.asObservable();
     //TRACKING
     //this.capturaHoraInicio('NEGOCIACION');
-    this.clienteNegociacion();
+    //this.clienteNegociacion();
+    this.busquedaNegociacion();
     this.subheaderService.setTitle("Excepciones de Negociación");
     //this.capturaDatosTraking();
-
+    
   }
 
 
@@ -299,7 +300,68 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.entidadExcepcion.observacionAprobador = this.observacionAprobador.value;
   }
 
+  private busquedaNegociacion(){
+    //this.loadingSubject.next(true);
+    this.route.paramMap.subscribe((data: any) => {
+      if (data.params.id) {
+        let excepcionRol = JSON.parse(atob(data.params.id));
+        
+        this.excepcion = excepcionRol;
+        this.observacionAsesor.setValue(excepcionRol.observacionAsesor);
+        this.mensaje = excepcionRol.mensajeBre;
+        
+        this.neg.traerNegociacionExistente(excepcionRol.idNegociacion).subscribe( (data: any)=>{
+          if(data.entidad){
+            this.entidadCliente = data.entidad.credito.tbQoNegociacion.tbQoCliente;
+            this.riesgos = data.entidad.riesgos;
+            this.entidadNegociacion = data.entidad.credito.tbQoNegociacion;
+            this.nombresCompletos.setValue(this.entidadCliente.nombreCompleto);
+            this.idCliente = this.entidadCliente.id;
+            this.identificacion.setValue(this.entidadCliente.cedulaCliente);
+            this.procesoEntidad = data.entidad.proceso;
+            // FORM CLIENTE
+            this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
+            this.aprobadoWebMupi.setValue(this.entidadCliente.aprobacionMupi)
+            this.primerNombre.setValue(this.entidadCliente.primerNombre);
+            this.segundoNombre.setValue(this.entidadCliente.segundoNombre);
+            this.separacionDeBienes.setValue(this.entidadCliente.separacionBienes);
+            this.apellidoPaterno.setValue(this.entidadCliente.apellidoPaterno);
+            this.apellidoMaterno.setValue(this.entidadCliente.apellidoMaterno);
+            this.cargaFamiliar.setValue(this.entidadCliente.cargasFamiliares);
+            this.genero.setValue(this.entidadCliente.genero);
+            this.estadoCivil.setValue(this.entidadCliente.estadoCivil);
+            this.lugarDeNacimiento.setValue(this.entidadCliente.lugarNacimiento);
+            this.fechaDeNacimiento.setValue(new Date(this.entidadCliente.fechaNacimiento));
+            this.nacionalidad.setValue(this.entidadCliente.nacionalidad);
+            this.edad.setValue(this.entidadCliente.edad);
+            this.nivelDeEducacion.setValue(this.entidadCliente.nivelEducacion);
+            this.actividadEconomica.setValue(this.entidadCliente.actividadEconomica);
+            this.ultimaFechaDeActualizacionDeCliente.setValue(new Date(this.entidadCliente.fechaActualizacion));
+            // INPUT VARIABLES CREDITICIAS
+            this.dataPopup = new DataPopup();
+            this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
+            this.dataPopup.isNegociacion = true;
+            this.dataPopup.idBusqueda = this.entidadNegociacion.id;
+            console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
+            //INPUT RIESGO ACUMULADO
 
+            // FORM CONTACTO
+            let idtlf = 0;
+      
+            this.correo.setValue(this.entidadCliente.email);
+            //FORM DATOS NEGOCIACION
+            this.estadoNegociacion.setValue(this.procesoEntidad.estadoProceso);
+            this.nombreProceso.setValue(this.procesoEntidad.proceso);
+            this.fechaDeCreacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
+            this.ultimaFechaDeActualizacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));
+          }else{
+            this.loadingSubject.next(false);
+            this.sinNoticeService.setNotice('ERROR CARGANDO NEGOCIACION','error');
+          }
+        });
+      }
+    }, error =>{this.loadingSubject.next(false)});
+  }
 
 
   /******************************************** @EVENT   *********************************************************/

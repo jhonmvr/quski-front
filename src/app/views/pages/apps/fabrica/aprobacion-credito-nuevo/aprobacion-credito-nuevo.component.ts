@@ -388,7 +388,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
       this.ocupacion.setValue(this.catalogos.catOcupacion.find(x => x.codigo == e.ocupacion).nombre);
       this.actividadEconomicaMupi.setValue( this.catalogos.catActividadEconomicaMupi.find(x => x.codigo == e.actividadEconomicaMupi ).nombre);
       this.actividadEconomicaEmpresa.setValue(this.catalogos.catActividadEconomica.find(x => x.id.toString() == e.actividadEconomica).nombre);
-      this.profesion.setValue(this.catalogos.catProfesion.find( c => c.codigo = ap.credito.tbQoNegociacion.tbQoCliente.profesion).nombre );
+      this.profesion.setValue(this.catalogos.catProfesion.find( c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.profesion).nombre );
     });
     this.dataSourcePatrimonioActivo = new  MatTableDataSource<TbQoPatrimonio>();
     this.dataSourcePatrimonioPasivo = new  MatTableDataSource<TbQoPatrimonio>();

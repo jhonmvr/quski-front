@@ -4,10 +4,10 @@
 <re-portlet>
     <re-portlet-header [title]="'Generar Credito'" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
-			<a href="javascript:void(0);" matTooltip="Guardar" style="font-size: 12px; vertical-align: middle;">
+			<a href="javascript:void(0);" matTooltip="Solicitar Aprobacion" style="font-size: 12px; vertical-align: middle;" (click)="solicitarAprobacion()">
 				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
 				</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Guardar</span>
+				<span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Solicitar Aprobacion</span>
 			</a>
 		</ng-container>
     </re-portlet-header>
@@ -217,34 +217,62 @@
             </mat-step>
 
             <mat-step label="Datos Instruccion Operativa" [stepControl]="formInstruccion">
-                <form [formGroup]="formInstruccion">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required placeholder="Banco del cliente" [formControl]="tipoCuenta" (selectionChange)="buscarNumero()">
-                                    <mat-option *ngFor="let element of catCuenta" [value]="element">
-                                        {{element.nombre }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                <div class="row">
+                    <form [formGroup]="formInstruccion">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <mat-select required placeholder="Banco del cliente" [formControl]="tipoCuenta" (selectionChange)="buscarNumero()">
+                                        <mat-option *ngFor="let element of catCuenta" [value]="element">
+                                            {{element.nombre }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input matInput required [formControl]="numeroCuenta" placeholder="Numero de Cuenta">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input matInput required [formControl]="firmanteOperacion" placeholder="Firmante Operacion">
+                                </mat-form-field>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput required [formControl]="numeroCuenta" placeholder="Numero de Cuenta">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput required [formControl]="firmanteOperacion" placeholder="Firmante Operacion">
-                            </mat-form-field>
-                        </div>
+                       
+                    </form>
+                </div>
+                <div class="row">
+                    
+                    <strong>Excepcion operativa</strong>
+                </div>
+                <div class="row">
+                    <br>
+                    <div class="col-md-4">
+                        <mat-select placeholder="Tipo Excepcion" name="item">
+                            <mat-option>SERVICIO BASICO</mat-option>
+                            <mat-option>PAPELETA DE VOTACION</mat-option>
+                            
+                        </mat-select>
                     </div>
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker6" placeholder="Fecha de regularizacion">
+                            <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                            <mat-datepicker #picker6></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+                <div class="row">
                     <div class="row mb-5">
                         <div  class="offset-md-5 col-md-4" >
                             <button mat-raised-button color="primary" (click)="generarCredito()"> Generar Credito </button>
                         </div>
                     </div>
-                </form>
+                </div>
+               
             </mat-step>
             <mat-step label="Datos del Credito nuevo" [stepControl]="formCredito">
                 <form [formGroup]="formCredito">
@@ -495,7 +523,7 @@
                     <re-habilitante [proceso]="'CREDITONUEVO'" [useType]="'LIST'" [tipoDocumento]="'5'" [referencia]="this.operacionNuevo.credito.id" [rol]="'7'"> </re-habilitante>
                     <div class="row">
                         <div class="col-md-5 offset-md-5">
-                            <button mat-button (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
+                            <button  mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
                         </div>
                     </div>
                 </ng-container>
