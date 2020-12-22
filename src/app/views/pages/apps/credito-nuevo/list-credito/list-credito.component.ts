@@ -140,7 +140,7 @@ export class ListCreditoComponent implements OnInit {
     this.router.navigate(['credito-nuevo/detalle-credito/', row.numeroOperacion]);    
   }
   public irNovar(row: any){
-    this.router.navigate(['novacion/novar-credito', row.numeroOperacion]);    
+    this.router.navigate(['novacion/crear-novacion', row.numeroOperacion]);    
   }
   public limpiarFiltros(){
     Object.keys(this.formFiltro.controls).forEach((name) => {
