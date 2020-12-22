@@ -188,8 +188,6 @@ export class GestionNegociacionComponent implements OnInit {
 
 
   loadCatalogo(){
-   
-
     this.sof.consultarPaisCS().subscribe((data: any) => {
       this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
       

@@ -91,7 +91,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
           if(this.catAgencia){
             e.agencia = !e.idAgencia || e.idAgencia == 0 ? 'Sin Agencia' : this.catAgencia.find( a => a.id == e.idAgencia ) ? this.catAgencia.find( a => a.id == e.idAgencia ).nombre : 'Sin Agencia';
           }
-           e.actividad = !e.actividad || e.actividad == ' ' || e.actividad.toUpperCase() == 'NULL' ? 'Sin Actividad' : e.actividad.replace(/_/gi," ");
+          e.actividad = !e.actividad || e.actividad == ' ' || e.actividad.toUpperCase() == 'NULL' ? 'Sin Actividad' : e.actividad.replace(/_/gi," ");
           e.codigoOperacion = !e.codigoOperacion || e.codigoOperacion.toUpperCase() == 'NULL' ? "Sin Codigo Softbank": e.codigoOperacion;
           e.montoFinanciado = !e.montoFinanciado || e.montoFinanciado == '0' ? 'No Aplica' : e.montoFinanciado+'$';
           e.estadoProceso = e.estadoProceso.replace(/_/gi," ");
@@ -132,7 +132,6 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
               "";
     }
   }
-  
   private cargarCatalogosOperacionesAndEnums(){
     this.loadingSubject.next(true);
     this.sof.consultarAgenciasCS().subscribe( (data: any) =>{

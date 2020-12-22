@@ -56,6 +56,10 @@ const routes: Routes = [
 			{
 				path: 'fabrica',
 				loadChildren: () => import('../app/views/pages/apps/fabrica/fabrica.module').then(m => m.FabricaModule)
+			},			
+			{
+				path: 'novacion',
+				loadChildren: () => import('../app/views/pages/apps/novacion/novacion.module').then(m => m.NovacionModule)
 			},
 			{
 				path: 'builder',

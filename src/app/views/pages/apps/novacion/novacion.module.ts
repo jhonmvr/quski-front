@@ -1,11 +1,8 @@
-
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-
 // Translate Module
 import { TranslateModule } from '@ngx-translate/core';
 // Auth
@@ -26,7 +23,6 @@ import {
 	MatDialogModule,
 	MatTabsModule,
 	MatNativeDateModule,
-	MatCardModule,
 	MatRadioModule,
 	MatIconModule,
 	MatDatepickerModule,
@@ -36,56 +32,36 @@ import {
 	MatTooltipModule,
 	MatStepperModule,
 	MatDialogRef,
-	MatButtonToggleGroup,
 } from '@angular/material';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPermissionsModule } from 'ngx-permissions';
-
 // Component
-import { NegociacionComponent } from './negociacion.component';
+import { CrearRenovacionComponent } from './crear-renovacion/crear-renovacion.component';
+import { NovacionComponent } from './novacion.component';
 import { PartialsModule } from '../../../partials/partials.module';
-import { GestionNegociacionComponent } from './gestion-negociacion/gestion-negociacion.component';
 import { ErrorCargaInicialComponent } from '../../../../views/partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
-import { VerCotizacionesComponent } from '../../../../views/partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
-import { BandejaOperacionesProcesoComponent } from './bandeja-operaciones-proceso/bandeja-operaciones-proceso.component';
 import { ListaExcepcionesComponent } from '../../../../views/partials/custom/popups/lista-excepciones/lista-excepciones.component';
 import { ReasignarUsuarioComponent } from '../../../../views/partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
-import { DetalleNegociacionComponent } from './detalle-negociacion/detalle-negociacion.component';
-
 const routes: Routes = [
 	{
 		path: '',
-		component: NegociacionComponent,
-		// canActivate: [ModuleGuard],
-		// data: { moduleName: 'ecommerce' },
+		component: NovacionComponent,
 		children: [
 			{
 				path: '',
-				redirectTo: 'bandeja-operaciones',
+				redirectTo: 'crear-novacion',
 				pathMatch: 'full'
-			},{
-				path: 'gestion-negociacion',
-				component: GestionNegociacionComponent
-			},{
-				path: 'detalle-negociacion/:id',
-				component: DetalleNegociacionComponent
-			},{
-				path: 'bandeja-operaciones',
-				component: BandejaOperacionesProcesoComponent
 			},
 			{
-				path: 'gestion-negociacion/:origen/:id',
-				component: GestionNegociacionComponent
+				path: 'crear-novacion/:numeroOperacion',
+				component: CrearRenovacionComponent
 			}
 
 		]
 	}
 ];
-
-
 @NgModule({
-	imports: [
+  	imports: [
 		CommonModule,
 		RouterModule.forChild(routes),
 		MatDialogModule,
@@ -106,7 +82,7 @@ const routes: Routes = [
 		MatNativeDateModule,
 		MatProgressBarModule,
 		MatDatepickerModule,
-		MatCardModule,
+		MatRadioModule,
 		MatPaginatorModule,
 		MatSortModule,
 		MatCheckboxModule,
@@ -115,11 +91,11 @@ const routes: Routes = [
 		MatTabsModule,
 		MatTooltipModule,
 		MatButtonToggleModule,
-		NgbProgressbarModule,
-   	    MatStepperModule,
-        PartialsModule
-	],
-	providers: [
+		MatProgressBarModule,
+   		MatStepperModule,
+    	PartialsModule
+  	],	
+  	providers: [
 		ModuleGuard,
 		{ provide: MatDialogRef, useValue: {} },
 		{
@@ -131,18 +107,15 @@ const routes: Routes = [
 				width: '900px'
 			}
 		},
-	],
-	declarations: [
-		GestionNegociacionComponent,
-		NegociacionComponent,
-		BandejaOperacionesProcesoComponent,
-		DetalleNegociacionComponent
+  	],
+  	declarations: [
+		CrearRenovacionComponent,
+		NovacionComponent
 	],
 	entryComponents: [	
 		ErrorCargaInicialComponent,
-		VerCotizacionesComponent,
 		ListaExcepcionesComponent,
 		ReasignarUsuarioComponent
 	]
 })
-export class NegociacionModule { }
+export class NovacionModule { }

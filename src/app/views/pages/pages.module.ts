@@ -17,6 +17,7 @@ import { CreditoNuevoModule } from './apps/credito-nuevo/credito-nuevo.module';
 import { NegociacionModule } from './apps/negociacion/negociacion.module';
 import { ExcepcionesModule } from './apps/excepciones/excepciones.module';
 import { AprobadorModule } from './apps/aprobador/aprobador.module';
+import { NovacionModule } from './apps/novacion/novacion.module';
 
 
 
@@ -34,7 +35,6 @@ const RELATIVE_DATE_FORMATS = {
 };
 
 @NgModule({
-	declarations: [],
 	exports: [],
 	imports: [
 		CommonModule,
@@ -51,7 +51,8 @@ const RELATIVE_DATE_FORMATS = {
 		NegociacionModule,
 		ExcepcionesModule,
 		UserManagementModule,
-		AprobadorModule
+		AprobadorModule,
+		NovacionModule
 	],
 	providers: []
 })
