@@ -1,29 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
-import { MatTableDataSource } from '@angular/material';
-import { BehaviorSubject } from 'rxjs';
-import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
-import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
-import { FormGroup, FormControl } from '@angular/forms';
-import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
-import { TrackingService } from '../../../../../core/services/quski/tracking.service';
-import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
-import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
-import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
-import { EstadoExcepcionEnum } from '../../../../../core/enum/EstadoExcepcionEnum';
-import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { ParametroService } from '../../../../../core/services/quski/parametro.service';
-import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
-import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
-import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOferta';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
-import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
-import 'hammerjs';
-import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
-import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { CalculadoraService } from '../../../../../core/services/quski/calculadora.service';
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
+import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { environment } from '../../../../../../../src/environments/environment';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
+import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog, MatTableDataSource } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import 'hammerjs';
 
 
 @Component({
@@ -32,460 +23,205 @@ import { NegociacionWrapper } from '../../../../../core/model/wrapper/Negociacio
   styleUrls: ['./excepciones-cobertura.component.scss']
 })
 export class ExcepcionesCoberturaComponent implements OnInit {
-
-  //ENTIDADES
-  private entidadNegociacion: TbQoNegociacion = null;
-  wrapper: NegociacionWrapper;
-  private entidadExcepcion: TbQoExcepcion = null;
-  private procesoEntidad: TbQoProceso;
-  // STANDARD VARIABLES
-  private idNegociacion: number;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading;
+  public observacion: string;
+  public excepcion: TbQoExcepcion;
   public usuario;
-  public proceso;
-  public mensaje: string;
-  public listExepcion: any;
-  private minimoDeCobertura;
-  private camposDinamicos;
-  private validacionCobertura;
-  public dataPopup: DataPopup;
-  public consultaOferta: ConsultaOferta;
-  public vertical: true;
-  public valor: null;
+  public agencia;
+  public simulado: boolean;
 
-
-  // OBJETOS DE ENTIDADES
-  private negociacion: TbQoNegociacion;
-  private cliente: TbQoCliente;
-  private excepcion: TbQoExcepcion;
-  private variablesCre: Array<TbQoVariablesCrediticia>;
-  private riesgoAcumul: Array<TbQoRiesgoAcumulado>;
-  private tasacion: Array<TbQoTasacion>;
-  private opcCredito: Array<OpcionesDeCredito>;
-  private opcExcepcionada: Array<OpcionesDeCredito>;
-
-
-
-  // TABLA TASACION
-  displayedColumnsTasacion = ['NumeroPiezas', 'TipoOro', 'TipoJoya', 'Estado', 'Descripcion', 'PesoBruto', 'DescuentoPiedra', 'DescuentoSuelda', 'PesoNeto', 'ValorAvaluo', 'ValorComercial', 'ValorRealizacion', 'ValorOro'];
-  dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
-
-  // TABLA COBERTURA
-  displayedColumnsCobertura = ['plazo', 'montoCredito', 'cuota', 'aRecibirCliente', 'aPagarCliente', 'valorDeDesembolso', 'riesgoAcumulado'];
-  dataSourceCobertura = new MatTableDataSource<any>();
-
-  // VARIABLES DE TRACKING
-  public horaInicioExcepcion: Date;
-  public horaAsignacionExcepcion: Date = null;
-  public horaAtencionExcepcion: Date;
-  public horaFinalExcepcion: Date = null;
-  public procesoExcepcion: string;
-  public actividad: string;
-
-  //FORM DATOS CONTACTOS_CLIENTE
-  public formDatoContacto: FormGroup = new FormGroup({});
-  public telefonoDomicilio = new FormControl('', []);
-  public telefonoAdicional = new FormControl('', []);
-  public telefonoMovil = new FormControl('', []);
-  public telefonoOficinaOtros = new FormControl('', []);
-  public correoElectronico = new FormControl('', []);
-
-  //FORM DATOS NEGOCIACION
-  public formDatosNegociacion: FormGroup = new FormGroup({});
-  public tipoProceso = new FormControl('', []);
-  public estadoNegociacion = new FormControl('', []);
+  public wp: NegociacionWrapper = null;
+  public formDisable: FormGroup = new FormGroup({});
+  public cliente = new FormControl('', []);
+  public cedula  = new FormControl('', []);
   public fechaCreacion = new FormControl('', []);
-  public fechaActualizacion = new FormControl('', []);
-
-
-  // FORM DATOS OPERACION
-  public formDatosOperacion: FormGroup = new FormGroup({});
-  public nombresCompletos = new FormControl('', []);
-  public identificacion = new FormControl('', []);
-  public nombreProceso = new FormControl('', []);
+  public proceso = new FormControl('', []);
+  public telefonoDomicilio = new FormControl('', []);
+  public telefonoMovil = new FormControl('', []);
+  public email = new FormControl('', []);
 
 
 
-  // FORM DATOS EXCEPCION
+  dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
+  displayedColumnsTasacion = ['NumeroPiezas', 'TipoOro', 'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'valorComercial', 'tienePiedras', 'detallePiedras','TipoJoya', 'EstadoJoya', 'Descripcion',];
+  dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
+  displayedColumnsCreditoNegociacion = ['plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
+  'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
+  'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
+  'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
+  'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
+  'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
+  'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
+  dataSourceCobertura = new MatTableDataSource<any>();
+  displayedColumnsCobertura = ['plazo','montoCredito','riesgoAcumulado','valorDesembolso','cuota'];
+
   public formDatosExcepcion: FormGroup = new FormGroup({});
-  public tipoExcepcionCliente: string;
+  public cobertura = new FormControl('', [Validators.required, ]);
+  public observacionAprobador = new FormControl('', [Validators.required]);
   public observacionAsesor = new FormControl('', []);
-  public observacionAprobador = new FormControl('', []);
-  public radioB = new FormControl('', []);
-  public porcentaje = new FormControl('', []);
+
+  public coberturaActual = new FormControl('', []);
+  public montoActual = new FormControl('', []);
+  public valorComercial = new FormControl('', []);
+  public valorAvaluo = new FormControl('', []);
 
   constructor(
-    private exs: ExcepcionService,
-    private tra: TrackingService,
-    private par: ParametroService,
-    private pro: ProcesoService,
     private route: ActivatedRoute,
     private router: Router,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
-    private neg: NegociacionService
+    private dialog: MatDialog,
+    private neg: NegociacionService,
+    private exc: ExcepcionService,
+    private cal: CalculadoraService
+
   ) {
-
-
-    // FORM DATOS CONTACTOS_CLIENTE
-    this.formDatoContacto.addControl('telefonoDomicilio', this.telefonoDomicilio);
-    this.formDatoContacto.addControl('telefonoAdicional', this.telefonoAdicional);
-    this.formDatoContacto.addControl('telefonoMovil', this.telefonoMovil);
-    this.formDatoContacto.addControl('telefonoOficinaOtros', this.telefonoOficinaOtros);
-    this.formDatoContacto.addControl('correoElectronico', this.correoElectronico);
-
-    //FORM DATOS NEGOCIACION
-    this.formDatosNegociacion.addControl('tipoProceso', this.tipoProceso);
-    this.formDatosNegociacion.addControl('estadoNegociacion', this.estadoNegociacion);
-    this.formDatosNegociacion.addControl('fechaCreacion', this.fechaCreacion);
-    this.formDatosNegociacion.addControl('fechaActualizacion', this.fechaActualizacion);
-
-    // INPUT VARIABLES CREDITICIAS
-
-
-
-    //FORM DATOS EXCEPCION
-    this.formDatosExcepcion.addControl('observacionAsesor', this.observacionAsesor);
+    this.formDisable.addControl('cliente', this.cliente);
+    this.formDisable.addControl('cedula', this.cedula);
+    this.formDisable.addControl('fechaCreacion', this.fechaCreacion);
+    this.formDisable.addControl('proceso', this.proceso);
+    this.formDisable.addControl('telefonoDomicilio', this.telefonoDomicilio);
+    this.formDisable.addControl('telefonoMovil', this.telefonoMovil);
+    this.formDisable.addControl('email', this.email);
     this.formDatosExcepcion.addControl('observacionAprobador', this.observacionAprobador);
-    this.formDatosExcepcion.addControl('radioB', this.radioB);
-    this.formDatosExcepcion.addControl('porcentaje', this.porcentaje);
-
-
-    //SECCIONES Y CAMPOS DE LECTURA
-    this.formDatosOperacion.disable();
-    this.formDatosNegociacion.disable();
-    this.formDatoContacto.disable();
-    this.observacionAsesor.disable();
+    this.formDatosExcepcion.addControl('cobertura', this.cobertura);
   }
 
   ngOnInit() {
-
-    this.subheaderService.setTitle('Excepción de Cobertura');
+    this.wp = null;
     this.loading = this.loadingSubject.asObservable();
-    // this.camposDinamicos = false;
-    // this.minimoDeCobertura = 80;
-    // this.validacionCobertura = false;
-
-    this.capturaHoraInicio('NEGOCIACION');
-    this.buscarExcepcion();
-    this.buscoDatosFlujo();
-    this.capturaDatosTraking();
-    // this.usuario = localStorage.getItem(atob(environment.userKey));
-    //  console.log('El usuario es excepcion cobertura ----> ', localStorage.getItem(atob(environment.userKey)));
+    this.busquedaNegociacion();
+    this.usuario = localStorage.getItem(atob(environment.userKey));
+    this.agencia = 2;
   }
-
-
-  /********************************************  @TRACKING  ***********************************************************/
-  /**
-* @author Kléber Guerra  - Relative Engine
-* @description Captura la hora de inicio de Tracking
-*/
-  private capturaHoraInicio(etapa: string) {
-    this.tra.getSystemDate().subscribe((hora: any) => {
-      if (hora.entidad) {
-        this.horaInicioExcepcion = hora.entidad;
-      }
-
-    });
+  private camposAdicinales(wp: NegociacionWrapper){
+    let totalValorAvaluo: number = 0;
+    let totalValorComercial: number = 0;
+    !this.wp.joyas ? null : this.wp.joyas.forEach(e=>{
+      totalValorAvaluo += e.valorAvaluo;
+      totalValorComercial += e.valorComercial;
+    }); 
+    this.coberturaActual.setValue( this.wp.variables.find( v => v.codigo == 'Cobertura') ? this.wp.variables.find( v => v.codigo == 'Cobertura').valor : 'No aplica');
+    this.valorComercial.setValue( totalValorComercial );
+    this.valorAvaluo.setValue( totalValorAvaluo );
   }
-  /**
-   * @description Captura de la hora de asignacion en Tracking
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-09-20
-   * @private
-   * @param {string} etapa
-   * @memberof ExcepcionesCoberturaComponent
-   */
-  private capturaHoraAsignacion(etapa: string) {
-    this.tra.getSystemDate().subscribe((hora: any) => {
-      if (hora.entidad) {
-
-        this.horaAsignacionExcepcion = hora.entidad;
-
-      }
-    });
-  }
-  /**
-   * @description Captura la hora de Atención en Tracking
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-09-20
-   * @private
-   * @param {string} etapa
-   * @memberof ExcepcionesCoberturaComponent
-   */
-  private capturaHoraAtencion(etapa: string) {
-    this.tra.getSystemDate().subscribe((hora: any) => {
-      if (hora.entidad) {
-
-
-        this.horaAtencionExcepcion = hora.entidad;
-        console.log('HORA DE capturaHoraAtencion ==> ', JSON.stringify(hora.entidad));
-
-      }
-    });
-  }
-  /**
-   * @description Captura la hora Final para Tracking
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-09-20
-   * @private
-   * @param {string} etapa
-   * @memberof ExcepcionesCoberturaComponent
-   */
-  private capturaHoraFinal(etapa: string) {
-    this.tra.getSystemDate().subscribe((hora: any) => {
-      if (hora.entidad) {
-        this.registroExcepcion(this.entidadNegociacion.id, this.horaInicioExcepcion, this.horaAsignacionExcepcion,
-          this.horaAtencionExcepcion, this.horaFinalExcepcion);
-      }
-
-    });
-  }
-  /**
-   * @description Método que busca la excepcion segun su tipo en la tabla de parametros
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-09-20
-   * @private
-   * @memberof ExcepcionesCoberturaComponent
-   */
-  private capturaDatosTraking() {
-    this.par.findByNombreTipoOrdered('EXCEPCION_COBERTURA', 'TIP-EXC', 'Y').subscribe((data: any) => {
-      if (data.entidades) {
-        this.actividad = data.entidades[0].nombre;
-        this.par.findByNombreTipoOrdered('EXCEPCION_COBERTURA', 'TIP-EXC', 'Y').subscribe((data: any) => {
-          if (data.entidades) {
-            this.procesoExcepcion = data.entidades[0].nombre;
-            this.par.findByNombreTipoOrdered('EXCEPCION_COBERTURA', 'TIP-EXC', 'Y').subscribe((data: any) => {
-              if (data.entidades) {
-                this.procesoExcepcion = data.entidades[0].nombre;
-              }
-            });
-          }
-        });
-      }
-    });
-  }
-  /**
-   * @description Método que realiza el registro de la excepcion ademas se guarda tambien el tracking 
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-09-20
-   * @param {number} codigoRegistro
-   * @param {Date} fechaInicio
-   * @param {Date} fechaAsignacion
-   * @param {Date} fechaInicioAtencion
-   * @param {Date} fechaFin
-   * @memberof ExcepcionesCoberturaComponent
-   */
-  public registroExcepcion(codigoRegistro: number, fechaInicio: Date, fechaAsignacion: Date, fechaInicioAtencion: Date, fechaFin: Date) {
-    const tracking: TbQoTracking = new TbQoTracking();
-    this.loadingSubject.next(true);
-    tracking.actividad = this.actividad;
-    tracking.proceso = this.procesoExcepcion;
-    tracking.observacion = '';
-    /*tracking.codigoRegistro = codigoRegistro;
-    tracking.usuario = atob(localStorage.getItem(environment.userKey))
-    tracking.fechaInicio = fechaInicio;
-    tracking.fechaAsignacion = fechaAsignacion;
-    tracking.fechaInicioAtencion = fechaInicioAtencion;*/
-    tracking.fechaFin = fechaFin;
-    this.tra.guardarTracking(tracking).subscribe((data: any) => {
-      if (data.entidad) {
-        console.log('data de tracking para Prospeccion ----> ', data.entidad);
-        this.loadingSubject.next(false);
-      } else {
-        this.loadingSubject.next(false);
-        this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING', 'error');
-      }
-    }, error => {
-      this.loadingSubject.next(false);
-      if (JSON.stringify(error).indexOf('codError') > 0) {
-        const b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice('ERROR AL GUARDAR TRACKING', 'error');
-      }
-    });
-
-  }
-
-  /**
-   * @author Jeroham Cadenas - Developer Twelve
-   * @description Cargando valores para traking desde tabla de parametros
-   */
-
-  private buscoDatosFlujo() {
-    this.loadingSubject.next(true);
-    this.par.findByNombreTipoOrdered('NEGOCIACION', 'ACTIVIDAD', 'Y').subscribe((data: any) => {
-      if (data.entidades) {
-        this.actividad = data.entidades[0].nombre;
-        this.par.findByNombreTipoOrdered('EXCEPCION', 'PROCESO', 'Y').subscribe((data: any) => {
-          if (data.entidades) {
-            this.procesoExcepcion = data.entidades[0].nombre;
-          }
-        });
-      }
-    });
-  }
-  /********************************************  @EXCEPCION  ***********************************************************/
-
-  buscarExcepciones(id: number) {
-    this.loadingSubject.next(true);
-    console.log('valor del id===> ', id.toString());
-    this.exs.findByIdNegociacion(id).subscribe((data: any) => {
-      console.log('VALOR DE LA DATA DE LA EXCEPCION ===> ', JSON.stringify(data));
-      if (data.list != null && data.list[0] != null) {
-
-        this.listExepcion = data.list[0];
-        //  console.log('valor de la llistas', this.listExepcion);
-        this.entidadExcepcion = data.list[0];
-        this.observacionAsesor.setValue(this.entidadExcepcion.observacionAsesor);
-        this.mensaje = (this.entidadExcepcion.mensajeBre);
-      }
-    });
-    this.loadingSubject.next(false);
-
-  }
-  /**
-   * @author Jeroham Cadenas - Developer Twelve
-   * @description Busca dota la informacion relacionada a la excepcion y la imprime en las distintas seciones.
-   */
-  buscarExcepcion() {
+  private busquedaNegociacion(){
     this.loadingSubject.next(true);
     this.route.paramMap.subscribe((data: any) => {
-      data.params.id
       if (data.params.id) {
-        this.idNegociacion = data.params.id;
-        //console.log('PARAMETRO=====> ', this.idNegociacion);
-        this.pro.findByIdReferencia(this.idNegociacion, "NUEVO").subscribe( (dataProceso: any)=>{
-          if(dataProceso.entidad != null){
-            this.procesoEntidad = dataProceso.entidad;
-            this.neg.traerNegociacionExistente(this.idNegociacion).subscribe((data: any) => {
-              if (data.entidad) {
-                console.log('VALOR DE LA NEGOCIACION findNegociacionById ', JSON.stringify(data));
-    
-                this.wrapper = data.entidad
-                this.capturaHoraAsignacion('NEGOCIACION');
-                this.entidadNegociacion = this.wrapper.credito.tbQoNegociacion;
-    
-                console.log('VALORES DE LA ENTIDAD NEGOSCIA==> .id', this.entidadNegociacion.id);
-                this.buscarExcepciones(this.entidadNegociacion.id);
-                console.log('id NEGOCIACION=====> ', this.entidadNegociacion);
-                //console.log(' CLIENTE==> ', this.entidadCliente)
-                //RECUPERO LA DATA DE VARIABLES
-                this.dataPopup = new DataPopup();
-                this.dataPopup.idBusqueda = this.entidadNegociacion.id;
-                this.dataPopup.isNegociacion = true;
-                // this.buscarExcepcion(this.entidadNegociacion.id);
-                if (data) {
-                  let idtlf = 0;
-                  this.wrapper.telefonos.forEach(e=>{
-                    if(e.tipoTelefono == "M"){
-                      if(idtlf == 0){
-                        idtlf = e.id; 
-                      }else{
-                        this.telefonoMovil.setValue(e.numero);
-                      }
-                      this.telefonoAdicional.setValue(e.numero);
-                    }
-                    if(e.tipoTelefono == "F"){
-                      this.telefonoDomicilio.setValue(e.numero);
-                    }
-                    if(e.tipoTelefono == "CEL"){
-                      this.telefonoOficinaOtros.setValue(e.numero);
-                    }
-                  });
-                  this.correoElectronico.setValue(this.entidadNegociacion.tbQoCliente.email);
-                  this.estadoNegociacion.setValue(this.procesoEntidad.estadoProceso);
-                  this.fechaCreacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
-                  this.fechaActualizacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));
-                } else {
-                  this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 1', 'error');
-                  this.capturaHoraAtencion('NEGOCIACION');
-                }
-              }
-            });
-          } else{
+        let excepcionRol = JSON.parse(atob(data.params.id));
+        this.neg.traerNegociacionExistente(excepcionRol.idNegociacion).subscribe( (data: any)=>{
+          if(data.entidad){
+            this.wp = data.entidad;
+            this.excepcion = this.wp.excepciones.find(e => e.id == excepcionRol.id ); 
+            console.log('Hola x2?')
+            this.wp.credito && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' && this.excepcion ?  
+            this.cargarCampos(this.wp) : this.sinNoticeService.setNotice('ERROR CARGANDO EXCEPCION','error');
             this.loadingSubject.next(false);
-            this.sinNoticeService.setNotice('ERROR AL CARGAR NEGOCIACION', 'error');
-
+          }else{
+            this.loadingSubject.next(false);
+            this.sinNoticeService.setNotice('ERROR CARGANDO NEGOCIACION','error');
           }
         });
-        
-      } else {
-        this.loadingSubject.next(false);
-        this.sinNoticeService.setNotice('ERROR AL CARGAR NEGOCIACION', 'error');
-        this.capturaHoraAsignacion('NEGOCIACION');
-        this.capturaHoraAsignacion('NEGOCIACION');
-        this.capturaHoraAtencion('NEGOCIACION');
-
       }
-    });
+    }, error =>{this.loadingSubject.next(false)});
+  }
+  public regresar(){
+    this.router.navigate(['aprobador/bandeja-excepciones']);
+  }
+  private cargarCampos( wp: NegociacionWrapper){
+    this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success')
+    this.formDisable.disable();
+    this.subheaderService.setTitle('Operacion: '+this.wp.credito.codigo);
+    this.cliente.setValue( wp.credito.tbQoNegociacion.tbQoCliente.nombreCompleto );
+    this.cedula.setValue( wp.credito.tbQoNegociacion.tbQoCliente.cedulaCliente );
+    this.fechaCreacion.setValue( wp.credito.tbQoNegociacion.fechaCreacion );
+    this.proceso.setValue( wp.proceso.proceso );
+    this.telefonoDomicilio.setValue( wp.telefonoDomicilio ? wp.telefonoDomicilio.numero : null );
+    this.telefonoMovil.setValue( wp.telefonoMovil ? wp.telefonoMovil.numero : null );
+    this.email.setValue( wp.credito.tbQoNegociacion.tbQoCliente.email );
+    this.dataSourceTasacion.data = wp.joyas;
+    this.observacionAsesor.disable();
+    this.calcularOpciones();
+    this.camposAdicinales( wp );
+    console.log('Mi excepcion --> ', this.excepcion);
+    this.observacion = this.excepcion.observacionAsesor;
     this.loadingSubject.next(false);
   }
-
-  asignarAprobacion() {
-    console.log('ASIGNAR APROBACION');
-
-    if (this.radioB.value === 'APROBADO') {
-      this.radioB.setValue(EstadoExcepcionEnum.APROBADO);
-    } else if (this.radioB.value === 'NEGADO') {
-      this.radioB.setValue(EstadoExcepcionEnum.NEGADO);
-    }
-    this.entidadExcepcion.estadoExcepcion = this.radioB.value;
-    this.entidadExcepcion.observacionAprobador = this.observacionAprobador.value;
-  }
-
-  public submit(flujo: string) {
+  public simular(){ 
     this.loadingSubject.next(true);
-    console.log('INICIA EL SUBMIT', this.entidadExcepcion);
-    this.asignarAprobacion();
-
-    this.exs.persistEntity(this.entidadExcepcion).subscribe((data: any) => {
-      console.log('ENTIDAD EXCEPCION', JSON.stringify(data));
-      this.capturaHoraFinal('NEGOCIACION');
-      this.router.navigate(['asesor/bandeja-principal']);
-      this.sinNoticeService.setNotice('SE GUARDO LA EXCEPCION CORRECTAMENTE', 'success');
-    }, error => {
-      this.loadingSubject.next(false);
-      if (error.error) {
-        if (error.error.codError) {
-          this.sinNoticeService.setNotice(error.error.codError + ' - ' + error.error.msgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice('Error al guardar la excepcion', 'error');
-        }
-      } else if (error.statusText && error.status == 401) {
-
-        this.sinNoticeService.setNotice('Error al guardar la excepcion', 'error');
-      } else {
-        this.sinNoticeService.setNotice('Error al guardar la excepción', 'error');
-      }
-    });
-
+    console.log('COBERTURA ---> ', this.cobertura.value )
+    !this.cobertura.valid && this.observacionAprobador.valid  && this.cobertura.value >= 80 ? 
+      this.sinNoticeService.setNotice('COMPLETE LA SECCION CORRECTAMENTE','error'):
+        this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{
+          !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
+          this.simulado = data.entidades ? true : false;
+          this.loadingSubject.next(false);
+        });
+        this.loadingSubject.next(false);
   }
-
-
-
-  formatLabel(value: number) {
-    if (value >= 1000) {
-      return Math.round(value / 1000) + '%';
-      console.log('el valor es ', this.porcentaje);
+  public calcularOpciones() {
+    if (this.dataSourceTasacion && this.dataSourceTasacion.data && this.dataSourceTasacion.data.length > 0) {
+      this.loadingSubject.next(true);
+      this.cal.simularOferta(this.wp.credito.id, null, null).subscribe((data: any) => {
+        this.loadingSubject.next(false);
+        if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
+          && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
+          && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
+            this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado);
+            this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+        }
+      },err=>{
+        this.loadingSubject.next(false);
+      });
+    } else {
+      this.sinNoticeService.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
     }
 
-    return value;
   }
-
-  public slideChange(event) {
-    console.log('valor capturado es ', event);
-
-    this.valor = event.value;
-    this.porcentaje.setValue(this.valor);
-    console.log('valor  es ', this.valor);
-    this.entidadExcepcion.caracteristica = this.valor;
-
-    console.log('Excepcion===>  ', this.entidadExcepcion);
-
-
+  public numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
   }
-
+  public negar(){ 
+    if(this.observacionAprobador.valid){
+      console.log('ME FUI A NEGAR')
+      this.simulado = false;
+      let mensaje = 'Negar la excepcion de cobertura para: ' + this.wp.credito.codigo+'?'; 
+      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        width: "800px",
+        height: "auto",
+        data: mensaje
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        if(r){
+          this.exc.negarExcepcion(this.excepcion.id, this.observacionAprobador.value, this.usuario).subscribe( (data: any) =>{
+            if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error al negar la excepcion','error')}
+          });
+        }
+      });
+    }else{ this.sinNoticeService.setNotice('COMPLETE EL CAMPO DE OBSERVACION','error') }
+  }
+  public aprobar(){ 
+    if(this.observacionAprobador.valid && this.cobertura.valid){
+      console.log('ME FUI A APROBAR')
+      let mensaje = 'Aprobar la excepcion de cobertura para: ' + this.wp.credito.codigo+'?'; 
+      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        width: "800px",
+        height: "auto",
+        data: mensaje
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        if(r){
+          this.exc.aprobarCobertura(this.excepcion.id, this.observacionAprobador.value, this.usuario, this.cobertura.value).subscribe( (data: any) =>{
+            if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error  al aprobar la excepcion','error')}
+          });
+        }
+      });
+    }else{ this.sinNoticeService.setNotice('COMPLETE EL CAMPO DE OBSERVACION','error') }
+  }
 }

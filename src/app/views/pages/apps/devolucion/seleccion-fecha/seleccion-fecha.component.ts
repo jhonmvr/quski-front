@@ -12,9 +12,8 @@ import { SubheaderService } from '../../../../../core/_base/layout';
 import { AddFechaComponent } from '../../../../partials/custom/add-fecha/add-fecha.component';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
-import { RegistroFechaArribo } from '../../../../../core/model/wrapper/registroFechaArribo';
-/* import { RegistroFechaArribo } from '../../../../../core/model/wrapper/registroFechaArribo';
- */
+import { RegistroFechaArribo } from '../../../../../core/model/wrapper/RegistroFechaArribo';
+
 @Component({
   selector: 'kt-seleccion-fecha',
   templateUrl: './seleccion-fecha.component.html',

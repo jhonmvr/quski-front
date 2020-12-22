@@ -3,7 +3,7 @@ export class OperacionesAprobadorWrapper {
     codigoBpm: string;
     codigoOperacion: string;
     proceso: string;
-    fechaSolicitud: Date; 
+    fechaSolicitud: any; 
     cedulaCliente: string; 
     nombreCliente: string; 
     idAgencia: number;

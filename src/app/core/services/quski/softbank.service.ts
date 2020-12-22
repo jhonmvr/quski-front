@@ -61,6 +61,16 @@ export class SoftbankService extends BaseService {
       )
     );
   }
+  public buscarCreditos( wrapper: any ) {
+    let serviceUrl = this.appResourcesUrl + "softbankClienteRestController/buscarCreditos";
+    this.options = { Headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
   /**
    * @author Jeroham Cadenas - Developer Twelve
    * @description Consultar cliente Softbank
@@ -354,7 +364,7 @@ export class SoftbankService extends BaseService {
    */
   consultarEstadoProcesoCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadoproceso" ;
-    let wrapper =  "";
+    let wrapper =  {};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options).pipe(
       tap( // Log the result or error
@@ -369,7 +379,7 @@ export class SoftbankService extends BaseService {
    */
   consultarEstadoUbicacionCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "estadoubicacion" ;
-    let wrapper =  "";
+    let wrapper =  {};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options).pipe(
       tap( // Log the result or error
@@ -550,7 +560,7 @@ export class SoftbankService extends BaseService {
    */
   consultarAsesoresCS() {
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "asesor" ;
-    let wrapper =  {  "idAgencia": 2};
+    let wrapper =  {};
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options).pipe(
       tap( // Log the result or error

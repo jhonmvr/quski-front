@@ -24,6 +24,10 @@
                 <mat-header-cell *matHeaderCellDef> Interes </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{ element.interes | currency: "USD":true:"1.2" }} </mat-cell>
             </ng-container>
+            <ng-container matColumnDef="seguro">
+                <mat-header-cell *matHeaderCellDef> Seguro </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.seguro | currency: "USD":true:"1.2" }} </mat-cell>
+            </ng-container>
             <ng-container matColumnDef="otros">
                 <mat-header-cell *matHeaderCellDef> Otros </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{ element.otros | currency: "USD":true:"1.2" }} </mat-cell>

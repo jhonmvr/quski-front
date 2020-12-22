@@ -1,21 +1,19 @@
 import { SolicitudAutorizacionDialogComponent } from './../../../../partials/custom/popups/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
 import { SolicitudDeExcepcionesComponent } from './../../../../partials/custom/popups/solicitud-de-excepciones/solicitud-de-excepciones.component';
 import { ErrorCargaInicialComponent } from './../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { DevolucionCreditoComponent } from './../../../../partials/custom/popups/devolucion-credito/devolucion-credito.component';
 import { ListaExcepcionesComponent } from './../../../../partials/custom/popups/lista-excepciones/lista-excepciones.component';
 import { VerCotizacionesComponent } from './../../../../partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
-import { CalculadoraEntradaWrapper } from './../../../../../core/model/wrapper/CalculadoraEntradaWrapper';
 import { DataInjectExcepciones } from './../../../../../core/model/wrapper/DataInjectExcepciones';
 import { TbQoCreditoNegociacion } from './../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { NegociacionService } from './../../../../../core/services/quski/negociacion.service';
 import { CalculadoraService } from './../../../../../core/services/quski/calculadora.service';
-import { ConsultaPrecioJoya } from './../../../../../core/model/wrapper/ConsultaPrecioJoya';
 import { NegociacionWrapper } from './../../../../../core/model/wrapper/NegociacionWrapper';
 import { ParametroService } from './../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
 import { TasacionService } from './../../../../../core/services/quski/tasacion.service';
 import { RelativeDateAdapter } from './../../../../../core/util/relative.dateadapter';
-import { GarantiaWrapper } from './../../../../../core/model/wrapper/GarantiaWrapper';
 import { EstadoExcepcionEnum } from './../../../../../core/enum/EstadoExcepcionEnum';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
@@ -32,7 +30,7 @@ import { ProcesoService } from '../../../../../core/services/quski/proceso.servi
 import { SelectionModel } from '@angular/cdk/collections';
 
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
-//import { DataTableDataSource } from 'src/app/views/partials/content/widgets/general/data-table/data-table.data-source';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'kt-gestion-negociacion',
@@ -56,6 +54,7 @@ export class GestionNegociacionComponent implements OnInit {
   public catTipoOro: Array<any>;
   public catEstadoJoya: Array<any>;
   catPais;
+  private catMotivoDevolucion: Array<any>;
   filteredPais: Observable<Pais[]>;
   public totalNumeroJoya: number;
   public totalPesoB: number;
@@ -75,13 +74,13 @@ export class GestionNegociacionComponent implements OnInit {
   public cedula = new FormControl('', []);
   public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public publicidad = new FormControl('', [Validators.required]);
-  public fechaDeNacimiento = new FormControl('', []);
-  public edad = new FormControl('', []);
-  public nacionalidad = new FormControl('', []);
+  public fechaDeNacimiento = new FormControl('', [Validators.required]);
+  public edad = new FormControl('', [Validators.required]);
+  public nacionalidad = new FormControl('', [Validators.required]);
   public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
   public email = new FormControl('', [Validators.required, Validators.email]);
-  public campania = new FormControl('', []);
+  public campania = new FormControl('', [Validators.required]);
   public aprobacionMupi = new FormControl('', [Validators.required]);
   // FORMULARIO TASACION
   public formTasacion: FormGroup = new FormGroup({});
@@ -123,12 +122,13 @@ export class GestionNegociacionComponent implements OnInit {
     'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
     'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
     'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
+  riesgoTotal: any;
+  coberturaExcepcionada;
 
 
   constructor(
     private sof: SoftbankService,
     private par: ParametroService,
-    private pro: ProcesoService,
     private cal: CalculadoraService,
     private neg: NegociacionService,
     private tas: TasacionService,
@@ -188,10 +188,12 @@ export class GestionNegociacionComponent implements OnInit {
 
 
   loadCatalogo(){
-   
-
     this.sof.consultarPaisCS().subscribe((data: any) => {
       this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      
+    });
+    this.sof.consultarMotivoDevolucionAprobacionCS().subscribe((data: any) => {
+      this.catMotivoDevolucion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
       
     });
     this.sof.consultarTipoJoyaCS().subscribe((data: any) => {
@@ -224,7 +226,9 @@ export class GestionNegociacionComponent implements OnInit {
     this.neg.traerNegociacionExistente( id ).subscribe( (wrapper: any) =>{
       if(wrapper.entidad.respuesta){
         this.negoW = wrapper.entidad;
-        this.validarExcepciones(this.negoW);
+        this.negoW.proceso.proceso == 'NUEVO' ? null : this.salirDeGestion('Error al buscar proceso relacionado a la operacion');
+        this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : this.validarExcepciones(this.negoW);
+        this.cargarValores(this.negoW, true);
       }else{
         this.salirDeGestion("La negociacion que esta buscando, no existe, fue cerrada o cancelada");
       }
@@ -235,26 +239,56 @@ export class GestionNegociacionComponent implements OnInit {
       let listPendientes: TbQoExcepcion[] = null;
       let listInPendientes: TbQoExcepcion[] = null;
       tmp.excepciones.forEach(e =>{
-        if( e.estadoExcepcion == EstadoExcepcionEnum.PENDIENTE){
-          listPendientes != null ? listPendientes.push(e) : listPendientes = [e];
-        }else if(e.estadoExcepcion == EstadoExcepcionEnum.APROBADO){
-          listInPendientes != null ? listInPendientes.push(e) : listInPendientes = [e];
-        } else if(e.estadoExcepcion == EstadoExcepcionEnum.NEGADO){
-          listInPendientes != null ? listInPendientes.push(e) : listInPendientes = [e];
-        }else{
-        this.salirDeGestion("ERROR DE DESARROLLO, EXISTE EXCEPCION SIN UN ESTADO DEFINIDO", false, "ERROR DESARROLLO");
-        }
+        if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.NEGADO  && e.tipoExcepcion == 'EXCEPCION_CLIENTE'){
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE CLIENTE NEGADA'}
+          });
+          dialogRef.afterClosed().subscribe(r => {
+            this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
+            return;
+          });
+        } else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.NEGADO  && e.tipoExcepcion == 'EXCEPCION_RIESGO'){
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE RIESGO NEGADA'}
+          });
+          dialogRef.afterClosed().subscribe(r => {
+            this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
+            return;
+          });
+        } else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.APROBADO  && e.tipoExcepcion == 'EXCEPCION_RIESGO'){
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE RIESGO APROBADA'}
+          });
+          dialogRef.afterClosed().subscribe(r => {
+            this.riesgoTotal = 0;
+          });
+        }else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.APROBADO  && e.tipoExcepcion == 'EXCEPCION_COBERTURA'){
+          this.coberturaExcepcionada = tmp.credito.cobertura;
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE COBERTURA'}
+          });
+          dialogRef.afterClosed().subscribe(r => {
+            this.calcularOpciones( null );
+          });
+        } 
       });
-      if(listPendientes != null){
-        this.salirDeGestion("Esta negociacion posee una excepcion pendiente. Espere que su excepcion sea revisada y aprobada.", false, "EXCEPCION PENDIENTE ACTIVA");
-      } else if( listInPendientes != null){
-        this.notificarSobreExcepciones( listInPendientes );
-      }else{
-        this.salirDeGestion("ERROR DE DESARROLLO DESCONOCIDO", false, "ERROR DESARROLLO");
-      }
-    } else{
-      this.cargarValores(tmp);
-    }
+    } 
   }
   private calcular() {
     this.totalPesoN = 0;
@@ -282,7 +316,7 @@ export class GestionNegociacionComponent implements OnInit {
         this.negoW = wrapper.entidad;
         console.log("NEGOCIACION INICIADA POR COT-> ", wrapper.entidad);
         if (this.negoW.excepcionBre == "") {
-          this.cargarValores(this.negoW);
+          this.cargarValores(this.negoW, false);
         } else {
           this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
         }
@@ -309,27 +343,28 @@ export class GestionNegociacionComponent implements OnInit {
             this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
             return;
           } 
-          this.cargarValores(this.negoW);
+          this.cargarValores(this.negoW, false);
         } else {
-          //this.abrirPopupDeAutorizacion(cedula);
+          this.abrirPopupDeAutorizacion(this.identificacion.value);
         }
       });
  
   }
   private iniciarNegociacionEquifax( cedula: string ){
-    this.loadingSubject.next(true);
+    //this.loadingSubject.next(true);
     this.neg.iniciarNegociacionEquifax( cedula, this.usuario).subscribe( (wrapper: any) =>{
       if (wrapper.entidad.respuesta) {
+        this.limpiarNegociacion();
         this.negoW = wrapper.entidad;
-        console.log("NEGOCIACION INICIADA POR EQUIFAX-> ", wrapper.entidad);
-        if (this.negoW.excepcionBre == "") {
-          this.myStepper.selectedIndex = 1;
-          this.cargarValores(this.negoW);
-        } else {
+        this.myStepper.selectedIndex = 1;
+        if (this.negoW.excepcionBre){
           this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
-        }
+          return;
+        } 
+        this.cargarValores(this.negoW, false);
+        
       } else {
-        this.loadingSubject.next(false);
+        //this.loadingSubject.next(false);
         this.limpiarCamposBusqueda();
         this.sinNotSer.setNotice('NO SE PUDO INICIAR NEGOCIACION, CLIENTE NO ENCONTRADO EN EQUIFAX','error')
       }
@@ -392,8 +427,7 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-  private cargarValores(wrapper) {
-    //this.catTipoOro = wrapper.tipoOro;
+  private cargarValores(wrapper, cargar: boolean) {
     this.tbQoCliente= wrapper.credito.tbQoNegociacion.tbQoCliente;
     this.cedula.setValue(this.tbQoCliente.cedulaCliente);
     this.identificacion.setValue(this.tbQoCliente.cedulaCliente);
@@ -414,10 +448,17 @@ export class GestionNegociacionComponent implements OnInit {
     this.email.setValue(this.tbQoCliente.email);
     this.campania.setValue('');
     this.publicidad.setValue ('');
-    //this.aprobacionMupi.setValue(this.tbQoCliente.aprobacionMupi ? this.tbQoCliente.aprobacionMupi == 'SI' ? 'S' : 'N'  : null );
-    this.aprobacionMupi.setValue('');
+    this.aprobacionMupi.setValue( cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi : '');
+    this.publicidad.setValue( cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.publicidad : '');
+    this.campania.setValue( cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.campania : '');
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
+    this.riesgoTotal = 0;
+    if(this.negoW.riesgos){
+       this.negoW.riesgos.forEach(element => {
+        this.riesgoTotal =this.riesgoTotal  + element.saldo;
+       });
+    }
     if(wrapper.joyas != null){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
       this.dataSourceCreditoNegociacion.data.push( wrapper.credito );
@@ -456,7 +497,23 @@ export class GestionNegociacionComponent implements OnInit {
       data: data
     });
     dialogRef.afterClosed().subscribe(r => {
-      this.router.navigate(['negociacion/bandeja-operaciones']);
+      //this.router.navigate(['negociacion/bandeja-operaciones']);
+    });
+  }
+  public popupDevolucion( ){
+    this.loadingSubject.next(false);
+    this.identificacion.disable();
+    let entryData = {
+      titulo: 'Algo',
+      mensajeAprobador: this.negoW.credito.descripcionDevuelto, 
+      motivoDevolucion: this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto) ? this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto).nombre : 'No definido',
+      aprobador: this.negoW.proceso.usuario,
+      codigoBpm: this.negoW.credito.codigo
+    }
+    const dialogRef = this.dialog.open(DevolucionCreditoComponent, {
+      width: "800px",
+      height: "auto",
+      data: entryData
     });
   }
   public abrirPopupExcepciones(data: DataInjectExcepciones = null) {
@@ -484,6 +541,15 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
+
+
+  solicitarCobertura(){
+    if(this.dataSourceTasacion.data && this.dataSourceTasacion.data.length > 0){
+      this.abrirPopupExcepciones();
+    }else{
+      this.sinNotSer.setNotice('REGISTRE ALMENOS UNA JOYA EN TASACION','warning');
+    }
+  }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, cancelar: boolean = false, dataTitulo?: string) {
     let pData = {
@@ -491,13 +557,13 @@ export class GestionNegociacionComponent implements OnInit {
       titulo: dataTitulo ? dataTitulo : null
     }
     if (cancelar) {
-      this.pro.cancelarNegociacion(this.negoW.credito.tbQoNegociacion.id, this.usuario).subscribe((data: any) => {
+      /* this.pro.cancelarNegociacion(this.negoW.credito.tbQoNegociacion.id, this.usuario).subscribe((data: any) => {
         if (data.entidad) {
           this.abrirSalirGestion(pData);
         } else {
           this.sinNotSer.setNotice("Error cancelando la negociacion.", 'error')
         }
-      });
+      }); */
     } else {
       this.abrirSalirGestion(pData);
     }
@@ -683,6 +749,13 @@ export class GestionNegociacionComponent implements OnInit {
       return;
     }
       //this.loadingSubject.next(true);
+      if(this.negoW.excepciones && this.negoW.excepciones.find(ex=> (ex.tipoExcepcion == 'EXCEPCION_COBERTURA' || ex.tipoExcepcion == 'EXCEPCION_RIESGO')
+       && ex.estadoExcepcion == EstadoExcepcionEnum.APROBADO) ){
+        if( !confirm("USTED TIENE UNA EXCEPCION APROBADA. SI CAMBIA LAS GARANTIAS ESTA EXCEPCION SE ANULARA") ){
+          return;
+        }
+       }
+      this.selection = new SelectionModel<any>(true, []);
       let joya = new TbQoTasacion();
       joya.descripcion = this.descripcion.value;
       joya.descuentoPesoPiedra = this.descuentoPiedra.value;
@@ -701,6 +774,12 @@ export class GestionNegociacionComponent implements OnInit {
       //joya.valorOro = this.valorOro.value;
       joya.valorRealizacion = this.valorRealizacion.value;
       joya.tbQoCreditoNegociacion = {id:this.negoW.credito.id};
+     if(this.negoW.riesgos){
+      this.riesgoTotal = 0 ;
+      this.negoW.riesgos.forEach(p=>{
+        this.riesgoTotal = this.riesgoTotal + p.saldo;
+      })
+     }
       if (this.elementJoya) {
         joya.id = this.elementJoya.id;
        // const index = this.dataSourceTasacion.data.indexOf(this.elementJoya);
@@ -755,20 +834,22 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   /** ********************************************** @OPCIONES ***************************************/
-  /**
-   * calcularOpciones
-   */
   public calcularOpciones(montoSolicitado) {
     if (this.dataSourceTasacion.data.length > 0) {
       this.loadingSubject.next(true);
-      this.cal.simularOferta(this.negoW.credito.id,montoSolicitado).subscribe((data: any) => {
+      this.cal.simularOferta(this.negoW.credito.id,montoSolicitado,this.riesgoTotal).subscribe((data: any) => {
         this.loadingSubject.next(false);
+        if(data.entidad.simularResult.codigoError>3){
+          this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
+          this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
+        }
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
-          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+            this.selection = new SelectionModel<any>(true, []);
+            this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
-        this.myStepper.selectedIndex = 6;
+        this.myStepper.selectedIndex = 5;
       },err=>{
         this.loadingSubject.next(false);
       });
@@ -778,8 +859,6 @@ export class GestionNegociacionComponent implements OnInit {
     }
 
   }
-
-
   updateCliente(event,control){
     console.log("=========>",event,control);
 
@@ -805,7 +884,6 @@ export class GestionNegociacionComponent implements OnInit {
       console.log("no guardar")
     }
   }
-
   buildCliente(){
     console.log("guardad")
     if( this.telefonoFijo){
@@ -844,26 +922,20 @@ export class GestionNegociacionComponent implements OnInit {
     }
     return cliente;
   }
-
   seleccionarCredito(element){
     this.opcionCredito = element;
   }
-
-
   checkboxLabel(row?): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
-
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSourceCreditoNegociacion.data.length;
     return numSelected === numRows;
   }
-
-
   guardarCredito(){
     if (this.selection.selected.length == 0){
       this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO",'warning');
@@ -874,10 +946,10 @@ export class GestionNegociacionComponent implements OnInit {
           this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
        });
       }
-      
-    
   }
-
+  regresar(){
+    this.router.navigate(['negociacion/']);
+  }
   verPrecio(){
     if(this.formDatosCliente.invalid){
       this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'error');
@@ -890,14 +962,10 @@ export class GestionNegociacionComponent implements OnInit {
       this.myStepper.selectedIndex =4;
     })
   }
-
-
-  
   private _filter(value: Pais): Pais[] {
     const filterValue = this._normalizeValue(value.nombre);
     return this.catPais.filter(pais => this._normalizeValue(pais.nombre).includes(filterValue));
   }
-
   private _normalizeValue(value: string): string {
     return value.toLowerCase().replace(/\s/g, '');
   }

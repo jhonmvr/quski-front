@@ -12,6 +12,8 @@ export class NegociacionWrapper{
     joyas: TbQoTasacion[];
     excepciones: TbQoExcepcion[];
     telefonos: TbQoTelefonoCliente[];
+    telefonoDomicilio: TbQoTelefonoCliente;
+    telefonoMovil: TbQoTelefonoCliente;
     proceso: TbQoProceso
 
     excepcionBre: string;

@@ -1,0 +1,19 @@
+<div class="row m-2">
+    <div class="col-12 mt-2 mb-2">
+        <mat-card-title> {{ v.titulo }} </mat-card-title>
+    </div>
+</div>
+<mat-card>
+    <div class="row m-2 justify-content-center">
+        <div class="col-8">
+            <mat-card-content><strong>{{ this.v.codigoBpm }}</strong> fue revisado y devuleto por: <strong>{{ this.v.aprobador | titlecase }}</strong>.</mat-card-content>        
+            <mat-card-content><strong>Motivo de devolucion: </strong> {{ this.v.motivoDevolucion | titlecase }}.</mat-card-content>        
+            <mat-card-content><strong>Observacion del aprobador: </strong> {{ this.v.mensajeAprobador }}.</mat-card-content>        
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-2">
+            <button mat-raised-button (click)="salir(true)" color="primary"> ACEPTAR </button>
+        </div>
+    </div>
+</mat-card>

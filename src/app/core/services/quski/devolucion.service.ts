@@ -7,9 +7,8 @@ import { BaseService } from '../base.service';
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ReNoticeService } from '../re-notice.service';
-import { BusquedaDevolucionWrapper } from '../../model/quski/BusquedaDevolucionWrapper';
-import { RegistroFechaArribo } from '../../model/wrapper/registroFechaArribo';
 import { Page } from '../../model/page';
+import { RegistroFechaArribo } from '../../model/wrapper/RegistroFechaArribo';
 @Injectable({
   providedIn: 'root'
 })

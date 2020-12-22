@@ -92,7 +92,180 @@ table{
   border-color: white;
   font-weight: 400;
 }    
-.text-align {   
+mat-slider {
+  width: 300px;
+}
+.mat-header-cell {
+  flex-direction: column;
   justify-content: center;
   font-size: smaller;
+  
+}
+
+.mat-cell {
+  text-align: center;
+  justify-content:center;
+  font-size: smaller;
+}
+.mat-footer-cell{
+  font-weight: bold;
+  text-align: center;
+  justify-content:center;
+  font-size: smaller;
+}
+#tableNegociacion{
+  width: 100%;
+  overflow: auto;
+}
+
+.mat-column-plazo {
+  flex: 0 0 100px;
+}
+
+.mat-column-periodoPlazo {
+  flex: 0 0 100px;
+}
+
+.mat-column-periodicidadPlazo {
+  flex: 0 0 100px;
+}
+
+.mat-column-montoFinanciado {
+  flex: 0 0 100px;
+}
+
+.mat-column-valorARecibir {
+  flex: 0 0 100px;
+}
+
+.mat-column-valorAPagar {
+  flex: 0 0 100px;
+}
+
+.mat-column-costoCustodia {
+  flex: 0 0 100px;
+}
+
+.mat-column-costoFideicomiso {
+  flex: 0 0 100px;
+}
+
+.mat-column-costoSeguro {
+  flex: 0 0 100px;
+}
+
+.mat-column-costoTasacion {
+  flex: 0 0 100px;
+}
+
+.mat-column-costoTransporte {
+  flex: 0 0 100px;
+}
+
+.mat-column-costoValoracion {
+  flex: 0 0 100px;
+}
+
+.mat-column-impuestoSolca {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoImpuestoSolca {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoCapital {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoCustodia {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoFideicomiso {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoInteres {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoMora {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoGastoCobranza {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoSeguro {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoTasador {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoTransporte {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoValoracion {
+  flex: 0 0 100px;
+}
+
+.mat-column-saldoInteres {
+  flex: 0 0 100px;
+}
+
+.mat-column-saldoMora {
+  flex: 0 0 100px;
+}
+
+.mat-column-gastoCobranza {
+  flex: 0 0 100px;
+}
+
+.mat-column-cuota {
+  flex: 0 0 100px;
+}
+
+.mat-column-saldoCapitalRenov {
+  flex: 0 0 100px;
+}
+
+.mat-column-montoPrevioDesembolso {
+  flex: 0 0 100px;
+}
+
+.mat-column-totalGastosNuevaOperacion {
+  flex: 0 0 100px;
+}
+
+.mat-column-totalCostosOperacionAnterior {
+  flex: 0 0 100px;
+}
+
+.mat-column-custodiaDevengada {
+  flex: 0 0 100px;
+}
+
+.mat-column-formaPagoCustodiaDevengada {
+  flex: 0 0 100px;
+}
+
+.mat-column-tipooferta {
+  flex: 0 0 100px;
+}
+
+.mat-column-porcentajeflujoplaneado {
+  flex: 0 0 100px;
+}
+
+.mat-column-dividendoflujoplaneado {
+  flex: 0 0 100px;
+}
+
+.mat-column-dividendosprorrateoserviciosdiferido {
+  flex: 0 0 100px;
 }

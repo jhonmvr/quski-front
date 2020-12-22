@@ -32,8 +32,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   public currentPage = 0;
   public totalSize = 0;
   public totalResults = 0;
-  @ViewChild(MatPaginator, { static: true })
-  paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true })  paginator: MatPaginator;
   /**Obligatorio ordenamiento */
   @ViewChild('sort1', { static: true }) sort: MatSort;
   total: string;
@@ -71,7 +70,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
       this.dataSourceRiesgoAcumulado.data = this.base;
     }else{
       if (this.idCliente != null && this.cedula == null) {
-        this.initiateTablePaginator();
+        //this.initiateTablePaginator();
         this.busquedaCore();
       } else {
         if (this.cedula != null && this.idCliente == null) {
@@ -191,7 +190,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
   */
   paged() {
-    this.initiateTablePaginator();
+  //  this.initiateTablePaginator();
     this.p = this.getPaginacion(this.sort.active, this.sort.direction, 'Y', this.paginator.pageIndex)
     if (this.idCliente != null && this.cedula == null) {
       this.busquedaCore();

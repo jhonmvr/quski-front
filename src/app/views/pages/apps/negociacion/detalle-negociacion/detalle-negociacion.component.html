@@ -15,8 +15,6 @@
     <re-portlet-body>
         <mat-vertical-stepper>
             <mat-step label="Información Del Cliente">
-
-
                 <div class="row">
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
@@ -90,7 +88,7 @@
             </mat-step>
             <mat-step label="Riesgo Acumulado">
                 <div class="row mt-1 mb-1">
-                    <div class="col-md-6 offset-md-3">
+                    <div class="col-md-10 offset-md-1">
                         <ng-container *ngIf="this.detalle && this.detalle.riesgos; else elseTemplate2">
                             <kt-tabla-riesgo-acumulado [base]="this.detalle.riesgos"></kt-tabla-riesgo-acumulado>
                         </ng-container>
@@ -102,7 +100,7 @@
             </mat-step>
             <mat-step label="Garantias">
                 <div class="row">
-                    <div class="col-8 offset-2" *ngIf="detalle && detalle.joyas">
+                    <div class="col-10 offset-1" *ngIf="detalle && detalle.joyas">
                         <mat-table  class="mat-elevation-z8 garantia" [dataSource]="dataSourceTasacion">
 
                             <ng-container matColumnDef="NumeroPiezas">
@@ -216,7 +214,7 @@
                         <mat-table #tableNegociacion class="garantia"	[dataSource]="dataSourceCreditoNegociacion">
                             <ng-container matColumnDef="plazo">
                                 <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.plazo }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.plazoCredito }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="periodoPlazo">
                                 <mat-header-cell *matHeaderCellDef>periodo Plazo</mat-header-cell>
@@ -352,19 +350,19 @@
                             </ng-container>
                             <ng-container matColumnDef="tipooferta">
                                 <mat-header-cell *matHeaderCellDef>tipo oferta</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.tipooferta }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.tipoOferta }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="porcentajeflujoplaneado">
                                 <mat-header-cell *matHeaderCellDef>porcentaje flujo planeado</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.porcentajeflujoplaneado }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.porcentajeFlujoPlaneado }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="dividendoflujoplaneado">
                                 <mat-header-cell *matHeaderCellDef>dividendo flujo planeado</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.dividendoflujoplaneado}}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{element.dividendoFlujoPlaneado }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="dividendosprorrateoserviciosdiferido">
                                 <mat-header-cell *matHeaderCellDef>dividendos prorrateo servicios diferido</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.dividendosprorrateoserviciosdiferido }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.dividendoProrrateo }}</mat-cell>
                             </ng-container>
                             <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
                             <mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>

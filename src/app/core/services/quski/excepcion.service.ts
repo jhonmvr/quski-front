@@ -7,10 +7,12 @@ import { TbQoExcepcion } from '../../model/quski/TbQoExcepcion';
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ReNoticeService } from '../re-notice.service';
+import { environment } from '../../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class ExcepcionService extends BaseService {
+
   public restC = 'excepcionesRestController/';
   constructor(_http: HttpClient,
     private dialog: MatDialog) {
@@ -28,6 +30,28 @@ export class ExcepcionService extends BaseService {
   public getEntity(id: number) {
     const serviceUrl = this.appResourcesUrl + this.restC + 'getEntity';
     this.params = new HttpParams().set('id', id.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+  public negarExcepcion(idExc: number, obsAprobador: string, aprobador: string) {
+    const serviceUrl = this.appResourcesUrl + this.restC + 'negarExcepcion';
+    this.params = new HttpParams().set('idExc', idExc.toString()).set('obsAprobador', obsAprobador).set('aprobador', aprobador);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+  public aprobarCobertura(idExc: number, obsAprobador: string, aprobador: string, cobertura: string) {
+    const serviceUrl = this.appResourcesUrl + this.restC + 'aprobarCobertura';
+    this.params = new HttpParams().set('idExc', idExc.toString()).set('obsAprobador', obsAprobador).set('aprobador', aprobador).set('cobertura', cobertura);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -154,7 +178,34 @@ export class ExcepcionService extends BaseService {
     );
   }
 
+  public solicitarExcepcion(data: TbQoExcepcion) {
+    let serviceUrl = this.appResourcesUrl +'negociacionRestController/solicitarExcepcion';
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, data, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
 
+  aprobarExcepcion(id, obsAprobador,aprobado) {
+    let serviceUrl = this.appResourcesUrl +'excepcionesRestController/excepcionCliente';
+    this.params = new HttpParams();
+    this.params = this.params.set('id', id);
+    this.params = this.params.set('obsAprobador', obsAprobador);
+    if(atob(localStorage.getItem(environment.userKey))){
+      this.params = this.params.set('aprobador', atob(localStorage.getItem(environment.userKey)));
+    }
+    this.params = this.params.set('aprobado', aprobado);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
 
 
 

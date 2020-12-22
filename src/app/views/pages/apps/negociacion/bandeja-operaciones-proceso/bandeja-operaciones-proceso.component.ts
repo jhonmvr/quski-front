@@ -50,7 +50,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   dataSource = new MatTableDataSource<OperacionesProcesoWrapper>();
-  displayedColumns = ['Accion', 'codigoBpm', 'codigoOperacion', 'nombreCliente', 'cedulaCliente', 'montoPreaprobado', 'fechaCreacion', 'agencia', 'estadoProceso', 'proceso', 'asesor', 'usuarioEjecutor','actividad'];
+  displayedColumns = ['Accion', 'codigoBpm', 'codigoOperacion', 'nombreCliente', 'cedulaCliente', 'montoFinanciado', 'fechaCreacion', 'agencia', 'estadoProceso', 'proceso', 'asesor', 'usuarioEjecutor','actividad'];
 
   constructor(
     private pro: ProcesoService,
@@ -88,27 +88,15 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       if( data.entidad != null && data.entidad.operaciones != null){
         let operaciones: OperacionesProcesoWrapper[] = data.entidad.operaciones;
         operaciones.forEach(e=>{
-          if(e.idAgencia && this.catAgencia){
-            this.catAgencia.forEach( c =>{
-              if(e.idAgencia == c.id){
-                e.agencia = c.nombre;
-              }
-            });
-          }else{
-            e.agencia = "Sin Agencia";
+          if(this.catAgencia){
+            e.agencia = !e.idAgencia || e.idAgencia == 0 ? 'Sin Agencia' : this.catAgencia.find( a => a.id == e.idAgencia ) ? this.catAgencia.find( a => a.id == e.idAgencia ).nombre : 'Sin Agencia';
           }
-          
-          if(e.actividad ==" " || e.actividad =="null"){
-            e.actividad = "Sin Tracking";
-          }else{
-            e.actividad = e.actividad.replace(/_/gi," ");
-          }
+          e.actividad = !e.actividad || e.actividad == ' ' || e.actividad.toUpperCase() == 'NULL' ? 'Sin Actividad' : e.actividad.replace(/_/gi," ");
+          e.codigoOperacion = !e.codigoOperacion || e.codigoOperacion.toUpperCase() == 'NULL' ? "Sin Codigo Softbank": e.codigoOperacion;
+          e.montoFinanciado = !e.montoFinanciado || e.montoFinanciado == '0' ? 'No Aplica' : e.montoFinanciado+'$';
           e.estadoProceso = e.estadoProceso.replace(/_/gi," ");
           e.nombreCliente = e.nombreCliente.replace(/_/gi," ");
           e.proceso = e.proceso.replace(/_/gi," ");
-          if(e.montoPreaprobado == "0"){
-            e.montoPreaprobado = "No Aplica";
-          }
         });
         this.dataSource.data = operaciones;
         this.paginator.length = data.entidad.result;
@@ -144,7 +132,6 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
               "";
     }
   }
-  
   private cargarCatalogosOperacionesAndEnums(){
     this.loadingSubject.next(true);
     this.sof.consultarAgenciasCS().subscribe( (data: any) =>{
@@ -244,16 +231,12 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   }
   public verDetalle(row: OperacionesProcesoWrapper ){
     if(row.id != null){
-      this.sinNotSer.setNotice("HISTORIA DE VER DETALLE AUN NO EXISTE","error");
-      console.log('Me fui jiji ->',row.id);
-      this.limpiarFiltros();
-      this.router.navigate(['negociacion/bandeja-operaciones']);    
+      this.router.navigate(['negociacion/detalle-negociacion/', row.id]);    
     }
   }
   public verOperacion(row: OperacionesProcesoWrapper ){
     if(row.id != null){
       if(row.proceso == 'NUEVO'){
-        console.log('Me fui jiji ->',row.id);
         this.router.navigate(['negociacion/gestion-negociacion/NEG/',row.id]);    
       }
       if(row.proceso == 'RENOVACION'){

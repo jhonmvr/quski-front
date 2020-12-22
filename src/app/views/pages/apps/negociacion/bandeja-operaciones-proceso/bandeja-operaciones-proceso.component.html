@@ -65,23 +65,21 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div >
-                            <a href="javascript:void(0);" (click)="irNegociacion()" matTooltip="Nueva Negociacion" style="font-size: 12px; vertical-align: middle;">
-                                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon"></span>
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">post_add
-                                </mat-icon>
-                            </a>
-                            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
-                                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon"></span>
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">layers_clear
-                                </mat-icon>
+                        <div class="col-2">
+                            <a (click)="irNegociacion()" matTooltip="Nueva Negociacion" style="font-size: 12px; vertical-align: middle;">
+                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">post_add</mat-icon>
+                                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Nueva Negociacion</span>
                             </a>
                         </div>
-                        <div class="col-4 offset-5">
+                        <div class="col-4 offset-3">
                             <button mat-raised-button color="basic" (click)="buscar(null,null)">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>
                                 <span >Buscar Operacion</span>
                             </button>
+                            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
+                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
+                                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
+                            </a>
                         </div>
                     </div>
                 </form>
@@ -91,7 +89,7 @@
                     <ng-container matColumnDef="Accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
                         <mat-cell *matCellDef="let row">
-                            <ng-container *ngIf="row.estadoProceso != 'PENDIENTE EXCEPCION' && rol == 'ASESOR'">
+                            <ng-container *ngIf="row.estadoProceso == 'CREADO' || row.estadoProceso == 'EXCEPCIONADO' || row.estadoProceso == 'DEVUELTO'">
                                 <a (click)="verOperacion(row)">
                                     <mat-icon matTooltip="Ver Operacion">edit</mat-icon>
                                 </a>
@@ -104,7 +102,6 @@
                                     <mat-icon matTooltip="Reasignar Asesor">account_circle</mat-icon>
                                 </a>
                             </ng-container>
-                            
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="codigoBpm">
@@ -113,7 +110,7 @@
                     </ng-container>
                     <ng-container matColumnDef="codigoOperacion">
                         <mat-header-cell *matHeaderCellDef >Codigo Operacion</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.codigoOperacion | uppercase  }}</mat-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.codigoOperacion | titlecase  }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="nombreCliente">
                         <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
@@ -123,9 +120,9 @@
                         <mat-header-cell *matHeaderCellDef>Cedula Cliente</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ element.cedulaCliente }}</mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="montoPreaprobado">
-                        <mat-header-cell *matHeaderCellDef>Monto PreAprobado</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.montoPreaprobado }}</mat-cell>
+                    <ng-container matColumnDef="montoFinanciado">
+                        <mat-header-cell *matHeaderCellDef>Monto Financiado</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.montoFinanciado }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="fechaCreacion">
                         <mat-header-cell *matHeaderCellDef>Fecha Creacion</mat-header-cell>
@@ -133,7 +130,7 @@
                     </ng-container>
                     <ng-container matColumnDef="agencia">
                         <mat-header-cell *matHeaderCellDef>Agencia</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.agencia }}</mat-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.agencia | titlecase }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="estadoProceso">
                         <mat-header-cell *matHeaderCellDef>Estado Proceso</mat-header-cell>

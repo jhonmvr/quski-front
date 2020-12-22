@@ -6,9 +6,8 @@
 	<re-portlet-header [title]="'BANDEJA PRINCIPAL DE ASIGNACIÓN BAJO DEMANDA'" [class]="'kt-portlet__head--lg'">
 		<ng-container ktPortletTools>
 			<a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
-				</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Limpiar</span>
+				<mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
+				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
 			</a>
 		</ng-container>
 	</re-portlet-header>
@@ -73,7 +72,7 @@
                     </ng-container>
                     <ng-container matColumnDef="codigoOperacion">
                         <mat-header-cell *matHeaderCellDef >Codigo Operacion</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.codigoOperacion | uppercase  }}</mat-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.codigoOperacion | titlecase  }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="proceso">
                         <mat-header-cell *matHeaderCellDef >Proceso</mat-header-cell>

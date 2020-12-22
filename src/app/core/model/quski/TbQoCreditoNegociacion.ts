@@ -10,6 +10,9 @@ export class TbQoCreditoNegociacion {
     codigo: string;
     estado: string;
     estadoSoftbank: string;
+    codigoCash: string;
+    codigoDevuelto: string;
+    descripcionDevuelto: string;
     fechaActualizacion: Date;
     fechaCreacion: Date;
     pagoDia: Date;
@@ -89,7 +92,7 @@ export class TbQoCreditoNegociacion {
     totalValorRealizacion: number;
     valorAPagar:number;
     valorARecibir: number;
-
+    cobertura;
     constructor(idNegociacion?: number) {
         this.tbQoNegociacion = new TbQoNegociacion();
         this.tbQoNegociacion.id = idNegociacion > 0 ? idNegociacion : null;

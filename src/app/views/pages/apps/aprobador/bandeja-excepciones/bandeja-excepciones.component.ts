@@ -23,7 +23,7 @@ export class BandejaExcepcionesComponent implements OnInit {
   public loading;
   usuario: string;
   //VARIABLES DE LA TABLA
-  displayedColumnsExcepciones = ['accion', 'tipoExcepcion', 'nombreCliente'];
+  displayedColumnsExcepciones = ['accion', 'tipoExcepcion', 'nombreCliente','identificacion'];
   dataSourceExcepcionRol = new MatTableDataSource<TbQoExcepcionRol>();
   private agregar = new Array<TbQoExcepcionRol>();
 
@@ -100,21 +100,15 @@ export class BandejaExcepcionesComponent implements OnInit {
 
   public verExcepcion(element) {
     this.loadingSubject.next(true);
-    console.log('ELEMENT===> ', element);
-
     if (element.tipoExcepcion == 'EXCEPCION_CLIENTE') {
-      console.log('ingresa a EXCEPCION_CLIENTE====> ', element.idNegociacion);
-      this.router.navigate(['./excepciones/excepcion-cliente/', element.idNegociacion]);
-
+      console.log('ingresa a EXCEPCION_CLIENTE====> ', btoa(JSON.stringify(element)) );
+      this.router.navigate(['./excepciones/excepcion-cliente/', btoa(JSON.stringify(element))])
     } else if (element.tipoExcepcion == 'EXCEPCION_RIESGO') {
       console.log('ingresa a EXCEPCION_RIESGO');
-      this.router.navigate(['./excepciones/excepcion-riesgo/', element.idNegociacion]);
-
-
+      this.router.navigate(['./excepciones/excepcion-riesgo/', btoa(JSON.stringify(element))]);
     } else if (element.tipoExcepcion == 'EXCEPCION_COBERTURA') {
       console.log('ingresa a EXCEPCION_COBERTURA');
-      this.router.navigate(['./excepciones/excepcion-cobertura/', element.idNegociacion]);
-
+      this.router.navigate(['./excepciones/excepcion-cobertura/', btoa(JSON.stringify(element))])
     }
 
 

@@ -104,15 +104,14 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
       excepcion.idAsesor = this.usuario;
       excepcion.tipoExcepcion = this.tipoExcep;
       excepcion.observacionAsesor = this.observacionAsesor.value;
-      excepcion.mensajeBre = this.dataExcepciones.mensajeBre; // TODO: Cambiar a campo de mensaje de bre. 
+      excepcion.mensajeBre = this.dataExcepciones.mensajeBre; 
       excepcion.tbQoNegociacion = new TbQoNegociacion();
       excepcion.tbQoNegociacion.id = this.dataExcepciones.idNegociacion;
-      this.exc.persistEntity(excepcion).subscribe( (data:any)=>{
+      this.exc.solicitarExcepcion(excepcion).subscribe( (data:any)=>{
         if(data.entidad){
           this.salir(data.entidad);
         } else{
           this.sinNotSer.setNotice('ERROR AL GENERAR SOLICITUD','error');
-
         }
       });   
     }else {
@@ -121,26 +120,11 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
   }
   private seleccionarTipo(){
     if(this.dataExcepciones.isRiesgo){
-      this.catTiposExcepciones.forEach(e=>{
-        if(e.nombre === "EXCEPCION_RIESGO_ACUMULADO"){
-          console.log("---> EXCEPCION_RIESGO_ACUMULADO")
-          this.tipoExcep = e.nombre;
-        }
-      });
+          this.tipoExcep = 'EXCEPCION_RIESGO_ACUMULADO';
     } else if(this.dataExcepciones.isCobertura){
-      this.catTiposExcepciones.forEach(e=>{
-        if(e.nombre === "EXCEPCION_COBERTURA"){
-          console.log("---> ",e.nombre)
-          this.tipoExcep = e.nombre;
-        }
-      });
+          this.tipoExcep = 'EXCEPCION_COBERTURA';
     } else if( this.dataExcepciones.isCliente){
-      this.catTiposExcepciones.forEach(e=>{
-        if(e.nombre === "EXCEPCION_CLIENTE"){
-          console.log("---> EXCEPCION_CLIENTE")
-          this.tipoExcep = e.nombre;
-        }
-      });
+          this.tipoExcep = 'EXCEPCION_CLIENTE';
     } else{
       this.mostrarError("Tipo de excepcion no definida.");
       this.tipoExcep = null;

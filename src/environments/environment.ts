@@ -19,6 +19,7 @@ export const environment = {
     DATE_FORMAT:'dd/MM/yyyy',
     userKey:"RE2001",
     rolKey:"re1002",
+    rolName:"re1001",
     rootKey:"/quski-front/",
     mongoHabilitanteCollection:'documento-habilitante',
     //DESARROLLO

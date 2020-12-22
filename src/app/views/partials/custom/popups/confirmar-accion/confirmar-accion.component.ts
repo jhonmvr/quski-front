@@ -25,7 +25,6 @@ export class ConfirmarAccionComponent implements OnInit {
       mensaje: '¿Esta seguro que desea realizar la siguiente acción?: ' + this.data,
       titulo: 'CONFIRMAR ACCION'
     }
-
   }
   public salir(result: boolean){
     this.dialogRefGuardar.close(result);
