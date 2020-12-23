@@ -115,7 +115,7 @@ joyasList  = [{"tipoOro": "18KILATES",
   /// src 
   listTablaHeredero = []
   parametroObjeto 
-  idCreditoNegociacion= 96
+
   //TABLA
   displayedColumnsJoyas = ['tipoOro', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto',
   'tienePiedras','detallePiedras','descuentoPesoPiedra', 'pesoNeto', 
@@ -132,7 +132,7 @@ joyasList  = [{"tipoOro": "18KILATES",
  dataSourceHeredero =new MatTableDataSource;
  //:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
 
-objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIyMDIwLTEwLTEyIiwKICAgICJmZWNoYVZlbmNpbWllbnRvIjogIjIwMjAtMTEtMTAiLAogICAgIm1vbnRvRmluYW5jaWFkbyI6ICI3MDAiLAogICAgImFzZXNvciI6ICJKdWFuaXRvIiwKICAgICJlc3RhZG9PcGVyYWNpb24iOiAgIkNBTkNFTEFETyIsCiAgICAidGlwb0NyZWRpdG8iOiAiIiwKICAgICJjb2RpZ29UYWJsYUFtb3J0aXphY2lvblF1c2tpIjoiQTAxIiwKICAgICJpbXBhZ28iOiAibm8iLAogICAgInJldGFucXVlbyI6ICJubyIsCiAgICAiY29iZXJ0dXJhSW5pY2lhbCI6ICIxMjAwIiwKICAgICJjb2JlcnR1cmFBY3R1YWwiOiAiMTEwMCIsCiAgICAiYmxvcXVlbyI6IiIsCiAgICAiZGlhc01vcmEiOiAiIiwKICAgICJlc3RhZG9VYmljYWNpb24iOiIiLAogICAgImVzdGFkb1Byb2Nlc28iOiIiLAogICAgImNvZGlnb1NlcnZpY2lvIjoiIiwKICAgICJtaWdyYWRvIjogIiIKCn0='
+objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28gSmF2aWVyIFNlcnJhbm8gQXJldmFsbyIsCiAgICAiaWRDbGllbnRlIjogIjEzMTEwNjY0NDIiLAogICAgIm51bWVyb09wZXJhY2lvbiI6ICJjb2QtMTciLAogICAgIm51bWVyb09wZXJhY2lvbk1hZHJlIiA6ICJjb2QtMTAiLAogICAgIm51bWVyb09wZXJhY2lvbk11cGkiOiAiIiwKICAgICJmZWNoYUFwcm9iYWNpb24iIDogIjIwMjAtMTAtMTIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiMjAyMC0xMS0xMCIsCiAgICAibW9udG9GaW5hbmNpYWRvIjogIjg1MCIsCiAgICAiYXNlc29yIjogIkp1YW5pdG8iLAogICAgImVzdGFkb09wZXJhY2lvbiI6ICAiQ0FOQ0VMQURPIiwKICAgICJ0aXBvQ3JlZGl0byI6ICIiLAogICAgImNvZGlnb1RhYmxhQW1vcnRpemFjaW9uUXVza2kiOiJBMDEiLAogICAgImltcGFnbyI6ICJubyIsCiAgICAicmV0YW5xdWVvIjogIm5vIiwKICAgICJjb2JlcnR1cmFJbmljaWFsIjogIjEyMDAiLAogICAgImNvYmVydHVyYUFjdHVhbCI6ICIxMTAwIiwKICAgICJibG9xdWVvIjoiIiwKICAgICJkaWFzTW9yYSI6ICIiLAogICAgImVzdGFkb1ViaWNhY2lvbiI6IiIsCiAgICAiZXN0YWRvUHJvY2VzbyI6IiIsCiAgICAiY29kaWdvU2VydmljaW8iOiIiLAogICAgIm1pZ3JhZG8iOiAiIgoKfQ=='
 datos
   // VARIABLES DE TRACKING
   public horaAsignacionCreacion: Date = null;
@@ -338,6 +338,9 @@ datos
     tbQoDevolucion.tipoCliente = this.tipoCliente.value
     tbQoDevolucion.observaciones = this.observaciones.value
     tbQoDevolucion.agenciaEntrega = this.agenciaEntrega.value.nombre
+    tbQoDevolucion.codigoOperacionMadre = this.datos.numeroOperacionMadre == null ? "" : this.datos.numeroOperacionMadre
+    tbQoDevolucion.fundaMadre = "QUEMADA-13"
+    tbQoDevolucion.fundaActual = "ACTQUE-14"
     console.log(this.agenciaEntrega.value)
     tbQoDevolucion.agenciaEntregaId  = this.agenciaEntrega.value.id
     console.log(this.encodeObjetos(this.joyasList))

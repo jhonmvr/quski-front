@@ -10,6 +10,7 @@ export class TbQoDevolucion {
     idAgencia: string;
     nombreCliente: string;
     cedulaCliente: string;
+    codigoOperacionMadre: string;
     codigoOperacion: string;
     nivelEducacion: string;
     estadoCivil: string;
@@ -28,6 +29,7 @@ export class TbQoDevolucion {
     genero: string;
     fundaActual: string;
     fundaMadre: string;
+    ciudadTevcol: string;
     nombreAgenciaSolicitud : string;
     agenciaEntregaId: number;
     pesoBruto: number;
