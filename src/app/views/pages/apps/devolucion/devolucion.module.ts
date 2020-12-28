@@ -44,6 +44,7 @@ import { DetalleDevolucionComponent } from './detalle-devolucion/detalle-devoluc
 import { CancelacionSolicitudDevolucionComponent } from './cancelacion-solicitud-devolucion/cancelacion-solicitud-devolucion.component';
 import { AprobacionCancelacionComponent } from './aprobacion-cancelacion/aprobacion-cancelacion.component';
 import { VerificacionFirmaComponent } from './verificacion-firma/verificacion-firma.component';
+import jspdf from  "jspdf"
 
 const routes: Routes = [
 	{
@@ -168,4 +169,4 @@ const routes: Routes = [
   
   entryComponents: []
 })
-export class DevolucionModule { }
+export class DevolucionModule {jspdf }
