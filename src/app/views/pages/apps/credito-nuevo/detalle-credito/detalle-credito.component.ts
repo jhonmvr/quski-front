@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 
 @Component({
   selector: 'kt-detalle-credito',
@@ -17,6 +18,14 @@ export class DetalleCreditoComponent implements OnInit {
   public  loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public  wrapper: any; 
+  public catTipoGarantia: Array<any>;
+  public catTipoCobertura: Array<any>;
+  public catAgencia: Array<any>;
+  public catTipoJoya: Array<any>;
+  public catEstadoJoya: Array<any>;
+  public catTipoOro: Array<any>;
+  public catEstadoProceso: Array<any>;
+  public catEstadoUbicacion: Array<any>;
 
   public formInformacion: FormGroup = new FormGroup({});
   public nombre = new FormControl();
@@ -48,7 +57,7 @@ export class DetalleCreditoComponent implements OnInit {
   public displayedColumnsRubro = ['rubro','numeroCuota', 'proyectado', 'calculado', 'estado'];
   public dataSourceRubro = new MatTableDataSource<any>();
 
-  public displayedColumnsGarantia = ['numeroGarantia','numeroExpediente','codigoTipoGarantia','descripcion','codigoSubTipoGarantia','tipoCobertura','valorComercial','valorAvaluo',
+  public displayedColumnsGarantia = ['numeroGarantia','numeroExpediente','codigoTipoGarantia','descripcion','tipoCobertura','valorComercial','valorAvaluo',
   'valorRealizacion','valorOro','fechaAvaluo','idAgenciaRegistro','idAgenciaCustodia','referencia','codigoTipoJoya','descripcionJoya','codigoEstadoJoya',
   'codigoTipoOro','pesoBruto','tienePiedras','detallePiedras','descuentoPiedras','pesoNeto','codigoEstadoProceso','codigoEstadoUbicacion','numeroFundaMadre',
   'numeroFundaJoya','numeroPiezas','descuentoSuelda'];
@@ -56,6 +65,7 @@ export class DetalleCreditoComponent implements OnInit {
 
   constructor(
     private cre: CreditoNegociacionService,
+    private sof: SoftbankService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private subheaderService: SubheaderService,
@@ -93,8 +103,9 @@ export class DetalleCreditoComponent implements OnInit {
 
   ngOnInit() {
     this.formInformacion.disable();
+    this.cargarCats();
     this.loading = this.loadingSubject.asObservable();
-    this.subheaderService.setTitle('Gestion credito');
+    this.subheaderService.setTitle('Detalle de credito');
     this.traerCredito();
   }
   private traerCredito(){
@@ -151,6 +162,22 @@ export class DetalleCreditoComponent implements OnInit {
     this.descripcionBloqueo.setValue( this.wrapper.credito.datosBloqueo ? this.wrapper.credito.datosBloqueo : 'No presenta bloqueos');
     this.dataSourceRubro.data = this.wrapper.rubros;
     this.dataSourceGarantia.data = this.wrapper.garantias;
+    this.dataSourceGarantia.data.forEach(e=>{
+      console.log("Catalogo de cobertura ->", this.catTipoGarantia);
+      e.codigoTipoGarantia = this.catTipoGarantia.find(x => x.codigo == e.codigoTipoGarantia) ? this.catTipoGarantia.find(x => x.codigo == e.codigoTipoGarantia).nombre : 'Error en catalogo';
+      e.tipoCobertura = this.catTipoCobertura.find(x => x.codigo == e.tipoCobertura ) ? this.catTipoCobertura.find(x => x.codigo == e.tipoCobertura).nombre : 'Error en catalogo';
+      e.nombreAgenciaCustodia = this.catAgencia.find(x => x.id == e.idAgenciaCustodia).nombre;
+      e.nombreAgenciaRegistro = this.catAgencia.find(x => x.id == e.idAgenciaRegistro).nombre;
+      e.codigoTipoJoya = this.catTipoJoya.find(x => x.codigo == e.codigoTipoJoya) ? this.catTipoJoya.find( x => x.codigo == e.codigoTipoJoya).nombre : 'Error en catalogo';
+      e.tienePiedras = e.tienePiedras? 'Si': 'No';
+      e.codigoEstadoJoya = this.catEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya) ? this.catEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya).nombre : 'Error en catalogo';
+      e.codigoTipoOro = this.catTipoOro.find(x => x.codigo ==e.codigoTipoOro) ? this.catTipoOro.find(x => x.codigo == e.codigoTipoOro).nombre : 'Error en catalogo';
+      e.detallePiedras = e.detallePiedras ? e.detallePiedras : 'Sin detalle';  
+      e.codigoEstadoProceso = this.catEstadoProceso.find(x=> x.codigo == e.codigoEstadoProceso) ? this.catEstadoProceso.find(x=> x.codigo == e.codigoEstadoProceso).nombre: 'Error en catalogo';
+      e.codigoEstadoUbicacion = this.catEstadoUbicacion.find(x=> x.codigo == e.codigoEstadoUbicacion) ? this.catEstadoUbicacion.find(x=> x.codigo == e.codigoEstadoUbicacion).nombre: 'Error en catalogo';
+      e.numeroFundaMadre = e.numeroFundaMadre ? e.numeroFundaMadre : 'Sin funda madre';  
+
+    });
     this.sinNotSer.setNotice('CREDITO CARGADO CORRECTAMENTE','success');
     this.loadingSubject.next(false);
   }
@@ -169,6 +196,32 @@ export class DetalleCreditoComponent implements OnInit {
     dialogRef.afterClosed().subscribe(r => {
       this.router.navigate(['credito-nuevo/']);
     });
+  }
+  private cargarCats(){
+    this.sof.consultarTipoJoyaCS().subscribe( (data: any) =>{
+      this.catTipoGarantia = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+    });  
+    this.sof.consultarTipoCoberturaCS().subscribe( (data: any) =>{
+      this.catTipoCobertura = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+    });
+    this.sof.consultarAgenciasCS().subscribe( (data: any) =>{
+      this.catAgencia = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+    });
+    this.sof.consultarTipoJoyaCS().subscribe( (data: any) =>{
+      this.catTipoJoya = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+    });     
+    this.sof.consultarEstadoJoyaCS().subscribe( (data: any) =>{
+      this.catEstadoJoya = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+    });
+    this.sof.consultarTipoOroCS().subscribe( (data: any) =>{
+      this.catTipoOro = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+    });  
+    this.sof.consultarEstadoProcesoCS().subscribe( (data: any) =>{
+      this.catEstadoProceso = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+    });
+    this.sof.consultarEstadoUbicacionCS().subscribe( (data: any) =>{
+      this.catEstadoUbicacion= !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+    });  
   }
   regresar(){
     this.router.navigate(['credito-nuevo/']);

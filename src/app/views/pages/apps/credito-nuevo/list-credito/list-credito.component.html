@@ -173,10 +173,10 @@
                     <ng-container matColumnDef="accion">
                         <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
                         <mat-cell *matCellDef="let row">
-                            <a (click)="irNovar()" matTooltip="Novar el credito" style="font-size: 12px; vertical-align: middle;">
+                            <a (click)="irNovar(row)" matTooltip="Novar el credito" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">autorenew</mat-icon>
                             </a>
-                            <a (click)="irDetalle()" matTooltip="Ver el detalle" style="font-size: 12px; vertical-align: middle;">
+                            <a (click)="irDetalle(row)" matTooltip="Ver el detalle" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">remove_red_eye</mat-icon>
                             </a>
                         </mat-cell>
