@@ -25,22 +25,27 @@ export class CrearRenovacionComponent implements OnInit {
   private creditoSoftbank: any;
   public fechaUtil: diferenciaEnDias;
   private fechaServer;
-
-
+  totalPesoB
+  totalPesoN
+  totalValorO
+  totalNumeroJoya
+  totalValorA
+  totalValorR
+  totalValorC
   /** @FORMULARIOS */
   public formOperacion: FormGroup = new FormGroup({});
   public codigoBpm = new FormControl();
   public codigoOperacion = new FormControl();
   public proceso = new FormControl();
   public estadoProceso = new FormControl();
-  public nombreCliente = new FormControl();
+  public nombreCompleto = new FormControl();
   public cedulaCliente = new FormControl();
   public fechaCuota = new FormControl();
   
   public dataSourceTasacion = new MatTableDataSource<any>();
-  public displayedColumnsTasacion = ['Accion', 'NumeroPiezas', 'TipoOro', 'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'valorComercial', 'tienePiedras', 'detallePiedras','TipoJoya', 'EstadoJoya', 'Descripcion',];
+  public displayedColumnsTasacion = ['NumeroPiezas', 'TipoOro', 'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'valorComercial', 'tienePiedras', 'detallePiedras','TipoJoya', 'EstadoJoya', 'Descripcion',];
   public dataSourceCreditoNegociacion = new MatTableDataSource<any>();
-  public displayedColumnsCreditoNegociacion = ['Accion', 'plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
+  public displayedColumnsCreditoNegociacion = ['plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
     'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
     'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
     'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
@@ -60,7 +65,7 @@ export class CrearRenovacionComponent implements OnInit {
     this.formOperacion.addControl("codigoOperacion", this.codigoOperacion);
     this.formOperacion.addControl("proceso", this.proceso);
     this.formOperacion.addControl("estadoProceso", this.estadoProceso);
-    this.formOperacion.addControl("nombreCliente", this.nombreCliente);
+    this.formOperacion.addControl("nombreCompleto", this.nombreCompleto);
     this.formOperacion.addControl("cedulaCliente", this.cedulaCliente);
     this.formOperacion.addControl("fechaCuota", this.fechaCuota);
   }
@@ -77,9 +82,10 @@ export class CrearRenovacionComponent implements OnInit {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.numeroOperacion) {
         this.loadingSubject.next(true);
-        this.cre.traerCreditoVigente(json.params.numeroOperacion).subscribe((data: any) => {
+        this.cre.buscarRenovacion(json.params.numeroOperacion).subscribe((data: any) => {
           if (data.entidad) {
             this.cargarCampos( data.entidad );
+            console.log("datos ->", data.entidad)
           }else{
             this.abrirSalirGestion("Error al intentar cargar el credito.");
           }
@@ -94,7 +100,7 @@ export class CrearRenovacionComponent implements OnInit {
     this.codigoOperacion.setValue(wrapper);
     this.proceso.setValue(wrapper);
     this.estadoProceso.setValue(wrapper);
-    this.nombreCliente.setValue(wrapper);
+    this.nombreCompleto.setValue(wrapper);
     this.cedulaCliente.setValue(wrapper);
     this.formOperacion.disable(wrapper);
     //this.dataSourceTasacion.data = wrapper;
