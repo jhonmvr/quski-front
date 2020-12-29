@@ -84,8 +84,8 @@ export class CrearRenovacionComponent implements OnInit {
         this.loadingSubject.next(true);
         this.cre.buscarRenovacion(json.params.numeroOperacion).subscribe((data: any) => {
           if (data.entidad) {
-            this.cargarCampos( data.entidad );
             console.log("datos ->", data.entidad)
+            this.cargarCampos( data.entidad );
           }else{
             this.abrirSalirGestion("Error al intentar cargar el credito.");
           }
@@ -93,18 +93,16 @@ export class CrearRenovacionComponent implements OnInit {
       } 
     });
   }
-  private cargarCampos(wrapper: CreditoSoftbankWrapper) {
-    this.creditoSoftbank = wrapper;
-    console.log('Mi wrapper --> '+ this.creditoSoftbank )
-    this.codigoBpm.setValue(wrapper);
-    this.codigoOperacion.setValue(wrapper);
-    this.proceso.setValue(wrapper);
-    this.estadoProceso.setValue(wrapper);
-    this.nombreCompleto.setValue(wrapper);
-    this.cedulaCliente.setValue(wrapper);
-    this.formOperacion.disable(wrapper);
-    //this.dataSourceTasacion.data = wrapper;
-    this.sinNotSer.setNotice("SE HA INICIADO UNA RENOVACION -> " + wrapper + ".", "success");
+  private cargarCampos(wr) {
+    this.codigoBpm.setValue( wr.credito? wr.credito.codigo : 'Sin asignar')
+    this.codigoOperacion.setValue(wr.detalle.credito.numeroOperacion);
+    this.proceso.setValue(wr.proceso ? wr.proceso.proceso : 'Renovacion');
+    this.estadoProceso.setValue(wr.proceso ? wr.proceso.estadoProceso : 'Creado');
+    this.nombreCompleto.setValue(wr.detalle.cliente.nombreCompleto);
+    this.cedulaCliente.setValue(wr.detalle.cliente.identificacion);
+    this.formOperacion.disable();
+    this.dataSourceTasacion.data = wr.detalle.garantias;
+    this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.detalle.credito.numeroOperacion + ".", "success");
     this.loadingSubject.next(false);
   }
   public solicitarCobertura(){}

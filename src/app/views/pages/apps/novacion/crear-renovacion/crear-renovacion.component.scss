@@ -72,31 +72,29 @@ background-color: red;
 border-color: white;
 font-weight: 400;
 }    
+.mat-header-cell, .mat-footer-cell, .mat-cell {
+  min-width: 80px;
+  box-sizing: border-box;
+}
 .mat-header-cell {
-flex-direction: column;
-justify-content: center;
-font-size: smaller;
-
+  flex-direction: column;
+  justify-content: center;
+  justify-items: center;
+  font-size: smaller;
 }
 .mat-cell {
-text-align: center;
-justify-content:center;
-font-size: smaller;
+  text-align: center;
+  justify-content:center;
+  font-size: smaller;
 }
-.tableOpciones{
-overflow: auto;
+.mat-footer-cell{
+  font-weight: bold;
+  text-align: center;
+  justify-content:center;
+  font-size: smaller;
 }
-    .mat-header-cell, .mat-footer-cell, .mat-cell {
-        min-width: 80px;
-        box-sizing: border-box;
-    }
-    #tableTasacion{
-    overflow: auto;
-    width: 100%;
-    }
-    .mat-footer-cell{
-    font-weight: bold;
-    text-align: center;
-    justify-content:center;
-    font-size: smaller;
-    }
+.garantia{
+  width: 100%;
+  max-height: 400px;
+  overflow: auto;
+}

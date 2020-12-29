@@ -47,7 +47,7 @@
 				</form>
 			</mat-step>
 			<mat-step label='Detalle de garantias'> 
-				<mat-table class="mat-elevation-z8" [dataSource]="dataSourceTasacion">
+				<mat-table class="garantia" [dataSource]="dataSourceTasacion" >
 					<ng-container matColumnDef="NumeroPiezas">
 						<mat-header-cell *matHeaderCellDef>N. de piezas</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.numeroPiezas }} </mat-cell>
