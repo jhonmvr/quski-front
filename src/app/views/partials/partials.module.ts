@@ -118,6 +118,7 @@ import { ConfirmarAccionComponent } from './custom/popups/confirmar-accion/confi
 import { AddFechaComponent } from './custom/add-fecha/add-fecha.component';
 import { TablaAmortizacionComponent } from './custom/popups/tabla-amortizacion/tabla-amortizacion.component';
 import { DevolucionCreditoComponent } from './custom/popups/devolucion-credito/devolucion-credito.component';
+import { PopupPagoComponent } from './custom/popups/popup-pago/popup-pago.component';
 
 
 
@@ -190,7 +191,8 @@ import { DevolucionCreditoComponent } from './custom/popups/devolucion-credito/d
 		ConfirmarAccionComponent,
 		AddFechaComponent,
 		TablaAmortizacionComponent,
-		DevolucionCreditoComponent
+		DevolucionCreditoComponent,
+		PopupPagoComponent
 
 	],
 	exports: [
@@ -317,7 +319,8 @@ import { DevolucionCreditoComponent } from './custom/popups/devolucion-credito/d
 		TablaTasacionComponent,
 		TablaOfertaCreditoComponent,
 		AddFechaComponent,
-		TablaAmortizacionComponent
+		TablaAmortizacionComponent,
+		PopupPagoComponent
 
 	]
 })

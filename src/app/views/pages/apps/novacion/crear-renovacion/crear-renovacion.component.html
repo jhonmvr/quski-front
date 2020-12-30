@@ -132,9 +132,7 @@
 					<mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
 					<mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
 					<mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
-				</mat-table>
-			</mat-step>
-			<mat-step label='Simular opciones de crédito'>
+                </mat-table>
                 <div class="row">
                     <div class="col-4 offset-5">
                         <button mat-stroked-button color="primary" matStepperNext (click)="simularOpciones()">
@@ -143,6 +141,8 @@
 						</button>
                     </div>
                 </div>
+			</mat-step>
+			<mat-step label='Simular opciones de crédito'>
                 <div class="row">
                     <div class="col-12">
                         <mat-table [dataSource]="dataSourceCreditoNegociacion">

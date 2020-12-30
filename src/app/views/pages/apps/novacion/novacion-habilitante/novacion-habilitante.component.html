@@ -1,0 +1,130 @@
+<re-portlet>
+	<re-portlet-header [title]="'Renovar Credito'" [class]="'kt-portlet__head--lg'">
+		<ng-container ktPortletTools>
+			<a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
+				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+					arrow_back</mat-icon>
+				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+			</a>
+		</ng-container>
+	</re-portlet-header>
+	<re-portlet-body>
+		<mat-vertical-stepper #stepper>
+			<mat-step label='Datos Instruccion Oper'>
+				<form [formGroup]="formOperacion">
+					<div class="row">
+						<div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput [formControl]="tipoDeCuenta" placeholder="Tipo De Cuenta"/>
+							</mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput [formControl]="numeroCuenta" placeholder="Numero Cuenta"/>
+							</mat-form-field>
+                        </div>					
+                        <div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput [formControl]="firmaRegularizada" placeholder="firmaRegularizada"/>
+							</mat-form-field>
+                        </div>		
+                        <div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput [formControl]="diaFijoPago" placeholder="Dia Fijo Pago"/>
+							</mat-form-field>
+                        </div>			
+                        <div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput [formControl]="firmadaOperacion" placeholder="Firmada Operacion"/>
+							</mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput [formControl]="firmanteCuenta" placeholder="firmanteCuenta"/>
+							</mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput [formControl]="tipoCliente" placeholder="Tipo Cliente"/>
+							</mat-form-field>
+						</div>
+					</div>
+				</form>
+            </mat-step>
+            <mat-step label='Comprobante De Pago'>
+				<mat-table class="garantia" [dataSource]="dataSourceComprobante" >
+					<ng-container matColumnDef="accion">
+                        <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <a (click)="eliminarComprobante(row)">
+								<mat-icon matTooltip="Eliminar">delete</mat-icon>
+                            </a>
+                        </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="intitucionFinanciera">
+						<mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.intitucionFinanciera }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="cuenta">
+						<mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.cuenta }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaPago">
+						<mat-header-cell *matHeaderCellDef>Fecha Pago</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.fechaPago }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroDeDeposito">
+						<mat-header-cell *matHeaderCellDef>Numero De Deposito</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.numeroDeDeposito }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorDepositado">
+						<mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.valorDepositado }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="subirComprobante">
+						<mat-header-cell *matHeaderCellDef>Subir Comprobante</mat-header-cell>
+						<mat-cell *matCellDef="let row">
+                            <a (click)="subirComprobante(row)">
+								<mat-icon matTooltip="Subir">edit</mat-icon>
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="descargarComprobante">
+						<mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
+						<mat-cell *matCellDef="let row">
+                            <a (click)="descargarComprobante(row)">
+								<mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
+                            </a>
+                        </mat-cell>					
+                    </ng-container>
+
+					<mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
+					<mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
+                </mat-table>
+                <div class="row mt-2">
+                    <div class="col-2 offset-5">
+                        <button mat-stroked-button color="primary" matStepperNext (click)="agregarComprobante()">
+							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
+							<span color="primary">Agregar Comprobante</span>
+						</button>
+                    </div>
+                    <div class="col-2 offset-2">
+                        <button mat-stroked-button color="warn" matStepperNext (click)="solicitarExcepcion()">
+							<span color="warn">Solicitar Excepcion</span>
+						</button>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label='Documentos Legales'>
+				<re-habilitante [proceso]="'CREDITONUEVO'" [useType]="'LIST'" [tipoDocumento]="'5'" [referencia]="" [rol]="'7'"> </re-habilitante>
+                <div class="row">
+                    <div class="col-md-5 offset-md-5">
+                        <button  mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
+                    </div>
+                </div>
+			</mat-step>
+		</mat-vertical-stepper>
+
+	</re-portlet-body>
+	<re-portlet-footer></re-portlet-footer>
+</re-portlet>
