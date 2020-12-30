@@ -14,9 +14,13 @@
 				<form [formGroup]="formOperacion">
 					<div class="row">
 						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="tipoDeCuenta" placeholder="Tipo De Cuenta"/>
-							</mat-form-field>
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select required placeholder="Tipo De Cuenta"  [formControl]="tipoDeCuenta">
+                                    <mat-option *ngFor="let element of catCuenta" [value]="element">
+                                        {{element.nombre }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
                         <div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
@@ -24,29 +28,47 @@
 							</mat-form-field>
                         </div>					
                         <div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="firmaRegularizada" placeholder="firmaRegularizada"/>
-							</mat-form-field>
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select required [formControl]="firmaRegularizada" placeholder="firmaRegularizada">
+                                    <mat-option *ngFor="let element of firmaCat" [value]="element">
+                                        {{element }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>		
                         <div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="diaFijoPago" placeholder="Dia Fijo Pago"/>
-							</mat-form-field>
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [matDatepicker]="picker6" [formControl]="diaFijoPago" placeholder="Dia Fijo Pago">
+                                <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                                <mat-datepicker #picker6></mat-datepicker>
+                            </mat-form-field>
                         </div>			
                         <div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="firmadaOperacion" placeholder="Firmada Operacion"/>
-							</mat-form-field>
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select required [formControl]="firmadaOperacion" placeholder="Firmada Operacion">
+                                    <mat-option *ngFor="let element of firmadaOperacionCat" [value]="element">
+                                        {{element.nombre }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
                         <div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="firmanteCuenta" placeholder="firmanteCuenta"/>
-							</mat-form-field>
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select required [formControl]="firmanteCuenta" placeholder="firmanteCuenta">
+                                    <mat-option *ngFor="let element of firmanteCuentaCat" [value]="element">
+                                        {{element.nombre }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
                         <div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="tipoCliente" placeholder="Tipo Cliente"/>
-							</mat-form-field>
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select required [formControl]="tipoCliente" placeholder="Tipo Cliente">
+                                    <mat-option *ngFor="let element of tipoClienteCat" [value]="element">
+                                        {{element.nombre }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
 						</div>
 					</div>
 				</form>

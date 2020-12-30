@@ -30,6 +30,13 @@ export class NovacionHabilitanteComponent implements OnInit {
   public tipoCliente = new FormControl();
   public dataSourceComprobante = new MatTableDataSource<any>();
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','subirComprobante','descargarComprobante'];
+
+  public catCuenta:[];
+  public firmaCat = ['SI','NO'];
+  public firmadaOperacionCat:[];
+  public firmanteCuentaCat:[];
+  public tipoClienteCat:[];
+  
   
 
   constructor(
