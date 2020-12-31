@@ -42,6 +42,8 @@ export class GestionClienteComponent implements OnInit {
   public loading;
   usuario
   agencia
+  private origen: string;
+  private item: any;
   public totalActivo: number = 0;
   public totalPasivo: number = 0;
   public totalValorIngresoEgreso: number = 0;
@@ -401,6 +403,8 @@ export class GestionClienteComponent implements OnInit {
   private buscarCliente() {
     this.route.paramMap.subscribe((data: any) => {
       this.loadingSubject.next(true);
+      this.origen = data.params.origen;
+      this.item = data.params.item;
       if (data.params.origen == "NEG") {
         this.idNegociacion = data.params.item
         this.cli.traerClienteByIdNegociacion(data.params.item).subscribe((data: any) => {
@@ -422,9 +426,18 @@ export class GestionClienteComponent implements OnInit {
             this.sinNoticeService.setNotice('NO EXISTE CLEINTE: ' + data.entidad.mensaje, 'error');
           }
         });
-      } else {
+      } else if(data.params.origen == "NOV"){
         this.loadingSubject.next(false);
-
+        this.cli.traerClienteByNumeroOperacion(data.params.item).subscribe((data: any) => {
+          if (!data.entidad) {
+            console.log('Data ->', data.entidad);
+            this.wrapper = data.entidad;
+            this.traerCatalogos();
+          } else {
+            this.loadingSubject.next(false);
+            this.sinNoticeService.setNotice('NO EXISTE CLEINTE: ' + data.entidad.mensaje, 'error');
+          }
+        });
       }
     });
   }
@@ -1279,6 +1292,10 @@ export class GestionClienteComponent implements OnInit {
                         this.sinNoticeService.setNotice("CLIENTE REGISTRADO CORRECTAMENTE", 'success');
                         this.loadingSubject.next(false);
                         if (this.idNegociacion) {
+                          this.origen == "NOV" ? 
+                            this.router.navigate(['novacion/novacion-habilitante/', this.item]) :
+                              this.router.navigate(['credito-nuevo/generar-credito/', this.idNegociacion]);
+
                           this.router.navigate(['credito-nuevo/generar-credito/', this.idNegociacion]);
                         } else {
                           this.router.navigate(['negociacion/bandeja-operaciones']);

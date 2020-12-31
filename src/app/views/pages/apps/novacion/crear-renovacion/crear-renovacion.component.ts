@@ -13,6 +13,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
+import { TbQoProceso } from 'src/app/core/model/quski/TbQoProceso';
+import { TbQoCreditoNegociacion } from 'src/app/core/model/quski/TbQoCreditoNegociacion';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -27,7 +29,7 @@ export class CrearRenovacionComponent implements OnInit {
   public usuario: string;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
-  private credit;
+  private credit: { detalle: any, proceso: TbQoProceso, credito: TbQoCreditoNegociacion}
   private numeroOperacion;
   public fechaUtil: diferenciaEnDias;
   public seleccion;
@@ -147,14 +149,26 @@ export class CrearRenovacionComponent implements OnInit {
     this.loadingSubject.next(false);
   }
   public solicitarCobertura(){
-    if(this.seleccion ){
+    if( this.seleccion ){
+      if(!this.credit.proceso){
+        this.cre.crearCreditoRenovacion( this.seleccion, this.numeroOperacion, this.usuario).subscribe( data =>{
+          if(data.entidad){
+            console.log( 'Mi operacion ->', data.entidad );
+            this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
+          }
+        });
+      }else{
+        this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
+      }
 
+    }else{
+      this.sinNotSer.setNotice('Seleccione una opcion valida', 'error');
     }
 
   }
   public abrirPopupExcepciones(data: DataInjectExcepciones) {
     this.loadingSubject.next(false);
-    //data.idNegociacion = this.negoW.credito.tbQoNegociacion.id;
+    data.idNegociacion = this.credit.proceso.idReferencia;
     const dialogRefGuardar = this.dialog.open(SolicitudDeExcepcionesComponent, {
       width: '800px',
       height: 'auto',
@@ -175,7 +189,12 @@ export class CrearRenovacionComponent implements OnInit {
   }
   public actualizarCliente(){
     if( this.seleccion ){
-      this.router.navigate(['cliente/gestion-cliente/NOV/',this.numeroOperacion]);
+      this.cre.crearCreditoRenovacion( this.seleccion, this.numeroOperacion, this.usuario).subscribe( data =>{
+        if(data.entidad){
+          console.log( 'Mi operacion ->', data.entidad );
+          this.router.navigate(['cliente/gestion-cliente/NOV/',this.numeroOperacion]);
+        }
+      });
     }else{
       this.sinNotSer.setNotice('Seleccione una opcion valida', 'error');
     }
@@ -227,7 +246,7 @@ export class CrearRenovacionComponent implements OnInit {
       data: data
     });
     dialogRef.afterClosed().subscribe(r => {
-      this.regresar();
+      this.router.navigate(['negociacion/bandeja-operaciones']);
     });
   }
   public validacionFecha() {

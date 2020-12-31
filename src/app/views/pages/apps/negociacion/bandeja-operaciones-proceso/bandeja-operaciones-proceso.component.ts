@@ -240,10 +240,13 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         this.router.navigate(['negociacion/gestion-negociacion/NEG/',row.id]);    
       }
       if(row.proceso == 'RENOVACION'){
-        this.sinNotSer.setNotice("HISTORIA DE RENOVACION AUN NO EXISTE","error");
-        console.log('Me fui jiji ->',row.id);
-        this.limpiarFiltros();
-        this.router.navigate(['negociacion/bandeja-operaciones']);
+        console.log('row.codigoBpm ? ->', row.codigoBpm);
+        this.pro.traerNumeroOperacionMadre(row.codigoBpm).subscribe(data =>{
+          if(data.entidad){
+            console.log('numero operacion ? ->', data.entidad);
+            this.router.navigate(['novacion/crear-novacion/', data.entidad]);
+          }
+        });
       }
       if(row.proceso == 'DEVOLUCION'){
         this.sinNotSer.setNotice("HISTORIA DE DEVOLUCION AUN NO EXISTE","error");

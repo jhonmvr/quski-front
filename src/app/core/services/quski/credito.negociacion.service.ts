@@ -72,6 +72,17 @@ export class CreditoNegociacionService extends BaseService {
         error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
       )
     );
+  }  
+  public crearCreditoRenovacion( opcion, numeroOperacionMadre, asesor) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest + "crearCreditoRenovacion" ;
+    this.params = new HttpParams().set('numeroOperacionMadre', numeroOperacionMadre).set('asesor', asesor);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, opcion, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
 
   public traerCreditoNegociacionExistente(idNegociacion: number) {
