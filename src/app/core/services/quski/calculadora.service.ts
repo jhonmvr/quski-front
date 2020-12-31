@@ -33,7 +33,19 @@ export class CalculadoraService extends BaseService {
     this.params = this.params.set('riesgoTotal',riesgoTotal);
    }
    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options).pipe(
+    return this.http.get(serviceUrl,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+  public simularOfertaRenovacion(montoSolicitado, riesgoTotal, coberturaExcepcionada, codigoAgencia, wrapper) {
+    const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOfertaRenovacion';
+    this.params = new HttpParams();
+    this.params = this.params.set('montoSolicitado',montoSolicitado).set('riesgoTotal',riesgoTotal).set('coberturaExcepcionada',coberturaExcepcionada).set('codigoAgencia',codigoAgencia);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { this.HandleError(error, new ReNoticeService(),this.dialog); }

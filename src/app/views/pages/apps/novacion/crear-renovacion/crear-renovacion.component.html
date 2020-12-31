@@ -1,3 +1,6 @@
+<div class="spinner-container" *ngIf="loading | async">
+	<mat-spinner class="spiner"></mat-spinner>
+</div> 
 <re-portlet>
 	<re-portlet-header [title]="'Renovar Credito'" [class]="'kt-portlet__head--lg'">
 		<ng-container ktPortletTools>
@@ -13,50 +16,55 @@
 			<mat-step label='Informacion de operacion'>
 				<form [formGroup]="formOperacion">
 					<div class="row">
-						<div class="col-md-6">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="codigoBpm" placeholder="codigo BPM"/>
-							</mat-form-field>
-                        </div>
-                        <div class="col-md-6">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="codigoOperacion" placeholder="Codigo Operacion"/>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="codigoOperacion" placeholder="Codigo Operacion"/>
 							</mat-form-field>
                         </div>					
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="nombreCompleto" placeholder="Nombre Completo"/>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="cedulaCliente" placeholder="Cedula Cliente"/>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="codigoBpm" placeholder="codigo BPM"/>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput [formControl]="proceso" placeholder="Proceso"/>
 							</mat-form-field>
                         </div>		
-                        <div class="col-md-6">
+                        <div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput [formControl]="estadoProceso" placeholder="Estado Proceso"/>
 							</mat-form-field>
                         </div>			
-                        <div class="col-md-6">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="nombreCompleto" placeholder="Nombre Completo"/>
-							</mat-form-field>
-                        </div>
-                        <div class="col-md-6">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="cedulaCliente" placeholder="Cedula Cliente"/>
-							</mat-form-field>
-						</div>
 					</div>
 				</form>
 			</mat-step>
 			<mat-step label='Detalle de garantias'> 
 				<mat-table class="garantia" [dataSource]="dataSourceTasacion" >
+                    <ng-container matColumnDef="Total">
+                        <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.total }} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> Totales: </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="TipoOro">
+                        <mat-header-cell *matHeaderCellDef> Tipo de oro </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.tipoOro }} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
 					<ng-container matColumnDef="NumeroPiezas">
 						<mat-header-cell *matHeaderCellDef>N. de piezas</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.numeroPiezas }} </mat-cell>
                         <mat-footer-cell *matFooterCellDef>  {{ totalNumeroJoya  }}</mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="TipoOro">
-						<mat-header-cell *matHeaderCellDef> Tipo de oro </mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.tipoOro }} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="PesoBruto">
 						<mat-header-cell *matHeaderCellDef>Peso bruto</mat-header-cell>
@@ -89,7 +97,7 @@
                         <mat-footer-cell *matFooterCellDef> {{ totalValorA | currency: "USD":true:"1.2" }} </mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="ValorAplicable">
-						<mat-header-cell *matHeaderCellDef> Valor comercial</mat-header-cell>
+						<mat-header-cell *matHeaderCellDef> Valor Aplicable</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.valorAplicable }}</mat-cell>
 						<td align="right" mat-footer-cell *matFooterCellDef> </td>
 					</ng-container>
@@ -110,7 +118,7 @@
 					</ng-container>
 					<ng-container matColumnDef="detallePiedras">
 						<mat-header-cell *matHeaderCellDef>Detalle Piedras</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.detallePiedras}}</mat-cell>
+						<mat-cell *matCellDef="let element"> {{ element.detallePiedras }}</mat-cell>
                         <mat-footer-cell *matFooterCellDef></mat-footer-cell>
 					</ng-container>
 					<ng-container matColumnDef="TipoJoya">
@@ -133,7 +141,7 @@
 					<mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
 					<mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
                 </mat-table>
-                <div class="row">
+                <div class="row mt-2">
                     <div class="col-4 offset-5">
                         <button mat-stroked-button color="primary" matStepperNext (click)="simularOpciones()">
 							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
@@ -145,7 +153,13 @@
 			<mat-step label='Simular opciones de crédito'>
                 <div class="row">
                     <div class="col-12">
-                        <mat-table [dataSource]="dataSourceCreditoNegociacion">
+                        <mat-table class="simulacion"  [dataSource]="dataSourceCreditoNegociacion">
+                            <ng-container matColumnDef="accion">
+                                <mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
+                                <mat-cell *matCellDef="let row">
+                                  <mat-checkbox (change)="guardarSeleccion(row)"></mat-checkbox>
+                                </mat-cell>
+                            </ng-container>
                             <ng-container matColumnDef="plazo">
                                 <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.plazo }}</mat-cell>
@@ -302,7 +316,9 @@
                             <mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>
                         </mat-table>
                     </div>
-                    <div class="col-md-4">
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4" *ngIf="this.seleccion && this.seleccion.periodicidadPlazo == 'C'">
                         <mat-form-field class="mat-form-field-fluid">
                             <input [min]="fechaServer" (dateChange)="validacionFecha()" matInput #inputFechaCuota
                                 [matDatepicker]="pickerFechaCuota" placeholder="Fecha de la Cuota"
@@ -311,15 +327,15 @@
                             <mat-datepicker #pickerFechaCuota></mat-datepicker>
                         </mat-form-field>
                     </div>
-                    <div class="offset-4 col-2">
+                    <div class="offset-10 col-2">
                         <button mat-stroked-button color="primary" matStepperNext (click)="solicitarCobertura()">
-							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
 							<span color="primary">Solicitar Cobertura</span>
                         </button>
                     </div>
-                    <div class="col-2">
-                        <button mat-stroked-button color="primary" matStepperNext (click)="actualizarCliente()">
-							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
+                </div>
+                <div class="row">
+                    <div class="offset-5 col-2">
+                        <button mat-raised-button color="primary" matStepperNext (click)="actualizarCliente()">
 							<span color="primary">Actualizar Cliente</span>
                         </button>
                     </div>
