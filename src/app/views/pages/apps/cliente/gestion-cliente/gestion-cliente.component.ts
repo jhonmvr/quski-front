@@ -247,6 +247,7 @@ export class GestionClienteComponent implements OnInit {
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private cargarCampos() {
+    if(this.wrapper){
     console.log(' Antes de validacion -> ', this.wrapper);
     this.nombresCompletos.setValue(this.wrapper.cliente.nombreCompleto);
     this.nombresCompletos.disable();
@@ -399,6 +400,9 @@ export class GestionClienteComponent implements OnInit {
     this.calcularIngresoEgreso();
     this.loadingSubject.next(false);
     console.log(' Luego de validacion -> ', this.wrapper);
+    }else{
+      this.sinNoticeService.setNotice('Error cargando cliente','error');
+    }
   }
   private buscarCliente() {
     this.route.paramMap.subscribe((data: any) => {

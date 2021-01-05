@@ -13,8 +13,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { TbQoProceso } from 'src/app/core/model/quski/TbQoProceso';
-import { TbQoCreditoNegociacion } from 'src/app/core/model/quski/TbQoCreditoNegociacion';
+import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
+import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -149,22 +149,16 @@ export class CrearRenovacionComponent implements OnInit {
     this.loadingSubject.next(false);
   }
   public solicitarCobertura(){
-    if( this.seleccion ){
-      if(!this.credit.proceso){
-        this.cre.crearCreditoRenovacion( this.seleccion, this.numeroOperacion, this.usuario).subscribe( data =>{
-          if(data.entidad){
-            console.log( 'Mi operacion ->', data.entidad );
-            this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
-          }
-        });
-      }else{
-        this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
-      }
-
+    if(!this.credit.proceso){
+      this.cre.crearCreditoRenovacion( this.seleccion, this.numeroOperacion, this.usuario).subscribe( data =>{
+        if(data.entidad){
+          console.log( 'Mi operacion ->', data.entidad );
+          this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
+        }
+      });
     }else{
-      this.sinNotSer.setNotice('Seleccione una opcion valida', 'error');
+      this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
     }
-
   }
   public abrirPopupExcepciones(data: DataInjectExcepciones) {
     this.loadingSubject.next(false);

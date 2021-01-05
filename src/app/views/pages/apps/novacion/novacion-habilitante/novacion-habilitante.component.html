@@ -10,7 +10,7 @@
 	</re-portlet-header>
 	<re-portlet-body>
 		<mat-vertical-stepper #stepper>
-			<mat-step label='Datos Instruccion Oper'>
+			<mat-step label='Datos Instruccion Operacion'>
 				<form [formGroup]="formOperacion">
 					<div class="row">
 						<div class="col-md-4">
@@ -70,7 +70,38 @@
                                 </mat-select>
                             </mat-form-field>
 						</div>
-					</div>
+                    </div>
+                    <div class="row" *ngIf="tipoCliente.value && (tipoCliente.value.codigo == 'SAP' || tipoCliente.value.codigo == 'CYA')">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="nombreApoderado" placeholder="Nombre Completo (Apoderado)"/>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (Apoderado)"/>
+							</mat-form-field>
+                        </div>		
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [matDatepicker]="picker6" [formControl]="fechaNacimientoApoderado" placeholder="Fecha Nacimiento">
+                                <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                                <mat-datepicker #picker6></mat-datepicker>
+                            </mat-form-field>
+                        </div>					
+                    </div>
+                    <div class="row" *ngIf="this.tipoCliente.value && (tipoCliente.value.codigo == 'SCD' || tipoCliente.value.codigo == 'CYA')">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="nombreCodeudor" placeholder="Nombre Completo (Codeudor)"/>
+                            </mat-form-field>
+                        </div>				
+                        <div class="col-md-4">
+							<mat-form-field class="mat-form-field-fluid">
+								<input matInput [formControl]="identificacionCodeudor" placeholder="Identificacion (Codeudor)"/>
+							</mat-form-field>
+                        </div>		
+                    </div>
 				</form>
             </mat-step>
             <mat-step label='Comprobante De Pago'>

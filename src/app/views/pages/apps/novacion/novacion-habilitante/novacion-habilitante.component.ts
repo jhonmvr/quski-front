@@ -9,6 +9,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 
 @Component({
   selector: 'kt-novacion-habilitante',
@@ -28,6 +30,11 @@ export class NovacionHabilitanteComponent implements OnInit {
   public firmadaOperacion = new FormControl();
   public firmanteCuenta = new FormControl();
   public tipoCliente = new FormControl();
+  public identificacionApoderado = new FormControl();
+  public nombreApoderado = new FormControl();
+  public fechaNacimientoApoderado = new FormControl();
+  public identificacionCodeudor = new FormControl();
+  public nombreCodeudor = new FormControl();
   public dataSourceComprobante = new MatTableDataSource<any>();
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','subirComprobante','descargarComprobante'];
 
@@ -43,6 +50,7 @@ export class NovacionHabilitanteComponent implements OnInit {
     private cre: CreditoNegociacionService,
     private route: ActivatedRoute,
     private router: Router,
+    private sof: SoftbankService,
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService,
     private subheaderService: SubheaderService
@@ -54,9 +62,15 @@ export class NovacionHabilitanteComponent implements OnInit {
     this.formOperacion.addControl("firmadaOperacion", this.firmadaOperacion);
     this.formOperacion.addControl("firmanteCuenta", this.firmanteCuenta);
     this.formOperacion.addControl("tipoCliente", this.tipoCliente);
+    this.formOperacion.addControl("nombreApoderado", this.nombreApoderado);
+    this.formOperacion.addControl("fechaNacimientoApoderado", this.fechaNacimientoApoderado);
+    this.formOperacion.addControl("identificacionCodeudor", this.identificacionCodeudor);
+    this.formOperacion.addControl("nombreCodeudor", this.nombreCodeudor);
+    this.formOperacion.addControl("identificacionApoderado", this.identificacionApoderado);
   }
 
   ngOnInit() {
+    this.cargarCatalogos();
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
@@ -84,4 +98,30 @@ export class NovacionHabilitanteComponent implements OnInit {
   public eliminarComprobante(row){}
   public subirComprobante(row){}
   public descargarComprobante(row){}
+  /** @FUNCIONALIDAD */
+  private cargarCatalogos(){
+    this.sof.consultarFirmanteOperacionCS().subscribe( data =>{
+      this.firmanteCuentaCat = data.catalogo ? data.catalogo : ['No se cargo el catalogo. Error'];
+    });
+    this.sof.consultarBancosCS().subscribe( data =>{
+      this.catCuenta = data.catalogo ? data.catalogo :  ['No se cargo el catalogo. Error'];
+    });
+    this.sof.consultarTipoClienteCS().subscribe( data =>{
+      this.tipoClienteCat = data.catalogo ? data.catalogo :  ['No se cargo el catalogo. Error'];
+    });
+  }
+  public abrirSalirGestion(mensaje: string, titulo?: string) {
+    let data = {
+      mensaje: mensaje,
+      titulo: titulo ? titulo : null
+    }
+    const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+      width: "800px",
+      height: "auto",
+      data: data
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      this.router.navigate(['negociacion/bandeja-operaciones']);
+    });
+  }
 }
