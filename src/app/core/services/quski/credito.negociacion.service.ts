@@ -34,10 +34,22 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
-  public buscarRenovacion( numeroOperacion: string) {
+  public buscarRenovacionByNumeroOperacionMadre( numeroOperacion: string) {
     this.setParameter();
-    const serviceUrl = this.appResourcesUrl + 'creditoNegociacionRestController/buscarRenovacion';
+    const serviceUrl = this.appResourcesUrl + 'creditoNegociacionRestController/buscarRenovacionByNumeroOperacionMadre';
     this.params = new HttpParams().set('numeroOperacion', numeroOperacion);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }   
+  public buscarRenovacionByIdNegociacion( idNegociacion: number) {
+    this.setParameter();
+    const serviceUrl = this.appResourcesUrl + 'creditoNegociacionRestController/buscarRenovacionByIdNegociacion';
+    this.params = new HttpParams().set('idNegociacion', idNegociacion.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -73,11 +85,12 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }  
-  public crearCreditoRenovacion( opcion, numeroOperacionMadre, asesor) {
+  public crearCreditoRenovacion( opcion, garantias, numeroOperacionMadre, asesor) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "crearCreditoRenovacion" ;
     this.params = new HttpParams().set('numeroOperacionMadre', numeroOperacionMadre).set('asesor', asesor);
+    let wrapper = { opcion: opcion, garantias: garantias}
     this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, opcion, this.options).pipe(
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { this.HandleError(error, new ReNoticeService(),this.dialog); }

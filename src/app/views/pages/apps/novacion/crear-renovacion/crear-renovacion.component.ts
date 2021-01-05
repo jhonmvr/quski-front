@@ -1,6 +1,7 @@
 import { SolicitudDeExcepcionesComponent } from '../../../../partials/custom/popups/solicitud-de-excepciones/solicitud-de-excepciones.component';
 import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
+import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { DataInjectExcepciones } from '../../../../../core/model/wrapper/DataInjectExcepciones';
 import { CalculadoraService } from '../../../../../core/services/quski/calculadora.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
@@ -8,13 +9,12 @@ import { environment } from '../../../../../../../src/environments/environment.p
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
+import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
-import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -29,10 +29,12 @@ export class CrearRenovacionComponent implements OnInit {
   public usuario: string;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
-  private credit: { detalle: any, proceso: TbQoProceso, credito: TbQoCreditoNegociacion}
+  private credit: { operacionAnterior: any, proceso: TbQoProceso, credito: TbQoCreditoNegociacion}
   private numeroOperacion;
   public fechaUtil: diferenciaEnDias;
   public seleccion;
+  private garantiasSimuladas: any[];
+
   private fechaServer;
   public totalPesoB;
   public totalPesoN;
@@ -99,7 +101,7 @@ export class CrearRenovacionComponent implements OnInit {
       if (json.params.numeroOperacion) {
         this.numeroOperacion = json.params.numeroOperacion;
         this.loadingSubject.next(true);
-        this.cre.buscarRenovacion(json.params.numeroOperacion).subscribe((data: any) => {
+        this.cre.buscarRenovacionByNumeroOperacionMadre(json.params.numeroOperacion).subscribe((data: any) => {
           this.credit = data.entidad;
           console.log("datos ->", this.credit);
           if (this.credit ) {
@@ -124,7 +126,7 @@ export class CrearRenovacionComponent implements OnInit {
     this.codigoBpm.setValue( wr.credito ? wr.credito.codigo : 'Sin asignar')
     this.proceso.setValue(   wr.proceso ? wr.proceso.proceso : 'Sin asignar');
     this.estadoProceso.setValue(wr.proceso ? wr.proceso.estadoProceso : 'Sin asignar');
-    this.dataSourceTasacion.data = wr.tasacion ? wr.tasacion : wr.detalle.garantias ;
+    this.dataSourceTasacion.data = wr.tasacion ? wr.tasacion : wr.operacionAnterior.garantias ;
     this.dataSourceTasacion.data ? this.dataSourceTasacion.data.forEach(e=>{
       /* e.tipoOro = this.catTipoOro.find( x => x.codigo == e.codigoTipoOro ) ? this.catTipoOro.find( x => x.codigo == e.codigoTipoOro ).nombre: 'Error de Catalogo';
       e.descuentoPesoPiedra = e.descuentoPiedras;
@@ -142,15 +144,15 @@ export class CrearRenovacionComponent implements OnInit {
       this.totalValorR += e.valorRealizacion
       this.totalValorC += e.valorComercial
     }) : null ;
-    this.codigoOperacion.setValue(wr.detalle.credito.numeroOperacion);
-    this.nombreCompleto.setValue(wr.detalle.cliente.nombreCompleto);
-    this.cedulaCliente.setValue(wr.detalle.cliente.identificacion);
-    this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.detalle.credito.numeroOperacion + ".", "success");
+    this.codigoOperacion.setValue(wr.operacionAnterior.credito.numeroOperacion);
+    this.nombreCompleto.setValue(wr.operacionAnterior.cliente.nombreCompleto);
+    this.cedulaCliente.setValue(wr.operacionAnterior.cliente.identificacion);
+    this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.operacionAnterior.credito.numeroOperacion + ".", "success");
     this.loadingSubject.next(false);
   }
   public solicitarCobertura(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion( this.seleccion, this.numeroOperacion, this.usuario).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.usuario).subscribe( data =>{
         if(data.entidad){
           console.log( 'Mi operacion ->', data.entidad );
           this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
@@ -183,7 +185,7 @@ export class CrearRenovacionComponent implements OnInit {
   }
   public actualizarCliente(){
     if( this.seleccion ){
-      this.cre.crearCreditoRenovacion( this.seleccion, this.numeroOperacion, this.usuario).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.usuario).subscribe( data =>{
         if(data.entidad){
           console.log( 'Mi operacion ->', data.entidad );
           this.router.navigate(['cliente/gestion-cliente/NOV/',this.numeroOperacion]);
@@ -200,15 +202,19 @@ export class CrearRenovacionComponent implements OnInit {
   public simularOpciones(){
     this.loadingSubject.next(true);
     let cliente = {} as cliente;
-    cliente.identificacion = this.credit.detalle.cliente.identificacion;
-    cliente.fechaNacimiento = this.credit.detalle.cliente.fechaNacimiento;
-    this.credit.detalle.cliente = cliente;
-    console.log('wrapper de salida ->', this.credit.detalle);
-    this.cal.simularOfertaRenovacion(0,0,0,2, this.credit.detalle).subscribe( (data: any) =>{
+    cliente.identificacion = this.credit.operacionAnterior.cliente.identificacion;
+    cliente.fechaNacimiento = this.credit.operacionAnterior.cliente.fechaNacimiento;
+    this.credit.operacionAnterior.cliente = cliente;
+    console.log('wrapper de salida ->', this.credit.operacionAnterior);
+    this.cal.simularOfertaRenovacion(0,0,0,2, this.credit.operacionAnterior).subscribe( (data: any) =>{
       if(data.entidad){
         console.log('Data de simulacion -->',data.entidad);
         data.entidad.simularResult.codigoError > 0 ? this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
           : this.sinNotSer.setNotice("Seleccione una opcion de credito para continuar", 'success') ;
+        this.garantiasSimuladas = [];
+        data.entidad.simularResult.xmlGarantias.Garantias.garantia.forEach(e => {
+          this.garantiasSimuladas.push( e );
+        });
         this.dataSourceCreditoNegociacion.data = data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
         this.loadingSubject.next(false);
       }
