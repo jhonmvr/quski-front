@@ -164,6 +164,18 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   public calcularOpciones() {
     if (this.dataSourceTasacion && this.dataSourceTasacion.data && this.dataSourceTasacion.data.length > 0) {
       this.loadingSubject.next(true);
+      this.wp.proceso.proceso == "RENOVACION" ? 
+        this.cal.simularOfertaRenovacionExcepcion(this.wp.credito.idAgencia, this.wp.credito.numeroOperacionMadre).subscribe( data =>{
+          this.loadingSubject.next(false);
+          if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
+            && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
+            && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
+              this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado);
+              this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+          }
+        },err=>{
+          this.loadingSubject.next(false);
+        }):
       this.cal.simularOferta(this.wp.credito.id, null, null).subscribe((data: any) => {
         this.loadingSubject.next(false);
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 

@@ -40,6 +40,18 @@ export class CalculadoraService extends BaseService {
       )
     );
   }
+  public simularOfertaRenovacionExcepcion(codigoAgencia, numeroOperacionMadre) {
+    const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOfertaRenovacionExcepcion';
+    this.params = new HttpParams();
+    this.params = this.params.set('codigoAgencia',codigoAgencia).set('numeroOperacionMadre',numeroOperacionMadre);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
   public simularOfertaRenovacion(montoSolicitado, riesgoTotal, coberturaExcepcionada, codigoAgencia, wrapper) {
     const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOfertaRenovacion';
     this.params = new HttpParams();

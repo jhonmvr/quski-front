@@ -212,9 +212,9 @@ export class CrearRenovacionComponent implements OnInit {
         data.entidad.simularResult.codigoError > 0 ? this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
           : this.sinNotSer.setNotice("Seleccione una opcion de credito para continuar", 'success') ;
         this.garantiasSimuladas = [];
-        data.entidad.simularResult.xmlGarantias.Garantias.garantia.forEach(e => {
+        data.entidad.simularResult.xmlGarantias ? data.entidad.simularResult.xmlGarantias.garantias.garantia.forEach(e => {
           this.garantiasSimuladas.push( e );
-        });
+        }): null;
         this.dataSourceCreditoNegociacion.data = data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
         this.loadingSubject.next(false);
       }
