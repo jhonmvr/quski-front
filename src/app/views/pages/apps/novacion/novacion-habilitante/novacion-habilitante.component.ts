@@ -42,7 +42,10 @@ export class NovacionHabilitanteComponent implements OnInit {
   public firmaCat = ['SI','NO'];
   public firmadaOperacionCat:[];
   public firmanteCuentaCat:[];
-  public tipoClienteCat:[];
+  public tipoClienteCat;
+  numeroOperacion: any;
+  credit: any;
+
   
   
 
@@ -71,7 +74,6 @@ export class NovacionHabilitanteComponent implements OnInit {
 
   ngOnInit() {
     this.cargarCatalogos();
-    this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.inicioDeFlujo();
@@ -80,12 +82,29 @@ export class NovacionHabilitanteComponent implements OnInit {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.numeroOperacion) {
         this.loadingSubject.next(true);
-        // Agregar busqueda el credito;
+        this.numeroOperacion = json.params.numeroOperacion;
+        this.loadingSubject.next(true);
+        this.cre.buscarRenovacionByNumeroOperacionMadre(json.params.numeroOperacion).subscribe((data: any) => {
+          this.credit = data.entidad;
+          console.log("datos ->", this.credit);
+          if (this.credit ) {
+            this.cargarCampos( this.credit  );
+          }else{
+            this.abrirSalirGestion("Error al intentar cargar el credito.");
+          }
+        });
       } 
     });
   }
-
-  public regresar(){}
+  private cargarCampos(wr) {
+    this.subheaderService.setTitle('Codigo Bpm: '+ wr.credito.codigo );
+    this.tipoCliente.setValue (this.tipoClienteCat.find(x => x.codigo == 'DEU') );
+    this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.credito.codigo + ".", "success");
+    this.loadingSubject.next(false);
+  }
+  public regresar(){
+    this.router.navigate(['negociacion/bandeja-operaciones']);
+  }
   public agregarComprobante(){
     const dialogRef = this.dialog.open(PopupPagoComponent, {
       width: "800px",

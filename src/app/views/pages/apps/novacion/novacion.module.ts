@@ -54,7 +54,7 @@ const routes: Routes = [
 				pathMatch: 'full'
 			},
 			{
-				path: 'crear-novacion/:numeroOperacion',
+				path: 'crear-novacion/:codigo/:item',
 				component: CrearRenovacionComponent
 			},
 			{

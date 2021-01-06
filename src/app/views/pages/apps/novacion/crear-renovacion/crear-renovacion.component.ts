@@ -98,18 +98,33 @@ export class CrearRenovacionComponent implements OnInit {
   /** @CREDITO */
   private inicioDeFlujo() {
     this.route.paramMap.subscribe((json: any) => {
-      if (json.params.numeroOperacion) {
-        this.numeroOperacion = json.params.numeroOperacion;
-        this.loadingSubject.next(true);
-        this.cre.buscarRenovacionByNumeroOperacionMadre(json.params.numeroOperacion).subscribe((data: any) => {
-          this.credit = data.entidad;
-          console.log("datos ->", this.credit);
-          if (this.credit ) {
-            this.cargarCampos( this.credit  );
-          }else{
-            this.abrirSalirGestion("Error al intentar cargar el credito.");
-          }
-        });
+      if (json.params.item && json.params.codigo) {
+        if( json.params.codigo == 'NOV'){
+          this.loadingSubject.next(true);
+          this.cre.buscarRenovacionByIdNegociacion(json.params.item).subscribe((data: any) => {
+            this.credit = data.entidad;
+            console.log("datos ->", this.credit);
+            if (this.credit ) {
+              this.cargarCampos( this.credit  );
+            }else{
+              this.abrirSalirGestion("Error al intentar cargar el credito.");
+            }
+          });
+        }else if(json.params.codigo == 'OPE'){
+          this.loadingSubject.next(true);
+          this.cre.buscarRenovacionByNumeroOperacionMadre(json.params.item).subscribe((data: any) => {
+            this.credit = data.entidad;
+            console.log("datos ->", this.credit);
+            if (this.credit ) {
+              this.cargarCampos( this.credit  );
+            }else{
+              this.abrirSalirGestion("Error al intentar cargar el credito.");
+            }
+          });
+        }else{
+          this.abrirSalirGestion("Error al intentar cargar el credito.");
+        }
+        
       } 
     });
   }
@@ -123,6 +138,7 @@ export class CrearRenovacionComponent implements OnInit {
     this.totalValorR     = 0;
     this.totalValorC     = 0;
     this.total           = 0;
+    this.numeroOperacion = wr.operacionAnterior.credito.numeroOperacion;
     this.codigoBpm.setValue( wr.credito ? wr.credito.codigo : 'Sin asignar')
     this.proceso.setValue(   wr.proceso ? wr.proceso.proceso : 'Sin asignar');
     this.estadoProceso.setValue(wr.proceso ? wr.proceso.estadoProceso : 'Sin asignar');
@@ -152,7 +168,7 @@ export class CrearRenovacionComponent implements OnInit {
   }
   public solicitarCobertura(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.usuario).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.credit.proceso? this.credit.proceso.idReferencia : null,  this.usuario).subscribe( data =>{
         if(data.entidad){
           console.log( 'Mi operacion ->', data.entidad );
           this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
@@ -185,7 +201,7 @@ export class CrearRenovacionComponent implements OnInit {
   }
   public actualizarCliente(){
     if( this.seleccion ){
-      this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.usuario).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.credit.proceso? this.credit.proceso.idReferencia : null, this.usuario).subscribe( data =>{
         if(data.entidad){
           console.log( 'Mi operacion ->', data.entidad );
           this.router.navigate(['cliente/gestion-cliente/NOV/',this.numeroOperacion]);
