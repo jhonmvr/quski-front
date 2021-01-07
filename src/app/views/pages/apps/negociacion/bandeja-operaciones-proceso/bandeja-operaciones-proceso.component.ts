@@ -241,12 +241,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       }
       if(row.proceso == 'RENOVACION'){
         console.log('row.codigoBpm ? ->', row.codigoBpm);
-        this.pro.traerNumeroOperacionMadre(row.codigoBpm).subscribe(data =>{
-          if(data.entidad){
-            console.log('numero operacion ? ->', data.entidad);
-            this.router.navigate(['novacion/crear-novacion/', data.entidad]);
-          }
-        });
+        this.router.navigate(['novacion/crear-novacion/NOV/', row.id]);
       }
       if(row.proceso == 'DEVOLUCION'){
         this.sinNotSer.setNotice("HISTORIA DE DEVOLUCION AUN NO EXISTE","error");

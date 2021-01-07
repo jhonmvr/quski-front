@@ -110,7 +110,7 @@ export class CrearRenovacionComponent implements OnInit {
               this.abrirSalirGestion("Error al intentar cargar el credito.");
             }
           });
-        }else if(json.params.codigo == 'OPE'){
+        }else if(json.params.codigo == 'CRE'){
           this.loadingSubject.next(true);
           this.cre.buscarRenovacionByNumeroOperacionMadre(json.params.item).subscribe((data: any) => {
             this.credit = data.entidad;
