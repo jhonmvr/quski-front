@@ -57,7 +57,6 @@ export class CrearRenovacionComponent implements OnInit {
   public estadoProceso = new FormControl();
   public nombreCompleto = new FormControl();
   public cedulaCliente = new FormControl();
-  public fechaCuota = new FormControl();
   
   public dataSourceTasacion = new MatTableDataSource<any>();
   public displayedColumnsTasacion = ['Total','NumeroPiezas','PesoBruto','PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'TipoOro','TipoJoya', 'EstadoJoya', 'Descripcion',  'DescuentoSuelda', 'DescuentoPesoPiedra', 'tienePiedras', 'detallePiedras'];
@@ -92,7 +91,6 @@ export class CrearRenovacionComponent implements OnInit {
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.setFechaSistema();
     this.inicioDeFlujo();
   }
   /** @CREDITO */
@@ -204,7 +202,7 @@ export class CrearRenovacionComponent implements OnInit {
       this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.credit.proceso? this.credit.proceso.idReferencia : null, this.usuario).subscribe( data =>{
         if(data.entidad){
           console.log( 'Mi operacion ->', data.entidad );
-          this.router.navigate(['cliente/gestion-cliente/NOV/',this.numeroOperacion]);
+          this.router.navigate(['cliente/gestion-cliente/NOV/',this.credit.proceso.idReferencia]);
         }
       });
     }else{
@@ -264,19 +262,5 @@ export class CrearRenovacionComponent implements OnInit {
     dialogRef.afterClosed().subscribe(r => {
       this.router.navigate(['negociacion/bandeja-operaciones']);
     });
-  }
-  public validacionFecha() {
-    this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value), new Date(this.fechaServer))
-    if (Math.abs(this.fechaUtil.obtenerDias()) >= 30 && Math.abs(this.fechaUtil.obtenerDias()) <= 45) {
-      console.log("Esta dentro del rango")
-    } else {
-      this.sinNotSer.setNotice("DEBE ESCOGER ENTRE 30 Y 45 DÍAS", 'error');
-    }
-    console.log("los dias  de diferencia", this.fechaUtil.obtenerDias())
-  }
-  private setFechaSistema() {
-    this.cre.getSystemDate().subscribe((fechaSistema: any) => {
-      this.fechaServer = new Date(fechaSistema.entidad);
-    })
   }
 }

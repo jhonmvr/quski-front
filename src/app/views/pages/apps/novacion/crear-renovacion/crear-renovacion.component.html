@@ -317,23 +317,8 @@
                         </mat-table>
                     </div>
                 </div>
+
                 <div class="row mt-3">
-                    <div class="col-md-4" *ngIf="this.seleccion && this.seleccion.periodicidadPlazo == 'C'">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [min]="fechaServer" (dateChange)="validacionFecha()" matInput #inputFechaCuota
-                                [matDatepicker]="pickerFechaCuota" placeholder="Fecha de la Cuota"
-                                [formControl]="fechaCuota"/>
-                            <mat-datepicker-toggle matSuffix [for]="pickerFechaCuota"></mat-datepicker-toggle>
-                            <mat-datepicker #pickerFechaCuota></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div class="offset-10 col-2">
-                        <button mat-stroked-button color="primary" matStepperNext (click)="solicitarCobertura()">
-							<span color="primary">Solicitar Cobertura</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="offset-5 col-2">
                         <button mat-raised-button color="primary" matStepperNext (click)="actualizarCliente()">
 							<span color="primary">Actualizar Cliente</span>
