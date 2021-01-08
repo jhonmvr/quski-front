@@ -314,7 +314,8 @@ export class BaseService {
       errorMessage = 'Error: ' + error.statusText;
     } else {
       errorMessage = 'Error: ' +
-        (error.error.mensaje === undefined || error.error.mensaje === null ? error.message : error.error.mensaje);
+        (error.error === undefined || error.error === null ?error:
+          error.error.mensaje === undefined || error.error.mensaje === null ? error.message : error.error.mensaje);
     }
 
     return throwError(errorMessage);
