@@ -1,16 +1,19 @@
-
+import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { PopupPagoComponent } from '../../../../partials/custom/popups/popup-pago/popup-pago.component';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../environments/environment.prod';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Page } from '../../../../../core/model/page';
 import { BehaviorSubject } from 'rxjs';
-import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
-import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { RegistrarPagoService } from '../../../../../core/services/quski/registrarPago.service';
+
 
 @Component({
   selector: 'kt-novacion-habilitante',
@@ -36,11 +39,11 @@ export class NovacionHabilitanteComponent implements OnInit {
   public identificacionCodeudor = new FormControl('', [Validators.required]);
   public nombreCodeudor = new FormControl('', [Validators.required]);
   public dataSourceComprobante = new MatTableDataSource<any>();
-  public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','subirComprobante','descargarComprobante'];
+  public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','descargarComprobante'];
 
   public catCuenta;
   public catfirma = ['SI','NO'];
-  public catfirmadaOperacion=['Algo?'];
+  public catfirmadaOperacion: {nombre, codigo}[];
   public catFirmanteOperacion;
   public catTipoCliente;
   idNegociacion: any;
@@ -51,12 +54,14 @@ export class NovacionHabilitanteComponent implements OnInit {
 
   constructor(
     private cre: CreditoNegociacionService,
+    private reg: RegistrarPagoService,
+    private sof: SoftbankService,
     private route: ActivatedRoute,
     private router: Router,
-    private sof: SoftbankService,
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService,
-    private subheaderService: SubheaderService
+    private subheaderService: SubheaderService,
+
   ) { 
     this.formOperacion.addControl("tipoDeCuenta", this.tipoDeCuenta);
     this.formOperacion.addControl("numeroCuenta", this.numeroCuenta);
@@ -91,6 +96,7 @@ export class NovacionHabilitanteComponent implements OnInit {
     });
   }
   private cargarCampos(wr) {
+    this.catfirmadaOperacion = [{nombre:'Algo?', codigo:'algo'}];
     console.log('Data para cargar: ', wr);
     this.subheaderService.setTitle('Codigo Bpm: '+ wr.credito.codigo );
     if(wr.credito.periodoPlazo == 'C'){ this.formOperacion.addControl("diaFijoPago", this.diaFijoPago); }
@@ -111,12 +117,35 @@ export class NovacionHabilitanteComponent implements OnInit {
     const dialogRef = this.dialog.open(PopupPagoComponent, {
       width: "800px",
       height: "auto",
-      data: null
+      data: this.credit.credito.id
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      console.log('Regresando de Popup pago ----> ' + r);
+      if (r) {
+        this.sinNotSer.setNotice('ARCHIVO CARGADO CORRECTAMENTE','success');
+        this.cargarComprobante(r);
+      }else{
+        this.sinNotSer.setNotice('ERROR CARGANDO ARCHIVO','error');
+      }
     });
   }
-  public solicitarAprobacion(){}
+  private cargarComprobante(r) {
+    this.dataSourceComprobante.data.push(r);
+    console.log('data =======>', this.dataSourceComprobante.data);
+  }
+  public solicitarAprobacion(){
+    if(this.dataSourceComprobante.data){
+      let wraper = { pagos: this.dataSourceComprobante.data };
+      this.reg.crearRegistrarComprobanteRenovacion(wraper).subscribe( (data: any)=>{
+        console.log(data);
+      }, error =>{
+        this.sinNotSer.setNotice('ERROR EN EL SERVICIO','error');
+      });
+    }else{
+      this.sinNotSer.setNotice('CARGUE AL MENOS UN COMPROBANTE DE PAGOS','error');
+    }
+  }
   public eliminarComprobante(row){}
-  public subirComprobante(row){}
   public descargarComprobante(row){}
   /** @FUNCIONALIDAD */
   private cargarCatalogos(){

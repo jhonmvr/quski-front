@@ -17,7 +17,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 export interface cliente {
   identificacion: string;
-  fechaNacimiento: Date;
+  fechaNacimiento: string;
 }
 @Component({
   selector: 'kt-crear-renovacion',
@@ -217,9 +217,10 @@ export class CrearRenovacionComponent implements OnInit {
     this.loadingSubject.next(true);
     let cliente = {} as cliente;
     cliente.identificacion = this.credit.operacionAnterior.cliente.identificacion;
-    cliente.fechaNacimiento = this.credit.operacionAnterior.cliente.fechaNacimiento;
+    let fecha = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
+    cliente.fechaNacimiento = (fecha.getDate() < 10 ? '0'+fecha.getDate() : fecha.getDate()) +'/' + (fecha.getMonth() < 10 ? '0'+fecha.getMonth() : fecha.getMonth())  +'/' + fecha.getFullYear(); 
     this.credit.operacionAnterior.cliente = cliente;
-    this.credit.operacionAnterior.fechaNacimiento = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
+    //this.credit.operacionAnterior.fechaNacimiento = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
     console.log('wrapper de salida ->', this.credit.operacionAnterior);
     this.cal.simularOfertaRenovacion(0,0,0,2, this.credit.operacionAnterior).subscribe( (data: any) =>{
       if(data.entidad){

@@ -1,6 +1,4 @@
-import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { SubirComprobanteComponent } from './subir-comprobante/subir-comprobante.component';
-import { ReFileUploadService } from '../../../../../core/services/re-file-upload.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -14,15 +12,15 @@ export interface DataUpload {
   typeAction: string;
   relatedIdStr: string;
 }
-export interface DialogData {
-  idTipoDocumento: string;
-  tipo: string;
-  idCliente: number;
-  identificacion: string;
-  idCotizador: string;
-  idNegociacion: string;
-  nombresCompleto: string;
+export interface WrapperRegistro{
+  comprobante;
+  intitucionFinanciera;
+  numeroDeposito;
+  valorDepositado;
+  cuenta;
+  fechaPago;
 }
+
 @Component({
   selector: 'kt-popup-pago',
   templateUrl: './popup-pago.component.html',
@@ -40,11 +38,8 @@ export class PopupPagoComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: any,
     public dialogRefGuardar: MatDialogRef<any>,
-    private sinNotSer: ReNoticeService,
-    private dh: DocumentoHabilitanteService,
-    private upload: ReFileUploadService,
     private dialog: MatDialog,
-
+    private sinNoticeService: ReNoticeService,
   ) {
     this.formOperacion.addControl("intitucionFinanciera", this.intitucionFinanciera);
     this.formOperacion.addControl("numeroDeposito", this.numeroDeposito);
@@ -58,18 +53,6 @@ export class PopupPagoComponent implements OnInit {
   public cancelar(){
     this.dialogRefGuardar.close(false);
   }
-  public aceptar(){
-    if(this.formOperacion.valid){
-      const dialogRef = this.dialog.open(SubirComprobanteComponent, {
-        width: "800px",
-        height: "auto",
-        data: null
-      });
-      //this.dialogRefGuardar.close(true);
-    }else{
-      this.sinNotSer.setNotice('COMPLETE LOS CAMPOS CORRECTAMENTE', 'error');
-    }
-  }  
   public numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -77,6 +60,34 @@ export class PopupPagoComponent implements OnInit {
     }
     return true;
   }
-
-
+  loadArchivoCliente(element) {
+    console.log('Data desde el componente', this.data );
+    if(this.formOperacion.valid){
+      let d = {
+        idTipoDocumento: 10,
+        idCredito: this.data
+      };
+      const dialogRef = this.dialog.open(SubirComprobanteComponent, {
+        width: '500px',
+        height: 'auto',
+        data: d
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        if (r) {
+          let wrapperRegistro: WrapperRegistro = {
+            comprobante:r,
+            intitucionFinanciera: this.intitucionFinanciera.value,
+            numeroDeposito: this.numeroDeposito.value,
+            valorDepositado: this.valorDepositado.value,
+            cuenta: this.cuenta.value,
+            fechaPago: this.fechaPago.value
+          };
+          console.log('Regresando de Subir Comprobante ----> ' + wrapperRegistro);
+          this.dialogRefGuardar.close(wrapperRegistro);
+        }else{
+          this.sinNoticeService.setNotice('ERROR CARGANDO ARCHIVO','error');
+        }
+      });
+    }
+  }
 }
