@@ -1,8 +1,11 @@
 import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
-import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { PopupPagoComponent } from '../../../../partials/custom/popups/popup-pago/popup-pago.component';
+import { RegistrarPagoService } from '../../../../../core/services/quski/registrarPago.service';
+import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../environments/environment.prod';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
@@ -10,9 +13,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Page } from '../../../../../core/model/page';
 import { BehaviorSubject } from 'rxjs';
-import { RegistrarPagoService } from '../../../../../core/services/quski/registrarPago.service';
+import { saveAs } from 'file-saver';
 
 
 @Component({
@@ -47,7 +49,7 @@ export class NovacionHabilitanteComponent implements OnInit {
   public catFirmanteOperacion;
   public catTipoCliente;
   idNegociacion: any;
-  credit: any;
+  credit: {credito: TbQoCreditoNegociacion};
 
   
   
@@ -56,6 +58,7 @@ export class NovacionHabilitanteComponent implements OnInit {
     private cre: CreditoNegociacionService,
     private reg: RegistrarPagoService,
     private sof: SoftbankService,
+    private pro: ProcesoService,
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
@@ -130,23 +133,90 @@ export class NovacionHabilitanteComponent implements OnInit {
     });
   }
   private cargarComprobante(r) {
-    this.dataSourceComprobante.data.push(r);
+    const data = this.dataSourceComprobante.data;
+    data.push(r);
+    this.dataSourceComprobante = new MatTableDataSource<any>( data );
     console.log('data =======>', this.dataSourceComprobante.data);
   }
   public solicitarAprobacion(){
     if(this.dataSourceComprobante.data){
-      let wraper = { pagos: this.dataSourceComprobante.data };
-      this.reg.crearRegistrarComprobanteRenovacion(wraper).subscribe( (data: any)=>{
-        console.log(data);
-      }, error =>{
-        this.sinNotSer.setNotice('ERROR EN EL SERVICIO','error');
-      });
+      if(this.formOperacion.valid){
+        let mensaje = "Solicitar la aprobacion del credito: " + this.credit.credito.codigo;
+        const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+          width: "800px",
+          height: "auto",
+          data: mensaje
+        });
+        dialogRef.afterClosed().subscribe(r => {
+          this.loadingSubject.next(true);
+          if(r){
+            let wraper = { pagos: this.dataSourceComprobante.data, asesor: this.usuario, idCredito: this.credit.credito.id};
+            console.log( "id ===>", this.credit.credito.id );
+  
+            this.reg.crearRegistrarComprobanteRenovacion(wraper).subscribe( (data: any)=>{
+              if(data.entidades){
+                console.log( "Data de habiltantes ==>", data.entidades );
+                this.crearOperacion();
+              }else{
+              this.sinNotSer.setNotice('ERRROR AL GUARDAR LOS COMPROBANTES','error');
+              }
+            }, error =>{
+              this.sinNotSer.setNotice('ERROR EN EL SERVICIO','error');
+            });
+          }else{
+            this.loadingSubject.next(false);
+            this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
+          }
+        });  
+      }else{
+        this.sinNotSer.setNotice('Complete los campos correctamente','error');
+      }
     }else{
       this.sinNotSer.setNotice('CARGUE AL MENOS UN COMPROBANTE DE PAGOS','error');
     }
   }
-  public eliminarComprobante(row){}
-  public descargarComprobante(row){}
+  private crearOperacion(){
+      this.credit.credito.numeroCuenta = this.numeroCuenta.value;
+      this.credit.credito.pagoDia = this.diaFijoPago.value;
+      this.credit.credito.firmanteOperacion = this.firmanteCuenta.value.codigo;
+      this.credit.credito.tipoCliente = this.tipoCliente.value.codigo;
+      if( this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA'){
+        this.credit.credito.identificacionApoderado = this.identificacionApoderado.value;
+        this.credit.credito.nombreCompletoApoderado = this.nombreApoderado.value;
+        this.credit.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value;
+      }
+      if(this.tipoCliente.value.codigo == 'SCD' || this.tipoCliente.value.codigo == 'CYA'){
+        this.credit.credito.identificacionCodeudor = this.identificacionCodeudor.value;
+        this.credit.credito.nombreCompletoCodeudor = this.nombreCodeudor.value;
+      }
+      //public firmadaOperacion = new FormControl('', [Validators.required]);
+      //public firmaRegularizada = new FormControl('', [Validators.required]);
+      this.cre.crearOperacionRenovacion( this.credit.credito).subscribe( (data: any) =>{
+        if(data.entidad){
+          console.log( 'La data de la operacion creada -->',data.entidad);
+           this.pro.cambiarEstadoProceso(this.credit.credito.tbQoNegociacion.id,"RENOVACION","PENDIENTE_APROBACION").subscribe( (data: any) =>{
+            if(data.entidad){
+              console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+              this.router.navigate(['negociacion/bandeja-operaciones']);
+            }
+          });
+        }else{
+          this.sinNotSer.setNotice('ERROCREACION EL CREDITO EN SOFTBANK', 'error');
+        }
+      }, error =>{
+        this.sinNotSer.setNotice('ERROR EN LA CREACION DE LA OPERACION: Probablemente por la tabla de amoritzacion', 'error');
+      });
+  }
+  public eliminarComprobante(row){
+    const index = this.dataSourceComprobante.data.indexOf(row);
+    this.dataSourceComprobante.data.splice(index, 1);
+    const data = this.dataSourceComprobante.data;
+    this.dataSourceComprobante.data = data;
+
+  }
+  public descargarComprobante(row){
+    saveAs( row.comprobante.fileBase64, row.comprobante.name);
+  }
   /** @FUNCIONALIDAD */
   private cargarCatalogos(){
     this.sof.consultarFirmanteOperacionCS().subscribe( data =>{
