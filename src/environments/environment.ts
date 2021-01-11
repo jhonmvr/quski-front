@@ -20,7 +20,7 @@ export const environment = {
     userKey:"RE2001",
     rolKey:"re1002",
     rolName:"re1001",
-    rootKey:"/quski-front/",
+    rootKey:"quski-front/",
     mongoHabilitanteCollection:'documento-habilitante',
     appkey:"QUSKIBPM",
     //SOFTBANK

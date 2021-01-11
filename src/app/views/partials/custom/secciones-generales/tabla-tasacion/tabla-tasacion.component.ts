@@ -31,7 +31,7 @@ export class TablaTasacionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('DATAPOPUP TASACION===> ', this.dataPopup);
+    //console.log('DATAPOPUP TASACION===> ', this.dataPopup);
     this.direccionDeFlujo(this.dataPopup);
 
   }
@@ -43,14 +43,14 @@ export class TablaTasacionComponent implements OnInit {
   private direccionDeFlujo(data: DataPopup) {
 
     if (data.isNegociacion) {
-      console.log('INGRESA AL IF isNegociacion ');
-      console.log('data==> direccionDeFlujo ', JSON.stringify(data));
+      //console.log('INGRESA AL IF isNegociacion ');
+      //console.log('data==> direccionDeFlujo ', JSON.stringify(data));
       this.iniciaBusquedaNegociacion(data.idBusqueda);
     } else {
       if (data.isCalculadora) {
         this.iniciaBusquedaCalculadora(data.cedula);
       } else {
-        console.log("Error ----> NO HAY DATOS DE ENTRADA ", data)
+        //console.log("Error ----> NO HAY DATOS DE ENTRADA ", data)
       }
     }
   }
@@ -67,11 +67,11 @@ export class TablaTasacionComponent implements OnInit {
           this.dataSourceTasacion.data = this.entidadesTasaciones;
           this.enviarAlPadre(this.entidadesTasaciones);
         } else {
-          console.log("Error ----> Id de cotizacion no existe", cedula);
+          //console.log("Error ----> Id de cotizacion no existe", cedula);
         }
       });
     } else {
-      console.log("Error ----> Ingrese id de cotizador", cedula);
+      //console.log("Error ----> Ingrese id de cotizador", cedula);
     }
   }
 
@@ -85,18 +85,18 @@ export class TablaTasacionComponent implements OnInit {
             this.dataSourceTasacion.data = this.entidadesTasaciones;
             this.enviarAlPadre(this.entidadesTasaciones);
           } else {
-            console.log("Error ----> Id de cotizacion no existe", id);
+            //console.log("Error ----> Id de cotizacion no existe", id);
           }
         });
       } else {
-        console.log("Error ----> id cotizador Incorrecto", id);
+        //console.log("Error ----> id cotizador Incorrecto", id);
       }
     } else {
-      console.log("Error ----> Ingrese id de cotizador", id);
+      //console.log("Error ----> Ingrese id de cotizador", id);
     }
   }
   private enviarAlPadre(entidades: Array<TbQoTasacion>) {
-    console.log('Estoy enviando esto desde tasacion -----> ', entidades);
+    //console.log('Estoy enviando esto desde tasacion -----> ', entidades);
     this.entidades.emit(entidades);
   }
 }

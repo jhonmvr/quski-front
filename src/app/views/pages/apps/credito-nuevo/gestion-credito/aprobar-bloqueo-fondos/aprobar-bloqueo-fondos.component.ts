@@ -67,7 +67,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
 
   id;
   Aprobar() {
-    console.log("entra a popUp Aprobrar ")
+    //console.log("entra a popUp Aprobrar ")
     let idReferenciaHab = this.id;
     const dialogRef = this.dialog.open(DialogoAprobarBloqueoFondosComponent, {
       width: "auto-max",
@@ -84,7 +84,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
       
   let user = localStorage.getItem(localStorage.key(2));
       this.rp.aprobarPago(this.idCliente, this.estado, this.tipo, user).subscribe(q => {
-        console.log(" >>> ", this.rp);
+        //console.log(" >>> ", this.rp);
 
         this.loadingSubject.next(false);
         this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
@@ -95,7 +95,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
     });
   }
   Rechazar() {
-    console.log("entra a popUp Rechazar")
+    //console.log("entra a popUp Rechazar")
     let idReferenciaHab = this.id;
     const dialogRef = this.dialog.open(DialogoRechazarBloqueoFondosComponent, {
       width: "auto-max",
@@ -113,7 +113,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
       
   let user = localStorage.getItem(localStorage.key(2));
       this.rp.rechazarPago(this.idCliente, this.estado, this.tipo,user).subscribe(p => {
-        console.log(" >>> ", this.rp);
+        //console.log(" >>> ", this.rp);
 
         this.loadingSubject.next(false);
         this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
@@ -125,7 +125,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
   }
   deletFila(row) {
     let data = this.dataSource.data;
-    console.log("esta es la fila q quiero borrar", row)
+    //console.log("esta es la fila q quiero borrar", row)
     data.splice(row, 1);
     this.dataSource = new MatTableDataSource<any>(data);
   };
@@ -139,7 +139,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
       if (confirm("Realmente quiere descargar?")) {
         if( data && data.entidad ){
           let obj=JSON.parse( atob(data.entidad) );
-          console.log("entra a retorno json " + JSON.stringify( obj ));
+          //console.log("entra a retorno json " + JSON.stringify( obj ));
           const byteCharacters = atob(obj.fileBase64);
           const byteNumbers = new Array(byteCharacters.length);
           for (let i = 0; i < byteCharacters.length; i++) {
@@ -154,7 +154,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
       }
       },
       error => {
-        console.log("================>error: " + JSON.stringify(error));
+        //console.log("================>error: " + JSON.stringify(error));
         this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
       });
   }
@@ -171,7 +171,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
   /*consultarClienteSoftbankCS() {
     let entidadConsultaCliente = new ClienteSoftbank();
     entidadConsultaCliente.identificacion = this.identificacion;
-    console.log(" ---->>>>> ", entidadConsultaCliente.identificacion = this.identificacion);
+    //console.log(" ---->>>>> ", entidadConsultaCliente.identificacion = this.identificacion);
     entidadConsultaCliente.idTipoIdentificacion = 1;
 
     this.css.consultarClienteSoftbankCS(entidadConsultaCliente).subscribe((data: any) => {
@@ -199,7 +199,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
   ConsultarPagosId() {
     this.route.paramMap.subscribe((data: any) => {
       data.params.id;
-      console.log(" id = ? ", data.params.id)
+      //console.log(" id = ? ", data.params.id)
       if (data.params.id) {
         this.idCliente = data.params.id;
         let tipodb = "BLOQUEO_FONDO";
@@ -214,9 +214,9 @@ export class AprobarBloqueoFondosComponent implements OnInit {
             this.observacion.setValue(cliente.observacion);
             this.estado = cliente.estado;
             this.tipo = cliente.tipo;
-            console.log("Cliente: ----> ", this.estado);
-            console.log("Cliente: ----> ", this.tipo);
-            console.log("Consulta de pagos en clientePagoByIdCliente --> " + JSON.stringify(data));
+            //console.log("Cliente: ----> ", this.estado);
+            //console.log("Cliente: ----> ", this.tipo);
+            //console.log("Consulta de pagos en clientePagoByIdCliente --> " + JSON.stringify(data));
 
             this.dataSource = new MatTableDataSource<any>(data.entidades);
           } else {

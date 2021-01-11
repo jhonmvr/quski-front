@@ -153,9 +153,9 @@ joyasList  = []
     this.setFechaSistema();
     this.getParametros();
     this.cargarDatos();
-    console.log("el encode", )
-    console.log(typeof(this.catalagoEstadosCiviles))
-    console.log( this.catalagoEstadosCiviles)
+    //console.log("el encode", )
+    //console.log(typeof(this.catalagoEstadosCiviles))
+    //console.log( this.catalagoEstadosCiviles)
 
    
    
@@ -193,7 +193,7 @@ joyasList  = []
     let listDatosCreditos = []
     this.devService.getDevolucion(this.idDevolucion).subscribe((data:any)=> {
       if(data.entidad){
-        console.log("Hello", data.entidad)
+        //console.log("Hello", data.entidad)
         this.codigoOperacion.setValue(data.entidad.codigoOperacion)
         this.procesoDev.setValue("DEVOLUCION")
         this.cedulaCliente.setValue(data.entidad.cedulaCliente)
@@ -235,7 +235,7 @@ joyasList  = []
       
        
         this.idDevolucion = params.get('idDevolucion');
-        console.log("parametro", this.idDevolucion)
+        //console.log("parametro", this.idDevolucion)
        
       },
       error => {
@@ -249,7 +249,7 @@ joyasList  = []
 setFechaSistema(){
   this.cns.getSystemDate().subscribe((fechaSistema: any) => {
    this.fechaServer = new Date( fechaSistema.entidad);
-   console.log(this.fechaServer) 
+   //console.log(this.fechaServer) 
   })
 }
   
@@ -268,7 +268,7 @@ getEdad(fechaValue){
 
   let ind = 0;
   if (this.dataSourceJoyas.data) {
-    //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
+    ////console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
  
     this.joyasList.forEach(element => {
       
@@ -298,7 +298,7 @@ consultarEducacionCS(){
 consultarPaisCS(){
   this.css.consultarPaisCS().subscribe((data:any)=> {
     if(!data.existeError){
-      console.log(data)
+      //console.log(data)
       this.catalogoPais = data.catalogo
     }
   })
@@ -319,7 +319,7 @@ validateHeredero(){
 aprobar(){
   this.devService.aprobarVerificacionFirmas(this.idDevolucion).subscribe((data:any)=> {
     
-    console.log(data.entidad)
+    //console.log(data.entidad)
 
     this.sinNoticeService.setNotice(
       "Se ha aprobado correctamente",
@@ -336,7 +336,7 @@ aprobar(){
 rechazar(){
   this.devService.rechazarVerificacionFirmas(this.idDevolucion).subscribe((data:any)=> {
     
-    console.log(data.entidad)
+    //console.log(data.entidad)
     this.sinNoticeService.setNotice(
       "Se ha rechazado correctamente",
       "success"

@@ -141,7 +141,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
         });
         this.rie.persistEntities(guardarCore).subscribe((data: any) => {
           if (data.entidades != null) {
-            console.log("Riesgo acumulado guadado en core");
+            //console.log("Riesgo acumulado guadado en core");
           } else {
             this.siN.setNotice('ERROR AL GUARDAR RIESGOS ACUMULADOS', 'error');
           }

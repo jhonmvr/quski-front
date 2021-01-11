@@ -32,7 +32,7 @@ export class AutorizacionService  {
 
 
   public login( authData):Observable<BaseWrapper>{
-    console.log("=========> ejecuta login");
+    //console.log("=========> ejecuta login");
    /* let wp={
       "entidad":{
         "idUsuario":authData.email,
@@ -47,7 +47,7 @@ export class AutorizacionService  {
   }
 
   public getRelative(token:string):Observable<any>{
-    console.log("=========> ejecuta relative");
+    //console.log("=========> ejecuta relative");
     
     const headersLoc= new HttpHeaders({
       //'Authorization':environment.authprefix+ token,
@@ -58,12 +58,12 @@ export class AutorizacionService  {
       headers: headersLoc,
       params:params
     };
-    console.log("===>getRelative optionsLoc " + JSON.stringify( optionsLoc ));
+    //console.log("===>getRelative optionsLoc " + JSON.stringify( optionsLoc ));
     return this.http.get<any>( atob(environment.app_p) , optionsLoc);
   }
 
   public getPerfil(token:string, usuario:string):Observable<Array<RolWrapper>>{
-    console.log("=========> ejecuta getperfil");
+    //console.log("=========> ejecuta getperfil");
    
     const paramsLoc = new HttpParams()
     .set("usuario", usuario)
@@ -74,7 +74,7 @@ export class AutorizacionService  {
       headers: headersLoc,
       params:paramsLoc
     };
-    console.log("===>getRelative getPerfil " + JSON.stringify( optionsLoc ));
+    //console.log("===>getRelative getPerfil " + JSON.stringify( optionsLoc ));
     return this.http.get<Array<RolWrapper>>(url,optionsLoc);
   }
 
@@ -93,16 +93,16 @@ export class AutorizacionService  {
 
   private userReturn(  dataLogin,dataParam,dataRoles:Array<RolWrapper>, credential): Observable<UsuarioAuth>{
         
-    //console.log( "++>FLAT MAP BUSCANDO PARAMETROS: " ) ;
-    //console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataLogin " + JSON.stringify(dataLogin) ) ;
-    //console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataParam " + JSON.stringify(dataParam) ) ;
-    //console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataRoles " + JSON.stringify(dataRoles) ) ;
+    ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: " ) ;
+    ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataLogin " + JSON.stringify(dataLogin) ) ;
+    ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataParam " + JSON.stringify(dataParam) ) ;
+    ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataRoles " + JSON.stringify(dataRoles) ) ;
     
    
 
     if( dataLogin && dataLogin.roles  ){
         this.setRe000(dataParam);                                                        
-        console.log( "++>termino busqueda de usuario canal: " + JSON.stringify( dataLogin)) ;
+        //console.log( "++>termino busqueda de usuario canal: " + JSON.stringify( dataLogin)) ;
                   
         
         let x:UsuarioAuth=new UsuarioAuth();
@@ -120,12 +120,12 @@ export class AutorizacionService  {
           localStorage.setItem("re1001",dataLogin.roles[0]);
             
         }
-        //console.log( "++>FLAT MAP BUSCANDO Preturn of(x);: " ) ;
+        ////console.log( "++>FLAT MAP BUSCANDO Preturn of(x);: " ) ;
      
         return of(x);
     } else {
   
-        //console.log("===================retorna false: " + JSON.stringify( dataLogin ));  
+        ////console.log("===================retorna false: " + JSON.stringify( dataLogin ));  
         let y:UsuarioAuth=new UsuarioAuth();
         y.existLogin=false;
               if( !dataLogin || !dataLogin.entidad ){
@@ -156,11 +156,11 @@ export class AutorizacionService  {
 
       
     getUserByToken(): Observable<User> {
-        console.log( "=====>mi getUserByToken " );
+        //console.log( "=====>mi getUserByToken " );
         //const userId = atob(localStorage.getItem(environment.authKey));
       
         //let url = atob( environment.seg_r ) + "login";
-        //console.log( "=====>mi getUserByToken userId " + userId );
+        ////console.log( "=====>mi getUserByToken userId " + userId );
         let user:User= new User();
         user.accessToken=localStorage.getItem(environment.authTokenKey);
         user.address=new Address();
@@ -171,7 +171,7 @@ export class AutorizacionService  {
         user.occupation="ND";
         user.password=undefined;
         user.phone="0987654321";
-        user.pic="./assets/media/users/300_25.jpg";
+        user.pic="./quski-front/assets/media/users/300_25.jpg";
         user.refreshToken=localStorage.getItem(environment.authTokenKey);
         user.roles=[2];
         user.socialNetworks=new SocialNetworks();
@@ -180,7 +180,7 @@ export class AutorizacionService  {
     }
 
     public athorizate(aplicacion):Observable<Array<any>> {
-      //console.log("===================>athorizate parametros "  );
+      ////console.log("===================>athorizate parametros "  );
       const userId = atob(localStorage.getItem(environment.authKey));
       let params = new HttpParams();
       params=params.set("idUsuario", userId.trim() );
@@ -199,16 +199,16 @@ export class AutorizacionService  {
       }
       return this.http.post( atob(environment.seg_r)+'menu',wp, optionsLoc).pipe(
         map((response: any) => {
-        //console.log( "!!!!!!!!!!!!!!!==respuesta authorizacion: " + JSON.stringify(response) );
+        ////console.log( "!!!!!!!!!!!!!!!==respuesta authorizacion: " + JSON.stringify(response) );
         let paginatedListx = response;//.json();
-        //console.log( "!!!!!!!!!!!!!!!==OPTION: " + JSON.stringify( paginatedListx ));
+        ////console.log( "!!!!!!!!!!!!!!!==OPTION: " + JSON.stringify( paginatedListx ));
         let items: Array<any> = [];
         if (paginatedListx) {
          
-          //console.log("submenues " + JSON.stringify(submenues));
+          ////console.log("submenues " + JSON.stringify(submenues));
           
           let submenues: Array<MenuResponse> = paginatedListx.menu;
-          console.log("recorriendo submenues " + submenues.length );
+          //console.log("recorriendo submenues " + submenues.length );
           for (var i = 0; i < submenues.length; i++) {
             //if (Number(submenues[i].nivel) == 1) {
               let item = new ItemView();
@@ -237,11 +237,11 @@ export class AutorizacionService  {
   
           
         }
-        //console.log( "==gerneando menu: " + JSON.stringify(items));
+        ////console.log( "==gerneando menu: " + JSON.stringify(items));
         return items;
       },
         error => {
-          ////console.log("==>despues de buscar usuario error  " + JSON.stringify(error));
+          //////console.log("==>despues de buscar usuario error  " + JSON.stringify(error));
           return error;
         }));
     }
@@ -257,8 +257,8 @@ export class AutorizacionService  {
   }
 
   public logoutDialog(){
-    console.log("===>logput ");
-    console.log("===>logput " + this.store);
+    //console.log("===>logput ");
+    //console.log("===>logput " + this.store);
     this.store.dispatch(new Logout());
     this.removeRe000();
     this.router.navigate(['/']);
@@ -271,8 +271,8 @@ export class AutorizacionService  {
   
   
   public setRe000( re000 ){
-    //console.log("=======================> llenmando parametros " );
-    //console.log("=======================> llenmando parametros " + JSON.stringify( re000 ) );
+    ////console.log("=======================> llenmando parametros " );
+    ////console.log("=======================> llenmando parametros " + JSON.stringify( re000 ) );
     if( re000  ){ 
         for (var index = 1; index <= environment.paramsize; index++) {
             let key=environment.prefix + 'RE';
@@ -282,7 +282,7 @@ export class AutorizacionService  {
                 key=key+'0'+index; 
             }
             let p =re000[key];
-            //console.log("llenando parametro " + key + " valor " + p);
+            ////console.log("llenando parametro " + key + " valor " + p);
             localStorage.setItem(key, p);
         }
     }

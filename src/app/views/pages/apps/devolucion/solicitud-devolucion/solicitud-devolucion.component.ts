@@ -196,9 +196,9 @@ datos
     this.getParametros();
     this.cargarDatos();
     this.getJoyas();
-    console.log("el encode", )
-    console.log(typeof(this.catalagoEstadosCiviles))
-    console.log( this.catalagoEstadosCiviles)
+    //console.log("el encode", )
+    //console.log(typeof(this.catalagoEstadosCiviles))
+    //console.log( this.catalagoEstadosCiviles)
 
    
    
@@ -241,11 +241,11 @@ datos
     this.objetoCredito.fechaVencimiento = this.datos.fechaVencimiento
     this.objetoCredito.monto = this.datos.montoFinanciado
     listDatosCreditos.push(this.objetoCredito)
-    console.log(listDatosCreditos)
+    //console.log(listDatosCreditos)
     this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
     this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)
-    console.log("datasource Credito"  , this.objetoCredito)
-    console.log(this.datos.nombreCliente)
+    //console.log("datasource Credito"  , this.objetoCredito)
+    //console.log(this.datos.nombreCliente)
     this.procesoDev.setValue("DEVOLUCION")
     this.nombresCompletos.setValue(this.datos.nombreCliente)
     this.codigoOperacion.setValue(this.datos.numeroOperacion)
@@ -257,14 +257,14 @@ datos
   consultarClienteCS(){
     let entidadConsultaCliente = new ConsultaCliente();
     
-    //console.log(" "  + cedula)
+    ////console.log(" "  + cedula)
     entidadConsultaCliente.identificacion = this.datos.idCliente;
     entidadConsultaCliente.idTipoIdentificacion = 1;
 
     this.css.consultarClienteCS(entidadConsultaCliente).subscribe((data: any) => {
       if (data) {
-      console.log(data) 
-      console.log(data.codigoEstadoCivil)
+      //console.log(data) 
+      //console.log(data.codigoEstadoCivil)
       this.nivelEducacion.setValue(this.buscarEnCatalogo(this.catalogoEducacion, data.codigoEducacion).nombre)
       this.genero.setValue(this.buscarEnCatalogo(this.catalogoGenero, data.codigoSexo).nombre)
       this.estadoCivil.setValue(this.buscarEnCatalogo(this.catalagoEstadosCiviles, data.codigoEstadoCivil).nombre)
@@ -341,10 +341,10 @@ datos
     tbQoDevolucion.codigoOperacionMadre = this.datos.numeroOperacionMadre == null ? "" : this.datos.numeroOperacionMadre
     tbQoDevolucion.fundaMadre = "QUEMADA-13"
     tbQoDevolucion.fundaActual = "ACTQUE-14"
-    console.log(this.agenciaEntrega.value)
+    //console.log(this.agenciaEntrega.value)
     tbQoDevolucion.agenciaEntregaId  = this.agenciaEntrega.value.id
-    console.log(this.encodeObjetos(this.joyasList))
-    console.log("XD", this.decodeObjetoDatos(this.encodeObjetos(this.joyasList)));
+    //console.log(this.encodeObjetos(this.joyasList))
+    //console.log("XD", this.decodeObjetoDatos(this.encodeObjetos(this.joyasList)));
     tbQoDevolucion.valorCustodiaAprox = 12.00
     tbQoDevolucion.codeHerederos = this.encodeObjetos(this.listTablaHeredero)
     tbQoDevolucion.codeDetalleCredito = this.encodeObjetos(this.objetoCredito)
@@ -363,7 +363,7 @@ datos
           "Ocurrio un error al guardar",
           "warning"
         );
-        //console.log(rWClient);
+        ////console.log(rWClient);
       }
       
     })
@@ -375,7 +375,7 @@ datos
 setFechaSistema(){
   this.cns.getSystemDate().subscribe((fechaSistema: any) => {
    this.fechaServer = new Date( fechaSistema.entidad);
-   console.log(this.fechaServer) 
+   //console.log(this.fechaServer) 
   })
 }
   
@@ -388,10 +388,10 @@ getEdad(fechaValue){
 
  getJoyas(){
   this.totalResults = this.joyasList.length;
-  console.log( this.joyasList)
+  //console.log( this.joyasList)
   this.dataSourceJoyas = new MatTableDataSource<any>(this.joyasList);
   this.calcular()
-  console.log(this.totalValorAvaluo)
+  //console.log(this.totalValorAvaluo)
  }
 
 
@@ -407,7 +407,7 @@ calcular(){
  
   let ind = 0;
   if (this.dataSourceJoyas.data) {
-    //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
+    ////console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
     
     this.joyasList.forEach(element => {
     this.totalPesoNeto = Number(this.totalPesoNeto) + Number(element.pesoNeto);
@@ -424,15 +424,15 @@ calcular(){
 
 consultaGeneroCS(){
   this.css.consultarGeneroCS().subscribe((data:any)=>{
-    //console.log("me trajo data de catalogos de GENERO ----->" + JSON.stringify(data))
+    ////console.log("me trajo data de catalogos de GENERO ----->" + JSON.stringify(data))
     if (!data.existeError) {
 
       //this.listNombreGenero = data.catalogo;
-      console.log(" GENERO -----> " , data )
+      //console.log(" GENERO -----> " , data )
       this.catalogoGenero=data.catalogo
 
     } else {
-      //console.log("No me trajo data de catalogos de GENERO ----->" + JSON.stringify(data));
+      ////console.log("No me trajo data de catalogos de GENERO ----->" + JSON.stringify(data));
     } error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
@@ -446,15 +446,15 @@ consultaGeneroCS(){
 
 consultarEstadosCivilesCS(){
   this.css.consultarEstadosCivilesCS().subscribe((data: any)=> {
-    //console.log("Consulta de catalogos de estado civil ----->" + JSON.stringify(data));
+    ////console.log("Consulta de catalogos de estado civil ----->" + JSON.stringify(data));
     if (!data.existeError) {
       //this.listNombreEstadoCivil = data.catalogo;
-      console.log(data)
+      //console.log(data)
       this.catalagoEstadosCiviles = data.catalogo
       
       
     } else {
-      //console.log("No me trajo data de catalogos de ESTADO CIVIL ----->" + JSON.stringify(data));
+      ////console.log("No me trajo data de catalogos de ESTADO CIVIL ----->" + JSON.stringify(data));
     } error => {
       if (JSON.stringify(error).indexOf("codError") > 0) {
         let b = error.error;
@@ -476,7 +476,7 @@ consultarEducacionCS(){
 consultarPaisCS(){
   this.css.consultarPaisCS().subscribe((data:any)=> {
     if(!data.existeError){
-      console.log(data)
+      //console.log(data)
       this.catalogoPais = data.catalogo
     }
   })
@@ -486,7 +486,7 @@ consultarLugaresCS(){
   
     this.css.consultarDivicionPoliticaConsolidadaCS().subscribe((data:any)=>{
       if(!data.existeError){
-        console.log(data)
+        //console.log(data)
         this.catalogoLugarNacimiento = data.divisionPoliticaConsolidado
       }
     })
@@ -497,7 +497,7 @@ consultarLugaresCS(){
 consultarTipoCliente(){
   this.css.consultarTipoClienteCS().subscribe((data:any)=>{
     if(!data.existeError){
-      console.log(data)
+      //console.log(data)
       this.catalogoTipoCliente = data.catalogo
     }
   })
@@ -507,13 +507,13 @@ consultarTipoCliente(){
 consultarAgencia(){
   this.css.consultarAgenciasCS().subscribe((data:any)=>{
     if(!data.existeError){
-      console.log(data)
+      //console.log(data)
       this.catalogoAgencia = data.catalogo
     }
   })
 }
 
-validateHeredero(){
+validateHeredero(event){
   if (this.tipoCliente.value.toUpperCase()==="HEREDERO" ){
     this.enableHeredero.next(true)
     
@@ -538,7 +538,7 @@ agregarEnTabla(){
     objetoHeredero.nombre= this.nombreHeredero.value
     this.listTablaHeredero.push(objetoHeredero)
     this.dataSourceHeredero=new MatTableDataSource<any>(this.listTablaHeredero);
-    console.log(this.listTablaHeredero)
+    //console.log(this.listTablaHeredero)
   }else{
     this.sinNoticeService.setNotice("Debe agregar el nombre del heredero", 'error');
   }

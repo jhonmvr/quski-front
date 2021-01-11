@@ -78,7 +78,7 @@ export class ErrorPageComponent implements OnInit, OnDestroy {
 		switch (this.type) {
 			case 'error-v1':
 				if (!this.image) {
-					this.image = './assets/media/error/bg1.jpg';
+					this.image = './quski-front/assets/media/error/bg1.jpg';
 				}
 				if (!this.code) {
 					this.code = '404';
@@ -89,7 +89,7 @@ export class ErrorPageComponent implements OnInit, OnDestroy {
 				break;
 			case 'error-v2':
 				if (!this.image) {
-					this.image = './assets/media/error/bg2.jpg';
+					this.image = './quski-front/assets/media/error/bg2.jpg';
 				}
 				if (!this.code) {
 					this.code = '404';
@@ -115,7 +115,7 @@ export class ErrorPageComponent implements OnInit, OnDestroy {
 					this.desc = 'There may be amisspelling in the URL entered,<br>' + 'or the page you are looking for may no longer exist.';
 				}
 				if (!this.image) {
-					this.image = './assets/media/error/bg3.jpg';
+					this.image = './quski-front/assets/media/error/bg3.jpg';
 				}
 				break;
 			case 'error-v4':
@@ -129,7 +129,7 @@ export class ErrorPageComponent implements OnInit, OnDestroy {
 					this.desc = 'Nothing left to do here';
 				}
 				if (!this.image) {
-					this.image = './assets/media/error/bg4.jpg';
+					this.image = './quski-front/assets/media/error/bg4.jpg';
 				}
 				break;
 			case 'error-v5':
@@ -143,7 +143,7 @@ export class ErrorPageComponent implements OnInit, OnDestroy {
 					this.desc = 'We\'re working on it and we\'ll get it fixed<br>' + 'as soon possible.<br>' + 'You can back or use our Help Center.';
 				}
 				if (!this.image) {
-					this.image = './assets/media/error/bg5.jpg';
+					this.image = './quski-front/assets/media/error/bg5.jpg';
 				}
 				break;
 			case 'error-v6':
@@ -154,12 +154,12 @@ export class ErrorPageComponent implements OnInit, OnDestroy {
 					this.desc = 'Looks like something went wrong.<br>' + 'We\'re working on it';
 				}
 				if (!this.image) {
-					this.image = './assets/media/error/bg6.jpg';
+					this.image = './quski-front/assets/media/error/bg6.jpg';
 				}
 				break;
 			default:
 				if (!this.image) {
-					this.image = './assets/media/error/bg1.jpg';
+					this.image = './quski-front/assets/media/error/bg1.jpg';
 				}
 		}
 	}

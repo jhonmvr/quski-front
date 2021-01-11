@@ -119,7 +119,7 @@ export class TrackingPagosComponent implements OnInit {
       if (data.list) {            
         this.totalResults = data.totalResults;
         this.dataSource = new MatTableDataSource<TbQoTracking>(data.list);
-        console.log(" daos registro pagos ", data.list);
+        //console.log(" daos registro pagos ", data.list);
         //Tracking fecha
         for (let i = 0; i < this.dataSource.data.length; i++) {
           let a = this.dataSource.data[i].fechaInicio;

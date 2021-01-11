@@ -287,7 +287,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   private traerCatalogos() {
     this.loadingSubject.next(true);
     this.sof.traerCatalogos().subscribe((data: any) => {
-      console.log('Catalogos --> ', data.entidad);
+      //console.log('Catalogos --> ', data.entidad);
       if (data.entidad) {
         this.catalogos = data.entidad;
         this.catMotivoDevolucionAprobacion = this.catalogos.catMotivoDevolucionAprobacion;
@@ -303,7 +303,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
       if (data.params.id) {
         this.loadingSubject.next(true);
         this.cre.traerCreditoNegociacionExistente(data.params.id).subscribe((data: any) => {
-          console.log('Credito --> ', data.entidad);
+          //console.log('Credito --> ', data.entidad);
           if (!data.entidad.existeError) {
             this.crediW = data.entidad;
             this.traerCatalogos();
@@ -489,7 +489,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
                   this.cre.devolverAprobar( this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe( (data : any) =>{
                     this.loadingSubject.next(false);
                     if(data.entidad){
-                      console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+                      //console.log('El nuevo estado -> ',data.entidad.estadoProceso);
                       this.router.navigate(['aprobador']);  
                     }else{
                       this.sinNotSer.setNotice('Error actualizando el credito','error');
@@ -534,7 +534,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
               this.cre.devolverAprobar( this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe( (data : any) =>{
                 this.loadingSubject.next(false);
                 if(data.entidad){
-                  console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+                  //console.log('El nuevo estado -> ',data.entidad.estadoProceso);
                   this.router.navigate(['aprobador']);  
                 }else{
                   this.sinNotSer.setNotice('Error actualizando el credito','error');

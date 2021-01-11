@@ -42,7 +42,7 @@ export class DialogoAprobarBloqueoFondosComponent implements OnInit {
   
 
   aprobar() {
-    console.log("voy a aprobar ")
+    //console.log("voy a aprobar ")
     this.loadingSubject.next(true);
     if (this.formAprobarPagos.invalid) {
       this.loadingSubject.next(false);

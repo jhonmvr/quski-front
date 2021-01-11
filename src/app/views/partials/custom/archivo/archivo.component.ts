@@ -39,7 +39,7 @@ export class ArchivoComponent implements OnInit {
       });
      // console.log("===>>envio data: ",this.data );
       dialogRef.afterClosed().subscribe(r => {
-        console.log("===>>ertorno al cierre: " + JSON.stringify(r));
+        //console.log("===>>ertorno al cierre: " + JSON.stringify(r));
         if (r) {
         //  this.validar='ACT';
           this.sinNoticeService.setNotice(
@@ -51,7 +51,7 @@ export class ArchivoComponent implements OnInit {
         //this.submit();
       });
     /* } else {
-      console.log("===>>errorrrr al cierre: ");
+      //console.log("===>>errorrrr al cierre: ");
       this.sinNoticeService.setNotice(
         "ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO",
         "error"

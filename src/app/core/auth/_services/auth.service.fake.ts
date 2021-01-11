@@ -55,7 +55,7 @@ export class AuthService {
         user.roles = [2]; // Manager
         user.accessToken = 'access-token-' + Math.random();
         user.refreshToken = 'access-token-' + Math.random();
-        user.pic = './assets/media/users/default.jpg';
+        user.pic = './quski-front/assets/media/users/default.jpg';
 
         const httpHeaders = new HttpHeaders();
         httpHeaders.set('Content-Type', 'application/json');
@@ -93,16 +93,16 @@ export class AuthService {
     }
 
     getUserByToken(): Observable<User> {
-        console.log( "=====>getUserByToken " );
+        //console.log( "=====>getUserByToken " );
         const userToken = localStorage.getItem(environment.authTokenKey);
-        console.log( "=====>getUserByToken userToken " + userToken );
+        //console.log( "=====>getUserByToken userToken " + userToken );
         if (!userToken) {
             return of(null);
         }
 
         return this.getAllUsers().pipe(
             map((result: User[]) => {
-                console.log( "=====>getAllUsers userToken " + userToken );
+                //console.log( "=====>getAllUsers userToken " + userToken );
                 if (result.length <= 0) {
                     return null;
                 }

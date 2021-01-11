@@ -42,7 +42,7 @@ export class BaseService {
     this.params = new HttpParams();
     if (localStorage.getItem('reUser')) {
       this.headers= new HttpHeaders({ 'Content-Type': 'application/json' });
-      console.log("Hola, creaste los headers");
+      //console.log("Hola, creaste los headers");
       if( localStorage.getItem( environment.authTokenKey ) ){
         this.headers=new HttpHeaders({ 
           'Authorization':environment.authprefix+ localStorage.getItem(environment.authTokenKey),
@@ -181,8 +181,8 @@ export class BaseService {
   }
 
    public manageGenericUrl(wrapper: BaseWrapper, serviceUrl: string) {
-    console.log('==> manageGenericUrlxx ' + JSON.stringify(wrapper));
-    console.log('==> url ' + serviceUrl);
+    //console.log('==> manageGenericUrlxx ' + JSON.stringify(wrapper));
+    //console.log('==> url ' + serviceUrl);
     this.options = { headers: this.headers };
     return this.http.post<BaseWrapper>(serviceUrl, wrapper, this.options);
   }
@@ -238,7 +238,7 @@ export class BaseService {
   }
 
   findBytebyIdUrl(url: string, id: string, fileType: string) {
-    console.log('findBytebyIdUrl');
+    //console.log('findBytebyIdUrl');
     this.params = new HttpParams();
     this.params.set('id', id);
     this.params.set('fileType', fileType);
@@ -247,7 +247,7 @@ export class BaseService {
       params: this.params,
       responseType: 'blob'
     };
-    console.log('findBytebyIdUrl options ' + this.options);
+    //console.log('findBytebyIdUrl options ' + this.options);
     return this.http.get(
       url + '?id=' + id + '&codigo=' + fileType,
       this.options
@@ -295,7 +295,7 @@ export class BaseService {
           sinNoticeService.setNotice(error.message, 'error');
         }else{
           sinNoticeService.setNotice(error.error, 'error');
-          //console.log(error);
+          ////console.log(error);
         }
       }
     }

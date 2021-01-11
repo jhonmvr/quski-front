@@ -40,7 +40,7 @@ export class DialogoRechazarBloqueoFondosComponent implements OnInit {
   
 
   rechazar() {
-    console.log("voy a rechazar")
+    //console.log("voy a rechazar")
     this.loadingSubject.next(true);
     if (this.formRechazarPagos.invalid) {
       this.loadingSubject.next(false);

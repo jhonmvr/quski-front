@@ -27,7 +27,7 @@ export class User extends BaseModel {
         this.fullname = '';
         this.accessToken = 'access-token-' + Math.random();
         this.refreshToken = 'access-token-' + Math.random();
-        this.pic = './assets/media/users/default.jpg';
+        this.pic = './quski-front/assets/media/users/default.jpg';
         this.occupation = '';
         this.companyName = '';
         this.phone = '';

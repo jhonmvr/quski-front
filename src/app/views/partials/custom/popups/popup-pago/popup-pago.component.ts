@@ -60,8 +60,8 @@ export class PopupPagoComponent implements OnInit {
     }
     return true;
   }
-  loadArchivoCliente(element) {
-    console.log('Data desde el componente', this.data );
+  loadArchivoCliente() {
+    //console.log('Data desde el componente', this.data );
     if(this.formOperacion.valid){
       let d = {
         idTipoDocumento: 10,
@@ -82,7 +82,7 @@ export class PopupPagoComponent implements OnInit {
             cuenta: this.cuenta.value,
             fechaPago: this.fechaPago.value
           };
-          console.log('Regresando de Subir Comprobante ----> ' + wrapperRegistro);
+          //console.log('Regresando de Subir Comprobante ----> ' + wrapperRegistro);
           this.dialogRefGuardar.close(wrapperRegistro);
         }else{
           this.sinNoticeService.setNotice('ERROR CARGANDO ARCHIVO','error');

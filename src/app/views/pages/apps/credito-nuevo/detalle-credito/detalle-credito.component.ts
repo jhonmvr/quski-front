@@ -163,7 +163,7 @@ export class DetalleCreditoComponent implements OnInit {
     this.dataSourceRubro.data = this.wrapper.rubros;
     this.dataSourceGarantia.data = this.wrapper.garantias;
     this.dataSourceGarantia.data.forEach(e=>{
-      console.log("Catalogo de cobertura ->", this.catTipoGarantia);
+      //console.log("Catalogo de cobertura ->", this.catTipoGarantia);
       e.codigoTipoGarantia = this.catTipoGarantia.find(x => x.codigo == e.codigoTipoGarantia) ? this.catTipoGarantia.find(x => x.codigo == e.codigoTipoGarantia).nombre : 'Error en catalogo';
       e.tipoCobertura = this.catTipoCobertura.find(x => x.codigo == e.tipoCobertura ) ? this.catTipoCobertura.find(x => x.codigo == e.tipoCobertura).nombre : 'Error en catalogo';
       e.nombreAgenciaCustodia = this.catAgencia.find(x => x.id == e.idAgenciaCustodia).nombre;

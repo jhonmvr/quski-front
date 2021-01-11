@@ -41,7 +41,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<SolicitudAutorizacionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: string, public dialog: MatDialog, private upload: ReFileUploadService,
     private cs: ClienteService) {
-    console.log('>>><<<<<<<<<<<<<<< DATA COTIZACION' + JSON.stringify(data));
+    //console.log('>>><<<<<<<<<<<<<<< DATA COTIZACION' + JSON.stringify(data));
     this.formDatosSolicitud.addControl('nombresCompletos', this.nombresCompletos);
     this.formDatosSolicitud.addControl('identificacion', this.identificacion);
 
@@ -80,7 +80,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
 
   loadArchivoCliente(element) {
 
-    console.log('===>>ingreso: ', this.nombresCompletos.value);
+    //console.log('===>>ingreso: ', this.nombresCompletos.value);
     let d = {
       idTipoDocumento: 1,
       identificacionCliente: this.identificacion.value,
@@ -95,9 +95,9 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
       data: d
 
     });
-    console.log('===>>envio data: ', this.data);
+    //console.log('===>>envio data: ', this.data);
     dialogRef.afterClosed().subscribe(r => {
-      console.log('===>>ertorno al cierre: ' + JSON.stringify(r));
+      //console.log('===>>ertorno al cierre: ' + JSON.stringify(r));
       if (r) {
         this.validar = 'ACT';
         this.enableConsultar.next(true);
@@ -112,7 +112,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
 
     });
     /* } else {
-      console.log("===>>errorrrr al cierre: ");
+      //console.log("===>>errorrrr al cierre: ");
       this.sinNoticeService.setNotice(
         "ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO",
         "error"
@@ -128,7 +128,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe((r) => {
-        console.log("===>>ertorno al cierre: " + JSON.stringify( r ) );
+        //console.log("===>>ertorno al cierre: " + JSON.stringify( r ) );
         if (r) {
           this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE", 'success');
           //this.validateContratoByHabilitante();
@@ -136,7 +136,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
         //this.submit();
       });
     } else {
-      console.log("===>>errorrrr al cierre: "  );
+      //console.log("===>>errorrrr al cierre: "  );
       this.sinNoticeService.setNotice("ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO", 'error');
     } 
   } */
@@ -148,7 +148,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   consultar() {
 
     this.validar;
-    console.log('llegaaaa', this.validar);
+    //console.log('llegaaaa', this.validar);
     if (this.validar == 'ACT') {
       this.dialogRef.close(this.validar);
       this.equifax = 'Equifax';
@@ -160,9 +160,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   }
 
   onFileChange(event) {
-    console.log(
-      '===>contraro relate idContrato: ' + JSON.stringify(this.data)
-    );
+    //console.log('===>contraro relate idContrato: ' + JSON.stringify(this.data));
 
     let relatedstr = '';
     let process = '';
@@ -196,16 +194,16 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
 
   descargarPlantillaHabilitante(row) {
 
-    console.log('<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>', this.nombresCompletos.value, this.data);
+    //console.log('<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>', this.nombresCompletos.value, this.data);
     if (this.nombresCompletos.value != '') {
 
       this.dh.downloadAutorizacionPlantilla(1, 'PDF', this.nombresCompletos.value, this.identificacion.value).subscribe(
         (data: any) => {
-          //console.log("descargarNotificacion datos xx " + data.entidad);
-          //console.log("descargarNotificacion datos " + JSON.stringify(data));
+          ////console.log("descargarNotificacion datos xx " + data.entidad);
+          ////console.log("descargarNotificacion datos " + JSON.stringify(data));
           if (data) {
             //this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
-            //console.log("datos de salida",data);
+            ////console.log("datos de salida",data);
             saveAs(data, 'Carta solicitud Autorizacion Buro' + '.pdf');
             this.enableLoadArchivo.next(true);
             this.enableConsultar.next(false);
@@ -218,7 +216,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
           }
         },
         error => {
-          console.log('================>error: ' + JSON.stringify(error));
+          //console.log('================>error: ' + JSON.stringify(error));
           this.sinNoticeService.setNotice(
             'ERROR DESCARGA DE PLANTILLA HABILITANTE',
             'error'
@@ -231,10 +229,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
 
 
   public subirArchivoHabilitante() {
-    console.log(
-      '===> subirArchivoHabilitantecontraro relate id: ' +
-      JSON.stringify(this.data)
-    );
+    //console.log('===> subirArchivoHabilitantecontraro relate id: ' +JSON.stringify(this.data));
     this.enableLoadArchivo.next(false);
     this.enableConsultar.next(true);
     this.sinNoticeService.setNotice('SE SUBIO EXITOSAMENTE ', 'success');
@@ -253,26 +248,26 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
           this.dialogRef.close(data.relatedIdStr);
         },
         error => {
-          console.log("error llegado " + JSON.stringify(error.error));
+          //console.log("error llegado " + JSON.stringify(error.error));
           if (JSON.stringify(error.error).indexOf("codError") > 0) {
             //let b = JSON.parse( error._body );
             let b = error.error;
             // this.alert={id: 2,type: "danger",message: "ERROR EN LA CARGA DE ARCHIVO " + b.msgError};
             //this.sinNoticeService.setNotice("ERROR EN LA CARGA DE ARCHIVO " + b.msgError, 'error');
           } else {
-            console.log("error no java " + error);
+            //console.log("error no java " + error);
             // this.alert={id: 2,type: "danger",message: "ERROR EN LA CARGA DE ARCHIVO " };
             //this.sinNoticeService.setNotice("ERROR EN LA CARGA DE ARCHIVO", 'error');
           }
         }
       ); */
   }
-  /*  console.log(
+  /*  //console.log(
       "<<<<<<<<<<<<<<<< id>>>>>>>>>>>>>>>>",
       this.codigoContratoLocal
     );
-    console.log("descargarArchivoHabilitante");
-    console.log("entra a submit var json " + row.id);
+    //console.log("descargarArchivoHabilitante");
+    //console.log("entra a submit var json " + row.id);
     this.dh
       .downloadHabilitante(
         row.id
@@ -284,8 +279,8 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
       )
       .subscribe(
         (data: any) => {
-          console.log("descargarNotificacion datos xx " + data);
-          console.log("descargarNotificacion datos " + JSON.stringify(data));
+          //console.log("descargarNotificacion datos xx " + data);
+          //console.log("descargarNotificacion datos " + JSON.stringify(data));
           if (data) {
             this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
             saveAs(data, row.descripcion + ".pdf");
@@ -297,7 +292,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
           }
         },
         error => {
-          console.log("================>error: " + JSON.stringify(error));
+          //console.log("================>error: " + JSON.stringify(error));
           this.sinNoticeService.setNotice(
             "ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO",
             "error"
@@ -305,7 +300,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
         }
       );
 
-    //console.log("descargarNotificacion"); */
+    ////console.log("descargarNotificacion"); */
 }
 
 

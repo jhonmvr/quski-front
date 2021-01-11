@@ -9,7 +9,7 @@ import { DataPopup } from '../../../../../../core/model/wrapper/dataPopup';
   styleUrls: ['./detalles.component.scss']
 })
 export class DetallesComponent implements OnInit {
-  private dataPopup: DataPopup;
+  public dataPopup: DataPopup;
   constructor(
     public dialogRefGuardar: MatDialogRef<any>,
     @Inject(MAT_DIALOG_DATA) private data: TbQoPrecioOro,

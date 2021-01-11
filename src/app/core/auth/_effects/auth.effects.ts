@@ -36,6 +36,7 @@ export class AuthEffects {
             localStorage.removeItem("re1001");
             localStorage.removeItem("RE2000");
             localStorage.removeItem("RE2001");
+            localStorage.removeItem("layoutConfig");
                 localStorage.removeItem(environment.rolKey);
                 localStorage.removeItem("setRE000"); 
                 localStorage.removeItem("authcekey"); 
