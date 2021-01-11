@@ -11,36 +11,27 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./registar-pago-dialog.scss']
 })
 export class RegistarPagoDialogComponent implements OnInit {
+  public formCliente: FormGroup = new FormGroup({});
+  public institucionFinanciera = new FormControl('',[Validators.required]);
+  public numeroDeposito = new FormControl('',[Validators.required]);
+  public valorPagado = new FormControl('',[Validators.required]);
+  public cuentas = new FormControl('',[Validators.required]);
+  public fechaPago = new FormControl('',[Validators.required]);
 
   loadingSubject = new BehaviorSubject<boolean>(false);
-    constructor( public dialogRef: MatDialogRef<RegistarPagoDialogComponent>,
-      @Inject(MAT_DIALOG_DATA) public data:TbQoRegistrarPago  , public dataService: RegistrarPagoService ) { 
-    
-      }
-      public formCliente: FormGroup = new FormGroup({});
-      
-    institucionFinanciera = new FormControl('',[Validators.required]);
-    
-    numeroDeposito = new FormControl('',[Validators.required]);
-    
-    valorPagado = new FormControl('',[Validators.required]);
-    
-    cuentas = new FormControl('',[Validators.required]);
-    
-    fechaPago = new FormControl('',[Validators.required]);
-
- 
-
-      ngOnInit(){
-        this.institucionFinanciera.setValue("Mutualista Pichincha");
-
-        this.formCliente.addControl('institucionFinanciera',this.institucionFinanciera);
-        this.formCliente.addControl('numeroDeposito',this.numeroDeposito);
-        this.formCliente.addControl('valorPagado',this.valorPagado);
-        this.formCliente.addControl('cuentas',this.cuentas);
-        this.formCliente.addControl('fechaPago',this.fechaPago);
-
-      }
+  constructor( public dialogRef: MatDialogRef<RegistarPagoDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data:TbQoRegistrarPago  , public dataService: RegistrarPagoService ) { 
+      this.dataService.setParameter();
+  }
+  ngOnInit(){
+    this.dataService.setParameter();
+    this.institucionFinanciera.setValue("Mutualista Pichincha");
+    this.formCliente.addControl('institucionFinanciera',this.institucionFinanciera);
+    this.formCliente.addControl('numeroDeposito',this.numeroDeposito);
+    this.formCliente.addControl('valorPagado',this.valorPagado);
+    this.formCliente.addControl('cuentas',this.cuentas);
+    this.formCliente.addControl('fechaPago',this.fechaPago);
+  }
   /**
    * @description METODO QUE AGREGA UNA NUEVO PAGO
    */

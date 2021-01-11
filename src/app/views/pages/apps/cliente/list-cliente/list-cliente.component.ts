@@ -67,6 +67,7 @@ export class ListClienteComponent implements OnInit {
      }
 
   ngOnInit() {
+    this.clienteService.setParameter();
     //this.titulo.setNotice("GESTION DE CLIENTES")
     this.loading = this.loadingSubject.asObservable();
     // Set title to page breadCrumbs

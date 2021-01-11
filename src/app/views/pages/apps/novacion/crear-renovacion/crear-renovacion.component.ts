@@ -78,6 +78,10 @@ export class CrearRenovacionComponent implements OnInit {
     private sinNotSer: ReNoticeService,
     private subheaderService: SubheaderService
   ) { 
+    this.cre.setParameter();
+    this.sof.setParameter();
+    this.cal.setParameter();
+
     this.formOperacion.addControl("codigoBpm", this.codigoBpm);
     this.formOperacion.addControl("codigoOperacion", this.codigoOperacion);
     this.formOperacion.addControl("proceso", this.proceso);
@@ -87,6 +91,9 @@ export class CrearRenovacionComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cre.setParameter();
+    this.sof.setParameter();
+    this.cal.setParameter();
     this.cargarCatalogos();
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();

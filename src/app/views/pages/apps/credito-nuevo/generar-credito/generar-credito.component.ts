@@ -158,6 +158,11 @@ export class GenerarCreditoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cre.setParameter();
+    this.doc.setParameter();
+    this.obj.setParameter();
+    this.pro.setParameter();
+    this.sof.setParameter();
     this.loading = this.loadingSubject.asObservable();
     this.obtenerCatalogosSoftbank();
     this.setFechaSistema();

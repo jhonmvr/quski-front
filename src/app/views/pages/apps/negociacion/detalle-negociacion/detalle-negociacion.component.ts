@@ -59,6 +59,7 @@ export class DetalleNegociacionComponent implements OnInit {
     private router: Router
   ) {
     this.par.setParameter();
+    this.cre.setParameter();
     this.formDisable.addControl('nombre', this.nombre);
     this.formDisable.addControl('cedula', this.cedula);
     this.formDisable.addControl('fechaNacimiento', this.fechaNacimiento);
@@ -74,6 +75,7 @@ export class DetalleNegociacionComponent implements OnInit {
 
   ngOnInit() {
     this.par.setParameter();
+    this.cre.setParameter();    
     this.formDisable.disable();
     this.loading = this.loadingSubject.asObservable();
     this.subheaderService.setTitle('Gestion credito');

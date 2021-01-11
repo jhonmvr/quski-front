@@ -31,7 +31,7 @@ export class BloquearCreditoComponent implements OnInit {
   totalResults: number;
   //p = new Page();
   @ViewChild('sort1', { static: true }) sort: DialogoBloquearCreditoComponent;
-
+  id;
   public formBloqueoFondo: FormGroup = new FormGroup({});
   public identificacion = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public cedula = new FormControl('', [Validators.required, Validators.maxLength(13)]);
@@ -53,6 +53,8 @@ export class BloquearCreditoComponent implements OnInit {
     private os: ObjectStorageService,
     public dialog: MatDialog
     ) {
+    this.css.setParameter();
+    this.registrarPagoService.setParameter();
     this.upload.setParameter();
     this.os.setParameter();
     this.formBloqueoFondo.addControl("identificacion", this.identificacion);
@@ -62,11 +64,16 @@ export class BloquearCreditoComponent implements OnInit {
     this.formBloqueoFondo.addControl("valorDepositado", this.valorDepositado);
     this.formBloqueoFondo.addControl("observacion", this.observacion);
   }
-
-
-
-
-  id;
+  ngOnInit() {
+    this.css.setParameter();
+    this.registrarPagoService.setParameter();
+    this.upload.setParameter();
+    this.os.setParameter();
+    //falta el de rubros pre cancelacion
+    this.subheaderService.setTitle("Bloqueo de Fondos");
+    this.loading = this.loadingSubject.asObservable();
+    // this.submit();
+  }
   cargarPagos() {
     ////console.log("entra a popUp Aprobrar y Rechazar")
     let idReferenciaHab = this.id;
@@ -136,13 +143,6 @@ export class BloquearCreditoComponent implements OnInit {
       });
   }
 
-  ngOnInit() {
-    //this.testoperacionConsultaCS();
-    //falta el de rubros pre cancelacion
-    this.subheaderService.setTitle("Bloqueo de Fondos");
-    this.loading = this.loadingSubject.asObservable();
-    // this.submit();
-  }
 
 
 

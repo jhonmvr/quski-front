@@ -25,7 +25,7 @@ export class DialogoAprobarBloqueoFondosComponent implements OnInit {
     public dialogRef: MatDialogRef<DialogoAprobarBloqueoFondosComponent>,
     private sinNoticeService: ReNoticeService,
     @Inject(MAT_DIALOG_DATA) public data: TbQoRegistrarPago, public dataService: RegistrarPagoService) {
-
+      this.registrarPagoService.setParameter();
   }
 
   observacion = new FormControl('', [Validators.required]);
@@ -33,6 +33,7 @@ export class DialogoAprobarBloqueoFondosComponent implements OnInit {
 
 
   ngOnInit() {
+    this.registrarPagoService.setParameter();
     this.formAprobarPagos.addControl('observacion', this.observacion);
 
   }

@@ -37,14 +37,17 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private dataExcepciones: DataInjectExcepciones,
     public  dialogRef: MatDialogRef<SolicitudDeExcepcionesComponent>,
     private sinNotSer: ReNoticeService, 
-    private dialog: MatDialog, 
     private exc: ExcepcionService,
     private par: ParametroService,
     ) { 
+    this.exc.setParameter();
+    this.par.setParameter();
     this.formExcepciones.addControl("observacionAsesor", this.observacionAsesor);
   }
 
   ngOnInit() {
+    this.exc.setParameter();
+    this.par.setParameter();
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.buscarCatalogosTipoExcepcion();

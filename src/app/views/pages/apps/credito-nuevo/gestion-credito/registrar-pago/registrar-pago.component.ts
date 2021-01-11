@@ -59,6 +59,7 @@ export class RegistrarPagoComponent implements OnInit {
   public valorPreCancelado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public valorDepositado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public observacion = new FormControl('', [Validators.maxLength(150)]);
+  id;
   /**
    * 
    * @param  sinNoticeService;
@@ -70,26 +71,36 @@ export class RegistrarPagoComponent implements OnInit {
     private sinNoticeService: ReNoticeService,
     private registrarPagoService: RegistrarPagoService,
     private noticeService: ReNoticeService,
-    private upload: ReFileUploadService, private os: ObjectStorageService,
+    private upload: ReFileUploadService, 
+    private os: ObjectStorageService,
     public dialog: MatDialog) {
+      this.css.setParameter();
+      this.registrarPagoService.setParameter();
+      this.upload.setParameter();
+      this.os.setParameter();
+      this.formRegistrarPago.addControl("nombresCliente", this.nombreCliente);
+      this.formRegistrarPago.addControl("cedula", this.cedula);
+      this.formRegistrarPago.addControl("codigoOperacion", this.codigoOperacion);
+      this.formRegistrarPago.addControl("codigoCuentaMupi", this.codigoCuentaMupi);
+      this.formRegistrarPago.addControl("tipoCredito", this.tipoCredito);
+      this.formRegistrarPago.addControl("valorPreCancelado", this.valorPreCancelado);
+      this.formRegistrarPago.addControl("valorDepositado", this.valorDepositado);
+      this.formRegistrarPago.addControl("observacion", this.observacion);
+  }
+  ngOnInit() {
+    this.css.setParameter();
+    this.registrarPagoService.setParameter();
     this.upload.setParameter();
     this.os.setParameter();
-    this.formRegistrarPago.addControl("nombresCliente", this.nombreCliente);
-    this.formRegistrarPago.addControl("cedula", this.cedula);
-    this.formRegistrarPago.addControl("codigoOperacion", this.codigoOperacion);
-    this.formRegistrarPago.addControl("codigoCuentaMupi", this.codigoCuentaMupi);
-    this.formRegistrarPago.addControl("tipoCredito", this.tipoCredito);
-    this.formRegistrarPago.addControl("valorPreCancelado", this.valorPreCancelado);
-    this.formRegistrarPago.addControl("valorDepositado", this.valorDepositado);
-    this.formRegistrarPago.addControl("observacion", this.observacion);
+    this.testoperacionConsultaCS();
+    this.consultarClienteSoftbankCS();
+    this.testconsultaRubrosCS();
+    //falta el de rubros pre cancelacion
+    this.subheaderService.setTitle("Registrar Pago");
+    this.loading = this.loadingSubject.asObservable();
+    // this.submit();
   }
-
-  submit() {
-
-
-  }
-
-  id;
+  submit() {}
   cargarPagos() {
     //console.log("entra a popUp angregar pago")
     let idReferenciaHab = this.id;
@@ -162,16 +173,7 @@ export class RegistrarPagoComponent implements OnInit {
       });
   }
 
-  ngOnInit() {
-    this.testoperacionConsultaCS();
-    this.consultarClienteSoftbankCS();
-    this.testconsultaRubrosCS();
-    //falta el de rubros pre cancelacion
-    this.subheaderService.setTitle("Registrar Pago");
-    this.loading = this.loadingSubject.asObservable();
-    // this.submit();
-  }
-
+  
   consultarClienteSoftbankCS() {
     let entidadConsultaCliente = new ClienteSoftbank();
     //let cedula = this.identificacion.value;

@@ -38,14 +38,15 @@ export class TrackingPagosComponent implements OnInit {
   total: string;
   
   constructor(
-    private autorizacionService: AutorizacionService,
     private trackingService: TrackingService,
     private sinNoticeService: ReNoticeService,
-    private noticeService:ReNoticeService,
     public dialog: MatDialog
-  ) { }
+  ) { 
+    this.trackingService.setParameter();
+  }
 
   ngOnInit() {
+    this.trackingService.setParameter();
     //this.titulo.setNotice("GESTION DE CLIENTES")
     this.loading = this.loadingSubject.asObservable();
     this.initiateTablePaginator();

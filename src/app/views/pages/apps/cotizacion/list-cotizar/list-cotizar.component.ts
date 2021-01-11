@@ -61,7 +61,6 @@ export class ListCotizarComponent implements OnInit {
   private entidadesOpcionesCreditos: Array<OpcionesDeCredito> = null;
   private entidadesVariablesCrediticias: Array<TbQoVariablesCrediticia> = null;
   private entidadesDetalleCreditos: Array<TbQoDetalleCredito> = null;
-  private entidadesRiesgoAcumulados: Array<TbQoRiesgoAcumulado> = null;
   public entidadPrecioOro = new TbQoPrecioOro();
 
   // CATALOGOS SOFTBANK
@@ -139,13 +138,11 @@ export class ListCotizarComponent implements OnInit {
     private sof: SoftbankService,
     private cot: CotizacionService,
     private cli: ClienteService,
-    private tip: TipoOroService,
     private ing: IntegracionService,
     private vac: VariablesCrediticiasService,
     private det: DetalleCreditoService,
     private crm: CRMService,
     private par: ParametroService,
-    private rie: RiesgoAcumuladoService,
     private pre: PrecioOroService,
     private tra: TrackingService,
     private router: Router,
@@ -153,6 +150,16 @@ export class ListCotizarComponent implements OnInit {
     private sinNoticeService: ReNoticeService,
     private dialog: MatDialog
   ) {
+    this.sof.setParameter();
+    this.cot.setParameter();
+    this.cli.setParameter();
+    this.ing.setParameter();
+    this.vac.setParameter();
+    this.det.setParameter();
+    this.crm.setParameter();
+    this.par.setParameter();
+    this.pre.setParameter();
+    this.tra.setParameter();
 
     // FORM CLIENTE
     this.formBusqueda.addControl('cedula', this.identificacion);
@@ -178,6 +185,16 @@ export class ListCotizarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.sof.setParameter();
+    this.cot.setParameter();
+    this.cli.setParameter();
+    this.ing.setParameter();
+    this.vac.setParameter();
+    this.det.setParameter();
+    this.crm.setParameter();
+    this.par.setParameter();
+    this.pre.setParameter();
+    this.tra.setParameter();
     this.seleccionadoOro.quilate = '18K';
     this.subheaderService.setTitle('GESTION DE COTIZACION');
     this.limpiarCampos();

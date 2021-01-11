@@ -33,10 +33,11 @@ export class BandejaExcepcionesComponent implements OnInit {
     private sinNoticeService: ReNoticeService,
   ) {
     this.formBusqueda.addControl('cedula', this.identificacion);
-
+    this.exr.setParameter();
   }
 
   ngOnInit() {
+    this.exr.setParameter();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     //console.log('valor del usuario==> ', this.usuario);
     this.busquedaExcepciones(this.usuario);

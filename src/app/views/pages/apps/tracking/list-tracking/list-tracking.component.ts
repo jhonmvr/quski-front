@@ -51,17 +51,15 @@ export class ListTrackingComponent implements OnInit {
   public fechaHasta = new FormControl('', [Validators.required, Validators.maxLength(20)]);
 
   constructor(
-    private autorizacionService: AutorizacionService,
     private trackService: TrackingService,
     private sinNoticeService: ReNoticeService,
-    private noticeService: ReNoticeService,
     public dialog: MatDialog
   ) {
-
-
+    this.trackService.setParameter();
   }
 
   ngOnInit() {
+    this.trackService.setParameter();
     //this.submit();
     this.loading = this.loadingSubject.asObservable();
     this.SelectProceso();

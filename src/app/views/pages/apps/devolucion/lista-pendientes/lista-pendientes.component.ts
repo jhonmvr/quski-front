@@ -43,16 +43,14 @@ export class ListaPendientesComponent implements OnInit {
   
 
   constructor(public ds: DevolucionService,
-    
-    private sinNoticeService: ReNoticeService,
     private subheaderService: SubheaderService,
     private noticeService:ReNoticeService,
 		public dialog: MatDialog) {
-     
+      this.ds.setParameter();
      }
 
   ngOnInit() {
-  
+    this.ds.setParameter();
     this.loading = this.loadingSubject.asObservable();
     // Set title to page breadCrumbs
     this.subheaderService.setTitle('Pendiente de arribo');
