@@ -115,7 +115,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
           if(data.entidad){
             this.wp = data.entidad;
             this.excepcion = this.wp.excepciones.find(e => e.id == excepcionRol.id ); 
-            console.log('Hola x2?')
+            //console.log('Hola x2?')
             this.wp.credito && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' && this.excepcion ?  
             this.cargarCampos(this.wp) : this.sinNoticeService.setNotice('ERROR CARGANDO EXCEPCION','error');
             this.loadingSubject.next(false);
@@ -145,13 +145,13 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.observacionAsesor.disable();
     this.calcularOpciones();
     this.camposAdicinales( wp );
-    console.log('Mi excepcion --> ', this.excepcion);
+    //console.log('Mi excepcion --> ', this.excepcion);
     this.observacion = this.excepcion.observacionAsesor;
     this.loadingSubject.next(false);
   }
   public simular(){ 
     this.loadingSubject.next(true);
-    console.log('COBERTURA ---> ', this.cobertura.value )
+    //console.log('COBERTURA ---> ', this.cobertura.value )
     !this.cobertura.valid && this.observacionAprobador.valid  && this.cobertura.value >= 80 ? 
       this.sinNoticeService.setNotice('COMPLETE LA SECCION CORRECTAMENTE','error'):
         this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{
@@ -201,7 +201,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   }
   public negar(){ 
     if(this.observacionAprobador.valid){
-      console.log('ME FUI A NEGAR')
+      //console.log('ME FUI A NEGAR')
       this.simulado = false;
       let mensaje = 'Negar la excepcion de cobertura para: ' + this.wp.credito.codigo+'?'; 
       const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
@@ -220,7 +220,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   }
   public aprobar(){ 
     if(this.observacionAprobador.valid && this.cobertura.valid){
-      console.log('ME FUI A APROBAR')
+      //console.log('ME FUI A APROBAR')
       let mensaje = 'Aprobar la excepcion de cobertura para: ' + this.wp.credito.codigo+'?'; 
       const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
         width: "800px",

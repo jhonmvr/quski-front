@@ -100,7 +100,7 @@ export class NovacionHabilitanteComponent implements OnInit {
   }
   private cargarCampos(wr) {
     this.catfirmadaOperacion = [{nombre:'Algo?', codigo:'algo'}];
-    console.log('Data para cargar: ', wr);
+    //console.log('Data para cargar: ', wr);
     this.subheaderService.setTitle('Codigo Bpm: '+ wr.credito.codigo );
     if(wr.credito.periodoPlazo == 'C'){ this.formOperacion.addControl("diaFijoPago", this.diaFijoPago); }
     this.tipoCliente.setValue (this.catTipoCliente.find(x => x.codigo == 'DEU') );
@@ -123,7 +123,7 @@ export class NovacionHabilitanteComponent implements OnInit {
       data: this.credit.credito.id
     });
     dialogRef.afterClosed().subscribe(r => {
-      console.log('Regresando de Popup pago ----> ' + r);
+      //console.log('Regresando de Popup pago ----> ' + r);
       if (r) {
         this.sinNotSer.setNotice('ARCHIVO CARGADO CORRECTAMENTE','success');
         this.cargarComprobante(r);
@@ -136,7 +136,7 @@ export class NovacionHabilitanteComponent implements OnInit {
     const data = this.dataSourceComprobante.data;
     data.push(r);
     this.dataSourceComprobante = new MatTableDataSource<any>( data );
-    console.log('data =======>', this.dataSourceComprobante.data);
+    //console.log('data =======>', this.dataSourceComprobante.data);
   }
   public solicitarAprobacion(){
     if(this.dataSourceComprobante.data){
@@ -151,11 +151,11 @@ export class NovacionHabilitanteComponent implements OnInit {
           this.loadingSubject.next(true);
           if(r){
             let wraper = { pagos: this.dataSourceComprobante.data, asesor: this.usuario, idCredito: this.credit.credito.id};
-            console.log( "id ===>", this.credit.credito.id );
+            //console.log( "id ===>", this.credit.credito.id );
   
             this.reg.crearRegistrarComprobanteRenovacion(wraper).subscribe( (data: any)=>{
               if(data.entidades){
-                console.log( "Data de habiltantes ==>", data.entidades );
+                //console.log( "Data de habiltantes ==>", data.entidades );
                 this.crearOperacion();
               }else{
               this.sinNotSer.setNotice('ERRROR AL GUARDAR LOS COMPROBANTES','error');
@@ -193,10 +193,10 @@ export class NovacionHabilitanteComponent implements OnInit {
       //public firmaRegularizada = new FormControl('', [Validators.required]);
       this.cre.crearOperacionRenovacion( this.credit.credito).subscribe( (data: any) =>{
         if(data.entidad){
-          console.log( 'La data de la operacion creada -->',data.entidad);
+          //console.log( 'La data de la operacion creada -->',data.entidad);
            this.pro.cambiarEstadoProceso(this.credit.credito.tbQoNegociacion.id,"RENOVACION","PENDIENTE_APROBACION").subscribe( (data: any) =>{
             if(data.entidad){
-              console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+              //console.log('El nuevo estado -> ',data.entidad.estadoProceso);
               this.router.navigate(['negociacion/bandeja-operaciones']);
             }
           });
@@ -267,7 +267,7 @@ export class NovacionHabilitanteComponent implements OnInit {
   }
   public cambiarCliente(){
     this.limpiarGarantes();
-    console.log('Tipo de cliente solicitado ->', this.tipoCliente.value);
+    //console.log('Tipo de cliente solicitado ->', this.tipoCliente.value);
     if(this.tipoCliente.value && (this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA')){
       this.formOperacion.addControl("nombreApoderado", this.nombreApoderado);
       this.formOperacion.addControl("fechaNacimientoApoderado", this.fechaNacimientoApoderado);

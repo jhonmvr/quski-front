@@ -7,18 +7,18 @@ export class LayoutConfig {
 		self: {
 			layout: 'fluid', // fluid|boxed
 			body: {
-				'background-image': './assets/media/misc/bg-1.jpg',
+				'background-image': 'quski-front/assets/media/misc/bg-1.jpg',
 			},
 			logo: {
-				desktop: './assets/media/logos/logo-5.png',
-				sticky: './assets/media/logos/logo-5-sm.png',
+				desktop: 'quski-front/assets/media/logos/logo-5.png',
+				sticky: 'quski-front/assets/media/logos/logo-5-sm.png',
 			},
 		},
 		// == Page Splash Screen loading
 		loader: {
 			enabled: true,
 			type: 'spinner-logo',
-			logo: './assets/media/logos/logo-mini-md.png',
+			logo: 'quski-front/assets/media/logos/logo-mini-md.png',
 			message: 'Please wait...',
 		},
 		// == Colors for javascript

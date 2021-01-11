@@ -27,44 +27,44 @@ export class LanguageSelectorComponent implements OnInit {
 		{
 			lang: 'en',
 			name: 'English',
-			flag: './assets/media/flags/260-united-kingdom.svg'
+			flag: './quski-front/assets/media/flags/260-united-kingdom.svg'
 		},
 		{
 			lang: 'es',
 			name: 'Spanish',
-			flag: './assets/media/flags/104-ecuador.svg'
+			flag: './quski-front/assets/media/flags/104-ecuador.svg'
 		},
 	];
 	/*languages: LanguageFlag[] = [
 		{
 			lang: 'en',
 			name: 'English',
-			flag: './assets/media/flags/260-united-kingdom.svg'
+			flag: './quski-front/assets/media/flags/260-united-kingdom.svg'
 		},
 		{
 			lang: 'ch',
 			name: 'Mandarin',
-			flag: './assets/media/flags/034-china.svg'
+			flag: './quski-front/assets/media/flags/034-china.svg'
 		},
 		{
 			lang: 'es',
 			name: 'Spanish',
-			flag: './assets/media/flags/128-spain.svg'
+			flag: './quski-front/assets/media/flags/128-spain.svg'
 		},
 		{
 			lang: 'jp',
 			name: 'Japanese',
-			flag: './assets/media/flags/063-japan.svg'
+			flag: './quski-front/assets/media/flags/063-japan.svg'
 		},
 		{
 			lang: 'de',
 			name: 'German',
-			flag: './assets/media/flags/162-germany.svg'
+			flag: './quski-front/assets/media/flags/162-germany.svg'
 		},
 		{
 			lang: 'fr',
 			name: 'French',
-			flag: './assets/media/flags/195-france.svg'
+			flag: './quski-front/assets/media/flags/195-france.svg'
 		},
 	];*/
 

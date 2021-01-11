@@ -45,7 +45,7 @@ export class GestionNegociacionComponent implements OnInit {
   public loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
   // ENTIDADES
-  private negoW: NegociacionWrapper = null;
+  negoW: NegociacionWrapper = null;
   public componenteVariable: boolean;
   public componenteRiesgo: boolean;
   // CATALOGOS
@@ -139,6 +139,12 @@ export class GestionNegociacionComponent implements OnInit {
     private subheaderService: SubheaderService
   ) {
     
+
+    this.sof.setParameter();
+    this.par.setParameter();
+    this.cal.setParameter();
+    this.neg.setParameter();
+    this.tas.setParameter();
     //  RELACIONANDO FORMULARIO DE BUSQUEDA
     this.formBusqueda.addControl("identificacion", this.identificacion);
     //  RELACIONANDO FORMULARIO DE CLIENTE
@@ -174,6 +180,11 @@ export class GestionNegociacionComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.sof.setParameter();
+    this.par.setParameter();
+    this.cal.setParameter();
+    this.neg.setParameter();
+    this.tas.setParameter();
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
@@ -314,7 +325,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.neg.iniciarNegociacionFromCot( id, this.usuario ).subscribe( (wrapper: any) =>{
       if (wrapper.entidad.respuesta) {
         this.negoW = wrapper.entidad;
-        console.log("NEGOCIACION INICIADA POR COT-> ", wrapper.entidad);
+        //console.log("NEGOCIACION INICIADA POR COT-> ", wrapper.entidad);
         if (this.negoW.excepcionBre == "") {
           this.cargarValores(this.negoW, false);
         } else {
@@ -333,7 +344,7 @@ export class GestionNegociacionComponent implements OnInit {
       return;
     }    
     this.loadingSubject.next(true);  
-    console.log("entra a negociacion")
+    //console.log("entra a negociacion")
       this.neg.iniciarNegociacion(this.identificacion.value, this.usuario).subscribe((wrapper: any) => {
         if (wrapper.entidad.respuesta) {
           this.limpiarNegociacion();
@@ -418,7 +429,7 @@ export class GestionNegociacionComponent implements OnInit {
       data: cedula
     });
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
-      console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
+      //console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
       if (respuesta) {
         this.iniciarNegociacionEquifax(cedula);
       } else {
@@ -487,7 +498,7 @@ export class GestionNegociacionComponent implements OnInit {
       data: list
     });
     dialogRef.afterClosed().subscribe(r =>{
-      console.log("LLEGUE HASTA AQUI JEJE");
+      //console.log("LLEGUE HASTA AQUI JEJE");
     });
   }
   public abrirSalirGestion(data: any) {
@@ -529,7 +540,7 @@ export class GestionNegociacionComponent implements OnInit {
       data: data
     });
     dialogRefGuardar.afterClosed().subscribe((result: any) => {
-      console.log('envio de RESP ' + JSON.stringify(result) + ' typeof respuesta ' + typeof (result));
+      //console.log('envio de RESP ' + JSON.stringify(result) + ' typeof respuesta ' + typeof (result));
       if (result) {
         this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', false, 'EXCEPCION SOLICITADA');
       } else {
@@ -738,7 +749,7 @@ export class GestionNegociacionComponent implements OnInit {
     }
   }
   cargarJoya() {
-    console.log('formulario tasacion ===>>>',this.formTasacion)
+    //console.log('formulario tasacion ===>>>',this.formTasacion)
     if (this.formTasacion.invalid) {
       this.sinNotSer.setNotice('COMPLETE CORRECTAMENTE EL FORMULARIO', 'warning');
       return;
@@ -860,7 +871,7 @@ export class GestionNegociacionComponent implements OnInit {
 
   }
   updateCliente(event,control){
-    console.log("=========>",event,control);
+    //console.log("=========>",event,control);
 
     if(control.invalid || (event instanceof  KeyboardEvent && event.key !='Tab') ){
       return;
@@ -881,11 +892,11 @@ export class GestionNegociacionComponent implements OnInit {
         }
       });
     }else{
-      console.log("no guardar")
+      //console.log("no guardar")
     }
   }
   buildCliente(){
-    console.log("guardad")
+    //console.log("guardad")
     if( this.telefonoFijo){
       this.telefonoFijo.numero = this.telefonoDomicilio.value
     }else if(this.telefonoDomicilio.value){

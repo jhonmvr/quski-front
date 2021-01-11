@@ -100,7 +100,7 @@ export class ListTrackingComponent implements OnInit {
     p.sortFields = ordenarPor;
     p.sortDirections = tipoOrden;
     p.isPaginated = paginado;
-    //console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
+    ////console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
     return p;
   }
   /**
@@ -137,9 +137,9 @@ export class ListTrackingComponent implements OnInit {
     if (this.fechaHasta.value)
       trackingWrapper.fechaHasta = this.fechaHasta.value;
 
-    console.log("datos enviando", this.p, trackingWrapper);
+    //console.log("datos enviando", this.p, trackingWrapper);
     this.trackService.busquedaTracking(this.p, trackingWrapper).subscribe((data: any) => {
-      // console.log("====> datos: " + JSON.stringify(data));
+      // //console.log("====> datos: " + JSON.stringify(data));
 
       if (data.list != null) {
 
@@ -166,27 +166,27 @@ export class ListTrackingComponent implements OnInit {
   SelectProceso() {
     const listProcesos = this.trackService.listProceso(this.p).subscribe((data: any) => {
       let listProcesos = data.entidades;
-      console.log("Busqueda proceso --->>> ", listProcesos);
+      //console.log("Busqueda proceso --->>> ", listProcesos);
       this.e = listProcesos.map(e => {
         return e.replace(/_/gi, " ");
       });
       this.procesos = this.e;
-      console.log("Elimina guion --->>> ", this.procesos);
+      //console.log("Elimina guion --->>> ", this.procesos);
     });
 
   }
-  SelectActividad() {
+  SelectActividad(event) {
     this.enviaprocess = this.proceso.value.replace(/ /gi, "_");
-    console.log("Envia proceso con guion --->>> ", this.enviaprocess);
+    //console.log("Envia proceso con guion --->>> ", this.enviaprocess);
     const listActividad = this.trackService.listActividad(this.enviaprocess).subscribe((data: any) => {
       let listActividad = data.entidades;
-      console.log("Filtro para la activi --->>> ", this.listActividad);
+      //console.log("Filtro para la activi --->>> ", this.listActividad);
 
       this.a = listActividad.map(e => {
         return e.replace(/_/gi, " ");
       });
       this.listActividad = this.a;
-      console.log("Elimina guion --->>> ", this.listActividad);
+      //console.log("Elimina guion --->>> ", this.listActividad);
 
       this.listSeccion = null;
       this.actividad.setValue(null);
@@ -196,17 +196,17 @@ export class ListTrackingComponent implements OnInit {
       this.listSeccion = null;
     });
   }
-  SelectSeccion() {
+  SelectSeccion(event) {
     this.enviaActividad = this.actividad.value.replace(/ /gi, "_");
     const listSeccion = this.trackService.listSeccion(this.enviaActividad).subscribe((data: any) => {
       let listSeccion = data.entidades;
-      console.log("Filtro para la seccion --->>> ", this.listSeccion);
+      //console.log("Filtro para la seccion --->>> ", this.listSeccion);
 
       this.s = listSeccion.map(e => {
         return e.replace(/_/gi, " ");
       });
       this.listSeccion = this.s;
-      console.log("Elimina guion --->>> ", this.listSeccion);
+      //console.log("Elimina guion --->>> ", this.listSeccion);
 
     },
       error => { 
@@ -216,12 +216,12 @@ export class ListTrackingComponent implements OnInit {
   }
 
   /*submit() {
-    //console.log("====> paged: " + JSON.stringify( this.p ));
+    ////console.log("====> paged: " + JSON.stringify( this.p ));
     this.loadingSubject.next(true);
     this.dataSource = null;
     this.trackService.findAllTracking(this.p).subscribe((data: any) => {
       this.loadingSubject.next(false);
-      console.log("====> datos: " + JSON.stringify(data));
+      //console.log("====> datos: " + JSON.stringify(data));
       if (data.list) {
         this.totalResults = data.totalResults;
         this.dataSource = new MatTableDataSource<TbQoTracking>(data.list);

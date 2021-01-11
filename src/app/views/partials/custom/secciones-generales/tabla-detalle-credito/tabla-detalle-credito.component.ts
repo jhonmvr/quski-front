@@ -27,14 +27,14 @@ export class TablaDetalleCreditoComponent implements OnInit {
           if (data.list) {
             this.dataSourceDetalleCredito.data = data.list;
           } else {
-            console.log("Error ----> Id de cotizacion no existe", idCotizador);
+            //console.log("Error ----> Id de cotizacion no existe", idCotizador);
           } 
         });
       } else {
-        console.log("Error ----> id cotizador Incorrecto", idCotizador);
+        //console.log("Error ----> id cotizador Incorrecto", idCotizador);
       }
     } else {
-      console.log("Error ----> Ingrese id de cotizador", idCotizador);
+      //console.log("Error ----> Ingrese id de cotizador", idCotizador);
     }
   }
 }

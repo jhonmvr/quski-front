@@ -27,17 +27,17 @@ export class AddFechaComponent implements OnInit {
 
   ngOnInit() {
 
-    console.log("hello",this.idDevoluciones)
+    //console.log("hello",this.idDevoluciones)
   }
 
   registrarFecha(){
     this.fechaUtil = new diferenciaEnDias(new Date(this.fechaArribo.value))
     if(this.fechaArribo.value){
-      console.log("registrar",this.fechaUtil)
+      //console.log("registrar",this.fechaUtil)
       this.dialogRef.close(this.fechaUtil.convertirFechaAString(this.fechaArribo.value));
     }
     else{
-      console.log("fallamos")
+      //console.log("fallamos")
     }
 
   }

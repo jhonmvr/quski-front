@@ -61,16 +61,16 @@ export class SubirComprobanteComponent implements OnInit {
       this.dialogRef.close();
     }
     public subirArchivoHabilitante(elemento) {
-      console.log("Subir-Comprobante: Lo que se guarda ===>",this.dataUpload)
+      //console.log("Subir-Comprobante: Lo que se guarda ===>",this.dataUpload)
       this.dialogRef.close(this.dataUpload);
 
       /* this.upload.uploadFile( this.upload.appResourcesUrl + "uploadRestController/loadFileHabilitante", this.dataUpload).subscribe( (data: any) => {
       },error => {
-        console.log("error llegado " + JSON.stringify(error.error));
+        //console.log("error llegado " + JSON.stringify(error.error));
         if (JSON.stringify(error.error).indexOf("codError") > 0) {
           this.sinNoticeService.setNotice("ERROR EN LA CARGA DE ARCHIVO " , 'error');
         } else {
-          console.log("error no java " + error);
+          //console.log("error no java " + error);
         }
       }); */
     }

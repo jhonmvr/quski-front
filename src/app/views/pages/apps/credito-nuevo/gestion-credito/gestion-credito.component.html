@@ -395,7 +395,7 @@
                     <div class="col-md-2">
                         <mat-form-field>
                             <mat-select placeholder="Estado de la Operacion" [formControl]="estadoOperacion">
-                                <mat-option *ngFor="let estadoOp of estadoOp" [value]="estadoOp">
+                                <mat-option *ngFor="let estadoOp of estadoOpes" [value]="estadoOp">
                                     {{estadoOp}}
                                 </mat-option>
                             </mat-select>                     
@@ -407,7 +407,7 @@
                     <div class="col-md-2">
                         <mat-form-field>
                             <mat-select placeholder="Estado de la Operacion" [formControl]="estadoOperacion">
-                                <mat-option *ngFor="let estadoOp of estadoOp" [value]="estadoOp">
+                                <mat-option *ngFor="let estadoOp of estadoOpes" [value]="estadoOp">
                                     {{estadoOp}}
                                 </mat-option>
                             </mat-select>                     
@@ -685,7 +685,7 @@
                 </div>
                 <div class="row">
                     <div class= "col-md-4">
-                        <a href="javascript:void(0);" *ngIf="getPermiso('CARGA_ARC')" (click)="cargarFotoJoya(); $event.preventDefault()">
+                        <a href="javascript:void(0);" *ngIf="getPermiso()" (click)="cargarFotoJoya(); $event.preventDefault()">
                             <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
                             <span style="position: relative;top: -10px;margin-left: 5px;">Carga Foto</span>
                         </a>
@@ -700,7 +700,7 @@
          
                  
                     <div class= "col-md-4">
-                        <a href="javascript:void(0);" *ngIf="getPermiso('CARGA_ARC')" (click)="cargarFotoFunda(); $event.preventDefault()">
+                        <a href="javascript:void(0);" *ngIf="getPermiso()" (click)="cargarFotoFunda(); $event.preventDefault()">
                             <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
                             <span style="position: relative;top: -10px;margin-left: 5px;">Carga Foto</span>
                         </a>

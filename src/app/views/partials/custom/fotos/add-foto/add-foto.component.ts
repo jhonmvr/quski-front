@@ -91,7 +91,7 @@ export class AddFotoComponent implements OnInit {
   guardar(): void{
     //console.log("guardar " +this.imageBase64 );
     this.pictureTaken.emit(this.webcamImage);
-    console.log("guardar " +this.imageBase64 );
+    //console.log("guardar " +this.imageBase64 );
     this.data.fileBase64=this.imageBase64;
     this.dialogRef.close( this.data );
   }

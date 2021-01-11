@@ -23,9 +23,9 @@ export class ParametroService extends BaseService {
 
    public findRelative(re000:string ) {
       this.params = new HttpParams().set("re000", re000);
-      console.log("==> parametros obtenidos " +  this.params.toString() );
+      //console.log("==> parametros obtenidos " +  this.params.toString() );
       let url=atob(AppConfig.cpu);
-      console.log("==> url " +  url );
+      //console.log("==> url " +  url );
       return this.http.get(url, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,

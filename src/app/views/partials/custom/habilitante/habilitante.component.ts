@@ -118,13 +118,13 @@ export class HabilitanteComponent implements OnInit {
     private dh: DocumentoHabilitanteService,
     private os:ObjectStorageService,
     public dialog: MatDialog  ) {
-    //console.log("===========> entra en componente habilitantes");
+    ////console.log("===========> entra en componente habilitantes");
     this.uploading = this.uploadSubject.asObservable();
-    /* console.log("cargando rol: " + this.rol);
-    console.log("cargando proceso: " + this.proceso);
-    console.log("cargando referencia: " + this.referencia);
-    console.log("cargando estadoOperacion: " + this.estadoOperacion);
-    console.log("cargando tipoDocumento: " + this.tipoDocumento); */
+    /* //console.log("cargando rol: " + this.rol);
+    //console.log("cargando proceso: " + this.proceso);
+    //console.log("cargando referencia: " + this.referencia);
+    //console.log("cargando estadoOperacion: " + this.estadoOperacion);
+    //console.log("cargando tipoDocumento: " + this.tipoDocumento); */
     this.dh.setParameter();
     this.os.setParameter();
     this.procesoSubject.subscribe(()=>{
@@ -150,10 +150,10 @@ export class HabilitanteComponent implements OnInit {
 
   validateLoadData(  ){
     if( this.useType && this.useType === this.TYPE_FORM && this.proceso && this.referencia ){
-      console.log("====Carga informacion para  " + this.TYPE_FORM);
+      //console.log("====Carga informacion para  " + this.TYPE_FORM);
       this.buscar();
     } else if( this.useType && this.useType === this.TYPE_LIST  ){
-      console.log("====Carga informacion para  " + this.TYPE_LIST);
+      //console.log("====Carga informacion para  " + this.TYPE_LIST);
       this.buscar();
     }
   }
@@ -180,7 +180,7 @@ export class HabilitanteComponent implements OnInit {
     p.sortFields = ordenarPor;
     p.sortDirections = tipoOrden;
     p.isPaginated = paginado;
-    //console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
+    ////console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
     return p;
   }
 
@@ -201,18 +201,18 @@ export class HabilitanteComponent implements OnInit {
   }
 
   submit() {
-    /* console.log("loadDocumentoHabilitante cargando rol: " + this.rol);
-    console.log("loadDocumentoHabilitante cargando proceso: " + this.proceso);
-    console.log("loadDocumentoHabilitante cargando referencia: " + this.referencia);
-    console.log("loadDocumentoHabilitante cargando estadoOperacion: " + this.estadoOperacion);
-    console.log("loadDocumentoHabilitante cargando tipoDocumento: " + this.tipoDocumento);
-    console.log("==>entra a documentos habilitantes loadDocumentoHabilitante"); */
+    /* //console.log("loadDocumentoHabilitante cargando rol: " + this.rol);
+    //console.log("loadDocumentoHabilitante cargando proceso: " + this.proceso);
+    //console.log("loadDocumentoHabilitante cargando referencia: " + this.referencia);
+    //console.log("loadDocumentoHabilitante cargando estadoOperacion: " + this.estadoOperacion);
+    //console.log("loadDocumentoHabilitante cargando tipoDocumento: " + this.tipoDocumento);
+    //console.log("==>entra a documentos habilitantes loadDocumentoHabilitante"); */
     //this.uploadSubject.next(false);
     this.dataSourcesHabilitantes = new MatTableDataSource<any>();
     this.dh.findByRolTipoDocumentoReferenciaProcesoEstadoOperacion(localStorage.getItem(environment.rolKey),this.tipoDocumento, this.referencia,
     this.proceso,this.estadoOperacion, this.p  ).subscribe(
         (data: any) => {
-          console.log("resultadotipos de documento " + JSON.stringify(data));
+          //console.log("resultadotipos de documento " + JSON.stringify(data));
           if (data && data.list) {
             let existentes=data.list.filter(e=>e.estaCargado==true);
             if( existentes && existentes.length==data.list.length ){
@@ -224,7 +224,7 @@ export class HabilitanteComponent implements OnInit {
             this.getPermisoAccion();
             this.totalResults=data.totalResults;
           } else {
-            console.log("no hay datos ");
+            //console.log("no hay datos ");
             this.sinNoticeService.setNotice("NO SE ENCONTRARON HABILITANTES PARA ESTE PROCESO ","warning");
           }
         },
@@ -244,13 +244,13 @@ export class HabilitanteComponent implements OnInit {
 
   descargarArchivoHabilitante(row:HabilitanteWrapper) {
     
-    console.log("descargarArchivoHabilitante");
+    //console.log("descargarArchivoHabilitante");
     
     this.os.getObjectById( row.objectId,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
-      //console.log("entra a submit var json " + JSON.stringify( atob(data.entidad) ));
+      ////console.log("entra a submit var json " + JSON.stringify( atob(data.entidad) ));
       if( data && data.entidad ){
         let obj=JSON.parse( atob(data.entidad) );
-        console.log("entra a retorno json " + JSON.stringify( obj ));
+        //console.log("entra a retorno json " + JSON.stringify( obj ));
         const byteCharacters = atob(obj.fileBase64);
         const byteNumbers = new Array(byteCharacters.length);
         for (let i = 0; i < byteCharacters.length; i++) {
@@ -264,22 +264,22 @@ export class HabilitanteComponent implements OnInit {
       }
     },
     error => {
-      console.log("================>error: " + JSON.stringify(error));
+      //console.log("================>error: " + JSON.stringify(error));
       this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
     });
   }
 
   descargarPlantillaHabilitante(row:HabilitanteWrapper) {
-    //console.log(      "<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>",      this.codigoContratoLocal    );
-    //console.log("entra a submit var json " + row.id);
+    ////console.log(      "<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>",      this.codigoContratoLocal    );
+    ////console.log("entra a submit var json " + row.id);
     this.dh.generatePlantillaHabilitantesByParams(
         row.servicio,row.idReferencia?String(row.idReferencia):null,
         row.idTipoDocumento?String(row.idTipoDocumento):null, row.proceso, 
         row.estadoOperacion, 
         row.idDocumentoHabilitante?String(row.idDocumentoHabilitante):null,"PDF"
       ).subscribe((data: any) => {
-          console.log("descargarNotificacion datos xx " + data);
-          //console.log("descargarNotificacion datos " + JSON.stringify(data));
+          //console.log("descargarNotificacion datos xx " + data);
+          ////console.log("descargarNotificacion datos " + JSON.stringify(data));
           if (data) {            
             let blob = new Blob([data], { type: 'application/pdf'});
             saveAs(blob, row.descripcionTipoDocumento + ".pdf");
@@ -289,11 +289,11 @@ export class HabilitanteComponent implements OnInit {
           }
         },
         error => {
-          console.log("================>error: " + JSON.stringify(error));
+          //console.log("================>error: " + JSON.stringify(error));
           this.sinNoticeService.setNotice("ERROR DESCARGA DE PLANTILLA HABILITANTE","error");
         }
       );
-    //console.log("descargarNotificacion");
+    ////console.log("descargarNotificacion");
   }
 
     
@@ -308,9 +308,9 @@ export class HabilitanteComponent implements OnInit {
   descargaDocumentoAdicional: boolean;*/
   getPermiso(tipo:string, permisos:Array<TbQoRolTipoDocumento> ):boolean{
     if( permisos && permisos.length>0 ){
-      //console.log("===> getPermiso rol " + localStorage.getItem( environment.rolKey ) + " tipo: " +  tipo + " datos "+ JSON.stringify( permisos));
+      ////console.log("===> getPermiso rol " + localStorage.getItem( environment.rolKey ) + " tipo: " +  tipo + " datos "+ JSON.stringify( permisos));
       let existPermisos=permisos.filter(p=>p.idRol === Number( localStorage.getItem( environment.rolKey ) ));
-      //console.log("===> permisos filter " + JSON.stringify( existPermisos));
+      ////console.log("===> permisos filter " + JSON.stringify( existPermisos));
       if( existPermisos &&  existPermisos.length >0 ){
         if( tipo === "DESCARGA_PLA" &&  existPermisos[0].descargaPlantilla && existPermisos[0].descargaPlantilla===true  ){
           return true;
@@ -348,9 +348,9 @@ export class HabilitanteComponent implements OnInit {
     page.isPaginated="N";
     this.dh.findByRolTipoDocumentoProcesoEstadoOperacion(localStorage.getItem(environment.rolKey),this.tipoDocumento,this.proceso,this.estadoOperacion, page).subscribe((data:any)=>{
       if( data && data.entidades ){
-        //console.log("==> acciones permisos " + JSON.stringify( data.entidades ));
+        ////console.log("==> acciones permisos " + JSON.stringify( data.entidades ));
         this.acciones=data.entidades.filter(p=>p.idTipoDocumento==null);
-        //console.log("==> acciones permisos filtrado " + JSON.stringify( this.acciones ));
+        ////console.log("==> acciones permisos filtrado " + JSON.stringify( this.acciones ));
       } else {
         this.sinNoticeService.setNotice("ERROR NO EXISTE ASIGNACION DE PERMISOS EN COMPONENTE HABILITANTE PARA REALIZAR ACCIONES");
       }
@@ -374,9 +374,9 @@ export class HabilitanteComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(r => {
-        //console.log("===>>ertorno al cierre: " + JSON.stringify(r));
+        ////console.log("===>>ertorno al cierre: " + JSON.stringify(r));
         if (r) {
-          //console.log("===>>va a recargar: " );
+          ////console.log("===>>va a recargar: " );
           this.buscar();
           this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE","success");
           //this.validateContratoByHabilitante('false');
@@ -384,7 +384,7 @@ export class HabilitanteComponent implements OnInit {
         //this.submit();
       });
     } else {
-      console.log("===>>errorrrr al cierre: ");
+      //console.log("===>>errorrrr al cierre: ");
       this.sinNoticeService.setNotice("ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO","error");
     }
   }

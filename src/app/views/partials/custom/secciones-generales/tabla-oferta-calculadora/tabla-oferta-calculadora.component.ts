@@ -27,7 +27,7 @@ export class TablaOfertaCalculadoraComponent implements OnInit {
     this.iniciaBusqueda(this.consulta);
   }
   private iniciaBusqueda(consulta: ConsultaOferta) {
-    console.log("INICIA iniciaBusqueda Consulta ==> ", this.consulta)
+    //console.log("INICIA iniciaBusqueda Consulta ==> ", this.consulta)
     if (consulta != null) {
       this.cal.getInformacionOferta(consulta).subscribe((data: any) => {
         if (data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion != null) {
@@ -35,15 +35,15 @@ export class TablaOfertaCalculadoraComponent implements OnInit {
           this.dataSourceOpcionesDeCredito.data = this.entidadesOpciones;
           this.enviarAlPadre(this.entidadesOpciones);
         } else {
-          console.log("Error ----> Id de cotizacion no existe", consulta);
+          //console.log("Error ----> Id de cotizacion no existe", consulta);
         }
       });
     } else {
-      console.log("Error ----> Ingrese id de cotizador", consulta);
+      //console.log("Error ----> Ingrese id de cotizador", consulta);
     }
   }
   private enviarAlPadre(entidades: Array<OpcionesDeCredito>) {
-    console.log(" Esto estoy enviando al padre -----> ", entidades);
+    //console.log(" Esto estoy enviando al padre -----> ", entidades);
     this.entidades.emit(entidades);
   }
 

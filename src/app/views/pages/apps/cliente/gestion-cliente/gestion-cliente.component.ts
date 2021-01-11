@@ -247,7 +247,7 @@ export class GestionClienteComponent implements OnInit {
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private cargarCampos() {
     if(this.wrapper){
-    console.log(' Antes de validacion -> ', this.wrapper);
+    //console.log(' Antes de validacion -> ', this.wrapper);
     this.nombresCompletos.setValue(this.wrapper.cliente.nombreCompleto);
     this.nombresCompletos.disable();
     this.numeroCuenta.disable();
@@ -362,7 +362,7 @@ export class GestionClienteComponent implements OnInit {
     });
     !this.wrapper.cuentas ? null        : this.wrapper.cuentas.forEach(e=>{
       e.estado = 'INA';
-      console.log('Estoy inactivando');
+      //console.log('Estoy inactivando');
     });
     if(this.wrapper.cuentas){
       this.wrapper.cuentas[0].estado = 'ACT';
@@ -370,13 +370,13 @@ export class GestionClienteComponent implements OnInit {
       this.tipoCuenta.setValue( item.nombre )
       this.numeroCuenta.setValue( this.wrapper.cuentas[0].cuenta );
       this.esAhorro.setValue( this.wrapper.cuentas[0].esAhorros ? 'SI':'NO' );
-      console.log('Estoy pasando');
+      //console.log('Estoy pasando');
     }   
     let countRefer : number = 0;
     let refe = new Array<TbReferencia>(); 
     !this.wrapper.referencias ? null : this.wrapper.referencias.forEach(e => {
       if(e.estado == 'ACT' && countRefer < 2){
-        console.log('HOla?')
+        //console.log('HOla?')
         const referencia = this.catTipoReferencia.find(x => x.codigo == e.parentesco);
         e.parentesco = referencia ? referencia.nombre : 'error' ;
         refe.push( e );
@@ -398,7 +398,7 @@ export class GestionClienteComponent implements OnInit {
     this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( this.wrapper.cliente.egresos, false ) )  
     this.calcularIngresoEgreso();
     this.loadingSubject.next(false);
-    console.log(' Luego de validacion -> ', this.wrapper);
+    //console.log(' Luego de validacion -> ', this.wrapper);
     }else{
       this.sinNoticeService.setNotice('Error cargando cliente','error');
     }
@@ -1002,7 +1002,7 @@ export class GestionClienteComponent implements OnInit {
   public editar(element) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
-    //console.log(JSON.stringify(element));
+    ////console.log(JSON.stringify(element));
     if (element.esIngreso && element.esEgreso == false) {
       this.valorIngreso.setValue(element.valor);
     } else {
@@ -1280,7 +1280,7 @@ export class GestionClienteComponent implements OnInit {
                       });
                       this.wrapper.referencias = this.dataSource.data;
                     }
-                    console.log(' Lo que guardo -> ', this.wrapper);
+                    //console.log(' Lo que guardo -> ', this.wrapper);
                     this.cli.registrarCliente(this.wrapper).subscribe((data: any) => {
                       if (data.entidad && data.entidad.isCore && data.entidad.isSoftbank) {
                         this.loadingSubject.next(false);

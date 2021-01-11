@@ -101,7 +101,7 @@ export class CrearRenovacionComponent implements OnInit {
           this.loadingSubject.next(true);
           this.cre.buscarRenovacionByIdNegociacion(json.params.item).subscribe((data: any) => {
             this.credit = data.entidad;
-            console.log("datos ->", this.credit);
+            //console.log("datos ->", this.credit);
             if (this.credit ) {
               this.cargarCampos( this.credit  );
             }else{
@@ -112,7 +112,7 @@ export class CrearRenovacionComponent implements OnInit {
           this.loadingSubject.next(true);
           this.cre.buscarRenovacionByNumeroOperacionMadre(json.params.item).subscribe((data: any) => {
             this.credit = data.entidad;
-            console.log("datos ->", this.credit);
+            //console.log("datos ->", this.credit);
             if (this.credit ) {
               this.cargarCampos( this.credit  );
             }else{
@@ -168,7 +168,7 @@ export class CrearRenovacionComponent implements OnInit {
     if(!this.credit.proceso){
       this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.credit.proceso? this.credit.proceso.idReferencia : null,  this.usuario).subscribe( data =>{
         if(data.entidad){
-          console.log( 'Mi operacion ->', data.entidad );
+          //console.log( 'Mi operacion ->', data.entidad );
           this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
         }
       });
@@ -185,7 +185,7 @@ export class CrearRenovacionComponent implements OnInit {
       data: data
     });
     dialogRefGuardar.afterClosed().subscribe((result: any) => {
-      console.log('envio de RESP ' + JSON.stringify(result) + ' typeof respuesta ' + typeof (result));
+      //console.log('envio de RESP ' + JSON.stringify(result) + ' typeof respuesta ' + typeof (result));
       if (result) {
         this.abrirSalirGestion('Espere respuesta del aprobador para continuar con la negociacion.','EXCEPCION SOLICITADA');
       } else {
@@ -202,6 +202,7 @@ export class CrearRenovacionComponent implements OnInit {
       this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.credit.proceso? this.credit.proceso.idReferencia : null, this.usuario).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
+          //console.log( 'Mi operacion ->', data.entidad );
           this.router.navigate(['cliente/gestion-cliente/NOV/',this.credit.proceso.idReferencia]);
         }
       });
@@ -210,7 +211,7 @@ export class CrearRenovacionComponent implements OnInit {
     }
   }
   public guardarSeleccion(row){
-    console.log('La seleccion ->',row);    
+    //console.log('La seleccion ->',row);    
     this.seleccion = row;
   }
   public simularOpciones(){
@@ -222,10 +223,10 @@ export class CrearRenovacionComponent implements OnInit {
     cliente.fechaNacimiento = (fecha.getDate() < 10 ? '0'+fecha.getDate() : fecha.getDate()) +'/' + mes +'/' + fecha.getFullYear(); 
     this.credit.operacionAnterior.cliente = cliente;
     //this.credit.operacionAnterior.fechaNacimiento = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
-    console.log('wrapper de salida ->', this.credit.operacionAnterior);
+    //console.log('wrapper de salida ->', this.credit.operacionAnterior);
     this.cal.simularOfertaRenovacion(0,0,0,2, this.credit.operacionAnterior).subscribe( (data: any) =>{
       if(data.entidad){
-        console.log('Data de simulacion -->',data.entidad);
+        //console.log('Data de simulacion -->',data.entidad);
         data.entidad.simularResult.codigoError > 0 ? this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
           : this.sinNotSer.setNotice("Seleccione una opcion de credito para continuar", 'success') ;
         this.garantiasSimuladas = [];

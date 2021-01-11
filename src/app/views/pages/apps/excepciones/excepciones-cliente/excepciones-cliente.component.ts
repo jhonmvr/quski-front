@@ -342,7 +342,7 @@ export class ExcepcionesClienteComponent implements OnInit {
             this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
             this.dataPopup.isNegociacion = true;
             this.dataPopup.idBusqueda = this.entidadNegociacion.id;
-            console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
+            //console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
             //INPUT RIESGO ACUMULADO
 
             // FORM CONTACTO
@@ -421,7 +421,7 @@ export class ExcepcionesClienteComponent implements OnInit {
                     this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
                     this.dataPopup.isNegociacion = true;
                     this.dataPopup.idBusqueda = this.entidadNegociacion.id;
-                    console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
+                    //console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
                     //INPUT RIESGO ACUMULADO
     
                     // FORM CONTACTO

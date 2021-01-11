@@ -58,6 +58,7 @@ export class DetalleNegociacionComponent implements OnInit {
     private subheaderService: SubheaderService,
     private router: Router
   ) {
+    this.par.setParameter();
     this.formDisable.addControl('nombre', this.nombre);
     this.formDisable.addControl('cedula', this.cedula);
     this.formDisable.addControl('fechaNacimiento', this.fechaNacimiento);
@@ -72,6 +73,7 @@ export class DetalleNegociacionComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.par.setParameter();
     this.formDisable.disable();
     this.loading = this.loadingSubject.asObservable();
     this.subheaderService.setTitle('Gestion credito');
@@ -82,7 +84,7 @@ export class DetalleNegociacionComponent implements OnInit {
       if (data.params.id) {
         this.loadingSubject.next(true);
         this.cre.traerCreditoNegociacion(data.params.id).subscribe((data: any) => {
-          console.log('Credito --> ', data.entidad);
+          //console.log('Credito --> ', data.entidad);
           if (!data.entidad.existeError) {
             this.detalle = data.entidad;
             this.setearValores( this.detalle );

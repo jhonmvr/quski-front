@@ -79,7 +79,7 @@ export class SeleccionFechaComponent implements OnInit {
     this.initiateTablePaginator();
     //Se ejecuta cuando se hace click en el ordenamiento en el mattable
     this.sort.sortChange.subscribe(() => {
-      console.log("sort changed "  );
+      //console.log("sort changed "  );
       this.initiateTablePaginator();
       this.buscar();
     });
@@ -111,7 +111,7 @@ export class SeleccionFechaComponent implements OnInit {
     p.isPaginated = paginado;
     this.busquedaDevWrapper.numberItems = this.paginator.pageSize;
     this.busquedaDevWrapper.numberPage = pagina
-    //console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
+    ////console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
     return p;
   }
 
@@ -138,9 +138,9 @@ export class SeleccionFechaComponent implements OnInit {
   submit() {
  
 
-    console.log("XD" , this.codigoOperacion.value)
+    //console.log("XD" , this.codigoOperacion.value)
   
-    console.log("====> paged: " + JSON.stringify( this.p ));
+    //console.log("====> paged: " + JSON.stringify( this.p ));
     this.loadingSubject.next(true);
     this.dataSource = null;
     this.p.pageNumber = this.paginator.pageIndex;
@@ -149,7 +149,7 @@ export class SeleccionFechaComponent implements OnInit {
     this.fechaUtil.convertirFechaAString(this.fechaAprobacionFin.value  == null ? "" : this.fechaAprobacionFin.value), 
     this.cedulaCliente.value   == null ? "" : this.cedulaCliente.value ).subscribe((data:any)=>{
       if(data){
-        console.log(data.list)
+        //console.log(data.list)
 
         this.paginator.length = data.totalResults;
         this.dataSource=new MatTableDataSource<any>(data.list);
@@ -171,7 +171,7 @@ export class SeleccionFechaComponent implements OnInit {
   addRemove(row) {
     if (this.selection.isSelected(row.id)) {
       this.selection.deselect(row.id);
-      console.log(row.id)
+      //console.log(row.id)
     } else {
       this.selection.select(row.id);
     }
@@ -184,7 +184,7 @@ export class SeleccionFechaComponent implements OnInit {
   seleccionarFecha(){
     
     if( this.selection && this.selection.selected && this.selection.selected.length>0 ){
-      console.log("aqui", this.selection.selected)
+      //console.log("aqui", this.selection.selected)
       const dialogRef = this.dialog.open(AddFechaComponent, {
         height: '500px',
         width: '700px',
@@ -192,17 +192,17 @@ export class SeleccionFechaComponent implements OnInit {
       });
      dialogRef.afterClosed().subscribe((resultado) => {
       if (resultado) {
-        console.log(resultado)
+        //console.log(resultado)
         let listIdDevolucion =[];
         this.selection.selected.forEach(x=> listIdDevolucion.push(x.id))
-        console.log("XD",listIdDevolucion)
+        //console.log("XD",listIdDevolucion)
         let objetoRegistroFechaArribo = new RegistroFechaArribo
         objetoRegistroFechaArribo.fechaArribo = resultado;
         objetoRegistroFechaArribo.idDevoluciones = listIdDevolucion;
-        console.log("Ojeto",objetoRegistroFechaArribo.idDevoluciones)
+        //console.log("Ojeto",objetoRegistroFechaArribo.idDevoluciones)
         this.ds.registrarFechaArribo(objetoRegistroFechaArribo).subscribe((data:any)=>{
           if(data){
-            console.log(data)
+            //console.log(data)
             this.sinNoticeService.setNotice("Se ha registrado con exito", "success")
             this.eliminarSelect();
             this.buscar();
@@ -230,7 +230,7 @@ export class SeleccionFechaComponent implements OnInit {
   consultarAgencia(){
     this.css.consultarAgenciasCS().subscribe((data:any)=>{
       if(!data.existeError){
-        console.log(data)
+        //console.log(data)
         this.catalogoAgencia = data.catalogo
       }
     })

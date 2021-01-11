@@ -148,9 +148,9 @@ datos
     this.datos = this.decodeObjetoDatos(this.objetoDatos);
     this.getParametros();
     this.cargarDatos();
-    console.log("el encode", )
-    console.log(typeof(this.catalagoEstadosCiviles))
-    console.log( this.catalagoEstadosCiviles)
+    //console.log("el encode", )
+    //console.log(typeof(this.catalagoEstadosCiviles))
+    //console.log( this.catalagoEstadosCiviles)
 
    
    
@@ -188,7 +188,7 @@ datos
     let listDatosCreditos = []
     this.devService.getDevolucion(this.idDevolucion).subscribe((data:any)=> {
       if(data.entidad){
-        console.log("Hello", data.entidad)
+        //console.log("Hello", data.entidad)
         this.codigoOperacion.setValue(data.entidad.codigoOperacion)
         this.procesoDev.setValue("DEVOLUCION")
         this.cedulaCliente.setValue(data.entidad.cedulaCliente)
@@ -230,7 +230,7 @@ datos
       
        
         this.idDevolucion = params.get('idDevolucion');
-        console.log("parametro", this.idDevolucion)
+        //console.log("parametro", this.idDevolucion)
        
       },
       error => {
@@ -242,7 +242,7 @@ datos
 setFechaSistema(){
   this.cns.getSystemDate().subscribe((fechaSistema: any) => {
    this.fechaServer = new Date( fechaSistema.entidad);
-   console.log(this.fechaServer) 
+   //console.log(this.fechaServer) 
   })
 }
   
@@ -259,7 +259,7 @@ getEdad(fechaValue){
 
   let ind = 0;
   if (this.dataSourceJoyas.data) {
-    //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
+    ////console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
  
     this.joyasList.forEach(element => {
       
@@ -272,7 +272,7 @@ getEdad(fechaValue){
     });
     
   }
-  console.log("XD" , this.totalPesoNeto)
+  //console.log("XD" , this.totalPesoNeto)
 }
 
 
@@ -301,7 +301,7 @@ guardar(){
       "success"
     );
     this.router.navigate(['negociacion/bandeja-operaciones'    ]);
-    console.log(data.entidad)
+    //console.log(data.entidad)
   }, error => {
     this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
   })

@@ -54,7 +54,14 @@ export class GestionCreditoComponent implements OnInit {
   public riesgoTotalCliente = new FormControl('');
   public recibirCliente = new FormControl('');
   public netoCliente = new FormControl('');
-  
+  fechaCreacion = new FormControl('');
+  cliente= new FormControl('');
+  agenciaOrigen= new FormControl('');
+  telefonoDoc= new FormControl('');
+  telefonoAdic= new FormControl('');
+  telefonoMov= new FormControl('');
+  telefonoOfic= new FormControl('');
+  correoCliente= new FormControl('');
   public dialog: MatDialog;
   ///Monto
   public montoSolicitado = new FormControl('');
@@ -173,7 +180,7 @@ export class GestionCreditoComponent implements OnInit {
     p.sortFields = ordenarPor;
     p.sortDirections = tipoOrden;
     p.isPaginated = paginado;
-    //console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
+    ////console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
     return p;
   }
 
@@ -201,8 +208,8 @@ export class GestionCreditoComponent implements OnInit {
       if(data.entidad){
         this.tbCreditoNegociacion = data.entidad
         this.tbQoCliente = this.tbCreditoNegociacion.tbQoNegociacion.tbQoCliente
-        console.log(this.tbQoCliente)
-        console.log(this.tbCreditoNegociacion)
+        //console.log(this.tbQoCliente)
+        //console.log(this.tbCreditoNegociacion)
         this.codigoOperacion.setValue(data.entidad.tbQoNegociacion.codigoOperacion)
         this.cedulaCliente.setValue(data.entidad.tbQoNegociacion.tbQoCliente.cedulaCliente)
         this.nombresCompletos.setValue(data.entidad.tbQoNegociacion.tbQoCliente.apellidoPaterno.concat(" ",
@@ -214,7 +221,7 @@ export class GestionCreditoComponent implements OnInit {
  
         this.consultarClienteCS();
          if(data.entidad.tbQoNegociacion.tipoNegociacion === "CUOTAS"){
-           console.log("deberia verse")
+           //console.log("deberia verse")
           this.enableDiaPago.next(true);
          }else{
           this.enableDiaPago.next(false);
@@ -233,7 +240,7 @@ export class GestionCreditoComponent implements OnInit {
   setFechaSistema(){
     this.cns.getSystemDate().subscribe((fechaSistema: any) => {
      this.fechaServer = new Date( fechaSistema.entidad);
-     console.log(this.fechaServer) 
+     //console.log(this.fechaServer) 
     })
   }
 
@@ -241,7 +248,7 @@ export class GestionCreditoComponent implements OnInit {
 
  getJoyas(){
    this.tas.getTasacionByIdCredito(this.p,this.idCreditoNegociacion).subscribe((data:any)=>{
-     console.log("que pasa por la calle", data.list)
+     //console.log("que pasa por la calle", data.list)
      this.totalResults = data.totalResults;
         this.dataSource = new MatTableDataSource<any>(data.list);
         this.calcular()
@@ -256,8 +263,8 @@ export class GestionCreditoComponent implements OnInit {
  }
 
  setTipoCliente(tipo){
-   console.log(tipo)
-   console.log(this.tiposClientes.find(p=>p==tipo))
+   //console.log(tipo)
+   //console.log(this.tiposClientes.find(p=>p==tipo))
   this.tipoCliente.setValue( this.tiposClientes.find(p=>p==tipo))
  }
 
@@ -276,7 +283,7 @@ calcular(){
   this.totalValorC = 0
   let ind = 0;
   if (this.dataSource.data) {
-    //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
+    ////console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
     this.list=[];
     this.dataSource.data.forEach(element => {
       
@@ -306,7 +313,7 @@ getFunda(pesoFun){
       this.totalPesoBrutoFunda.setValue(Number(this.totalPesoB)+ Number(data.entidad.peso));
       this.totalValorRealizacion.setValue(this.totalValorR);
       this.joyaFoto.referencia = data.entidad.id
-      console.log(data)
+      //console.log(data)
     }else{
       this.sinNoticeService.setNotice("No se encontro fundas", 'warning');
     }
@@ -324,9 +331,9 @@ getFunda(pesoFun){
   entidadConsultaCliente.idTipoIdentificacion = 1;
   this.css.consultarClienteCS( entidadConsultaCliente ).subscribe( (data : any) => {
     if (data) {
-      //console.log("consultarClienteCS --> Funciona");
+      ////console.log("consultarClienteCS --> Funciona");
       this.numeroCuenta.setValue(data.entidad.cuentasBancariasCliente.cuenta)
-      console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
+      //console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data) );
     } else {
       this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
     }
@@ -342,4 +349,19 @@ getFunda(pesoFun){
   });
 }
 
+validacionFecha(){
+
+}
+RegistrarPago(){
+
+}
+cargarFotoJoya(){
+
+}
+srcJoya
+srcFunda
+estadoOpes =['estado 1','estado2'];
+cargarFotoFunda(){
+
+}
 }

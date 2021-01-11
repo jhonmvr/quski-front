@@ -8,12 +8,12 @@ import { MAT_DIALOG_DATA } from '@angular/material';
   styleUrls: ['./dialog-cargar-habilitante.component.scss']
 })
 export class DialogCargarHabilitanteComponent implements OnInit {
-  private proceso: string = "CLIENTE";
-  private rol: string = "1";
-  private idRef
-  private title :string = "HABILITANTES DEL CLIENTE";
-  private useType : string = "FORM";
-  private estOperacion : string = "DISPONIBLE"
+   proceso: string = "CLIENTE";
+   rol: string = "1";
+   idRef
+   title :string = "HABILITANTES DEL CLIENTE";
+   useType : string = "FORM";
+   estOperacion : string = "DISPONIBLE"
 
 
   constructor( @Inject(MAT_DIALOG_DATA) private data: string ) { 

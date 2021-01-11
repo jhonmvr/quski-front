@@ -120,6 +120,7 @@ import { TablaAmortizacionComponent } from './custom/popups/tabla-amortizacion/t
 import { DevolucionCreditoComponent } from './custom/popups/devolucion-credito/devolucion-credito.component';
 import { PopupPagoComponent } from './custom/popups/popup-pago/popup-pago.component';
 import { SubirComprobanteComponent } from './custom/popups/popup-pago/subir-comprobante/subir-comprobante.component';
+import { CreditoDialogComponent } from './custom/secciones-generales/credito-dialog/credito-dialog.component';
 
 
 
@@ -134,7 +135,7 @@ import { SubirComprobanteComponent } from './custom/popups/popup-pago/subir-comp
 		FetchEntityDialogComponent,
 		UpdateStatusDialogComponent,
 		AlertComponent,
-
+		CreditoDialogComponent,
 		// topbar components
 		ContextMenu2Component,
 		ContextMenuComponent,
@@ -303,6 +304,7 @@ import { SubirComprobanteComponent } from './custom/popups/popup-pago/subir-comp
 		{ provide: MAT_DIALOG_DATA, useValue: [] },
 	],
 	entryComponents: [
+		CreditoDialogComponent,
 		RiesgoAcumuladoComponent,
 		AuthDialogComponent,
 		HabilitanteDialogComponent,
