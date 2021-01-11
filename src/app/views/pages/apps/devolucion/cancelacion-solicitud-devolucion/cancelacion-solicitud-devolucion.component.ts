@@ -213,7 +213,7 @@ datos
         this.lugarNacimiento.setValue(data.entidad.lugarNacimiento)
         this.valorCustodia.setValue(data.entidad.valorCustodiaAprox.toFixed(2))
         this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
-        this.listTablaHeredero = this.decodeObjetoDatos(data.entidad.codeHerederos);
+        this.listTablaHeredero = this.decodeObjetoDatos(data.entidad.heredero.codeHerederos);
         listDatosCreditos.push(this.decodeObjetoDatos(data.entidad.codeDetalleCredito))
         this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
         this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)

@@ -349,7 +349,7 @@ datos
     console.log(this.encodeObjetos(this.joyasList))
     console.log("XD", this.decodeObjetoDatos(this.encodeObjetos(this.joyasList)));
     tbQoDevolucion.valorCustodiaAprox = 12.00
-    tbQoDevolucion.codeHerederos = this.encodeObjetos(this.listTablaHeredero)
+    tbQoDevolucion.codeHerederos = this.encodeObjetos({"heredero":this.listTablaHeredero})
     tbQoDevolucion.codeDetalleCredito = this.encodeObjetos(this.objetoCredito)
     tbQoDevolucion.codeDetalleGarantia = this.encodeObjetos(this.joyasList)
     tbQoDevolucion.pesoBruto = this.totalPesoBruto
@@ -586,6 +586,7 @@ funcionToPdf(){
   let texto = 'Hello my <br> friend'
   this.doc.text(texto, 10, 10, );
   this.doc.save('autoprint.pdf')
+//  this.doc.addField()
 }
 
 } 
