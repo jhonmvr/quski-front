@@ -58,7 +58,7 @@ const routes: Routes = [
 				component: CrearRenovacionComponent
 			},
 			{
-				path: 'novacion-habilitante/:numeroOperacion',
+				path: 'novacion-habilitante/:idNegociacion',
 				component: NovacionHabilitanteComponent
 			}
 

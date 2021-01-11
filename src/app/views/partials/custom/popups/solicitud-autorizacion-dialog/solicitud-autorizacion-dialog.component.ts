@@ -36,7 +36,6 @@ export interface DialogData {
   styleUrls: ['./solicitud-autorizacion-dialog.component.scss']
 })
 export class SolicitudAutorizacionDialogComponent implements OnInit {
-  [x: string]: any;
 
   constructor(private dh: DocumentoHabilitanteService, private sinNoticeService: ReNoticeService,
     public dialogRef: MatDialogRef<SolicitudAutorizacionDialogComponent>,
