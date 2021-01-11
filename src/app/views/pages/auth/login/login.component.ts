@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../core/reducers';
 // Auth
-import { AuthNoticeService, AuthService, Login } from '../../../../core/auth';
+import { AuthNoticeService, AuthService, currentUser, Login, User, UserLoaded } from '../../../../core/auth';
 import { AutorizacionService } from '../../../../core/services/autorizacion.service';
 import { environment } from '../../../../../environments/environment';
 import * as uuid from 'uuid';
@@ -140,19 +140,23 @@ export class LoginComponent implements OnInit, OnDestroy {
 		
 		this.authRelative.serverLogin(authData).pipe( tap(
 			usuarioAuth => {
-				//console.log("=en tap termino validaciones con usuarioAuth " + JSON.stringify(usuarioAuth))
+				console.log("=en tap termino validaciones con usuarioAuth " + JSON.stringify(usuarioAuth))
 					if (usuarioAuth && usuarioAuth.existLogin ) {
-						//console.log("=en tap termino exiete login " + usuarioAuth.accessToken );
+						console.log("=en tap termino exiete login " + usuarioAuth.accessToken );
 						localStorage.setItem( environment.userKey, btoa( authData.email)  );
 						localStorage.setItem( environment.authKey, btoa( ""+ usuarioAuth.id) );
 						localStorage.setItem( environment.hashWebSocketKey,uuid.v4() )
 						this.store.dispatch(new Login({authToken: usuarioAuth.accessToken}));
+						//let user = new User();
+						//user.fullname = usuarioAuth.fullname;
+						//this.store.dispatch(new UserLoaded({ user: user }))
 						console.log("=socket ruta " + this.ws.appWebSocketUrl + localStorage.getItem( environment.hashWebSocketKey )+"?dummy=1" );
 						this.ws.setParameter();
 						this.ws.connect(this.ws.appWebSocketUrl + localStorage.getItem( environment.hashWebSocketKey )+"?dummy=1");
 						this.ws.messages.subscribe(msg => {			
 							console.log("Response from websocket: ",msg);
 						});
+				console.log("ruta de main ===>>>",this.returnUrl);
 						this.router.navigateByUrl(this.returnUrl); // Main page
 					} else {
 						this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
