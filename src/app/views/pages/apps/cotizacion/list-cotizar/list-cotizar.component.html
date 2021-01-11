@@ -31,7 +31,7 @@
     <!-- start::FILTERS & GROUP ACTIONS -->
 
     <div class="kt-form">
-      <mat-vertical-stepper [linear]="!isLinear" #stepper>
+      <mat-vertical-stepper #stepper>
         <mat-step [stepControl]="formBusqueda">
           <ng-template matStepLabel>Busqueda del Cliente</ng-template>
           <form [formGroup]="formBusqueda">
@@ -148,8 +148,8 @@
               <div class="col-md-6">
                 <span>Aprobación Mupi</span>
                 <mat-radio-group [formControl]="aprobacionMupi">
-                  <mat-radio-button [checked]='isCheckSi' value="SI">Si</mat-radio-button>
-                  <mat-radio-button [checked]='isCheckNo' value="NO">No</mat-radio-button>
+                  <mat-radio-button [checked]='aprobacionMupi.value == "SI"' value="SI">Si</mat-radio-button>
+                  <mat-radio-button [checked]='aprobacionMupi.value == "NO"' value="NO">No</mat-radio-button>
                 </mat-radio-group>
                 <mat-error *ngIf="aprobacionMupi.hasError('required')"><strong>requerido</strong></mat-error>
               </div>

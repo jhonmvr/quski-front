@@ -38,10 +38,11 @@ export class GestionClienteComponent implements OnInit {
   /** @STANDAR_VARIABLES **/
   private loadingSubject = new BehaviorSubject<boolean>(false);
   private wrapper: ClienteCompletoWrapper;
-  private idNegociacion;
   public loading;
   usuario
   agencia
+  private origen: string;
+  private item: any;
   public totalActivo: number = 0;
   public totalPasivo: number = 0;
   public totalValorIngresoEgreso: number = 0;
@@ -245,7 +246,8 @@ export class GestionClienteComponent implements OnInit {
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private cargarCampos() {
-    console.log(' Antes de validacion -> ', this.wrapper);
+    if(this.wrapper){
+    //console.log(' Antes de validacion -> ', this.wrapper);
     this.nombresCompletos.setValue(this.wrapper.cliente.nombreCompleto);
     this.nombresCompletos.disable();
     this.numeroCuenta.disable();
@@ -360,7 +362,7 @@ export class GestionClienteComponent implements OnInit {
     });
     !this.wrapper.cuentas ? null        : this.wrapper.cuentas.forEach(e=>{
       e.estado = 'INA';
-      console.log('Estoy inactivando');
+      //console.log('Estoy inactivando');
     });
     if(this.wrapper.cuentas){
       this.wrapper.cuentas[0].estado = 'ACT';
@@ -368,13 +370,13 @@ export class GestionClienteComponent implements OnInit {
       this.tipoCuenta.setValue( item.nombre )
       this.numeroCuenta.setValue( this.wrapper.cuentas[0].cuenta );
       this.esAhorro.setValue( this.wrapper.cuentas[0].esAhorros ? 'SI':'NO' );
-      console.log('Estoy pasando');
+      //console.log('Estoy pasando');
     }   
     let countRefer : number = 0;
     let refe = new Array<TbReferencia>(); 
     !this.wrapper.referencias ? null : this.wrapper.referencias.forEach(e => {
       if(e.estado == 'ACT' && countRefer < 2){
-        console.log('HOla?')
+        //console.log('HOla?')
         const referencia = this.catTipoReferencia.find(x => x.codigo == e.parentesco);
         e.parentesco = referencia ? referencia.nombre : 'error' ;
         refe.push( e );
@@ -396,20 +398,25 @@ export class GestionClienteComponent implements OnInit {
     this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( this.wrapper.cliente.egresos, false ) )  
     this.calcularIngresoEgreso();
     this.loadingSubject.next(false);
-    console.log(' Luego de validacion -> ', this.wrapper);
+    //console.log(' Luego de validacion -> ', this.wrapper);
+    }else{
+      this.sinNoticeService.setNotice('Error cargando cliente','error');
+    }
   }
   private buscarCliente() {
     this.route.paramMap.subscribe((data: any) => {
       this.loadingSubject.next(true);
-      if (data.params.origen == "NEG") {
-        this.idNegociacion = data.params.item
+      this.origen = data.params.origen;
+      this.item = data.params.item;
+      if (data.params.origen == "NEG" || data.params.origen == "NOV") {
+        this.item = data.params.item
         this.cli.traerClienteByIdNegociacion(data.params.item).subscribe((data: any) => {
           if (!data.entidad.existeError) {
             this.wrapper = data.entidad;
             this.traerCatalogos();
           } else {
             this.loadingSubject.next(false);
-            this.sinNoticeService.setNotice('NO EXISTE CLEINTE: ' + data.entidad.mensaje, 'error');
+            this.sinNoticeService.setNotice('NO EXISTE CLIENTE: ' + data.entidad.mensaje, 'error');
           }
         });
       } else if (data.params.origen == "CED") {
@@ -419,12 +426,12 @@ export class GestionClienteComponent implements OnInit {
             this.traerCatalogos();
           } else {
             this.loadingSubject.next(false);
-            this.sinNoticeService.setNotice('NO EXISTE CLEINTE: ' + data.entidad.mensaje, 'error');
+            this.sinNoticeService.setNotice('NO EXISTE CLIENTE: ' + data.entidad.mensaje, 'error');
           }
         });
       } else {
         this.loadingSubject.next(false);
-
+        this.sinNoticeService.setNotice('ERROR EN EL CODIGO DE ENTRADA','error');
       }
     });
   }
@@ -995,7 +1002,7 @@ export class GestionClienteComponent implements OnInit {
   public editar(element) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
-    //console.log(JSON.stringify(element));
+    ////console.log(JSON.stringify(element));
     if (element.esIngreso && element.esEgreso == false) {
       this.valorIngreso.setValue(element.valor);
     } else {
@@ -1273,24 +1280,20 @@ export class GestionClienteComponent implements OnInit {
                       });
                       this.wrapper.referencias = this.dataSource.data;
                     }
-                    console.log(' Lo que guardo -> ', this.wrapper);
+                    //console.log(' Lo que guardo -> ', this.wrapper);
                     this.cli.registrarCliente(this.wrapper).subscribe((data: any) => {
                       if (data.entidad && data.entidad.isCore && data.entidad.isSoftbank) {
-                        this.sinNoticeService.setNotice("CLIENTE REGISTRADO CORRECTAMENTE", 'success');
                         this.loadingSubject.next(false);
-                        if (this.idNegociacion) {
-                          this.router.navigate(['credito-nuevo/generar-credito/', this.idNegociacion]);
-                        } else {
-                          this.router.navigate(['negociacion/bandeja-operaciones']);
-                        }
+                        this.sinNoticeService.setNotice("CLIENTE REGISTRADO CORRECTAMENTE", 'success');
+                        if(this.origen == 'NEG'){ this.router.navigate(['credito-nuevo/generar-credito/', this.item]); }
+                        if(this.origen == 'NOV'){ this.router.navigate(['novacion/novacion-habilitante/', this.item]);}
+                        if(this.origen == 'CED'){ this.router.navigate(['negociacion/bandeja-operaciones']);}  
                       } else {
                         this.loadingSubject.next(false);
                         this.sinNoticeService.setNotice("NO SE PUDO REGISTRAR EL CLIENTE EN SOFTBANK", 'error');
-                        if (this.idNegociacion) {
-                          this.router.navigate(['credito-nuevo/generar-credito/', this.idNegociacion]);
-                        } else {
-                          this.router.navigate(['negociacion/bandeja-operaciones']);
-                        }
+                          if(this.origen == 'NEG'){ this.router.navigate(['credito-nuevo/generar-credito/', this.item]); }
+                          if(this.origen == 'NOV'){ this.router.navigate(['novacion/novacion-habilitante/', this.item]);}
+                          if(this.origen == 'CED'){ this.router.navigate(['negociacion/bandeja-operaciones']);}  
                       }
                     });
                   } else {

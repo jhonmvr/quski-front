@@ -68,7 +68,7 @@ export class BloquearCreditoComponent implements OnInit {
 
   id;
   cargarPagos() {
-    console.log("entra a popUp Aprobrar y Rechazar")
+    ////console.log("entra a popUp Aprobrar y Rechazar")
     let idReferenciaHab = this.id;
     const dialogRef = this.dialog.open(DialogoBloquearCreditoComponent, {
       width: "auto-max",
@@ -77,11 +77,11 @@ export class BloquearCreditoComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(r => {
       this.banderaGuardar.next(true);
-      console.log("datos de salida popUp", r)
+      //console.log("datos de salida popUp", r)
       let datos = this.dataSource.data;
       datos.push(r);
 
-      console.log("dataSOurce", datos);
+      //console.log("dataSOurce", datos);
       if (r) {
         this.dataSource.data = datos;
       }
@@ -89,19 +89,19 @@ export class BloquearCreditoComponent implements OnInit {
   }
   deletFila(row) {
     let data = this.dataSource.data;
-    console.log("esta es la fila q quiero borrar", row)
+    //console.log("esta es la fila q quiero borrar", row)
     data.splice(row, 1);
     this.dataSource = new MatTableDataSource<any>(data);
   };
   subirComprobante(j) {
-    console.log("registro ",j)
+    //console.log("registro ",j)
     const dialogRef = this.dialog.open(UploadFileComponent, {
       width: "auto",
       height: "auto"
     });
 
     dialogRef.afterClosed().subscribe(r => {
-      console.log("resultado del archivito q subi XD", r);
+      //console.log("resultado del archivito q subi XD", r);
       if (r) {
         j.nombreArchivo = r.nombreArchivo;
         j.archivo = r.archivo;
@@ -111,12 +111,12 @@ export class BloquearCreditoComponent implements OnInit {
     });
   }
   descargarComprobante(j) {
-    console.log("Archivo subido --->>>>> ", j);
+    //console.log("Archivo subido --->>>>> ", j);
     this.os.getObjectById( j.archivo,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
       if (confirm("Realmente quiere descargar?")) {
         if( data && data.entidad ){
           let obj=JSON.parse( atob(data.entidad) );
-          console.log("entra a retorno json " + JSON.stringify( obj ));
+          //console.log("entra a retorno json " + JSON.stringify( obj ));
           const byteCharacters = atob(obj.fileBase64);
           const byteNumbers = new Array(byteCharacters.length);
           for (let i = 0; i < byteCharacters.length; i++) {
@@ -131,7 +131,7 @@ export class BloquearCreditoComponent implements OnInit {
       }
       },
       error => {
-        console.log("================>error: " + JSON.stringify(error));
+        //console.log("================>error: " + JSON.stringify(error));
         this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
       });
   }
@@ -149,7 +149,7 @@ export class BloquearCreditoComponent implements OnInit {
   consultarClienteSoftbankCS() {
     let entidadConsultaCliente = new ClienteSoftbank();
     let cedula = this.identificacion.value;
-    console.log(" " + cedula)
+    //console.log(" " + cedula)
     entidadConsultaCliente.identificacion = cedula;
     entidadConsultaCliente.idTipoIdentificacion = 1;
 
@@ -158,9 +158,9 @@ export class BloquearCreditoComponent implements OnInit {
         this.cedula.setValue(data.identificacion);
         this.nombreCliente.setValue(data.nombreCompleto);
         let cuentasBancaCliente = data.cuentasBancariasCliente[0];
-        console.log(" cuentas cuentasBancariasCliente --->",cuentasBancaCliente )
+        //console.log(" cuentas cuentasBancariasCliente --->",cuentasBancaCliente )
         this.codigoCuentaMupi.setValue("5248548563");
-        console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data));
+        //console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data));
       } else {
         this.sinNoticeService.setNotice("Error no fue cacturado en 'consultarClienteCS' :(", 'error');
       }
@@ -177,7 +177,7 @@ export class BloquearCreditoComponent implements OnInit {
 
 
   Enviar() {
-    console.log("voy a guarar ")
+    //console.log("voy a guarar ")
     this.loadingSubject.next(true);
     if (this.formBloqueoFondo.invalid) {
       this.loadingSubject.next(false);
@@ -205,7 +205,7 @@ export class BloquearCreditoComponent implements OnInit {
     }
 
     this.registrarPagoService.bloqueoFondosConRelaciones(registrarBloqueoFondoWrapper).subscribe((p:any) => {
-      console.log("Datos que se van a guardar >>> ", this.registrarPagoService);
+      //console.log("Datos que se van a guardar >>> ", this.registrarPagoService);
       if(p.entidad && p.entidad.pagos){
         this.dataSource.data = p.entidad.pagos;
         this.banderaDescargar.next(true);

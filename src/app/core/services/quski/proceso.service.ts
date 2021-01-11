@@ -36,6 +36,17 @@ export class ProcesoService extends BaseService {
         error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
       )
     );
+  }  
+  public traerNumeroOperacionMadre(codigoBpm) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'traerNumeroOperacionMadre';
+    this.params = new HttpParams().set('codigoBpm', codigoBpm);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
   }
   /**
    * @author Jeroham Cadenas

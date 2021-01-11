@@ -37,7 +37,9 @@ export class DetalleDevolucionComponent implements OnInit{
  public nacionalidad = new FormControl('');
  public lugarNacimiento = new FormControl('');
  public edad = new FormControl('');
-
+ totalPesoBruto
+ totalPesoNeto
+ totalValorAvaluo
  //GESTION DEVOLUCION
  public tipoCliente = new FormControl('');
  public observaciones = new FormControl('');
@@ -147,9 +149,9 @@ datos
 
     this.getParametros();
     this.cargarDatos();
-    console.log("el encode", )
-    console.log(typeof(this.catalagoEstadosCiviles))
-    console.log( this.catalagoEstadosCiviles)
+    //console.log("el encode", )
+    //console.log(typeof(this.catalagoEstadosCiviles))
+    //console.log( this.catalagoEstadosCiviles)
 
    
    
@@ -187,7 +189,7 @@ datos
     let listDatosCreditos = []
     this.devService.getDevolucion(this.idDevolucion).subscribe((data:any)=> {
       if(data.entidad){
-        console.log("Hello", data.entidad)
+        //console.log("Hello", data.entidad)
         this.codigoOperacion.setValue(data.entidad.codigoOperacion)
         this.procesoDev.setValue("DEVOLUCION")
         this.cedulaCliente.setValue(data.entidad.cedulaCliente)
@@ -244,7 +246,7 @@ datos
 setFechaSistema(){
   this.cns.getSystemDate().subscribe((fechaSistema: any) => {
    this.fechaServer = new Date( fechaSistema.entidad);
-   console.log(this.fechaServer) 
+   //console.log(this.fechaServer) 
   })
 }
   
@@ -272,7 +274,7 @@ calcular(){
   this.totalNumeroJoya = 0
   let ind = 0;
   if (this.dataSource.data) {
-    //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
+    ////console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
     this.list=[];
     this.dataSource.data.forEach(element => {
       
@@ -309,7 +311,7 @@ consultarEducacionCS(){
 consultarPaisCS(){
   this.css.consultarPaisCS().subscribe((data:any)=> {
     if(!data.existeError){
-      console.log(data)
+      //console.log(data)
       this.catalogoPais = data.catalogo
     }
   })

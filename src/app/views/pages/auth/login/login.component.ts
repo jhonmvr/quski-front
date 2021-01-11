@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../core/reducers';
 // Auth
-import { AuthNoticeService, AuthService, Login } from '../../../../core/auth';
+import { AuthNoticeService, AuthService, currentUser, Login, User, UserLoaded } from '../../../../core/auth';
 import { AutorizacionService } from '../../../../core/services/autorizacion.service';
 import { environment } from '../../../../../environments/environment';
 import * as uuid from 'uuid';
@@ -147,12 +147,16 @@ export class LoginComponent implements OnInit, OnDestroy {
 						localStorage.setItem( environment.authKey, btoa( ""+ usuarioAuth.id) );
 						localStorage.setItem( environment.hashWebSocketKey,uuid.v4() )
 						this.store.dispatch(new Login({authToken: usuarioAuth.accessToken}));
-						console.log("=socket ruta " + this.ws.appWebSocketUrl + localStorage.getItem( environment.hashWebSocketKey )+"?dummy=1" );
+						//let user = new User();
+						//user.fullname = usuarioAuth.fullname;
+						//this.store.dispatch(new UserLoaded({ user: user }))
+						//console.log("=socket ruta " + this.ws.appWebSocketUrl + localStorage.getItem( environment.hashWebSocketKey )+"?dummy=1" );
 						this.ws.setParameter();
 						this.ws.connect(this.ws.appWebSocketUrl + localStorage.getItem( environment.hashWebSocketKey )+"?dummy=1");
 						this.ws.messages.subscribe(msg => {			
-							console.log("Response from websocket: ",msg);
+							//console.log("Response from websocket: ",msg);
 						});
+				//console.log("ruta de main ===>>>",this.returnUrl);
 						this.router.navigateByUrl(this.returnUrl); // Main page
 					} else {
 						this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
@@ -212,15 +216,15 @@ export class LoginComponent implements OnInit, OnDestroy {
 	/*
 	private userReturn(  dataLogin,dataParam,dataRoles:Array<RolWrapper>, credential): Observable<any>{
         
-        console.log( "++>FLAT MAP BUSCANDO PARAMETROS: " ) ;
-        console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataLogin " + JSON.stringify(dataLogin) ) ;
-        console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataParam " + JSON.stringify(dataParam) ) ;
-        console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataRoles " + JSON.stringify(dataRoles) ) ;
+        //console.log( "++>FLAT MAP BUSCANDO PARAMETROS: " ) ;
+        //console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataLogin " + JSON.stringify(dataLogin) ) ;
+        //console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataParam " + JSON.stringify(dataParam) ) ;
+        //console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataRoles " + JSON.stringify(dataRoles) ) ;
         
 
         if( dataLogin && dataLogin.entidad  ){
             this.setRe000(dataParam);                                                        
-            console.log( "++>termino busqueda de usuario canal: " + JSON.stringify( dataLogin)) ;
+            //console.log( "++>termino busqueda de usuario canal: " + JSON.stringify( dataLogin)) ;
                       
             
             let x:UsuarioAuth=new UsuarioAuth();
@@ -234,7 +238,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             //localStorage.setItem("reUser",credential.email); 
             if( dataRoles ){
                 let dataRolesFilter=dataRoles.filter(r=>r.estado==='A');
-                console.log( "++>ROLES FILTRADOS " + JSON.stringify(dataRolesFilter) ) ;
+                //console.log( "++>ROLES FILTRADOS " + JSON.stringify(dataRolesFilter) ) ;
                 if( dataRolesFilter ){
 					x.existLogin=true;
                     dataRolesFilter.forEach(r=>{
@@ -249,7 +253,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             return of(x);
         } else {
 			
-            console.log("===================retorna false: " + JSON.stringify( dataLogin ));  
+            //console.log("===================retorna false: " + JSON.stringify( dataLogin ));  
 			let y:UsuarioAuth=new UsuarioAuth();
 			y.existLogin=false;
             if( !dataLogin || !dataLogin.entidad ){

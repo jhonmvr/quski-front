@@ -81,6 +81,7 @@ export class ListCreditoComponent implements OnInit {
     private router: Router,
     private sof: SoftbankService,
 		public dialog: MatDialog) {
+      this.sof.setParameter();
       this.formFiltro.addControl("codigoOperacion", this.codigoOperacion);
       this.formFiltro.addControl("codigoOperacionMadre", this.codigoOperacionMadre);
       this.formFiltro.addControl("asesor", this.asesor);
@@ -101,6 +102,7 @@ export class ListCreditoComponent implements OnInit {
      }
 
   ngOnInit() {
+    this.sof.setParameter();
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.rol = "ASESOR";
@@ -140,7 +142,7 @@ export class ListCreditoComponent implements OnInit {
     this.router.navigate(['credito-nuevo/detalle-credito/', row.numeroOperacion]);    
   }
   public irNovar(row: any){
-    this.router.navigate(['novacion/crear-novacion', row.numeroOperacion]);    
+    this.router.navigate(['novacion/crear-novacion/CRE', row.numeroOperacion]);    
   }
   public limpiarFiltros(){
     Object.keys(this.formFiltro.controls).forEach((name) => {
@@ -185,10 +187,10 @@ export class ListCreditoComponent implements OnInit {
       let w = {} as WrapperBusqueda;
       //w.esMigrado = null;
       w.numeroOperacionMupi = null;
-      console.log('La pagina 1 ->' , numeroPagina);
+      //console.log('La pagina 1 ->' , numeroPagina);
       w.numeroPagina = numeroPagina ? numeroPagina : 1;
       w.tamanioPagina = tamanioPagina ? tamanioPagina : 5;
-      console.log('La pagina 2 ->' , w.numeroPagina);
+      //console.log('La pagina 2 ->' , w.numeroPagina);
       w.numeroOperacionMadre = this.codigoOperacionMadre.value ? this.codigoOperacionMadre.value : null;
       w.numeroOperacion = this.codigoOperacion.value ? this.codigoOperacion.value : null;
       w.idAgencia = this.agencia.value ? this.agencia.value.id : null;

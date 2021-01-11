@@ -46,7 +46,7 @@ export class ReasignarUsuarioComponent implements OnInit {
         this.catUsuarios = data.catalogo;
         this.dataSource.data = this.catUsuarios; 
       } else {
-        console.log('Me cai we :c');
+        //console.log('Me cai we :c');
       }
     });
   }
@@ -61,7 +61,7 @@ export class ReasignarUsuarioComponent implements OnInit {
       if (result) {
         this.pro.reasignarOperacion( this.data.id, this.data.proceso, row.codigo ).subscribe( (data: any) =>{
           if(data.entidad){
-            console.log('Si se pudo :) ->', data.entidad.asesor);
+            //console.log('Si se pudo :) ->', data.entidad.asesor);
             this.dialogRefGuardar.close(true);
           }else{
             this.sinNotSer.setNotice('ERROR REASIGNANDO ASESOR, VUELVA A INTENTAR.', 'error');

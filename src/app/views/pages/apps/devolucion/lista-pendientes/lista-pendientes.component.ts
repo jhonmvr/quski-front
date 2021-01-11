@@ -60,7 +60,7 @@ export class ListaPendientesComponent implements OnInit {
     this.buscar();
     //Se ejecuta cuando se hace click en el ordenamiento en el mattable
     this.sort.sortChange.subscribe(() => {
-      console.log("sort changed "  );
+      //console.log("sort changed "  );
       this.initiateTablePaginator();
       this.buscar();
     });
@@ -88,7 +88,7 @@ export class ListaPendientesComponent implements OnInit {
     p.sortFields = ordenarPor;
     p.sortDirections = tipoOrden;
     p.isPaginated = paginado;
-    //console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
+    ////console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
     return p;
   }
 
@@ -118,7 +118,7 @@ export class ListaPendientesComponent implements OnInit {
     this.dataSource = null;
     this.ds.busquedaArribo(this.p, this.codigoOperacion.value == null? "": this.codigoOperacion.value).subscribe((data:any)=>{
       if(data){
-        console.log(data.list)
+        //console.log(data.list)
         this.paginator.length = data.totalResults;
         this.dataSource=new MatTableDataSource<any>(data.list);
         this.loadingSubject.next(false);
@@ -141,7 +141,7 @@ isCheck(row): boolean {
 addRemove(row) {
   if (this.selection.isSelected(row.id)) {
     this.selection.deselect(row.id);
-    console.log(row.id)
+    //console.log(row.id)
   } else {
     this.selection.select(row.id);
   }
@@ -155,8 +155,8 @@ confirmarArribo(){
   if( this.selection && this.selection.selected && this.selection.selected.length>0 ){
     let listFundaPeso =[];
     let listIdDevolucion = [];
-    console.log("seleccion" ,this.selection.selected[0])
-    console.log(typeof( this.selection.selected))
+    //console.log("seleccion" ,this.selection.selected[0])
+    //console.log(typeof( this.selection.selected))
     let fundaPeso = {
       "funda" : "",
       "peso" : ""
@@ -165,11 +165,11 @@ confirmarArribo(){
     this.selection
     this.selection.selected.forEach(x=> listFundaPeso.push( "\n Funda: " + x.fundaActual + "      peso: " + x.pesoBruto.toFixed(2).toString().padStart(13, " ") ))
     this.selection.selected.forEach(x=> listIdDevolucion.push(x.id))
-    console.log(this.selection.selected[0])
+    //console.log(this.selection.selected[0])
      if (confirm('Usted confirma la recepción de las fundas:  ' + listFundaPeso  )) {
       this.ds.registrarArribo(listIdDevolucion).subscribe((data:any)=>{
         if(data){
-          console.log(data)
+          //console.log(data)
           this.noticeService.setNotice("Se ha registrado exitosamente" , "success")
           this.eliminarSelect();
           this.buscar();

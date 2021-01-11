@@ -276,12 +276,8 @@ export class DocumentoHabilitanteService extends BaseService {
       params: this.params,
       responseType: 'blob' as 'json'
     };
-    console.log(
-      "downloadHabilitantePlantilla options " + JSON.stringify(this.options)
-    );
-    console.log(
-      "downloadHabilitantePlantilla parametros " + JSON.stringify(this.params)
-    );
+    //console.log(      "downloadHabilitantePlantilla options " + JSON.stringify(this.options)   );
+    //console.log(      "downloadHabilitantePlantilla parametros " + JSON.stringify(this.params));
     //return this.http.get(serviceUrl, { params: this.params, responseType: 'blob' as 'json' });
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

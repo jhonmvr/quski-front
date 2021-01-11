@@ -33,6 +33,24 @@ export class AuthEffects {
         ofType<Logout>(AuthActionTypes.Logout),
         tap(() => {
             localStorage.removeItem(environment.authTokenKey);
+            localStorage.removeItem("re1001");
+            localStorage.removeItem("RE2000");
+            localStorage.removeItem("RE2001");
+            localStorage.removeItem("layoutConfig");
+                localStorage.removeItem(environment.rolKey);
+                localStorage.removeItem("setRE000"); 
+                localStorage.removeItem("authcekey"); 
+                for (var index = 1; index <= environment.paramsize; index++) {
+                    let key= environment.prefix + 'RE';
+                    if( index <10 ){
+                        key=key+'00'+index;
+                    } else {
+                        key=key+'0'+index; 
+                    }
+                    if( key != 'RE030' ){     
+                        localStorage.removeItem(key);
+                    }
+                }
 			         this.router.navigate(['/auth/login'], {queryParams: {returnUrl: this.returnUrl}});
         })
     );

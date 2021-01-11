@@ -14,7 +14,7 @@ export class MensajeEdadComponent implements OnInit {
   }
   ngOnInit(): void {
     this.mensaje = this.data;
-    console.log('MENSAJE EDAD MensajeEdadComponent===> ', this.mensaje);
+    //console.log('MENSAJE EDAD MensajeEdadComponent===> ', this.mensaje);
   }
   salir() {
     this.dialogRef.close();

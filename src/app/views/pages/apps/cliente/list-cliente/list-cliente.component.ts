@@ -75,7 +75,7 @@ export class ListClienteComponent implements OnInit {
 
     //Se ejecuta cuando se hace click en el ordenamiento en el mattable
     this.sort.sortChange.subscribe(() => {
-      console.log("sort changed "  );
+      //console.log("sort changed "  );
       this.initiateTablePaginator();
       this.buscar();
     });

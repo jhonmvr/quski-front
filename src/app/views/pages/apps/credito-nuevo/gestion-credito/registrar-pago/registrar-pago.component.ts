@@ -91,7 +91,7 @@ export class RegistrarPagoComponent implements OnInit {
 
   id;
   cargarPagos() {
-    console.log("entra a popUp angregar pago")
+    //console.log("entra a popUp angregar pago")
     let idReferenciaHab = this.id;
     const dialogRef = this.dialog.open(RegistarPagoDialogComponent, {
       width: "auto-max",
@@ -100,11 +100,11 @@ export class RegistrarPagoComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(r => {
     this.banderaGuardar.next(true);
-      console.log("datos de salida popUp", r)
+      //console.log("datos de salida popUp", r)
       let datos = this.dataSource.data;
       datos.push(r);
 
-      console.log("dataSOurce", datos);
+      //console.log("dataSOurce", datos);
       if (r) {
         this.dataSource.data = datos;
       }
@@ -112,20 +112,20 @@ export class RegistrarPagoComponent implements OnInit {
   }
   deletFila(row) {
     let data = this.dataSource.data;
-    console.log("esta es la fila q quiero borrar", row)
+    //console.log("esta es la fila q quiero borrar", row)
     data.splice(row, 1);
     this.dataSource = new MatTableDataSource<any>(data);
   };
 
   subirComprobante(j) {
-    console.log("registro ",j)
+    //console.log("registro ",j)
     const dialogRef = this.dialog.open(UploadFileComponent, {
       width: "auto",
       height: "auto"
     });
 
     dialogRef.afterClosed().subscribe(r => {
-      console.log("resultado del archivito q subi XD", r);
+      //console.log("resultado del archivito q subi XD", r);
       if (r) {
         j.nombreArchivo = r.nombreArchivo;
         j.archivo = r.archivo;  
@@ -137,12 +137,12 @@ export class RegistrarPagoComponent implements OnInit {
   }
 
   descargarComprobante(j) {
-    console.log("Archivo subido --->>>>> ", j);
+    //console.log("Archivo subido --->>>>> ", j);
     this.os.getObjectById( j.archivo,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
       if (confirm("Realmente quiere descargar?")) {
         if( data && data.entidad ){
           let obj=JSON.parse( atob(data.entidad) );
-          console.log("entra a retorno json " + JSON.stringify( obj ));
+          //console.log("entra a retorno json " + JSON.stringify( obj ));
           const byteCharacters = atob(obj.fileBase64);
           const byteNumbers = new Array(byteCharacters.length);
           for (let i = 0; i < byteCharacters.length; i++) {
@@ -157,7 +157,7 @@ export class RegistrarPagoComponent implements OnInit {
       }
       },
       error => {
-        console.log("================>error: " + JSON.stringify(error));
+        //console.log("================>error: " + JSON.stringify(error));
         this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
       });
   }
@@ -175,7 +175,7 @@ export class RegistrarPagoComponent implements OnInit {
   consultarClienteSoftbankCS() {
     let entidadConsultaCliente = new ClienteSoftbank();
     //let cedula = this.identificacion.value;
-    //console.log(" "  + cedula)
+    ////console.log(" "  + cedula)
     entidadConsultaCliente.identificacion = "1311066441";
     entidadConsultaCliente.idTipoIdentificacion = 1;
 
@@ -184,10 +184,10 @@ export class RegistrarPagoComponent implements OnInit {
         this.cedula.setValue(data.identificacion);
         this.nombreCliente.setValue(data.nombreCompleto);
         let cuentasBancaCliente = data.cuentasBancariasCliente[0];
-        //console.log(" cuenta banco --->",cuentasBancaCliente.cuenta )
+        ////console.log(" cuenta banco --->",cuentasBancaCliente.cuenta )
         this.codigoCuentaMupi.setValue("5248548563");
         this.tipoCredito.setValue("CUOTAS");
-        //console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data));
+        ////console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data));
       } else {
         this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
       }
@@ -210,7 +210,7 @@ export class RegistrarPagoComponent implements OnInit {
       if (data.operaciones[0]) {
         let codOpera = data.operaciones[0];
         this.codigoOperacion.setValue(codOpera.numeroOperacion);
-        //console.log("Consulta de Operacion en Cloustudio --> " + JSON.stringify(data.operaciones[0]));
+        ////console.log("Consulta de Operacion en Cloustudio --> " + JSON.stringify(data.operaciones[0]));
       } else {
         this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaOperacion'", 'error');
       }
@@ -233,7 +233,7 @@ export class RegistrarPagoComponent implements OnInit {
       if (data) {
         let rubro = data.rubros;
         this.dataSourceRubros = new MatTableDataSource<any>(rubro.filter(e => e.estado == "ACTIVO"));
-        //console.log("Consulta de Rubros en Cloustudio --> " + JSON.stringify(data));
+        ////console.log("Consulta de Rubros en Cloustudio --> " + JSON.stringify(data));
       } else {
         this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaRubros'", 'error');
       }
@@ -249,7 +249,7 @@ export class RegistrarPagoComponent implements OnInit {
   };
 
   guardar() {
-    console.log("voy a guardar ")
+    //console.log("voy a guardar ")
     this.loadingSubject.next(true);
     if (this.formRegistrarPago.invalid) {
       this.loadingSubject.next(false);
@@ -280,7 +280,7 @@ export class RegistrarPagoComponent implements OnInit {
     }
 
     this.registrarPagoService.crearRegistrarPagoConRelaciones(registrarPagoWrapper).subscribe((p:any) => {
-      console.log(" >>> ", this.registrarPagoService);
+      //console.log(" >>> ", this.registrarPagoService);
       if(p.entidad && p.entidad.pagos){
         this.dataSource.data = p.entidad.pagos;
         this.banderaDescargar.next(true);

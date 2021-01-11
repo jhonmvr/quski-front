@@ -31,12 +31,12 @@ export class HabilitanteDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogDataHabilitante,
     private upload: ReFileUploadService, private os:ObjectStorageService
   ) {
-/*     console.log( "===>cargando dialog habilitante: " + JSON.stringify(this.data));
-    console.log("===>contraro relate referencia: " + this.data.referencia);
-    console.log("===>contraro relate tipoDocumento: " + this.data.tipoDocumento);
-    console.log("===>contraro relate proceso: " + this.data.proceso);
-    console.log("===>contraro relate estadoOperacion: " +this.data.estadoOperacion);
-    console.log("===>contraro relate idhabilitante: " +this.data.documentoHabilitante); */
+/*     //console.log( "===>cargando dialog habilitante: " + JSON.stringify(this.data));
+    //console.log("===>contraro relate referencia: " + this.data.referencia);
+    //console.log("===>contraro relate tipoDocumento: " + this.data.tipoDocumento);
+    //console.log("===>contraro relate proceso: " + this.data.proceso);
+    //console.log("===>contraro relate estadoOperacion: " +this.data.estadoOperacion);
+    //console.log("===>contraro relate idhabilitante: " +this.data.documentoHabilitante); */
     this.upload.setParameter();
     this.os.setParameter();
   }
@@ -74,7 +74,7 @@ export class HabilitanteDialogComponent implements OnInit {
             };
           };
         } else {
-          //console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
+          ////console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
           //this.fileInput.nativeElement = null;
           //document.getElementById("fileUpload").nodeValue = "";
           //file = null
@@ -84,13 +84,13 @@ export class HabilitanteDialogComponent implements OnInit {
         }
         
       } else {
-        //console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
+        ////console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
         //this.fileInput.nativeElement = null;
         //document.getElementById("fileUpload").nodeValue = "";
         //file = null
         this.dataUpload =null;
         this.uploadSubject.next(false);
-        console.log("entra aqui")
+        //console.log("entra aqui")
         this.sinNoticeService.setNotice("Formato no permitido.", 'error');
       }
     } else {
@@ -99,23 +99,23 @@ export class HabilitanteDialogComponent implements OnInit {
   }
 
   public subirArchivoHabilitante() {
-    //console.log("===> subirArchivoHabilitantecontraro relate id: " +JSON.stringify(this.dataUpload));
-    //console.log("===> subirArchivoHabilitantecontraro relate id: " +btoa( JSON.stringify( this.dataUpload )));
-    //console.log("===> subirArchivoHabilitante contraro relate tipo: " +JSON.stringify(this.data.tipoDocumento));
+    ////console.log("===> subirArchivoHabilitantecontraro relate id: " +JSON.stringify(this.dataUpload));
+    ////console.log("===> subirArchivoHabilitantecontraro relate id: " +btoa( JSON.stringify( this.dataUpload )));
+    ////console.log("===> subirArchivoHabilitante contraro relate tipo: " +JSON.stringify(this.data.tipoDocumento));
     this.os.createObject( btoa( JSON.stringify( this.dataUpload ) ) , 
       this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe( (objectData:any)=>{
-      //console.log("===> subirArchivoHabilitante retorna mongo: " +JSON.stringify(objectData));
+      ////console.log("===> subirArchivoHabilitante retorna mongo: " +JSON.stringify(objectData));
       if( objectData && objectData.entidad ){
         this.dataUpload.objectId=objectData.entidad;
         this.fileBase64=null;
         this.upload.uploadFile(this.upload.appResourcesUrl +"uploadRestController/loadFileHabilitanteSimplified",this.dataUpload).subscribe((data: any) => {
           this.dialogRef.close(data.relatedIdStr);
         },error => {
-          //console.log("error llegado " + JSON.stringify(error.error));
+          ////console.log("error llegado " + JSON.stringify(error.error));
           if (JSON.stringify(error.error).indexOf("codError") > 0) {
             let b = error.error;
           } else {
-            console.log("error no java " + error);
+            //console.log("error no java " + error);
           }
         }
       );

@@ -45,9 +45,9 @@ export class TbQoCreditoNegociacion {
     nombreCompletoApoderado: string;
     fechaNacimientoApoderado: Date;
     tbQoNegociacion: TbQoNegociacion;
-    codigoOperacion:  string;
     costoCustodia: number;
     costoFideicomiso: number;
+    numeroOperacionMadre: string;
     costoSeguro: number;
     costoTasacion: number;
     costoTransporte: number;

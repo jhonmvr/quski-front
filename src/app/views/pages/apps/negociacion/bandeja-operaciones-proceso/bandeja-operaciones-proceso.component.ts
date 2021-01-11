@@ -59,6 +59,8 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService
   ) {
+    this.pro.setParameter();
+    this.sof.setParameter();
     /** ** @FORMULARIO ** */
     this.formFiltro.addControl("nombreCompleto", this.nombreCompleto);
     this.formFiltro.addControl("identificacion", this.identificacion);
@@ -70,6 +72,8 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.pro.setParameter();
+    this.sof.setParameter();
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     //this.usuario = 'Jero';
@@ -105,7 +109,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         this.loadingSubject.next(false);
         this.paginator.length = 0;
         this.dataSource.data = null;
-        console.log("Me cai en la busqueda :c");
+        //console.log("Me cai en la busqueda :c");
       }
     });
   }
@@ -139,7 +143,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         this.catAgencia = data.catalogo;
         this.buscarOperaciones( new WrapperBusqueda() );
       } else {
-        console.log("Me cai en la Cat de agencia :c");
+        //console.log("Me cai en la Cat de agencia :c");
       }
     });
   }
@@ -158,11 +162,11 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
               }
             });
           }else {
-            console.log("Me cai en la busqueda de enums de procesos :c");
+            //console.log("Me cai en la busqueda de enums de procesos :c");
           }
         });
       } else{
-        console.log("Me cai buscando Los estados de procesos :c ");
+        //console.log("Me cai buscando Los estados de procesos :c ");
       }
     });
   }
@@ -195,31 +199,31 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
          w = new WrapperBusqueda();
       }
       if(this.estado.value != "" && this.estado.value != null){
-        console.log("estado -->", this.estado.value);
+        //console.log("estado -->", this.estado.value);
         w.estado = this.estado.value.replace(/ /gi,"_",);
       }
       if(this.actividad.value != "" && this.actividad.value!= null){
-        console.log("actividad -->", this.actividad.value);
+        //console.log("actividad -->", this.actividad.value);
         w.actividad = this.actividad.value.replace(/ /gi,"_",);
       }
       if(this.fechaCreacionDesde.value != "" && this.fechaCreacionDesde.value!= null){
-        console.log("fechaCreacionDesde -->", this.fechaCreacionDesde.value);
+        //console.log("fechaCreacionDesde -->", this.fechaCreacionDesde.value);
         w.fechaCreacionDesde = this.fechaCreacionDesde.value;
       }
       if(this.fechaCreacionHasta.value != "" && this.fechaCreacionHasta.value!= null){
-        console.log("fechaCreacionHasta -->", this.fechaCreacionHasta.value);
+        //console.log("fechaCreacionHasta -->", this.fechaCreacionHasta.value);
         w.fechaCreacionHasta = this.fechaCreacionHasta.value;
       }
       if(this.identificacion.value != "" && this.identificacion.value!= null){
-        console.log("identificacion -->", this.identificacion.value);
+        //console.log("identificacion -->", this.identificacion.value);
         w.identificacion = this.identificacion.value;
       }
       if(this.nombreCompleto.value != "" && this.nombreCompleto.value!= null){
-        console.log("nombreCompleto -->", this.nombreCompleto.value);
+        //console.log("nombreCompleto -->", this.nombreCompleto.value);
         w.nombreCompleto = this.nombreCompleto.value;
       }
       if(this.proceso.value != ""  && this.proceso.value!= null){
-        console.log("proceso -->", this.proceso.value);
+        //console.log("proceso -->", this.proceso.value);
         w.proceso = this.proceso.value.replace(/ /gi,"_",);
       }
 
@@ -240,14 +244,12 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         this.router.navigate(['negociacion/gestion-negociacion/NEG/',row.id]);    
       }
       if(row.proceso == 'RENOVACION'){
-        this.sinNotSer.setNotice("HISTORIA DE RENOVACION AUN NO EXISTE","error");
-        console.log('Me fui jiji ->',row.id);
-        this.limpiarFiltros();
-        this.router.navigate(['negociacion/bandeja-operaciones']);
+        //console.log('row.codigoBpm ? ->', row.codigoBpm);
+        this.router.navigate(['novacion/crear-novacion/NOV/', row.id]);
       }
       if(row.proceso == 'DEVOLUCION'){
         this.sinNotSer.setNotice("HISTORIA DE DEVOLUCION AUN NO EXISTE","error");
-        console.log('Me fui jiji ->',row.id);
+        //console.log('Me fui jiji ->',row.id);
         this.limpiarFiltros();
         this.router.navigate(['negociacion/bandeja-operaciones']);
       }

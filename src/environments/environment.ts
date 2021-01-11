@@ -20,18 +20,29 @@ export const environment = {
     userKey:"RE2001",
     rolKey:"re1002",
     rolName:"re1001",
-    rootKey:"/quski-front/",
+    rootKey:"quski-front/",
     mongoHabilitanteCollection:'documento-habilitante',
+    appkey:"QUSKIBPM",
+    //SOFTBANK
+    //parametros
+    app_p : 'aHR0cDovL2FwaWd3LnF1c2tpLmVjOjg0ODAvZ2VuZXJpYy1yZWxhdGl2ZS1yZXN0L3Jlc291cmNlcy9yZWxhdGl2ZS9nZXRSZWxhdGl2ZQo=',
+    //agente supervisor
+    abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
+    //autenticacion 
+    seg_a :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC9sb2dpbgo=",
+    //seguridad-resources
+    seg_r :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC8="
+    
+
     //DESARROLLO
     //parametros
-    app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU=',
+    //app_p : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9nZW5lcmljLXJlbGF0aXZlLXJlc3QvcmVzb3VyY2VzL3JlbGF0aXZlL2dldFJlbGF0aXZl',
     //agente supervisor
-    abu : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL21pZGFzLW9yby1yZXN0L3Jlc291cmNlcy9hZ2VudGVSZXN0Q29udHJvbGxlci9hZ2VudGVPclN1cGVydmlzb3JCeVVzZXJuYW1l',
+    //abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
     //autenticacion 
-    seg_a :"aHR0cDovL2xvY2FsaG9zdDo4MDgwL2NvcmUtc2VjdXJpdHktd2ViL3Jlc291cmNlcy9hdXRlbnRpY2FjaW9uL3NzMDAz",
+    //seg_a :"aHR0cDovL2xvY2FsaG9zdDoyODA4MC9jb3JlLXNlY3VyaXR5LXdlYi9yZXNvdXJjZXMvYXV0ZW50aWNhY2lvbi9zczAwMw==",
     //seguridad-resources
-    seg_r :"aHR0cDovL2xvY2FsaG9zdDo4MDgwL2NvcmUtc2VjdXJpdHktd2ViL3Jlc291cmNlcy8="
-    
+    //seg_r :"aHR0cDovL2xvY2FsaG9zdDoyODA4MC9jb3JlLXNlY3VyaXR5LXdlYi9yZXNvdXJjZXMv"
     //pruebas
     //cpu : 'aHR0cDovLzE4Ni40LjE5OS4xNzY6MTg0ODAvbWlkYXMtb3JvLXJlc3QvcmVzb3VyY2VzL3JlbGF0aXZlL2dldFJlbGF0aXZl',
     //abu : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL21pZGFzLW9yby1yZXN0L3Jlc291cmNlcy9hZ2VudGVSZXN0Q29udHJvbGxlci9hZ2VudGVPclN1cGVydmlzb3JCeVVzZXJuYW1l',

@@ -53,14 +53,14 @@ export class IntegracionService extends BaseService {
    * @param consulta ConsultaOferta
    */
   public getInformacionOferta(consulta: ConsultaOferta) {
-    console.log("INGRESA AL SERVICIO LA FECHA ES ----> " + consulta.fechaNacimiento)
+    //console.log("INGRESA AL SERVICIO LA FECHA ES ----> " + consulta.fechaNacimiento)
     const pipe = new DatePipe('en-US');
     // let fdf = null;
     // let fdff = new Date(consulta.fechaNacimiento);
     // fdff.setMinutes(fdff.getMinutes() + fdff.getTimezoneOffset());
     let fechaNacimiento = new Date(consulta.fechaNacimiento);
     const strigFecha = pipe.transform(fechaNacimiento, 'dd/MM/yyyy');
-    console.log("INGRESA AL SERVICIO LA FECHA ES ----> " + strigFecha);
+    //console.log("INGRESA AL SERVICIO LA FECHA ES ----> " + strigFecha);
 
     const serviceUrl = this.appResourcesUrl + 'integracionRestController/getInformacionOferta';
 

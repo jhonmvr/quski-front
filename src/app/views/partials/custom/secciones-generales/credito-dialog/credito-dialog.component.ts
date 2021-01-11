@@ -54,13 +54,13 @@ export class CreditoDialogComponent implements OnInit {
   submit() {
     this.cs.riesgoAcumulado().subscribe((data: any) => {
 
-      console.log("Rieso acumulado >>>>" + JSON.stringify(data));
+      //console.log("Rieso acumulado >>>>" + JSON.stringify(data));
       if (data.list) {
-        console.log("lista  >>>>" + JSON.stringify(data.list));
+        //console.log("lista  >>>>" + JSON.stringify(data.list));
 
         this.totalResults = data.totalResults;
         //this.dataSourceCre = new MatTableDataSource<>(data.list);
-        //console.log("lista 2 >>>>" + JSON.stringify(this.dataSourceCre));
+        ////console.log("lista 2 >>>>" + JSON.stringify(this.dataSourceCre));
         this.element = null;
 
       } else {

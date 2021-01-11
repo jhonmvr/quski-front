@@ -50,20 +50,20 @@ export class TrackingUtil{
      
       this.tra.guardarTracking(this.t).subscribe((data: any) => {
         if (data.entidad) {
-          console.log('TRACKING REGISTRADO ----> ', data.entidad);
+          //////console.log('TRACKING REGISTRADO ----> ', data.entidad);
         } else {
-          console.log('ERROR REGISTRANDO TRACKING  ----> ', data.entidad);
+          //console.log('ERROR REGISTRANDO TRACKING  ----> ', data.entidad);
         }
       }, error => {
         if (JSON.stringify(error).indexOf('codError') > 0) {
           const b = error.error;
-          console.log('ERROR REGISTRANDO TRACKING  ----> ', b.msgError);
+          //console.log('ERROR REGISTRANDO TRACKING  ----> ', b.msgError);
         } else {
-          console.log('ERROR DESCONOCIDO REGISTRANDO TRACKING :c');
+          //console.log('ERROR DESCONOCIDO REGISTRANDO TRACKING :c');
         }
       });
     } else{
-      console.log('TRACKING NO REGISTRADO ----> ERROR: Falta fecha de inicio, atencion, asignacion o fin.');
+      //console.log('TRACKING NO REGISTRADO ----> ERROR: Falta fecha de inicio, atencion, asignacion o fin.');
     }
   }
 }

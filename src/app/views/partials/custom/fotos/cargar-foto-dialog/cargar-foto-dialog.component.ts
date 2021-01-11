@@ -32,9 +32,7 @@ export class CargarFotoDialogComponent implements OnInit {
   constructor(private sinNoticeService: ReNoticeService,public dialogRef: MatDialogRef<CargarFotoDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private upload: ReFileUploadService) {
-      console.log(
-        "===>cargando dialog habilitante: " + JSON.stringify(this.data)
-      );
+      //console.log( "===>cargando dialog habilitante: " + JSON.stringify(this.data));
      }
 
   ngOnInit() {
@@ -82,17 +80,11 @@ export class CargarFotoDialogComponent implements OnInit {
   }
 
   public subirArchivoHabilitante(elemento) {
-    console.log("Ingresa al archivo subir",this.dataUpload)
-    console.log("===>>llego a subir: ",JSON.stringify(this.data) );
-    console.log(
-      "===> subirArchivoHabilitantecontraro relate id: " +
-        JSON.stringify(this.data.nombresCompletos)
-    );
-    console.log(
-      "===> subirArchivoHabilitante contraro relate tipo: " +
-        JSON.stringify(this.data.idTipoDocumento)
-    );
-    console.log("===> va a upload con dagtos: " + JSON.stringify(this.dataUpload));
+    //console.log("Ingresa al archivo subir",this.dataUpload)
+    //console.log("===>>llego a subir: ",JSON.stringify(this.data) );
+    //console.log("===> subirArchivoHabilitantecontraro relate id: " +JSON.stringify(this.data.nombresCompletos));
+    //console.log("===> subirArchivoHabilitante contraro relate tipo: " +JSON.stringify(this.data.idTipoDocumento));
+    //console.log("===> va a upload con dagtos: " + JSON.stringify(this.dataUpload));
     this.upload
       .uploadFile(
         this.upload.appResourcesUrl +
@@ -105,14 +97,14 @@ export class CargarFotoDialogComponent implements OnInit {
           this.dialogRef.close(data.relatedIdStr);
         },
         error => {
-          console.log("error llegado " + JSON.stringify(error.error));
+          //console.log("error llegado " + JSON.stringify(error.error));
           if (JSON.stringify(error.error).indexOf("codError") > 0) {
             //let b = JSON.parse( error._body );
            // let b = error.error;
             
            this.sinNoticeService.setNotice("ERROR EN LA CARGA DE ARCHIVO " , 'error');
           } else {
-            console.log("error no java " + error);
+            //console.log("error no java " + error);
             // this.alert={id: 2,type: "danger",message: "ERROR EN LA CARGA DE ARCHIVO " };
             //this.sinNoticeService.setNotice("ERROR EN LA CARGA DE ARCHIVO", 'error');
           }

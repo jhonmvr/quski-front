@@ -42,7 +42,7 @@ export class BaseService {
     this.params = new HttpParams();
     if (localStorage.getItem('reUser')) {
       this.headers= new HttpHeaders({ 'Content-Type': 'application/json' });
-      console.log("Hola, creaste los headers");
+      //console.log("Hola, creaste los headers");
       if( localStorage.getItem( environment.authTokenKey ) ){
         this.headers=new HttpHeaders({ 
           'Authorization':environment.authprefix+ localStorage.getItem(environment.authTokenKey),
@@ -54,7 +54,7 @@ export class BaseService {
       };
     }
   }
-/* 
+
   public setParameter() {
            localStorage.setItem('setRE000', 'true');
            this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
@@ -84,9 +84,9 @@ export class BaseService {
            //parametros cloudstudio
            this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
            
-  } */
+  }
 
-  public setParameter() {
+  /* public setParameter() {
     localStorage.setItem('setRE000', 'true');
     this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
     //Url de acceso al rootcontext de seguridad core-security-web
@@ -96,7 +96,7 @@ export class BaseService {
     //Full url para datos de usuario por rol core-security-web
     this.userRolServiceUrl = 'http://localhost:8080/core-security-web/resources/usuarioRolRestController/getEntitiesByUsuario';
     //Full url par datos del servicio core-security-web
-    //this.menuServiceUrl = 'http://localhost:8080/core-security-web/resources/authRolRestController/opciones/usuario';
+    //this.menuServiceUrl = 'http://localhost:28080/core-security-web/resources/authRolRestController/opciones/usuario';
     //Path al rootcontext de la app 
     this.appRootContextUrl = 'http://localhost:8080/quski-oro-rest/';
     //Path al resources de la app
@@ -115,7 +115,7 @@ export class BaseService {
     //parametros cloudstudio
     this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
     
-}
+} */
   
 
   public getSystemDate() {
@@ -181,8 +181,8 @@ export class BaseService {
   }
 
    public manageGenericUrl(wrapper: BaseWrapper, serviceUrl: string) {
-    console.log('==> manageGenericUrlxx ' + JSON.stringify(wrapper));
-    console.log('==> url ' + serviceUrl);
+    //console.log('==> manageGenericUrlxx ' + JSON.stringify(wrapper));
+    //console.log('==> url ' + serviceUrl);
     this.options = { headers: this.headers };
     return this.http.post<BaseWrapper>(serviceUrl, wrapper, this.options);
   }
@@ -238,7 +238,7 @@ export class BaseService {
   }
 
   findBytebyIdUrl(url: string, id: string, fileType: string) {
-    console.log('findBytebyIdUrl');
+    //console.log('findBytebyIdUrl');
     this.params = new HttpParams();
     this.params.set('id', id);
     this.params.set('fileType', fileType);
@@ -247,7 +247,7 @@ export class BaseService {
       params: this.params,
       responseType: 'blob'
     };
-    console.log('findBytebyIdUrl options ' + this.options);
+    //console.log('findBytebyIdUrl options ' + this.options);
     return this.http.get(
       url + '?id=' + id + '&codigo=' + fileType,
       this.options
@@ -295,7 +295,7 @@ export class BaseService {
           sinNoticeService.setNotice(error.message, 'error');
         }else{
           sinNoticeService.setNotice(error.error, 'error');
-          //console.log(error);
+          ////console.log(error);
         }
       }
     }
@@ -314,7 +314,8 @@ export class BaseService {
       errorMessage = 'Error: ' + error.statusText;
     } else {
       errorMessage = 'Error: ' +
-        (error.error.mensaje === undefined || error.error.mensaje === null ? error.message : error.error.mensaje);
+        (error.error === undefined || error.error === null ?error:
+          error.error.mensaje === undefined || error.error.mensaje === null ? error.message : error.error.mensaje);
     }
 
     return throwError(errorMessage);

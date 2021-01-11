@@ -10,7 +10,7 @@ export class UsuarioAuth {
     accessToken: string='access-token-' + Math.random();
     refreshToken:string= 'access-token-' + Math.random();
     roles:string[] =['ADMIN'];
-    pic:string= './assets/app/media/img/users/user4.jpg';
+    pic:string= './quski-front/assets/app/media/img/users/user4.jpg';
     fullname:string;
     existLogin:boolean;
     

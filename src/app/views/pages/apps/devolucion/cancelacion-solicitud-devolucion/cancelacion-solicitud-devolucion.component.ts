@@ -153,9 +153,9 @@ datos
     this.cargarDatos();
    this.validateExisteProcesoCancelacion();
     this.validateCancelacion();
-    console.log("el encode", )
-    console.log(typeof(this.catalagoEstadosCiviles))
-    console.log( this.catalagoEstadosCiviles)
+    //console.log("el encode", )
+    //console.log(typeof(this.catalagoEstadosCiviles))
+    //console.log( this.catalagoEstadosCiviles)
 
 
    
@@ -195,7 +195,7 @@ datos
     let listDatosCreditos = []
     this.devService.getDevolucion(this.idDevolucion).subscribe((data:any)=> {
       if(data.entidad){
-        console.log("Hello", data.entidad)
+        //console.log("Hello", data.entidad)
         this.codigoOperacion.setValue(data.entidad.codigoOperacion)
         this.procesoDev.setValue("DEVOLUCION")
         this.cedulaCliente.setValue(data.entidad.cedulaCliente)
@@ -240,7 +240,7 @@ datos
       
        
         this.idDevolucion = params.get('idDevolucion');
-        console.log("parametro", this.idDevolucion)
+        //console.log("parametro", this.idDevolucion)
        
       },
       error => {
@@ -253,7 +253,7 @@ datos
 setFechaSistema(){
   this.cns.getSystemDate().subscribe((fechaSistema: any) => {
    this.fechaServer = new Date( fechaSistema.entidad);
-   console.log(this.fechaServer) 
+   //console.log(this.fechaServer) 
   })
 }
   
@@ -272,7 +272,7 @@ getEdad(fechaValue){
 
   let ind = 0;
   if (this.dataSourceJoyas.data) {
-    //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
+    ////console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
  
     this.joyasList.forEach(element => {
       
@@ -312,7 +312,7 @@ anularSolicitud(){
     if(data.entidad){
       this.sinNoticeService.setNotice("Se ha registrado la solicitud de cancelacion", "success")
       this.disableCancelacion.next(false);
-      console.log("Exito")
+      //console.log("Exito")
       this.router.navigate(['negociacion/bandeja-operaciones'    ]);
      
 
@@ -327,12 +327,12 @@ anularSolicitud(){
   validateExisteProcesoCancelacion(){
     this.devService.existeCancelacionCancelacion(this.idDevolucion).subscribe((data:any)=>{
       if(data.entidad){
-        console.log("La validacion", data)
+        //console.log("La validacion", data)
       
         this.sinNoticeService.setNotice("Ya existe un proceso de cancelación para la devolución", "warning")
         this.disableCancelacion.next(false);
       }else {
-        console.log("Deberia ser False")
+        //console.log("Deberia ser False")
         this.disableCancelacion.next(true);
       }
     })
@@ -344,11 +344,11 @@ anularSolicitud(){
  
       this.devService.validarCancelacionSolicitud(this.idDevolucion).subscribe((data:any)=>{
         if(data.entidad.bandera){
-          console.log("La validacion", data)
+          //console.log("La validacion", data)
           this.disableCancelacion.next(true);
           
         }else {
-          console.log("Deberia ser False")
+          //console.log("Deberia ser False")
           this.sinNoticeService.setNotice( data.entidad.mensaje, "warning")
           this.disableCancelacion.next(false);
         }

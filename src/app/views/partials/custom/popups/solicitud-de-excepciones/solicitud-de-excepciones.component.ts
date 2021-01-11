@@ -134,7 +134,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
     this.dialogRef.close(result);
   }
   public abrirSubBotonesM() {
-    console.log("Holis?")
+    //console.log("Holis?")
     this.abrirSubBotones = true;
   }
   

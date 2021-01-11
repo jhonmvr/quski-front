@@ -15,15 +15,28 @@ export const environment = {
     DATE_FORMAT:'dd/MM/yyyy',
     userKey:"RE2001",
     rolKey:"re1002",
-    rootKey:"/quski-front/",
+    rolName:"re1001",
+    rootKey:"quski-front/",
     mongoHabilitanteCollection:'documento-habilitante',
+    appkey:"QUSKIBPM",
     //DESARROLLO
     //parametros
-    app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL3F1c2tpLW9yby1yZXN0L3Jlc291cmNlcy9yZWxhdGl2ZS9nZXRSZWxhdGl2ZQ==',
+    //app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL3F1c2tpLW9yby1yZXN0L3Jlc291cmNlcy9yZWxhdGl2ZS9nZXRSZWxhdGl2ZQ==',
     //agente supervisor
-    abu : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL21pZGFzLW9yby1yZXN0L3Jlc291cmNlcy9hZ2VudGVSZXN0Q29udHJvbGxlci9hZ2VudGVPclN1cGVydmlzb3JCeVVzZXJuYW1l',
+    //abu : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL21pZGFzLW9yby1yZXN0L3Jlc291cmNlcy9hZ2VudGVSZXN0Q29udHJvbGxlci9hZ2VudGVPclN1cGVydmlzb3JCeVVzZXJuYW1l',
     //autenticacion 
-    seg_a :"aHR0cDovL2xvY2FsaG9zdDo4MDgwL2NvcmUtc2VjdXJpdHktd2ViL3Jlc291cmNlcy9hdXRlbnRpY2FjaW9uL3NzMDAz",
+    //seg_a :"aHR0cDovL2xvY2FsaG9zdDo4MDgwL2NvcmUtc2VjdXJpdHktd2ViL3Jlc291cmNlcy9hdXRlbnRpY2FjaW9uL3NzMDAz",
     //seguridad-resources
-    seg_r :"aHR0cDovL2xvY2FsaG9zdDo4MDgwL2NvcmUtc2VjdXJpdHktd2ViL3Jlc291cmNlcy8="
+    //seg_r :"aHR0cDovL2xvY2FsaG9zdDo4MDgwL2NvcmUtc2VjdXJpdHktd2ViL3Jlc291cmNlcy8="
+
+    //SOFTBANK
+    //parametros
+    app_p : 'aHR0cDovL2FwaWd3LnF1c2tpLmVjOjg0ODAvZ2VuZXJpYy1yZWxhdGl2ZS1yZXN0L3Jlc291cmNlcy9yZWxhdGl2ZS9nZXRSZWxhdGl2ZQo=',
+    //agente supervisor
+    abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
+    //autenticacion 
+    seg_a :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC9sb2dpbgo=",
+    //seguridad-resources
+    seg_r :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC8="
+    
 };

@@ -38,7 +38,7 @@ export class BandejaExcepcionesComponent implements OnInit {
 
   ngOnInit() {
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    console.log('valor del usuario==> ', this.usuario);
+    //console.log('valor del usuario==> ', this.usuario);
     this.busquedaExcepciones(this.usuario);
     this.dataSourceExcepcionRol = null;
     this.loading = this.loadingSubject.asObservable();
@@ -56,7 +56,7 @@ export class BandejaExcepcionesComponent implements OnInit {
     this.exr.findByRolAndIdentificacion(rol, null).subscribe((data: any) => {
       if (data && data.list) {
         this.dataSourceExcepcionRol = data.list;
-        console.log('DATASOURCE==> ', JSON.stringify(this.dataSourceExcepcionRol));
+        //console.log('DATASOURCE==> ', JSON.stringify(this.dataSourceExcepcionRol));
       }
       this.loadingSubject.next(false);
 
@@ -69,13 +69,13 @@ export class BandejaExcepcionesComponent implements OnInit {
       let listRecuperados = new Array<TbQoExcepcionRol>();
       this.agregar = new Array<TbQoExcepcionRol>();
       listRecuperados = data.list;
-      console.log('LISTRECUPERADOS==> ', listRecuperados);
+      //console.log('LISTRECUPERADOS==> ', listRecuperados);
       if (listRecuperados) {
         this.dataSourceExcepcionRol = null;
         for (let index = 0; index < listRecuperados.length; index++) {
           if (this.identificacion.value === listRecuperados[index].identificacion) {
             let encontrados = new TbQoExcepcionRol();
-            console.log('INGRESA AL IF');
+            //console.log('INGRESA AL IF');
             encontrados = listRecuperados[index];
             this.agregar.push(encontrados);
           }
@@ -101,13 +101,13 @@ export class BandejaExcepcionesComponent implements OnInit {
   public verExcepcion(element) {
     this.loadingSubject.next(true);
     if (element.tipoExcepcion == 'EXCEPCION_CLIENTE') {
-      console.log('ingresa a EXCEPCION_CLIENTE====> ', btoa(JSON.stringify(element)) );
+      //console.log('ingresa a EXCEPCION_CLIENTE====> ', btoa(JSON.stringify(element)) );
       this.router.navigate(['./excepciones/excepcion-cliente/', btoa(JSON.stringify(element))])
     } else if (element.tipoExcepcion == 'EXCEPCION_RIESGO') {
-      console.log('ingresa a EXCEPCION_RIESGO');
+      //console.log('ingresa a EXCEPCION_RIESGO');
       this.router.navigate(['./excepciones/excepcion-riesgo/', btoa(JSON.stringify(element))]);
     } else if (element.tipoExcepcion == 'EXCEPCION_COBERTURA') {
-      console.log('ingresa a EXCEPCION_COBERTURA');
+      //console.log('ingresa a EXCEPCION_COBERTURA');
       this.router.navigate(['./excepciones/excepcion-cobertura/', btoa(JSON.stringify(element))])
     }
 

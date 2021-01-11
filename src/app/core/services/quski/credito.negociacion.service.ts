@@ -34,6 +34,30 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
+  public buscarRenovacionByNumeroOperacionMadre( numeroOperacion: string) {
+    this.setParameter();
+    const serviceUrl = this.appResourcesUrl + 'creditoNegociacionRestController/buscarRenovacionByNumeroOperacionMadre';
+    this.params = new HttpParams().set('numeroOperacion', numeroOperacion);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }   
+  public buscarRenovacionByIdNegociacion( idNegociacion: number) {
+    this.setParameter();
+    const serviceUrl = this.appResourcesUrl + 'creditoNegociacionRestController/buscarRenovacionByIdNegociacion';
+    this.params = new HttpParams().set('idNegociacion', idNegociacion.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }  
   public consultarTablaAmortizacion( numeroOperacion: string, agencia: number, usuario: string) {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + 'creditoNegociacionRestController/consultarTablaAmortizacion';
@@ -55,6 +79,29 @@ export class CreditoNegociacionService extends BaseService {
     this.options = { headers: this.headers };
     let entidad = { entidad: data }
     return this.http.post(serviceUrl, entidad, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }  
+  public crearOperacionRenovacion( data: TbQoCreditoNegociacion) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest + "crearOperacionRenovacion" ;
+    this.options = { headers: this.headers };
+    let entidad = { entidad: data }
+    return this.http.post(serviceUrl, entidad, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+  public crearCreditoRenovacion( opcion, garantias, numeroOperacionMadre, idNegociacion, asesor) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest + "crearCreditoRenovacion" ;
+    this.params = new HttpParams().set('numeroOperacionMadre', numeroOperacionMadre).set('idNegociacion', idNegociacion).set('asesor', asesor);
+    let wrapper = { opcion: opcion, garantias: garantias}
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { this.HandleError(error, new ReNoticeService(),this.dialog); }

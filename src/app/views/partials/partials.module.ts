@@ -118,6 +118,9 @@ import { ConfirmarAccionComponent } from './custom/popups/confirmar-accion/confi
 import { AddFechaComponent } from './custom/add-fecha/add-fecha.component';
 import { TablaAmortizacionComponent } from './custom/popups/tabla-amortizacion/tabla-amortizacion.component';
 import { DevolucionCreditoComponent } from './custom/popups/devolucion-credito/devolucion-credito.component';
+import { PopupPagoComponent } from './custom/popups/popup-pago/popup-pago.component';
+import { SubirComprobanteComponent } from './custom/popups/popup-pago/subir-comprobante/subir-comprobante.component';
+import { CreditoDialogComponent } from './custom/secciones-generales/credito-dialog/credito-dialog.component';
 
 
 
@@ -132,7 +135,7 @@ import { DevolucionCreditoComponent } from './custom/popups/devolucion-credito/d
 		FetchEntityDialogComponent,
 		UpdateStatusDialogComponent,
 		AlertComponent,
-
+		CreditoDialogComponent,
 		// topbar components
 		ContextMenu2Component,
 		ContextMenuComponent,
@@ -190,7 +193,9 @@ import { DevolucionCreditoComponent } from './custom/popups/devolucion-credito/d
 		ConfirmarAccionComponent,
 		AddFechaComponent,
 		TablaAmortizacionComponent,
-		DevolucionCreditoComponent
+		DevolucionCreditoComponent,
+		PopupPagoComponent,
+		SubirComprobanteComponent
 
 	],
 	exports: [
@@ -299,6 +304,7 @@ import { DevolucionCreditoComponent } from './custom/popups/devolucion-credito/d
 		{ provide: MAT_DIALOG_DATA, useValue: [] },
 	],
 	entryComponents: [
+		CreditoDialogComponent,
 		RiesgoAcumuladoComponent,
 		AuthDialogComponent,
 		HabilitanteDialogComponent,
@@ -317,7 +323,9 @@ import { DevolucionCreditoComponent } from './custom/popups/devolucion-credito/d
 		TablaTasacionComponent,
 		TablaOfertaCreditoComponent,
 		AddFechaComponent,
-		TablaAmortizacionComponent
+		TablaAmortizacionComponent,
+		PopupPagoComponent,
+		SubirComprobanteComponent
 
 	]
 })

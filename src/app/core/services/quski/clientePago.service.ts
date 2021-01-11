@@ -60,7 +60,7 @@ import { tap } from 'rxjs/operators';
       this.appResourcesUrl + 'clientePagoRestController/findByIdClientePago';
     this.params = new HttpParams().set('cedula', cedula);
     this.options = { headers: this.headers, params: this.params };
-    console.log(" >>>>>> ", this.params);
+    //console.log(" >>>>>> ", this.params);
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,

@@ -27,9 +27,7 @@ export class ArchivoUploadDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ArchivoUploadDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private upload: ReFileUploadService) {
-      console.log(
-        "===>cargando dialog habilitante: " + JSON.stringify(this.data)
-      );
+      //console.log("===>cargando dialog habilitante: " + JSON.stringify(this.data)      );
      }
 
   ngOnInit() {
@@ -72,13 +70,10 @@ export class ArchivoUploadDialogComponent implements OnInit {
   }
 
   public subirArchivoHabilitante(elemento) {
-    console.log(this.dataUpload)
-    console.log("===>>llego a subir: ",this.data );
+    //console.log(this.dataUpload)
+    //console.log("===>>llego a subir: ",this.data );
   
-    console.log(
-      "===> subirArchivoHabilitante contraro relate tipo: " +
-        JSON.stringify(this.data.data)
-    );
+    //console.log("===> subirArchivoHabilitante contraro relate tipo: " +JSON.stringify(this.data.data) );
     //console.log("===> va a upload con dagtos: " + JSON.stringify(this.dataUpload));
     this.upload
       .uploadFile(
@@ -92,14 +87,14 @@ export class ArchivoUploadDialogComponent implements OnInit {
           this.dialogRef.close(data.relatedIdStr);
         },
         error => {
-          console.log("error llegado " + JSON.stringify(error.error));
+          //console.log("error llegado " + JSON.stringify(error.error));
           if (JSON.stringify(error.error).indexOf("codError") > 0) {
             //let b = JSON.parse( error._body );
             let b = error.error;
             // this.alert={id: 2,type: "danger",message: "ERROR EN LA CARGA DE ARCHIVO " + b.msgError};
             //this.sinNoticeService.setNotice("ERROR EN LA CARGA DE ARCHIVO " + b.msgError, 'error');
           } else {
-            console.log("error no java " + error);
+            //console.log("error no java " + error);
             // this.alert={id: 2,type: "danger",message: "ERROR EN LA CARGA DE ARCHIVO " };
             //this.sinNoticeService.setNotice("ERROR EN LA CARGA DE ARCHIVO", 'error');
           }

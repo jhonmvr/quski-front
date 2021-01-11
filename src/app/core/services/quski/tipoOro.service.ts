@@ -33,7 +33,7 @@ export class TipoOroService extends BaseService {
       )
     );
     }
-    public listAllEntities() {
+    /*public listAllEntities() {
         let serviceUrl = this.appResourcesUrl + "tipoOroRestController/listAllEntities";
         this.options = { headers: this.headers, params: this.params };
         return this.http.get(serviceUrl, this.options).pipe(
@@ -42,5 +42,5 @@ export class TipoOroService extends BaseService {
         error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
       )
     );
-    }
+    }*/
 }

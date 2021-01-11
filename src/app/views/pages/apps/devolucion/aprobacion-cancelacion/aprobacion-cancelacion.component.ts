@@ -140,9 +140,9 @@ datos
     this.datos = this.decodeObjetoDatos(this.objetoDatos);
     this.getParametros();
     this.cargarDatos();
-    console.log("el encode", )
-    console.log(typeof(this.catalagoEstadosCiviles))
-    console.log( this.catalagoEstadosCiviles)
+    //console.log("el encode", )
+    //console.log(typeof(this.catalagoEstadosCiviles))
+    //console.log( this.catalagoEstadosCiviles)
   }
 
   
@@ -176,7 +176,7 @@ datos
     let listDatosCreditos = []
     this.devService.getDevolucion(this.idDevolucion).subscribe((data:any)=> {
       if(data.entidad){
-        console.log("Hello", data.entidad)
+        //console.log("Hello", data.entidad)
         this.codigoOperacion.setValue(data.entidad.codigoOperacion)
         this.procesoDev.setValue("DEVOLUCION")
         this.cedulaCliente.setValue(data.entidad.cedulaCliente)
@@ -218,7 +218,7 @@ datos
       
        
         this.idDevolucion = params.get('idDevolucion');
-        console.log("parametro", this.idDevolucion)
+        //console.log("parametro", this.idDevolucion)
        
       },
       error => {
@@ -235,7 +235,7 @@ datos
 setFechaSistema(){
   this.cns.getSystemDate().subscribe((fechaSistema: any) => {
    this.fechaServer = new Date( fechaSistema.entidad);
-   console.log(this.fechaServer) 
+   //console.log(this.fechaServer) 
   })
 }
   
@@ -254,7 +254,7 @@ getEdad(fechaValue){
 
   let ind = 0;
   if (this.dataSourceJoyas.data) {
-    //console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
+    ////console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
  
     this.joyasList.forEach(element => {
       
@@ -289,7 +289,7 @@ aprobarCancelacionSolicitud(){
     if(data.entidad){
       this.sinNoticeService.setNotice("Se ha aprobado la cancelacion", "success")
       this.disableAprobacionCancelacion.next(false);
-      console.log("Exito")
+      //console.log("Exito")
 
     }else{
       this.sinNoticeService.setNotice("Error al registrar", "error")
@@ -304,7 +304,7 @@ rechazarCancelacionSolicitud(){
     if(data.entidad){
       this.sinNoticeService.setNotice("Se ha rechazado la cancelacion", "success")
       this.disableAprobacionCancelacion.next(false);
-      console.log("Exito")
+      //console.log("Exito")
 
     }else{
       this.sinNoticeService.setNotice("Error al registrar", "error")
@@ -314,7 +314,7 @@ rechazarCancelacionSolicitud(){
 }
 
 validarAprobacion(){
-  //console.log("Ver reversar local"+localStorage.getItem('re1001'))
+  ////console.log("Ver reversar local"+localStorage.getItem('re1001'))
   this.devService.validarAprobarCancelacionSolicitud(this.idDevolucion).subscribe((data:any)=>{
    
   if(data && data.entidad === true){
@@ -322,17 +322,17 @@ validarAprobacion(){
         this.disableAprobacionCancelacion.next(true);
       
        
-        //console.log("deberia verse")
+        ////console.log("deberia verse")
       }
   else{
   this.disableAprobacionCancelacion.next(false);
   this.sinNoticeService.setNotice("La solicitud no posee los estados necesarios", "error")
-  //console.log("aqui no deber[ia entrar")
+  ////console.log("aqui no deber[ia entrar")
       }
     },()=>{
       this.disableAprobacionCancelacion.next(false);
 
-      //console.log("peor aqui")
+      ////console.log("peor aqui")
     });
    
    

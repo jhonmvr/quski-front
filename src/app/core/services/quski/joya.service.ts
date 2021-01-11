@@ -62,7 +62,7 @@ export class JoyaService extends BaseService {
 
     ////console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params: this.params };
-    console.log("options>>>" + JSON.stringify(this.options));
+    //console.log("options>>>" + JSON.stringify(this.options));
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
@@ -146,7 +146,7 @@ export class JoyaService extends BaseService {
   }
 
 
-  public findLoteByEstado() {
+/*  public findLoteByEstado() {
     let serviceUrl = this.appResourcesUrl + "tipoOroRestController/listAllEntities";
     this.params = new HttpParams()
       .set('isPaginated', ('N'));
@@ -157,7 +157,7 @@ export class JoyaService extends BaseService {
         error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
       )
     );
-  }
+  }*/
 
   public findByEstadoJoya(estado: string) {
     let serviceUrl = this.appResourcesUrl + "joyaRestController/findByEstadoMvCodigoTipo";
@@ -287,12 +287,12 @@ export class JoyaService extends BaseService {
 
   public findByCodigoJoyaEstadosFechas(p: Page, pcodigoJoya: string, pestados: Array<String>, pfechaDesde, pfechaHasta) {
     let serviceUrl = this.appResourcesUrl + "joyaRestController/findByCodigoJoyaEstadosFechas";
-    console.log("======>findByCodigoJoyaEstadosFechas pager " + JSON.stringify( p ));    
+    //console.log("======>findByCodigoJoyaEstadosFechas pager " + JSON.stringify( p ));    
     this.setSearchParams(p);
     let fd = this.dateFormat.formatBack(pfechaDesde, "input");
     let fh = this.dateFormat.formatBack(pfechaHasta, "input");
     let wp = { codigoJoya: pcodigoJoya, estadosJoyaStr: pestados, fechaDesde: fd, fechaHasta: fh };
-    console.log("======>findByCodigoJoyaEstadosFechas wrapper " + JSON.stringify( wp ));
+    //console.log("======>findByCodigoJoyaEstadosFechas wrapper " + JSON.stringify( wp ));
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, wp, this.options).pipe(
       tap( // Log the result or error

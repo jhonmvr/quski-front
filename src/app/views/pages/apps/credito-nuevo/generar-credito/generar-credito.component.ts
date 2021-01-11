@@ -201,7 +201,7 @@ export class GenerarCreditoComponent implements OnInit {
     }
   }
   private cargarCampos(data: OperacionNuevoWrapper) {
-    console.log('OperacionNuevoWrapper de entrada ->', data);
+    //console.log('OperacionNuevoWrapper de entrada ->', data);
     this.agencia = 2;
     this.firmanteOperacion.setValue( this.catFirmanteOperacion.find(t=> t.codigo != null).nombre );
     this.firmanteOperacion.disable();
@@ -306,11 +306,11 @@ export class GenerarCreditoComponent implements OnInit {
   public validacionFecha() {
     this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value), new Date(this.fechaServer))
     if (Math.abs(this.fechaUtil.obtenerDias()) >= 30 && Math.abs(this.fechaUtil.obtenerDias()) <= 45) {
-      console.log("Esta dentro del rango")
+      //console.log("Esta dentro del rango")
     } else {
       this.sinNotSer.setNotice("DEBE ESCOGER ENTRE 30 Y 45 DÍAS", 'error');
     }
-    console.log("los dias  de diferencia", this.fechaUtil.obtenerDias())
+    //console.log("los dias  de diferencia", this.fechaUtil.obtenerDias())
   }
   private obtenerCatalogosSoftbank() { 
     this.sof.consultarTipoFundaCS().subscribe((data: any) => {
@@ -487,7 +487,7 @@ export class GenerarCreditoComponent implements OnInit {
         if(r){
           this.pro.cambiarEstadoProceso(this.operacionNuevo.credito.tbQoNegociacion.id,"NUEVO","PENDIENTE_APROBACION").subscribe( (data: any) =>{
             if(data.entidad){
-              console.log('El nuevo estado -> ',data.entidad.estadoProceso);
+              //console.log('El nuevo estado -> ',data.entidad.estadoProceso);
               this.router.navigate(['negociacion/bandeja-operaciones']);
             }
           });

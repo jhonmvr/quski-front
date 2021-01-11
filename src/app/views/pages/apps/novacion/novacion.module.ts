@@ -42,6 +42,7 @@ import { PartialsModule } from '../../../partials/partials.module';
 import { ErrorCargaInicialComponent } from '../../../../views/partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { ListaExcepcionesComponent } from '../../../../views/partials/custom/popups/lista-excepciones/lista-excepciones.component';
 import { ReasignarUsuarioComponent } from '../../../../views/partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
+import { NovacionHabilitanteComponent } from './novacion-habilitante/novacion-habilitante.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -53,8 +54,12 @@ const routes: Routes = [
 				pathMatch: 'full'
 			},
 			{
-				path: 'crear-novacion/:numeroOperacion',
+				path: 'crear-novacion/:codigo/:item',
 				component: CrearRenovacionComponent
+			},
+			{
+				path: 'novacion-habilitante/:idNegociacion',
+				component: NovacionHabilitanteComponent
 			}
 
 		]
@@ -110,7 +115,9 @@ const routes: Routes = [
   	],
   	declarations: [
 		CrearRenovacionComponent,
-		NovacionComponent
+		NovacionComponent,
+		NovacionHabilitanteComponent,
+		NovacionHabilitanteComponent
 	],
 	entryComponents: [	
 		ErrorCargaInicialComponent,

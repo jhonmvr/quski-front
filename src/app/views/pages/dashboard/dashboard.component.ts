@@ -50,27 +50,27 @@ export class DashboardComponent implements OnInit {
 		// @ts-ignore
 		this.widget4_1 = shuffle([
 			{
-				pic: './assets/media/files/doc.svg',
+				pic: './quski-front/assets/media/files/doc.svg',
 				title: 'Metronic Documentation',
 				url: 'https://keenthemes.com.my/metronic',
 			}, {
-				pic: './assets/media/files/jpg.svg',
+				pic: './quski-front/assets/media/files/jpg.svg',
 				title: 'Project Launch Evgent',
 				url: 'https://keenthemes.com.my/metronic',
 			}, {
-				pic: './assets/media/files/pdf.svg',
+				pic: './quski-front/assets/media/files/pdf.svg',
 				title: 'Full Developer Manual For 4.7',
 				url: 'https://keenthemes.com.my/metronic',
 			}, {
-				pic: './assets/media/files/javascript.svg',
+				pic: './quski-front/assets/media/files/javascript.svg',
 				title: 'Make JS Development',
 				url: 'https://keenthemes.com.my/metronic',
 			}, {
-				pic: './assets/media/files/zip.svg',
+				pic: './quski-front/assets/media/files/zip.svg',
 				title: 'Download Ziped version OF 5.0',
 				url: 'https://keenthemes.com.my/metronic',
 			}, {
-				pic: './assets/media/files/pdf.svg',
+				pic: './quski-front/assets/media/files/pdf.svg',
 				title: 'Finance Report 2016/2017',
 				url: 'https://keenthemes.com.my/metronic',
 			},
@@ -78,31 +78,31 @@ export class DashboardComponent implements OnInit {
 		// @ts-ignore
 		this.widget4_2 = shuffle([
 			{
-				pic: './assets/media/users/100_4.jpg',
+				pic: './quski-front/assets/media/users/100_4.jpg',
 				username: 'Anna Strong',
 				desc: 'Visual Designer,Google Inc.',
 				url: 'https://keenthemes.com.my/metronic',
 				buttonClass: 'btn-label-brand'
 			}, {
-				pic: './assets/media/users/100_14.jpg',
+				pic: './quski-front/assets/media/users/100_14.jpg',
 				username: 'Milano Esco',
 				desc: 'Product Designer, Apple Inc.',
 				url: 'https://keenthemes.com.my/metronic',
 				buttonClass: 'btn-label-warning'
 			}, {
-				pic: './assets/media/users/100_11.jpg',
+				pic: './quski-front/assets/media/users/100_11.jpg',
 				username: 'Nick Bold',
 				desc: 'Web Developer, Facebook Inc.',
 				url: 'https://keenthemes.com.my/metronic',
 				buttonClass: 'btn-label-danger'
 			}, {
-				pic: './assets/media/users/100_1.jpg',
+				pic: './quski-front/assets/media/users/100_1.jpg',
 				username: 'Wilter Delton',
 				desc: 'Project Manager, Amazon Inc.',
 				url: 'https://keenthemes.com.my/metronic',
 				buttonClass: 'btn-label-success'
 			}, {
-				pic: './assets/media/users/100_5.jpg',
+				pic: './quski-front/assets/media/users/100_5.jpg',
 				username: 'Nick Stone',
 				desc: 'Visual Designer, Github Inc.',
 				url: 'https://keenthemes.com.my/metronic',
@@ -158,35 +158,35 @@ export class DashboardComponent implements OnInit {
 		// @ts-ignore
 		this.widget4_4 = shuffle([
 			{
-				pic: './assets/media/client-logos/logo5.png',
+				pic: './quski-front/assets/media/client-logos/logo5.png',
 				title: 'Trump Themes',
 				desc: 'Make Metronic Development',
 				url: 'https://keenthemes.com.my/metronic',
 				value: '+$2500',
 				valueColor: 'kt-font-brand'
 			}, {
-				pic: './assets/media/client-logos/logo4.png',
+				pic: './quski-front/assets/media/client-logos/logo4.png',
 				title: 'StarBucks',
 				desc: 'Good Coffee & Snacks',
 				url: 'https://keenthemes.com.my/metronic',
 				value: '-$290',
 				valueColor: 'kt-font-brand'
 			}, {
-				pic: './assets/media/client-logos/logo3.png',
+				pic: './quski-front/assets/media/client-logos/logo3.png',
 				title: 'Phyton',
 				desc: 'A Programming Language',
 				url: 'https://keenthemes.com.my/metronic',
 				value: '+$17',
 				valueColor: 'kt-font-brand'
 			}, {
-				pic: './assets/media/client-logos/logo2.png',
+				pic: './quski-front/assets/media/client-logos/logo2.png',
 				title: 'GreenMakers',
 				desc: 'Make Green Development',
 				url: 'https://keenthemes.com.my/metronic',
 				value: '-$2.50',
 				valueColor: 'kt-font-brand'
 			}, {
-				pic: './assets/media/client-logos/logo1.png',
+				pic: './quski-front/assets/media/client-logos/logo1.png',
 				title: 'FlyThemes',
 				desc: 'A Let\'s Fly Fast Again Language',
 				url: 'https://keenthemes.com.my/metronic',
