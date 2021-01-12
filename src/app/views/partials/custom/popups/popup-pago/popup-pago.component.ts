@@ -74,7 +74,7 @@ export class PopupPagoComponent implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         if (r) {
           this.file = r;
-          this.sinNoticeService.setNotice('ARCHIVO CARGADO','error');
+          this.sinNoticeService.setNotice('ARCHIVO CARGADO','success');
         }else{
           this.sinNoticeService.setNotice('ERROR CARGANDO ARCHIVO','error');
         }
