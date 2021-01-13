@@ -72,6 +72,9 @@ export class DetalleCreditoComponent implements OnInit {
     private router: Router,
     private sinNotSer: ReNoticeService,
   ) { 
+    this.cre.setParameter();
+    this.sof.setParameter();
+
     this.formInformacion.addControl("nombre", this.nombre);
     this.formInformacion.addControl("cedula", this.cedula);
     this.formInformacion.addControl("email", this.email);
@@ -102,6 +105,8 @@ export class DetalleCreditoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cre.setParameter();
+    this.sof.setParameter();
     this.formInformacion.disable();
     this.cargarCats();
     this.loading = this.loadingSubject.asObservable();

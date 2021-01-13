@@ -10,26 +10,20 @@ import { TbQoRegistrarPago } from './../../../../../../../core/model/quski/TbQoR
   styleUrls: ['./dialogo-bloquear-credito.component.scss']
 })
 export class DialogoBloquearCreditoComponent implements OnInit {
+  public institucionFinanciera = new FormControl('', [Validators.required]);
+  public numeroDeposito = new FormControl('', [Validators.required]);
+  public valorPagado = new FormControl('', [Validators.required]);
+  public cuentas = new FormControl('', [Validators.required]);
+  public fechaPago = new FormControl('',[Validators.required]);
+  public formCliente: FormGroup = new FormGroup({});
 
   constructor(public dialogRef: MatDialogRef<DialogoBloquearCreditoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: TbQoRegistrarPago, public dataService: RegistrarPagoService) {
-
+      this.dataService.setParameter();
   }
 
-  institucionFinanciera = new FormControl('', [Validators.required]);
-
-  numeroDeposito = new FormControl('', [Validators.required]);
-
-  valorPagado = new FormControl('', [Validators.required]);
-
-  cuentas = new FormControl('', [Validators.required]);
-
-  fechaPago = new FormControl('',[Validators.required]);
-
-  public formCliente: FormGroup = new FormGroup({});
-
-
   ngOnInit() {
+    this.dataService.setParameter();
     this.formCliente.addControl('institucionFinanciera', this.institucionFinanciera);
     this.formCliente.addControl('numeroDeposito', this.numeroDeposito);
     this.formCliente.addControl('valorPagado', this.valorPagado);

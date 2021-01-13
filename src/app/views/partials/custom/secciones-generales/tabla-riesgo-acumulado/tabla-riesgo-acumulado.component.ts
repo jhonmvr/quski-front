@@ -63,9 +63,16 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
     private cli: ClienteService,
     private rie: RiesgoAcumuladoService,
     private siN: ReNoticeService
-  ) { }
+  ) { 
+    this.sof.setParameter();
+    this.cli.setParameter();
+    this.rie.setParameter();
+  }
 
   ngOnInit() {
+    this.sof.setParameter();
+    this.cli.setParameter();
+    this.rie.setParameter();
     if(this.base != null){
       this.dataSourceRiesgoAcumulado.data = this.base;
     }else{

@@ -18,6 +18,7 @@ import { ExcepcionService } from '../../../../../core/services/quski/excepcion.s
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 
@@ -107,12 +108,16 @@ export class ExcepcionesClienteComponent implements OnInit {
     private tra: TrackingService,
     private pro: ProcesoService,
     private route: ActivatedRoute,
-    private par: ParametroService,
     private exs: ExcepcionService,
     private router: Router,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService
   ) {
+    this.neg.setParameter();
+    this.cli.setParameter();
+    this.tra.setParameter();
+    this.pro.setParameter();
+    this.exs.setParameter();
 
     //FORM DATOS OPERACION
     this.formDatosOperacion.addControl("nombresCompletos", this.nombresCompletos);
@@ -163,6 +168,11 @@ export class ExcepcionesClienteComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.neg.setParameter();
+    this.cli.setParameter();
+    this.tra.setParameter();
+    this.pro.setParameter();
+    this.exs.setParameter();
     this.loading = this.loadingSubject.asObservable();
     //TRACKING
     //this.capturaHoraInicio('NEGOCIACION');

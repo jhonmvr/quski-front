@@ -34,9 +34,16 @@ export class ReasignarUsuarioComponent implements OnInit {
     public neg: NegociacionService,
     public dialogRefGuardar: MatDialogRef<any>,
     private sinNotSer: ReNoticeService,
-  ) { }
+  ) { 
+    this.sof.setParameter();
+    this.pro.setParameter();
+    this.neg.setParameter();
+  }
 
   ngOnInit() {
+    this.sof.setParameter();
+    this.pro.setParameter();
+    this.neg.setParameter();
     this.usuario = this.data.asesor;
     this.cargarListaAsesores();
   }

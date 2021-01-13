@@ -175,6 +175,9 @@ export class GestionClienteComponent implements OnInit {
     private router: Router,
     private subheaderService: SubheaderService,
   ) {
+    this.css.setParameter();
+    this.cli.setParameter();
+    this.sp.setParameter();
     /** @FORMULARIOS **/
     this.formCliente.addControl("identificacion", this.identificacion);
     this.formCliente.addControl("nombresCompletos ", this.nombresCompletos);
@@ -238,6 +241,9 @@ export class GestionClienteComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.css.setParameter();
+    this.cli.setParameter();
+    this.sp.setParameter();
     this.subheaderService.setTitle("Gestion de Cliente");
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));

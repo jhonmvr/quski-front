@@ -166,12 +166,17 @@ datos
  @ViewChild('sort1', {static: true}) sort: MatSort;
   
 
-  constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, private tas: TasacionService,
-    public dialog: MatDialog, private dhs: DocumentoHabilitanteService,
+  constructor(
+    private cns: CreditoNegociacionService, 
+    private sinNoticeService: ReNoticeService, 
+    public dialog: MatDialog, 
     private css: SoftbankService, 
-    private par: ParametroService, private route: ActivatedRoute,
+    private route: ActivatedRoute,
     private router: Router,
     private devService: DevolucionService) { 
+      this.cns.setParameter();
+      this.css.setParameter();
+      this.devService.setParameter();
       this.heredero.addControl("cedulaHeredero", this.cedulaHeredero);
       this.heredero.addControl("nombreHeredero", this.nombreHeredero);
       this.devolucionForm.addControl("tipoCliente", this.tipoCliente);
@@ -182,6 +187,9 @@ datos
   }
 
   ngOnInit() {
+    this.cns.setParameter();
+    this.css.setParameter();
+    this.devService.setParameter();
     this.enableHerederoButton = this.enableHeredero.asObservable();
     this.enableHeredero.next(false);
     this.setFechaSistema();

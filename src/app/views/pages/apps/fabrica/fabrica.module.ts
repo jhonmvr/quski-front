@@ -41,6 +41,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 import { AprobacionCreditoNuevoComponent } from './aprobacion-credito-nuevo/aprobacion-credito-nuevo.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { AprobacionNovacionComponent } from './aprobacion-novacion/aprobacion-novacion.component';
 
 
 
@@ -63,6 +64,10 @@ const routes: Routes = [
       {
         path: 'aprobacion-credito-nuevo/:id',
         component: AprobacionCreditoNuevoComponent
+      },
+      {
+        path: 'aprobacion-novacion/:idNegociacion',
+        component: AprobacionNovacionComponent
       }
 
     ]
@@ -120,7 +125,8 @@ const routes: Routes = [
   ],
   declarations: [
     FabricaComponent,
-    AprobacionCreditoNuevoComponent
+    AprobacionCreditoNuevoComponent,
+    AprobacionNovacionComponent
   ],
   entryComponents: [
     ErrorCargaInicialComponent,

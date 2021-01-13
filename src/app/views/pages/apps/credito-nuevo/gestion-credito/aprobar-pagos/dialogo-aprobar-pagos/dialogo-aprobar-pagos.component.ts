@@ -25,7 +25,7 @@ export class DialogoAprobarPagosComponent implements OnInit {
     public dialogRef: MatDialogRef<DialogoAprobarPagosComponent>,
     private sinNoticeService: ReNoticeService,
     @Inject(MAT_DIALOG_DATA) public data: TbQoRegistrarPago, public dataService: RegistrarPagoService) {
-
+      this.dataService.setParameter();
   }
 
   observacion = new FormControl('', [Validators.required]);
@@ -33,7 +33,8 @@ export class DialogoAprobarPagosComponent implements OnInit {
 
 
   ngOnInit() {
-    this.formAprobarPagos.addControl('observacion', this.observacion);
+      this.dataService.setParameter();
+      this.formAprobarPagos.addControl('observacion', this.observacion);
 
   }
   /**

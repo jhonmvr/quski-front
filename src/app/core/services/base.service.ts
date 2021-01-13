@@ -55,7 +55,7 @@ export class BaseService {
     }
   }
 
-  public setParameter() {
+/*   public setParameter() {
            localStorage.setItem('setRE000', 'true');
            this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
            //Url de acceso al rootcontext de seguridad core-security-web
@@ -84,9 +84,9 @@ export class BaseService {
            //parametros cloudstudio
            this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
            
-  }
+  } */
 
-  /* public setParameter() {
+  public setParameter() {
     localStorage.setItem('setRE000', 'true');
     this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
     //Url de acceso al rootcontext de seguridad core-security-web
@@ -96,7 +96,6 @@ export class BaseService {
     //Full url para datos de usuario por rol core-security-web
     this.userRolServiceUrl = 'http://localhost:8080/core-security-web/resources/usuarioRolRestController/getEntitiesByUsuario';
     //Full url par datos del servicio core-security-web
-    //this.menuServiceUrl = 'http://localhost:28080/core-security-web/resources/authRolRestController/opciones/usuario';
     //Path al rootcontext de la app 
     this.appRootContextUrl = 'http://localhost:8080/quski-oro-rest/';
     //Path al resources de la app
@@ -115,7 +114,7 @@ export class BaseService {
     //parametros cloudstudio
     this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
     
-} */
+}
   
 
   public getSystemDate() {

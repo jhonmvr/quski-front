@@ -21,9 +21,13 @@ export class TablaOfertaCalculadoraComponent implements OnInit {
   dataSourceOpcionesDeCredito = new MatTableDataSource<OpcionesDeCredito>();
   constructor(
     private cal: IntegracionService
-  ) { }
+  ) { 
+    this.cal.setParameter();
+
+  }
 
   ngOnInit() {
+    this.cal.setParameter();
     this.iniciaBusqueda(this.consulta);
   }
   private iniciaBusqueda(consulta: ConsultaOferta) {

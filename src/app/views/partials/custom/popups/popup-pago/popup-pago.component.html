@@ -30,10 +30,18 @@
                 <mat-datepicker #picker6></mat-datepicker>
             </mat-form-field>
         </div>	
+        <div class="offset-4">
+
+        </div>
+        <div class="col-4 offset-4 pl-3 ml-3">
+            <button mat-stroked-button color="basic" matStepperNext (click)="loadArchivoCliente()">
+                <span color="primary">Cargar Comprobante</span>
+            </button>
+        </div>
     </div>
     <div class="row mt-2 mb-2">
         <div class="col-2 offset-4">
-            <button mat-stroked-button color="primary" matStepperNext (click)="loadArchivoCliente();">
+            <button mat-stroked-button color="primary" matStepperNext (click)="aceptar()">
                 <span color="primary">Aceptar</span>
             </button>
         </div>

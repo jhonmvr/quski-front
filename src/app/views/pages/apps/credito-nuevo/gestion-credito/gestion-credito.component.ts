@@ -142,21 +142,28 @@ export class GestionCreditoComponent implements OnInit {
  /**Obligatorio ordenamiento */
  @ViewChild('sort1', {static: true}) sort: MatSort;
 
-  constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, private tas: TasacionService,
-    private dhs: DocumentoHabilitanteService, 
-    private fs: FundaService, private css: SoftbankService) { 
-    
-    
+  constructor(
+    private cns: CreditoNegociacionService, 
+    private sinNoticeService: ReNoticeService, 
+    private tas: TasacionService,
+    private fs: FundaService, 
+    private css: SoftbankService) 
+    { 
+      this.cns.setParameter();
+      this.tas.setParameter();
+      this.fs.setParameter();
+      this.css.setParameter();
   }
 
   ngOnInit() {
+    this.cns.setParameter();
+    this.tas.setParameter();
+    this.fs.setParameter();
+    this.css.setParameter();
     this.setFechaSistema();
-   
     this.buscar();
     this.cargarDatosOperacion()
-    
     this.getJoyas();
-    
   }
 
  /**

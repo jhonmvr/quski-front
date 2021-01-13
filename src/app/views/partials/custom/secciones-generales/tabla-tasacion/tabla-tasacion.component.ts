@@ -25,12 +25,16 @@ export class TablaTasacionComponent implements OnInit {
   public displayedColumnsTasacion = ['descripcion', 'descuentoPesoPiedra', 'descuentoSuelda'];
   public dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
   constructor(
-    private tas: TasacionService,
     private vaC: VariablesCrediticiasService,
     private cal: IntegracionService,
-  ) { }
+  ) { 
+    this.vaC.setParameter();
+    this.cal.setParameter();
+  }
 
   ngOnInit() {
+    this.vaC.setParameter();
+    this.cal.setParameter();
     //console.log('DATAPOPUP TASACION===> ', this.dataPopup);
     this.direccionDeFlujo(this.dataPopup);
 

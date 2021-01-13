@@ -78,6 +78,10 @@ export class CrearRenovacionComponent implements OnInit {
     private sinNotSer: ReNoticeService,
     private subheaderService: SubheaderService
   ) { 
+    this.cre.setParameter();
+    this.sof.setParameter();
+    this.cal.setParameter();
+
     this.formOperacion.addControl("codigoBpm", this.codigoBpm);
     this.formOperacion.addControl("codigoOperacion", this.codigoOperacion);
     this.formOperacion.addControl("proceso", this.proceso);
@@ -87,6 +91,9 @@ export class CrearRenovacionComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cre.setParameter();
+    this.sof.setParameter();
+    this.cal.setParameter();
     this.cargarCatalogos();
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
@@ -201,6 +208,7 @@ export class CrearRenovacionComponent implements OnInit {
     if( this.seleccion ){
       this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.credit.proceso? this.credit.proceso.idReferencia : null, this.usuario).subscribe( data =>{
         if(data.entidad){
+          this.credit = data.entidad;
           //console.log( 'Mi operacion ->', data.entidad );
           this.router.navigate(['cliente/gestion-cliente/NOV/',this.credit.proceso.idReferencia]);
         }
@@ -218,7 +226,8 @@ export class CrearRenovacionComponent implements OnInit {
     let cliente = {} as cliente;
     cliente.identificacion = this.credit.operacionAnterior.cliente.identificacion;
     let fecha = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
-    cliente.fechaNacimiento = (fecha.getDate() < 10 ? '0'+fecha.getDate() : fecha.getDate()) +'/' + (fecha.getMonth() < 10 ? '0'+fecha.getMonth() : fecha.getMonth())  +'/' + fecha.getFullYear(); 
+    let mes = (fecha.getMonth() < 10 ? fecha.getMonth() == 0 ? '12':'0'+fecha.getMonth() : fecha.getMonth())  
+    cliente.fechaNacimiento = (fecha.getDate() < 10 ? '0'+fecha.getDate() : fecha.getDate()) +'/' + mes +'/' + fecha.getFullYear(); 
     this.credit.operacionAnterior.cliente = cliente;
     //this.credit.operacionAnterior.fechaNacimiento = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
     //console.log('wrapper de salida ->', this.credit.operacionAnterior);

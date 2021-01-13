@@ -137,17 +137,24 @@ joyasList  = []
  @ViewChild('sort1', {static: true}) sort: MatSort;
   
 
-  constructor(private cns: CreditoNegociacionService, private sinNoticeService: ReNoticeService, 
-    public dialog: MatDialog, private dhs: DocumentoHabilitanteService,
+  constructor(
+    private cns: CreditoNegociacionService, 
+    private sinNoticeService: ReNoticeService, 
+    public dialog: MatDialog, 
     private css: SoftbankService, 
-    private par: ParametroService, private route: ActivatedRoute,
+    private route: ActivatedRoute,
     private router: Router,
     private devService: DevolucionService) { 
-    
+    this.cns.setParameter();
+    this.css.setParameter();
+    this.devService.setParameter();
     
   }
 
   ngOnInit() {
+    this.cns.setParameter();
+    this.css.setParameter();
+    this.devService.setParameter();
     this.enableHerederoButton = this.enableHeredero.asObservable();
     this.enableHeredero.next(false);
     this.disableAprobacionButton = this.disableAprobacion.asObservable();

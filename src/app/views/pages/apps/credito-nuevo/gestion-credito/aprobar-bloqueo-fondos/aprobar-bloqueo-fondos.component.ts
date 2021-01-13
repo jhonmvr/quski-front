@@ -46,13 +46,13 @@ export class AprobarBloqueoFondosComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private css: SoftbankService,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
     private rp: RegistrarPagoService,
     private os: ObjectStorageService,
     public dialog: MatDialog
   ) {
+    this.rp.setParameter();
     this.os.setParameter();
     this.formBloqueoFondo.addControl("nombresCliente", this.nombreCliente);
     this.formBloqueoFondo.addControl("cedula", this.cedula);
@@ -61,10 +61,15 @@ export class AprobarBloqueoFondosComponent implements OnInit {
     this.formBloqueoFondo.addControl("valorDepositado", this.valorDepositado);
     this.formBloqueoFondo.addControl("observacion", this.observacion);
   }
+  ngOnInit() {
+    this.subheaderService.setTitle("Bloqueo de Fondos");
+    this.loading = this.loadingSubject.asObservable();
+    this.ConsultarPagosId();
+    //this.consultarClienteSoftbankCS();
+    this.rp.setParameter();
+    this.os.setParameter();
 
-
-
-
+  }
   id;
   Aprobar() {
     //console.log("entra a popUp Aprobrar ")
@@ -159,14 +164,6 @@ export class AprobarBloqueoFondosComponent implements OnInit {
       });
   }
 
-  ngOnInit() {
-    this.subheaderService.setTitle("Bloqueo de Fondos");
-    this.loading = this.loadingSubject.asObservable();
-    this.ConsultarPagosId();
-    //this.consultarClienteSoftbankCS();
-
-
-  }
 
   /*consultarClienteSoftbankCS() {
     let entidadConsultaCliente = new ClienteSoftbank();

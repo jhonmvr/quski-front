@@ -74,6 +74,9 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     private cal: CalculadoraService
 
   ) {
+    this.neg.setParameter();
+    this.exc.setParameter();
+    this.cal.setParameter();
     this.formDisable.addControl('cliente', this.cliente);
     this.formDisable.addControl('cedula', this.cedula);
     this.formDisable.addControl('fechaCreacion', this.fechaCreacion);
@@ -86,6 +89,9 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.neg.setParameter();
+    this.exc.setParameter();
+    this.cal.setParameter();
     this.wp = null;
     this.loading = this.loadingSubject.asObservable();
     this.busquedaNegociacion();

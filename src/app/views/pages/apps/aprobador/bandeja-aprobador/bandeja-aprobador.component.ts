@@ -55,10 +55,12 @@ export class BandejaAprobadorComponent implements OnInit {
     this.formFiltro.addControl("codigo", this.codigo);
     this.formFiltro.addControl("proceso", this.proceso);
     this.formFiltro.addControl("agencia", this.agencia);
-    
+    this.pro.setParameter();
+    this.sof.setParameter();
   }
-
   ngOnInit() {
+    this.pro.setParameter();
+    this.sof.setParameter();
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey)).toUpperCase();
     this.cargarCatalogos();
@@ -206,9 +208,8 @@ export class BandejaAprobadorComponent implements OnInit {
                   this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.id]);    
                 }
                 if(row.proceso =="RENOVACION"){
-                  this.sinNotSer.setNotice("APROBACION RENOVACION, SIN DESARROLLO","error");
-                  this.limpiarFiltros();
-                  this.router.navigate(['aprobador']);    
+                  this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+                  this.router.navigate(['fabrica/aprobacion-novacion/',row.id]);    
                 }
                 if(row.proceso =="COTIZACION"){
                   this.sinNotSer.setNotice("ERROR, CONTACTE SOPORTE","error");

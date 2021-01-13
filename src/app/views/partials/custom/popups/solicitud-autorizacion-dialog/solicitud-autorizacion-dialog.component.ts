@@ -41,6 +41,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<SolicitudAutorizacionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: string, public dialog: MatDialog, private upload: ReFileUploadService,
     private cs: ClienteService) {
+      this.dh.setParameter();
     //console.log('>>><<<<<<<<<<<<<<< DATA COTIZACION' + JSON.stringify(data));
     this.formDatosSolicitud.addControl('nombresCompletos', this.nombresCompletos);
     this.formDatosSolicitud.addControl('identificacion', this.identificacion);
@@ -69,6 +70,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   public identificacion = new FormControl(this.data, [Validators.required]);
 
   ngOnInit() {
+    this.dh.setParameter();
     this.enableLoadArchivoButton = this.enableLoadArchivo.asObservable();
     this.enableLoadArchivo.next(false);
     this.enableConsultarButton = this.enableConsultar.asObservable();

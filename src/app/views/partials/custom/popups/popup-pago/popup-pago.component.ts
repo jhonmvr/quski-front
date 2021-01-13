@@ -34,7 +34,7 @@ export class PopupPagoComponent implements OnInit {
   public valorDepositado = new FormControl('', [Validators.required]);
   public cuenta = new FormControl('', [Validators.required]);
   public fechaPago = new FormControl('', [Validators.required]);
-  
+  public file: any;
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: any,
     public dialogRefGuardar: MatDialogRef<any>,
@@ -61,7 +61,6 @@ export class PopupPagoComponent implements OnInit {
     return true;
   }
   loadArchivoCliente() {
-    //console.log('Data desde el componente', this.data );
     if(this.formOperacion.valid){
       let d = {
         idTipoDocumento: 10,
@@ -74,20 +73,28 @@ export class PopupPagoComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if (r) {
-          let wrapperRegistro: WrapperRegistro = {
-            comprobante:r,
-            intitucionFinanciera: this.intitucionFinanciera.value,
-            numeroDeposito: this.numeroDeposito.value,
-            valorDepositado: this.valorDepositado.value,
-            cuenta: this.cuenta.value,
-            fechaPago: this.fechaPago.value
-          };
-          //console.log('Regresando de Subir Comprobante ----> ' + wrapperRegistro);
-          this.dialogRefGuardar.close(wrapperRegistro);
+          this.file = r;
+          this.sinNoticeService.setNotice('ARCHIVO CARGADO','success');
         }else{
           this.sinNoticeService.setNotice('ERROR CARGANDO ARCHIVO','error');
         }
       });
+    }
+  }
+  public aceptar(){
+    if(this.formOperacion.valid){
+      let wrapperRegistro: WrapperRegistro = {
+        comprobante:this.file ? this.file : null,
+        intitucionFinanciera: this.intitucionFinanciera.value,
+        numeroDeposito: this.numeroDeposito.value,
+        valorDepositado: this.valorDepositado.value,
+        cuenta: this.cuenta.value,
+        fechaPago: this.fechaPago.value
+      };
+      this.dialogRefGuardar.close(wrapperRegistro);
+      console.log('Regresando de Subir Comprobante ----> ' + wrapperRegistro);
+    }else{
+      this.sinNoticeService.setNotice('COMPLETE EL FORMULARIO','error');
     }
   }
 }

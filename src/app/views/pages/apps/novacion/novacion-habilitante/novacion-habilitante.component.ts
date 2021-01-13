@@ -66,6 +66,11 @@ export class NovacionHabilitanteComponent implements OnInit {
     private subheaderService: SubheaderService,
 
   ) { 
+    this.cre.setParameter();
+    this.reg.setParameter();
+    this.sof.setParameter();
+    this.pro.setParameter();
+
     this.formOperacion.addControl("tipoDeCuenta", this.tipoDeCuenta);
     this.formOperacion.addControl("numeroCuenta", this.numeroCuenta);
     this.formOperacion.addControl("firmaRegularizada", this.firmaRegularizada);
@@ -76,6 +81,10 @@ export class NovacionHabilitanteComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cre.setParameter();
+    this.reg.setParameter();
+    this.sof.setParameter();
+    this.pro.setParameter();
     this.cargarCatalogos();
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));

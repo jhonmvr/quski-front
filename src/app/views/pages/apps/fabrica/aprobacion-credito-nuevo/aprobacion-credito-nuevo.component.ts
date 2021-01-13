@@ -181,6 +181,9 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     private dialog: MatDialog,
     private subheaderService: SubheaderService
   ) {
+    this.cre.setParameter();
+    this.sof.setParameter();
+    this.pro.setParameter();
     this.formDisable.addControl( "codigoBpm", this.codigoBpm );
     this.formDisable.addControl( "proceso", this.proceso );
     this.formDisable.addControl( "nombresCompletoCliente", this.nombresCompletoCliente );
@@ -277,6 +280,9 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cre.setParameter();
+    this.sof.setParameter();
+    this.pro.setParameter();
     this.subheaderService.setTitle('Aprobación De Credito');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));

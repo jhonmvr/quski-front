@@ -30,8 +30,12 @@ export class CreditoDialogComponent implements OnInit {
 
   p = new Page();
 
-  constructor(private cs: RiesgoAcumuladoService, public dialogRefListar: MatDialogRef<CreditoDialogComponent>) { }
+  constructor(private cs: RiesgoAcumuladoService, public dialogRefListar: MatDialogRef<CreditoDialogComponent>) { 
+    this.cs.setParameter();
+
+  }
   ngOnInit() {
+    this.cs.setParameter();
     this.buscar();
   }
   buscar() {

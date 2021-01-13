@@ -27,9 +27,14 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
   constructor(
     private vaC: VariablesCrediticiasService,
     private cal: IntegracionService,
-  ) { }
+  ) { 
+    this.vaC.setParameter();
+    this.cal.setParameter();
+  }
 
   ngOnInit() {
+    this.cal.setParameter();
+    this.vaC.setParameter();
     this.loading = this.loadingSubject.asObservable();
     if(this.base != null){
       this.dataSourceVariablesCrediticias.data = this.base;

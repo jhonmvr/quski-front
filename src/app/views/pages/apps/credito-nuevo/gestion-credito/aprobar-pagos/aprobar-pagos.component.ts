@@ -64,6 +64,8 @@ export class AprobarPagosComponent implements OnInit {
     private os: ObjectStorageService,
     public dialog: MatDialog
     ) {
+    this.css.setParameter();
+    this.rp.setParameter();
     this.os.setParameter();
     this.formAprobarPago.addControl("nombresCliente", this.nombreCliente);
     this.formAprobarPago.addControl("cedula", this.cedula);
@@ -74,7 +76,15 @@ export class AprobarPagosComponent implements OnInit {
     this.formAprobarPago.addControl("valorDepositado", this.valorDepositado);
     this.formAprobarPago.addControl("observacion", this.observacion);
   }
+  ngOnInit() {
+    this.css.setParameter();
+    this.rp.setParameter();
+    this.os.setParameter();
+    this.testconsultaRubrosCS();
+    this.ConsultarPagosId();
+    this.subheaderService.setTitle("Aprobar Pagos");
 
+  }
   submit() {
     
   }
@@ -176,13 +186,7 @@ export class AprobarPagosComponent implements OnInit {
       });
   }
 
-  ngOnInit() {
-    
-    this.testconsultaRubrosCS();
-    this.ConsultarPagosId();
-    this.subheaderService.setTitle("Aprobar Pagos");
 
-  }
 
 
   ConsultarPagosId() {

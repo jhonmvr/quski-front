@@ -23,10 +23,8 @@ export class SubirComprobanteComponent implements OnInit {
   element: any;
 
   constructor(
-    private sinNoticeService: ReNoticeService,
     public dialogRef: MatDialogRef<SubirComprobanteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private upload: ReFileUploadService
     ) { }
 
     ngOnInit() {

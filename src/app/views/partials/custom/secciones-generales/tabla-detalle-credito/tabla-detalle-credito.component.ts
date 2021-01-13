@@ -15,9 +15,12 @@ export class TablaDetalleCreditoComponent implements OnInit {
   dataSourceDetalleCredito = new MatTableDataSource<TbQoDetalleCredito>();
   constructor(
     private det: DetalleCreditoService
-  ) { }
+  ) { 
+    this.det.setParameter();
+  }
 
   ngOnInit() {
+    this.det.setParameter();
     this.iniciaBusqueda( this.idCotizador );
   }
   private iniciaBusqueda( idCotizador : number ){

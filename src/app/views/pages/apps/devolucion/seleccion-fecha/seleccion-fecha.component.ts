@@ -61,19 +61,18 @@ export class SeleccionFechaComponent implements OnInit {
   }
 
   constructor(public ds: DevolucionService,
-    
     private sinNoticeService: ReNoticeService,
-    private subheaderService: SubheaderService,
-    private noticeService:ReNoticeService,
     private css:SoftbankService,
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<AddFechaComponent>,
     @Inject(MAT_DIALOG_DATA) public data) {
-     
+      this.ds.setParameter();
+      this.css.setParameter();
      }
 
   ngOnInit() {
-  
+    this.ds.setParameter();
+    this.css.setParameter();
     this.loading = this.loadingSubject.asObservable();
     this.consultarAgencia();
     this.initiateTablePaginator();

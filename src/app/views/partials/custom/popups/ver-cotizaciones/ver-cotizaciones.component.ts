@@ -42,9 +42,15 @@ export class VerCotizacionesComponent implements OnInit {
     private pre: PrecioOroService,
     private cot: CotizacionService
 
-  ) { }
+  ) { 
+    this.cot.setParameter();
+    this.pre.setParameter();
+
+  }
 
   ngOnInit() {
+    this.cot.setParameter();
+    this.pre.setParameter();
     this.loading = this.loadingSubject.asObservable();
     if(this.data){
       this.cedula = this.data;
