@@ -123,6 +123,17 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
+  public traerCreditonovacionPorAprobar(idNegociacion: number) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerCreditonovacionPorAprobar';
+    this.params = new HttpParams().set('idNegociacion', idNegociacion.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
   public devolverAprobar(idCredito: number, cash: string, descripcion: string, codigo: string) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'devolverAprobar';
     this.params = new HttpParams().set('idCredito', idCredito.toString()).set('cash',cash).set('descripcion',descripcion).set('codigo',codigo);
