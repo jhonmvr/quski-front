@@ -203,7 +203,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.exc.negarExcepcion(this.excepcion.id, this.observacionAprobador.value, this.usuario).subscribe( (data: any) =>{
+          this.exc.negarExcepcion(this.excepcion.id, this.observacionAprobador.value, this.usuario,this.wp.proceso.proceso).subscribe( (data: any) =>{
             if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error al negar la excepcion','error')}
           });
         }
@@ -221,7 +221,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.exc.aprobarCobertura(this.excepcion.id, this.observacionAprobador.value, this.usuario, this.cobertura.value).subscribe( (data: any) =>{
+          this.exc.aprobarCobertura(this.excepcion.id, this.observacionAprobador.value, this.usuario, this.cobertura.value,this.wp.proceso.proceso).subscribe( (data: any) =>{
             if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error  al aprobar la excepcion','error')}
           });
         }

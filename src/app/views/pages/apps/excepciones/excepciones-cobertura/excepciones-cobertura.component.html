@@ -323,7 +323,7 @@
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Observacion Del Asesor: </mat-label>
                                 <textarea class="form-control border" rows="5"
-                                placeholder="Observacion Del Asesor: " matInput> {{ observacion }}</textarea>
+                                placeholder="Observacion Del Asesor: " [formControl]="observacionAsesor" matInput> {{ observacion }}</textarea>
                             </mat-form-field>
                         </div>
                         <div class="col-8">

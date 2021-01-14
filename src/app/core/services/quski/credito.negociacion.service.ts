@@ -96,9 +96,9 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
-  public crearCreditoRenovacion( opcion, garantias, numeroOperacionMadre,asesor,  idNegociacion) {
+  public crearCreditoRenovacion( opcion, garantias, numeroOperacionMadre,asesor, idAgencia,  idNegociacion) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "crearCreditoRenovacion" ;
-    this.params = new HttpParams().set('numeroOperacionMadre', numeroOperacionMadre).set('asesor', asesor)
+    this.params = new HttpParams().set('numeroOperacionMadre', numeroOperacionMadre).set('asesor', asesor).set('idAgencia', idAgencia)
     if(idNegociacion){
       this.params.set('idNegociacion', idNegociacion);
     }
@@ -114,6 +114,17 @@ export class CreditoNegociacionService extends BaseService {
 
   public traerCreditoNegociacionExistente(idNegociacion: number) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerCreditoNegociacionExistente';
+    this.params = new HttpParams().set('idNegociacion', idNegociacion.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+  public traerCreditonovacionPorAprobar(idNegociacion: number) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerCreditonovacionPorAprobar';
     this.params = new HttpParams().set('idNegociacion', idNegociacion.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(

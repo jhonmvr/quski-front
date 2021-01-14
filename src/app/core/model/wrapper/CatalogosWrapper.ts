@@ -23,7 +23,7 @@ export class CatalogosWrapper {
     catTipoFunda:  Array<any>
     catCargo: Array<any>;   
 	catOrigenIngreso: Array<any>;   
-	catOcupacion: Array<any>;   
+    catOcupacion: Array<any>;   
     constructor() {
 
     }
