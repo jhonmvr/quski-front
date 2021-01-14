@@ -9,7 +9,7 @@ export const environment = {
     authKey: 'authcekey',
     prefix:'local',
     authprefix:'relative ',
-    paramsize:13,
+    paramsize:14,
     aplicacion:'1',
     wsProtocol:'ws',
     hashWebSocketKey:"RE2000",
@@ -23,9 +23,10 @@ export const environment = {
     rootKey:"quski-front/",
     mongoHabilitanteCollection:'documento-habilitante',
     appkey:"QUSKIBPM",
+    agenciakey:"reAgencia",
     //SOFTBANK
     //parametros
-    app_p : 'aHR0cDovL2FwaWd3LnF1c2tpLmVjOjg0ODAvZ2VuZXJpYy1yZWxhdGl2ZS1yZXN0L3Jlc291cmNlcy9yZWxhdGl2ZS9nZXRSZWxhdGl2ZQo=',
+    app_p : 'aHR0cDovLzEwLjM3LjEwLjE4MDo4NDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU',
     //agente supervisor
     abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
     //autenticacion 
