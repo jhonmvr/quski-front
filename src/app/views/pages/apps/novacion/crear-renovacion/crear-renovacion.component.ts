@@ -4,6 +4,7 @@ import { CreditoNegociacionService } from '../../../../../core/services/quski/cr
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { DataInjectExcepciones } from '../../../../../core/model/wrapper/DataInjectExcepciones';
 import { CalculadoraService } from '../../../../../core/services/quski/calculadora.service';
+import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { environment } from '../../../../../../../src/environments/environment.prod';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
@@ -74,6 +75,7 @@ export class CrearRenovacionComponent implements OnInit {
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
     private cal: CalculadoraService,
+    private par: ParametroService,
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
@@ -172,7 +174,6 @@ export class CrearRenovacionComponent implements OnInit {
     this.nombreCompleto.setValue(wr.operacionAnterior.cliente.nombreCompleto);
     this.cedulaCliente.setValue(wr.operacionAnterior.cliente.identificacion);
     this.validarProceso();
-    this.validarExcepcionCliente();
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.operacionAnterior.credito.numeroOperacion + ".", "success");
     this.loadingSubject.next(false);
   }
@@ -184,36 +185,47 @@ export class CrearRenovacionComponent implements OnInit {
       if(this.credit.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' || this.credit.proceso.estadoProceso == 'PENDIENTE_APROBACION' || this.credit.proceso.estadoProceso == 'PENDIENTE_APROBACION_DEVUELTO'){
         this.abrirSalirGestion('Su novacion se encuentra en revision por fabrica. Espere a que su credito sea revisado','Credito en fabrica');
       }
+      if(this.credit.proceso.estadoProceso == 'APROBADO' || this.credit.proceso.estadoProceso == 'NEGADO'){
+        this.abrirSalirGestion('Su novacion ya fue finalizada.','Operacion finalizada');
+      }
+
       this.credit.excepciones? this.credit.excepciones.forEach(e=>{
         if(e.estadoExcepcion == 'PENDIENTE'){
           this.abrirSalirGestion('Su novacion se encuentra en revision por fabrica. Espere a que su credito sea revisado','Excepcion en proceso');
         }
-        if(e.estadoExcepcion == 'NEGADO'){
+        if(e.tipoExcepcion != 'EXCEPCION_COBERTURA' && e.estadoExcepcion == 'NEGADO'){
           this.abrirSalirGestion('Su excepcion fue negada. Observacion:'+ e.observacionAprobador+'.','Excepcion Negada');
         }
       }) : null ;
     }
   }
-  public validarExcepcionCliente(){
-    let fecha = new Date(this.credit.operacionAnterior.cliente.fechaNacimiento);
-    if((( new Date().getFullYear() - fecha.getFullYear() ) > 65) ){
-      this.credit.excepciones ? this.credit.excepciones.forEach(e =>{
-        if(e.tipoExcepcion != 'EXCEPCION_CLIENTE'){
-          this.solicitarExcepcionCliente();
-        };
-        if(e.tipoExcepcion == 'EXCEPCION_CLIENTE' && e.estadoExcepcion == 'NEGADO'){
-          this.solicitarExcepcionCliente();
-        }
-      }): this.solicitarExcepcionCliente(); ;
-
-    }
-
+  public validarCliente(){
+    this.par.findByNombre('EDAD_MAXIMA').subscribe( (data: any) =>{
+      if(data.entidad){
+        console.log('Edad  maxima? ===>', data.entidad.valor);
+        this.par.getDiffBetweenDateInicioActual(this.credit.operacionAnterior.cliente.fechaNacimiento, 'dd/MM/yyyy').subscribe( (data: any) =>{
+          console.log('Mi data de calcular edad ===>', data);
+        });
+       /*  let fecha = new Date(this.credit.operacionAnterior.cliente.fechaNacimiento);
+        if((( fecha.get ) > 65) ){
+          this.credit.excepciones ? this.credit.excepciones.forEach(e =>{
+            if(e.tipoExcepcion != 'EXCEPCION_CLIENTE'){
+              this.solicitarExcepcionCliente();
+            };
+            if(e.tipoExcepcion == 'EXCEPCION_CLIENTE' && e.estadoExcepcion == 'NEGADO'){
+              this.solicitarExcepcionCliente();
+            }
+          }): this.solicitarExcepcionCliente();
+        } */
+      }
+    });
+   
   }
   public solicitarExcepcionRiesgo(){
     if(!this.credit.proceso){
       this.cre.crearCreditoRenovacion(  this.seleccion, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
         if(data.entidad){
-          //console.log( 'Mi operacion ->', data.entidad );
+          this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(false,true,false) );
         }
       });
@@ -225,7 +237,7 @@ export class CrearRenovacionComponent implements OnInit {
     if(!this.credit.proceso){
       this.cre.crearCreditoRenovacion(  this.seleccion, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
         if(data.entidad){
-          //console.log( 'Mi operacion ->', data.entidad );
+          this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false) );
         }
       });
@@ -239,7 +251,6 @@ export class CrearRenovacionComponent implements OnInit {
         this.cre.crearCreditoRenovacion(  this.seleccion, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
           if(data.entidad){
             this.credit = data.entidad;
-            //console.log( 'Mi operacion ->', data.entidad );
             this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
           }
         });
@@ -285,8 +296,9 @@ export class CrearRenovacionComponent implements OnInit {
     }
   }
   public guardarSeleccion(row){
-    //console.log('La seleccion ->',row);    
     this.seleccion = row;
+    this.validarCliente();
+    //this.solicitarExcepcionCliente();
   }
   public simularOpciones(){
     this.loadingSubject.next(true);

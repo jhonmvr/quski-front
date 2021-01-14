@@ -97,7 +97,7 @@ export class CreditoNegociacionService extends BaseService {
     );
   }
   public crearCreditoRenovacion( opcion, garantias, numeroOperacionMadre,asesor, idAgencia,  idNegociacion) {
-    let serviceUrl = this.appResourcesUrl + this.urlRest + "crearCreditoRenovacion" ;
+    let serviceUrl = this.appResourcesUrl + this.urlRest + "crearCreditoRenovacion";
     this.params = new HttpParams().set('numeroOperacionMadre', numeroOperacionMadre).set('asesor', asesor).set('idAgencia', idAgencia)
     if(idNegociacion){
       this.params.set('idNegociacion', idNegociacion);
