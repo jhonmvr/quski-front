@@ -38,9 +38,9 @@ export class ExcepcionService extends BaseService {
       )
     );
   }
-  public negarExcepcion(idExc: number, obsAprobador: string, aprobador: string) {
+  public negarExcepcion(idExc: number, obsAprobador: string, aprobador: string, proceso: string) {
     const serviceUrl = this.appResourcesUrl + this.restC + 'negarExcepcion';
-    this.params = new HttpParams().set('idExc', idExc.toString()).set('obsAprobador', obsAprobador).set('aprobador', aprobador);
+    this.params = new HttpParams().set('idExc', idExc.toString()).set('obsAprobador', obsAprobador).set('aprobador', aprobador).set('proceso', proceso);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -49,9 +49,9 @@ export class ExcepcionService extends BaseService {
       )
     );
   }
-  public aprobarCobertura(idExc: number, obsAprobador: string, aprobador: string, cobertura: string) {
+  public aprobarCobertura(idExc: number, obsAprobador: string, aprobador: string, cobertura: string, proceso: string) {
     const serviceUrl = this.appResourcesUrl + this.restC + 'aprobarCobertura';
-    this.params = new HttpParams().set('idExc', idExc.toString()).set('obsAprobador', obsAprobador).set('aprobador', aprobador).set('cobertura', cobertura);
+    this.params = new HttpParams().set('idExc', idExc.toString()).set('obsAprobador', obsAprobador).set('aprobador', aprobador).set('cobertura', cobertura).set('proceso', proceso);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

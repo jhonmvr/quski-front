@@ -8,6 +8,7 @@ import { SoftbankService } from '../../../../../core/services/quski/softbank.ser
 import { environment } from '../../../../../../../src/environments/environment.prod';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { SubheaderService } from '../../../../../core/_base/layout';
@@ -27,9 +28,10 @@ export interface cliente {
 export class CrearRenovacionComponent implements OnInit {
   public loading;
   public usuario: string;
+  agencia: string;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
-  private credit: { operacionAnterior: any, proceso: TbQoProceso, credito: TbQoCreditoNegociacion}
+  private credit: { operacionAnterior: any, proceso: TbQoProceso, credito: TbQoCreditoNegociacion, excepciones: TbQoExcepcion[]}
   private numeroOperacion;
   public fechaUtil: diferenciaEnDias;
   public seleccion;
@@ -98,6 +100,7 @@ export class CrearRenovacionComponent implements OnInit {
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.agencia = '2';
     this.inicioDeFlujo();
   }
   /** @CREDITO */
@@ -168,19 +171,83 @@ export class CrearRenovacionComponent implements OnInit {
     this.codigoOperacion.setValue(wr.operacionAnterior.credito.numeroOperacion);
     this.nombreCompleto.setValue(wr.operacionAnterior.cliente.nombreCompleto);
     this.cedulaCliente.setValue(wr.operacionAnterior.cliente.identificacion);
+    this.validarProceso();
+    this.validarExcepcionCliente();
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.operacionAnterior.credito.numeroOperacion + ".", "success");
     this.loadingSubject.next(false);
   }
-  public solicitarCobertura(){
+  public validarProceso(){
+    if(this.credit.proceso){
+      if(this.credit.proceso.proceso != 'RENOVACION'){
+        this.abrirSalirGestion('El credito que intenta procesar no es un credito de novacion','Credito Invalido');
+      }
+      if(this.credit.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' || this.credit.proceso.estadoProceso == 'PENDIENTE_APROBACION' || this.credit.proceso.estadoProceso == 'PENDIENTE_APROBACION_DEVUELTO'){
+        this.abrirSalirGestion('Su novacion se encuentra en revision por fabrica. Espere a que su credito sea revisado','Credito en fabrica');
+      }
+      this.credit.excepciones? this.credit.excepciones.forEach(e=>{
+        if(e.estadoExcepcion == 'PENDIENTE'){
+          this.abrirSalirGestion('Su novacion se encuentra en revision por fabrica. Espere a que su credito sea revisado','Excepcion en proceso');
+        }
+        if(e.estadoExcepcion == 'NEGADO'){
+          this.abrirSalirGestion('Su excepcion fue negada. Observacion:'+ e.observacionAprobador+'.','Excepcion Negada');
+        }
+      }) : null ;
+    }
+  }
+  public validarExcepcionCliente(){
+    let fecha = new Date(this.credit.operacionAnterior.cliente.fechaNacimiento);
+    if((( new Date().getFullYear() - fecha.getFullYear() ) > 65) ){
+      this.credit.excepciones ? this.credit.excepciones.forEach(e =>{
+        if(e.tipoExcepcion != 'EXCEPCION_CLIENTE'){
+          this.solicitarExcepcionCliente();
+        };
+        if(e.tipoExcepcion == 'EXCEPCION_CLIENTE' && e.estadoExcepcion == 'NEGADO'){
+          this.solicitarExcepcionCliente();
+        }
+      }): this.solicitarExcepcionCliente(); ;
+
+    }
+
+  }
+  public solicitarExcepcionRiesgo(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.credit.proceso? this.credit.proceso.idReferencia : null,  this.usuario).subscribe( data =>{
+      this.cre.crearCreditoRenovacion(  this.seleccion, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
         if(data.entidad){
           //console.log( 'Mi operacion ->', data.entidad );
-          this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
+          this.abrirPopupExcepciones(new DataInjectExcepciones(false,true,false) );
         }
       });
     }else{
-      this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
+      this.abrirPopupExcepciones(new DataInjectExcepciones(false,true,false) );
+    }
+  }
+  public solicitarExcepcionCliente(){
+    if(!this.credit.proceso){
+      this.cre.crearCreditoRenovacion(  this.seleccion, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
+        if(data.entidad){
+          //console.log( 'Mi operacion ->', data.entidad );
+          this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false) );
+        }
+      });
+    }else{
+      this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false) );
+    }
+  }
+  public solicitarExcepcionCobertura(){
+    if(this.seleccion){
+      if(!this.credit.proceso){
+        this.cre.crearCreditoRenovacion(  this.seleccion, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
+          if(data.entidad){
+            this.credit = data.entidad;
+            //console.log( 'Mi operacion ->', data.entidad );
+            this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
+          }
+        });
+      }else{
+        this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
+      }
+    }else{
+      this.sinNotSer.setNotice('SELECCIONE AL MENOS UNA OPCION PARA SOLICITAR LA EXCEPCION', 'error');
     }
   }
   public abrirPopupExcepciones(data: DataInjectExcepciones) {
@@ -206,7 +273,7 @@ export class CrearRenovacionComponent implements OnInit {
   }
   public actualizarCliente(){
     if( this.seleccion ){
-      this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion, this.credit.proceso? this.credit.proceso.idReferencia : null, this.usuario).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia, this.credit.proceso? this.credit.proceso.idReferencia : null ).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           //console.log( 'Mi operacion ->', data.entidad );
@@ -230,8 +297,7 @@ export class CrearRenovacionComponent implements OnInit {
     cliente.fechaNacimiento = (fecha.getDate() < 10 ? '0'+fecha.getDate() : fecha.getDate()) +'/' + mes +'/' + fecha.getFullYear(); 
     this.credit.operacionAnterior.cliente = cliente;
     //this.credit.operacionAnterior.fechaNacimiento = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
-    //console.log('wrapper de salida ->', this.credit.operacionAnterior);
-    this.cal.simularOfertaRenovacion(0,0,0,2, this.credit.operacionAnterior).subscribe( (data: any) =>{
+    this.cal.simularOfertaRenovacion(0,0,this.credit.credito? this.credit.credito.cobertura : 0,this.agencia, this.credit.operacionAnterior).subscribe( (data: any) =>{
       if(data.entidad){
         //console.log('Data de simulacion -->',data.entidad);
         data.entidad.simularResult.codigoError > 0 ? this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')

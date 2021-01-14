@@ -62,7 +62,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
   private solitudRiesgo(dataExcepciones: DataInjectExcepciones) {
     this.titulo     = TituloExcepcionEnum.RIESGO;
     this.mensaje    = MensajeExcepcionEnum.RIESGO;
-    this.bre        = dataExcepciones.mensajeBre;
+    this.bre        = dataExcepciones.mensajeBre ? dataExcepciones.mensajeBre : 'No aplica';
     this.subBotones = true;
     this.abrirSubBotones = false;
     
@@ -70,7 +70,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
   private solitudCobertura(dataExcepciones: DataInjectExcepciones) {
     this.titulo   = TituloExcepcionEnum.COBERTURA;
     this.mensaje  = MensajeExcepcionEnum.COBERTURA;
-    this.bre        = null;
+    this.bre        = 'No aplica';
     this.subBotones = false;
     this.abrirSubBotones = true;
 
@@ -78,7 +78,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
   private solitudCliente(dataExcepciones: DataInjectExcepciones) {
     this.titulo   = TituloExcepcionEnum.CLIENTE;
     this.mensaje  = MensajeExcepcionEnum.CLIENTE;
-    this.bre        = dataExcepciones.mensajeBre;
+    this.bre        = dataExcepciones.mensajeBre ? dataExcepciones.mensajeBre : 'No aplica';
     this.subBotones = true;
     this.abrirSubBotones = false;
 
@@ -93,6 +93,8 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
       this.loadingSubject.next(true);
       if(data.entidades){
         this.catTiposExcepciones = data.entidades;
+        console.log('array de catalogo ===>', this.catTiposExcepciones);
+        
         this.seleccionarTipo();
       } else{
         this.sinNotSer.setNotice('ERROR EN BASE PARA TRAER LA LISTA DE CATALOGOS','error');
@@ -107,7 +109,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
       excepcion.idAsesor = this.usuario;
       excepcion.tipoExcepcion = this.tipoExcep;
       excepcion.observacionAsesor = this.observacionAsesor.value;
-      excepcion.mensajeBre = this.dataExcepciones.mensajeBre; 
+      excepcion.mensajeBre = this.bre; 
       excepcion.tbQoNegociacion = new TbQoNegociacion();
       excepcion.tbQoNegociacion.id = this.dataExcepciones.idNegociacion;
       this.exc.solicitarExcepcion(excepcion).subscribe( (data:any)=>{
@@ -123,7 +125,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
   }
   private seleccionarTipo(){
     if(this.dataExcepciones.isRiesgo){
-          this.tipoExcep = 'EXCEPCION_RIESGO_ACUMULADO';
+          this.tipoExcep = 'EXCEPCION_RIESGO';
     } else if(this.dataExcepciones.isCobertura){
           this.tipoExcep = 'EXCEPCION_COBERTURA';
     } else if( this.dataExcepciones.isCliente){

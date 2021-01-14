@@ -40,10 +40,22 @@ export class CalculadoraService extends BaseService {
       )
     );
   }
-  public simularOfertaRenovacionExcepcion(codigoAgencia, numeroOperacionMadre) {
+  public simularOfertaRenovacionExcepcion(idCredito: number, cobertura) {
     const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOfertaRenovacionExcepcion';
     this.params = new HttpParams();
-    this.params = this.params.set('codigoAgencia',codigoAgencia).set('numeroOperacionMadre',numeroOperacionMadre);
+    this.params = this.params.set('idCredito',idCredito.toString()).set('cobertura',cobertura);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+      )
+    );
+  }
+  public simularOfertaExcepcionadaRenovacion(idCredito: number, cobertura) {
+    const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOfertaExcepcionadaRenovacion';
+    this.params = new HttpParams();
+    this.params = this.params.set('idCredito',idCredito.toString()).set('cobertura',cobertura);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

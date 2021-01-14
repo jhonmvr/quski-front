@@ -87,6 +87,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.formDisable.addControl('telefonoDomicilio', this.telefonoDomicilio);
     this.formDisable.addControl('telefonoMovil', this.telefonoMovil);
     this.formDisable.addControl('email', this.email);
+    this.formDisable.addControl('observacionAsesor', this.observacionAsesor);
     this.formDatosExcepcion.addControl('observacionAprobador', this.observacionAprobador);
     this.formDatosExcepcion.addControl('cobertura', this.cobertura);
   }
@@ -98,7 +99,9 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.wp = null;
     this.loading = this.loadingSubject.asObservable();
     this.busquedaNegociacion();
-    this.usuario = localStorage.getItem(atob(environment.userKey));
+    //this.usuario = localStorage.getItem(atob(environment.userKey));
+    this.usuario = 'JeroAprobador';
+    console.log('El aprobador? =====>',this.usuario);
     this.agencia = 2;
   }
   private camposAdicinales(wp: NegociacionWrapper){
@@ -111,6 +114,10 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.coberturaActual.setValue( this.wp.variables.find( v => v.codigo == 'Cobertura') ? this.wp.variables.find( v => v.codigo == 'Cobertura').valor : 'No aplica');
     this.valorComercial.setValue( totalValorComercial );
     this.valorAvaluo.setValue( totalValorAvaluo );
+    this.montoActual.disable();
+    this.coberturaActual.disable();
+    this.valorComercial.disable();
+    this.valorAvaluo.disable();
   }
   private busquedaNegociacion(){
     this.loadingSubject.next(true);
@@ -148,7 +155,6 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.telefonoMovil.setValue( wp.telefonoMovil ? wp.telefonoMovil.numero : null );
     this.email.setValue( wp.credito.tbQoNegociacion.tbQoCliente.email );
     this.dataSourceTasacion.data = wp.joyas;
-    this.observacionAsesor.disable();
     this.calcularOpciones();
     this.camposAdicinales( wp );
     //console.log('Mi excepcion --> ', this.excepcion);
@@ -158,20 +164,30 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   public simular(){ 
     this.loadingSubject.next(true);
     //console.log('COBERTURA ---> ', this.cobertura.value )
-    !this.cobertura.valid && this.observacionAprobador.valid  && this.cobertura.value >= 80 ? 
-      this.sinNoticeService.setNotice('COMPLETE LA SECCION CORRECTAMENTE','error'):
-        this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{
-          !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
-          this.simulado = data.entidades ? true : false;
+    if(this.cobertura.valid && this.observacionAprobador.valid  && this.cobertura.value <= 80){
+      this.wp.proceso.proceso == "RENOVACION" ? 
+      this.cal.simularOfertaExcepcionadaRenovacion(this.wp.credito.id, this.cobertura.value).subscribe( (data: any) =>{
+        !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
+        this.simulado = data.entidades ? true : false;
+        this.loadingSubject.next(false);
+      },err=>{
+        this.loadingSubject.next(false);
+      }):this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{
+        !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
+        this.simulado = data.entidades ? true : false;
+        this.loadingSubject.next(false);
+        },err=>{
           this.loadingSubject.next(false);
         });
-        this.loadingSubject.next(false);
+    }else{
+      this.sinNoticeService.setNotice('COMPLETE LA SECCION CORRECTAMENTE','error');
+    }
   }
   public calcularOpciones() {
     if (this.dataSourceTasacion && this.dataSourceTasacion.data && this.dataSourceTasacion.data.length > 0) {
       this.loadingSubject.next(true);
       this.wp.proceso.proceso == "RENOVACION" ? 
-        this.cal.simularOfertaRenovacionExcepcion(this.wp.credito.idAgencia, this.wp.credito.numeroOperacionMadre).subscribe( data =>{
+        this.cal.simularOfertaRenovacionExcepcion(this.wp.credito.id, 0).subscribe( data =>{
           this.loadingSubject.next(false);
           if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
             && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
@@ -217,7 +233,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.exc.negarExcepcion(this.excepcion.id, this.observacionAprobador.value, this.usuario).subscribe( (data: any) =>{
+          this.exc.negarExcepcion(this.excepcion.id, this.observacionAprobador.value, this.usuario, this.wp.proceso.proceso).subscribe( (data: any) =>{
             if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error al negar la excepcion','error')}
           });
         }
@@ -235,7 +251,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.exc.aprobarCobertura(this.excepcion.id, this.observacionAprobador.value, this.usuario, this.cobertura.value).subscribe( (data: any) =>{
+          this.exc.aprobarCobertura(this.excepcion.id, this.observacionAprobador.value, this.usuario, this.cobertura.value, this.wp.proceso.proceso).subscribe( (data: any) =>{
             if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error  al aprobar la excepcion','error')}
           });
         }
