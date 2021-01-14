@@ -199,6 +199,7 @@ export class CrearRenovacionComponent implements OnInit {
       }) : null ;
     }
   }
+  
   public validarCliente(){
     this.par.findByNombre('EDAD_MAXIMA').subscribe( (data: any) =>{
       if(data.entidad){
