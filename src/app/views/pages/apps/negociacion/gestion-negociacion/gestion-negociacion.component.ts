@@ -445,7 +445,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.nombresCompletos.setValue(this.tbQoCliente.nombreCompleto);
     this.fechaDeNacimiento.setValue(this.tbQoCliente.fechaNacimiento);
     this.cargarEdad();
-    this.nacionalidad.setValue(this.catPais.find(p=> p.id == this.tbQoCliente.nacionalidad));
+    this.nacionalidad.setValue(this.catPais?this.catPais.find(p=> p.id == this.tbQoCliente.nacionalidad):null);
     if(wrapper.telefonoMovil){
       this.movil.setValue(wrapper.telefonoMovil.numero);
       this.telefonoMovil = wrapper.telefonoMovil;

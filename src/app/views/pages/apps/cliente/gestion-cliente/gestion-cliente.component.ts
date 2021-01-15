@@ -290,13 +290,13 @@ export class GestionClienteComponent implements OnInit {
     let countOtro: number = 0;
     let countMovil: number = 0;
     !this.wrapper.telefonos ? null      : this.wrapper.telefonos.forEach(e => {
-      if (e.tipoTelefono == "M" && e.estado == "ACT" && countMovil < 1) {
+      if (e.tipoTelefono == "CEL" && e.estado == "ACT" && countMovil < 1) {
         this.telefonoMovil.setValue(e.numero);
         countMovil++;
-      }else if( e.tipoTelefono == "F" && e.estado == "ACT" && countFijo < 1){
+      }else if( e.tipoTelefono == "DOM" && e.estado == "ACT" && countFijo < 1){
         this.telefonoFijo.setValue(e.numero);
         countFijo++;
-      }else if(e.tipoTelefono == "CEL" && e.estado == "ACT" && countOtro < 1){
+      }else if(e.tipoTelefono == "ADI" && e.estado == "ACT" && countOtro < 1){
         this.telefonoOtro.setValue(e.numero);
         countOtro++;
       }else{
@@ -1223,13 +1223,13 @@ export class GestionClienteComponent implements OnInit {
                       }
                     } else {
                       this.wrapper.telefonos.forEach(e => {
-                        if (e.tipoTelefono == "M" && e.estado == 'ACT') {
+                        if (e.tipoTelefono == "CEL" && e.estado == 'ACT') {
                           e.numero = this.telefonoMovil.value;
                         }
-                        if (e.tipoTelefono == "F" && e.estado == 'ACT') {
+                        if (e.tipoTelefono == "DOM" && e.estado == 'ACT') {
                           e.numero = this.telefonoFijo.value;
                         }
-                        if (e.tipoTelefono == "CEL" && e.estado == 'ACT') {
+                        if (e.tipoTelefono == "ASI" && e.estado == 'ACT') {
                           e.numero = this.telefonoOtro.value;
                         }
                       });
@@ -1272,7 +1272,7 @@ export class GestionClienteComponent implements OnInit {
                       }
                     });
                     this.dataSource.data.forEach(e => {
-                      const codigo = this.catTipoReferencia.find(x => x.nombre == e.parentesco);
+                      let codigo = this.catTipoReferencia.find(x => x.nombre == e.parentesco);
                       e.parentesco = codigo.codigo;
                       e.tbQoCliente = this.wrapper.cliente;
                     });
