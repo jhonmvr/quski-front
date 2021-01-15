@@ -102,7 +102,7 @@ export class CrearRenovacionComponent implements OnInit {
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.agencia = '2';
+    this.agencia = '2'// localStorage.getItem( 'idAgencia' );
     this.inicioDeFlujo();
   }
   /** @CREDITO */
@@ -204,23 +204,22 @@ export class CrearRenovacionComponent implements OnInit {
     this.par.findByNombre('EDAD_MAXIMA').subscribe( (data: any) =>{
       if(data.entidad){
         console.log('Edad  maxima? ===>', data.entidad.valor);
+        let valor = data.entidad.valor;
         this.par.getDiffBetweenDateInicioActual(this.credit.operacionAnterior.cliente.fechaNacimiento, 'dd/MM/yyyy').subscribe( (data: any) =>{
           console.log('Mi data de calcular edad ===>', data);
+          if(data.entidad.year < valor){
+            this.credit.excepciones ? this.credit.excepciones.forEach(e =>{
+              if(e.tipoExcepcion != 'EXCEPCION_CLIENTE'){
+                this.solicitarExcepcionCliente();
+              };
+              if(e.tipoExcepcion == 'EXCEPCION_CLIENTE' && e.estadoExcepcion == 'NEGADO'){
+                this.solicitarExcepcionCliente();
+              }
+            }): this.solicitarExcepcionCliente();
+          }
         });
-       /*  let fecha = new Date(this.credit.operacionAnterior.cliente.fechaNacimiento);
-        if((( fecha.get ) > 65) ){
-          this.credit.excepciones ? this.credit.excepciones.forEach(e =>{
-            if(e.tipoExcepcion != 'EXCEPCION_CLIENTE'){
-              this.solicitarExcepcionCliente();
-            };
-            if(e.tipoExcepcion == 'EXCEPCION_CLIENTE' && e.estadoExcepcion == 'NEGADO'){
-              this.solicitarExcepcionCliente();
-            }
-          }): this.solicitarExcepcionCliente();
-        } */
       }
     });
-   
   }
   public solicitarExcepcionRiesgo(){
     if(!this.credit.proceso){

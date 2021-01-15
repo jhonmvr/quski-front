@@ -30,7 +30,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   // VARIABLES PUBLICAS  
   public loading;
   public usuario: string;
-  public agencia: number;
+  public agencia: any;
   public fechaActual: string;
 
   public loadingSubject = new BehaviorSubject<boolean>(false);
@@ -286,7 +286,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.subheaderService.setTitle('Aprobación De Credito');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.agencia = 2;
+    this.agencia = localStorage.getItem( 'idAgencia' );
     this.traerCreditoNegociacion();
     this.formDisable.disable();
   }

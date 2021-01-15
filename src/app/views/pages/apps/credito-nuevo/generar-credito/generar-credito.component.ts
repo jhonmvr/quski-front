@@ -39,7 +39,7 @@ export class GenerarCreditoComponent implements OnInit {
   public operacionSoft: OperacionSoft;
   private fechaServer;
   public existeCredito: boolean;
-  private agencia: number;
+  private agencia: any;
   /** @FORM_INFORMACION **/
   public formInformacion: FormGroup = new FormGroup({});
   public codigoOperacion = new FormControl('', [Validators.required]);
@@ -207,7 +207,7 @@ export class GenerarCreditoComponent implements OnInit {
   }
   private cargarCampos(data: OperacionNuevoWrapper) {
     //console.log('OperacionNuevoWrapper de entrada ->', data);
-    this.agencia = 2;
+    this.agencia = Number(localStorage.getItem( 'idAgencia' ));
     this.firmanteOperacion.setValue( this.catFirmanteOperacion.find(t=> t.codigo != null).nombre );
     this.firmanteOperacion.disable();
 

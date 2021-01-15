@@ -102,7 +102,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     //this.usuario = localStorage.getItem(atob(environment.userKey));
     this.usuario = 'JeroAprobador';
     console.log('El aprobador? =====>',this.usuario);
-    this.agencia = 2;
+    this.agencia = localStorage.getItem( 'idAgencia' );
   }
   private camposAdicinales(wp: NegociacionWrapper){
     let totalValorAvaluo: number = 0;

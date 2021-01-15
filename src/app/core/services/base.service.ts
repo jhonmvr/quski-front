@@ -103,6 +103,7 @@ export class BaseService {
     //Full url al servidor de websocket generic-relative-core
     this.appWebSocketUrl = 'ws://localhost:8080/generic-relative-rest/relativews/';
     //Path contextroot generic-relative-core
+    //this.genericResourcesUrl = 'http://186.4.199.176:18080/generic-relative-rest/resources/';
     this.genericResourcesUrl = 'http://localhost:8080/generic-relative-rest/resources/';
     //object storage 
     this.mongoDb = atob(localStorage.getItem( environment.prefix + 'RE009')).replace(this.keyUnencrypt, '');

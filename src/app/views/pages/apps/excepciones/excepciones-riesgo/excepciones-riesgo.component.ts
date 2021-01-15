@@ -96,7 +96,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.loading = this.loadingSubject.asObservable();
     this.busquedaNegociacion();
     this.usuario = localStorage.getItem(atob(environment.userKey));
-    this.agencia = 2;
+    this.agencia = localStorage.getItem( 'idAgencia' );
   }
   private camposAdicinales(){
     let totalValorAvaluo: number = 0;

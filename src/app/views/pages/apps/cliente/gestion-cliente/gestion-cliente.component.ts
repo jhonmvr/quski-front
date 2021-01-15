@@ -247,7 +247,7 @@ export class GestionClienteComponent implements OnInit {
     this.subheaderService.setTitle("Gestion de Cliente");
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.agencia = 2;
+    this.agencia = localStorage.getItem( 'idAgencia' );
     this.buscarCliente();
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
