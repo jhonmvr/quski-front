@@ -767,7 +767,7 @@ export class GestionClienteComponent implements OnInit {
     this.separacionBienes.setValue('');
     this.separacionBienes.disable();
     this.catEstadoCivil.forEach(e => {
-      if (this.estadoCivil.value && this.estadoCivil.value.codigo == "C") {
+      if (this.estadoCivil.value && this.estadoCivil.value.codigo == "CAS") {
         this.separacionBienes.setValidators([Validators.required]);
         this.separacionBienes.enable();
         this.sinNoticeService.setNotice("SELECCIONE LA OPCION DE SEPARACIÒN DE BIENES ", 'warning');
