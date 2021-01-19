@@ -438,7 +438,7 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-  private cargarValores(wrapper, cargar: boolean) {
+  private cargarValores(wrapper: NegociacionWrapper, cargar: boolean) {
     this.tbQoCliente= wrapper.credito.tbQoNegociacion.tbQoCliente;
     this.cedula.setValue(this.tbQoCliente.cedulaCliente);
     this.identificacion.setValue(this.tbQoCliente.cedulaCliente);
@@ -472,9 +472,49 @@ export class GestionNegociacionComponent implements OnInit {
     }
     if(wrapper.joyas != null){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
-      this.dataSourceCreditoNegociacion.data.push( wrapper.credito );
+      let calculadora: any = {
+        costoCustodia: this.negoW.credito.costoCustodia,
+        costoFideicomiso: this.negoW.credito.costoFideicomiso,
+        costoSeguro: this.negoW.credito.costoSeguro,
+        costoTasacion: this.negoW.credito.costoTasacion,
+        costoTransporte: this.negoW.credito.costoTransporte,
+        costoValoracion: this.negoW.credito.costoValoracion,
+        cuota: this.negoW.credito.cuota,
+        custodiaDevengada: this.negoW.credito.custodiaDevengada,
+        dividendoflujoplaneado: this.negoW.credito.dividendoFlujoPlaneado,
+        dividendosprorrateoserviciosdiferido:this.negoW.credito.dividendoProrrateo,
+        formaPagoCapital: this.negoW.credito.formaPagoCapital,
+        formaPagoCustodia: this.negoW.credito.formaPagoCustodia,
+        formaPagoCustodiaDevengada: this.negoW.credito.formaPagoCustodiaDevengada,
+        formaPagoFideicomiso: this.negoW.credito.formaPagoFideicomiso,
+        formaPagoGastoCobranza: this.negoW.credito.formaPagoGastoCobranza,
+        formaPagoImpuestoSolca: this.negoW.credito.formaPagoImpuestoSolca,
+        formaPagoInteres: this.negoW.credito.formaPagoInteres,
+        formaPagoMora: this.negoW.credito.formaPagoMora,
+        formaPagoSeguro: this.negoW.credito.formaPagoSeguro,
+        formaPagoTasador: this.negoW.credito.formaPagoTasador,
+        formaPagoTransporte: this.negoW.credito.formaPagoTransporte,
+        formaPagoValoracion: this.negoW.credito.formaPagoValoracion,
+        gastoCobranza: this.negoW.credito.gastoCobranza,
+        impuestoSolca: this.negoW.credito.impuestoSolca,
+        montoFinanciado: this.negoW.credito.montoFinanciado,
+        montoPrevioDesembolso: this.negoW.credito.montoPrevioDesembolso,
+        periodicidadPlazo: this.negoW.credito.periodicidadPlazo,
+        periodoPlazo: this.negoW.credito.periodoPlazo,
+        plazo: this.negoW.credito.plazoCredito,
+        porcentajeflujoplaneado: this.negoW.credito.porcentajeFlujoPlaneado,
+        saldoCapitalRenov: this.negoW.credito.saldoCapitalRenov,
+        saldoInteres: this.negoW.credito.saldoInteres,
+        saldoMora: this.negoW.credito.saldoMora,
+        tipooferta: this.negoW.credito.tipoOferta,
+        totalCostosOperacionAnterior: this.negoW.credito.totalCostosOperacionAnterior,
+        totalGastosNuevaOperacion: this.negoW.credito.totalGastosNuevaOperacion,
+        valorAPagar: this.negoW.credito.valorAPagar,
+        valorARecibir: this.negoW.credito.valorARecibir
+      }
+      this.dataSourceCreditoNegociacion.data.push( calculadora );
       this.dataSourceTasacion.data = wrapper.joyas;
-      this.calcular();
+      this.calcular();  
       this.sinNotSer.setNotice("NEGOCIACION -> \"" + wrapper.credito.codigo + "\" Cargada correctamente.", "success");
     }else{
       this.sinNotSer.setNotice("SE HA INICIADO UNA NEGOCIACION -> \"" + wrapper.credito.codigo + "\". ", "success");
@@ -792,38 +832,48 @@ export class GestionNegociacionComponent implements OnInit {
       })
      }
       if (this.elementJoya) {
-        joya.id = this.elementJoya.id;
+        joya.id = this.elementJoya;
        // const index = this.dataSourceTasacion.data.indexOf(this.elementJoya);
        // this.dataSourceTasacion.data.splice(index, 1);
         this.elementJoya = null;
       }
+      console.log('Mi joya a guardar ===>', joya);
       this.neg.agregarJoya(joya).subscribe((data: any) => {
           this.dataSourceTasacion = new MatTableDataSource<any>(data.entidades);
           this.sinNotSer.setNotice('SE GUARDO LA JOYA TASADA', 'success');
         //this.loadingSubject.next(false);
         this.limpiarCamposTasacion();
         this.calcular();
+        this.dataSourceCreditoNegociacion = new MatTableDataSource<any>();
       });
     
   }
   editar(element: TbQoTasacion) {
-    this.tipoOro.setValue(element.tipoOro);
-    this.pesoNeto.setValue(element.pesoNeto);
-    this.pesoBruto.setValue(element.pesoBruto);
-    this.numeroPiezas.setValue(element.numeroPiezas);
-    this.tipoJoya.setValue(element.tipoJoya);
-    this.estado.setValue(element.estadoJoya);
-    this.descuentoPiedra.setValue(element.descuentoPesoPiedra);
-    this.descuentoSuelda.setValue(element.descuentoSuelda);
-    this.valorOro.setValue(element.valorOro);
-    this.tienePiedras.setValue(element.tienePiedras);
-    this.detallePiedras.setValue(element.detallePiedras);
-    this.valorAplicable.setValue(element.valorAplicable);
-    this.precioOro.setValue(element.precioOro);
-    this.valorAvaluo.setValue(element.valorAvaluo);
-    this.valorRealizacion.setValue(element.valorRealizacion);
-    this.descripcion.setValue(element.descripcion);
-    this.elementJoya = element.id;
+    console.log('Mi elemento ===>', element);
+    this.loadingSubject.next(true);
+    let cliente = this.buildCliente();
+    this.neg.verPrecios(cliente).subscribe(resp=>{
+      this.catTipoOro = resp.entidades;
+      this.tipoOro.setValue(this.catTipoOro ? this.catTipoOro.find(t => t.codigo == element.tipoOro) ? this.catTipoOro.find(t => t.codigo == element.tipoOro) : "No definido" : 'No definido' );
+      this.pesoNeto.setValue(element.pesoNeto);
+      this.pesoBruto.setValue(element.pesoBruto);
+      this.numeroPiezas.setValue(element.numeroPiezas);
+      this.tipoJoya.setValue(this.catTipoJoya ? this.catTipoJoya.find(t => t.codigo == element.tipoJoya) ? this.catTipoJoya.find(t => t.codigo == element.tipoJoya) : "No definido" : 'No definido' );
+      this.estado.setValue(this.catEstadoJoya ? this.catEstadoJoya.find(t => t.codigo == element.estadoJoya) ? this.catEstadoJoya.find(t => t.codigo == element.estadoJoya) : "No definido" : 'No definido' );
+      this.descuentoSuelda.setValue(element.descuentoSuelda);
+      this.valorOro.setValue(element.valorOro);
+      this.tienePiedras.setValue(element.tienePiedras ? 'S' : 'N');
+      this.selectTienePiedras();
+      this.descuentoPiedra.setValue(element.descuentoPesoPiedra);
+      this.detallePiedras.setValue(element.detallePiedras);
+      this.valorAplicable.setValue(element.valorAplicable);
+      this.precioOro.setValue(element.precioOro);
+      this.valorAvaluo.setValue(element.valorAvaluo);
+      this.valorRealizacion.setValue(element.valorRealizacion);
+      this.descripcion.setValue(element.descripcion);
+      this.elementJoya = element.id;
+      this.loadingSubject.next(false);
+    })
   }
   eliminar(element: TbQoTasacion) {
     this.loadingSubject.next(true);

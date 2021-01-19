@@ -56,8 +56,8 @@ export class HabilitanteDialogComponent implements OnInit {
       let file = <File>event.target.files[0];
       let mimeType = file.type;
       let mimeSize = file.size;
-      if (mimeType.match('\.pdf') != null   ||  mimeType.match('\.png') != null) {
-        if (mimeSize < 500000) {
+      if (true) {
+        if (mimeSize < 600000) {
           reader.readAsDataURL(file);
           reader.onload = () => {
             this.uploadSubject.next(true);
@@ -84,13 +84,8 @@ export class HabilitanteDialogComponent implements OnInit {
         }
         
       } else {
-        ////console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
-        //this.fileInput.nativeElement = null;
-        //document.getElementById("fileUpload").nodeValue = "";
-        //file = null
         this.dataUpload =null;
         this.uploadSubject.next(false);
-        //console.log("entra aqui")
         this.sinNoticeService.setNotice("Formato no permitido.", 'error');
       }
     } else {

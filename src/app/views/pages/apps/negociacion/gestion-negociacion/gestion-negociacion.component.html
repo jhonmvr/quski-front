@@ -1,5 +1,6 @@
-
-
+<div class="spinner-container" *ngIf="loading | async">
+    <mat-spinner class="spiner"></mat-spinner>
+</div>
 <re-portlet>
 	<re-portlet-header [title]="'Negociación'" [class]="'kt-portlet__head--lg'">
 		<ng-container ktPortletTools>
@@ -215,7 +216,6 @@
 								<mat-error>{{ getErrorMessage('tipoJoya')  }}</mat-error>
 							</mat-form-field>
 						</div>
-							
 						<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<mat-select placeholder="Estado" [formControl]="estado">
@@ -226,28 +226,6 @@
 								<mat-error>{{ getErrorMessage('estado')  }}</mat-error>
 							</mat-form-field>
 						</div>
-					
-				
-				<!-- 		<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Valor Aplicable:" [formControl]="valorAplicable" readonly>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="precio oro:" [formControl]="precioOro" readonly>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="valor avaluo:" [formControl]="valorAvaluo" readonly>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="valor realizacion:" [formControl]="valorRealizacion" readonly>
-							</mat-form-field>
-						</div> -->
 					</div>
 					<div class="row">
 						<div class="col-md-4">

@@ -95,7 +95,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.wp = null;
     this.loading = this.loadingSubject.asObservable();
     this.busquedaNegociacion();
-    this.usuario = localStorage.getItem(atob(environment.userKey));
+    this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem( 'idAgencia' );
   }
   private camposAdicinales(){

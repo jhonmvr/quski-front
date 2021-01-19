@@ -5,13 +5,13 @@
 <re-portlet>
   <re-portlet-header [title]="'Creacion/Actualizacion Clientes'"[class]="'kt-portlet__head--lg'">
     <ng-container ktPortletTools>
-      <a href="javascript:void(0);" matTooltip="Regresar a Negociacion" style="font-size: 12px; vertical-align: middle;">
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+      <a href="javascript:void(0);" matTooltip="Regresar a Negociacion" (click)="regresar()"  style="font-size: 12px; vertical-align: middle;">
         <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">arrow_back</mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
       </a>
-      <a href="javascript:void(0);"  matTooltip="Regresar a la creacion de Credito" (click)="guardar()" style="font-size: 12px; vertical-align: middle;">
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Avanzar</span>
+      <a href="javascript:void(0);"  matTooltip="Guardar y avanzar" (click)="guardar()" style="font-size: 12px; vertical-align: middle;">
         <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save</mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Avanzar</span>
       </a>
     </ng-container>
   </re-portlet-header>
