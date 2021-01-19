@@ -1239,17 +1239,15 @@ export class GestionClienteComponent implements OnInit {
                         }
                       });
                     }
-                    if (!this.wrapper.direcciones) {
-                      this.wrapper.direcciones = new Array<TbQoDireccionCliente>();
-                      this.wrapper.direcciones[0] = new TbQoDireccionCliente();
-                      this.wrapper.direcciones[1] = new TbQoDireccionCliente();
-                      this.wrapper.direcciones[0].tipoDireccion = "OFI";
-                      this.wrapper.direcciones[1].tipoDireccion = "DOM";
-                      this.wrapper.direcciones[0].tbQoCliente = this.wrapper.cliente;
-                      this.wrapper.direcciones[1].tbQoCliente = this.wrapper.cliente;
-                      this.wrapper.direcciones[0].estado = 'ACT';
-                      this.wrapper.direcciones[1].estado = 'ACT';
-                    }
+                    this.wrapper.direcciones = new Array<TbQoDireccionCliente>();
+                    this.wrapper.direcciones[0] = new TbQoDireccionCliente();
+                    this.wrapper.direcciones[1] = new TbQoDireccionCliente();
+                    this.wrapper.direcciones[0].tipoDireccion = "OFI";
+                    this.wrapper.direcciones[1].tipoDireccion = "DOM";
+                    this.wrapper.direcciones[0].tbQoCliente = this.wrapper.cliente;
+                    this.wrapper.direcciones[1].tbQoCliente = this.wrapper.cliente;
+                    this.wrapper.direcciones[0].estado = 'ACT';
+                    this.wrapper.direcciones[1].estado = 'ACT';
                     this.wrapper.direcciones.forEach(e => {
                       if (e.tipoDireccion == "OFI" && e.estado == 'ACT') {
                         e.divisionPolitica = this.ubicacionO.value.id;
