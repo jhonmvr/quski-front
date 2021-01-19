@@ -1172,7 +1172,7 @@ export class GestionClienteComponent implements OnInit {
           if (this.formDatosDireccionLaboral.valid) {
             if (this.formDatosEconomicos.valid) {
               if (this.formDatosIngreso.valid) {
-                if (this.avaluoActivo.valid && this.avaluoPasivo.valid) {
+                if (this.avaluoActivo.valid || this.avaluoPasivo.valid) {
                   if (this.dataSource.data.length > 1) {
                     this.wrapper.cliente.actividadEconomica = this.actividadEconomica.value ? this.actividadEconomica.value.id : null;
                     this.wrapper.cliente.apellidoMaterno = this.apellidoMaterno.value;
