@@ -413,8 +413,8 @@ export class GestionClienteComponent implements OnInit {
     this.dataSource.data = refe;
     this.valorIngreso.setValue(this.wrapper.cliente.ingresos);
     this.valorEgreso.setValue(this.wrapper.cliente.egresos);
-    this.pasivo.setValue(this.wrapper.cliente.pasivos);
-    this.activo.setValue(this.wrapper.cliente.activos);
+    this.avaluoPasivo.setValue(this.wrapper.cliente.pasivos);
+    this.avaluoActivo.setValue(this.wrapper.cliente.activos);
    /*  this.dataSourcePatrimonioPasivo.data.push( new TbQoPatrimonio(this.wrapper.cliente.pasivos, false) );
     this.calcularPasivo();
     this.dataSourcePatrimonioActivo.data.push( new TbQoPatrimonio(this.wrapper.cliente.activos, false) );
@@ -1067,31 +1067,8 @@ export class GestionClienteComponent implements OnInit {
     this.avaluoPasivo.setValue(element.avaluo);
   }
   private limpiarCampos() {
-    Object.keys(this.formDatosPatrimonioActivos.controls).forEach((name) => {
-      let control = this.formDatosPatrimonioActivos.controls[name];
-      control.setErrors(null);
-      control.setValue(null);
-      control.updateValueAndValidity();
-    });
-    Object.keys(this.formDatosPatrimonioPasivos.controls).forEach((name) => {
-      let control = this.formDatosPatrimonioPasivos.controls[name];
-      control.setErrors(null);
-      control.setValue(null);
-      control.updateValueAndValidity();
-    });
     Object.keys(this.formDatosReferenciasPersonales.controls).forEach((name) => {
       let control = this.formDatosReferenciasPersonales.controls[name];
-      control.setErrors(null);
-      control.setValue(null);
-    });
-    Object.keys(this.formDatosIngreso.controls).forEach((name) => {
-      let control = this.formDatosIngreso.controls[name];
-      control.setErrors(null);
-      control.setValue(null);
-      control.updateValueAndValidity();
-    });
-    Object.keys(this.formDatosEgreso.controls).forEach((name) => {
-      let control = this.formDatosEgreso.controls[name];
       control.setErrors(null);
       control.setValue(null);
     });
