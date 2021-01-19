@@ -62,7 +62,7 @@ export class BandejaAprobadorComponent implements OnInit {
     this.pro.setParameter();
     this.sof.setParameter();
     this.loading = this.loadingSubject.asObservable();
-    this.usuario = atob(localStorage.getItem(environment.userKey)).toUpperCase();
+    this.usuario = atob(localStorage.getItem(environment.userKey));
     this.cargarCatalogos();
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */

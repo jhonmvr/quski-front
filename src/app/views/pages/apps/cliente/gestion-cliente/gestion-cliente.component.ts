@@ -258,6 +258,11 @@ export class GestionClienteComponent implements OnInit {
     this.agencia = localStorage.getItem( 'idAgencia' );
     this.buscarCliente();
   }
+  public regresar(){
+    if(this.origen == 'NEG'){
+      this.router.navigate(['negociacion/gestion-negociacion/NEG/', this.item]);
+    }
+  }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private cargarCampos() {
     if(this.wrapper){

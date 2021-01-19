@@ -8,6 +8,7 @@ import { OperacionNuevoWrapper } from '../../../../../core/model/wrapper/Operaci
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { DialogDataHabilitante } from '../../../../../core/interfaces/dialog-data-habilitante';
 import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
+import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { OperacionSoft } from '../../../../../core/model/softbank/OperacionSoft';
@@ -40,6 +41,7 @@ export class GenerarCreditoComponent implements OnInit {
   private fechaServer;
   public existeCredito: boolean;
   private agencia: any;
+  private correoAsesor: any;
   /** @FORM_INFORMACION **/
   public formInformacion: FormGroup = new FormGroup({});
   public codigoOperacion = new FormControl('', [Validators.required]);
@@ -94,6 +96,8 @@ export class GenerarCreditoComponent implements OnInit {
   private fundaFoto = {idRol:"1",proceso:"FUNDA",estadoOperacion:"",tipoDocumento:"7"}
   public srcJoya : string;
   public srcFunda: string;
+  public excepcionOperativa = new FormControl('');
+  public fechaRegularizacion = new FormControl('');
   /** @CATALOGOS **/
   public catTipoFunda: Array<any>;
   public catFirmanteOperacion: Array<any>;
@@ -102,6 +106,7 @@ export class GenerarCreditoComponent implements OnInit {
   public catTipoJoya: Array<any>;
   public catTipoOro: Array<any>;
   public catEstadoJoya: Array<any>;
+  public catExcepcionOperativa: Array<any>;
 
   //negociacion
   dataSourceCreditoNegociacion = new MatTableDataSource<any>();
@@ -118,6 +123,7 @@ export class GenerarCreditoComponent implements OnInit {
     private cre: CreditoNegociacionService,
     private doc: DocumentoHabilitanteService,
     private obj: ObjectStorageService,
+    private par: ParametroService,
     private pro: ProcesoService,
     private sof: SoftbankService,
     private route: ActivatedRoute,
@@ -130,6 +136,7 @@ export class GenerarCreditoComponent implements OnInit {
     this.obj.setParameter();
     this.pro.setParameter();
     this.sof.setParameter();
+    this.par.setParameter();
 
     //  RELACIONANDO FORMULARIOS
     this.formInformacion.addControl("codigoOperacion", this.codigoOperacion);
@@ -155,6 +162,8 @@ export class GenerarCreditoComponent implements OnInit {
     this.formCredito.addControl("pagarCliente", this.pagarCliente);
     this.formCredito.addControl("riesgoTotalCliente", this.riesgoTotalCliente);
     this.formCredito.addControl("recibirCliente", this.recibirCliente);
+    this.formInstruccion.addControl("excepcionOperativa", this.excepcionOperativa);
+    this.formInstruccion.addControl("fechaRegularizacion", this.fechaRegularizacion);
   }
 
   ngOnInit() {
@@ -163,7 +172,10 @@ export class GenerarCreditoComponent implements OnInit {
     this.obj.setParameter();
     this.pro.setParameter();
     this.sof.setParameter();
+    this.par.setParameter();
     this.loading = this.loadingSubject.asObservable();
+    this.agencia = Number(localStorage.getItem( 'idAgencia' ));
+    this.correoAsesor = localStorage.getItem( 'email' );
     this.obtenerCatalogosSoftbank();
     this.setFechaSistema();
   }
@@ -205,9 +217,15 @@ export class GenerarCreditoComponent implements OnInit {
       this.salirDeGestion("El credito al que intenta ingresar se encuentra en estado \"" + data.proceso.estadoProceso.replace('_', ' ').toLocaleLowerCase() + "\". No es posible entrar. ");
     }
   }
+  public habilitarExcepcionOperativa(){
+    if(this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
+      this.fechaRegularizacion.disable();
+      this.fechaRegularizacion.setValue(null);
+    }else{
+      this.fechaRegularizacion.enable();
+    }
+  }
   private cargarCampos(data: OperacionNuevoWrapper) {
-    //console.log('OperacionNuevoWrapper de entrada ->', data);
-    this.agencia = Number(localStorage.getItem( 'idAgencia' ));
     this.firmanteOperacion.setValue( this.catFirmanteOperacion.find(t=> t.codigo != null).nombre );
     this.firmanteOperacion.disable();
 
@@ -340,6 +358,12 @@ export class GenerarCreditoComponent implements OnInit {
         });
       });
     });
+    this.par.findByTipo('EXC-OPV-NUEV',).subscribe( (data :any) =>{
+      console.log('paramatreos -->', data);
+      if(data.entidades){
+        this.catExcepcionOperativa = data.entidades;
+      }
+    });
   }
   /** ********************************************* @OPERACION ********************* **/
   public obtenerNumeroFunda() {
@@ -362,7 +386,7 @@ export class GenerarCreditoComponent implements OnInit {
     },er=>{this.loadingSubject.next(false)});
   }
   public generarCredito(anular?: boolean ) {
-    if(this.formFunda.valid && this.srcFunda && this.srcJoya){
+    if(this.formFunda.valid && this.formInstruccion.valid && this.srcFunda && this.srcJoya){
       this.loadingSubject.next(true);      
       this.operacionNuevo.credito.pagoDia = this.fechaCuota.value != null ? this.fechaCuota.value : null;
       this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
@@ -370,8 +394,10 @@ export class GenerarCreditoComponent implements OnInit {
       this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
       this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
       this.operacionNuevo.credito.idAgencia = this.agencia;
+      this.operacionNuevo.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
+      this.operacionNuevo.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
 
-      this.cre.crearOperacionNuevo( this.operacionNuevo.credito ).subscribe( (data: any) =>{
+      this.cre.crearOperacionNuevo( this.operacionNuevo.credito, this.correoAsesor ).subscribe( (data: any) =>{
         if(data.entidad){
           this.operacionSoft = data.entidad;  
           this.cargarOperacion( this.operacionSoft.credito );
@@ -398,7 +424,7 @@ export class GenerarCreditoComponent implements OnInit {
     this.numeroOperacion.setValue( data.numeroOperacion );
     this.deudaInicial.setValue( data.deudaInicial );
     //this.sinNotSer.setNotice('NUMERO DE FUNDA ASIGNADO: '+ data.numeroFunda, 'success');
-    this.stepper.selectedIndex = data.tipo == 'CUOTAS' ? 4 : 3;
+    this.stepper.selectedIndex = data.periodoPlazo != 'D' ? 4 : 3;
     this.fechaVencimiento.setValue( data.fechaVencimiento ); 
     this.fechaEfectiva.setValue( data.fechaEfectiva); 
     if(!this.operacionSoft){

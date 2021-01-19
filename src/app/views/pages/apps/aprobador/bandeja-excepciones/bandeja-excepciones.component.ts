@@ -39,7 +39,7 @@ export class BandejaExcepcionesComponent implements OnInit {
   ngOnInit() {
     this.exr.setParameter();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    //console.log('valor del usuario==> ', this.usuario);
+    console.log('valor del usuario==> ', this.usuario);
     this.busquedaExcepciones(this.usuario);
     this.dataSourceExcepcionRol = null;
     this.loading = this.loadingSubject.asObservable();
