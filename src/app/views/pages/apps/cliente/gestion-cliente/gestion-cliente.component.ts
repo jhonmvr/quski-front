@@ -77,6 +77,7 @@ export class GestionClienteComponent implements OnInit {
   public catMotivoVisita: Array<any>;
   public catOcupacion: Array<any>;
   public catCargo: Array<any>;
+  catTipoTelefono;
   /** @ENUMS **/
   public catSeparacionBienes = Object.values(SeparacionBienesEnum);
   /** @DIVISION_POLITICA **/
@@ -104,10 +105,7 @@ export class GestionClienteComponent implements OnInit {
   public estadoCivil = new FormControl('', Validators.required);
   public separacionBienes = new FormControl('', []);
   public edad = new FormControl('', []);
-  public telefonoMovil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
-  public email = new FormControl('', [Validators.email, Validators.maxLength(100), Validators.required]);
-  public telefonoOtro = new FormControl('', [Validators.minLength(9), Validators.maxLength(10)]);
-  public telefonoFijo = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
+
   public formDatosContacto: FormGroup = new FormGroup({});
   public ubicacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public referenciaUbicacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -140,14 +138,14 @@ export class GestionClienteComponent implements OnInit {
   public cargo = new FormControl('', [Validators.required]);
   public formDatosEconomicos: FormGroup = new FormGroup({});
   public relacionDependencia = new FormControl('');
-  public valorIngreso = new FormControl('', [Validators.maxLength(50)]);
+  public valorIngreso = new FormControl('', [Validators.required,Validators.maxLength(50),Validators.max(5000)]);
   public formDatosIngreso: FormGroup = new FormGroup({});
-  public valorEgreso = new FormControl('', [Validators.maxLength(50)]);
+  public valorEgreso = new FormControl('', [Validators.required,Validators.maxLength(50)]);
   public formDatosEgreso: FormGroup = new FormGroup({});
-  public avaluoActivo = new FormControl('', [Validators.maxLength(50)]);
+  public avaluoActivo = new FormControl('', [Validators.required,Validators.maxLength(50)]);
   public formDatosPatrimonioActivos: FormGroup = new FormGroup({});
   public activo = new FormControl('', [Validators.maxLength(50)]);
-  public avaluoPasivo = new FormControl('', [Validators.maxLength(50)]);
+  public avaluoPasivo = new FormControl('', [Validators.required,Validators.maxLength(50)]);
   public formDatosPatrimonioPasivos: FormGroup = new FormGroup({});
   public pasivo = new FormControl('', [Validators.maxLength(50)]);
   
@@ -164,6 +162,16 @@ export class GestionClienteComponent implements OnInit {
   public parentescoR = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public direccionR = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public element;
+
+
+  ///datos de contacto cliente
+  dataSourceTelefonosCliente = new MatTableDataSource<any>();
+  tipoTelefonoCliente = new FormControl('',[Validators.required]);
+  public telefonoMovil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+  public email = new FormControl('', [Validators.email, Validators.maxLength(100), Validators.required]);
+  public telefonoOtro = new FormControl('', [Validators.required]);
+  public telefonoFijo = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
+  teleId;
 
   constructor(
     private css: SoftbankService,
@@ -289,7 +297,7 @@ export class GestionClienteComponent implements OnInit {
     let countFijo: number = 0;
     let countOtro: number = 0;
     let countMovil: number = 0;
-    !this.wrapper.telefonos ? null      : this.wrapper.telefonos.forEach(e => {
+    /* !this.wrapper.telefonos ? null      : this.wrapper.telefonos.forEach(e => {
       if (e.tipoTelefono == "CEL" && e.estado == "ACT" && countMovil < 1) {
         this.telefonoMovil.setValue(e.numero);
         countMovil++;
@@ -302,7 +310,10 @@ export class GestionClienteComponent implements OnInit {
       }else{
         e.estado = "INA";
       }
-    });
+    }); */
+    if(this.wrapper.telefonos){
+      this.dataSourceTelefonosCliente = new MatTableDataSource<any>(this.wrapper.telefonos);
+    }
     let countOfi: number= 0;
     let countDom: number= 0;
     !this.wrapper.datosTrabajos ? null  : this.wrapper.datosTrabajos.forEach(t=>{
@@ -395,14 +406,18 @@ export class GestionClienteComponent implements OnInit {
       }
     });
     this.dataSource.data = refe;
-    this.dataSourcePatrimonioPasivo.data.push( new TbQoPatrimonio(this.wrapper.cliente.pasivos, false) );
+    this.valorIngreso.setValue(this.wrapper.cliente.ingresos);
+    this.valorEgreso.setValue(this.wrapper.cliente.egresos);
+    this.pasivo.setValue(this.wrapper.cliente.pasivos);
+    this.activo.setValue(this.wrapper.cliente.activos);
+   /*  this.dataSourcePatrimonioPasivo.data.push( new TbQoPatrimonio(this.wrapper.cliente.pasivos, false) );
     this.calcularPasivo();
     this.dataSourcePatrimonioActivo.data.push( new TbQoPatrimonio(this.wrapper.cliente.activos, false) );
     this.calcularActivo();
     this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( this.wrapper.cliente.ingresos, true ) )  
     this.calcularIngresoEgreso();
     this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( this.wrapper.cliente.egresos, false ) )  
-    this.calcularIngresoEgreso();
+    this.calcularIngresoEgreso(); */
     this.loadingSubject.next(false);
     //console.log(' Luego de validacion -> ', this.wrapper);
     }else{
@@ -474,6 +489,9 @@ export class GestionClienteComponent implements OnInit {
                               this.catMotivoVisita = !data.existeError ? data.catalogo : "Error al cargar catalogo";
                               this.css.consultarCargoOcupacion().subscribe((data: any) => {
                                 this.catCargo = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                                this.css.consultarTipoTelefonoCS().subscribe(tipoTel=>{
+                                  this.catTipoTelefono = tipoTel.catalogo;
+                                })
                                 this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
                                   if (!data.existeError) {
                                     const localizacion = data.catalogo;
@@ -573,17 +591,29 @@ export class GestionClienteComponent implements OnInit {
                 : "";
     }
 
-    //Validaciones de ingreso-egreso
+    //Validaciones de ingreso-egreso avaluoActivo
     if (pfield && pfield == "activo") {
       return this.activo.hasError('required') ? errorrequiredo : '';
     }
-    if (pfield && pfield == "avaluo") {
-      return this.avaluoActivo.hasError('required') ? errorrequiredo : this.avaluoActivo.hasError('invalido') ? errorFormatoIngreso : this.avaluoActivo.hasError('min') ? 'Valor invalido' : ' ';
+
+    if (pfield && pfield == "valorEgreso") {
+      return this.valorEgreso.hasError('required') ? errorrequiredo : '';
+    }
+    if (pfield && pfield == "avaluoPasivo") {
+      return this.avaluoPasivo.hasError('required') ? errorrequiredo : '';
+    }
+
+    if (pfield && pfield == "avaluoActivo") {
+      return this.avaluoActivo.hasError('required') ? errorrequiredo : ' ';
     }
     //Validaciones de datos personales
     if (pfield && pfield === 'apellidoMaterno') {
       const input = this.apellidoMaterno;
       return input.hasError('required') ? errorRequerido : '';
+    }
+    if (pfield && pfield === 'valorIngreso') {
+      const input = this.valorIngreso;
+      return input.hasError('required') ? errorRequerido : input.hasError('max') ? 'El ingreso total no puede ser mayor a 5000' : '';
     }
     if (pfield && pfield === 'apellidoPaterno') {
       const input = this.apellidoPaterno;
@@ -1132,12 +1162,12 @@ export class GestionClienteComponent implements OnInit {
   public guardar() {
     this.loadingSubject.next(true);
     if (this.formCliente.valid) {
-      if (this.formDatosContacto.valid) {
+      if (this.dataSourceTelefonosCliente.data.length > 0 ) {
         if (this.formDatosDireccionDomicilio.valid) {
           if (this.formDatosDireccionLaboral.valid) {
             if (this.formDatosEconomicos.valid) {
-              if (this.dataSourceIngresoEgreso.data.length > 0) {
-                if ((this.dataSourcePatrimonioActivo.data.length > 0) || (this.dataSourcePatrimonioPasivo.data.length > 0)) {
+              if (this.formDatosIngreso.valid) {
+                if (this.avaluoActivo.valid && this.avaluoPasivo.valid) {
                   if (this.dataSource.data.length > 1) {
                     this.wrapper.cliente.actividadEconomica = this.actividadEconomica.value ? this.actividadEconomica.value.id : null;
                     this.wrapper.cliente.apellidoMaterno = this.apellidoMaterno.value;
@@ -1159,20 +1189,23 @@ export class GestionClienteComponent implements OnInit {
                     this.wrapper.cliente.separacionBienes = this.separacionBienes.value;
                     this.wrapper.cliente.usuario = this.usuario;
                     this.wrapper.cliente.agencia = this.agencia;
-                    this.wrapper.cliente.pasivos = this.totalPasivo;
-                    this.wrapper.cliente.activos = this.totalActivo;
-                    let totalEgreso = 0;
+
+                    this.wrapper.cliente.pasivos = this.avaluoPasivo.value;
+                    this.wrapper.cliente.activos = this.avaluoActivo.value;
+                    /* 
+                    
+                   let totalEgreso = 0;
                     let totalIngreso = 0;
-                    this.dataSourceIngresoEgreso.data.forEach(e=>{
+                     this.dataSourceIngresoEgreso.data.forEach(e=>{
                       if( e.esEgreso ){
                         totalEgreso = totalEgreso + e.valor;
                       }
                       if( e.esIngreso ){
                         totalIngreso = totalIngreso + e.valor;
                       }
-                    });
-                    this.wrapper.cliente.ingresos = totalIngreso;
-                    this.wrapper.cliente.egresos = totalEgreso;
+                    }); */
+                    this.wrapper.cliente.ingresos = this.valorIngreso.value;
+                    this.wrapper.cliente.egresos = this.valorEgreso.value;
                     this.wrapper.datosTrabajos ? this.wrapper.datosTrabajos.forEach( t =>{
                       if( t.esprincipal && t.estado == 'ACT'){
                         t.nombreEmpresa = this.nombreEmpresa.value;
@@ -1200,24 +1233,26 @@ export class GestionClienteComponent implements OnInit {
                       this.wrapper.datosTrabajos = new Array<TbQoDatoTrabajoCliente>();
                       this.wrapper.datosTrabajos.push( trabajo );
                     }
-                    if (!this.wrapper.telefonos) {
+
+                    this.wrapper.telefonos = this.dataSourceTelefonosCliente.data;
+                   /*  if (!this.wrapper.telefonos) {
                       this.wrapper.telefonos = new Array<TbQoTelefonoCliente>()
                       this.wrapper.telefonos[0] = new TbQoTelefonoCliente();
                       this.wrapper.telefonos[0].numero = this.telefonoMovil.value;
-                      this.wrapper.telefonos[0].tipoTelefono = "M";
+                      this.wrapper.telefonos[0].tipoTelefono = "CEL";
                       this.wrapper.telefonos[0].tbQoCliente = this.wrapper.cliente;
                       this.wrapper.telefonos[0].estado = 'ACT';
                       if (this.telefonoFijo.value) {
                         this.wrapper.telefonos[1] = new TbQoTelefonoCliente();
                         this.wrapper.telefonos[1].numero = this.telefonoFijo.value;
-                        this.wrapper.telefonos[1].tipoTelefono = "F";
+                        this.wrapper.telefonos[1].tipoTelefono = "DOM";
                         this.wrapper.telefonos[1].tbQoCliente = this.wrapper.cliente;
                         this.wrapper.telefonos[1].estado = 'ACT';
                       }
                       if (this.telefonoOtro.value) {
                         this.wrapper.telefonos[2] = new TbQoTelefonoCliente();
                         this.wrapper.telefonos[2].numero = this.telefonoOtro.value;
-                        this.wrapper.telefonos[2].tipoTelefono = "CEL";
+                        this.wrapper.telefonos[2].tipoTelefono = "ASI";
                         this.wrapper.telefonos[2].estado = 'ACT';
                         this.wrapper.telefonos[2].tbQoCliente = this.wrapper.cliente;
                       }
@@ -1233,7 +1268,7 @@ export class GestionClienteComponent implements OnInit {
                           e.numero = this.telefonoOtro.value;
                         }
                       });
-                    }
+                    } */
                     if (!this.wrapper.direcciones) {
                       this.wrapper.direcciones = new Array<TbQoDireccionCliente>();
                       this.wrapper.direcciones[0] = new TbQoDireccionCliente();
@@ -1335,5 +1370,58 @@ export class GestionClienteComponent implements OnInit {
       this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS PERSONALES DEL CLIENTE", 'error');
     }
   }
+
+  cambiarTipoTelefonoCliente(){
+    if(this.tipoTelefonoCliente.value.codigo == 'DOM'){
+      this.telefonoFijo = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
+    }
+    if(this.tipoTelefonoCliente.value.codigo == 'CEL'){
+      this.telefonoFijo = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+    }
+    this.telefonoFijo = new FormControl('', [Validators.required,Validators.minLength(8), Validators.maxLength(12)]);
+
+  }
+
+  agregarTelefonoCliente(){
+    if(this.tipoTelefonoCliente.invalid){
+      this.sinNoticeService.setNotice('Selecione un tipo de telefono','warning');
+      return;
+    }
+    if(this.telefonoFijo.valid){
+      const tel =  this.dataSourceTelefonosCliente.data;
+      let telefono:TbQoTelefonoCliente = {
+        id:this.teleId?this.teleId.id:null,
+        tipoTelefono:this.tipoTelefonoCliente.value.codigo,
+        numero:this.telefonoFijo.value,
+        estado:'ACT',
+        tbQoCliente:this.wrapper.cliente, 
+        idSoftbank:this.teleId?this.teleId.idSoftbank:null
+
+      }
+      if (this.teleId) {
+        const index = this.dataSourceTelefonosCliente.data.indexOf(this.teleId);
+        this.dataSourceTelefonosCliente.data.splice(index, 1);
+        const data = this.dataSourceTelefonosCliente.data;
+        this.dataSourceTelefonosCliente.data = data;
+      }
+      const data = this.dataSourceTelefonosCliente.data;
+      data.push(telefono);
+      this.dataSourceTelefonosCliente.data = data;
+
+      this.teleId = null;
+      this.tipoTelefonoCliente.setValue(null);
+      this.telefonoFijo.setValue(null);
+    }else{
+      this.sinNoticeService.setNotice('Ingrese un numero de telefono valido','warning');
+      return;
+    }
+  }
+
+  editarTelefono(element){
+    this.teleId = element;
+    this.tipoTelefonoCliente.setValue(this.catTipoTelefono?this.catTipoTelefono.find(p => p.codigo ==element.codigoTipoTelefono):'');
+    this.telefonoFijo.setValue(element.numero);
+  }
+
 
 }

@@ -517,7 +517,9 @@ export class GestionNegociacionComponent implements OnInit {
     let entryData = {
       titulo: 'Algo',
       mensajeAprobador: this.negoW.credito.descripcionDevuelto, 
-      motivoDevolucion: this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto) ? this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto).nombre : 'No definido',
+      motivoDevolucion: this.catMotivoDevolucion?
+      this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto) ? 
+      this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto).nombre : 'No definido':'No definido',
       aprobador: this.negoW.proceso.usuario,
       codigoBpm: this.negoW.credito.codigo
     }
@@ -881,10 +883,10 @@ export class GestionNegociacionComponent implements OnInit {
       this.neg.updateCliente(cliente).subscribe( p =>{
         if(p.entidad && p.entidad.tbQoTelefonoClientes){
           p.entidad.tbQoTelefonoClientes.forEach(element => {
-            if(element.tipoTelefono =='M'){
+            if(element.tipoTelefono =='CEL'){
               this.telefonoMovil =element;
             }
-            if(element.tipoTelefono =='F'){
+            if(element.tipoTelefono =='DOM'){
               this.telefonoFijo =element;
             }          
           });
@@ -901,7 +903,7 @@ export class GestionNegociacionComponent implements OnInit {
       this.telefonoFijo.numero = this.telefonoDomicilio.value
     }else if(this.telefonoDomicilio.value){
       this.telefonoFijo ={
-        tipoTelefono:'F',
+        tipoTelefono:'DOM',
         numero:this.telefonoDomicilio.value
       }
     }
@@ -909,7 +911,7 @@ export class GestionNegociacionComponent implements OnInit {
       this.telefonoMovil.numero = this.movil.value
     }else if (this.movil.value){
       this.telefonoMovil ={
-        tipoTelefono:'M',
+        tipoTelefono:'CEL',
         numero:this.movil.value
       }
     }

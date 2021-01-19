@@ -185,36 +185,63 @@
       </mat-step>
 
       <!-- DATOS DE CONTACTO -->
-      <mat-step label="Datos de contacto" [stepControl]="formDatosContacto">
+      <mat-step label="Datos de contacto" >
         <form [formGroup]="formDatosContacto">
-          <div class="form-group row">
-            <div class="col-md-6">
-              <mat-form-field class="mat-form-field-fluid">
-                <input placeholder="Télefono Móvil:" required [formControl]="telefonoMovil"  autocomplete="off" matInput numeric numericType="number"
-                (keypress)="numberOnly($event)" >
-                <mat-error>{{ getErrorMessage("telefonoMovil") }}</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-md-6">
-              <mat-form-field class="mat-form-field-fluid">
-                <input placeholder="Tel&#233;fono Domicilio:" [formControl]="telefonoFijo"  autocomplete="off" matInput numeric numericType="number"
-                (keypress)="numberOnly($event)" />
-                <mat-error>{{ getErrorMessage("telefonoFijo") }}</mat-error>
-              </mat-form-field>
-            </div>
+          <div class="row">
             <div class="col-md-6">
               <mat-form-field class="mat-form-field-fluid">
                 <input matInput placeholder="Correo electr&#243;nico" [formControl]="email" required/>
                 <mat-error>{{ getErrorMessage("email") }}</mat-error>
               </mat-form-field>
             </div>
+          </div>
+          <div class="form-group row">
             <div class="col-md-6">
               <mat-form-field class="mat-form-field-fluid">
-                <input placeholder="Télefono Oficina/Otros:" [formControl]="telefonoOtro" autocomplete="off" matInput numeric numericType="number"
-                (keypress)="numberOnly($event)" />
-                <mat-error>{{ getErrorMessage("telefonoOtro") }}</mat-error>
+                <mat-select placeholder="Tipo de teléfono" [formControl]="tipoTelefonoCliente" (selectionChange) ="cambiarTipoTelefonoCliente()" >
+                <mat-option *ngFor="let tipoTel of catTipoTelefono" [value]="tipoTel">
+                  {{tipoTel.nombre}}
+                </mat-option>
+               </mat-select>
               </mat-form-field>
             </div>
+            <div class="col-md-6">
+              <mat-form-field class="mat-form-field-fluid">
+                <input placeholder="Télefono:" required [formControl]="telefonoFijo"  autocomplete="off" matInput numeric numericType="number"
+                (keypress)="numberOnly($event)" >
+                <mat-error>{{ getErrorMessage("telefonoFijo") }}</mat-error>
+              </mat-form-field>
+            </div>
+           
+          </div>
+          <div class="row">
+            <button mat-button (click)="agregarTelefonoCliente()"><mat-icon>add</mat-icon> Agregar</button>
+          </div>
+          <div class="row">
+            <table mat-table #table [dataSource]="dataSourceTelefonosCliente">
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> - </th>
+                <td mat-cell *matCellDef="let row"> 
+                  <a href="javascript:void(0);" matTooltip="Editar" (click)="editarTelefono(row)" style="font-size: 12px; vertical-align: middle;">
+                    <mat-icon class="blue-icon" style="font-size: 24px;" color="primary" matTooltipPosition="above">edit</mat-icon>  
+                  </a>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="codigoTipoTelefono">
+                <th mat-header-cell *matHeaderCellDef> Tipo teléfono </th>
+                <td mat-cell *matCellDef="let row"> {{row.tipoTelefono}} </td>
+              </ng-container>
+              <ng-container matColumnDef="numero">
+                <th mat-header-cell *matHeaderCellDef> Número </th>
+                <td mat-cell *matCellDef="let row"> {{row.numero}} </td>
+              </ng-container>
+              <ng-container matColumnDef="activo">
+                <th mat-header-cell *matHeaderCellDef> Activo </th>
+                <td mat-cell *matCellDef="let row"> {{row.estado=='ACT'?'SI':'NO'}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="['action','codigoTipoTelefono','numero','activo']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['action','codigoTipoTelefono','numero','activo'];"></tr>
+            </table>
           </div>
         </form>
       </mat-step>
@@ -489,199 +516,49 @@
 
       <!-- Ingresos Egresos -->
       <mat-step label="Ingresos / Egresos" [stepControl]="  ">
-        <div class="row">
-          <div class="col-md-6">
+       
             <form [formGroup]="formDatosIngreso">
               <div class="form-group row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <mat-form-field class="mat-form-field-fluid">
                     <input placeholder="Valor De Ingreso:" [formControl]="valorIngreso"  autocomplete="off" matInput numeric numericType="number"
                     (keypress)="numberOnly($event)" />
                     <mat-error>{{ getErrorMessage("valorIngreso") }}</mat-error>
                   </mat-form-field>
                 </div>
-              </div>
-              <div  class="form-group row">
-                <div class="col-md-12">
-                  <a href="javascript:void(0);" (click)="nuevoIngreso()" matTooltip="Agregar " style="font-size: 12px; vertical-align: middle;">
-                    <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
-                    <span style="position: relative; top: -10px; margin-left: 5px;">Agregar Ingreso</span>
-                  </a>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="col-md-6">
-            <form [formGroup]="formDatosEgreso">
-              <div class="form-group row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <mat-form-field class="mat-form-field-fluid">
                     <input placeholder="Valor De Egreso:" [formControl]="valorEgreso" autocomplete="off" matInput numeric numericType="number"
                     (keypress)="numberOnly($event)" />
-                    <mat-error>{{ getErrorMessage("valorIngreso") }}</mat-error>
+                    <mat-error>{{ getErrorMessage("valorEgreso") }}</mat-error>
                   </mat-form-field>
                 </div>
               </div>
-              <div class="form-group row">
-                <div class="col-md-12">
-                  <a href="javascript:void(0);"  (click)="nuevoEgreso()" matTooltip="Agregar " style="font-size: 12px; vertical-align: middle;">
-                    <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
-                    <span style="position: relative; top: -10px; margin-left: 5px;">Agregar Egreso</span>
-                  </a>
-                </div>
-              </div>
+          
             </form>
-          </div>
-        </div>
-        <mat-table  #table class="mat-elevation-z8"  [dataSource]="dataSourceIngresoEgreso" style="max-width: 760px;">
-          <ng-container matColumnDef="Accion">
-            <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <a (click)="deleteIngresoEgreso(element)">
-                <mat-icon matTooltip="Borrar">delete</mat-icon>
-              </a>
-              <a (click)="editar(element)">
-                <mat-icon matTooltip="Editar">edit</mat-icon>
-              </a>
-            </mat-cell>
-            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-          </ng-container>
-          <ng-container matColumnDef="Is">
-            <mat-header-cell *matHeaderCellDef> Actividad </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <ng-container *ngIf="element.esIngreso else elseTemplate">
-                Ingreso
-              </ng-container>
-              <ng-template #elseTemplate>
-                Egreso
-              </ng-template>
-            </mat-cell>
-            <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
-          </ng-container>
-          <ng-container matColumnDef="Valor">
-            <mat-header-cell *matHeaderCellDef> Valor </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.valor | currency: "USD":true:"1.2" }}
-            </mat-cell>
-            <mat-footer-cell *matFooterCellDef>
-              {{ totalValorIngresoEgreso | currency: "USD":true:"1.2" }}
-            </mat-footer-cell>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayedColumnsII"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumnsII"></mat-row>
-          <mat-footer-row *matFooterRowDef="displayedColumnsII"></mat-footer-row>
-        </mat-table>
       </mat-step> 
       
       <!-- Patrimonio -->
       <mat-step label="Patrimonio">
-        <div class="row">
-          <div class="col-md-6">
             <form [formGroup]="formDatosPatrimonioActivos">
               <div class="form-group row">
-                <div class="ofset-md-1 col-md-5">
+                <div class="col-md-6">
                   <mat-form-field class="mat-form-field-fluid">
-                    <input  matInput placeholder="Activos:"  autocomplete="off" [formControl]="activo" type="text"/>
-                  </mat-form-field>
-                </div>
-                <div class="col-md-5">
-                  <mat-form-field class="mat-form-field-fluid">
-                    <input placeholder="Avaluo:" [formControl]="avaluoActivo"  autocomplete="off" matInput numeric numericType="number"
+                    <input placeholder="Avaluo Activos:" [formControl]="avaluoActivo"  autocomplete="off" matInput numeric numericType="number"
                     (keypress)="numberOnly($event)" />
+                    <mat-error>{{ getErrorMessage("avaluoActivo") }}</mat-error>
                   </mat-form-field>
                 </div>
-              </div>
-              <div class="form-group row">
-                <div class="offset-md-4 col-md-4">
-                  <a href="javascript:void(0);" (click)="nuevoActivo()" matTooltip="Agregar" style="font-size: 12px; vertical-align: middle;">
-                    <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
-                    <span style="position: relative; top: -10px; margin-left: 5px;">Agregar Activo</span>
-                  </a>
+                <div class="col-md-6">
+                  <mat-form-field class="mat-form-field-fluid">
+                    <input placeholder="Avaluo Pasivos:" [formControl]="avaluoPasivo" autocomplete="off" matInput numeric numericType="number"
+                    (keypress)="numberOnly($event)" />
+                    <mat-error>{{ getErrorMessage("avaluoPasivo") }}</mat-error>
+                  </mat-form-field>
                 </div>
               </div>
             </form>
-            <mat-table  #table  class="mat-elevation-z8"  [dataSource]="dataSourcePatrimonioActivo"  style="max-width: 760px;">
-              <ng-container matColumnDef="Accion">
-                <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
-                <mat-cell *matCellDef="let element">
-                  <a (click)="deleteActivo(element)"> <mat-icon matTooltip="Borrar">delete</mat-icon> </a>
-                  <a (click)="editarActivo(element)"> <mat-icon matTooltip="Editar">edit</mat-icon> </a>
-                </mat-cell>
-                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-              </ng-container>
-              <ng-container matColumnDef="Activo">
-                <mat-header-cell *matHeaderCellDef> Activo </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.activos | titlecase }} </mat-cell>
-                <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
-              </ng-container>
-              <ng-container matColumnDef="Avaluo">
-                <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
-                <mat-footer-cell *matFooterCellDef> {{ totalActivo | currency: "USD":true:"1.2" }}</mat-footer-cell>
-              </ng-container>
-              <mat-header-row
-                *matHeaderRowDef="displayedColumnsActivo"
-              ></mat-header-row>
-              <mat-row *matRowDef="let row; columns: displayedColumnsActivo"></mat-row>
-              <mat-footer-row
-                *matFooterRowDef="displayedColumnsActivo; sticky: true"
-              ></mat-footer-row>
-            </mat-table>
-          </div>
-          <div class="col-md-6">
-            <form [formGroup]="formDatosPatrimonioPasivos">
-              <div class="form-group row">
-                <div class="offset-md-1 col-md-5">
-                  <mat-form-field class="mat-form-field-fluid">
-                    <input  matInput placeholder="Pasivo:"  autocomplete="off" [formControl]="pasivo" type="text"/>
-                  </mat-form-field>
-                </div>
-                <div class="col-md-5">
-                  <mat-form-field class="mat-form-field-fluid">
-                    <input placeholder="Avaluo:" [formControl]="avaluoPasivo" autocomplete="off" matInput numeric numericType="number"
-                    (keypress)="numberOnly($event)" />
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="form-group row">
-                <div class="offset-md-4 col-md-4">
-                  <a href="javascript:void(0);" (click)="nuevoPasivo()" matTooltip="Agregar" style="font-size: 12px; vertical-align: middle;">
-                    <mat-icon style="font-size: 32px;" matTooltipPosition="above">add_circle_outline</mat-icon>
-                    <span style="position: relative; top: -10px; margin-left: 5px;">Agregar Pasivo</span>
-                  </a>
-                </div>
-              </div>
-            </form>
-            <mat-table  #table  class="mat-elevation-z8"  [dataSource]="dataSourcePatrimonioPasivo"  style="max-width: 760px;">
-              
-              <ng-container matColumnDef="Accion">
-                <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
-                <mat-cell *matCellDef="let element">
-                  <a (click)="deletePasivo(element)"> <mat-icon matTooltip="Borrar">delete</mat-icon> </a>
-                  <a (click)="editarPasivo(element)"> <mat-icon matTooltip="Editar">edit</mat-icon> </a>
-                </mat-cell>
-                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-              </ng-container>
-
-              <ng-container matColumnDef="Pasivo">
-                <mat-header-cell *matHeaderCellDef> Pasivo </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.pasivos | titlecase }}</mat-cell>
-                <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
-              </ng-container>
-
-              <ng-container matColumnDef="Avaluo">
-                <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }}</mat-cell>
-                <mat-footer-cell *matFooterCellDef>  {{ totalPasivo | currency: "USD":true:"1.2" }} </mat-footer-cell>
-              </ng-container>
     
-              <mat-header-row *matHeaderRowDef="displayedColumnsPasivo"></mat-header-row>
-              <mat-row *matRowDef="let row; columns: displayedColumnsPasivo"></mat-row>
-              <mat-footer-row *matFooterRowDef="displayedColumnsPasivo; sticky: true"></mat-footer-row>
-
-            </mat-table>
-          </div>
-        </div> 
       </mat-step>
       <mat-step label="Cuentas Bancarias">
         <div class="row">
