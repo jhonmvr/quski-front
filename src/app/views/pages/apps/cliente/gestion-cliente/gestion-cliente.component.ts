@@ -1019,53 +1019,6 @@ export class GestionClienteComponent implements OnInit {
 
     }
   }
-  public deleteIngresoEgreso(element) {
-    const index = this.dataSourceIngresoEgreso.data.indexOf(element);
-    this.dataSourceIngresoEgreso.data.splice(index, 1);
-    const data = this.dataSourceIngresoEgreso.data;
-    this.dataSourceIngresoEgreso.data = data;
-    this.calcularIngresoEgreso();
-  }
-  public deleteActivo(element) {
-    const index = this.dataSourcePatrimonioActivo.data.indexOf(element);
-    this.dataSourcePatrimonioActivo.data.splice(index, 1);
-    const data = this.dataSourcePatrimonioActivo.data;
-    this.dataSourcePatrimonioActivo.data = data;
-    this.calcularActivo();
-  }
-  public deletePasivo(element) {
-    const index = this.dataSourcePatrimonioPasivo.data.indexOf(element);
-    this.dataSourcePatrimonioPasivo.data.splice(index, 1);
-    const data = this.dataSourcePatrimonioPasivo.data;
-    this.dataSourcePatrimonioPasivo.data = data;
-    this.calcularPasivo();
-  }
-  public editar(element) {
-    this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
-    this.element = element;
-    ////console.log(JSON.stringify(element));
-    if (element.esIngreso && element.esEgreso == false) {
-      this.valorIngreso.setValue(element.valor);
-    } else {
-      if (element.esIngreso == false && element.esEgreso) {
-        this.valorEgreso.setValue(element.valor);
-      } else {
-        this.sinNoticeService.setNotice("ERROR DE DESARROLLO", 'error');
-      }
-    }
-  }
-  public editarActivo(element) {
-    this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
-    this.element = element;
-    this.activo.setValue(element.activos);
-    this.avaluoActivo.setValue(element.avaluo);
-  }
-  public editarPasivo(element) {
-    this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
-    this.element = element;
-    this.pasivo.setValue(element.pasivos);
-    this.avaluoPasivo.setValue(element.avaluo);
-  }
   private limpiarCampos() {
     Object.keys(this.formDatosReferenciasPersonales.controls).forEach((name) => {
       let control = this.formDatosReferenciasPersonales.controls[name];
@@ -1288,7 +1241,7 @@ export class GestionClienteComponent implements OnInit {
                     });
                     this.dataSource.data.forEach(e => {
                       let codigo = this.catTipoReferencia.find(x => x.nombre == e.parentesco);
-                      e.parentesco = codigo.codigo;
+                      e.parentesco = codigo ? codigo.codigo : 'C14';
                       e.tbQoCliente = this.wrapper.cliente;
                     });
                     if (!this.wrapper.referencias) {
