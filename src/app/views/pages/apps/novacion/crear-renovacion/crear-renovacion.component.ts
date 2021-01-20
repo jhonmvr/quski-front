@@ -30,6 +30,8 @@ export class CrearRenovacionComponent implements OnInit {
   public loading;
   public usuario: string;
   agencia: string;
+  private validCliente = true;
+  private riesgoTotal: number;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
   private credit: { operacionAnterior: any, proceso: TbQoProceso, credito: TbQoCreditoNegociacion, excepciones: TbQoExcepcion[]}
@@ -108,6 +110,8 @@ export class CrearRenovacionComponent implements OnInit {
   /** @CREDITO */
   private inicioDeFlujo() {
     this.route.paramMap.subscribe((json: any) => {
+      this.validCliente = true;
+      this.riesgoTotal  = 0;
       if (json.params.item && json.params.codigo) {
         if( json.params.codigo == 'NOV'){
           this.loadingSubject.next(true);
@@ -190,15 +194,50 @@ export class CrearRenovacionComponent implements OnInit {
       }
 
       this.credit.excepciones? this.credit.excepciones.forEach(e=>{
+        console.log('Hola? probando excepciones -->', this.credit.excepciones);
         if(e.estadoExcepcion == 'PENDIENTE'){
           this.abrirSalirGestion('Su novacion se encuentra en revision por fabrica. Espere a que su credito sea revisado','Excepcion en proceso');
         }
         if(e.tipoExcepcion != 'EXCEPCION_COBERTURA' && e.estadoExcepcion == 'NEGADO'){
           this.abrirSalirGestion('Su excepcion fue negada. Observacion:'+ e.observacionAprobador+'.','Excepcion Negada');
         }
+        if(e.tipoExcepcion == 'EXCEPCION_CLIENTE'   && e.estadoExcepcion == 'APROBADO'){
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Su excepcion de cliente por motivos: ' + e.observacionAsesor + '. Fue aprobada y revisada por: '+e.idAprobador +', agregando como observacion lo siguiente: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE CLIENTE APROBADA'}
+          });
+          dialogRef.afterClosed().subscribe(r => {
+            this.validCliente = false;
+          });
+        }
+        if(e.tipoExcepcion == 'EXCEPCION_RIESGO'    && e.estadoExcepcion == 'APROBADO'){
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE RIESGO APROBADA'}
+          });
+          dialogRef.afterClosed().subscribe(r => {
+            this.riesgoTotal = 0;
+          });
+        }
+        if(e.tipoExcepcion == 'EXCEPCION_COBERTURA' && e.estadoExcepcion == 'APROBADO'){
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE COBERTURA APROBADA'}
+          });
+        }
       }) : null ;
     }
+    
   }
+
   
   public validarCliente(){
     this.par.findByNombre('EDAD_MAXIMA').subscribe( (data: any) =>{
@@ -207,7 +246,7 @@ export class CrearRenovacionComponent implements OnInit {
         let valor = data.entidad.valor;
         this.par.getDiffBetweenDateInicioActual(this.credit.operacionAnterior.cliente.fechaNacimiento, 'dd/MM/yyyy').subscribe( (data: any) =>{
           console.log('Mi data de calcular edad ===>', data);
-          if(data.entidad.year < valor){
+          if(data.entidad.year < valor && this.validCliente){
             this.credit.excepciones ? this.credit.excepciones.forEach(e =>{
               if(e.tipoExcepcion != 'EXCEPCION_CLIENTE'){
                 this.solicitarExcepcionCliente();
@@ -297,8 +336,6 @@ export class CrearRenovacionComponent implements OnInit {
   }
   public guardarSeleccion(row){
     this.seleccion = row;
-    this.validarCliente();
-    //this.solicitarExcepcionCliente();
   }
   public simularOpciones(){
     this.loadingSubject.next(true);
@@ -309,7 +346,7 @@ export class CrearRenovacionComponent implements OnInit {
     cliente.fechaNacimiento = (fecha.getDate() < 10 ? '0'+fecha.getDate() : fecha.getDate()) +'/' + mes +'/' + fecha.getFullYear(); 
     this.credit.operacionAnterior.cliente = cliente;
     //this.credit.operacionAnterior.fechaNacimiento = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
-    this.cal.simularOfertaRenovacion(0,0,this.credit.credito? this.credit.credito.cobertura : 0,this.agencia, this.credit.operacionAnterior).subscribe( (data: any) =>{
+    this.cal.simularOfertaRenovacion(this.riesgoTotal,this.credit.credito? this.credit.credito.cobertura? this.credit.credito.cobertura : 0 : 0,this.agencia, this.credit.operacionAnterior).subscribe( (data: any) =>{
       if(data.entidad){
         //console.log('Data de simulacion -->',data.entidad);
         data.entidad.simularResult.codigoError > 0 ? this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
@@ -319,6 +356,7 @@ export class CrearRenovacionComponent implements OnInit {
           this.garantiasSimuladas.push( e );
         }): null;
         this.dataSourceCreditoNegociacion.data = data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
+        this.validarCliente();
         this.loadingSubject.next(false);
       }
     });

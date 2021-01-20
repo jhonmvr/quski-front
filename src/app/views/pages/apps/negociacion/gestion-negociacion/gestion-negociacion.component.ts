@@ -594,8 +594,6 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-
-
   solicitarCobertura(){
     if(this.dataSourceTasacion.data && this.dataSourceTasacion.data.length > 0){
       this.abrirPopupExcepciones();

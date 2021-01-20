@@ -2,7 +2,9 @@ src/app/core/services/base.service.ts
 src/environments/environment.ts
 workspace.code-workspace
 Save.code-workspace
-src/index.html
 node_modules
 .gitignore
 .vscode/
+src/index.html
+.gitignore
+src/index.html
