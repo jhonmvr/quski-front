@@ -158,14 +158,14 @@ export class CrearRenovacionComponent implements OnInit {
     this.estadoProceso.setValue(wr.proceso ? wr.proceso.estadoProceso : 'Sin asignar');
     this.dataSourceTasacion.data = wr.tasacion ? wr.tasacion : wr.operacionAnterior.garantias ;
     this.dataSourceTasacion.data ? this.dataSourceTasacion.data.forEach(e=>{
-      /* e.tipoOro = this.catTipoOro.find( x => x.codigo == e.codigoTipoOro ) ? this.catTipoOro.find( x => x.codigo == e.codigoTipoOro ).nombre: 'Error de Catalogo';
+      e.tipoOro = this.catTipoOro.find( x => x.codigo == e.codigoTipoOro ) ? this.catTipoOro.find( x => x.codigo == e.codigoTipoOro ).nombre: 'Error de Catalogo';
       e.descuentoPesoPiedra = e.descuentoPiedras;
       e.detallePiedras ? e.detallePiedras : 'Sin detalle';
       e.tipoJoya = this.catTipoJoya.find(x=> x.codigo == e.codigoTipoJoya) ? this.catTipoJoya.find(x=> x.codigo == e.codigoTipoJoya).nombre : 'Error en catalogo';
       e.estadoJoya = this.catEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya) ? this.catEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya).nombre : 'Error en catalogo';
       e.descripcion = e.descripcionJoya ? e.descripcionJoya : 'Sin descripcion'; 
       this.total++;
-      e.total = this.total;*/
+      e.total = this.total;
       this.totalPesoB += e.pesoBruto;
       this.totalPesoN += e.pesoNeto
       this.totalValorO += e.valorOro

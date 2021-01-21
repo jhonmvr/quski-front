@@ -266,7 +266,6 @@ export class GestionClienteComponent implements OnInit {
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private cargarCampos() {
     if(this.wrapper){
-    //console.log(' Antes de validacion -> ', this.wrapper);
     this.nombresCompletos.setValue(this.wrapper.cliente.nombreCompleto);
     this.nombresCompletos.disable();
     this.numeroCuenta.disable();
@@ -302,20 +301,6 @@ export class GestionClienteComponent implements OnInit {
     let countFijo: number = 0;
     let countOtro: number = 0;
     let countMovil: number = 0;
-    /* !this.wrapper.telefonos ? null      : this.wrapper.telefonos.forEach(e => {
-      if (e.tipoTelefono == "CEL" && e.estado == "ACT" && countMovil < 1) {
-        this.telefonoMovil.setValue(e.numero);
-        countMovil++;
-      }else if( e.tipoTelefono == "DOM" && e.estado == "ACT" && countFijo < 1){
-        this.telefonoFijo.setValue(e.numero);
-        countFijo++;
-      }else if(e.tipoTelefono == "ADI" && e.estado == "ACT" && countOtro < 1){
-        this.telefonoOtro.setValue(e.numero);
-        countOtro++;
-      }else{
-        e.estado = "INA";
-      }
-    }); */
     if(this.wrapper.telefonos){
       this.dataSourceTelefonosCliente = new MatTableDataSource<any>(this.wrapper.telefonos);
     }
@@ -384,7 +369,6 @@ export class GestionClienteComponent implements OnInit {
     });
     !this.wrapper.cuentas ? null        : this.wrapper.cuentas.forEach(e=>{
       e.estado = 'INA';
-      //console.log('Estoy inactivando');
     });
     if(this.wrapper.cuentas){
       this.wrapper.cuentas[0].estado = 'ACT';
@@ -392,13 +376,11 @@ export class GestionClienteComponent implements OnInit {
       this.tipoCuenta.setValue( item.nombre )
       this.numeroCuenta.setValue( this.wrapper.cuentas[0].cuenta );
       this.esAhorro.setValue( this.wrapper.cuentas[0].esAhorros ? 'SI':'NO' );
-      //console.log('Estoy pasando');
     }   
     let countRefer : number = 0;
     let refe = new Array<TbReferencia>(); 
     !this.wrapper.referencias ? null : this.wrapper.referencias.forEach(e => {
       if(e.estado == 'ACT' && countRefer < 2){
-        //console.log('HOla?')
         const referencia = this.catTipoReferencia.find(x => x.codigo == e.parentesco);
         e.parentesco = referencia ? referencia.nombre : 'error' ;
         refe.push( e );
@@ -415,16 +397,7 @@ export class GestionClienteComponent implements OnInit {
     this.valorEgreso.setValue(this.wrapper.cliente.egresos);
     this.avaluoPasivo.setValue(this.wrapper.cliente.pasivos);
     this.avaluoActivo.setValue(this.wrapper.cliente.activos);
-   /*  this.dataSourcePatrimonioPasivo.data.push( new TbQoPatrimonio(this.wrapper.cliente.pasivos, false) );
-    this.calcularPasivo();
-    this.dataSourcePatrimonioActivo.data.push( new TbQoPatrimonio(this.wrapper.cliente.activos, false) );
-    this.calcularActivo();
-    this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( this.wrapper.cliente.ingresos, true ) )  
-    this.calcularIngresoEgreso();
-    this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( this.wrapper.cliente.egresos, false ) )  
-    this.calcularIngresoEgreso(); */
     this.loadingSubject.next(false);
-    //console.log(' Luego de validacion -> ', this.wrapper);
     }else{
       this.sinNoticeService.setNotice('Error cargando cliente','error');
     }
@@ -575,7 +548,6 @@ export class GestionClienteComponent implements OnInit {
     const errorRequerido = 'Ingresar valores';
     const errorEmail = 'Correo Incorrecto';
     const errorNumero = 'Ingreso solo numeros';
-    const errorFormatoIngreso = 'Use el formato : 0.00';
     const invalidIdentification = 'La identificacion no es valida';
     const errorLogitudExedida = 'La longitud sobrepasa el limite';
     const errorInsuficiente = 'La longitud es insuficiente';
@@ -1127,18 +1099,6 @@ export class GestionClienteComponent implements OnInit {
 
                     this.wrapper.cliente.pasivos = this.avaluoPasivo.value;
                     this.wrapper.cliente.activos = this.avaluoActivo.value;
-                    /* 
-                    
-                   let totalEgreso = 0;
-                    let totalIngreso = 0;
-                     this.dataSourceIngresoEgreso.data.forEach(e=>{
-                      if( e.esEgreso ){
-                        totalEgreso = totalEgreso + e.valor;
-                      }
-                      if( e.esIngreso ){
-                        totalIngreso = totalIngreso + e.valor;
-                      }
-                    }); */
                     this.wrapper.cliente.ingresos = this.valorIngreso.value;
                     this.wrapper.cliente.egresos = this.valorEgreso.value;
                     this.wrapper.datosTrabajos ? this.wrapper.datosTrabajos.forEach( t =>{
@@ -1170,40 +1130,6 @@ export class GestionClienteComponent implements OnInit {
                     }
 
                     this.wrapper.telefonos = this.dataSourceTelefonosCliente.data;
-                   /*  if (!this.wrapper.telefonos) {
-                      this.wrapper.telefonos = new Array<TbQoTelefonoCliente>()
-                      this.wrapper.telefonos[0] = new TbQoTelefonoCliente();
-                      this.wrapper.telefonos[0].numero = this.telefonoMovil.value;
-                      this.wrapper.telefonos[0].tipoTelefono = "CEL";
-                      this.wrapper.telefonos[0].tbQoCliente = this.wrapper.cliente;
-                      this.wrapper.telefonos[0].estado = 'ACT';
-                      if (this.telefonoFijo.value) {
-                        this.wrapper.telefonos[1] = new TbQoTelefonoCliente();
-                        this.wrapper.telefonos[1].numero = this.telefonoFijo.value;
-                        this.wrapper.telefonos[1].tipoTelefono = "DOM";
-                        this.wrapper.telefonos[1].tbQoCliente = this.wrapper.cliente;
-                        this.wrapper.telefonos[1].estado = 'ACT';
-                      }
-                      if (this.telefonoOtro.value) {
-                        this.wrapper.telefonos[2] = new TbQoTelefonoCliente();
-                        this.wrapper.telefonos[2].numero = this.telefonoOtro.value;
-                        this.wrapper.telefonos[2].tipoTelefono = "ASI";
-                        this.wrapper.telefonos[2].estado = 'ACT';
-                        this.wrapper.telefonos[2].tbQoCliente = this.wrapper.cliente;
-                      }
-                    } else {
-                      this.wrapper.telefonos.forEach(e => {
-                        if (e.tipoTelefono == "CEL" && e.estado == 'ACT') {
-                          e.numero = this.telefonoMovil.value;
-                        }
-                        if (e.tipoTelefono == "DOM" && e.estado == 'ACT') {
-                          e.numero = this.telefonoFijo.value;
-                        }
-                        if (e.tipoTelefono == "ASI" && e.estado == 'ACT') {
-                          e.numero = this.telefonoOtro.value;
-                        }
-                      });
-                    }*/
                     this.wrapper.direcciones = new Array<TbQoDireccionCliente>();
                     this.wrapper.direcciones[0] = new TbQoDireccionCliente();
                     this.wrapper.direcciones[1] = new TbQoDireccionCliente();
@@ -1241,7 +1167,7 @@ export class GestionClienteComponent implements OnInit {
                     });
                     this.dataSource.data.forEach(e => {
                       let codigo = this.catTipoReferencia.find(x => x.nombre == e.parentesco);
-                      e.parentesco = codigo ? codigo.codigo : 'C14';
+                      e.parentesco = codigo ? codigo.codigo : 'C14'; 
                       e.tbQoCliente = this.wrapper.cliente;
                     });
                     if (!this.wrapper.referencias) {

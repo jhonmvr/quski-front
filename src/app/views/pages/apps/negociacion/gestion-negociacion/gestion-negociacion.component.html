@@ -56,8 +56,8 @@
 								<input matInput [formControl]="cedula" placeholder="Cedula:"  />
 							</mat-form-field>
 						</div>
-						<div *ngIf="negoW != null" class="col-md-3">
-							<button mat-stroked-button
+						<div *ngIf="false" class="col-md-3">
+							<button mat-stroked-button disabled
 								(click)="abrirPopupVerCotizacion(negoW.credito.tbQoNegociacion.tbQoCliente.cedulaCliente)">
 								<mat-icon style="font-size: 32px" matTooltipPosition="above" class="blue-icon">
 									remove_red_eye
