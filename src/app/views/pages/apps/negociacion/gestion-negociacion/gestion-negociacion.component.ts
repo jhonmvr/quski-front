@@ -21,16 +21,14 @@ import { environment } from '../../../../../../../src/environments/environment';
 import { MatDialog, MatTableDataSource, MatStepper } from '@angular/material';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
+import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
-import { SelectionModel } from '@angular/cdk/collections';
 
-import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'kt-gestion-negociacion',
@@ -42,6 +40,7 @@ export class GestionNegociacionComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
   public loading;
   public usuario: string;
+  public agencia: string;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
   // ENTIDADES
@@ -57,8 +56,9 @@ export class GestionNegociacionComponent implements OnInit {
   private catMotivoDevolucion: Array<any>;
   filteredPais: Observable<Pais[]>;
   public totalNumeroJoya: number;
-  public totalPesoB: number;
-  public totalPesoN: number;
+  public totalPesoB: any;
+  public totalPesoN: any;
+  public totalDescgr: any;
   public totalValorA: number;
   public totalValorR: number;
   public totalValorC: number;
@@ -111,7 +111,7 @@ export class GestionNegociacionComponent implements OnInit {
   // TABLA DE TASACION
   // ---- @TODO: Crear un data source para la tabla 
   dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
-  displayedColumnsTasacion = ['Accion', 'NumeroPiezas', 'TipoOro', 'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'valorComercial', 'tienePiedras', 'detallePiedras','TipoJoya', 'EstadoJoya', 'Descripcion',];
+  displayedColumnsTasacion = ['Accion', 'NumeroPiezas', 'TipoOro','PesoBruto','PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'DescuentoSuelda', 'TipoJoya', 'EstadoJoya', 'Descripcion', 'tienePiedras','DescuentoPesoPiedra', 'detallePiedras',];
   private elementJoya;
 
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
@@ -188,6 +188,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.agencia = localStorage.getItem( 'idAgencia' );
     this.loadCatalogo();
     this.obtenerCatalogosCore();
     this.componenteVariable = false;
@@ -303,6 +304,7 @@ export class GestionNegociacionComponent implements OnInit {
   }
   private calcular() {
     this.totalPesoN = 0;
+    this.totalDescgr = 0;
     this.totalPesoB = 0;
     this.totalValorR = 0;
     this.totalValorA = 0;
@@ -311,8 +313,9 @@ export class GestionNegociacionComponent implements OnInit {
     this.totalNumeroJoya = 0
     if (this.dataSourceTasacion.data) {
       this.dataSourceTasacion.data.forEach(element => {
-        this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-        this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
+        this.totalPesoN  = (Number(this.totalPesoN) + Number(element.pesoNeto)).toFixed(2);
+        this.totalDescgr = (Number(this.totalDescgr) + Number(element.descuentoPesoPiedra)).toFixed(2);
+        this.totalPesoB  = (Number(this.totalPesoB) + Number(element.pesoBruto)).toFixed(2);
         this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
         this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
         this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
@@ -322,10 +325,9 @@ export class GestionNegociacionComponent implements OnInit {
     }
   }
   private iniciarNegociacionFromCot(id : number ){
-    this.neg.iniciarNegociacionFromCot( id, this.usuario ).subscribe( (wrapper: any) =>{
+    this.neg.iniciarNegociacionFromCot( id, this.usuario, this.agencia).subscribe( (wrapper: any) =>{
       if (wrapper.entidad.respuesta) {
         this.negoW = wrapper.entidad;
-        //console.log("NEGOCIACION INICIADA POR COT-> ", wrapper.entidad);
         if (this.negoW.excepcionBre == "") {
           this.cargarValores(this.negoW, false);
         } else {
@@ -344,8 +346,7 @@ export class GestionNegociacionComponent implements OnInit {
       return;
     }    
     this.loadingSubject.next(true);  
-    //console.log("entra a negociacion")
-      this.neg.iniciarNegociacion(this.identificacion.value, this.usuario).subscribe((wrapper: any) => {
+      this.neg.iniciarNegociacion(this.identificacion.value, this.usuario, this.agencia).subscribe((wrapper: any) => {
         if (wrapper.entidad.respuesta) {
           this.limpiarNegociacion();
           this.negoW = wrapper.entidad;
@@ -362,8 +363,8 @@ export class GestionNegociacionComponent implements OnInit {
  
   }
   private iniciarNegociacionEquifax( cedula: string ){
-    //this.loadingSubject.next(true);
-    this.neg.iniciarNegociacionEquifax( cedula, this.usuario).subscribe( (wrapper: any) =>{
+    this.loadingSubject.next(true);
+    this.neg.iniciarNegociacionEquifax( cedula, this.usuario, this.agencia).subscribe( (wrapper: any) =>{
       if (wrapper.entidad.respuesta) {
         this.limpiarNegociacion();
         this.negoW = wrapper.entidad;
@@ -375,7 +376,7 @@ export class GestionNegociacionComponent implements OnInit {
         this.cargarValores(this.negoW, false);
         
       } else {
-        //this.loadingSubject.next(false);
+        this.loadingSubject.next(false);
         this.limpiarCamposBusqueda();
         this.sinNotSer.setNotice('NO SE PUDO INICIAR NEGOCIACION, CLIENTE NO ENCONTRADO EN EQUIFAX','error')
       }

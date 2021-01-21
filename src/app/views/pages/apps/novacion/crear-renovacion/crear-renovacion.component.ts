@@ -104,7 +104,7 @@ export class CrearRenovacionComponent implements OnInit {
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.agencia = '2'// localStorage.getItem( 'idAgencia' );
+    this.agencia = localStorage.getItem( 'idAgencia' );
     this.inicioDeFlujo();
   }
   /** @CREDITO */
@@ -119,7 +119,7 @@ export class CrearRenovacionComponent implements OnInit {
             this.credit = data.entidad;
             //console.log("datos ->", this.credit);
             if (this.credit ) {
-              this.cargarCampos( this.credit  );
+              this.cargarCampos();
             }else{
               this.abrirSalirGestion("Error al intentar cargar el credito.");
             }
@@ -130,7 +130,7 @@ export class CrearRenovacionComponent implements OnInit {
             this.credit = data.entidad;
             //console.log("datos ->", this.credit);
             if (this.credit ) {
-              this.cargarCampos( this.credit  );
+              this.cargarCampos();
             }else{
               this.abrirSalirGestion("Error al intentar cargar el credito.");
             }
@@ -142,7 +142,7 @@ export class CrearRenovacionComponent implements OnInit {
       } 
     });
   }
-  private cargarCampos(wr: any) {
+  private cargarCampos() {
     this.formOperacion.disable();
     this.totalPesoB      = 0;
     this.totalPesoN      = 0;
@@ -152,33 +152,39 @@ export class CrearRenovacionComponent implements OnInit {
     this.totalValorR     = 0;
     this.totalValorC     = 0;
     this.total           = 0;
-    this.numeroOperacion = wr.operacionAnterior.credito.numeroOperacion;
-    this.codigoBpm.setValue( wr.credito ? wr.credito.codigo : 'Sin asignar')
-    this.proceso.setValue(   wr.proceso ? wr.proceso.proceso : 'Sin asignar');
-    this.estadoProceso.setValue(wr.proceso ? wr.proceso.estadoProceso : 'Sin asignar');
-    this.dataSourceTasacion.data = wr.tasacion ? wr.tasacion : wr.operacionAnterior.garantias ;
-    this.dataSourceTasacion.data ? this.dataSourceTasacion.data.forEach(e=>{
-      e.tipoOro = this.catTipoOro.find( x => x.codigo == e.codigoTipoOro ) ? this.catTipoOro.find( x => x.codigo == e.codigoTipoOro ).nombre: 'Error de Catalogo';
-      e.descuentoPesoPiedra = e.descuentoPiedras;
-      e.detallePiedras ? e.detallePiedras : 'Sin detalle';
-      e.tipoJoya = this.catTipoJoya.find(x=> x.codigo == e.codigoTipoJoya) ? this.catTipoJoya.find(x=> x.codigo == e.codigoTipoJoya).nombre : 'Error en catalogo';
-      e.estadoJoya = this.catEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya) ? this.catEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya).nombre : 'Error en catalogo';
-      e.descripcion = e.descripcionJoya ? e.descripcionJoya : 'Sin descripcion'; 
-      this.total++;
-      e.total = this.total;
-      this.totalPesoB += e.pesoBruto;
-      this.totalPesoN += e.pesoNeto
-      this.totalValorO += e.valorOro
-      this.totalNumeroJoya += e.numeroPiezas
-      this.totalValorA += e.valorAvaluo
-      this.totalValorR += e.valorRealizacion
-      this.totalValorC += e.valorComercial
-    }) : null ;
-    this.codigoOperacion.setValue(wr.operacionAnterior.credito.numeroOperacion);
-    this.nombreCompleto.setValue(wr.operacionAnterior.cliente.nombreCompleto);
-    this.cedulaCliente.setValue(wr.operacionAnterior.cliente.identificacion);
+    this.numeroOperacion = this.credit.operacionAnterior.credito.numeroOperacion;
+    this.codigoBpm.setValue( this.credit.credito ? this.credit.credito.codigo : 'Sin asignar')
+    this.proceso.setValue(   this.credit.proceso ? this.credit.proceso.proceso : 'Sin asignar');
+    this.estadoProceso.setValue(this.credit.proceso ? this.credit.proceso.estadoProceso : 'Sin asignar');
+    let dataC : Array<any> = new Array<any>();
+    this.dataSourceTasacion = new MatTableDataSource<any>(dataC);
+    if(this.credit.operacionAnterior && this.credit.operacionAnterior.garantias){
+      this.credit.operacionAnterior.garantias.forEach(element => {
+        this.total++;
+        let garantia = {
+          tipoOro: this.catTipoOro ? this.catTipoOro.find( x => x.codigo == element.codigoTipoOro ) ? this.catTipoOro.find( x => x.codigo == element.codigoTipoOro ).nombre: 'Error de Catalogo' : 'Error de Catalogo',
+          tipoJoya: this.catTipoJoya ? this.catTipoJoya.find(x=> x.codigo == element.codigoTipoJoya) ? this.catTipoJoya.find(x=> x.codigo == element.codigoTipoJoya).nombre : 'Error en catalogo' : 'Error en catalogo',
+          estadoJoya: this.catEstadoJoya ? this.catEstadoJoya.find(x=> x.codigo == element.codigoEstadoJoya) ? this.catEstadoJoya.find(x=> x.codigo == element.codigoEstadoJoya).nombre : 'Error en catalogo' : 'Error en catalogo',
+          descripcion: element.descripcionJoya ? element.descripcionJoya : 'Sin descripcion',
+          detallePiedras: element.detallePiedras ? element.detallePiedras : 'Sin detalle',
+          descuentoPesoPiedra: element.descuentoPiedras,
+          total: this.total
+        };
+        this.totalPesoB += element.pesoBruto;
+        this.totalPesoN += element.pesoNeto
+        this.totalValorO += element.valorOro
+        this.totalNumeroJoya += element.numeroPiezas
+        this.totalValorA += element.valorAvaluo
+        this.totalValorR += element.valorRealizacion
+        this.totalValorC += element.valorComercial
+        this.dataSourceTasacion.data.push( garantia );
+      });
+    }
+    this.codigoOperacion.setValue(this.credit.operacionAnterior.credito.numeroOperacion);
+    this.nombreCompleto.setValue(this.credit.operacionAnterior.cliente.nombreCompleto);
+    this.cedulaCliente.setValue(this.credit.operacionAnterior.cliente.identificacion);
     this.validarProceso();
-    this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.operacionAnterior.credito.numeroOperacion + ".", "success");
+    this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + this.credit.operacionAnterior.credito.numeroOperacion + ".", "success");
     this.loadingSubject.next(false);
   }
   public validarProceso(){
