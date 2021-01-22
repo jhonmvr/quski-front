@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-md-6">
                         <mat-form-field  class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion: " />
+                            <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion: " [value]="fechaCreacion.value | date:'yyyy-MM-dd'"/>
                         </mat-form-field>
                     </div>
                 </div>

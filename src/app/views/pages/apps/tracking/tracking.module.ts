@@ -36,6 +36,8 @@ import {
 	MatStepperModule,
 	MatDialogRef,
 	MatButtonToggleGroup,
+	DateAdapter,
+	MAT_DATE_FORMATS,
 } from '@angular/material';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
@@ -47,6 +49,7 @@ import { ListTrackingComponent } from './list-tracking/list-tracking.component';
 import { AddFotoComponent } from '../../../partials/custom/fotos/add-foto/add-foto.component';
 import {PartialsModule} from '../../../partials/partials.module';
 import { TrackingPagosComponent } from './tracking-pagos/tracking-pagos.component'
+import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 const routes: Routes = [
 	{
 		path: '',
@@ -107,19 +110,22 @@ const routes: Routes = [
 		MatStepperModule,
 		PartialsModule
   ],
-  providers:[
+  providers: [
 	ModuleGuard,
+	
+	{provide: DateAdapter, useClass: PickDateAdapter},
+	{provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS},
 	{ provide: MatDialogRef, useValue: {} },
-    {
-			provide: MAT_DIALOG_DEFAULT_OPTIONS,
-			useValue: {
-				hasBackdrop: true,
-				panelClass: 'kt-mat-dialog-container__wrapper',
-				height: 'auto',
-				width: '900px'
-			}
-		},
-  ],
+	{
+		provide: MAT_DIALOG_DEFAULT_OPTIONS,
+		useValue: {
+			hasBackdrop: true,
+			panelClass: 'kt-mat-dialog-container__wrapper',
+			height: 'auto',
+			width: '900px'
+		}
+	},
+],
 declarations: [
     TrackingComponent,
     ListTrackingComponent,

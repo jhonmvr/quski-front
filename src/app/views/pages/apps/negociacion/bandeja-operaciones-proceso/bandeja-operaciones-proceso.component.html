@@ -126,7 +126,7 @@
                     </ng-container>
                     <ng-container matColumnDef="fechaCreacion">
                         <mat-header-cell *matHeaderCellDef>Fecha Creacion</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.fechaCreacion }}</mat-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.fechaCreacion | date:'yyyy-MM-dd' }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="agencia">
                         <mat-header-cell *matHeaderCellDef>Agencia</mat-header-cell>

@@ -34,6 +34,8 @@ import {
   MatStepperModule,
   MatDialogRef,
   MatButtonToggleGroup,
+  DateAdapter,
+  MAT_DATE_FORMATS,
 } from '@angular/material';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
@@ -45,6 +47,7 @@ import { AprobadorComponent } from './aprobador.component';
 import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { BandejaAprobadorComponent } from './bandeja-aprobador/bandeja-aprobador.component';
 import { ConfirmarAccionComponent } from '../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 
 
 
@@ -113,8 +116,11 @@ const routes: Routes = [
   providers: [
     ModuleGuard,
     { provide: MatDialogRef, useValue: {} },
+    {provide: DateAdapter, useClass: PickDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS},
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,
+    
       useValue: {
         hasBackdrop: true,
         panelClass: 'kt-mat-dialog-container__wrapper',

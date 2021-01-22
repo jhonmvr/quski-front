@@ -100,7 +100,7 @@
                 </div>
                 <div class="col-md-4 ">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input placeholder="Fecha Vencimiento hasta: " matInput [matDatepicker]="picker" formControlName="fechaVencimientoHasta">
+                        <input placeholder="Fecha Vencimiento hasta: " matInput [matDatepicker]="picker" formControlName="fechaVencimientoHasta" >
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
@@ -200,12 +200,12 @@
                     </ng-container>
                     <ng-container matColumnDef="fechaSolicitud">
                         <mat-header-cell *matHeaderCellDef>Fecha Solicitud</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.fechaSolicitud}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaSolicitud | date:'yyyy-MM-dd'}} </mat-cell>
         
                     </ng-container>
                     <ng-container matColumnDef="fechaAprobacion">
                         <mat-header-cell *matHeaderCellDef>Fecha Aprobacion</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.fechaAprobacion}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaAprobacion | date:'yyyy-MM-dd'}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="estado">
                         <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>

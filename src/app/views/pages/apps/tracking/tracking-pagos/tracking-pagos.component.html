@@ -31,23 +31,23 @@
         </ng-container>
         <ng-container matColumnDef="fechaInicio">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Inicio</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.fechaInicio | date:'short'}} </mat-cell>
+            <mat-cell *matCellDef="let element">{{element.fechaInicio | date:'yyyy-MM-dd'}} </mat-cell>
             <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
         </ng-container>
         <ng-container matColumnDef="fechaAsignacion">
             <mat-header-cell *matHeaderCellDef>Fecha Asignacion</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.fechaAsignacion | date:'short'}} </mat-cell>
+            <mat-cell *matCellDef="let element">{{element.fechaAsignacion | date:'yyyy-MM-dd'}} </mat-cell>
             <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
         </ng-container>
         
         <ng-container matColumnDef="fechaInicioAtencion">
             <mat-header-cell *matHeaderCellDef>Fecha Inicio Atencion</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.fechaInicioAtencion | date:'short'}} </mat-cell>
+            <mat-cell *matCellDef="let element">{{element.fechaInicioAtencion | date:'yyyy-MM-dd'}} </mat-cell>
             <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
         </ng-container>
         <ng-container matColumnDef="fechaFin">
             <mat-header-cell *matHeaderCellDef>Fecha Fin</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.fechaFin | date:'short'}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.fechaFin | date:'yyyy-MM-dd'}} </mat-cell>
             <mat-footer-cell *matFooterCellDef>  </mat-footer-cell>    
         </ng-container>
         <ng-container matColumnDef="situacion">

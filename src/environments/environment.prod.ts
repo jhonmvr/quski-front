@@ -32,12 +32,12 @@ export const environment = {
 
     //SOFTBANK
     //parametros
-    app_p : 'aHR0cDovLzEwLjM3LjEwLjE4MDo4NDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU',
+    app_p : 'aHR0cDovL2FwcC5xdXNraS5lYzoxODQ4MC9nZW5lcmljLXJlbGF0aXZlLXJlc3QvcmVzb3VyY2VzL3JlbGF0aXZlL2dldFJlbGF0aXZl',
     //agente supervisor
     abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
     //autenticacion 
-    seg_a :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC9sb2dpbgo=",
+    seg_a :"aHR0cDovL2FwcC5xdXNraS5lYzoxODA5NC9Tb2Z0YmFua0FQSS9hcGkvc2VndXJpZGFkL2xvZ2lu",
     //seguridad-resources
-    seg_r :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC8="
+    seg_r :"aHR0cDovL2FwcC5xdXNraS5lYzoxODA5NC9Tb2Z0YmFua0FQSS9hcGkvc2VndXJpZGFkLw=="
     
 };

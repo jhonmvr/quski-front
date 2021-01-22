@@ -32,6 +32,8 @@ import {
 	MatTooltipModule,
 	MatStepperModule,
 	MatDialogRef,
+	DateAdapter,
+	MAT_DATE_FORMATS,
 } from '@angular/material';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgxPermissionsModule } from 'ngx-permissions';
@@ -43,6 +45,7 @@ import { ErrorCargaInicialComponent } from '../../../../views/partials/custom/po
 import { ListaExcepcionesComponent } from '../../../../views/partials/custom/popups/lista-excepciones/lista-excepciones.component';
 import { ReasignarUsuarioComponent } from '../../../../views/partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
 import { NovacionHabilitanteComponent } from './novacion-habilitante/novacion-habilitante.component';
+import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 const routes: Routes = [
 	{
 		path: '',
@@ -100,8 +103,11 @@ const routes: Routes = [
    		MatStepperModule,
     	PartialsModule
   	],	
-  	providers: [
+	  providers: [
 		ModuleGuard,
+		
+		{provide: DateAdapter, useClass: PickDateAdapter},
+		{provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS},
 		{ provide: MatDialogRef, useValue: {} },
 		{
 			provide: MAT_DIALOG_DEFAULT_OPTIONS,
@@ -112,7 +118,7 @@ const routes: Routes = [
 				width: '900px'
 			}
 		},
-  	],
+	],
   	declarations: [
 		CrearRenovacionComponent,
 		NovacionComponent,

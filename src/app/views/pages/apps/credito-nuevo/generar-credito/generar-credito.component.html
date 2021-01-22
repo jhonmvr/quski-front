@@ -106,7 +106,7 @@
                     </ng-container>
                     <ng-container matColumnDef="tieneDescuento">
                         <mat-header-cell *matHeaderCellDef>Tiene descuentos</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaNacimiento | date:'yyyy-MM-dd'}} </mat-cell>
                         <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                     </ng-container>
                     <ng-container matColumnDef="descuentoPesoPiedra">
@@ -307,12 +307,12 @@
                         </div>
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="fechaEfectiva" readonly placeholder="Fecha Efectiva">
+                                <input matInput [formControl]="fechaEfectiva" readonly placeholder="Fecha Efectiva" [value]="fechaEfectiva.value  | date:'yyyy-MM-dd'">
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="fechaVencimiento" readonly placeholder="Fecha de Vencimiento">
+                                <input matInput [formControl]="fechaVencimiento" readonly placeholder="Fecha de Vencimiento" [value]="fechaVencimiento.value | date:'yyyy-MM-dd'" >
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">

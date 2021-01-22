@@ -46,7 +46,7 @@
                 <div class="row align-items-center" >
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento " autocomplete="off">
+                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento " autocomplete="off" [value]="fechaNacimiento.value | date:'yyyy-MM-dd'">
                         </mat-form-field>
                     </div>
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
@@ -103,7 +103,7 @@
                 </ng-container>
                 <ng-container matColumnDef="fechaNacimiento">
                 <mat-header-cell *matHeaderCellDef>Fecha de Nacimiento</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaNacimiento | date:'yyyy-MM-dd'}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="nacionalidad">
                 <mat-header-cell *matHeaderCellDef>Nacionalidad</mat-header-cell>

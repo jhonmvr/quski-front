@@ -18,11 +18,11 @@
     </ng-container>
     <ng-container matColumnDef="fechaEfectiva">
         <mat-header-cell *matHeaderCellDef class="text-align"> Fecha Efectiva</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaEfectiva}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaEfectiva | date:'yyyy-MM-dd'}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="fechaVencimiento">
         <mat-header-cell *matHeaderCellDef class="text-align">Fecha Vencimiento</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaVencimiento}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaVencimiento | date:'yyyy-MM-dd'}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="valorAlDia">
         <mat-header-cell *matHeaderCellDef class="text-align">Valor Al Día </mat-header-cell>
