@@ -318,12 +318,19 @@
             </mat-step>
             <mat-step label="Excepción">
                 <form [formGroup]="formDatosExcepcion">
+                    <div class="row">
+                        <div class="col-4">
+                            <mat-form-field  class="mat-form-field-fluid">
+                                <input matInput [formControl]="usuarioAsesor" placeholder="Usuario Asesor: " />
+                            </mat-form-field>
+                        </div>
+                    </div>
                     <div class="row mt-2">
                         <div class="col-8">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Observacion Del Asesor: </mat-label>
                                 <textarea class="form-control border" rows="5"
-                                placeholder="Observacion Del Asesor: " [formControl]="observacionAsesor" matInput> {{ observacion }}</textarea>
+                                placeholder="Observacion Del Asesor: " [formControl]="observacionAsesor" matInput> {{ observacion }} </textarea>
                             </mat-form-field>
                         </div>
                         <div class="col-8">
@@ -333,7 +340,6 @@
                                 placeholder="Observacion Del Aprobador: " matInput></textarea>
                             </mat-form-field>
                         </div>
-                        
                     </div>
                     <div class="row mt-5">
                         <div class="col-4">

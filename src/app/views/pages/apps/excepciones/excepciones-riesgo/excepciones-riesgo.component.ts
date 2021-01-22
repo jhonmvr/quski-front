@@ -62,6 +62,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   public montoActual = new FormControl('', []);
   public valorComercial = new FormControl('', []);
   public valorAvaluo = new FormControl('', []);
+  public usuarioAsesor = new FormControl('', []);
+
 
   constructor(
     private route: ActivatedRoute,
@@ -84,6 +86,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.formDisable.addControl('telefonoDomicilio', this.telefonoDomicilio);
     this.formDisable.addControl('telefonoMovil', this.telefonoMovil);
     this.formDisable.addControl('email', this.email);
+    this.formDisable.addControl('usuarioAsesor', this.usuarioAsesor);
     this.formDatosExcepcion.addControl('observacionAprobador', this.observacionAprobador);
     this.formDatosExcepcion.addControl('cobertura', this.cobertura);
   }
@@ -149,8 +152,9 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.observacionAsesor.disable();
     this.calcularOpciones();
     this.camposAdicinales( );
-    //console.log('Mi excepcion --> ', this.excepcion);
     this.observacion = this.excepcion.observacionAsesor;
+    this.observacionAsesor.setValue( this.excepcion.observacionAsesor );
+    this.usuarioAsesor.setValue( this.excepcion.idAsesor);
     this.loadingSubject.next(false);
   }
   public simular(){ 

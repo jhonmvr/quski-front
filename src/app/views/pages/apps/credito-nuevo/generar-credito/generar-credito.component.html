@@ -4,6 +4,11 @@
 <re-portlet>
     <re-portlet-header [title]="'Generar Credito'" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
+            <a (click)="regresar()" matTooltip="Regresar a gestion cliente" style="font-size: 12px; vertical-align: middle;">
+				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+					arrow_back</mat-icon>
+				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+			</a>
 			<a href="javascript:void(0);" matTooltip="Solicitar Aprobacion" style="font-size: 12px; vertical-align: middle;" (click)="solicitarAprobacion()">
 				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
 				</mat-icon>

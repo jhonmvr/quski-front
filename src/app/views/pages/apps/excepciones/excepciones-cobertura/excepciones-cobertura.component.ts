@@ -5,6 +5,7 @@ import { NegociacionService } from '../../../../../core/services/quski/negociaci
 import { CalculadoraService } from '../../../../../core/services/quski/calculadora.service';
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
+import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
@@ -60,6 +61,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   public cobertura = new FormControl('', [Validators.required, ]);
   public observacionAprobador = new FormControl('', [Validators.required]);
   public observacionAsesor = new FormControl('', []);
+  public usuarioAsesor = new FormControl('', []);
 
   public coberturaActual = new FormControl('', []);
   public montoActual = new FormControl('', []);
@@ -74,6 +76,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     private dialog: MatDialog,
     private neg: NegociacionService,
     private exc: ExcepcionService,
+    private par: ParametroService,
     private cal: CalculadoraService
 
   ) {
@@ -88,6 +91,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.formDisable.addControl('telefonoMovil', this.telefonoMovil);
     this.formDisable.addControl('email', this.email);
     this.formDisable.addControl('observacionAsesor', this.observacionAsesor);
+    this.formDisable.addControl('usuarioAsesor', this.usuarioAsesor);
     this.formDatosExcepcion.addControl('observacionAprobador', this.observacionAprobador);
     this.formDatosExcepcion.addControl('cobertura', this.cobertura);
   }
@@ -156,31 +160,41 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.dataSourceTasacion.data = wp.joyas;
     this.calcularOpciones();
     this.camposAdicinales( wp );
-    //console.log('Mi excepcion --> ', this.excepcion);
-    this.observacion = this.excepcion.observacionAsesor;
+    this.observacionAsesor.setValue( this.excepcion.observacionAsesor );
+    this.usuarioAsesor.setValue( this.excepcion.idAsesor );
     this.loadingSubject.next(false);
   }
   public simular(){ 
     this.loadingSubject.next(true);
-    //console.log('COBERTURA ---> ', this.cobertura.value )
-    if(this.cobertura.valid && this.observacionAprobador.valid  && this.cobertura.value <= 80){
-      this.wp.proceso.proceso == "RENOVACION" ? 
-      this.cal.simularOfertaExcepcionadaRenovacion(this.wp.credito.id, this.cobertura.value).subscribe( (data: any) =>{
-        !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
-        this.simulado = data.entidades ? true : false;
-        this.loadingSubject.next(false);
-      },err=>{
-        this.loadingSubject.next(false);
-      }):this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{
-        !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
-        this.simulado = data.entidades ? true : false;
-        this.loadingSubject.next(false);
-        },err=>{
+    this.par.findByNombre('COBERTURA_MINIMA').subscribe( (data: any) =>{
+      if(data.entidad){
+        console.log('Quiero el valor =>', data.entidad.valor);
+        if(this.cobertura.valid && this.observacionAprobador.valid  && this.cobertura.value >= data.entidad.valor){
+          this.wp.proceso.proceso == "RENOVACION" ? 
+          this.cal.simularOfertaExcepcionadaRenovacion(this.wp.credito.id, this.cobertura.value).subscribe( (data: any) =>{
+            !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
+            this.simulado = data.entidades ? true : false;
+            this.loadingSubject.next(false);
+          },err=>{
+            this.loadingSubject.next(false);
+          }):this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{
+            !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
+            this.simulado = data.entidades ? true : false;
+            this.loadingSubject.next(false);
+            },err=>{
+              this.loadingSubject.next(false);
+            });
+        }else{
+          this.sinNoticeService.setNotice('COMPLETE LA SECCION CORRECTAMENTE','error');
           this.loadingSubject.next(false);
-        });
-    }else{
-      this.sinNoticeService.setNotice('COMPLETE LA SECCION CORRECTAMENTE','error');
-    }
+        }
+      }else{
+        this.sinNoticeService.setNotice('ERROR CARGANDO PARAMETRO DE COBERTURA MINIMA','error');
+        this.loadingSubject.next(false);
+
+      }
+    });
+    
   }
   public calcularOpciones() {
     if (this.dataSourceTasacion && this.dataSourceTasacion.data && this.dataSourceTasacion.data.length > 0) {

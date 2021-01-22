@@ -905,20 +905,23 @@ export class GestionNegociacionComponent implements OnInit {
           this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
           this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
         }
+        if(data.entidad.simularResult.codigoError == 3){
+          this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
+        }
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
             this.selection = new SelectionModel<any>(true, []);
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+        }else{
+          this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
         }
         this.myStepper.selectedIndex = 5;
       },err=>{
         this.loadingSubject.next(false);
       });
 
-    } else {
-      this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
-    }
+    } 
 
   }
   updateCliente(event,control){

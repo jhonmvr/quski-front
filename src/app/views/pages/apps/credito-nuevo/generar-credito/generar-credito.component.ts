@@ -34,6 +34,7 @@ import { BehaviorSubject } from 'rxjs';
 export class GenerarCreditoComponent implements OnInit {
   /** @VARIABLES_GLOBALES **/
   public operacionNuevo: OperacionNuevoWrapper;
+  private item: number;
   public loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
@@ -184,8 +185,8 @@ export class GenerarCreditoComponent implements OnInit {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.id) {
         this.loadingSubject.next(true);
-        const id: number = json.params.id;
-        this.cre.traerCreditoNuevo(id).subscribe((data: any) => {
+        this.item = json.params.id;
+        this.cre.traerCreditoNuevo(this.item).subscribe((data: any) => {
           if (data.entidad) {
             this.operacionNuevo = data.entidad;
             this.validarOperacion(this.operacionNuevo);
@@ -384,6 +385,9 @@ export class GenerarCreditoComponent implements OnInit {
         this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
       }
     },er=>{this.loadingSubject.next(false)});
+  }
+  public  regresar(){
+    this.router.navigate(['cliente/gestion-cliente/NEG/',this.item]);
   }
   public generarCredito(anular?: boolean ) {
     if(this.formFunda.valid && this.formInstruccion.valid && this.srcFunda && this.srcJoya){

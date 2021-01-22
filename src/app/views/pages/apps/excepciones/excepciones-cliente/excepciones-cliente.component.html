@@ -299,40 +299,34 @@
                                 <mat-card class="warning">
                                     <span class="material-icons warning-icons">report_problem </span>
                                     <span>{{mensaje}}</span>
-
-
-
-
                                 </mat-card>
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-md-8">
-                                <mat-label> Observacion Del Asesor: </mat-label>
+                            <div class="col-4">
+                                <mat-form-field  class="mat-form-field-fluid">
+                                    <input matInput [formControl]="usuarioAsesor" placeholder="Usuario Asesor: " />
+                                </mat-form-field>
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-xl-8">
-                                <textarea class="form-control border" rows="3" [formControl]="observacionAsesor"
-                                    placeholder="Observacion Del Asesor: " matInput> {{ observacionAsesor }}</textarea>
+                        <div class="row mt-2">
+                            <div class="col-8">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <mat-label>Observacion Del Asesor: </mat-label>
+                                    <textarea class="form-control border" rows="5"
+                                    placeholder="Observacion Del Asesor: " [formControl]="observacionAsesor" matInput> {{ observacion }} </textarea>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-8">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <mat-label>Observacion Del Aprobador: </mat-label>
+                                    <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
+                                    placeholder="Observacion Del Aprobador: " matInput></textarea>
+                                </mat-form-field>
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-md-8">
-                                <mat-label> Observacion Del Aprobador: </mat-label>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-xl-8">
-                                <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
-                                    placeholder="Observacion Del Aprobador: "
-                                    matInput>{{ observacionAprobador }}</textarea>
-                            </div>
-                        </div>
-                    <br>
                         <div class="row">
                             <div class="col-md-2">
-
                             </div>
                             <div class="col-md-3">
                                 <button mat-button mat-raised-button color="primary" (click)="aprobarExcepcion('SI')">Aprobar Excepcion</button>
