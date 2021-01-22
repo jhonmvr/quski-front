@@ -22,14 +22,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
-
 @Component({
   selector: 'kt-generar-credito',
   templateUrl: './generar-credito.component.html',
   styleUrls: ['./generar-credito.component.scss'],
-
 })
-
 
 export class GenerarCreditoComponent implements OnInit {
   /** @VARIABLES_GLOBALES **/
@@ -64,7 +61,6 @@ export class GenerarCreditoComponent implements OnInit {
   public numeroCuenta = new FormControl('', Validators.required);
   public tipoCliente = new FormControl('', [Validators.required]);
   public firmanteOperacion = new FormControl('', [Validators.required]);
-  
   /** @FORM_CREDITO **/
   public formCredito: FormGroup = new FormGroup({});
   public tipoCartera = new FormControl('');
@@ -479,9 +475,12 @@ export class GenerarCreditoComponent implements OnInit {
         data: envioModel
       });
       dialogRef.afterClosed().subscribe(r => {
+        console.log('r => ', r);
         if (r) {
           this.sinNotSer.setNotice("ARCHIVO CARGADO CORRECTAMENTE", "success");
           this.cargarFotoHabilitante(idTipoDocumentoS, procesoS, referenciaS);
+        }else{
+          this.sinNotSer.setNotice("ERROR CARGANDO ARCHIVO", "error");
         }
       });
     } else {
@@ -494,6 +493,7 @@ export class GenerarCreditoComponent implements OnInit {
       if(data.entidad.tbQoTipoDocumento.tipoDocumento == "FOTO JOYAS"){
         this.operacionNuevo.credito.uriImagenSinFunda = data.entidad.objectId;
       }
+      const algo = 'algo';
       if(data.entidad.tbQoTipoDocumento.tipoDocumento == "FOTO FUNDA"){
         this.operacionNuevo.credito.uriImagenConFunda = data.entidad.objectId;
       }
@@ -506,7 +506,8 @@ export class GenerarCreditoComponent implements OnInit {
           this.srcFunda= file.fileBase64;
         }
       });
-      
+    }, error =>{
+
     });
   }
   public solicitarAprobacion(){

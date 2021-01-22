@@ -133,8 +133,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   public formaPagoValoracion = new FormControl('', []);
   public costoTasacion = new FormControl('', []);
   public formaPagoTasacion = new FormControl('', []);
-  public costoResguardo = new FormControl('', []);
-  public formaPagoResguardo = new FormControl('', []);
+  public custodiaDevengada = new FormControl('', []);
+  public formaPagoCustodiaDevengada = new FormControl('', []);
   public costoSeguro = new FormControl('', []);
   public formaPagoSeguro = new FormControl('', []);
   public solca = new FormControl('', []);
@@ -145,6 +145,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
   /** @INSTRUCCION_OPERATIVA */
   public tipoCuenta = new FormControl('', []);
+  public excepcionOperativa = new FormControl('', []);
   public numeroCuenta = new FormControl('', []);
   public firmaRegularizada = new FormControl('', []);
   public diaPagoFijo = new FormControl('', []);
@@ -250,8 +251,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.formDisable.addControl( "formaPagoValoracion", this.formaPagoValoracion );
     this.formDisable.addControl( "costoTasacion", this.costoTasacion );
     this.formDisable.addControl( "formaPagoTasacion", this.formaPagoTasacion );
-    this.formDisable.addControl( "costoResguardo", this.costoResguardo );
-    this.formDisable.addControl( "formaPagoResguardo", this.formaPagoResguardo );
+    this.formDisable.addControl( "custodiaDevengada", this.custodiaDevengada );
+    this.formDisable.addControl( "formaPagoCustodiaDevengada", this.formaPagoCustodiaDevengada );
     this.formDisable.addControl( "costoSeguro", this.costoSeguro );
     this.formDisable.addControl( "formaPagoSeguro", this.formaPagoSeguro );
     this.formDisable.addControl( "solca", this.solca );
@@ -276,6 +277,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.formDisable.addControl( "montoFinanciado", this.montoFinanciado );
     this.formDisable.addControl( "cuota", this.cuota );
     this.formDisable.addControl( "totalInteres", this.totalInteres );
+    this.formDisable.addControl( "excepcionOperativa", this.excepcionOperativa );
 
   }
 
@@ -421,8 +423,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.formaPagoValoracion.setValue( ap.credito.formaPagoValoracion);
     this.costoTasacion.setValue( ap.credito.costoTasacion);
     this.formaPagoTasacion.setValue( ap.credito.formaPagoTasador);
-    this.costoResguardo.setValue( ap.credito);
-    this.formaPagoResguardo.setValue( ap.credito);
+    this.custodiaDevengada.setValue(ap.credito.custodiaDevengada);
+    this.formaPagoCustodiaDevengada.setValue( ap.credito.formaPagoCustodiaDevengada);
     this.costoSeguro.setValue( ap.credito.costoSeguro);
     this.formaPagoSeguro.setValue( ap.credito.formaPagoSeguro);
     this.solca.setValue( ap.credito.impuestoSolca);
@@ -434,10 +436,9 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     /** @DATOS_INSTRUCCION_OPERATIVA */
     this.tipoCuenta.setValue( ap.cuenta.banco );
     this.numeroCuenta.setValue( ap.cuenta.cuenta );
-    this.firmaRegularizada.setValue( "No tengo" );
-    this.diaPagoFijo.setValue( ap.credito.pagoDia );
-    this.firmadaOperacion.setValue( ap.credito.firmanteOperacion );
-    this.tipoCliente.setValue( "DEUDOR" );
+    this.firmaRegularizada.setValue( ap.credito.firmanteOperacion ? ap.credito.firmanteOperacion  :  'Falta valdiar' );
+    this.diaPagoFijo.setValue( ap.credito.pagoDia ? ap.credito.pagoDia : 'No aplica');
+    this.firmadaOperacion.setValue( ap.credito.firmanteOperacion ? ap.credito.firmanteOperacion  :  'Falta valdiar' );
 
     /** @OPERACION_NUEVA */
     this.tipoCartera.setValue( ap.credito.tipoCarteraQuski );
@@ -447,7 +448,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.estadoOperacion.setValue( ap.credito.estadoSoftbank );
     this.fechaVencimiento.setValue( ap.credito.fechaVencimiento );
     this.fechaEfectiva.setValue( ap.credito.fechaEfectiva );
-    this.valorDesembolso.setValue( ap.credito.montoDesembolso );
+    this.valorDesembolso.setValue( ap.credito.montoDesembolso ? ap.credito.montoDesembolso : 'Falta validar'  );
     this.montoFinanciado.setValue(  ap.credito.montoFinanciado );
     this.cuota.setValue( ap.credito.cuota );
     this.totalInteres.setValue(  ap.credito.saldoInteres );

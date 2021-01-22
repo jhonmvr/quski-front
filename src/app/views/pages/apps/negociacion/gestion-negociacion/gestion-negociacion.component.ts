@@ -430,7 +430,6 @@ export class GestionNegociacionComponent implements OnInit {
       data: cedula
     });
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
-      //console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
       if (respuesta) {
         this.iniciarNegociacionEquifax(cedula);
       } else {
@@ -818,9 +817,10 @@ export class GestionNegociacionComponent implements OnInit {
       joya.pesoNeto = this.pesoNeto.value;
       joya.tipoJoya = this.tipoJoya.value.codigo;
       joya.tipoOro = this.tipoOro.value.codigo;
-      joya.tienePiedras = this.tienePiedras.value =='S'?true:false;
+      joya.tienePiedras = this.tienePiedras.value =='S' ? true  : false;
       joya.detallePiedras = this.detallePiedras.value;
-      joya.pesoNeto = Number(joya.pesoBruto) - (Number(joya.descuentoPesoPiedra) + Number(joya.descuentoSuelda));
+      joya.pesoNeto = Number((Number(joya.pesoBruto) - (Number(joya.descuentoPesoPiedra) + Number(joya.descuentoSuelda))).toFixed(2));
+      console.log("Peso neto ==> ", joya.pesoNeto);
       joya.valorOro = this.valorOro.value;
       //joya.valorAvaluo = this.valorAvaluo.value;
       //joya.valorOro = this.valorOro.value;
@@ -898,6 +898,10 @@ export class GestionNegociacionComponent implements OnInit {
   /** ********************************************** @OPCIONES ***************************************/
   public calcularOpciones(montoSolicitado) {
     if (this.dataSourceTasacion.data.length > 0) {
+      if(this.dataSourceCreditoNegociacion.data && montoSolicitado && ( montoSolicitado  > this.dataSourceCreditoNegociacion.data[0].montoFinanciado  ) ){
+        this.sinNotSer.setNotice("EL MONTO SOLICITADO ES MAYOR AL MONTO FINANCIADO ACTUAL", 'error');
+        return;
+      }
       this.loadingSubject.next(true);
       this.cal.simularOferta(this.negoW.credito.id,montoSolicitado,this.riesgoTotal).subscribe((data: any) => {
         this.loadingSubject.next(false);
@@ -920,13 +924,9 @@ export class GestionNegociacionComponent implements OnInit {
       },err=>{
         this.loadingSubject.next(false);
       });
-
     } 
-
   }
   updateCliente(event,control){
-    //console.log("=========>",event,control);
-
     if(control.invalid || (event instanceof  KeyboardEvent && event.key !='Tab') ){
       return;
     }
@@ -945,12 +945,9 @@ export class GestionNegociacionComponent implements OnInit {
           
         }
       });
-    }else{
-      //console.log("no guardar")
     }
   }
   buildCliente(){
-    //console.log("guardad")
     if( this.telefonoFijo){
       this.telefonoFijo.numero = this.telefonoDomicilio.value
     }else if(this.telefonoDomicilio.value){
@@ -967,7 +964,6 @@ export class GestionNegociacionComponent implements OnInit {
         numero:this.movil.value
       }
     }
-   
     let cliente = {
       id: this.tbQoCliente.id,
       cedulaCliente:this.tbQoCliente.cedulaCliente,
@@ -978,7 +974,6 @@ export class GestionNegociacionComponent implements OnInit {
       publicidad:this.publicidad.value,
       tbQoTelefonoClientes: new Array()
     };
-
     if(this.telefonoMovil){
       cliente.tbQoTelefonoClientes.push(this.telefonoMovil);
     }
@@ -1034,7 +1029,6 @@ export class GestionNegociacionComponent implements OnInit {
   private _normalizeValue(value: string): string {
     return value.toLowerCase().replace(/\s/g, '');
   }
-
   selectTienePiedras(){
     if(this.tienePiedras.value =='S'){
       this.formTasacion.addControl("detallePiedras", this.detallePiedras);
@@ -1044,26 +1038,20 @@ export class GestionNegociacionComponent implements OnInit {
       this.formTasacion.removeControl("descuentoPiedra");
     }
   }
-
   masterToggle(event) {
- 
     this.selection.clear()        
-    this.selection.select(event)
-    
-}
-
-setPesoNeto(){
-  try{
-    let v = (Number(this.pesoBruto.value) - (Number(this.descuentoSuelda.value)+ Number (this.descuentoPiedra.value)))
-    this.pesoNeto.setValue(v.toFixed(2));
-  }catch{
-    this.pesoNeto.setValue('0');
+    this.selection.select(event) 
   }
-  
+  setPesoNeto(){
+    try{
+      let v = (Number(this.pesoBruto.value) - (Number(this.descuentoSuelda.value)+ Number (this.descuentoPiedra.value)))
+      this.pesoNeto.setValue(v.toFixed(2));
+    }catch{
+      this.pesoNeto.setValue('0');
+    }
+    
+  }
 }
-  
-}
-
 export class Pais{
   id;
   codigo;
