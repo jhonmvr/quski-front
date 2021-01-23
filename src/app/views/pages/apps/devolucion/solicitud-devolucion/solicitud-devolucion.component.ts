@@ -193,7 +193,7 @@ datos
     this.enableHerederoButton = this.enableHeredero.asObservable();
     this.enableHeredero.next(false);
     this.setFechaSistema();
-    this.funcionToPdf();
+
     
     this.datos = this.decodeObjetoDatos(this.objetoDatos);
   
