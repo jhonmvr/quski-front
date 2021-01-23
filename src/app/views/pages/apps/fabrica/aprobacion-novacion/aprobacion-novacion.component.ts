@@ -31,7 +31,7 @@ export class AprobacionNovacionComponent implements OnInit {
   public loadingSubject = new BehaviorSubject<boolean>(false);
   public loading;
   public usuario: string;
-  public agencia: number;
+  public agencia: any;
   public fechaActual: string;
   public catalogos: CatalogosWrapper;
   public crediW: AprobacionWrapper;
@@ -313,7 +313,7 @@ export class AprobacionNovacionComponent implements OnInit {
     this.subheaderService.setTitle('Aprobación De Credito');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.agencia = 2;
+    this.agencia = localStorage.getItem( 'idAgencia' );
     this.formDisable.disable();
   }
   public descargarComprobante(row) {

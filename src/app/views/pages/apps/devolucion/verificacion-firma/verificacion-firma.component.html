@@ -94,7 +94,7 @@
                     </div>
                     <div class="col-md-3">
                         <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="fechaNacimiento" readonly>
+                            <input matInput [formControl]="fechaNacimiento" [value]="fechaNacimiento.value | date:'yyyy-MM-dd'" readonly>
                         </mat-form-field>
                     </div>
                     <div class="col-md-1">
@@ -212,12 +212,12 @@
         
                         <ng-container matColumnDef="fechaAprobacion">
                         <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.fechaAprobacion}}</mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.fechaAprobacion | date:'yyyy-MM-dd'}}</mat-cell>
                         
                         </ng-container>
                         <ng-container matColumnDef="fechaVencimiento">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de Vencimiento</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{element.fechaVencimiento}} </mat-cell>
+                            <mat-cell *matCellDef="let element"> {{element.fechaVencimiento | date:'yyyy-MM-dd'}} </mat-cell>
                              
                         </ng-container>
                         <ng-container matColumnDef="monto">

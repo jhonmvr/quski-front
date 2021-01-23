@@ -110,10 +110,10 @@ export class DetalleNegociacionComponent implements OnInit {
     this.campania.setValue( ap.credito.tbQoNegociacion.tbQoCliente.campania );
     this.aprobadoMupi.setValue( ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi );
     !ap.telefonos ? null : ap.telefonos.forEach( e=>{
-      if( e.tipoTelefono == 'M'){
+      if( e.tipoTelefono == 'CEL'){
         this.telefonoMovil.setValue( e.numero );
       }
-      if(e.tipoTelefono == 'F'){
+      if(e.tipoTelefono == 'DOM'){
         this.telefonoDomicilio.setValue( e.numero );
       }
     }); 

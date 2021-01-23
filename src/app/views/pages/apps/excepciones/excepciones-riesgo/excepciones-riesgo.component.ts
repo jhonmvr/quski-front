@@ -62,6 +62,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   public montoActual = new FormControl('', []);
   public valorComercial = new FormControl('', []);
   public valorAvaluo = new FormControl('', []);
+  public usuarioAsesor = new FormControl('', []);
+
 
   constructor(
     private route: ActivatedRoute,
@@ -84,6 +86,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.formDisable.addControl('telefonoDomicilio', this.telefonoDomicilio);
     this.formDisable.addControl('telefonoMovil', this.telefonoMovil);
     this.formDisable.addControl('email', this.email);
+    this.formDisable.addControl('usuarioAsesor', this.usuarioAsesor);
     this.formDatosExcepcion.addControl('observacionAprobador', this.observacionAprobador);
     this.formDatosExcepcion.addControl('cobertura', this.cobertura);
   }
@@ -95,8 +98,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.wp = null;
     this.loading = this.loadingSubject.asObservable();
     this.busquedaNegociacion();
-    this.usuario = localStorage.getItem(atob(environment.userKey));
-    this.agencia = 2;
+    this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.agencia = localStorage.getItem( 'idAgencia' );
   }
   private camposAdicinales(){
     let totalValorAvaluo: number = 0;
@@ -149,8 +152,9 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.observacionAsesor.disable();
     this.calcularOpciones();
     this.camposAdicinales( );
-    //console.log('Mi excepcion --> ', this.excepcion);
     this.observacion = this.excepcion.observacionAsesor;
+    this.observacionAsesor.setValue( this.excepcion.observacionAsesor );
+    this.usuarioAsesor.setValue( this.excepcion.idAsesor);
     this.loadingSubject.next(false);
   }
   public simular(){ 
@@ -203,7 +207,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.exc.negarExcepcion(this.excepcion.id, this.observacionAprobador.value, this.usuario).subscribe( (data: any) =>{
+          this.exc.negarExcepcion(this.excepcion.id, this.observacionAprobador.value, this.usuario,this.wp.proceso.proceso).subscribe( (data: any) =>{
             if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error al negar la excepcion','error')}
           });
         }
@@ -221,15 +225,13 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.exc.aprobarCobertura(this.excepcion.id, this.observacionAprobador.value, this.usuario, this.cobertura.value).subscribe( (data: any) =>{
+          this.exc.aprobarCobertura(this.excepcion.id, this.observacionAprobador.value, this.usuario,this.cobertura.value,this.wp.proceso.proceso).subscribe( (data: any) =>{
             if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error  al aprobar la excepcion','error')}
           });
         }
       });
     }else{ this.sinNoticeService.setNotice('COMPLETE EL CAMPO DE OBSERVACION','error') }
   }
-
-  
   aprobarExcepcion(aprueba){
     if(this.observacionAprobador.invalid){
       this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE EL LOS CAMPOS OBLIGATORIOS','warning');

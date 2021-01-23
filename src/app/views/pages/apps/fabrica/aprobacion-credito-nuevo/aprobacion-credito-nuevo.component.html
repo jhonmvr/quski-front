@@ -118,7 +118,7 @@
               </div>
               <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
-                  <input [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento:" matInput />
+                  <input [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento:" matInput [value]="fechaNacimiento.value | date:'yyyy-MM-dd'" />
                 </mat-form-field>
               </div>
               <div class="col-md-4">
@@ -133,7 +133,7 @@
               </div>
               <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
-                  <input [formControl]="fechaUltimaActualizazion" placeholder="Fecha Última Actualización:" matInput />
+                  <input [formControl]="fechaUltimaActualizazion" placeholder="Fecha Última Actualización:" matInput [value]="fechaUltimaActualizazion | date:'yyyy-MM-dd'" />
                 </mat-form-field>
               </div>
             </div>
@@ -149,11 +149,6 @@
               <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
                   <input [formControl]="telefonoMovil" placeholder="Telefono Movil:" matInput />
-                </mat-form-field>
-              </div>
-              <div class="col-md-4">
-                <mat-form-field class="mat-form-field-fluid">
-                  <input [formControl]="telefonoOficina" placeholder="Telefono de Oficina/Otros:" matInput />
                 </mat-form-field>
               </div>
               <div class="col-md-4">
@@ -428,91 +423,11 @@
         <mat-tab-group mat-align-tabs="start">
           <mat-tab label="Tasacion">
             <div class="row mt-1 mb-1">
-              <div class="col-md-10 offset-md-1">
-                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource">
-                  <ng-container matColumnDef="total">
-                      <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                      <mat-cell *matCellDef="let element"> </mat-cell>
-                      <mat-footer-cell *matFooterCellDef>  Total:  </mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="numeroPiezas">
-                      <mat-header-cell *matHeaderCellDef>Numero Piezas</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{element.numeroPiezas}}</mat-cell>
-                      <mat-footer-cell *matFooterCellDef>  {{ totalNumeroJoya  }}</mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="tipoOro">
-                      <mat-header-cell *matHeaderCellDef >Tipo de Oro</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{element.tipoOro}} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="tipoJoya">
-                      <mat-header-cell *matHeaderCellDef >Tipo de Joya</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.tipoJoya }} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="estadoJoya">
-                      <mat-header-cell *matHeaderCellDef >Estado de Joya</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.estadoJoya }} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="descripcion">
-                      <mat-header-cell *matHeaderCellDef>Descripcion</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.descripcion}} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="pesoBruto">
-                      <mat-header-cell *matHeaderCellDef>Peso Bruto (Gr)</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.pesoBruto}} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef> {{ totalPesoB  }} </mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="tieneDescuento">
-                      <mat-header-cell *matHeaderCellDef>Tiene descuentos</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="descuentoPesoPiedra">
-                      <mat-header-cell *matHeaderCellDef>Descuento Peso Piedra</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.descuentoPesoPiedra}} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="descuentoSuelda">
-                      <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.descuentoSuelda}} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="pesoNeto">
-                      <mat-header-cell *matHeaderCellDef>Peso Neto (Gr)</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.pesoNeto}} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef> {{ totalPesoN  }} </mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="valorOro">
-                      <mat-header-cell *matHeaderCellDef>Valor oro</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.valorOro | currency: "USD":true:"1.2"}} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef> {{ totalValorO  }}  </mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="valorAvaluo">
-                      <mat-header-cell *matHeaderCellDef>Valor Avaluo</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.valorAvaluo | currency: "USD":true:"1.2"}} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef> {{ totalValorA | currency: "USD":true:"1.2" }} </mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="valorComercial">
-                      <mat-header-cell *matHeaderCellDef>Valor Comercial  </mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.valorComercial | currency: "USD":true:"1.2"}} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef> {{ totalValorC | currency: "USD":true:"1.2" }} </mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="valorRealizacion">
-                      <mat-header-cell *matHeaderCellDef>Valor Realizacion</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.valorRealizacion | currency: "USD":true:"1.2"}} </mat-cell>
-                      <mat-footer-cell *matFooterCellDef> {{ totalValorR | currency: "USD":true:"1.2" }}  </mat-footer-cell>
-                  </ng-container>
-
-                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                  <mat-footer-row *matFooterRowDef="displayedColumns;"></mat-footer-row>
-                </mat-table>
+              <div class="col-md-12">
+                <kt-tabla-tasacion *ngIf="this.crediW;" [data]='this.crediW.joyas'></kt-tabla-tasacion>
               </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
               <div class="offset-md-3 col-md-3">
                 <mat-form-field class="mat-form-field-fluid">
                   <input [formControl]="numeroFunda" placeholder="Número Funda:" matInput />
@@ -546,200 +461,185 @@
               </div>
             </div>
           </mat-tab>
-
-
         </mat-tab-group>
       </mat-step>
-
-
       <mat-step label="Datos de crédito nuevo">
         <div class="row">
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="plazo" placeholder="Plazo:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="tipoOferta" placeholder="Tipo Oferta:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="costoCustodia" placeholder="Costo Custodia:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="formaPagoCustodia" placeholder="Forma de Pago Custodia:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="costoTransporte" placeholder="Costo Transporte:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="formaPagoTransporte" placeholder="Forma de Pago Transporte:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="costoValoracion" placeholder="Costo Valoración:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="formaPagoValoracion" placeholder="Forma de Pago Valoración:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="costoTasacion" placeholder="Costo Tasación:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="formaPagoTasacion" placeholder="Forma de Pago Tasación:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="costoResguardo" placeholder="Costo Resguardo:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="formaPagoResguardo" placeholder="Forma de Pago Resguardo:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="costoSeguro" placeholder="Costo Seguro:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="formaPagoSeguro" placeholder="Forma de Pago Seguro:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="solca" placeholder="Solca:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="formaPagoSolca" placeholder="Forma de Pago Solca:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="aPagarCliente" placeholder="A Pagar Cliente:" matInput />
-            </mat-form-field>
-          </div>
-
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="aRecibirCliente" placeholder="A Recibir Cliente:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="totalCostoNuevaOperacion" placeholder="Total Costo Nueva Operacion:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input matInput [formControl]="tipoCuenta" placeholder="Tipo de Cuenta:" />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="numeroCuenta" placeholder="Número de Cuenta:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="firmaRegularizada" placeholder="Firma Regularizada :" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="diaPagoFijo" placeholder="Día Pago Fijo:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="firmadaOperacion" placeholder="Firmada Operación:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="tipoCliente" placeholder="Tipo Cliente:" matInput />
-            </mat-form-field>
-          </div>
-        </div>
-      </mat-step>
-      <mat-step label="Datos De la Operación Nueva">
-        <div class="row">
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="tipoCartera" placeholder="Tipo de Cartera:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="tablaAmortizacion" placeholder="Tabla Amortizacion" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
               <input [formControl]="numeroOperacion" placeholder="Número de la operación:" matInput />
             </mat-form-field>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
               <input [formControl]="descripcionProducto" placeholder="Descripción del Producto:" matInput />
             </mat-form-field>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
               <input [formControl]="estadoOperacion" placeholder="Estado de la Operación:" matInput />
             </mat-form-field>
           </div>
-          <div class="col-md-3 col-md-offset-3">
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="tipoOferta" placeholder="Tipo Oferta:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="plazo" placeholder="Plazo:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="diaPagoFijo" placeholder="Día Pago Fijo:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input matInput [formControl]="tipoCuenta" placeholder="Tipo de Cuenta:" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="numeroCuenta" placeholder="Número de Cuenta:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="firmaRegularizada" placeholder="Firma Regularizada :" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="firmadaOperacion" placeholder="Firmada Operación:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="tipoCartera" placeholder="Tipo de Cartera:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="tablaAmortizacion" placeholder="Tabla Amortizacion" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
               <input [formControl]="fechaVencimiento" placeholder="Fecha de vencimiento:" matInput />
             </mat-form-field>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
               <input [formControl]="fechaEfectiva" placeholder="Fecha Efectiva:" matInput />
             </mat-form-field>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
               <input [formControl]="valorDesembolso" placeholder="Valor Desembolso:" matInput />
             </mat-form-field>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
               <input [formControl]="montoFinanciado" placeholder="Monto Financiado:" matInput />
             </mat-form-field>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="cuota" placeholder="Cuota:" matInput />
+              <input [formControl]="formaPagoCustodia" placeholder="Forma de Pago Custodia:" matInput />
             </mat-form-field>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="costoCustodia" placeholder="Costo Custodia:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoTransporte" placeholder="Forma de Pago Transporte:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="costoTransporte" placeholder="Costo Transporte:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoValoracion" placeholder="Forma de Pago Valoración:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="costoValoracion" placeholder="Costo Valoración:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoTasacion" placeholder="Forma de Pago Tasación:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="costoTasacion" placeholder="Costo Tasación:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoCustodiaDevengada" placeholder="Forma de Pago Custodia Devengada:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="custodiaDevengada" placeholder="Costo Devengada:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoSeguro" placeholder="Forma de Pago Seguro:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="costoSeguro" placeholder="Costo Seguro:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="formaPagoSolca" placeholder="Forma de Pago Solca:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="solca" placeholder="Solca:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="fechaVencimiento" placeholder="Fecha de vencimiento:" matInput [value]="fechaVencimiento.value | date:'yyyy-MM-dd'" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="fechaEfectiva" placeholder="Fecha Efectiva:" matInput [value]="fechaEfectiva.value | date:'yyyy-MM-dd'" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="totalCostoNuevaOperacion" placeholder="Total Costo Nueva Operacion:" matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
               <input [formControl]="totalInteres" placeholder="Total Interés:" matInput />
             </mat-form-field>
           </div>
-
+          <div class="col-md-6">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="cuota" placeholder="Cuota:" matInput />
+            </mat-form-field>
+          </div>
         </div>
       </mat-step>
 

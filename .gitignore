@@ -1,5 +1,9 @@
-node_modules
-Save.code-workspace
-.vscode/
-.gitignore
+src/app/core/services/base.service.ts
+src/environments/environment.ts
 workspace.code-workspace
+Save.code-workspace
+node_modules
+.gitignore
+.vscode/
+src/index.html
+.gitignore

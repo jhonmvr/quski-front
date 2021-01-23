@@ -174,8 +174,8 @@ export class ListCreditoComponent implements OnInit {
       e.esMigrado = e.esMigrado ? 'SI' : 'NO';
       e.tablaArmotizacion = e.codigoTipoTablaArmotizacionQuski;
       e.estado = this.catEstado ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion) ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion).nombre : 'Sin Estado' : 'Sin estado';
-      e.estadoProcesoGarantia = this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia) ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia).nombre : 'Sin Estado';
-      e.estadoUbicacionGrantia = this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGrantia) ? this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGrantia).nombre : 'Sin Estado';
+      e.estadoProcesoGarantia = this.catEstadoProcesoGarantia ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia) ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia).nombre : 'Sin Estado': 'Sin Estado';
+      e.estadoUbicacionGrantia = this.catEstadoUbicacionGarantia? this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGrantia) ? this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGrantia).nombre : 'Sin Estado': 'Sin Estado';
     });
     this.paginator.length = data.numeroTotalRegistros;
   }

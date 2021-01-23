@@ -115,10 +115,22 @@ export class AutorizacionService  {
         x.accessToken='sin-token';
         x.existLogin=true;
         localStorage.setItem("reUser",credential.email); 
+        localStorage.setItem("nombre",dataLogin.nombre); 
+        localStorage.setItem("email",dataLogin.email); 
+        localStorage.setItem("telefono",dataLogin.telefono); 
         if( dataLogin.roles ){
           localStorage.setItem(environment.rolKey,dataLogin.roles[0]);
           localStorage.setItem("re1001",dataLogin.roles[0]);
             
+        }
+        if(dataLogin.agencia){
+          localStorage.setItem("idAgencia",dataLogin.agencia.id); 
+          localStorage.setItem("codigoAgencia",dataLogin.agencia.codigo); 
+          localStorage.setItem("nombreAgencia",dataLogin.agencia.nombre); 
+          localStorage.setItem("direccionAgencia",dataLogin.agencia.direccion); 
+          localStorage.setItem("idResidenciaAgencia",dataLogin.agencia.idResidencia); 
+          localStorage.setItem("idTevcolAgencia",dataLogin.agencia.idUbicacionTevcol); 
+
         }
         ////console.log( "++>FLAT MAP BUSCANDO Preturn of(x);: " ) ;
      

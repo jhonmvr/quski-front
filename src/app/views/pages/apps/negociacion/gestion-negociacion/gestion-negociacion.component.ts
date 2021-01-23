@@ -21,16 +21,14 @@ import { environment } from '../../../../../../../src/environments/environment';
 import { MatDialog, MatTableDataSource, MatStepper } from '@angular/material';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
+import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
-import { SelectionModel } from '@angular/cdk/collections';
 
-import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'kt-gestion-negociacion',
@@ -42,6 +40,7 @@ export class GestionNegociacionComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
   public loading;
   public usuario: string;
+  public agencia: string;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
   // ENTIDADES
@@ -57,8 +56,9 @@ export class GestionNegociacionComponent implements OnInit {
   private catMotivoDevolucion: Array<any>;
   filteredPais: Observable<Pais[]>;
   public totalNumeroJoya: number;
-  public totalPesoB: number;
-  public totalPesoN: number;
+  public totalPesoB: any;
+  public totalPesoN: any;
+  public totalDescgr: any;
   public totalValorA: number;
   public totalValorR: number;
   public totalValorC: number;
@@ -111,7 +111,7 @@ export class GestionNegociacionComponent implements OnInit {
   // TABLA DE TASACION
   // ---- @TODO: Crear un data source para la tabla 
   dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
-  displayedColumnsTasacion = ['Accion', 'NumeroPiezas', 'TipoOro', 'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'valorComercial', 'tienePiedras', 'detallePiedras','TipoJoya', 'EstadoJoya', 'Descripcion',];
+  displayedColumnsTasacion = ['Accion', 'NumeroPiezas', 'TipoOro','PesoBruto','PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'DescuentoSuelda', 'TipoJoya', 'EstadoJoya', 'Descripcion', 'tienePiedras','DescuentoPesoPiedra', 'detallePiedras',];
   private elementJoya;
 
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
@@ -188,6 +188,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.agencia = localStorage.getItem( 'idAgencia' );
     this.loadCatalogo();
     this.obtenerCatalogosCore();
     this.componenteVariable = false;
@@ -303,6 +304,7 @@ export class GestionNegociacionComponent implements OnInit {
   }
   private calcular() {
     this.totalPesoN = 0;
+    this.totalDescgr = 0;
     this.totalPesoB = 0;
     this.totalValorR = 0;
     this.totalValorA = 0;
@@ -311,8 +313,9 @@ export class GestionNegociacionComponent implements OnInit {
     this.totalNumeroJoya = 0
     if (this.dataSourceTasacion.data) {
       this.dataSourceTasacion.data.forEach(element => {
-        this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-        this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
+        this.totalPesoN  = (Number(this.totalPesoN) + Number(element.pesoNeto)).toFixed(2);
+        this.totalDescgr = (Number(this.totalDescgr) + Number(element.descuentoPesoPiedra)).toFixed(2);
+        this.totalPesoB  = (Number(this.totalPesoB) + Number(element.pesoBruto)).toFixed(2);
         this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
         this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
         this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
@@ -322,10 +325,9 @@ export class GestionNegociacionComponent implements OnInit {
     }
   }
   private iniciarNegociacionFromCot(id : number ){
-    this.neg.iniciarNegociacionFromCot( id, this.usuario ).subscribe( (wrapper: any) =>{
+    this.neg.iniciarNegociacionFromCot( id, this.usuario, this.agencia).subscribe( (wrapper: any) =>{
       if (wrapper.entidad.respuesta) {
         this.negoW = wrapper.entidad;
-        //console.log("NEGOCIACION INICIADA POR COT-> ", wrapper.entidad);
         if (this.negoW.excepcionBre == "") {
           this.cargarValores(this.negoW, false);
         } else {
@@ -344,8 +346,7 @@ export class GestionNegociacionComponent implements OnInit {
       return;
     }    
     this.loadingSubject.next(true);  
-    //console.log("entra a negociacion")
-      this.neg.iniciarNegociacion(this.identificacion.value, this.usuario).subscribe((wrapper: any) => {
+      this.neg.iniciarNegociacion(this.identificacion.value, this.usuario, this.agencia).subscribe((wrapper: any) => {
         if (wrapper.entidad.respuesta) {
           this.limpiarNegociacion();
           this.negoW = wrapper.entidad;
@@ -362,8 +363,8 @@ export class GestionNegociacionComponent implements OnInit {
  
   }
   private iniciarNegociacionEquifax( cedula: string ){
-    //this.loadingSubject.next(true);
-    this.neg.iniciarNegociacionEquifax( cedula, this.usuario).subscribe( (wrapper: any) =>{
+    this.loadingSubject.next(true);
+    this.neg.iniciarNegociacionEquifax( cedula, this.usuario, this.agencia).subscribe( (wrapper: any) =>{
       if (wrapper.entidad.respuesta) {
         this.limpiarNegociacion();
         this.negoW = wrapper.entidad;
@@ -375,7 +376,7 @@ export class GestionNegociacionComponent implements OnInit {
         this.cargarValores(this.negoW, false);
         
       } else {
-        //this.loadingSubject.next(false);
+        this.loadingSubject.next(false);
         this.limpiarCamposBusqueda();
         this.sinNotSer.setNotice('NO SE PUDO INICIAR NEGOCIACION, CLIENTE NO ENCONTRADO EN EQUIFAX','error')
       }
@@ -429,7 +430,6 @@ export class GestionNegociacionComponent implements OnInit {
       data: cedula
     });
     dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
-      //console.log('envio de RESP ' + respuesta + ' typeof respuesta ' + typeof (respuesta));
       if (respuesta) {
         this.iniciarNegociacionEquifax(cedula);
       } else {
@@ -438,14 +438,14 @@ export class GestionNegociacionComponent implements OnInit {
       }
     });
   }
-  private cargarValores(wrapper, cargar: boolean) {
+  private cargarValores(wrapper: NegociacionWrapper, cargar: boolean) {
     this.tbQoCliente= wrapper.credito.tbQoNegociacion.tbQoCliente;
     this.cedula.setValue(this.tbQoCliente.cedulaCliente);
     this.identificacion.setValue(this.tbQoCliente.cedulaCliente);
     this.nombresCompletos.setValue(this.tbQoCliente.nombreCompleto);
     this.fechaDeNacimiento.setValue(this.tbQoCliente.fechaNacimiento);
     this.cargarEdad();
-    this.nacionalidad.setValue(this.catPais.find(p=> p.id == this.tbQoCliente.nacionalidad));
+    this.nacionalidad.setValue(this.catPais?this.catPais.find(p=> p.id == this.tbQoCliente.nacionalidad):null);
     if(wrapper.telefonoMovil){
       this.movil.setValue(wrapper.telefonoMovil.numero);
       this.telefonoMovil = wrapper.telefonoMovil;
@@ -472,9 +472,49 @@ export class GestionNegociacionComponent implements OnInit {
     }
     if(wrapper.joyas != null){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
-      this.dataSourceCreditoNegociacion.data.push( wrapper.credito );
+      let calculadora: any = {
+        costoCustodia: this.negoW.credito.costoCustodia,
+        costoFideicomiso: this.negoW.credito.costoFideicomiso,
+        costoSeguro: this.negoW.credito.costoSeguro,
+        costoTasacion: this.negoW.credito.costoTasacion,
+        costoTransporte: this.negoW.credito.costoTransporte,
+        costoValoracion: this.negoW.credito.costoValoracion,
+        cuota: this.negoW.credito.cuota,
+        custodiaDevengada: this.negoW.credito.custodiaDevengada,
+        dividendoflujoplaneado: this.negoW.credito.dividendoFlujoPlaneado,
+        dividendosprorrateoserviciosdiferido:this.negoW.credito.dividendoProrrateo,
+        formaPagoCapital: this.negoW.credito.formaPagoCapital,
+        formaPagoCustodia: this.negoW.credito.formaPagoCustodia,
+        formaPagoCustodiaDevengada: this.negoW.credito.formaPagoCustodiaDevengada,
+        formaPagoFideicomiso: this.negoW.credito.formaPagoFideicomiso,
+        formaPagoGastoCobranza: this.negoW.credito.formaPagoGastoCobranza,
+        formaPagoImpuestoSolca: this.negoW.credito.formaPagoImpuestoSolca,
+        formaPagoInteres: this.negoW.credito.formaPagoInteres,
+        formaPagoMora: this.negoW.credito.formaPagoMora,
+        formaPagoSeguro: this.negoW.credito.formaPagoSeguro,
+        formaPagoTasador: this.negoW.credito.formaPagoTasador,
+        formaPagoTransporte: this.negoW.credito.formaPagoTransporte,
+        formaPagoValoracion: this.negoW.credito.formaPagoValoracion,
+        gastoCobranza: this.negoW.credito.gastoCobranza,
+        impuestoSolca: this.negoW.credito.impuestoSolca,
+        montoFinanciado: this.negoW.credito.montoFinanciado,
+        montoPrevioDesembolso: this.negoW.credito.montoPrevioDesembolso,
+        periodicidadPlazo: this.negoW.credito.periodicidadPlazo,
+        periodoPlazo: this.negoW.credito.periodoPlazo,
+        plazo: this.negoW.credito.plazoCredito,
+        porcentajeflujoplaneado: this.negoW.credito.porcentajeFlujoPlaneado,
+        saldoCapitalRenov: this.negoW.credito.saldoCapitalRenov,
+        saldoInteres: this.negoW.credito.saldoInteres,
+        saldoMora: this.negoW.credito.saldoMora,
+        tipooferta: this.negoW.credito.tipoOferta,
+        totalCostosOperacionAnterior: this.negoW.credito.totalCostosOperacionAnterior,
+        totalGastosNuevaOperacion: this.negoW.credito.totalGastosNuevaOperacion,
+        valorAPagar: this.negoW.credito.valorAPagar,
+        valorARecibir: this.negoW.credito.valorARecibir
+      }
+      this.dataSourceCreditoNegociacion.data.push( calculadora );
       this.dataSourceTasacion.data = wrapper.joyas;
-      this.calcular();
+      this.calcular();  
       this.sinNotSer.setNotice("NEGOCIACION -> \"" + wrapper.credito.codigo + "\" Cargada correctamente.", "success");
     }else{
       this.sinNotSer.setNotice("SE HA INICIADO UNA NEGOCIACION -> \"" + wrapper.credito.codigo + "\". ", "success");
@@ -508,7 +548,7 @@ export class GestionNegociacionComponent implements OnInit {
       data: data
     });
     dialogRef.afterClosed().subscribe(r => {
-      //this.router.navigate(['negociacion/bandeja-operaciones']);
+      this.router.navigate(['negociacion/bandeja-operaciones']);
     });
   }
   public popupDevolucion( ){
@@ -517,7 +557,9 @@ export class GestionNegociacionComponent implements OnInit {
     let entryData = {
       titulo: 'Algo',
       mensajeAprobador: this.negoW.credito.descripcionDevuelto, 
-      motivoDevolucion: this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto) ? this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto).nombre : 'No definido',
+      motivoDevolucion: this.catMotivoDevolucion?
+      this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto) ? 
+      this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto).nombre : 'No definido':'No definido',
       aprobador: this.negoW.proceso.usuario,
       codigoBpm: this.negoW.credito.codigo
     }
@@ -540,20 +582,17 @@ export class GestionNegociacionComponent implements OnInit {
       data: data
     });
     dialogRefGuardar.afterClosed().subscribe((result: any) => {
-      //console.log('envio de RESP ' + JSON.stringify(result) + ' typeof respuesta ' + typeof (result));
       if (result) {
-        this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', false, 'EXCEPCION SOLICITADA');
+        this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
       } else {
         if (data.isCobertura) {
           this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'error');
         } else {
-          this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', true, 'NEGOCIACION CANCELADA');
+          this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', 'NEGOCIACION CANCELADA');
         }
       }
     });
   }
-
-
   solicitarCobertura(){
     if(this.dataSourceTasacion.data && this.dataSourceTasacion.data.length > 0){
       this.abrirPopupExcepciones();
@@ -562,22 +601,12 @@ export class GestionNegociacionComponent implements OnInit {
     }
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
-  private salirDeGestion(dataMensaje: string, cancelar: boolean = false, dataTitulo?: string) {
+  private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {
       mensaje: dataMensaje,
       titulo: dataTitulo ? dataTitulo : null
     }
-    if (cancelar) {
-      /* this.pro.cancelarNegociacion(this.negoW.credito.tbQoNegociacion.id, this.usuario).subscribe((data: any) => {
-        if (data.entidad) {
-          this.abrirSalirGestion(pData);
-        } else {
-          this.sinNotSer.setNotice("Error cancelando la negociacion.", 'error')
-        }
-      }); */
-    } else {
       this.abrirSalirGestion(pData);
-    }
   } 
   private limpiarCamposTasacion() {
     Object.keys(this.formTasacion.controls).forEach((name) => {
@@ -777,9 +806,10 @@ export class GestionNegociacionComponent implements OnInit {
       joya.pesoNeto = this.pesoNeto.value;
       joya.tipoJoya = this.tipoJoya.value.codigo;
       joya.tipoOro = this.tipoOro.value.codigo;
-      joya.tienePiedras = this.tienePiedras.value =='S'?true:false;
+      joya.tienePiedras = this.tienePiedras.value =='S' ? true  : false;
       joya.detallePiedras = this.detallePiedras.value;
-      joya.pesoNeto = Number(joya.pesoBruto) - (Number(joya.descuentoPesoPiedra) + Number(joya.descuentoSuelda));
+      joya.pesoNeto = Number((Number(joya.pesoBruto) - (Number(joya.descuentoPesoPiedra) + Number(joya.descuentoSuelda))).toFixed(2));
+      console.log("Peso neto ==> ", joya.pesoNeto);
       joya.valorOro = this.valorOro.value;
       //joya.valorAvaluo = this.valorAvaluo.value;
       //joya.valorOro = this.valorOro.value;
@@ -792,38 +822,48 @@ export class GestionNegociacionComponent implements OnInit {
       })
      }
       if (this.elementJoya) {
-        joya.id = this.elementJoya.id;
+        joya.id = this.elementJoya;
        // const index = this.dataSourceTasacion.data.indexOf(this.elementJoya);
        // this.dataSourceTasacion.data.splice(index, 1);
         this.elementJoya = null;
       }
+      console.log('Mi joya a guardar ===>', joya);
       this.neg.agregarJoya(joya).subscribe((data: any) => {
           this.dataSourceTasacion = new MatTableDataSource<any>(data.entidades);
           this.sinNotSer.setNotice('SE GUARDO LA JOYA TASADA', 'success');
         //this.loadingSubject.next(false);
         this.limpiarCamposTasacion();
         this.calcular();
+        this.dataSourceCreditoNegociacion = new MatTableDataSource<any>();
       });
     
   }
   editar(element: TbQoTasacion) {
-    this.tipoOro.setValue(element.tipoOro);
-    this.pesoNeto.setValue(element.pesoNeto);
-    this.pesoBruto.setValue(element.pesoBruto);
-    this.numeroPiezas.setValue(element.numeroPiezas);
-    this.tipoJoya.setValue(element.tipoJoya);
-    this.estado.setValue(element.estadoJoya);
-    this.descuentoPiedra.setValue(element.descuentoPesoPiedra);
-    this.descuentoSuelda.setValue(element.descuentoSuelda);
-    this.valorOro.setValue(element.valorOro);
-    this.tienePiedras.setValue(element.tienePiedras);
-    this.detallePiedras.setValue(element.detallePiedras);
-    this.valorAplicable.setValue(element.valorAplicable);
-    this.precioOro.setValue(element.precioOro);
-    this.valorAvaluo.setValue(element.valorAvaluo);
-    this.valorRealizacion.setValue(element.valorRealizacion);
-    this.descripcion.setValue(element.descripcion);
-    this.elementJoya = element.id;
+    console.log('Mi elemento ===>', element);
+    this.loadingSubject.next(true);
+    let cliente = this.buildCliente();
+    this.neg.verPrecios(cliente).subscribe(resp=>{
+      this.catTipoOro = resp.entidades;
+      this.tipoOro.setValue(this.catTipoOro ? this.catTipoOro.find(t => t.codigo == element.tipoOro) ? this.catTipoOro.find(t => t.codigo == element.tipoOro) : "No definido" : 'No definido' );
+      this.pesoNeto.setValue(element.pesoNeto);
+      this.pesoBruto.setValue(element.pesoBruto);
+      this.numeroPiezas.setValue(element.numeroPiezas);
+      this.tipoJoya.setValue(this.catTipoJoya ? this.catTipoJoya.find(t => t.codigo == element.tipoJoya) ? this.catTipoJoya.find(t => t.codigo == element.tipoJoya) : "No definido" : 'No definido' );
+      this.estado.setValue(this.catEstadoJoya ? this.catEstadoJoya.find(t => t.codigo == element.estadoJoya) ? this.catEstadoJoya.find(t => t.codigo == element.estadoJoya) : "No definido" : 'No definido' );
+      this.descuentoSuelda.setValue(element.descuentoSuelda);
+      this.valorOro.setValue(element.valorOro);
+      this.tienePiedras.setValue(element.tienePiedras ? 'S' : 'N');
+      this.selectTienePiedras();
+      this.descuentoPiedra.setValue(element.descuentoPesoPiedra);
+      this.detallePiedras.setValue(element.detallePiedras);
+      this.valorAplicable.setValue(element.valorAplicable);
+      this.precioOro.setValue(element.precioOro);
+      this.valorAvaluo.setValue(element.valorAvaluo);
+      this.valorRealizacion.setValue(element.valorRealizacion);
+      this.descripcion.setValue(element.descripcion);
+      this.elementJoya = element.id;
+      this.loadingSubject.next(false);
+    })
   }
   eliminar(element: TbQoTasacion) {
     this.loadingSubject.next(true);
@@ -847,10 +887,14 @@ export class GestionNegociacionComponent implements OnInit {
   /** ********************************************** @OPCIONES ***************************************/
   public calcularOpciones(montoSolicitado) {
     if (this.dataSourceTasacion.data.length > 0) {
+      if(this.dataSourceCreditoNegociacion.data && montoSolicitado && ( montoSolicitado  > this.dataSourceCreditoNegociacion.data[0].montoFinanciado  ) ){
+        this.sinNotSer.setNotice("EL MONTO SOLICITADO ES MAYOR AL MONTO FINANCIADO ACTUAL", 'error');
+        return;
+      }
       this.loadingSubject.next(true);
       this.cal.simularOferta(this.negoW.credito.id,montoSolicitado,this.riesgoTotal).subscribe((data: any) => {
         this.loadingSubject.next(false);
-        if(data.entidad.simularResult.codigoError>3){
+        if(data.entidad.simularResult.codigoError == 3 ){
           this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
           this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
         }
@@ -859,20 +903,16 @@ export class GestionNegociacionComponent implements OnInit {
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
             this.selection = new SelectionModel<any>(true, []);
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+        }else{
+          this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
         }
         this.myStepper.selectedIndex = 5;
       },err=>{
         this.loadingSubject.next(false);
       });
-
-    } else {
-      this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
-    }
-
+    } 
   }
   updateCliente(event,control){
-    //console.log("=========>",event,control);
-
     if(control.invalid || (event instanceof  KeyboardEvent && event.key !='Tab') ){
       return;
     }
@@ -881,27 +921,24 @@ export class GestionNegociacionComponent implements OnInit {
       this.neg.updateCliente(cliente).subscribe( p =>{
         if(p.entidad && p.entidad.tbQoTelefonoClientes){
           p.entidad.tbQoTelefonoClientes.forEach(element => {
-            if(element.tipoTelefono =='M'){
+            if(element.tipoTelefono =='CEL'){
               this.telefonoMovil =element;
             }
-            if(element.tipoTelefono =='F'){
+            if(element.tipoTelefono =='DOM'){
               this.telefonoFijo =element;
             }          
           });
           
         }
       });
-    }else{
-      //console.log("no guardar")
     }
   }
   buildCliente(){
-    //console.log("guardad")
     if( this.telefonoFijo){
       this.telefonoFijo.numero = this.telefonoDomicilio.value
     }else if(this.telefonoDomicilio.value){
       this.telefonoFijo ={
-        tipoTelefono:'F',
+        tipoTelefono:'DOM',
         numero:this.telefonoDomicilio.value
       }
     }
@@ -909,11 +946,10 @@ export class GestionNegociacionComponent implements OnInit {
       this.telefonoMovil.numero = this.movil.value
     }else if (this.movil.value){
       this.telefonoMovil ={
-        tipoTelefono:'M',
+        tipoTelefono:'CEL',
         numero:this.movil.value
       }
     }
-   
     let cliente = {
       id: this.tbQoCliente.id,
       cedulaCliente:this.tbQoCliente.cedulaCliente,
@@ -924,7 +960,6 @@ export class GestionNegociacionComponent implements OnInit {
       publicidad:this.publicidad.value,
       tbQoTelefonoClientes: new Array()
     };
-
     if(this.telefonoMovil){
       cliente.tbQoTelefonoClientes.push(this.telefonoMovil);
     }
@@ -980,7 +1015,6 @@ export class GestionNegociacionComponent implements OnInit {
   private _normalizeValue(value: string): string {
     return value.toLowerCase().replace(/\s/g, '');
   }
-
   selectTienePiedras(){
     if(this.tienePiedras.value =='S'){
       this.formTasacion.addControl("detallePiedras", this.detallePiedras);
@@ -990,26 +1024,20 @@ export class GestionNegociacionComponent implements OnInit {
       this.formTasacion.removeControl("descuentoPiedra");
     }
   }
-
   masterToggle(event) {
- 
     this.selection.clear()        
-    this.selection.select(event)
-    
-}
-
-setPesoNeto(){
-  try{
-    let v = (Number(this.pesoBruto.value) - (Number(this.descuentoSuelda.value)+ Number (this.descuentoPiedra.value)))
-    this.pesoNeto.setValue(v.toFixed(2));
-  }catch{
-    this.pesoNeto.setValue('0');
+    this.selection.select(event) 
   }
-  
+  setPesoNeto(){
+    try{
+      let v = (Number(this.pesoBruto.value) - (Number(this.descuentoSuelda.value)+ Number (this.descuentoPiedra.value)))
+      this.pesoNeto.setValue(v.toFixed(2));
+    }catch{
+      this.pesoNeto.setValue('0');
+    }
+    
+  }
 }
-  
-}
-
 export class Pais{
   id;
   codigo;

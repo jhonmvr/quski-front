@@ -28,6 +28,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public loading;
   public usuario: string;
   public rol: string;
+
   public loadingSubject = new BehaviorSubject<boolean>(false);
   private catAgencia : Array<Agencia>;
   public catProceso : Array<string>;
@@ -76,9 +77,8 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     this.sof.setParameter();
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    //this.usuario = 'Jero';
-    //this.rol = "SUPERVISOR"; 
-    this.rol = "ASESOR";
+    console.log('Nombre del asesor ->', atob(localStorage.getItem(environment.userKey)));
+    this.rol = localStorage.getItem( 're1001' );
     this.cargarCatalogosOperacionesAndEnums();
     this.cargarEnumBase();
 
@@ -87,7 +87,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private buscarOperaciones(wrapper?: WrapperBusqueda) {
     this.loadingSubject.next(true);
-    wrapper.asesor = this.rol != "SUPERVISOR" ? this.usuario : null;
+    wrapper.asesor = this.rol == "014" || this.rol == "1" || this.rol == "8" ? this.usuario : null;
     this.pro.buscarOperaciones(wrapper).subscribe( (data: any) =>{
       if( data.entidad != null && data.entidad.operaciones != null){
         let operaciones: OperacionesProcesoWrapper[] = data.entidad.operaciones;

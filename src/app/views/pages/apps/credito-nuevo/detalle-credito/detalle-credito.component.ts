@@ -15,6 +15,8 @@ import { SoftbankService } from '../../../../../core/services/quski/softbank.ser
   styleUrls: ['./detalle-credito.component.scss']
 })
 export class DetalleCreditoComponent implements OnInit {
+
+  formatoFecha = 'yyyy-MM-dd'
   public  loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public  wrapper: any; 

@@ -26,9 +26,9 @@ export class NegociacionService extends BaseService {
 
   }
 
-  public iniciarNegociacion(cedula: string, asesor: string) {
+  public iniciarNegociacion(cedula: string, asesor: string, idAgencia: string) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'iniciarNegociacion';
-    this.params = new HttpParams().set('cedula', cedula).set('asesor',asesor);
+    this.params = new HttpParams().set('cedula', cedula).set('asesor',asesor).set('idAgencia',idAgencia);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -37,9 +37,9 @@ export class NegociacionService extends BaseService {
       )
     );
   }
-  public iniciarNegociacionEquifax(cedula: string, asesor: string) {
+  public iniciarNegociacionEquifax(cedula: string, asesor: string, idAgencia: string) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'iniciarNegociacionEquifax';
-    this.params = new HttpParams().set('cedula', cedula).set('asesor',asesor);
+    this.params = new HttpParams().set('cedula', cedula).set('asesor',asesor).set('idAgencia',idAgencia);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -48,9 +48,9 @@ export class NegociacionService extends BaseService {
       )
     );
   }
-  public iniciarNegociacionFromCot(idCotizacion: number, asesor: string) {
+  public iniciarNegociacionFromCot(idCotizacion: number, asesor: string, idAgencia: string) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'iniciarNegociacionFromCot';
-    this.params = new HttpParams().set('idCotizacion', idCotizacion.toString()).set('asesor',asesor);
+    this.params = new HttpParams().set('idCotizacion', idCotizacion.toString()).set('asesor',asesor).set('idAgencia',idAgencia);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

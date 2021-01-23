@@ -40,7 +40,7 @@
                   </div>
                   <div class="col-md-6">
                       <mat-form-field  class="mat-form-field-fluid">
-                          <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion: " />
+                          <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion: " [value]="fechaCreacion.value | date:'yyyy-MM-dd'" />
                       </mat-form-field>
                   </div>
               </div>
@@ -320,16 +320,20 @@
             <ng-template matStepLabel>Excepción</ng-template>
             <div class="kt-form">
                 <form [formGroup]="formDatosExcepcion">
+
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <mat-card class="warning">
                                 <span class="material-icons warning-icons">report_problem </span>
                                 <span>{{mensaje}}</span>
-
-
-
-
                             </mat-card>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <mat-form-field  class="mat-form-field-fluid">
+                                <input matInput [formControl]="usuarioAsesor" placeholder="Usuario Asesor: " />
+                            </mat-form-field>
                         </div>
                     </div>
                     <div class="row mt-3">

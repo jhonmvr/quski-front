@@ -4,6 +4,11 @@
 <re-portlet>
     <re-portlet-header [title]="'Generar Credito'" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
+            <a (click)="regresar()" matTooltip="Regresar a gestion cliente" style="font-size: 12px; vertical-align: middle;">
+				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+					arrow_back</mat-icon>
+				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+			</a>
 			<a href="javascript:void(0);" matTooltip="Solicitar Aprobacion" style="font-size: 12px; vertical-align: middle;" (click)="solicitarAprobacion()">
 				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
 				</mat-icon>
@@ -101,7 +106,7 @@
                     </ng-container>
                     <ng-container matColumnDef="tieneDescuento">
                         <mat-header-cell *matHeaderCellDef>Tiene descuentos</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaNacimiento | date:'yyyy-MM-dd'}} </mat-cell>
                         <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                     </ng-container>
                     <ng-container matColumnDef="descuentoPesoPiedra">
@@ -217,62 +222,57 @@
             </mat-step>
 
             <mat-step label="Datos Instruccion Operativa" [stepControl]="formInstruccion">
-                <div class="row">
-                    <form [formGroup]="formInstruccion">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <mat-select required placeholder="Banco del cliente" [formControl]="tipoCuenta" (selectionChange)="buscarNumero()">
-                                        <mat-option *ngFor="let element of catCuenta" [value]="element">
-                                            {{element.nombre }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <input matInput required [formControl]="numeroCuenta" placeholder="Numero de Cuenta">
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <input matInput required [formControl]="firmanteOperacion" placeholder="Firmante Operacion">
-                                </mat-form-field>
-                            </div>
+                <form [formGroup]="formInstruccion">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select required placeholder="Banco del cliente" [formControl]="tipoCuenta" (selectionChange)="buscarNumero()">
+                                    <mat-option *ngFor="let element of catCuenta" [value]="element">
+                                        {{element.nombre }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
-                       
-                    </form>
-                </div>
-                <div class="row">
-                    
-                    <strong>Excepcion operativa</strong>
-                </div>
-                <div class="row">
-                    <br>
-                    <div class="col-md-4">
-                        <mat-select placeholder="Tipo Excepcion" name="item">
-                            <mat-option>SERVICIO BASICO</mat-option>
-                            <mat-option>PAPELETA DE VOTACION</mat-option>
-                            
-                        </mat-select>
-                    </div>
-                    <div class="col-md-4">
-                        <mat-form-field>
-                            <input matInput [matDatepicker]="picker6" placeholder="Fecha de regularizacion">
-                            <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
-                            <mat-datepicker #picker6></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    
-                </div>
-                <div class="row">
-                    <div class="row mb-5">
-                        <div  class="offset-md-5 col-md-4" >
-                            <button mat-raised-button color="primary" (click)="generarCredito()"> Generar Credito </button>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput required [formControl]="numeroCuenta" placeholder="Numero de Cuenta">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput required [formControl]="firmanteOperacion" placeholder="Firmante Operacion">
+                            </mat-form-field>
                         </div>
                     </div>
+                    <div class="row mt-5">
+                        <div class="offset-5 col-4">
+                            <strong>Excepcion Operativa</strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 offset-2">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select required placeholder="Tipo Excepcion"  [formControl]="excepcionOperativa" (selectionChange)="habilitarExcepcionOperativa()">
+                                    <mat-option *ngFor="let element of catExcepcionOperativa" [value]="element" >
+                                        {{element.valor }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [matDatepicker]="picker6" [formControl]="fechaRegularizacion" placeholder="Fecha de regularizacion">
+                                <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                                <mat-datepicker #picker6></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+                <div class="row mb-5">
+                    <div  class="offset-md-5 col-md-4" >
+                        <button mat-raised-button color="primary" (click)="generarCredito()"> Generar Credito </button>
+                    </div>
                 </div>
-               
             </mat-step>
             <mat-step label="Datos del Credito nuevo" [stepControl]="formCredito">
                 <form [formGroup]="formCredito">
@@ -307,12 +307,12 @@
                         </div>
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="fechaEfectiva" readonly placeholder="Fecha Efectiva">
+                                <input matInput [formControl]="fechaEfectiva" readonly placeholder="Fecha Efectiva" [value]="fechaEfectiva.value  | date:'yyyy-MM-dd'">
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="fechaVencimiento" readonly placeholder="Fecha de Vencimiento">
+                                <input matInput [formControl]="fechaVencimiento" readonly placeholder="Fecha de Vencimiento" [value]="fechaVencimiento.value | date:'yyyy-MM-dd'" >
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">

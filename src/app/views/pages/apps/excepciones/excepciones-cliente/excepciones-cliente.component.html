@@ -218,55 +218,6 @@
                     </form>
                 </div>
             </mat-step>
-          <!--   <mat-step>
-                <ng-template matStepLabel>Datos De Negociación</ng-template>
-                <div class="kt-form">
-                    <form [formGroup]="formDatosNegociacion">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="tipoProcesoNegociacion" placeholder="Tipo De Negociacion: "
-                                        matInput />
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="estadoNegociacion" placeholder="Estado de Negociacion: "
-                                        matInput />
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <mat-label>Fecha de Creación:</mat-label>
-                                    <input matInput #inputFechaNacimiento
-                                        [matDatepicker]="pickerfechaDeCreacionNegociacion"
-                                        [formControl]="fechaDeCreacionNegociacion" required="true" />
-                                    <mat-datepicker-toggle matSuffix [for]="pickerfechaDeCreacionNegociacion">
-                                    </mat-datepicker-toggle>
-                                    <mat-datepicker #pickerfechaDeCreacionNegociacion></mat-datepicker>
-                                </mat-form-field>
-
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <mat-label>Fecha de Actualización:</mat-label>
-                                    <input matInput #inputFechaNacimiento
-                                        [matDatepicker]="pickerultimaFechaDeActualizacionNegociacion"
-                                        [formControl]="ultimaFechaDeActualizacionNegociacion" required="true" />
-                                    <mat-datepicker-toggle matSuffix
-                                        [for]="pickerultimaFechaDeActualizacionNegociacion">
-                                    </mat-datepicker-toggle>
-                                    <mat-datepicker #pickerultimaFechaDeActualizacionNegociacion></mat-datepicker>
-                                </mat-form-field>
-
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </mat-step> -->
             <mat-step>
                 <ng-template matStepLabel>Variables crediticias </ng-template>
                 <div class="row mt-2">
@@ -299,40 +250,34 @@
                                 <mat-card class="warning">
                                     <span class="material-icons warning-icons">report_problem </span>
                                     <span>{{mensaje}}</span>
-
-
-
-
                                 </mat-card>
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-md-8">
-                                <mat-label> Observacion Del Asesor: </mat-label>
+                            <div class="col-4">
+                                <mat-form-field  class="mat-form-field-fluid">
+                                    <input matInput [formControl]="usuarioAsesor" placeholder="Usuario Asesor: " />
+                                </mat-form-field>
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-xl-8">
-                                <textarea class="form-control border" rows="3" [formControl]="observacionAsesor"
-                                    placeholder="Observacion Del Asesor: " matInput> {{ observacionAsesor }}</textarea>
+                        <div class="row mt-2">
+                            <div class="col-8">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <mat-label>Observacion Del Asesor: </mat-label>
+                                    <textarea class="form-control border" rows="5"
+                                    placeholder="Observacion Del Asesor: " [formControl]="observacionAsesor" [value]="observacionAsesor.value" matInput> </textarea>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-8">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <mat-label>Observacion Del Aprobador: </mat-label>
+                                    <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
+                                    placeholder="Observacion Del Aprobador: " matInput></textarea>
+                                </mat-form-field>
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-md-8">
-                                <mat-label> Observacion Del Aprobador: </mat-label>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-xl-8">
-                                <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
-                                    placeholder="Observacion Del Aprobador: "
-                                    matInput>{{ observacionAprobador }}</textarea>
-                            </div>
-                        </div>
-                    <br>
                         <div class="row">
                             <div class="col-md-2">
-
                             </div>
                             <div class="col-md-3">
                                 <button mat-button mat-raised-button color="primary" (click)="aprobarExcepcion('SI')">Aprobar Excepcion</button>

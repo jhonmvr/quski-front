@@ -157,7 +157,7 @@
                             <ng-container matColumnDef="accion">
                                 <mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
                                 <mat-cell *matCellDef="let row">
-                                  <mat-checkbox (change)="guardarSeleccion(row)"></mat-checkbox>
+                                    <mat-checkbox (change)="guardarSeleccion(row)"></mat-checkbox>
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="plazo">
@@ -317,8 +317,14 @@
                         </mat-table>
                     </div>
                 </div>
-
                 <div class="row mt-3">
+                    <div class="col-2">
+                        <button mat-raised-button color="primary" matStepperNext (click)="solicitarExcepcionCobertura()">
+							<span color="primary">Solicitar Cobertura </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="offset-5 col-2">
                         <button mat-raised-button color="primary" matStepperNext (click)="actualizarCliente()">
 							<span color="primary">Actualizar Cliente</span>

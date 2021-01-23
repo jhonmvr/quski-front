@@ -30,7 +30,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   // VARIABLES PUBLICAS  
   public loading;
   public usuario: string;
-  public agencia: number;
+  public agencia: any;
   public fechaActual: string;
 
   public loadingSubject = new BehaviorSubject<boolean>(false);
@@ -73,7 +73,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   public fechaUltimaActualizazion = new FormControl('', []);
   public telefonoDomicilio = new FormControl('', []);
   public telefonoMovil = new FormControl('', []);
-  public telefonoOficina = new FormControl('', []);
   public correo = new FormControl('', []);
 
   public direccionLegalDomicilio = new FormControl('', []);
@@ -117,8 +116,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
   /** @DATOS_NEGOCIACION */
   public tipoProceso = new FormControl('', []);
-  public displayedColumns = ['total','numeroPiezas', 'tipoOro', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto', 'tieneDescuento', 'descuentoPesoPiedra', 'descuentoSuelda', 'pesoNeto', 'valorOro', 'valorAvaluo', 'valorComercial', 'valorRealizacion'];
-  public dataSource = new MatTableDataSource<TbQoTasacion>();
   public numeroFunda = new FormControl('', []);
   public tipoFunda = new FormControl('', []);
 
@@ -133,8 +130,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   public formaPagoValoracion = new FormControl('', []);
   public costoTasacion = new FormControl('', []);
   public formaPagoTasacion = new FormControl('', []);
-  public costoResguardo = new FormControl('', []);
-  public formaPagoResguardo = new FormControl('', []);
+  public custodiaDevengada = new FormControl('', []);
+  public formaPagoCustodiaDevengada = new FormControl('', []);
   public costoSeguro = new FormControl('', []);
   public formaPagoSeguro = new FormControl('', []);
   public solca = new FormControl('', []);
@@ -145,6 +142,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
   /** @INSTRUCCION_OPERATIVA */
   public tipoCuenta = new FormControl('', []);
+  public excepcionOperativa = new FormControl('', []);
   public numeroCuenta = new FormControl('', []);
   public firmaRegularizada = new FormControl('', []);
   public diaPagoFijo = new FormControl('', []);
@@ -207,7 +205,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.formDisable.addControl( "fechaUltimaActualizazion", this.fechaUltimaActualizazion );
     this.formDisable.addControl( "telefonoDomicilio", this.telefonoDomicilio );
     this.formDisable.addControl( "telefonoMovil", this.telefonoMovil );
-    this.formDisable.addControl( "telefonoOficina", this.telefonoOficina );
     this.formDisable.addControl( "correo", this.correo );
     this.formDisable.addControl( "direccionLegalDomicilio", this.direccionLegalDomicilio );
     this.formDisable.addControl( "direccionCorreoDomicilio", this.direccionCorreoDomicilio );
@@ -250,8 +247,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.formDisable.addControl( "formaPagoValoracion", this.formaPagoValoracion );
     this.formDisable.addControl( "costoTasacion", this.costoTasacion );
     this.formDisable.addControl( "formaPagoTasacion", this.formaPagoTasacion );
-    this.formDisable.addControl( "costoResguardo", this.costoResguardo );
-    this.formDisable.addControl( "formaPagoResguardo", this.formaPagoResguardo );
+    this.formDisable.addControl( "custodiaDevengada", this.custodiaDevengada );
+    this.formDisable.addControl( "formaPagoCustodiaDevengada", this.formaPagoCustodiaDevengada );
     this.formDisable.addControl( "costoSeguro", this.costoSeguro );
     this.formDisable.addControl( "formaPagoSeguro", this.formaPagoSeguro );
     this.formDisable.addControl( "solca", this.solca );
@@ -276,6 +273,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.formDisable.addControl( "montoFinanciado", this.montoFinanciado );
     this.formDisable.addControl( "cuota", this.cuota );
     this.formDisable.addControl( "totalInteres", this.totalInteres );
+    this.formDisable.addControl( "excepcionOperativa", this.excepcionOperativa );
 
   }
 
@@ -286,7 +284,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.subheaderService.setTitle('Aprobación De Credito');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.agencia = 2;
+    this.agencia = localStorage.getItem( 'idAgencia' );
     this.traerCreditoNegociacion();
     this.formDisable.disable();
   }
@@ -350,14 +348,11 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.fechaUltimaActualizazion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaActualizacion);
     this.correo.setValue(ap.credito.tbQoNegociacion.tbQoCliente.email);
     !ap.telefonos ? null : ap.telefonos.forEach(e => {
-      if (e.tipoTelefono == "M") {
+      if (e.tipoTelefono == "CEL") {
         this.telefonoMovil.setValue(e.numero);
       }
-      if (e.tipoTelefono == "F") {
+      if (e.tipoTelefono == "DOM") {
         this.telefonoDomicilio.setValue(e.numero);
-      }
-      if (e.tipoTelefono == "CEL") {
-        this.telefonoOficina.setValue(e.numero);
       }
     });
     !ap.direcciones ? null : ap.direcciones.forEach(e => {
@@ -404,12 +399,35 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( ap.credito.tbQoNegociacion.tbQoCliente.ingresos, true) );
     this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( ap.credito.tbQoNegociacion.tbQoCliente.egresos, false) );
     this.dataSourceReferencia.data = ap.referencias;
+    this.dataSourceReferencia.data.forEach( e=>{
+      e.parentesco = this.catalogos ? 
+        this.catalogos.catTipoReferencia ?
+          this.catalogos.catTipoReferencia.find(x => x.codigo == e.parentesco) ? 
+            this.catalogos.catTipoReferencia.find( x => x.codigo == e.parentesco ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+    });
     this.numeroFunda.setValue( ap.credito.numeroFunda ) ;
-    this.tipoFunda.setValue( ap.credito.codigoTipoFunda );
-    this.dataSource.data = ap.joyas;
+    this.tipoFunda.setValue( ap.credito.codigoTipoFunda ? this.catalogos ? this.catalogos.catTipoFunda ? this.catalogos.catTipoFunda.find(x => x.codigo ) ? this.catalogos.catTipoFunda.find(x => x.codigo ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo');
+    this.crediW.joyas.forEach( e=>{
+      e.tipoOro = e.tipoOro ? 
+                    this.catalogos ? 
+                      this.catalogos.catTipoOro ? 
+                        this.catalogos.catTipoOro.find(x => x.codigo == e.tipoOro) ?
+                          this.catalogos.catTipoOro.find(x => x.codigo = e.tipoOro).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+      e.tipoJoya =  e.tipoJoya ?
+                      this.catalogos ?
+                        this.catalogos.catTipoJoya ?
+                          this.catalogos.catTipoJoya.find( x => x.codigo ) ?
+                            this.catalogos.catTipoJoya.find( x => x.codigo ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+      e.estadoJoya =  e.estadoJoya ?
+                        this.catalogos ?
+                          this.catalogos.catEstadoJoya ?
+                            this.catalogos.catEstadoJoya.find( x => x.codigo) ?
+                              this.catalogos.catEstadoJoya.find( x => x.codigo).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+
+
+    });
 
     this.tipoProceso.setValue( ap.proceso.proceso );
-    this.calcular();
     /** @DATOS_CREDITO_NUEVO */
     this.plazo.setValue( ap.credito.plazoCredito);
     this.tipoOferta.setValue( ap.credito.tipoOferta == "N" ? 'NUEVO' : ap.credito.tipoOferta);
@@ -421,8 +439,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.formaPagoValoracion.setValue( ap.credito.formaPagoValoracion);
     this.costoTasacion.setValue( ap.credito.costoTasacion);
     this.formaPagoTasacion.setValue( ap.credito.formaPagoTasador);
-    this.costoResguardo.setValue( ap.credito);
-    this.formaPagoResguardo.setValue( ap.credito);
+    this.custodiaDevengada.setValue(ap.credito.custodiaDevengada);
+    this.formaPagoCustodiaDevengada.setValue( ap.credito.formaPagoCustodiaDevengada);
     this.costoSeguro.setValue( ap.credito.costoSeguro);
     this.formaPagoSeguro.setValue( ap.credito.formaPagoSeguro);
     this.solca.setValue( ap.credito.impuestoSolca);
@@ -434,10 +452,9 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     /** @DATOS_INSTRUCCION_OPERATIVA */
     this.tipoCuenta.setValue( ap.cuenta.banco );
     this.numeroCuenta.setValue( ap.cuenta.cuenta );
-    this.firmaRegularizada.setValue( "No tengo" );
-    this.diaPagoFijo.setValue( ap.credito.pagoDia );
-    this.firmadaOperacion.setValue( ap.credito.firmanteOperacion );
-    this.tipoCliente.setValue( "DEUDOR" );
+    this.firmaRegularizada.setValue( ap.credito.firmanteOperacion ? ap.credito.firmanteOperacion  :  'Falta valdiar' );
+    this.diaPagoFijo.setValue( ap.credito.pagoDia ? ap.credito.pagoDia : 'No aplica');
+    this.firmadaOperacion.setValue( ap.credito.firmanteOperacion ? ap.credito.firmanteOperacion  :  'Falta valdiar' );
 
     /** @OPERACION_NUEVA */
     this.tipoCartera.setValue( ap.credito.tipoCarteraQuski );
@@ -447,33 +464,13 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.estadoOperacion.setValue( ap.credito.estadoSoftbank );
     this.fechaVencimiento.setValue( ap.credito.fechaVencimiento );
     this.fechaEfectiva.setValue( ap.credito.fechaEfectiva );
-    this.valorDesembolso.setValue( ap.credito.montoDesembolso );
+    this.valorDesembolso.setValue( ap.credito.montoDesembolso ? ap.credito.montoDesembolso : 'Falta validar'  );
     this.montoFinanciado.setValue(  ap.credito.montoFinanciado );
     this.cuota.setValue( ap.credito.cuota );
     this.totalInteres.setValue(  ap.credito.saldoInteres );
 
 
     this.loadingSubject.next(false);
-  }
-  private calcular() {
-    this.totalPesoN = 0;
-    this.totalPesoB = 0;
-    this.totalValorR = 0;
-    this.totalValorA = 0;
-    this.totalValorC = 0;
-    this.totalValorO = 0;
-    this.totalNumeroJoya = 0
-    if (this.dataSource.data) {
-      this.dataSource.data.forEach(element => {
-        this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-        this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
-        this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
-        this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
-        this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
-        this.totalValorO = Number(this.totalValorO) + Number(element.valorOro);
-        this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas);
-      });
-    }
   }
   public aprobar(){
     if( this.observacionAprobador.value && this.codigoCash.value ){

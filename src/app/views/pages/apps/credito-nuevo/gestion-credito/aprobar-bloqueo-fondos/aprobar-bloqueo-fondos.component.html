@@ -81,7 +81,7 @@
   
             <ng-container matColumnDef="fechaPago">
                 <th mat-header-cell *matHeaderCellDef> Fecha Pago </th>
-                <td mat-cell *matCellDef="let articulo"> {{articulo.fechaPago | date: 'dd/MM/yyyy'}} </td>
+                <td mat-cell *matCellDef="let articulo"> {{articulo.fechaPago | date:'yyyy-MM-dd'}} </td>
             </ng-container>
   
             <ng-container matColumnDef="numeroDeposito">
