@@ -17,7 +17,7 @@
   <ng-container matColumnDef="Vencimiento">
       <mat-header-cell *matHeaderCellDef> Vencimiento </mat-header-cell>
       <mat-cell *matCellDef="let element">
-        {{element.fechaFinalCredito}}
+        {{element.fechaFinalCredito | date:'yyyy-MM-dd'}}
       </mat-cell>
   </ng-container>
   <ng-container matColumnDef="Cuotas">
@@ -50,13 +50,13 @@
 <ng-container matColumnDef="FechaAprobacion">
   <mat-header-cell *matHeaderCellDef> Fecha Aprobacion </mat-header-cell>
   <mat-cell *matCellDef="let element">
-    {{element.fechaAprobacion}}
+    {{element.fechaAprobacion | date:'yyyy-MM-dd'}}
   </mat-cell>
 </ng-container>
 <ng-container matColumnDef="FechaFinalCredito">
   <mat-header-cell *matHeaderCellDef> Fecha Final Crèdito </mat-header-cell>
   <mat-cell *matCellDef="let element">
-    {{element.fechaFinalCredito}}
+    {{element.fechaFinalCredito | date:'yyyy-MM-dd'}}
   </mat-cell>
 </ng-container>
 

@@ -1,6 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -36,6 +36,8 @@ import {
 	MatStepperModule,
 	MatDialogRef,
 	MatButtonToggleGroup,
+	DateAdapter,
+	MAT_DATE_FORMATS,
 } from '@angular/material';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
@@ -63,6 +65,8 @@ import { DialogoAprobarBloqueoFondosComponent } from './gestion-credito/aprobar-
 import { DialogoRechazarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos.component';
 import { DetalleCreditoComponent } from './detalle-credito/detalle-credito.component';
 import { DialogoBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-bloqueo-fondos/dialogo-bloqueo-fondos.component';
+import { ModuleGuard } from '../../../../../app/core/auth';
+import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 
 
 
@@ -140,7 +144,7 @@ const routes: Routes = [
 	  DialogoAprobarBloqueoFondosComponent,
 	  DialogoRechazarBloqueoFondosComponent,
 	  DetalleCreditoComponent,
-	  DialogoBloqueoFondosComponent
+	  DialogoBloqueoFondosComponent,
 	],
   imports: [
 	CommonModule,
@@ -177,9 +181,22 @@ const routes: Routes = [
 	MatStepperModule,
 	PartialsModule
 ],
-providers:[
-
-], 
+providers: [
+	ModuleGuard,
+	
+	{provide: DateAdapter, useClass: PickDateAdapter},
+	{provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS},
+	{ provide: MatDialogRef, useValue: {} },
+	{
+		provide: MAT_DIALOG_DEFAULT_OPTIONS,
+		useValue: {
+			hasBackdrop: true,
+			panelClass: 'kt-mat-dialog-container__wrapper',
+			height: 'auto',
+			width: '900px'
+		}
+	},
+],
 
 entryComponents: [RegistarPagoDialogComponent, DialogoBloquearCreditoComponent,
 	DialogoBloqueoFondosComponent,

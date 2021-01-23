@@ -10,7 +10,7 @@
             </ng-container>
             <ng-container matColumnDef="fechaPago">
                 <mat-header-cell *matHeaderCellDef> Fecha Pago </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.fechaPago }} </mat-cell>
+                <mat-cell *matCellDef="let element"> {{ element.fechaPago | date:'yyyy-MM-dd' }} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="saldoCapital">
                 <mat-header-cell *matHeaderCellDef> Saldo Capital </mat-header-cell>

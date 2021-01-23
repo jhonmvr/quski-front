@@ -13,7 +13,7 @@
                     </div>
                     <div class="col-md-4">
                         <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="fechaCreacion" readonly>
+                            <input matInput [formControl]="fechaCreacion" [value]="fechaCreacion.value | date:'yyyy-MM-dd'" readonly>
                         </mat-form-field>
                     </div>
         
@@ -22,7 +22,7 @@
                     </div>
                     <div class="col-md-4">
                         <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="fechaVencimiento" readonly>
+                            <input matInput [formControl]="fechaVencimiento" [value]="fechaVencimiento.value | date:'yyyy-MM-dd'" readonly>
                         </mat-form-field>
                     </div>
                 </div>
@@ -567,7 +567,7 @@
                         </ng-container>
                         <ng-container matColumnDef="tieneDescuento">
                         <mat-header-cell *matHeaderCellDef>Tiene descuentos</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.fechaNacimiento}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaNacimiento | date:'yyyy-MM-dd'}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="descripcionDescuentos">
                         <mat-header-cell *matHeaderCellDef>Descripcion de descuentos </mat-header-cell>

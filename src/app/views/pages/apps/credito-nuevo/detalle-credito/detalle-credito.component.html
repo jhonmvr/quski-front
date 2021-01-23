@@ -58,12 +58,12 @@
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion" />
+                            <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion" [value] ="fechaCreacion.value  | date:'yyyy-MM-dd'" />
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaVencimiento" placeholder="Fecha Vencimiento" />
+                            <input matInput [formControl]="fechaVencimiento" placeholder="Fecha Vencimiento"  [value] ="fechaVencimiento.value | date:'yyyy-MM-dd'" />
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -236,7 +236,7 @@
                     </ng-container>
                     <ng-container matColumnDef="fechaAvaluo">
                         <mat-header-cell *matHeaderCellDef>Fecha Avaluo</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.fechaAvaluo}}</mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.fechaAvaluo | date:'yyyy-MM-dd'}}</mat-cell>
                         <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                     </ng-container>
                     <ng-container matColumnDef="idAgenciaRegistro">

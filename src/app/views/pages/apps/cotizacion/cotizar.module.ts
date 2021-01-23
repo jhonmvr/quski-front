@@ -36,6 +36,8 @@ import {
 	MatStepperModule,
 	MatDialogRef,
 	MatButtonToggleGroup,
+	DateAdapter,
+	MAT_DATE_FORMATS,
 
 
 } from '@angular/material';
@@ -49,6 +51,7 @@ import { ListCotizarComponent } from './list-cotizar/list-cotizar.component';
 import { DetalleCotizacionComponent } from './detalle-cotizacion/detalle-cotizacion.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
+import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 
 const routes: Routes = [
 	{
@@ -121,6 +124,9 @@ const routes: Routes = [
 	],
 	providers: [
 		ModuleGuard,
+		
+		{provide: DateAdapter, useClass: PickDateAdapter},
+		{provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS},
 		DatePipe,
 		{ provide: MatDialogRef, useValue: {} },
 		{

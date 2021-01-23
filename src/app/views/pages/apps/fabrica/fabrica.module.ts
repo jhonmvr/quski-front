@@ -33,6 +33,8 @@ import {
   MatStepperModule,
   MatDialogRef,
   MatButtonToggleGroup,
+  DateAdapter,
+  MAT_DATE_FORMATS,
 } from '@angular/material';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
@@ -42,6 +44,7 @@ import { AprobacionCreditoNuevoComponent } from './aprobacion-credito-nuevo/apro
 import { PartialsModule } from '../../../partials/partials.module';
 import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { AprobacionNovacionComponent } from './aprobacion-novacion/aprobacion-novacion.component';
+import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 
 
 
@@ -112,6 +115,9 @@ const routes: Routes = [
   ],
   providers: [
     ModuleGuard,
+    
+    {provide: DateAdapter, useClass: PickDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS},
     { provide: MatDialogRef, useValue: {} },
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,

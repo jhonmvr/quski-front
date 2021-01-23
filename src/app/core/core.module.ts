@@ -42,6 +42,7 @@ import { WebsocketService } from './services/websocket.service';
 		GetObjectPipe,
 		SafePipe,
 		FirstLetterPipe,
+
 	],
 	exports: [
 		// directives
