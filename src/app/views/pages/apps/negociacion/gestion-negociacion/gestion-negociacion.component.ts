@@ -548,7 +548,7 @@ export class GestionNegociacionComponent implements OnInit {
       data: data
     });
     dialogRef.afterClosed().subscribe(r => {
-      //this.router.navigate(['negociacion/bandeja-operaciones']);
+      this.router.navigate(['negociacion/bandeja-operaciones']);
     });
   }
   public popupDevolucion( ){
@@ -582,14 +582,13 @@ export class GestionNegociacionComponent implements OnInit {
       data: data
     });
     dialogRefGuardar.afterClosed().subscribe((result: any) => {
-      //console.log('envio de RESP ' + JSON.stringify(result) + ' typeof respuesta ' + typeof (result));
       if (result) {
-        this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', false, 'EXCEPCION SOLICITADA');
+        this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
       } else {
         if (data.isCobertura) {
           this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'error');
         } else {
-          this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', true, 'NEGOCIACION CANCELADA');
+          this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', 'NEGOCIACION CANCELADA');
         }
       }
     });
@@ -602,22 +601,12 @@ export class GestionNegociacionComponent implements OnInit {
     }
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
-  private salirDeGestion(dataMensaje: string, cancelar: boolean = false, dataTitulo?: string) {
+  private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {
       mensaje: dataMensaje,
       titulo: dataTitulo ? dataTitulo : null
     }
-    if (cancelar) {
-      /* this.pro.cancelarNegociacion(this.negoW.credito.tbQoNegociacion.id, this.usuario).subscribe((data: any) => {
-        if (data.entidad) {
-          this.abrirSalirGestion(pData);
-        } else {
-          this.sinNotSer.setNotice("Error cancelando la negociacion.", 'error')
-        }
-      }); */
-    } else {
       this.abrirSalirGestion(pData);
-    }
   } 
   private limpiarCamposTasacion() {
     Object.keys(this.formTasacion.controls).forEach((name) => {
@@ -905,12 +894,9 @@ export class GestionNegociacionComponent implements OnInit {
       this.loadingSubject.next(true);
       this.cal.simularOferta(this.negoW.credito.id,montoSolicitado,this.riesgoTotal).subscribe((data: any) => {
         this.loadingSubject.next(false);
-        if(data.entidad.simularResult.codigoError>3){
+        if(data.entidad.simularResult.codigoError == 3 ){
           this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
           this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
-        }
-        if(data.entidad.simularResult.codigoError == 3){
-          this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
         }
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 

@@ -15,93 +15,49 @@ import { Page } from '../../../../../core/model/page';
   styleUrls: ['./tabla-tasacion.component.scss']
 })
 export class TablaTasacionComponent implements OnInit {
-
-  // VARIABLES ANIDADAS
-  @Input() dataPopup: DataPopup;
-  @Output() entidades: EventEmitter<Array<TbQoTasacion>> = new EventEmitter<Array<TbQoTasacion>>();
-  // ENTIDADES
-  private entidadesTasaciones: Array<TbQoTasacion>;
-  // TABLA DE VARIABLES CREDITICIAS
-  public displayedColumnsTasacion = ['descripcion', 'descuentoPesoPiedra', 'descuentoSuelda'];
   public dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
-  constructor(
-    private vaC: VariablesCrediticiasService,
-    private cal: IntegracionService,
-  ) { 
-    this.vaC.setParameter();
-    this.cal.setParameter();
-  }
+  public displayedColumnsTasacion = ['Total', 'NumeroPiezas', 'TipoOro','PesoBruto','PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'DescuentoSuelda', 'TipoJoya', 'EstadoJoya', 'Descripcion', 'tienePiedras','DescuentoPesoPiedra', 'detallePiedras',];
+  totalPesoN: any;
+  totalDescgr: any;
+  totalPesoB: any;
+  totalValorR: number;
+  totalValorA: number;
+  totalValorC: number;
+  totalValorO: number;
+  totalNumeroJoya: number;
+  @Input() data: Array<TbQoTasacion>;
+  @Output() entidades: EventEmitter<Array<TbQoTasacion>> = new EventEmitter<Array<TbQoTasacion>>();
+  constructor() {}
 
   ngOnInit() {
-    this.vaC.setParameter();
-    this.cal.setParameter();
-    //console.log('DATAPOPUP TASACION===> ', this.dataPopup);
-    this.direccionDeFlujo(this.dataPopup);
+    this.inicioDeFlujo(this.data);
 
   }
-  /**
-   * @author Jeroham cadenas - Developer twelve
-   * @description Define si se busca la variable crediticia por negociacion o por cotizacion
-   * @param data DataPopup
-   */
-  private direccionDeFlujo(data: DataPopup) {
-
-    if (data.isNegociacion) {
-      //console.log('INGRESA AL IF isNegociacion ');
-      //console.log('data==> direccionDeFlujo ', JSON.stringify(data));
-      this.iniciaBusquedaNegociacion(data.idBusqueda);
-    } else {
-      if (data.isCalculadora) {
-        this.iniciaBusquedaCalculadora(data.cedula);
-      } else {
-        //console.log("Error ----> NO HAY DATOS DE ENTRADA ", data)
-      }
-    }
+  private inicioDeFlujo(data) {
+    this.dataSourceTasacion.data = data
+    this.calcular();
   }
-
-
-
-  private iniciaBusquedaCalculadora(cedula: string) {
-    if (cedula != "") {
-      const consulta = new PersonaConsulta();
-      consulta.identificacion = cedula;
-      this.cal.getInformacionPersonaCalculadora(consulta).subscribe((data: any) => {
-        if (data.entidad.xmlVariablesInternas.variablesInternas.variable != null) {
-          this.entidadesTasaciones = data.entidad.xmlVariablesInternas.variablesInternas.variable
-          this.dataSourceTasacion.data = this.entidadesTasaciones;
-          this.enviarAlPadre(this.entidadesTasaciones);
-        } else {
-          //console.log("Error ----> Id de cotizacion no existe", cedula);
-        }
+  private calcular() {
+    this.totalPesoN = 0;
+    this.totalDescgr = 0;
+    this.totalPesoB = 0;
+    this.totalValorR = 0;
+    this.totalValorA = 0;
+    this.totalValorC = 0;
+    this.totalValorO = 0;
+    this.totalNumeroJoya = 0
+    if (this.dataSourceTasacion.data) {
+      this.dataSourceTasacion.data.forEach(element => {
+        this.totalPesoN  = (Number(this.totalPesoN) + Number(element.pesoNeto)).toFixed(2);
+        this.totalDescgr = (Number(this.totalDescgr) + Number(element.descuentoPesoPiedra)).toFixed(2);
+        this.totalPesoB  = (Number(this.totalPesoB) + Number(element.pesoBruto)).toFixed(2);
+        this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
+        this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
+        this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
+        this.totalValorO = Number(this.totalValorO) + Number(element.valorOro);
+        this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas);
       });
-    } else {
-      //console.log("Error ----> Ingrese id de cotizador", cedula);
     }
-  }
-
-
-  private iniciaBusquedaNegociacion(id: number) {
-    if (id != null) {
-      if (id > 0) {
-        this.vaC.variablesCrediticiaByIdNegociacion(id).subscribe((data: any) => {
-          if (data) {
-            this.entidadesTasaciones = data;
-            this.dataSourceTasacion.data = this.entidadesTasaciones;
-            this.enviarAlPadre(this.entidadesTasaciones);
-          } else {
-            //console.log("Error ----> Id de cotizacion no existe", id);
-          }
-        });
-      } else {
-        //console.log("Error ----> id cotizador Incorrecto", id);
-      }
-    } else {
-      //console.log("Error ----> Ingrese id de cotizador", id);
-    }
-  }
-  private enviarAlPadre(entidades: Array<TbQoTasacion>) {
-    //console.log('Estoy enviando esto desde tasacion -----> ', entidades);
-    this.entidades.emit(entidades);
   }
 }
 
