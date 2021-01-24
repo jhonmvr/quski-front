@@ -133,7 +133,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [SolicitudDevolucionComponent, DevolucionComponent, SeleccionFechaComponent, ListaPendientesComponent, AprobacionSolicitudComponent, ListaPendientesComponent, EntregaRecepcionComponent, DetalleDevolucionComponent, CancelacionSolicitudDevolucionComponent, AprobacionCancelacionComponent, VerificacionFirmaComponent],
-  imports: [CreditoNuevoModule,
+  imports: [
     CommonModule,
 		RouterModule.forChild(routes),
 		PartialsModule,

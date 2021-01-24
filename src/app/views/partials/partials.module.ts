@@ -121,12 +121,14 @@ import { DevolucionCreditoComponent } from './custom/popups/devolucion-credito/d
 import { PopupPagoComponent } from './custom/popups/popup-pago/popup-pago.component';
 import { SubirComprobanteComponent } from './custom/popups/popup-pago/subir-comprobante/subir-comprobante.component';
 import { CreditoDialogComponent } from './custom/secciones-generales/credito-dialog/credito-dialog.component';
+import { RelativeDatePipe } from '../../../app/core/_base/layout/pipes/date-relative.pipe';
 
 
 
 
 @NgModule({
 	declarations: [
+		RelativeDatePipe,
 		MensajeExcepcionComponent,
 		ScrollTopComponent,
 		NoticeComponent,
@@ -201,7 +203,7 @@ import { CreditoDialogComponent } from './custom/secciones-generales/credito-dia
 	exports: [
 		WidgetModule,
 		PortletModule,
-
+		RelativeDatePipe,
 		ScrollTopComponent,
 		NoticeComponent,
 		ActionNotificationComponent,
@@ -257,6 +259,7 @@ import { CreditoDialogComponent } from './custom/secciones-generales/credito-dia
 
 	],
 	imports: [
+
 		CommonModule,
 		RouterModule,
 		FormsModule,

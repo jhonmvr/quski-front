@@ -88,7 +88,7 @@ const routes: Routes = [
 
 
 @NgModule({
-	imports: [CreditoNuevoModule,
+	imports: [
 
 		CommonModule,
 		RouterModule.forChild(routes),

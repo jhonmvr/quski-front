@@ -412,7 +412,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
                     this.catalogos ? 
                       this.catalogos.catTipoOro ? 
                         this.catalogos.catTipoOro.find(x => x.codigo == e.tipoOro) ?
-                          this.catalogos.catTipoOro.find(x => x.codigo = e.tipoOro).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+                          this.catalogos.catTipoOro.find(x => x.codigo == e.tipoOro).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
       e.tipoJoya =  e.tipoJoya ?
                       this.catalogos ?
                         this.catalogos.catTipoJoya ?

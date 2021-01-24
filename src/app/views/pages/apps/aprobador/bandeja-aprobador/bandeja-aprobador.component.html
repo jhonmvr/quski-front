@@ -80,7 +80,7 @@
                     </ng-container>
                     <ng-container matColumnDef="fechaSolicitud">
                         <mat-header-cell *matHeaderCellDef >Fecha Solicitud</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.fechaSolicitud  | date:'yyyy-MM-dd'}}</mat-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.fechaSolicitud  | rDate}}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="cedulaCliente">
                         <mat-header-cell *matHeaderCellDef >Cedula Cliente</mat-header-cell>

@@ -205,7 +205,7 @@
                     </ng-container>
                     <ng-container matColumnDef="fechaAprobacion">
                         <mat-header-cell *matHeaderCellDef>Fecha Aprobacion</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.fechaAprobacion | date:'yyyy-MM-dd'}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaAprobacion | rDate}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="estado">
                         <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
