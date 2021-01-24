@@ -10,7 +10,7 @@ export const PICK_FORMATS = {
       monthYearA11yLabel: {year: 'numeric', month: 'long'}
   }
 };
-const FORMAT_DATE='yyyy-MM-dd';
+export const FORMAT_DATE='yyyy-MM-dd';
 
 export class PickDateAdapter extends NativeDateAdapter {
   format(date: Date, displayFormat: Object): string {

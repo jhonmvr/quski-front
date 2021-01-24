@@ -67,6 +67,7 @@ import { DetalleCreditoComponent } from './detalle-credito/detalle-credito.compo
 import { DialogoBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-bloqueo-fondos/dialogo-bloqueo-fondos.component';
 import { ModuleGuard } from '../../../../../app/core/auth';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
+import { RelativeDatePipe } from '../../../../../app/core/_base/layout/pipes/date-relative.pipe';
 
 
 
@@ -128,7 +129,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CreditoNuevoComponent,
+  declarations: [CreditoNuevoComponent,RelativeDatePipe,
 	RegistarPagoDialogComponent,
 	 GenerarCreditoComponent, 
 	 GestionCreditoComponent,
@@ -197,7 +198,7 @@ providers: [
 		}
 	},
 ],
-
+exports:[RelativeDatePipe],
 entryComponents: [RegistarPagoDialogComponent, DialogoBloquearCreditoComponent,
 	DialogoBloqueoFondosComponent,
 	DialogoAprobarBloqueoFondosComponent,DialogoRechazarBloqueoFondosComponent,

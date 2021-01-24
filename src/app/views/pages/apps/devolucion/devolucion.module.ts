@@ -48,6 +48,7 @@ import { AprobacionCancelacionComponent } from './aprobacion-cancelacion/aprobac
 import { VerificacionFirmaComponent } from './verificacion-firma/verificacion-firma.component';
 import { ModuleGuard } from '../../../../../app/core/auth';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
+import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
 
 const routes: Routes = [
 	{
@@ -131,7 +132,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [SolicitudDevolucionComponent, DevolucionComponent, SeleccionFechaComponent, ListaPendientesComponent, AprobacionSolicitudComponent, ListaPendientesComponent, EntregaRecepcionComponent, DetalleDevolucionComponent, CancelacionSolicitudDevolucionComponent, AprobacionCancelacionComponent, VerificacionFirmaComponent],
-  imports: [
+  imports: [CreditoNuevoModule,
     CommonModule,
 		RouterModule.forChild(routes),
 		PartialsModule,
