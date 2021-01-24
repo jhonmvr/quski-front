@@ -15,6 +15,7 @@ import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { DevolucionService } from '../../../../../core/services/quski/devolucion.service';
 import { ValidateCedula } from '../../../../../core/util/validate.util';
+import jsPDF from 'jspdf'
 
 @Component({
   selector: 'kt-solicitud-devolucion',
@@ -89,6 +90,7 @@ joyasList  = [{"tipoOro": "18KILATES",
   //url=;objeto=ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiIiwKICAgICJtb250b0ZpbmFuY2lhZG8iOiAiNzAwIiwKICAgICJhc2Vzb3IiOiAiSnVhbml0byIsCiAgICAiZXN0YWRvT3BlcmFjaW9uIjogICJDQU5DRUxBRE8iLAogICAgInRpcG9DcmVkaXRvIjogIiIsCiAgICAiY29kaWdvVGFibGFBbW9ydGl6YWNpb25RdXNraSI6IkEwMSIsCiAgICAiaW1wYWdvIjogIm5vIiwKICAgICJyZXRhbnF1ZW8iOiAibm8iLAogICAgImNvYmVydHVyYUluaWNpYWwiOiAiMTIwMCIsCiAgICAiY29iZXJ0dXJhQWN0dWFsIjogIjExMDAiLAogICAgImJsb3F1ZW8iOiIiLAogICAgImRpYXNNb3JhIjogIiIsCiAgICAiZXN0YWRvVWJpY2FjaW9uIjoiIiwKICAgICJlc3RhZG9Qcm9jZXNvIjoiIiwKICAgICJjb2RpZ29TZXJ2aWNpbyI6IiIsCiAgICAibWlncmFkbyI6ICIiCgp9
   ///
   
+  doc = new jsPDF()
   
   //observables
   objetoCredito ={
@@ -191,6 +193,7 @@ datos
     this.enableHerederoButton = this.enableHeredero.asObservable();
     this.enableHeredero.next(false);
     this.setFechaSistema();
+
     
     this.datos = this.decodeObjetoDatos(this.objetoDatos);
   
@@ -354,7 +357,7 @@ datos
     //console.log(this.encodeObjetos(this.joyasList))
     //console.log("XD", this.decodeObjetoDatos(this.encodeObjetos(this.joyasList)));
     tbQoDevolucion.valorCustodiaAprox = 12.00
-    tbQoDevolucion.codeHerederos = this.encodeObjetos(this.listTablaHeredero)
+    tbQoDevolucion.codeHerederos = this.encodeObjetos({"heredero":this.listTablaHeredero})
     tbQoDevolucion.codeDetalleCredito = this.encodeObjetos(this.objetoCredito)
     tbQoDevolucion.codeDetalleGarantia = this.encodeObjetos(this.joyasList)
     tbQoDevolucion.pesoBruto = this.totalPesoBruto
@@ -583,7 +586,15 @@ public getErrorMessage(pfield: string) { //@TODO: Revisar campos
     return input.hasError('required') ? errorRequerido : '';
   }
 
+
 }
 
+
+funcionToPdf(){
+  let texto = 'Hello my <br> friend'
+  this.doc.text(texto, 10, 10, );
+  this.doc.save('autoprint.pdf')
+//  this.doc.addField()
+}
 
 } 
