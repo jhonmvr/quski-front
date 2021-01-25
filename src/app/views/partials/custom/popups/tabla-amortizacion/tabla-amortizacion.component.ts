@@ -19,10 +19,7 @@ export class TablaAmortizacionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    !this.list ? null : this.list.forEach(e=>{
-      let date = new Date( e.fechaPago );
-      e.fechaPago = date.getDate() +'-'+date.getMonth()+'-'+date.getFullYear();
-    });
+    
     this.dataSource.data = this.list;
   }
   salir(){

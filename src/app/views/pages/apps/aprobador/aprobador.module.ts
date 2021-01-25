@@ -48,6 +48,7 @@ import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/erro
 import { BandejaAprobadorComponent } from './bandeja-aprobador/bandeja-aprobador.component';
 import { ConfirmarAccionComponent } from '../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
+import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
 
 
 

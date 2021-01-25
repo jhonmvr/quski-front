@@ -197,7 +197,7 @@ providers: [
 		}
 	},
 ],
-
+exports:[],
 entryComponents: [RegistarPagoDialogComponent, DialogoBloquearCreditoComponent,
 	DialogoBloqueoFondosComponent,
 	DialogoAprobarBloqueoFondosComponent,DialogoRechazarBloqueoFondosComponent,

@@ -50,8 +50,7 @@ import { PartialsModule } from '../../../partials/partials.module';
 import { DialogCargarHabilitanteComponent } from './gestion-cliente/dialog-cargar-habilitante/dialog-cargar-habilitante.component';
 import { GestionClienteComponent } from './gestion-cliente/gestion-cliente.component';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
-
-
+import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
 
 const routes: Routes = [
 	{

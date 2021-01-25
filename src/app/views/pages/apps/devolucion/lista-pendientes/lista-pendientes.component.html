@@ -51,7 +51,7 @@
             </ng-container>
                 <ng-container matColumnDef="fechaSolicitud">
                 <mat-header-cell *matHeaderCellDef>Fecha de la Solicitud</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.fechaSolicitud | date:'yyyy-MM-dd'}}</mat-cell>
+                <mat-cell *matCellDef="let element"> {{element.fechaSolicitud | rDate}}</mat-cell>
             </ng-container>
                            
                 <ng-container matColumnDef="codigoOperacionMadre">
@@ -85,11 +85,11 @@
             </ng-container>
             <ng-container matColumnDef="fechaArriboAgencia">
                 <mat-header-cell *matHeaderCellDef>Fecha Arribo Agencia</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaArriboAgencia | date:'yyyy-MM-dd'}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaArriboAgencia | rDate}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="fechaAprobacion">
                 <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaAprobacion | date:'yyyy-MM-dd'}} </mat-cell>
+                <mat-cell *matCellDef="let element">{{element.fechaAprobacion | rDate}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="valorAvaluo">
                 <mat-header-cell *matHeaderCellDef>Valor Avalúo</mat-header-cell>

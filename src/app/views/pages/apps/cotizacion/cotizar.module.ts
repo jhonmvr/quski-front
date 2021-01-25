@@ -52,6 +52,7 @@ import { DetalleCotizacionComponent } from './detalle-cotizacion/detalle-cotizac
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
+import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
 
 const routes: Routes = [
 	{

@@ -28,7 +28,7 @@
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento" [value]="fechaNacimiento.value | date:'yyyy-MM-dd'"/>
+                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento" [value]="fechaNacimiento.value | rDate"/>
                         </mat-form-field>
                     </div>
                     <div class="col-4">
