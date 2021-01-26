@@ -18,6 +18,7 @@ import { environment } from '../../../../../../environments/environment';
 })
 export class HabilitanteDialogComponent implements OnInit {
   private uploadSubject = new BehaviorSubject<boolean>(false);
+  private loadImg = new BehaviorSubject<boolean>(false);
   public uploading;
   public dataUpload: DataUpload;
   isDisabledGuardar: any;
@@ -56,40 +57,34 @@ export class HabilitanteDialogComponent implements OnInit {
       let file = <File>event.target.files[0];
       let mimeType = file.type;
       let mimeSize = file.size;
-      if (true) {
-        if (mimeSize < 600000) {
-          reader.readAsDataURL(file);
-          reader.onload = () => {
-            this.uploadSubject.next(true);
-            //this.fileBase64= String(reader.result).split(",")[1];
-            this.dataUpload = {
-              name: file.name,
-              type: file.type,
-              process: this.data.proceso,
-              relatedId: this.data.documentoHabilitante?Number(this.data.documentoHabilitante):null,
-              relatedIdStr: this.data.referencia,
-              typeAction: this.data.tipoDocumento,
-              fileBase64: String(reader.result).split(",")[1],
-              objectId:""
-            };
+      if (mimeSize < 600000) {
+        this.loadImg.next(true);
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          //this.fileBase64= String(reader.result).split(",")[1];
+          this.dataUpload = {
+            name: file.name,
+            type: file.type,
+            process: this.data.proceso,
+            relatedId: this.data.documentoHabilitante?Number(this.data.documentoHabilitante):null,
+            relatedIdStr: this.data.referencia,
+            typeAction: this.data.tipoDocumento,
+            fileBase64: String(reader.result).split(",")[1],
+            objectId:""
           };
-        } else {
-          ////console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
-          //this.fileInput.nativeElement = null;
-          //document.getElementById("fileUpload").nodeValue = "";
-          //file = null
-          this.dataUpload =null;
-          this.uploadSubject.next(false);
-          this.sinNoticeService.setNotice("Tamaño de archivo no permitido.", 'error');
-        }
-        
+        };
+        this.loadImg.next(false);
       } else {
+        ////console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
+        //this.fileInput.nativeElement = null;
+        //document.getElementById("fileUpload").nodeValue = "";
+        //file = null
         this.dataUpload =null;
-        this.uploadSubject.next(false);
-        this.sinNoticeService.setNotice("Formato no permitido.", 'error');
+        this.loadImg.next(false);
+        this.sinNoticeService.setNotice("Tamaño de archivo no permitido.", 'error');
       }
     } else {
-      this.uploadSubject.next(false);
+      this.loadImg.next(false);
     }
   }
 

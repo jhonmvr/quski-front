@@ -34,6 +34,8 @@ export class GenerarCreditoComponent implements OnInit {
   private item: number;
   public loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
+  private loadImgJoya = new BehaviorSubject<boolean>(false);
+  private loadImgFunda = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
   public operacionSoft: OperacionSoft;
   private fechaServer;
@@ -230,7 +232,7 @@ export class GenerarCreditoComponent implements OnInit {
     this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     this.fechaCuota.setValue(data.credito.pagoDia ? data.credito.pagoDia : null);
-    this.validacionFecha();
+    data.credito.pagoDia ? this.validacionFecha() : null;
     data.joyas.forEach(e=>{
       let objetoOro = this.catTipoOro.find(x => x.codigo == e.tipoOro );
       e.tipoOro = objetoOro.nombre;

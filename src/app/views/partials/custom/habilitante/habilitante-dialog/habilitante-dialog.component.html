@@ -21,6 +21,11 @@
       </div>
     </div>
 </div>
+<div class="row">
+  <div class="col">
+    <mat-progress-bar *ngIf="loadImg.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+  </div>
+</div>
   
   <!--button mat-button [mat-dialog-close]="data" cdkFocusInitial
       disabled="{{isDisabledGuardar}}" (click)="subirArchivoHabilitante()">Guardar</button-->

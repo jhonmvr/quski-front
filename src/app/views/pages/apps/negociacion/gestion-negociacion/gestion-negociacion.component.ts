@@ -897,8 +897,12 @@ export class GestionNegociacionComponent implements OnInit {
           this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
           this.loadOpciones.next(false);
           this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
-        }
-        if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
+          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
+        } else if(data.entidad.simularResult.codigoError == 1 ){
+          this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
+          this.loadOpciones.next(false);
+          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
+        } else if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
             this.loadOpciones.next(false);

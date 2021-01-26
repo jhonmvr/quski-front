@@ -1057,6 +1057,10 @@ export class GestionClienteComponent implements OnInit {
           if (this.formDatosDireccionLaboral.valid) {
             if (this.formDatosEconomicos.valid) {
               if (this.formDatosIngreso.valid) {
+                if( this.valorIngreso.value < this.valorEgreso.value ){
+                  this.sinNoticeService.setNotice('EL EGRESO NO PUEDE SER MAYOR AL INGRESO DEL CLIENTE', 'warning');
+                  return;
+                }
                 if (this.avaluoActivo.valid || this.avaluoPasivo.valid) {
                   if (this.dataSource.data.length > 1) {
                     this.wrapper.cliente.actividadEconomica = this.actividadEconomica.value ? this.actividadEconomica.value.id : null;
