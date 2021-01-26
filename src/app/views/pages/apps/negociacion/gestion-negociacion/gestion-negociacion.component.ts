@@ -41,6 +41,7 @@ export class GestionNegociacionComponent implements OnInit {
   public loading;
   public usuario: string;
   public agencia: string;
+  errorEdad: string;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
   // ENTIDADES
@@ -199,7 +200,7 @@ export class GestionNegociacionComponent implements OnInit {
   }
 
 
-  loadCatalogo(){
+  public loadCatalogo(){
     this.sof.consultarPaisCS().subscribe((data: any) => {
       this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
       
@@ -454,8 +455,6 @@ export class GestionNegociacionComponent implements OnInit {
       this.telefonoDomicilio.setValue(wrapper.telefonoDomicilio.numero);
       this.telefonoFijo = wrapper.telefonoDomicilio;
     }
-  
-    
     this.email.setValue(this.tbQoCliente.email);
     this.campania.setValue('');
     this.publicidad.setValue ('');
@@ -513,6 +512,8 @@ export class GestionNegociacionComponent implements OnInit {
         valorARecibir: this.negoW.credito.valorARecibir
       }
       this.dataSourceCreditoNegociacion.data.push( calculadora );
+      this.seleccionarCredito( this.dataSourceCreditoNegociacion.data[0] );
+      this.masterToggle(this.dataSourceCreditoNegociacion.data[0]) ;
       this.dataSourceTasacion.data = wrapper.joyas;
       this.calcular();  
       this.sinNotSer.setNotice("NEGOCIACION -> \"" + wrapper.credito.codigo + "\" Cargada correctamente.", "success");
@@ -616,7 +617,20 @@ export class GestionNegociacionComponent implements OnInit {
       control.setValue(null);
     });
   }
-  public getErrorMessage(pfield: string) { //@TODO: Revisar campos 
+  public getErrorMessageEdad(){
+    const errorRequerido = 'Ingresar valores';
+    const input = this.formDatosCliente.get('edad');
+    console.log(' valores en el get message -> ', input.value  > 75 );
+    console.log(' valores en el get message -> ', input.value  < 18 );
+    return input.hasError('required') 
+    ? errorRequerido 
+    :  input.value  > 75 
+      ? 'Edad sobrepara el limite permitido' 
+      : input.value < 18 
+        ? 'No cumple la edad minima permitida' 
+        : '';
+  }
+  public getErrorMessage(pfield: string) { 
     const errorRequerido = 'Ingresar valores';
     const errorNumero = 'Ingresar solo numeros'; 
     const maximo = "El maximo de caracteres es: ";
@@ -641,17 +655,14 @@ export class GestionNegociacionComponent implements OnInit {
       const input = this.nombresCompletos;
       return input.hasError('required') ? errorRequerido : '';
     }
-
     if (pfield && pfield === 'fechaDeNacimiento') {
       const input = this.fechaDeNacimiento;
       return input.hasError('required') ? errorRequerido : '';
     }
-
     if (pfield && pfield === 'nacionalidad') {
       const input = this.nacionalidad;
       return input.hasError('required') ? errorRequerido : '';
     }
-
     if (pfield && pfield === 'telefonoDomicilio') {
       const input = this.formDatosCliente.get('telefonoDomicilio');
       return input.hasError('required')
@@ -664,7 +675,6 @@ export class GestionNegociacionComponent implements OnInit {
               ? errorInsuficiente
               : '';
     }
-
     if (pfield && pfield == "email") {
       const input = this.email;
       return input.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo + this.email.errors.maxlength.requiredLength : '';
@@ -678,7 +688,6 @@ export class GestionNegociacionComponent implements OnInit {
       const input = this.movil;
       return input.hasError('required') ? errorRequerido : input.hasError('pattern') ? errorNumero : input.hasError('maxlength') ? errorLogitudExedida : input.hasError('minlength') ? errorInsuficiente : '';
     }
-
     if (pfield && pfield === 'telefonoDomicilio') {
       const input = this.formDatosCliente.get('telefonoDomicilio');
       return input.hasError('required')
@@ -691,7 +700,6 @@ export class GestionNegociacionComponent implements OnInit {
               ? errorInsuficiente
               : '';
     }
-
     if (pfield && pfield === 'tipoOro') {
       const input = this.movil;
       return input.hasError('required') ? errorRequerido : '';
@@ -756,6 +764,9 @@ export class GestionNegociacionComponent implements OnInit {
       this.par.getDiffBetweenDateInicioActual(convertFechas.format(fechaSeleccionada, "input"), "dd/MM/yyy").subscribe((rDiff: any) => {
         const diff: YearMonthDay = rDiff.entidad;
         this.edad.setValue( diff.year );
+        if(this.edad.value && (this.edad.value < 18 || this.edad.value > 75) ){
+          this.getErrorMessage('edad');
+        }
       });
     }
   }
@@ -990,6 +1001,10 @@ export class GestionNegociacionComponent implements OnInit {
       if(confirm("ESTA SEGURO DE GENERAR LA SOLICITUD DE CREDITO?")){
         this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
           this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
+       }, error =>{
+         console.log('eeorr', error.error.msgError);
+        this.sinNotSer.setNotice(error.error.msgError,'error');
+
        });
       }
   }
@@ -1005,7 +1020,6 @@ export class GestionNegociacionComponent implements OnInit {
     let cliente = this.buildCliente();
     this.neg.verPrecios(cliente).subscribe(resp=>{
       this.catTipoOro = resp.entidades;
-      this.myStepper.selectedIndex =4;
     })
   }
   private _filter(value: Pais): Pais[] {

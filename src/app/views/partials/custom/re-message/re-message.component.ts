@@ -27,9 +27,9 @@ export class ReMessageComponent implements OnInit {
                 let config = new MatSnackBarConfig();
                 config.verticalPosition = 'top';
                 config.horizontalPosition = 'center';
-                
                 if(notice.type=='success'){
                     config.panelClass =  ['success-snackbar'] ;
+                    config.duration = 5000;
                 }                    
                 else if(notice.type=='error'){                        
                     config.panelClass =  ['error-snackbar'] ;
@@ -40,7 +40,6 @@ export class ReMessageComponent implements OnInit {
                 else if(notice.type=='warning'){                        
                     config.panelClass =  ['warning-snackbar'] ;
                 }
-                config.duration = 5000;
                 this.snackBar.open(this.message,"cerrar",config);
               }
           } else {

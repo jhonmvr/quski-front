@@ -225,11 +225,12 @@ export class GenerarCreditoComponent implements OnInit {
   private cargarCampos(data: OperacionNuevoWrapper) {
     this.firmanteOperacion.setValue( this.catFirmanteOperacion.find(t=> t.codigo != null).nombre );
     this.firmanteOperacion.disable();
-
     this.codigoOperacion.setValue(data.credito.codigo);
     this.estadoOperacion.setValue(data.proceso.estadoProceso);
     this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
+    this.fechaCuota.setValue(data.credito.pagoDia ? data.credito.pagoDia : null);
+    this.validacionFecha();
     data.joyas.forEach(e=>{
       let objetoOro = this.catTipoOro.find(x => x.codigo == e.tipoOro );
       e.tipoOro = objetoOro.nombre;
@@ -238,6 +239,8 @@ export class GenerarCreditoComponent implements OnInit {
       let objetoEstado = this.catEstadoJoya.find( x => x.codigo == e.estadoJoya);
       e.estadoJoya = objetoEstado.nombre;
     })
+    this.excepcionOperativa.setValue( data.proceso.estadoProceso == 'CREADO' ? this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') : null );
+    this.habilitarExcepcionOperativa();
     this.dataSource.data = data.joyas;
     this.numeroCuenta.setValue( data.cuentas[0].cuenta);
     this.tipoCuenta.setValue( this.catCuenta.find( x => x.id == data.cuentas[0].banco) );
@@ -254,24 +257,18 @@ export class GenerarCreditoComponent implements OnInit {
       });
     }
     this.calcular();
-    if( data.credito.numeroFunda && data.credito.estadoSoftbank && data.credito.numeroOperacion){
+    if( data.credito.numeroFunda){
       this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.id.toString());
       this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
-      this.tipoCliente.setValue( this.catTipoCliente.find(t=> t.codigo == data.credito.tipoCliente) );
-
-      data.credito.codigoTipoFunda ? this.pesoFunda.setValue( this.catTipoFunda.find(f => f.codigo == data.credito.codigoTipoFunda ) ) : null;
-      let cuenta = data.cuentas.find( e => e.cuenta == data.credito.numeroCuenta );
-      this.tipoCuenta.setValue( cuenta ?this.catCuenta.find(c => c.id == cuenta.banco ) : null );
-
-      this.buscarNumero();
+      this.pesoFunda.setValue( this.catTipoFunda ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) : null : null )
+      this.numeroFunda.setValue( data.credito.numeroFunda ? data.credito.numeroFunda : null);
+    }
+    if( data.credito.estadoSoftbank && data.credito.numeroOperacion){
       this.cargarOperacion( data.credito );
     }
-    //cargar datos negociacion
     let x = new Array()
     x.push(data.credito);
     this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(x);
-
-
     this.loadingSubject.next(false);
   }
   private calcular() {
@@ -316,13 +313,6 @@ export class GenerarCreditoComponent implements OnInit {
       this.fechaServer = new Date(fechaSistema.entidad);
     })
   }
-  public buscarNumero(){
-    this.operacionNuevo.cuentas.forEach(e=>{
-      if(e.banco == this.tipoCuenta.value.id){
-        this.numeroCuenta.setValue( e.cuenta );
-      }
-    });
-  }
   public validacionFecha() {
     this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value), new Date(this.fechaServer))
     if (Math.abs(this.fechaUtil.obtenerDias()) >= 30 && Math.abs(this.fechaUtil.obtenerDias()) <= 45) {
@@ -347,19 +337,17 @@ export class GenerarCreditoComponent implements OnInit {
                 this.catTipoOro = !data.existeError ? data.catalogo : "Error al cargar catalogo";
                 this.sof.consultarEstadoJoyaCS().subscribe( (data:any) =>{
                   this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-                  this.traerOperacion();
+                  this.par.findByTipo('EXC-OPV-NUEV',).subscribe( (data :any) =>{
+                    console.log('paramatreos -->', data);
+                    this.catExcepcionOperativa = data.entidades ? data.entidades : {codigo: 'ERR', mensaje: 'Error al cargar catalogo'}
+                      this.traerOperacion();
+                  });
                 });
               });
             });
           });
         });
       });
-    });
-    this.par.findByTipo('EXC-OPV-NUEV',).subscribe( (data :any) =>{
-      console.log('paramatreos -->', data);
-      if(data.entidades){
-        this.catExcepcionOperativa = data.entidades;
-      }
     });
   }
   /** ********************************************* @OPERACION ********************* **/
@@ -386,7 +374,7 @@ export class GenerarCreditoComponent implements OnInit {
     this.router.navigate(['cliente/gestion-cliente/NEG/',this.item]);
   }
   public generarCredito(anular?: boolean ) {
-    if(this.formFunda.valid && this.formInstruccion.valid && this.srcFunda && this.srcJoya){
+    if(this.formFunda.valid && this.formInstruccion.valid){
       this.loadingSubject.next(true);      
       this.operacionNuevo.credito.pagoDia = this.fechaCuota.value != null ? this.fechaCuota.value : null;
       this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
@@ -490,24 +478,26 @@ export class GenerarCreditoComponent implements OnInit {
   }
   private cargarFotoHabilitante(tipoDocumento, proceso, referencia) {
     this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).subscribe((data: any) => {
-      if(data.entidad.tbQoTipoDocumento.tipoDocumento == "FOTO JOYAS"){
-        this.operacionNuevo.credito.uriImagenSinFunda = data.entidad.objectId;
-      }
-      const algo = 'algo';
-      if(data.entidad.tbQoTipoDocumento.tipoDocumento == "FOTO FUNDA"){
-        this.operacionNuevo.credito.uriImagenConFunda = data.entidad.objectId;
-      }
-      this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).subscribe((dataDos: any) => {
-        let file = JSON.parse( atob( dataDos.entidad ) );
-        if(file.typeAction == '6'){
-          this.srcJoya = file.fileBase64;
+      if(data.entidad){
+        if(data.entidad.tbQoTipoDocumento.tipoDocumento == "FOTO JOYAS"){
+          this.operacionNuevo.credito.uriImagenSinFunda = data.entidad.objectId;
         }
-        if(file.typeAction == '7'){
-          this.srcFunda= file.fileBase64;
+        const algo = 'algo';
+        if(data.entidad.tbQoTipoDocumento.tipoDocumento == "FOTO FUNDA"){
+          this.operacionNuevo.credito.uriImagenConFunda = data.entidad.objectId;
         }
-      });
+        this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).subscribe((dataDos: any) => {
+          let file = JSON.parse( atob( dataDos.entidad ) );
+          if(file.typeAction == '6'){
+            this.srcJoya = file.fileBase64;
+          }
+          if(file.typeAction == '7'){
+            this.srcFunda= file.fileBase64;
+          }
+        });
+      }
     }, error =>{
-
+      this.sinNotSer.setNotice('ME BUGUIE :c','error');
     });
   }
   public solicitarAprobacion(){
@@ -533,8 +523,5 @@ export class GenerarCreditoComponent implements OnInit {
         }
       });
     }
-  }
-  private cargarDocumento(){
-
   }
 }

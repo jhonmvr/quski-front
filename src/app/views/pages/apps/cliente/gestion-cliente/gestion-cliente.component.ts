@@ -9,7 +9,6 @@ import { RelacionDependenciaEnum } from '../../../../../core/enum/RelacionDepend
 import { TbQoTelefonoCliente } from '../../../../../core/model/quski/TbQoTelefonoCliente';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
-import { SeparacionBienesEnum } from '../../../../../core/enum/SeparacionBienesEnum';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
@@ -79,7 +78,6 @@ export class GestionClienteComponent implements OnInit {
   public catCargo: Array<any>;
   catTipoTelefono;
   /** @ENUMS **/
-  public catSeparacionBienes = Object.values(SeparacionBienesEnum);
   /** @DIVISION_POLITICA **/
   private divicionPolitica: User[];
   public catFiltradoLugarNacimiento: Observable<User[]>;
@@ -103,7 +101,6 @@ export class GestionClienteComponent implements OnInit {
   public apellidoMaterno = new FormControl('', [Validators.maxLength(50)]);
   public segundoNombre = new FormControl('', [Validators.maxLength(50)]);
   public estadoCivil = new FormControl('', Validators.required);
-  public separacionBienes = new FormControl('', []);
   public edad = new FormControl('', []);
 
   public formDatosContacto: FormGroup = new FormGroup({});
@@ -201,7 +198,6 @@ export class GestionClienteComponent implements OnInit {
     this.formCliente.addControl("nacionalidad ", this.nacionalidad);
     this.formCliente.addControl("nivelEducacion ", this.nivelEducacion);
     this.formCliente.addControl("actividadEconomica  ", this.actividadEconomica);
-    this.formCliente.addControl("separacionBienes  ", this.separacionBienes);
     this.formCliente.addControl("canalContacto  ", this.canalContacto);
     this.formDatosContacto.addControl("telefonoFijo  ", this.telefonoFijo);
     this.formDatosContacto.addControl("telefonoMovil  ", this.telefonoMovil);
@@ -289,8 +285,6 @@ export class GestionClienteComponent implements OnInit {
     this.genero.setValue(this.catGenero.find(x => x.codigo == this.wrapper.cliente.genero));
     this.estadoCivil.setValue(this.catEstadoCivil.find(x => x.codigo == this.wrapper.cliente.estadoCivil));
     this.cargaFamiliar.setValue(this.wrapper.cliente.cargasFamiliares);
-    this.separacionBienes.setValue(this.wrapper.cliente.separacionBienes);
-    this.habilitarCampo();
     if (this.wrapper.cliente.lugarNacimiento) {
       this.catFiltradoLugarNacimiento.subscribe((data: any) => {
         this.lugarNacimiento.setValue(data.find(x => x.id == this.wrapper.cliente.lugarNacimiento));
@@ -770,17 +764,6 @@ export class GestionClienteComponent implements OnInit {
       return input.hasError('required') ? errorRequerido : '';
     }
   }
-  public habilitarCampo() {
-    this.separacionBienes.setValue('');
-    this.separacionBienes.disable();
-    this.catEstadoCivil.forEach(e => {
-      if (this.estadoCivil.value && this.estadoCivil.value.codigo == "CAS") {
-        this.separacionBienes.setValidators([Validators.required]);
-        this.separacionBienes.enable();
-        this.sinNoticeService.setNotice("SELECCIONE LA OPCION DE SEPARACIÒN DE BIENES ", 'warning');
-      }
-    });
-  }
   public _filter(nombre: string): User[] {
     const filterValue = nombre.toLowerCase();
     return this.divicionPolitica.filter(option => option.nombre.toLowerCase().indexOf(filterValue) === 0);
@@ -1093,7 +1076,6 @@ export class GestionClienteComponent implements OnInit {
                     this.wrapper.cliente.nivelEducacion = this.nivelEducacion.value ? this.nivelEducacion.value.codigo : null;
                     this.wrapper.cliente.profesion = this.profesion.value ? this.profesion.value.codigo : null;
                     this.wrapper.cliente.segundoNombre = this.segundoNombre.value;
-                    this.wrapper.cliente.separacionBienes = this.separacionBienes.value;
                     this.wrapper.cliente.usuario = this.usuario;
                     this.wrapper.cliente.agencia = this.agencia;
 
@@ -1191,9 +1173,6 @@ export class GestionClienteComponent implements OnInit {
                       } else {
                         this.loadingSubject.next(false);
                         this.sinNoticeService.setNotice("NO SE PUDO REGISTRAR EL CLIENTE EN SOFTBANK", 'error');
-                          if(this.origen == 'NEG'){ this.router.navigate(['credito-nuevo/generar-credito/', this.item]); }
-                          if(this.origen == 'NOV'){ this.router.navigate(['novacion/novacion-habilitante/', this.item]);}
-                          if(this.origen == 'CED'){ this.router.navigate(['negociacion/bandeja-operaciones']);}  
                       }
                     });
                   } else {
