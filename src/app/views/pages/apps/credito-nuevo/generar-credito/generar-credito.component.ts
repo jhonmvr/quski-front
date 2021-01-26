@@ -513,7 +513,6 @@ export class GenerarCreditoComponent implements OnInit {
         if(r){
           this.pro.cambiarEstadoProceso(this.operacionNuevo.credito.tbQoNegociacion.id,"NUEVO","PENDIENTE_APROBACION").subscribe( (data: any) =>{
             if(data.entidad){
-              //console.log('El nuevo estado -> ',data.entidad.estadoProceso);
               this.router.navigate(['negociacion/bandeja-operaciones']);
             }
           });

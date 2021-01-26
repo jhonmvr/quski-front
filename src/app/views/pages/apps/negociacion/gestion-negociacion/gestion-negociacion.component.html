@@ -147,6 +147,11 @@
 			</mat-step>
 			<mat-step>
 				<ng-template matStepLabel>Variables Crediticias</ng-template>
+				<div class="row">
+					<div class="col">
+						<mat-progress-bar *ngIf="loadVariables.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+					</div>
+				</div>
 				<ng-container *ngIf="componenteVariable">
 					<kt-tabla-variables-crediticias [base]="negoW.variables"></kt-tabla-variables-crediticias>
 				</ng-container>
@@ -171,6 +176,11 @@
 			<!--   ****************************** SEGUNDA PARTE DE NEGOCIACION ***************************   -->
 			<mat-step [stepControl]="formTasacion">
 				<ng-template matStepLabel> Tasación </ng-template>
+				<div class="row">
+					<div class="col">
+						<mat-progress-bar *ngIf="loadTasacion.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+					</div>
+				</div>
 				<div class="row mt-4">
 					<div class="col-4 offset-5">
 						<button mat-stroked-button color="primary" (click)="verPrecio()" matTooltip="Ver precio">
@@ -415,7 +425,11 @@
 			</mat-step>
 			<mat-step [stepControl]="formOpcionesCredito">
 				<ng-template matStepLabel>Detalle Opciones de crédito</ng-template>
-				<mat-progress-bar mode="indeterminate" *ngIf="loading | async"></mat-progress-bar>
+				<div class="row">
+					<div class="col">
+						<mat-progress-bar *ngIf="loadOpciones.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+					</div>
+				</div>
 				<mat-table #tableNegociacion class="tableOpciones"	[dataSource]="dataSourceCreditoNegociacion">
 					<ng-container matColumnDef="Accion">
 						<mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
