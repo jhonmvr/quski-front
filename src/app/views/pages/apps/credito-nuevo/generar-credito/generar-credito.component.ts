@@ -41,6 +41,7 @@ export class GenerarCreditoComponent implements OnInit {
   public fechaServer;
   public existeCredito: boolean;
   private agencia: any;
+  public anular: boolean;
   private correoAsesor: any;
   /** @FORM_INFORMACION **/
   public formInformacion: FormGroup = new FormGroup({});
@@ -364,7 +365,7 @@ export class GenerarCreditoComponent implements OnInit {
 
     this.cre.numeroDeFunda( this.operacionNuevo.credito ).subscribe( (data: any) =>{
       if(data.entidad){
-        
+        this.anular = true;
         this.numeroFunda.setValue( data.entidad.numeroFunda ); 
       }else{ 
         this.loadingSubject.next(false);
@@ -380,13 +381,12 @@ export class GenerarCreditoComponent implements OnInit {
       this.loadingSubject.next(true);      
       this.operacionNuevo.credito.pagoDia = this.fechaCuota.value != null ? this.fechaCuota.value : null;
       this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
-      this.operacionNuevo.credito.numeroFunda = anular ? 0 : this.numeroFunda.value;
+      this.operacionNuevo.credito.numeroFunda = anular ? null : this.numeroFunda.value;
       this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
       this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
       this.operacionNuevo.credito.idAgencia = this.agencia;
       this.operacionNuevo.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
       this.operacionNuevo.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
-
       this.cre.crearOperacionNuevo( this.operacionNuevo.credito, this.correoAsesor ).subscribe( (data: any) =>{
         if(data.entidad){
           this.operacionSoft = data.entidad;  
@@ -413,7 +413,6 @@ export class GenerarCreditoComponent implements OnInit {
     this.numeroFunda.setValue( data.numeroFunda ); 
     this.numeroOperacion.setValue( data.numeroOperacion );
     this.deudaInicial.setValue( data.deudaInicial );
-    //this.sinNotSer.setNotice('NUMERO DE FUNDA ASIGNADO: '+ data.numeroFunda, 'success');
     this.stepper.selectedIndex = data.periodoPlazo != 'D' ? 4 : 3;
     this.fechaVencimiento.setValue( data.fechaVencimiento ); 
     this.fechaEfectiva.setValue( data.fechaEfectiva); 

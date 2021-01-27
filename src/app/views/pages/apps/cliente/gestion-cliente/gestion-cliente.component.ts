@@ -36,6 +36,7 @@ export interface User {
 export class GestionClienteComponent implements OnInit {
   /** @STANDAR_VARIABLES **/
   private loadingSubject = new BehaviorSubject<boolean>(false);
+  public loadBusqueda  = new BehaviorSubject<boolean>(false);
   private wrapper: ClienteCompletoWrapper;
   public loading;
   usuario
@@ -391,14 +392,15 @@ export class GestionClienteComponent implements OnInit {
     this.valorEgreso.setValue(this.wrapper.cliente.egresos);
     this.avaluoPasivo.setValue(this.wrapper.cliente.pasivos);
     this.avaluoActivo.setValue(this.wrapper.cliente.activos);
-    this.loadingSubject.next(false);
+    this.loadBusqueda.next(false);
     }else{
+      this.loadBusqueda.next(false);
       this.sinNoticeService.setNotice('Error cargando cliente','error');
     }
   }
   private buscarCliente() {
     this.route.paramMap.subscribe((data: any) => {
-      this.loadingSubject.next(true);
+      this.loadBusqueda.next(true);
       this.origen = data.params.origen;
       this.item = data.params.item;
       if (data.params.origen == "NEG" || data.params.origen == "NOV") {
@@ -408,7 +410,7 @@ export class GestionClienteComponent implements OnInit {
             this.wrapper = data.entidad;
             this.traerCatalogos();
           } else {
-            this.loadingSubject.next(false);
+            this.loadBusqueda.next(false);
             this.sinNoticeService.setNotice('NO EXISTE CLIENTE: ' + data.entidad.mensaje, 'error');
           }
         });
@@ -418,12 +420,12 @@ export class GestionClienteComponent implements OnInit {
             this.wrapper = data.entidad;
             this.traerCatalogos();
           } else {
-            this.loadingSubject.next(false);
+            this.loadBusqueda.next(false);
             this.sinNoticeService.setNotice('NO EXISTE CLIENTE: ' + data.entidad.mensaje, 'error');
           }
         });
       } else {
-        this.loadingSubject.next(false);
+        this.loadBusqueda.next(false);
         this.sinNoticeService.setNotice('ERROR EN EL CODIGO DE ENTRADA','error');
       }
     });

@@ -16,6 +16,11 @@
     <mat-vertical-stepper [linear]="false" #stepper>
       <mat-step label="Datos Personales" [stepControl]="formCliente">
         <form [formGroup]="formCliente">
+          <div class="row">
+            <div class="col">
+              <mat-progress-bar *ngIf="loadBusqueda.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+            </div>
+          </div>
           <div class="row mb-5">
             <div  class="offset-md-4 col-md-4" >
               <button mat-button (click)=" cargarComponenteHabilitante()"> Documentos Habilitantes</button>

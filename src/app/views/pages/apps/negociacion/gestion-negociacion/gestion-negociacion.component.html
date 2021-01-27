@@ -20,6 +20,11 @@
 				<ng-template matStepLabel>Busqueda de Cliente</ng-template>
 				<form [formGroup]="formBusqueda">
 					<div class="row">
+						<div class="col">
+							<mat-progress-bar *ngIf="loadBusqueda.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+						</div>
+					</div>
+					<div class="row">
 						<div class="col-md-6 ">
 							<mat-form-field class="mat-form-field-fluid">
 								<input [formControl]="identificacion" placeholder="C.I." autocomplete="off"
@@ -621,7 +626,7 @@
 						</div>
 					</div>
 					<div class="row mt-3">
-						<div class="col-3 offset-4">
+						<div class="col-4 offset-5">
 							<button mat-raised-button color="accent" (click)="guardarCredito()" style="align-self: center;">
 								<span color="primary">Negociar</span>
 							</button>

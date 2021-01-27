@@ -22,7 +22,7 @@ export class TbQoCreditoNegociacion {
     numeroOperacion: string;
     totalInteresVencimiento: number ;
     totalCostoNuevaOperacion: number ;
-    numeroFunda: number;
+    numeroFunda: string;
     descripcionProducto: string;
     montoDiferido: number;
     montoPreaprobado: number;

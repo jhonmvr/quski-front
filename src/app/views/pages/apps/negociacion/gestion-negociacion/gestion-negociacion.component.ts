@@ -44,6 +44,7 @@ export class GestionNegociacionComponent implements OnInit {
   public agencia: string;
   public loadTasacion  = new BehaviorSubject<boolean>(false);
   public loadOpciones  = new BehaviorSubject<boolean>(false);
+  public loadBusqueda  = new BehaviorSubject<boolean>(false);
   public loadVariables = new BehaviorSubject<boolean>(false);
 
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
@@ -340,10 +341,12 @@ export class GestionNegociacionComponent implements OnInit {
     if (this.formBusqueda.invalid) {
       this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'warning');
       return;
-    }    
+    }
+    this.loadBusqueda.next(true);    
     this.neg.iniciarNegociacion(this.identificacion.value, this.usuario, this.agencia).subscribe((wrapper: any) => {
       if (wrapper.entidad.respuesta) {
         this.limpiarNegociacion();
+        this.loadBusqueda.next(false);    
         this.negoW = wrapper.entidad;
         this.myStepper.selectedIndex = 1;
         if (this.negoW.excepcionBre){
