@@ -18,7 +18,7 @@ import { environment } from '../../../../../../environments/environment';
 })
 export class HabilitanteDialogComponent implements OnInit {
   private uploadSubject = new BehaviorSubject<boolean>(false);
-  private loadImg = new BehaviorSubject<boolean>(false);
+  public loadImg = new BehaviorSubject<boolean>(false);
   public uploading;
   public dataUpload: DataUpload;
   isDisabledGuardar: any;
@@ -50,15 +50,14 @@ export class HabilitanteDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  onFileChange(event) {
-        
+  public onFileChange(event) {
     let reader = new FileReader();
+    this.uploadSubject.next(true)
     if (event.target.files && event.target.files.length > 0) {
       let file = <File>event.target.files[0];
       let mimeType = file.type;
       let mimeSize = file.size;
       if (mimeSize < 600000) {
-        this.loadImg.next(true);
         reader.readAsDataURL(file);
         reader.onload = () => {
           //this.fileBase64= String(reader.result).split(",")[1];
@@ -73,45 +72,31 @@ export class HabilitanteDialogComponent implements OnInit {
             objectId:""
           };
         };
-        this.loadImg.next(false);
+        this.uploadSubject.next(false)
       } else {
-        ////console.log("ARCHIVO --------> " + this.fileInput.nativeElement);
-        //this.fileInput.nativeElement = null;
-        //document.getElementById("fileUpload").nodeValue = "";
-        //file = null
+        this.uploadSubject.next(false)
         this.dataUpload =null;
-        this.loadImg.next(false);
         this.sinNoticeService.setNotice("Tamaño de archivo no permitido.", 'error');
       }
-    } else {
-      this.loadImg.next(false);
     }
   }
 
   public subirArchivoHabilitante() {
-    ////console.log("===> subirArchivoHabilitantecontraro relate id: " +JSON.stringify(this.dataUpload));
-    ////console.log("===> subirArchivoHabilitantecontraro relate id: " +btoa( JSON.stringify( this.dataUpload )));
-    ////console.log("===> subirArchivoHabilitante contraro relate tipo: " +JSON.stringify(this.data.tipoDocumento));
-    this.os.createObject( btoa( JSON.stringify( this.dataUpload ) ) , 
-      this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe( (objectData:any)=>{
-      ////console.log("===> subirArchivoHabilitante retorna mongo: " +JSON.stringify(objectData));
+    this.loadImg.next(true);
+    this.os.createObject( btoa( JSON.stringify( this.dataUpload ) ), this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe( (objectData:any)=>{
       if( objectData && objectData.entidad ){
         this.dataUpload.objectId=objectData.entidad;
         this.fileBase64=null;
         this.upload.uploadFile(this.upload.appResourcesUrl +"uploadRestController/loadFileHabilitanteSimplified",this.dataUpload).subscribe((data: any) => {
           this.dialogRef.close(data.relatedIdStr);
+          this.loadImg.next(false);
         },error => {
-          ////console.log("error llegado " + JSON.stringify(error.error));
+          this.loadImg.next(false);
           if (JSON.stringify(error.error).indexOf("codError") > 0) {
             let b = error.error;
-          } else {
-            //console.log("error no java " + error);
           }
-        }
-      );
+        });
       }
-    } );
-
-    
+    });
   }
 }

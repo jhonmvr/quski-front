@@ -34,11 +34,11 @@ export class GenerarCreditoComponent implements OnInit {
   private item: number;
   public loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
-  private loadImgJoya = new BehaviorSubject<boolean>(false);
-  private loadImgFunda = new BehaviorSubject<boolean>(false);
+  public loadImgJoya = new BehaviorSubject<boolean>(false);
+  public loadImgFunda = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
   public operacionSoft: OperacionSoft;
-  private fechaServer;
+  public fechaServer;
   public existeCredito: boolean;
   private agencia: any;
   private correoAsesor: any;
@@ -444,10 +444,12 @@ export class GenerarCreditoComponent implements OnInit {
 
   public cargarFotoJoya() {
     this.srcJoya = null;
+    this.loadImgJoya.next(true);
     this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.operacionNuevo.credito.id.toString(), this.joyaFoto.tipoDocumento);
   }
   public cargarFotoFunda() {
     this.srcFunda = null;
+    this.loadImgFunda.next(true);
     this.loadArchivoCliente(this.fundaFoto.proceso, this.fundaFoto.estadoOperacion, this.operacionNuevo.credito.id.toString(), this.fundaFoto.tipoDocumento);
   }
   private loadArchivoCliente(procesoS: string, estadoOperacionS: string, referenciaS: string, idTipoDocumentoS: string) {
@@ -467,14 +469,19 @@ export class GenerarCreditoComponent implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         console.log('r => ', r);
         if (r) {
+
           this.sinNotSer.setNotice("ARCHIVO CARGADO CORRECTAMENTE", "success");
           this.cargarFotoHabilitante(idTipoDocumentoS, procesoS, referenciaS);
         }else{
           this.sinNotSer.setNotice("ERROR CARGANDO ARCHIVO", "error");
+          this.loadImgFunda.next(false);
+          this.loadImgJoya.next(false);
         }
       });
     } else {
       this.sinNotSer.setNotice("ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO", "error");
+      this.loadImgFunda.next(false);
+      this.loadImgJoya.next(false);
     }
 
   }
@@ -492,9 +499,11 @@ export class GenerarCreditoComponent implements OnInit {
           let file = JSON.parse( atob( dataDos.entidad ) );
           if(file.typeAction == '6'){
             this.srcJoya = file.fileBase64;
+            this.loadImgJoya.next(false);
           }
           if(file.typeAction == '7'){
             this.srcFunda= file.fileBase64;
+            this.loadImgFunda.next(false);
           }
         });
       }

@@ -4,7 +4,7 @@
   </div>
   <div class="col-12 center">
     <div mat-dialog-content class="center" >
-    <input type="file" class="inputfile" *ngIf="!(uploading | async)"  id="fileUpload" (change)="onFileChange($event,element); $event.preventDefault()" #fileInput value="Escoja" >
+      <input type="file" class="inputfile" *ngIf="!(uploading | async)"  id="fileUpload" (change)="onFileChange($event,element); $event.preventDefault()" #fileInput value="Escoja" >
       <button type="button"  *ngIf="uploading | async" class="btn btn-sm btn-default" (click)="subirArchivoHabilitante(element); $event.preventDefault()">
         <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
       </button>

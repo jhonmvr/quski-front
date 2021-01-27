@@ -42,7 +42,6 @@ export class GestionNegociacionComponent implements OnInit {
   public loadingTasacion;
   public usuario: string;
   public agencia: string;
-  errorEdad: string;
   public loadTasacion  = new BehaviorSubject<boolean>(false);
   public loadOpciones  = new BehaviorSubject<boolean>(false);
   public loadVariables = new BehaviorSubject<boolean>(false);
@@ -80,7 +79,7 @@ export class GestionNegociacionComponent implements OnInit {
   public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public publicidad = new FormControl('', [Validators.required]);
   public fechaDeNacimiento = new FormControl('', [Validators.required]);
-  public edad = new FormControl('', [Validators.required]);
+  public edad = new FormControl('', [Validators.required, Validators.max(75), Validators.min(18)]);
   public nacionalidad = new FormControl('', [Validators.required]);
   public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
@@ -177,9 +176,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.formTasacion.addControl("valorOro", this.valorOro);
     this.formTasacion.addControl("tienePiedras", this.tienePiedras);
     this.formTasacion.addControl("detallePiedras", this.detallePiedras);
-    //this.formTasacion.addControl("valorAplicable", this.valorAplicable);
-    //this.formTasacion.addControl("precioOro", this.precioOro);
-    //this.formTasacion.addControl("valorAvaluo", this.valorAvaluo);
+
     
     this.formOpcionesCredito.addControl("montoSolicitado", this.montoSolicitado);
   }
@@ -201,8 +198,6 @@ export class GestionNegociacionComponent implements OnInit {
     this.inicioDeFlujo();
 
   }
-
-
   public loadCatalogo(){
     this.sof.consultarPaisCS().subscribe((data: any) => {
       this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
@@ -346,21 +341,20 @@ export class GestionNegociacionComponent implements OnInit {
       this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'warning');
       return;
     }    
-      this.neg.iniciarNegociacion(this.identificacion.value, this.usuario, this.agencia).subscribe((wrapper: any) => {
-        if (wrapper.entidad.respuesta) {
-          this.limpiarNegociacion();
-          this.negoW = wrapper.entidad;
-          this.myStepper.selectedIndex = 1;
-          if (this.negoW.excepcionBre){
-            this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
-            return;
-          } 
-          this.cargarValores(this.negoW, false);
-        } else {
-          this.abrirPopupDeAutorizacion(this.identificacion.value);
-        }
-      });
- 
+    this.neg.iniciarNegociacion(this.identificacion.value, this.usuario, this.agencia).subscribe((wrapper: any) => {
+      if (wrapper.entidad.respuesta) {
+        this.limpiarNegociacion();
+        this.negoW = wrapper.entidad;
+        this.myStepper.selectedIndex = 1;
+        if (this.negoW.excepcionBre){
+          this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
+          return;
+        } 
+        this.cargarValores(this.negoW, false);
+      } else {
+        this.abrirPopupDeAutorizacion(this.identificacion.value);
+      }
+    });
   }
   private iniciarNegociacionEquifax( cedula: string ){
     this.neg.iniciarNegociacionEquifax( cedula, this.usuario, this.agencia).subscribe( (wrapper: any) =>{
@@ -439,7 +433,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.cedula.setValue(this.tbQoCliente.cedulaCliente);
     this.identificacion.setValue(this.tbQoCliente.cedulaCliente);
     this.nombresCompletos.setValue(this.tbQoCliente.nombreCompleto);
-    this.fechaDeNacimiento.setValue(this.tbQoCliente.fechaNacimiento);
+    this.fechaDeNacimiento.setValue(this.tbQoCliente.fechaNacimiento ? new Date( this.tbQoCliente.fechaNacimiento ) : null );
     this.cargarEdad();
     this.nacionalidad.setValue(this.catPais?this.catPais.find(p=> p.id == this.tbQoCliente.nacionalidad):null);
     if(wrapper.telefonoMovil){
@@ -611,16 +605,11 @@ export class GestionNegociacionComponent implements OnInit {
   }
   public getErrorMessageEdad(){
     const errorRequerido = 'Ingresar valores';
+    const errorMin = 'No cumple la edad minima';
+    const errorMax = 'No cumple la edad maxima';
     const input = this.formDatosCliente.get('edad');
-    console.log(' valores en el get message -> ', input.value  > 75 );
-    console.log(' valores en el get message -> ', input.value  < 18 );
-    return input.hasError('required') 
-    ? errorRequerido 
-    :  input.value  > 75 
-      ? 'Edad sobrepara el limite permitido' 
-      : input.value < 18 
-        ? 'No cumple la edad minima permitida' 
-        : '';
+    // console.log('El required // El min // El max // El valor', input.hasError('required'), input.hasError('min'), input.hasError('max'), input.value );
+    return input.hasError('required') ? errorRequerido :  input.hasError('max') ? errorMax : input.hasError('min') ? errorMin : '';
   }
   public getErrorMessage(pfield: string) { 
     const errorRequerido = 'Ingresar valores';
@@ -750,15 +739,16 @@ export class GestionNegociacionComponent implements OnInit {
     this.cedula.disable();
   }
   public cargarEdad(){
+    console.log('cargarEdad');
     if(this.fechaDeNacimiento.valid){
+      console.log('Fecha de nacimeiento valida');
       const fechaSeleccionada = new Date(this.fechaDeNacimiento.value);
       const convertFechas = new RelativeDateAdapter();
+      console.log('Fecha ===>', fechaSeleccionada);
       this.par.getDiffBetweenDateInicioActual(convertFechas.format(fechaSeleccionada, "input"), "dd/MM/yyy").subscribe((rDiff: any) => {
         const diff: YearMonthDay = rDiff.entidad;
+        console.log('La edad? ===>', diff.year);
         this.edad.setValue( diff.year );
-        if(this.edad.value && (this.edad.value < 18 || this.edad.value > 75) ){
-          this.getErrorMessage('edad');
-        }
       });
     }
   }
@@ -1025,6 +1015,11 @@ export class GestionNegociacionComponent implements OnInit {
   verPrecio(){
     if(this.formDatosCliente.invalid){
       this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'error');
+      this.myStepper.selectedIndex =1;
+      return;
+    }
+    if(!this.fechaDeNacimiento.value || this.edad.value < 18 || this.edad.value > 75 ){
+      this.sinNotSer.setNotice("INGRESE UNA FECHA VALIDA QUE CORRESPONDA A UNA EDAD VALIDA", 'error');
       this.myStepper.selectedIndex =1;
       return;
     }

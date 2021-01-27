@@ -232,7 +232,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required placeholder="Banco del cliente" [formControl]="tipoCuenta" (selectionChange)="buscarNumero()">
+                                <mat-select required placeholder="Banco del cliente" [formControl]="tipoCuenta">
                                     <mat-option *ngFor="let element of catCuenta" [value]="element">
                                         {{element.nombre }}
                                     </mat-option>

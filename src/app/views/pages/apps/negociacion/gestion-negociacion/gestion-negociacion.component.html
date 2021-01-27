@@ -73,6 +73,7 @@
 									required="true" />
 								<mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
 								<mat-datepicker #pickerFechaNacimiento></mat-datepicker>
+								<mat-error>{{ getErrorMessageEdad() }}</mat-error>
 							</mat-form-field>
 						</div>
 						<div class="col-md-6 ">
