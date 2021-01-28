@@ -29,7 +29,7 @@ export class ParametroService extends BaseService {
       return this.http.get(url, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     ); 
   }  
@@ -41,7 +41,7 @@ public findByNombre(nombre:string){
   return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/getEntityByNombre", this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
 }
@@ -61,7 +61,7 @@ public findByNombre(nombre:string){
     return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/findByNombreTipoOrdered", this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -72,7 +72,7 @@ public findByNombre(nombre:string){
     return this.http.get(this.genericResourcesUrl  +this.rest + "/findByNombreTipoOrdered", this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -87,7 +87,7 @@ public findByNombre(nombre:string){
     return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/addDaysToDate", this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -102,7 +102,7 @@ public findByNombre(nombre:string){
     return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/countDaysBetweenDate", this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -114,7 +114,7 @@ public findByNombre(nombre:string){
     return this.http.get(url, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -140,7 +140,7 @@ public findByNombre(nombre:string){
     return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/listByParamEntities", this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -152,7 +152,7 @@ public findTipos(){
     return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/listAllTipos", this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
 }
@@ -171,7 +171,7 @@ public findTipos(){
     return this.http.get(url, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -188,7 +188,7 @@ public findTipos(){
     return this.http.get(url, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }

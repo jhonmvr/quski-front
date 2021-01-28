@@ -25,7 +25,7 @@ export class ReFileUploadService extends BaseService {
       return this.http.post(serviceUrl, data,this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
     }
