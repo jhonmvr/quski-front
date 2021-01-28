@@ -55,7 +55,7 @@ export class BaseService {
     }
   }
 
-  public setParameter() {
+ /*  public setParameter() {
            localStorage.setItem('setRE000', 'true');
            this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
            //Url de acceso al rootcontext de seguridad core-security-web
@@ -84,8 +84,8 @@ export class BaseService {
            //parametros cloudstudio
            this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
            
-  }
-/* 
+  } */
+
   public setParameter() {
     localStorage.setItem('setRE000', 'true');
     this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
@@ -115,7 +115,7 @@ export class BaseService {
     //parametros cloudstudio
     this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
     
-} */
+}
   
 
   public getSystemDate() {
@@ -280,46 +280,6 @@ export class BaseService {
 
 
 
-  HandleError(error: any, sinNoticeService: ReNoticeService, dialog ) {
-    if (JSON.stringify(error).indexOf("codError") > 0) {
-      let b = error.error;
-      sinNoticeService.setNotice(b.msgError, 'error');
-    } else if(error.error instanceof  Blob){
-        sinNoticeService.setNotice("NO SE ENCUENTRA O NO EXISTE ", 'error');
-     }else if(error.error instanceof ProgressEvent){
-      sinNoticeService.setNotice("NO SE PUEDE ACCEDER AL SERVICIO REVISE SU CONEXIÓN A INTERNET O VPN", 'error');
-     }
-     else if(error instanceof HttpErrorResponse ){
-      if(error.status != 200 ){
-        if(error.message){
-          sinNoticeService.setNotice(error.message, 'error');
-        }else{
-          sinNoticeService.setNotice(error.error, 'error');
-          ////console.log(error);
-        }
-      }
-    }
-    let errorMessage = '';
-    if (error.status === 401) {
-      errorMessage = 'Error: ' + error.statusText;
-      dialog.open(AuthDialogComponent, {
-        data: {
-          mensaje: "Error " + error.statusText + " - " + error.message
-        }
-      });
-    } else if (error.status === 403) {
-      errorMessage = 'Error: ' + error.statusText;
-      //this.securityService.resetPasswordRequired();
-    } else if (error.status === 500) {
-      errorMessage = 'Error: ' + error.statusText;
-    } else {
-      errorMessage = 'Error: ' +
-        (error.error === undefined || error.error === null ?error:
-          error.error.mensaje === undefined || error.error.mensaje === null ? error.message : error.error.mensaje);
-    }
-
-    return throwError(errorMessage);
-  }
   
 
 }

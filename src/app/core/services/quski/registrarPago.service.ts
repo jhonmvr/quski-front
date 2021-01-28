@@ -26,7 +26,7 @@ import { ReNoticeService } from '../re-notice.service';
     return this.http.post(serviceUrl, wrapper, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -39,7 +39,7 @@ import { ReNoticeService } from '../re-notice.service';
     return this.http.post(serviceUrl, registrarPagoWrapper, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -49,7 +49,7 @@ import { ReNoticeService } from '../re-notice.service';
     return this.http.post(serviceUrl, registro, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -60,7 +60,7 @@ import { ReNoticeService } from '../re-notice.service';
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -72,7 +72,7 @@ import { ReNoticeService } from '../re-notice.service';
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -84,7 +84,7 @@ import { ReNoticeService } from '../re-notice.service';
     return this.http.post(serviceUrl, registrarBloqueoFondoWrapper, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -99,7 +99,7 @@ import { ReNoticeService } from '../re-notice.service';
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -113,7 +113,7 @@ import { ReNoticeService } from '../re-notice.service';
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }

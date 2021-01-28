@@ -44,7 +44,7 @@ export class TasacionService extends BaseService {
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -80,7 +80,7 @@ export class TasacionService extends BaseService {
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -91,7 +91,7 @@ export class TasacionService extends BaseService {
     return this.http.post(serviceUrl, wrapper, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
@@ -102,7 +102,7 @@ export class TasacionService extends BaseService {
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
