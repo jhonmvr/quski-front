@@ -9,7 +9,6 @@ import { RelacionDependenciaEnum } from '../../../../../core/enum/RelacionDepend
 import { TbQoTelefonoCliente } from '../../../../../core/model/quski/TbQoTelefonoCliente';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
-import { SeparacionBienesEnum } from '../../../../../core/enum/SeparacionBienesEnum';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
@@ -37,6 +36,7 @@ export interface User {
 export class GestionClienteComponent implements OnInit {
   /** @STANDAR_VARIABLES **/
   private loadingSubject = new BehaviorSubject<boolean>(false);
+  public loadBusqueda  = new BehaviorSubject<boolean>(false);
   private wrapper: ClienteCompletoWrapper;
   public loading;
   usuario
@@ -79,7 +79,6 @@ export class GestionClienteComponent implements OnInit {
   public catCargo: Array<any>;
   catTipoTelefono;
   /** @ENUMS **/
-  public catSeparacionBienes = Object.values(SeparacionBienesEnum);
   /** @DIVISION_POLITICA **/
   private divicionPolitica: User[];
   public catFiltradoLugarNacimiento: Observable<User[]>;
@@ -103,7 +102,6 @@ export class GestionClienteComponent implements OnInit {
   public apellidoMaterno = new FormControl('', [Validators.maxLength(50)]);
   public segundoNombre = new FormControl('', [Validators.maxLength(50)]);
   public estadoCivil = new FormControl('', Validators.required);
-  public separacionBienes = new FormControl('', []);
   public edad = new FormControl('', []);
 
   public formDatosContacto: FormGroup = new FormGroup({});
@@ -201,7 +199,6 @@ export class GestionClienteComponent implements OnInit {
     this.formCliente.addControl("nacionalidad ", this.nacionalidad);
     this.formCliente.addControl("nivelEducacion ", this.nivelEducacion);
     this.formCliente.addControl("actividadEconomica  ", this.actividadEconomica);
-    this.formCliente.addControl("separacionBienes  ", this.separacionBienes);
     this.formCliente.addControl("canalContacto  ", this.canalContacto);
     this.formDatosContacto.addControl("telefonoFijo  ", this.telefonoFijo);
     this.formDatosContacto.addControl("telefonoMovil  ", this.telefonoMovil);
@@ -289,8 +286,6 @@ export class GestionClienteComponent implements OnInit {
     this.genero.setValue(this.catGenero.find(x => x.codigo == this.wrapper.cliente.genero));
     this.estadoCivil.setValue(this.catEstadoCivil.find(x => x.codigo == this.wrapper.cliente.estadoCivil));
     this.cargaFamiliar.setValue(this.wrapper.cliente.cargasFamiliares);
-    this.separacionBienes.setValue(this.wrapper.cliente.separacionBienes);
-    this.habilitarCampo();
     if (this.wrapper.cliente.lugarNacimiento) {
       this.catFiltradoLugarNacimiento.subscribe((data: any) => {
         this.lugarNacimiento.setValue(data.find(x => x.id == this.wrapper.cliente.lugarNacimiento));
@@ -397,14 +392,15 @@ export class GestionClienteComponent implements OnInit {
     this.valorEgreso.setValue(this.wrapper.cliente.egresos);
     this.avaluoPasivo.setValue(this.wrapper.cliente.pasivos);
     this.avaluoActivo.setValue(this.wrapper.cliente.activos);
-    this.loadingSubject.next(false);
+    this.loadBusqueda.next(false);
     }else{
+      this.loadBusqueda.next(false);
       this.sinNoticeService.setNotice('Error cargando cliente','error');
     }
   }
   private buscarCliente() {
     this.route.paramMap.subscribe((data: any) => {
-      this.loadingSubject.next(true);
+      this.loadBusqueda.next(true);
       this.origen = data.params.origen;
       this.item = data.params.item;
       if (data.params.origen == "NEG" || data.params.origen == "NOV") {
@@ -414,7 +410,7 @@ export class GestionClienteComponent implements OnInit {
             this.wrapper = data.entidad;
             this.traerCatalogos();
           } else {
-            this.loadingSubject.next(false);
+            this.loadBusqueda.next(false);
             this.sinNoticeService.setNotice('NO EXISTE CLIENTE: ' + data.entidad.mensaje, 'error');
           }
         });
@@ -424,12 +420,12 @@ export class GestionClienteComponent implements OnInit {
             this.wrapper = data.entidad;
             this.traerCatalogos();
           } else {
-            this.loadingSubject.next(false);
+            this.loadBusqueda.next(false);
             this.sinNoticeService.setNotice('NO EXISTE CLIENTE: ' + data.entidad.mensaje, 'error');
           }
         });
       } else {
-        this.loadingSubject.next(false);
+        this.loadBusqueda.next(false);
         this.sinNoticeService.setNotice('ERROR EN EL CODIGO DE ENTRADA','error');
       }
     });
@@ -473,9 +469,9 @@ export class GestionClienteComponent implements OnInit {
                                 this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
                                   if (!data.existeError) {
                                     const localizacion = data.catalogo;
-                                    let bprovinces = localizacion.filter(e => e.tipoDivision == "PROVINCIA");
+                                    let bprovinces = localizacion.filter(e => e.tipoDivision == 'PROVINCIA');
                                     let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
-                                    let bParroqui = localizacion.filter(e => e.tipoDivision == "PARROQUIA");
+                                    let bParroqui = localizacion.filter(e => e.tipoDivision == 'PARROQUIA');
                                     let ubicacion: User[] = bParroqui.map(parro => {
                                       const cant = bCantons.find(c => c.id == parro.idPadre) || {};
                                       const pro = bprovinces.find(p => p.id == cant.idPadre) || {};
@@ -770,17 +766,6 @@ export class GestionClienteComponent implements OnInit {
       return input.hasError('required') ? errorRequerido : '';
     }
   }
-  public habilitarCampo() {
-    this.separacionBienes.setValue('');
-    this.separacionBienes.disable();
-    this.catEstadoCivil.forEach(e => {
-      if (this.estadoCivil.value && this.estadoCivil.value.codigo == "CAS") {
-        this.separacionBienes.setValidators([Validators.required]);
-        this.separacionBienes.enable();
-        this.sinNoticeService.setNotice("SELECCIONE LA OPCION DE SEPARACIÒN DE BIENES ", 'warning');
-      }
-    });
-  }
   public _filter(nombre: string): User[] {
     const filterValue = nombre.toLowerCase();
     return this.divicionPolitica.filter(option => option.nombre.toLowerCase().indexOf(filterValue) === 0);
@@ -1074,6 +1059,10 @@ export class GestionClienteComponent implements OnInit {
           if (this.formDatosDireccionLaboral.valid) {
             if (this.formDatosEconomicos.valid) {
               if (this.formDatosIngreso.valid) {
+                if( this.valorIngreso.value < this.valorEgreso.value ){
+                  this.sinNoticeService.setNotice('EL EGRESO NO PUEDE SER MAYOR AL INGRESO DEL CLIENTE', 'warning');
+                  return;
+                }
                 if (this.avaluoActivo.valid || this.avaluoPasivo.valid) {
                   if (this.dataSource.data.length > 1) {
                     this.wrapper.cliente.actividadEconomica = this.actividadEconomica.value ? this.actividadEconomica.value.id : null;
@@ -1093,7 +1082,6 @@ export class GestionClienteComponent implements OnInit {
                     this.wrapper.cliente.nivelEducacion = this.nivelEducacion.value ? this.nivelEducacion.value.codigo : null;
                     this.wrapper.cliente.profesion = this.profesion.value ? this.profesion.value.codigo : null;
                     this.wrapper.cliente.segundoNombre = this.segundoNombre.value;
-                    this.wrapper.cliente.separacionBienes = this.separacionBienes.value;
                     this.wrapper.cliente.usuario = this.usuario;
                     this.wrapper.cliente.agencia = this.agencia;
 
@@ -1191,9 +1179,6 @@ export class GestionClienteComponent implements OnInit {
                       } else {
                         this.loadingSubject.next(false);
                         this.sinNoticeService.setNotice("NO SE PUDO REGISTRAR EL CLIENTE EN SOFTBANK", 'error');
-                          if(this.origen == 'NEG'){ this.router.navigate(['credito-nuevo/generar-credito/', this.item]); }
-                          if(this.origen == 'NOV'){ this.router.navigate(['novacion/novacion-habilitante/', this.item]);}
-                          if(this.origen == 'CED'){ this.router.navigate(['negociacion/bandeja-operaciones']);}  
                       }
                     });
                   } else {

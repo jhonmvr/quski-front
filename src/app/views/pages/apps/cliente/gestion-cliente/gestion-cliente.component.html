@@ -1,8 +1,4 @@
-<div class="spinner-container" *ngIf="loading | async">
-	<mat-spinner class="spiner"></mat-spinner>
-</div>
-
-<re-portlet>
+ <re-portlet>
   <re-portlet-header [title]="'Creacion/Actualizacion Clientes'"[class]="'kt-portlet__head--lg'">
     <ng-container ktPortletTools>
       <a href="javascript:void(0);" matTooltip="Regresar a Negociacion" (click)="regresar()"  style="font-size: 12px; vertical-align: middle;">
@@ -17,9 +13,14 @@
   </re-portlet-header>
   <re-portlet-body>
 
-    <mat-vertical-stepper [linear]="true" #stepper>
+    <mat-vertical-stepper [linear]="false" #stepper>
       <mat-step label="Datos Personales" [stepControl]="formCliente">
         <form [formGroup]="formCliente">
+          <div class="row">
+            <div class="col">
+              <mat-progress-bar *ngIf="loadBusqueda.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+            </div>
+          </div>
           <div class="row mb-5">
             <div  class="offset-md-4 col-md-4" >
               <button mat-button (click)=" cargarComponenteHabilitante()"> Documentos Habilitantes</button>
@@ -77,18 +78,6 @@
             </div>
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <mat-select  placeholder="Separación de Bienes:" [formControl]="separacionBienes" required>
-                  <mat-option>NO APLICA</mat-option>
-                  <mat-option *ngFor="let element of catSeparacionBienes"  [value]="element">
-                    {{ element }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-4">
-              <mat-form-field class="mat-form-field-fluid">
                 <mat-select placeholder="Género:" [formControl]="genero" required>
                   <mat-option>--</mat-option>
                   <mat-option *ngFor="let element of catGenero" [value]="element">
@@ -98,9 +87,11 @@
                 <mat-error>{{ getErrorMessage("genero") }}</mat-error>
               </mat-form-field>
             </div>
+          </div>
+          <div class="form-group row">
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <mat-select placeholder="Estado Civil:" [formControl]="estadoCivil"  required (selectionChange)="habilitarCampo()">
+                <mat-select placeholder="Estado Civil:" [formControl]="estadoCivil"  required>
                   <mat-option>--</mat-option>
                   <mat-option *ngFor="let element of catEstadoCivil" [value]="element">
                     {{ element.nombre }}
@@ -109,13 +100,22 @@
                 <mat-error>{{ getErrorMessage("estadoCivil") }}</mat-error>
               </mat-form-field>
             </div>
-            
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
                 <input type="number" matInput placeholder="Cargas Familiares:" [formControl]="cargaFamiliar"  required>
                 <mat-error>{{ getErrorMessage("cargaFamiliar") }}</mat-error>
               </mat-form-field>
-             
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="mat-form-field-fluid">
+                <mat-select placeholder="Nacionalidad:" [formControl]="nacionalidad" required>
+                  <mat-option> -- </mat-option>
+                  <mat-option *ngFor="let element of catPais" [value]="element">
+                    {{ element.nombre }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>{{ getErrorMessage("nacionalidad") }}</mat-error>
+              </mat-form-field>
             </div>
           </div>
           <div class="form-group row">
@@ -129,13 +129,7 @@
             </div>
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <mat-select placeholder="Nacionalidad:" [formControl]="nacionalidad" required>
-                  <mat-option> -- </mat-option>
-                  <mat-option *ngFor="let element of catPais" [value]="element">
-                    {{ element.nombre }}
-                  </mat-option>
-                </mat-select>
-                <mat-error>{{ getErrorMessage("nacionalidad") }}</mat-error>
+                <input  matInput placeholder="Edad:" [formControl]="edad" readonly/>
               </mat-form-field>
             </div>
             <div class="col-md-4">
@@ -153,11 +147,6 @@
             </div>
           </div>
           <div class="form-group row">
-            <div class="col-md-4">
-              <mat-form-field class="mat-form-field-fluid">
-                <input  matInput placeholder="Edad:" [formControl]="edad" readonly/>
-              </mat-form-field>
-            </div>
             <div class="col-md-4">
               <form class="example-form">
               <mat-form-field class="mat-form-field-fluid">
@@ -522,7 +511,7 @@
                 <div class="col-md-6">
                   <mat-form-field class="mat-form-field-fluid">
                     <input placeholder="Valor De Ingreso:" [formControl]="valorIngreso"  autocomplete="off" matInput numeric numericType="number"
-                    (keypress)="numberOnly($event)" />
+                    (keypress)="numberOnly($event)"  />
                     <mat-error>{{ getErrorMessage("valorIngreso") }}</mat-error>
                   </mat-form-field>
                 </div>

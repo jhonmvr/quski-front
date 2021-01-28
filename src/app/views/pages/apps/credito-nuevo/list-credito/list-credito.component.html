@@ -1,7 +1,3 @@
-<div class="spinner-container" *ngIf="loading | async">
-    <mat-spinner class="spiner"></mat-spinner>
-</div>
-
 <re-portlet>
     <re-portlet-header [title]="'BANDEJA DE ADMINISTRACIÓN DE OPERACIONES '" [class]="'kt-portlet__head--lg'">
 
@@ -206,6 +202,14 @@
                     <ng-container matColumnDef="fechaAprobacion">
                         <mat-header-cell *matHeaderCellDef>Fecha Aprobacion</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.fechaAprobacion | rDate}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="montoFinanciado">
+                        <mat-header-cell *matHeaderCellDef>Monto Financiado</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.montoFinanciado | currency: "USD":true:"1.2"}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="saldo">
+                        <mat-header-cell *matHeaderCellDef>Saldo</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.saldo | currency: "USD":true:"1.2"}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="estado">
                         <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>

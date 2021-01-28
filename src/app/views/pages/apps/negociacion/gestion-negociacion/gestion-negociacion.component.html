@@ -1,6 +1,4 @@
-<div class="spinner-container" *ngIf="loading | async">
-    <mat-spinner class="spiner"></mat-spinner>
-</div>
+  
 <re-portlet>
 	<re-portlet-header [title]="'Negociación'" [class]="'kt-portlet__head--lg'">
 		<ng-container ktPortletTools>
@@ -21,6 +19,11 @@
 			<mat-step [stepControl]="formBusqueda">
 				<ng-template matStepLabel>Busqueda de Cliente</ng-template>
 				<form [formGroup]="formBusqueda">
+					<div class="row">
+						<div class="col">
+							<mat-progress-bar *ngIf="loadBusqueda.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-md-6 ">
 							<mat-form-field class="mat-form-field-fluid">
@@ -75,19 +78,17 @@
 									required="true" />
 								<mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
 								<mat-datepicker #pickerFechaNacimiento></mat-datepicker>
+								<mat-error>{{ getErrorMessageEdad() }}</mat-error>
 							</mat-form-field>
 						</div>
 						<div class="col-md-6 ">
 							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="edad" placeholder="Edad"  />
+								<input matInput [formControl]="edad" placeholder="Edad"/>
 							</mat-form-field>
 						</div>
 					</div>
 					<div class="row">
-
 						<div class="col-md-6 ">
-
-							
 							<mat-form-field class="example-full-width">
 								<mat-select placeholder="Nacionalidad" [formControl]="nacionalidad" (selectionChange)="updateCliente($event, publicidad)"  (keydown)="updateCliente($event, publicidad)">
 									<mat-option *ngFor="let item of catPais" [value]="item">
@@ -95,9 +96,7 @@
 									</mat-option>
 								</mat-select>
 							  </mat-form-field>
-						
 						</div>
-
 						<div class="col-md-6 ">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput numeric numericType="number"  (click)="updateCliente($event, movil)"  (keydown)="updateCliente($event, movil)" [formControl]="movil" placeholder="Móvil"
@@ -105,7 +104,6 @@
 								<mat-error>{{ getErrorMessage("movil") }}</mat-error>
 							</mat-form-field>
 						</div>
-
 					</div>
 					<div class="row">
 						<div class="col-md-6 ">
@@ -155,6 +153,11 @@
 			</mat-step>
 			<mat-step>
 				<ng-template matStepLabel>Variables Crediticias</ng-template>
+				<div class="row">
+					<div class="col">
+						<mat-progress-bar *ngIf="loadVariables.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+					</div>
+				</div>
 				<ng-container *ngIf="componenteVariable">
 					<kt-tabla-variables-crediticias [base]="negoW.variables"></kt-tabla-variables-crediticias>
 				</ng-container>
@@ -175,6 +178,15 @@
 						<strong> EL CLIENTE NO TIENE RIESGO</strong>
 					</div>	
 				</div>
+			</mat-step>
+			<!--   ****************************** SEGUNDA PARTE DE NEGOCIACION ***************************   -->
+			<mat-step [stepControl]="formTasacion">
+				<ng-template matStepLabel> Tasación </ng-template>
+				<div class="row">
+					<div class="col">
+						<mat-progress-bar *ngIf="loadTasacion.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+					</div>
+				</div>
 				<div class="row mt-4">
 					<div class="col-4 offset-5">
 						<button mat-stroked-button color="primary" (click)="verPrecio()" matTooltip="Ver precio">
@@ -183,13 +195,9 @@
 						</button>
 					</div>
 				</div>
-			</mat-step>
-			<!--   ****************************** SEGUNDA PARTE DE NEGOCIACION ***************************   -->
-			<mat-step [stepControl]="formTasacion">
-				<ng-template matStepLabel> Tasación </ng-template>
 				<div class="row "  *ngIf="!this.catTipoOro">
 					<div class="col-4 offset-4">
-						<strong> PRESIONE 'Ver Precios' PARA CARGAR LOS TIPO DE ORO Y SU VALOR </strong>
+						<strong> PRESIONE 'Ver Precios' PARA CARGAR LOS OROS Y SU VALOR </strong>
 					</div>	
 				</div>
 				<form [formGroup]="formTasacion" *ngIf="this.catTipoOro">
@@ -423,7 +431,11 @@
 			</mat-step>
 			<mat-step [stepControl]="formOpcionesCredito">
 				<ng-template matStepLabel>Detalle Opciones de crédito</ng-template>
-				<mat-progress-bar mode="indeterminate" *ngIf="loading | async"></mat-progress-bar>
+				<div class="row">
+					<div class="col">
+						<mat-progress-bar *ngIf="loadOpciones.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+					</div>
+				</div>
 				<mat-table #tableNegociacion class="tableOpciones"	[dataSource]="dataSourceCreditoNegociacion">
 					<ng-container matColumnDef="Accion">
 						<mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
@@ -614,7 +626,7 @@
 						</div>
 					</div>
 					<div class="row mt-3">
-						<div class="col-3 offset-4">
+						<div class="col-4 offset-5">
 							<button mat-raised-button color="accent" (click)="guardarCredito()" style="align-self: center;">
 								<span color="primary">Negociar</span>
 							</button>

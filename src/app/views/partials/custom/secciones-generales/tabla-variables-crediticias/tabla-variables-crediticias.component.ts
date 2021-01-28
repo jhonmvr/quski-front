@@ -15,9 +15,12 @@ import { BehaviorSubject } from 'rxjs';
 export class TablaVariablesCrediticiasComponent implements OnInit {
   public loadingSubject = new BehaviorSubject<boolean>(false);
   public loading;
+  private baseSuject: BehaviorSubject<Array<TbQoVariablesCrediticia>> = new BehaviorSubject<Array<TbQoVariablesCrediticia>>(null);
   // VARIABLES ANIDADAS
   @Input() dataPopup: DataPopup;
-  @Input() base: TbQoVariablesCrediticia[];
+  @Input() set base( list : Array<TbQoVariablesCrediticia>){
+    this.baseSuject.next( list );
+  }
   @Output() entidades: EventEmitter<Array<TbQoVariablesCrediticia>> = new EventEmitter<Array<TbQoVariablesCrediticia>>();
   // ENTIDADES
   private entidadesVariablesCrediticias: Array<TbQoVariablesCrediticia>;
@@ -33,12 +36,18 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     this.cal.setParameter();
     this.vaC.setParameter();
     this.loading = this.loadingSubject.asObservable();
-    if(this.base != null){
-      this.dataSourceVariablesCrediticias.data = this.base;
-    }else if( this.dataPopup != null){
+    this.loadingSubject.next(true);
+    this.baseSuject.subscribe( data =>{
+      this.dataSourceVariablesCrediticias.data = data;
+      this.loadingSubject.next(false);
+    }, error => {
+      this.loadingSubject.next(false);
+    });
+    if( this.dataPopup != null){
       this.direccionDeFlujo(this.dataPopup);
     }
   }

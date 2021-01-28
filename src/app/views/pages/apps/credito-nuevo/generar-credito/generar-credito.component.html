@@ -1,6 +1,3 @@
-<!-- <div class="spinner-container" *ngIf="loading | async">
-	<mat-spinner class="spiner"></mat-spinner>
-</div> -->
 <re-portlet>
     <re-portlet-header [title]="'Generar Credito'" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
@@ -176,7 +173,7 @@
                        
                     </div>
                     <div class="row">
-                        <ng-container *ngIf="existeCredito">
+                        <ng-container *ngIf="anular">
                             <div class="offset-md-5 col-md-6 ">
                                 <button mat-raised-button (click)="generarCredito(true)"><span class="blue-icon"> Anular Funda </span></button>
                             </div>
@@ -184,6 +181,11 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-6">
+                            <div class="row">
+                                <div class="col">
+                                  <mat-progress-bar *ngIf="loadImgJoya.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+                                </div>
+                              </div>
                             <div class="row">
                                 <div class="col-md-4 offset-md-4">
                                     <button mat-raised-button (click)="cargarFotoJoya()"><span class="blue-icon"> Carga Foto De Joya </span></button>
@@ -201,6 +203,11 @@
                         </div>
                         <div class="col-md-6">
                             <div class="row">
+                                <div class="col">
+                                  <mat-progress-bar *ngIf="loadImgFunda.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+                                </div>
+                              </div>
+                            <div class="row">
                                 <div class="col-md-4 offset-md-4">
                                     <button mat-raised-button (click)="cargarFotoFunda()"><span class="blue-icon"> Carga Foto De Funda </span></button>
                                 </div>
@@ -211,7 +218,6 @@
                                         <mat-card>
                                             <img mat-card-image src="{{'data:image/png;base64,' + this.srcFunda}}" class="img-responsive">
                                         </mat-card>
-                                        
                                     </div>
                                 </div>
                             </ng-container>
@@ -226,7 +232,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required placeholder="Banco del cliente" [formControl]="tipoCuenta" (selectionChange)="buscarNumero()">
+                                <mat-select required placeholder="Banco del cliente" [formControl]="tipoCuenta">
                                     <mat-option *ngFor="let element of catCuenta" [value]="element">
                                         {{element.nombre }}
                                     </mat-option>
