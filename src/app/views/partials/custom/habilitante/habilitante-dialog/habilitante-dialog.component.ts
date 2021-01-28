@@ -18,7 +18,6 @@ import { environment } from '../../../../../../environments/environment';
 })
 export class HabilitanteDialogComponent implements OnInit {
   private uploadSubject = new BehaviorSubject<boolean>(false);
-  public loadImg = new BehaviorSubject<boolean>(false);
   public uploading;
   public dataUpload: DataUpload;
   isDisabledGuardar: any;
@@ -60,7 +59,7 @@ export class HabilitanteDialogComponent implements OnInit {
       if (mimeSize < 600000) {
         reader.readAsDataURL(file);
         reader.onload = () => {
-          //this.fileBase64= String(reader.result).split(",")[1];
+          this.uploadSubject.next(true);
           this.dataUpload = {
             name: file.name,
             type: file.type,
@@ -76,27 +75,30 @@ export class HabilitanteDialogComponent implements OnInit {
       } else {
         this.uploadSubject.next(false)
         this.dataUpload =null;
-        this.sinNoticeService.setNotice("Tamaño de archivo no permitido.", 'error');
+        this.sinNoticeService.setNotice("EL ARCHIVO ES MUY GRANDE PARA SER GUARDADO", 'error');
       }
     }
   }
 
   public subirArchivoHabilitante() {
-    this.loadImg.next(true);
+    this.uploadSubject.next(true);
     this.os.createObject( btoa( JSON.stringify( this.dataUpload ) ), this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe( (objectData:any)=>{
       if( objectData && objectData.entidad ){
         this.dataUpload.objectId=objectData.entidad;
         this.fileBase64=null;
         this.upload.uploadFile(this.upload.appResourcesUrl +"uploadRestController/loadFileHabilitanteSimplified",this.dataUpload).subscribe((data: any) => {
           this.dialogRef.close(data.relatedIdStr);
-          this.loadImg.next(false);
+          this.uploadSubject.next(false);
         },error => {
-          this.loadImg.next(false);
+          this.uploadSubject.next(false);
           if (JSON.stringify(error.error).indexOf("codError") > 0) {
             let b = error.error;
           }
         });
       }
+    },error => {
+      this.uploadSubject.next(false);
+      this.sinNoticeService.setNotice("NO SE PUDO GUARDAR EL ARCHIVO.", 'error');
     });
   }
 }

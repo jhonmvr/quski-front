@@ -17,9 +17,9 @@ import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { environment } from '../../../../../../environments/environment';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -232,7 +232,7 @@ export class GenerarCreditoComponent implements OnInit {
     this.estadoOperacion.setValue(data.proceso.estadoProceso);
     this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
-    this.fechaCuota.setValue(data.credito.pagoDia ? data.credito.pagoDia : null);
+    this.fechaCuota.setValue(data.credito.pagoDia ? new Date(data.credito.pagoDia) : null);
     data.credito.pagoDia ? this.validacionFecha() : null;
     data.joyas.forEach(e=>{
       let objetoOro = this.catTipoOro.find(x => x.codigo == e.tipoOro );
@@ -319,11 +319,12 @@ export class GenerarCreditoComponent implements OnInit {
   public validacionFecha() {
     this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value), new Date(this.fechaServer))
     if (Math.abs(this.fechaUtil.obtenerDias()) >= 30 && Math.abs(this.fechaUtil.obtenerDias()) <= 45) {
-      //console.log("Esta dentro del rango")
+      this.sinNotSer.setNotice("FECHA DE PAGO VALIDA", 'success');
     } else {
+      this.fechaCuota.setValue( null );
+      this.fechaCuota.setValidators(Validators.required);
       this.sinNotSer.setNotice("DEBE ESCOGER ENTRE 30 Y 45 DÍAS", 'error');
     }
-    //console.log("los dias  de diferencia", this.fechaUtil.obtenerDias())
   }
   private obtenerCatalogosSoftbank() { 
     this.sof.consultarTipoFundaCS().subscribe((data: any) => {

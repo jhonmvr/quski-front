@@ -469,9 +469,9 @@ export class GestionClienteComponent implements OnInit {
                                 this.css.consultarDivicionPoliticaCS().subscribe((data: any) => {
                                   if (!data.existeError) {
                                     const localizacion = data.catalogo;
-                                    let bprovinces = localizacion.filter(e => e.tipoDivision == "PROVINCIA");
+                                    let bprovinces = localizacion.filter(e => e.tipoDivision == 'PROVINCIA');
                                     let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
-                                    let bParroqui = localizacion.filter(e => e.tipoDivision == "PARROQUIA");
+                                    let bParroqui = localizacion.filter(e => e.tipoDivision == 'PARROQUIA');
                                     let ubicacion: User[] = bParroqui.map(parro => {
                                       const cant = bCantons.find(c => c.id == parro.idPadre) || {};
                                       const pro = bprovinces.find(p => p.id == cant.idPadre) || {};
