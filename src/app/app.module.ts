@@ -2,7 +2,7 @@
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GestureConfig, MatProgressSpinnerModule } from '@angular/material';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -61,6 +61,7 @@ import * as scss from 'highlight.js/lib/languages/scss';
 import * as xml from 'highlight.js/lib/languages/xml';
 import * as json from 'highlight.js/lib/languages/json';
 import { APP_BASE_HREF } from '@angular/common';
+import { LoaderInterceptor } from './core/interseptors/loader.interceptor';
 
 
 // tslint:disable-next-line:class-name
@@ -124,7 +125,7 @@ export function hljsLanguages(): HighlightLanguage[] {
 		KtDialogService,
 		DataTableService,
 		SplashScreenService,
-
+		{ provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
 		{
 			provide: PERFECT_SCROLLBAR_CONFIG,
 			useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
