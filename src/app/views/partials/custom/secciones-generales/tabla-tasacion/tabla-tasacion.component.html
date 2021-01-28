@@ -12,7 +12,7 @@
   </ng-container>
   <ng-container matColumnDef="TipoOro">
     <mat-header-cell *matHeaderCellDef> Tipo de oro </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.tipoOro }} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.tipoOro | titlecase }} </mat-cell>
     <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="PesoBruto">
@@ -62,27 +62,27 @@
   </ng-container>
   <ng-container matColumnDef="tienePiedras">
     <mat-header-cell *matHeaderCellDef> Tiene Piedras </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.tienePiedras?'SI':'NO'}}</mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.tienePiedras?'SI':'NO'  | titlecase}}</mat-cell>
     <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="detallePiedras">
     <mat-header-cell *matHeaderCellDef>Detalle Piedras</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.detallePiedras ? element.detallePiedras : 'No aplica'}}</mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.detallePiedras ? element.detallePiedras : 'No aplica'  | titlecase}}</mat-cell>
     <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="TipoJoya">
     <mat-header-cell *matHeaderCellDef> Tipo de joya </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.tipoJoya}}</mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.tipoJoya  | titlecase}}</mat-cell>
     <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="EstadoJoya">
     <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.estadoJoya }}</mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.estadoJoya  | titlecase }}</mat-cell>
     <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="Descripcion">
     <mat-header-cell *matHeaderCellDef>Descripci&#243;n</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.descripcion }}</mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.descripcion  | titlecase }}</mat-cell>
     <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
   </ng-container>
 

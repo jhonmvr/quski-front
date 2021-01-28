@@ -5,19 +5,21 @@ import { SubheaderService } from './../../../../../core/_base/layout/services/su
 import { AprobacionWrapper } from '../../../../../core/model/wrapper/AprobacionWrapper';
 import { CatalogosWrapper } from './../../../../../core/model/wrapper/CatalogosWrapper';
 import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
+import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { ProcesoService } from './../../../../../core/services/quski/proceso.service';
 import { OperacionAprobar } from '../../../../../core/model/softbank/OperacioAprobar';
+import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { DatosRegistro } from '../../../../../core/model/softbank/DatosRegistro';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
-import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { utils } from 'protractor';
 
 
 
@@ -173,6 +175,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
     private pro: ProcesoService,
+    private par: ParametroService,
     private sinNotSer: ReNoticeService,
     private route: ActivatedRoute,
     private router: Router,
@@ -345,7 +348,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.fechaNacimiento.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento);
     this.nivelEducacion.setValue(this.catalogos.catEducacion.find( c => c.codigo ==  ap.credito.tbQoNegociacion.tbQoCliente.nivelEducacion).nombre);
     this.actividadEconomica.setValue( this.catalogos.catActividadEconomica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.actividadEconomica ).nombre );
-    this.fechaUltimaActualizazion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaActualizacion);
+    this.fechaUltimaActualizazion.setValue( ap.credito.tbQoNegociacion.tbQoCliente.fechaActualizacion );
     this.correo.setValue(ap.credito.tbQoNegociacion.tbQoCliente.email);
     !ap.telefonos ? null : ap.telefonos.forEach(e => {
       if (e.tipoTelefono == "CEL") {
@@ -483,35 +486,40 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         this.loadingSubject.next(true);
         if(r){
-          let datos  = new DatosRegistro( this.fechaActual, this.usuario, this.agencia );
-          let wrapper: OperacionAprobar = new OperacionAprobar( this.crediW.credito.numeroOperacion, datos );
-          this.sof.operacionAprobarCS( wrapper ).subscribe( (data: any) =>{
-            if(!data.existeError){
-              this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id,"NUEVO","APROBADO").subscribe( (data: any) =>{
-                if(data.entidad){
-                  this.cre.devolverAprobar( this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe( (data : any) =>{
-                    this.loadingSubject.next(false);
+          this.par.getSystemDate().subscribe( ( data : any ) =>{
+            if(data.entidad){
+              console.log('Que me traes? =>', data.entidad);
+              //let fecha = new Date( data.entidad );
+              let otraFecha = new RelativeDateAdapter();
+              let datos  = new DatosRegistro( otraFecha.formatBack(new Date( data.entidad ), 'input'), this.usuario, this.agencia );
+              let wrapper: OperacionAprobar = new OperacionAprobar( this.crediW.credito.numeroOperacion, datos );
+              this.sof.operacionAprobarCS( wrapper ).subscribe( (data: any) =>{
+                if(!data.existeError){
+                  this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id,"NUEVO","APROBADO").subscribe( (data: any) =>{
                     if(data.entidad){
-                      //console.log('El nuevo estado -> ',data.entidad.estadoProceso);
-                      this.router.navigate(['aprobador']);  
+                      this.cre.devolverAprobar( this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe( (data : any) =>{
+                        this.loadingSubject.next(false);
+                        if(data.entidad){
+                          this.router.navigate(['aprobador']);  
+                        }else{
+                          this.sinNotSer.setNotice('Error actualizando el credito','error');
+                        }
+                      });
                     }else{
-                      this.sinNotSer.setNotice('Error actualizando el credito','error');
+                      this.loadingSubject.next(false);
+                      this.sinNotSer.setNotice('ERROR INTERNO','error');
                     }
                   });
                 }else{
                   this.loadingSubject.next(false);
-                  this.sinNotSer.setNotice('ERROR INTERNO','error');
+                  this.sinNotSer.setNotice('ERROR EN SOFTBANK','error');
                 }
+              }, error =>{
+                this.loadingSubject.next(false);
+                this.sinNotSer.setNotice('ERROR EN SOFTBANK','error');
               });
-            }else{
-              this.loadingSubject.next(false);
-              this.sinNotSer.setNotice('ERROR EN SOFTBANK','error');
             }
-          }, error =>{
-            this.loadingSubject.next(false);
-            this.sinNotSer.setNotice('ERROR EN SOFTBANK','error');
           });
-          
         }else{
           this.loadingSubject.next(false);
           this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
