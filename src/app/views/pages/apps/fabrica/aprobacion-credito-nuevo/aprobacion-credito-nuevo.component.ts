@@ -512,11 +512,11 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
                   });
                 }else{
                   this.loadingSubject.next(false);
-                  this.sinNotSer.setNotice('ERROR EN SOFTBANK','error');
+                  this.sinNotSer.setNotice(data.mensaje,'error');
                 }
               }, error =>{
                 this.loadingSubject.next(false);
-                this.sinNotSer.setNotice('ERROR EN SOFTBANK','error');
+                this.sinNotSer.setNotice(error.Mensaje,'error');
               });
             }
           });

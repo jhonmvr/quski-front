@@ -78,7 +78,7 @@ export class BandejaAprobadorComponent implements OnInit {
           e.nombreCliente = e.nombreCliente.replace(/_/gi," ");
           e.aprobador = e.aprobador ? e.aprobador.toUpperCase() == 'NULL' ? 'Libre' : e.aprobador : 'Libre';
           e.codigoOperacion = !e.codigoOperacion || e.codigoOperacion.toUpperCase() == 'NULL' ? 'Sin Codigo' : e.codigoOperacion;
-          e.fechaSolicitud = !e.fechaSolicitud || e.fechaSolicitud == '0001-01-01' ? 'No Aplica' : e.fechaSolicitud;
+          e.fechaSolicitud = e.fechaSolicitud;
         });
         this.dataSource.data = operaciones;
         this.paginator.length = data.entidad.result;
