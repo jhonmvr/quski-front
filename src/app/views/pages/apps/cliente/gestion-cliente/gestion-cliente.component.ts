@@ -1,3 +1,4 @@
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { DialogCargarHabilitanteComponent } from './dialog-cargar-habilitante/dialog-cargar-habilitante.component';
 import { TbQoCuentaBancariaCliente } from '../../../../../core/model/quski/TbQoCuentaBancariaCliente';
 import { TbQoIngresoEgresoCliente } from '../../../../../core/model/quski/TbQoIngresoEgresoCliente';
@@ -48,8 +49,8 @@ export class GestionClienteComponent implements OnInit {
   public totalValorIngresoEgreso: number = 0;
   public valorValidacion: number = 0;
   /** @TABLA_REFERENCIA **/
-  public displayedColumns = ['Accion', 'N', 'nombresRef', 'apellidosRef', 'Parentesco', 'Direccion', 'TelefonoMovil', 'TelefonoFijo'];
-  public dataSource = new MatTableDataSource<TbReferencia>();
+  public displayedColumns = ['Accion', 'nombresRef', 'apellidosRef','Direccion','Parentesco','TelefonoMovil', 'TelefonoFijo','Estado'];
+  public dataSourceReferencia = new MatTableDataSource<TbReferencia>();
   /** @TABLA_PATRIMONIO **/
   displayedColumnsActivo = ['Accion', 'Activo', 'Avaluo'];
   displayedColumnsPasivo = ['Accion', 'Pasivo', 'Avaluo'];
@@ -154,6 +155,7 @@ export class GestionClienteComponent implements OnInit {
   
   public formDatosReferenciasPersonales: FormGroup = new FormGroup({});
   public telefonoFijoR = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
+  public estadoR = new FormControl('', [Validators.required]);
   public telefonoMovilR = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public apellidosRef = new FormControl('', [Validators.required,  Validators.maxLength(50)]);
   public nombresRef = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -243,6 +245,8 @@ export class GestionClienteComponent implements OnInit {
     this.formDatosReferenciasPersonales.addControl("direccionR       ", this.direccionR);
     this.formDatosReferenciasPersonales.addControl("telefonoMovilR   ", this.telefonoMovilR);
     this.formDatosReferenciasPersonales.addControl("telefonoFijoR    ", this.telefonoFijoR);
+    this.formDatosReferenciasPersonales.addControl("estadoR          ", this.estadoR);
+    
   }
 
   ngOnInit() {
@@ -256,9 +260,20 @@ export class GestionClienteComponent implements OnInit {
     this.buscarCliente();
   }
   public regresar(){
-    if(this.origen == 'NEG'){
-      this.router.navigate(['negociacion/gestion-negociacion/NEG/', this.item]);
-    }
+    let mensaje = "Los datos del cliente no se han guardado. Si desea regresar se perderan los datos ingresados";
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if(r){
+        if(this.origen == 'NEG'){
+          this.router.navigate(['negociacion/gestion-negociacion/NEG/', this.item]);
+        }
+      }
+    });
+
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private cargarCampos() {
@@ -372,22 +387,7 @@ export class GestionClienteComponent implements OnInit {
       this.numeroCuenta.setValue( this.wrapper.cuentas[0].cuenta );
       this.esAhorro.setValue( this.wrapper.cuentas[0].esAhorros ? 'SI':'NO' );
     }   
-    let countRefer : number = 0;
-    let refe = new Array<TbReferencia>(); 
-    !this.wrapper.referencias ? null : this.wrapper.referencias.forEach(e => {
-      if(e.estado == 'ACT' && countRefer < 2){
-        const referencia = this.catTipoReferencia.find(x => x.codigo == e.parentesco);
-        e.parentesco = referencia ? referencia.nombre : 'error' ;
-        refe.push( e );
-        countRefer++;
-      }else{
-        e.estado = 'INA';
-        e.telefonoFijo = e.telefonoFijo ? e.telefonoFijo : "0999999999";
-        e.apellidos = e.apellidos ? e.apellidos : 'No definido';
-        e.telefonoMovil = e.telefonoMovil ? e.telefonoMovil : '0999999999';
-      }
-    });
-    this.dataSource.data = refe;
+    this.dataSourceReferencia = new MatTableDataSource<any> (this.wrapper.referencias);
     this.valorIngreso.setValue(this.wrapper.cliente.ingresos);
     this.valorEgreso.setValue(this.wrapper.cliente.egresos);
     this.avaluoPasivo.setValue(this.wrapper.cliente.pasivos);
@@ -981,75 +981,85 @@ export class GestionClienteComponent implements OnInit {
       let control = this.formDatosReferenciasPersonales.controls[name];
       control.setErrors(null);
       control.setValue(null);
+      control.reset();
     });
   }
   public nuevaReferencia() {
     const referencia = new TbReferencia;
-    if (this.formDatosReferenciasPersonales.valid) {
-      if (this.apellidosRef.value != null && this.nombresRef.value != "") {
-        if (this.parentescoR.value != null && this.parentescoR.value != "") {
-          if (this.direccionR.value != null && this.direccionR.value != "") {
-            let a = 0;
-            let b = 0;
-            if (this.telefonoMovilR.value != null && this.telefonoMovilR.value != "") {
-              a = Number(this.telefonoMovilR.value);
-            }
-            if (this.telefonoFijoR.value && this.telefonoFijoR.value != "") {
-              b = Number(this.telefonoFijoR.value);
-            }
-            if (a > 0 && b > 0) {
-              referencia.apellidos = this.apellidosRef.value.toUpperCase();
-              referencia.nombres = this.nombresRef.value.toUpperCase();
-              referencia.parentesco = this.parentescoR.value.nombre;
-              referencia.direccion = this.direccionR.value.toUpperCase();
-              referencia.telefonoMovil = this.telefonoMovilR.value;
-              referencia.telefonoFijo = this.telefonoFijoR.value;
-              referencia.estado = 'ACT';
-              if (this.element) {
-                const index = this.dataSource.data.indexOf(this.element);
-                this.dataSource.data.splice(index, 1);
-                const data = this.dataSource.data;
-                this.dataSource.data = data;
-              }
-              const data = this.dataSource.data;
-              data.push(referencia);
-              this.dataSource.data = data;
-              this.element = null;
-              this.limpiarCampos();
-            } else {
-              this.sinNoticeService.setNotice("NUMERO DE TELEFONO NO VALIDO", 'error');
-            }
-          } else {
-            this.sinNoticeService.setNotice("DIRECCION NO VALIDA", 'error');
-          }
-        } else {
-          this.sinNoticeService.setNotice("PARENTESCO NO VALIDO", 'error');
-        }
-      } else {
-        this.sinNoticeService.setNotice("NOMBRE O APELLIDO NO VALIDO", 'error');
-      }
-    } else {
+    if (!this.formDatosReferenciasPersonales.valid) {
       this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'error');
+      return;
+    }
+    if (!this.apellidosRef.value) {
+      this.sinNoticeService.setNotice("NOMBRE O APELLIDO NO VALIDO", 'error');
+      return;
+    }
+    if (!this.parentescoR.value || !this.catTipoReferencia.find (x => x.codigo == this.parentescoR.value.codigo)) {
+      this.sinNoticeService.setNotice("PARENTESCO NO VALIDO", 'error');
+      return;
+    }
+    if (!this.direccionR.value) {
+      this.sinNoticeService.setNotice("DIRECCION NO VALIDA", 'error');
+      return;
+    }
+    let b = 0;
+    if (!this.telefonoMovilR.value || Number(this.telefonoMovilR.value) < 0) {
+      this.sinNoticeService.setNotice("NUMERO DE TELEFONO NO VALIDO", 'error');
+      return;
+    }
+    if (!this.telefonoFijoR.value || Number(this.telefonoFijoR.value) < 0) {
+      this.sinNoticeService.setNotice("NUMERO DE TELEFONO NO VALIDO", 'error');
+      return;
+    }
+    referencia.apellidos = this.apellidosRef.value.toUpperCase();
+    referencia.nombres = this.nombresRef.value.toUpperCase();
+    referencia.parentesco = this.parentescoR.value.codigo;
+    referencia.direccion = this.direccionR.value.toUpperCase();
+    referencia.telefonoMovil = this.telefonoMovilR.value;
+    referencia.telefonoFijo = this.telefonoFijoR.value;
+    referencia.estado = this.estadoR.value;
+    if (this.element) {
+      referencia.idSoftbank = this.element.idSoftbank;
+      referencia.id = this.element.id;
+      const index = this.dataSourceReferencia.data.indexOf(this.element);
+      this.dataSourceReferencia.data.splice(index, 1);
+      const data = this.dataSourceReferencia.data;
+      this.dataSourceReferencia.data = data;
+    }
+    const data = this.dataSourceReferencia.data;
+    data.push(referencia);
+    this.dataSourceReferencia.data = data;
+    this.element = null;
+    this.limpiarCampos();
+  }
+  public traerCodigoReferencia( parentescoCodigo : string){
+    if(parentescoCodigo){
+      const item = this.catTipoReferencia ? this.catTipoReferencia.find( x => x.codigo == parentescoCodigo) : null;
+      return item ? item.nombre : null ;
     }
   }
-  public deleteReferencia(element : TbReferencia) {
-    const index = this.dataSource.data.indexOf(element);
-    element.estado = 'INA';
+/*   public deleteReferencia(element : TbReferencia) {
+    const index = this.dataSourceReferencia.data.indexOf(element);
     !this.wrapper.referencias ? this.wrapper.referencias = new Array<TbReferencia>(): null;
-    this.wrapper.referencias.push( element );
-    this.dataSource.data.splice(index, 1);
-    const data = this.dataSource.data;
-    this.dataSource.data = data;
-  }
+    if(element.idSoftbank){
+      element.estado = 'INA';
+      element.parentesco = element.parentesco.codigo;
+      this.wrapper.referencias.push( element );
+    }
+    this.dataSourceReferencia.data.splice(index, 1);
+    const data = this.dataSourceReferencia.data;
+    this.dataSourceReferencia.data = data;
+  } */
   public editarReferencia(element : TbReferencia ) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
     this.apellidosRef.setValue(element.apellidos);
     this.nombresRef.setValue(element.nombres);
-    this.parentescoR.setValue( this.catTipoReferencia.find (x => x.nombre == element.parentesco) );
+    this.parentescoR.setValue( this.catTipoReferencia.find( x => x.codigo == element.parentesco) );
     this.direccionR.setValue(element.direccion);
     this.telefonoMovilR.setValue(element.telefonoMovil);
     this.telefonoFijoR.setValue(element.telefonoFijo);
+    this.estadoR.setValue( element.estado);
   }
   public guardar() {
     this.loadingSubject.next(true);
@@ -1063,8 +1073,12 @@ export class GestionClienteComponent implements OnInit {
                   this.sinNoticeService.setNotice('EL EGRESO NO PUEDE SER MAYOR AL INGRESO DEL CLIENTE', 'warning');
                   return;
                 }
+                if(this.dataSourceReferencia.data.find( x => !x.apellidos || !x.nombres || (!x.telefonoFijo && !x.telefonoMovil) || !x.parentesco )){
+                  this.sinNoticeService.setNotice('ERROR ENCONTRADO EN LAS REFERENCIAS, REVISE ANTES DE GUARDAR', 'warning');
+                  return;
+                }
                 if (this.avaluoActivo.valid || this.avaluoPasivo.valid) {
-                  if (this.dataSource.data.length > 1) {
+                  if (this.dataSourceReferencia.data.length > 1) {
                     this.wrapper.cliente.actividadEconomica = this.actividadEconomica.value ? this.actividadEconomica.value.id : null;
                     this.wrapper.cliente.apellidoMaterno = this.apellidoMaterno.value;
                     this.wrapper.cliente.primerNombre = this.primerNombre.value;
@@ -1153,21 +1167,10 @@ export class GestionClienteComponent implements OnInit {
                         e.tipoVivienda = this.tipoVivienda.value ? this.tipoVivienda.value.codigo : 'No Espeficicado';
                       }
                     });
-                    this.dataSource.data.forEach(e => {
-                      let codigo = this.catTipoReferencia.find(x => x.nombre == e.parentesco);
-                      e.parentesco = codigo ? codigo.codigo : 'C14'; 
+                    this.dataSourceReferencia.data.forEach(e => {
                       e.tbQoCliente = this.wrapper.cliente;
                     });
-                    if (!this.wrapper.referencias) {
-                      this.wrapper.referencias = this.dataSource.data;
-                    }else{
-                      this.wrapper.referencias.forEach( f=>{
-                        if( f.estado == 'INA'){
-                          this.dataSource.data.push( f );
-                        }
-                      });
-                      this.wrapper.referencias = this.dataSource.data;
-                    }
+                    this.wrapper.referencias = this.dataSourceReferencia.data;
                     //console.log(' Lo que guardo -> ', this.wrapper);
                     this.cli.registrarCliente(this.wrapper).subscribe((data: any) => {
                       if (data.entidad && data.entidad.isCore && data.entidad.isSoftbank) {

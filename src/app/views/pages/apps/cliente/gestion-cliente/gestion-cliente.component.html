@@ -621,6 +621,15 @@
                 <mat-error>{{ getErrorMessage("telefonoFijoR") }}</mat-error>
               </mat-form-field>
             </div>
+            <div class="col-md-4">
+              <mat-form-field class="mat-form-field-fluid">
+                <mat-select  placeholder="Estado:"  [formControl]="estadoR" required >
+                  <mat-option value='ACT'> Activo </mat-option>
+                  <mat-option value='INA'> Inactivo </mat-option>
+                </mat-select>
+                <mat-error>{{ getErrorMessage("estadoR") }}</mat-error>
+              </mat-form-field>
+            </div>
           </div>
           <div class="form-group row">
             <div class="offset-md-5 col-md-4">
@@ -630,11 +639,10 @@
               </a>
             </div>
           </div>
-          <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource">
+          <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceReferencia">
             <ng-container matColumnDef="Accion">
               <mat-header-cell *matHeaderCellDef> Acci&#243;n </mat-header-cell>
               <mat-cell *matCellDef="let element">
-                <a (click)="deleteReferencia(element)"> <mat-icon matTooltip="Borrar">delete</mat-icon></a>
                 <a (click)="editarReferencia(element)"> <mat-icon matTooltip="Editar">edit</mat-icon></a>
               </mat-cell>
             </ng-container>
@@ -652,7 +660,7 @@
             </ng-container>
             <ng-container matColumnDef="Parentesco">
               <mat-header-cell *matHeaderCellDef> Parentesco </mat-header-cell>
-              <mat-cell *matCellDef="let element">{{ element.parentesco  | titlecase }}</mat-cell>
+              <mat-cell *matCellDef="let element">{{ traerCodigoReferencia(element.parentesco )  | titlecase }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="Direccion">
               <mat-header-cell *matHeaderCellDef> Dirección </mat-header-cell>
@@ -665,6 +673,10 @@
             <ng-container matColumnDef="TelefonoFijo">
               <mat-header-cell *matHeaderCellDef>Teléfono Fijo</mat-header-cell>
               <mat-cell *matCellDef="let element">{{ element.telefonoFijo }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Estado">
+              <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+              <mat-cell *matCellDef="let element">{{ element.estado == 'ACT' ? 'Activo' : 'Inactivo'  }}</mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
