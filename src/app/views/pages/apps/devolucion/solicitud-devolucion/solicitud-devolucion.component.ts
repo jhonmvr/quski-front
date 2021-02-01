@@ -28,10 +28,11 @@ export class SolicitudDevolucionComponent implements OnInit{
   // datos operacion
   public codigoOperacion = new FormControl('');
   public procesoDev = new FormControl('');
-  idDevolucion
 
-  proceso= "DEVOLUCION"
+
+
  //datos cliente
+
  public cedulaCliente = new FormControl('');
  public nombresCompletos = new FormControl('');
  public nivelEducacion = new FormControl('');
@@ -90,6 +91,10 @@ joyasList  = [{"tipoOro": "18KILATES",
   ///
   
 
+  ////////VARIABLES HABILITANTES
+  idDevolucion
+  procesoHabilitante = 'DEVOLUCION'
+  estadoOperacion = 'SOLICITUD'
   
   //observables
   objetoCredito ={
@@ -133,7 +138,7 @@ joyasList  = [{"tipoOro": "18KILATES",
  dataSourceHeredero =new MatTableDataSource;
  //:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
 
-objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28gSmF2aWVyIFNlcnJhbm8gQXJldmFsbyIsCiAgICAiaWRDbGllbnRlIjogIjEzMTEwNjY0NDIiLAogICAgIm51bWVyb09wZXJhY2lvbiI6ICJjb2QtMTciLAogICAgIm51bWVyb09wZXJhY2lvbk1hZHJlIiA6ICJjb2QtMTAiLAogICAgIm51bWVyb09wZXJhY2lvbk11cGkiOiAiIiwKICAgICJmZWNoYUFwcm9iYWNpb24iIDogIjIwMjAtMTAtMTIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiMjAyMC0xMS0xMCIsCiAgICAibW9udG9GaW5hbmNpYWRvIjogIjg1MCIsCiAgICAiYXNlc29yIjogIkp1YW5pdG8iLAogICAgImVzdGFkb09wZXJhY2lvbiI6ICAiQ0FOQ0VMQURPIiwKICAgICJ0aXBvQ3JlZGl0byI6ICIiLAogICAgImNvZGlnb1RhYmxhQW1vcnRpemFjaW9uUXVza2kiOiJBMDEiLAogICAgImltcGFnbyI6ICJubyIsCiAgICAicmV0YW5xdWVvIjogIm5vIiwKICAgICJjb2JlcnR1cmFJbmljaWFsIjogIjEyMDAiLAogICAgImNvYmVydHVyYUFjdHVhbCI6ICIxMTAwIiwKICAgICJibG9xdWVvIjoiIiwKICAgICJkaWFzTW9yYSI6ICIiLAogICAgImVzdGFkb1ViaWNhY2lvbiI6IiIsCiAgICAiZXN0YWRvUHJvY2VzbyI6IiIsCiAgICAiY29kaWdvU2VydmljaW8iOiIiLAogICAgIm1pZ3JhZG8iOiAiIgoKfQ=='
+objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28gSmF2aWVyIFNlcnJhbm8gQXJldmFsbyIsCiAgICAiaWRDbGllbnRlIjogIjE3MDY1ODc3MjAiLAogICAgIm51bWVyb09wZXJhY2lvbiI6ICJjb2QtMTciLAogICAgIm51bWVyb09wZXJhY2lvbk1hZHJlIiA6ICJjb2QtMTAiLAogICAgIm51bWVyb09wZXJhY2lvbk11cGkiOiAiIiwKICAgICJmZWNoYUFwcm9iYWNpb24iIDogIjIwMjAtMTAtMTIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiMjAyMC0xMS0xMCIsCiAgICAibW9udG9GaW5hbmNpYWRvIjogIjg1MCIsCiAgICAiYXNlc29yIjogIkp1YW5pdG8iLAogICAgImVzdGFkb09wZXJhY2lvbiI6ICAiQ0FOQ0VMQURPIiwKICAgICJ0aXBvQ3JlZGl0byI6ICIiLAogICAgImNvZGlnb1RhYmxhQW1vcnRpemFjaW9uUXVza2kiOiJBMDEiLAogICAgImltcGFnbyI6ICJubyIsCiAgICAicmV0YW5xdWVvIjogIm5vIiwKICAgICJjb2JlcnR1cmFJbmljaWFsIjogIjEyMDAiLAogICAgImNvYmVydHVyYUFjdHVhbCI6ICIxMTAwIiwKICAgICJibG9xdWVvIjoiIiwKICAgICJkaWFzTW9yYSI6ICIiLAogICAgImVzdGFkb1ViaWNhY2lvbiI6IiIsCiAgICAiZXN0YWRvUHJvY2VzbyI6IiIsCiAgICAiY29kaWdvU2VydmljaW8iOiIiLAogICAgIm1pZ3JhZG8iOiAiIgp9'
 datos
   // VARIABLES DE TRACKING
   public horaAsignacionCreacion: Date = null;
@@ -280,6 +285,7 @@ datos
       this.estadoCivil.setValue(this.buscarEnCatalogo(this.catalagoEstadosCiviles, data.codigoEstadoCivil).nombre)
       this.fechaNacimiento.setValue(data.fechaNacimiento)
       this.nacionalidad.setValue(this.catalogoPais.find(p=>p.id==data.idPais).nombre)
+      console.log("fecha nacimiento", data.fechaNacimiento)
       this.edad.setValue(Math.floor(this.getEdad(data.fechaNacimiento)))
       //this.lugarNacimiento.setValue(this.catalogoPais.find(p=>p.idDivisionNivelBajo==data.idPais).nombre)
 
@@ -331,7 +337,7 @@ datos
     let tbQoDevolucion = new TbQoDevolucion()
     tbQoDevolucion.codigo =  "";
     tbQoDevolucion.asesor = "Asesor quemado"
-    tbQoDevolucion.idAgencia = localStorage.getItem("reAgencia") == null ? "" : localStorage.getItem("reAgencia")
+    tbQoDevolucion.idAgencia = localStorage.getItem("idResidenciaAgencia") == null ? "" : localStorage.getItem("idResidenciaAgencia")
     tbQoDevolucion.nombreAgenciaSolicitud = "quemada"
     tbQoDevolucion.aprobador = "";
     tbQoDevolucion.nombreCliente= this.nombresCompletos.value
@@ -367,7 +373,11 @@ datos
           "Guardado correctamente",
           "success"
         );
-        this.router.navigate(['negociacion/bandeja-operaciones'    ]);
+
+        console.log(data.entidad.id)
+        this.idDevolucion = data.entidad.id
+        this.stepper.selectedIndex = 5;
+      //  this.router.navigate(['negociacion/bandeja-operaciones'    ]);
       } else {
         this.sinNoticeService.setNotice(
           "Ocurrio un error al guardar",
