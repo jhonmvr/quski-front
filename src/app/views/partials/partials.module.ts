@@ -122,6 +122,7 @@ import { PopupPagoComponent } from './custom/popups/popup-pago/popup-pago.compon
 import { SubirComprobanteComponent } from './custom/popups/popup-pago/subir-comprobante/subir-comprobante.component';
 import { CreditoDialogComponent } from './custom/secciones-generales/credito-dialog/credito-dialog.component';
 import { RelativeDatePipe } from '../../../app/core/_base/layout/pipes/date-relative.pipe';
+import { LoaderComponent } from './custom/loader/loader.component';
 
 
 
@@ -141,7 +142,7 @@ import { RelativeDatePipe } from '../../../app/core/_base/layout/pipes/date-rela
 		// topbar components
 		ContextMenu2Component,
 		ContextMenuComponent,
-
+		LoaderComponent,
 		QuickPanelComponent,
 		ScrollTopComponent,
 		SearchResultComponent,
@@ -218,7 +219,7 @@ import { RelativeDatePipe } from '../../../app/core/_base/layout/pipes/date-rela
 		TablaTasacionComponent,
 		TablaOfertaCreditoComponent,
 		MensajeEdadComponent,
-
+		LoaderComponent,
 		// topbar components
 		ContextMenu2Component,
 		ContextMenuComponent,

@@ -21,13 +21,11 @@ export class ReFileUploadService extends BaseService {
     
     public uploadFile(serviceUrl, data){
       this.headers=new HttpHeaders({ 'Content-Type': 'application/json' });
-      
       this.options = { headers: this.headers};
-
-        return this.http.post(serviceUrl, data,this.options).pipe(
+      return this.http.post(serviceUrl, data,this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { this.HandleError(error, new ReNoticeService(),this.dialog); }
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
     }

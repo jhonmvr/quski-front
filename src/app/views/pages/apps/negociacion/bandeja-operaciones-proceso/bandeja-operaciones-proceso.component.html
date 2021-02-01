@@ -1,6 +1,4 @@
-<div class="spinner-container" *ngIf="loading | async">
-	<mat-spinner class="spiner"></mat-spinner>
-</div>
+ 
 
 <re-portlet>
 	<re-portlet-header [title]="'BANDEJA DE OPERACIONES EN PROCESO'" [class]="'kt-portlet__head--lg'">
@@ -126,7 +124,7 @@
                     </ng-container>
                     <ng-container matColumnDef="fechaCreacion">
                         <mat-header-cell *matHeaderCellDef>Fecha Creacion</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.fechaCreacion | rDate }}</mat-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.fechaCreacion| rDate }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="agencia">
                         <mat-header-cell *matHeaderCellDef>Agencia</mat-header-cell>

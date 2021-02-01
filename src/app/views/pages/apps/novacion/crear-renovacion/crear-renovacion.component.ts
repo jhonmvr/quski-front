@@ -17,6 +17,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
+import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -64,7 +65,7 @@ export class CrearRenovacionComponent implements OnInit {
   public cedulaCliente = new FormControl();
   
   public dataSourceTasacion = new MatTableDataSource<any>();
-  public displayedColumnsTasacion = ['Total','NumeroPiezas','PesoBruto','PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'TipoOro','TipoJoya', 'EstadoJoya', 'Descripcion',  'DescuentoSuelda', 'DescuentoPesoPiedra', 'tienePiedras', 'detallePiedras'];
+  public displayedColumnsTasacion = ['Total','NumeroPiezas','PesoBruto','PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'TipoOro','TipoJoya', 'EstadoJoya', 'Descripcion',  'DescuentoSuelda', 'tienePiedras', 'detallePiedras','DescuentoPesoPiedra'];
   public dataSourceCreditoNegociacion = new MatTableDataSource<any>();
   public displayedColumnsCreditoNegociacion = ['accion','plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
     'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
@@ -168,7 +169,15 @@ export class CrearRenovacionComponent implements OnInit {
           descripcion: element.descripcionJoya ? element.descripcionJoya : 'Sin descripcion',
           detallePiedras: element.detallePiedras ? element.detallePiedras : 'Sin detalle',
           descuentoPesoPiedra: element.descuentoPiedras,
-          total: this.total
+          total: this.total,
+          numeroPiezas: element.numeroPiezas,
+          pesoBruto: element.pesoBruto,
+          descuentoSuelda : element.descuentoSuelda,
+          pesoNeto: element.pesoNeto,
+          valorOro: element.valorOro,
+          valorAvaluo: element.valorAvaluo,
+          valorRealizacion : element.valorRealizacion,
+          valorComercial :  element.valorComercial
         };
         this.totalPesoB += element.pesoBruto;
         this.totalPesoN += element.pesoNeto
@@ -252,7 +261,7 @@ export class CrearRenovacionComponent implements OnInit {
         let valor = data.entidad.valor;
         this.par.getDiffBetweenDateInicioActual(this.credit.operacionAnterior.cliente.fechaNacimiento, 'dd/MM/yyyy').subscribe( (data: any) =>{
           console.log('Mi data de calcular edad ===>', data);
-          if(data.entidad.year < valor && this.validCliente){
+          if(data.entidad.year > valor && this.validCliente){
             this.credit.excepciones ? this.credit.excepciones.forEach(e =>{
               if(e.tipoExcepcion != 'EXCEPCION_CLIENTE'){
                 this.solicitarExcepcionCliente();
@@ -309,6 +318,7 @@ export class CrearRenovacionComponent implements OnInit {
   public abrirPopupExcepciones(data: DataInjectExcepciones) {
     this.loadingSubject.next(false);
     data.idNegociacion = this.credit.proceso.idReferencia;
+    data.mensajeBre = data.isCliente ? 'El cliente supera el limite de edad establecido' : null;
     const dialogRefGuardar = this.dialog.open(SolicitudDeExcepcionesComponent, {
       width: '800px',
       height: 'auto',

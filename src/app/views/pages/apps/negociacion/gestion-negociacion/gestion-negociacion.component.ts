@@ -4,6 +4,7 @@ import { ErrorCargaInicialComponent } from './../../../../partials/custom/popups
 import { DevolucionCreditoComponent } from './../../../../partials/custom/popups/devolucion-credito/devolucion-credito.component';
 import { ListaExcepcionesComponent } from './../../../../partials/custom/popups/lista-excepciones/lista-excepciones.component';
 import { VerCotizacionesComponent } from './../../../../partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
+import { TbQoVariablesCrediticia } from './../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { DataInjectExcepciones } from './../../../../../core/model/wrapper/DataInjectExcepciones';
 import { TbQoCreditoNegociacion } from './../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
@@ -38,10 +39,14 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class GestionNegociacionComponent implements OnInit {
   // VARIABLES PUBLICAS
   selection = new SelectionModel<any>(true, []);
-  public loading;
+  public loadingTasacion;
   public usuario: string;
   public agencia: string;
-  public loadingSubject = new BehaviorSubject<boolean>(false);
+  public loadTasacion  = new BehaviorSubject<boolean>(false);
+  public loadOpciones  = new BehaviorSubject<boolean>(false);
+  public loadBusqueda  = new BehaviorSubject<boolean>(false);
+  public loadVariables = new BehaviorSubject<boolean>(false);
+
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
   // ENTIDADES
   negoW: NegociacionWrapper = null;
@@ -75,7 +80,7 @@ export class GestionNegociacionComponent implements OnInit {
   public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public publicidad = new FormControl('', [Validators.required]);
   public fechaDeNacimiento = new FormControl('', [Validators.required]);
-  public edad = new FormControl('', [Validators.required]);
+  public edad = new FormControl('', [Validators.required, Validators.max(75), Validators.min(18)]);
   public nacionalidad = new FormControl('', [Validators.required]);
   public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
@@ -172,9 +177,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.formTasacion.addControl("valorOro", this.valorOro);
     this.formTasacion.addControl("tienePiedras", this.tienePiedras);
     this.formTasacion.addControl("detallePiedras", this.detallePiedras);
-    //this.formTasacion.addControl("valorAplicable", this.valorAplicable);
-    //this.formTasacion.addControl("precioOro", this.precioOro);
-    //this.formTasacion.addControl("valorAvaluo", this.valorAvaluo);
+
     
     this.formOpcionesCredito.addControl("montoSolicitado", this.montoSolicitado);
   }
@@ -186,7 +189,6 @@ export class GestionNegociacionComponent implements OnInit {
     this.neg.setParameter();
     this.tas.setParameter();
     this.subheaderService.setTitle('Negociación');
-    this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem( 'idAgencia' );
     this.loadCatalogo();
@@ -197,9 +199,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.inicioDeFlujo();
 
   }
-
-
-  loadCatalogo(){
+  public loadCatalogo(){
     this.sof.consultarPaisCS().subscribe((data: any) => {
       this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
       
@@ -214,7 +214,6 @@ export class GestionNegociacionComponent implements OnInit {
     });
     this.sof.consultarEstadoJoyaCS().subscribe((data: any) => {
       this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-      this.loadingSubject.next(false);
     });
   }
   /** ********************************************* @ENTRADA ********************* **/
@@ -222,7 +221,6 @@ export class GestionNegociacionComponent implements OnInit {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.id && json.params.origen) {
         this.myStepper.selectedIndex = 1;
-        this.loadingSubject.next(true);
         if (json.params.origen == "NEG") {
           this.validarNegociacion(json.params.id);
         } else if (json.params.origen == "COT") {
@@ -230,7 +228,6 @@ export class GestionNegociacionComponent implements OnInit {
         } else {
           this.salirDeGestion("Error al intentar ingresar a la Negociacion.");
         }
-        this.loadingSubject.next(false);
       } 
     });
   }
@@ -344,26 +341,25 @@ export class GestionNegociacionComponent implements OnInit {
     if (this.formBusqueda.invalid) {
       this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'warning');
       return;
-    }    
-    this.loadingSubject.next(true);  
-      this.neg.iniciarNegociacion(this.identificacion.value, this.usuario, this.agencia).subscribe((wrapper: any) => {
-        if (wrapper.entidad.respuesta) {
-          this.limpiarNegociacion();
-          this.negoW = wrapper.entidad;
-          this.myStepper.selectedIndex = 1;
-          if (this.negoW.excepcionBre){
-            this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
-            return;
-          } 
-          this.cargarValores(this.negoW, false);
-        } else {
-          this.abrirPopupDeAutorizacion(this.identificacion.value);
-        }
-      });
- 
+    }
+    this.loadBusqueda.next(true);    
+    this.neg.iniciarNegociacion(this.identificacion.value, this.usuario, this.agencia).subscribe((wrapper: any) => {
+      if (wrapper.entidad.respuesta) {
+        this.limpiarNegociacion();
+        this.loadBusqueda.next(false);    
+        this.negoW = wrapper.entidad;
+        this.myStepper.selectedIndex = 1;
+        if (this.negoW.excepcionBre){
+          this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
+          return;
+        } 
+        this.cargarValores(this.negoW, false);
+      } else {
+        this.abrirPopupDeAutorizacion(this.identificacion.value);
+      }
+    });
   }
   private iniciarNegociacionEquifax( cedula: string ){
-    this.loadingSubject.next(true);
     this.neg.iniciarNegociacionEquifax( cedula, this.usuario, this.agencia).subscribe( (wrapper: any) =>{
       if (wrapper.entidad.respuesta) {
         this.limpiarNegociacion();
@@ -374,9 +370,7 @@ export class GestionNegociacionComponent implements OnInit {
           return;
         } 
         this.cargarValores(this.negoW, false);
-        
       } else {
-        this.loadingSubject.next(false);
         this.limpiarCamposBusqueda();
         this.sinNotSer.setNotice('NO SE PUDO INICIAR NEGOCIACION, CLIENTE NO ENCONTRADO EN EQUIFAX','error')
       }
@@ -423,7 +417,6 @@ export class GestionNegociacionComponent implements OnInit {
   }
   private abrirPopupDeAutorizacion(cedula: string): any {
     this.myStepper.selectedIndex = 0;
-    this.loadingSubject.next(false);
     const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
       width: '600px',
       height: 'auto',
@@ -443,7 +436,7 @@ export class GestionNegociacionComponent implements OnInit {
     this.cedula.setValue(this.tbQoCliente.cedulaCliente);
     this.identificacion.setValue(this.tbQoCliente.cedulaCliente);
     this.nombresCompletos.setValue(this.tbQoCliente.nombreCompleto);
-    this.fechaDeNacimiento.setValue(this.tbQoCliente.fechaNacimiento);
+    this.fechaDeNacimiento.setValue(this.tbQoCliente.fechaNacimiento ? new Date( this.tbQoCliente.fechaNacimiento ) : null );
     this.cargarEdad();
     this.nacionalidad.setValue(this.catPais?this.catPais.find(p=> p.id == this.tbQoCliente.nacionalidad):null);
     if(wrapper.telefonoMovil){
@@ -454,8 +447,6 @@ export class GestionNegociacionComponent implements OnInit {
       this.telefonoDomicilio.setValue(wrapper.telefonoDomicilio.numero);
       this.telefonoFijo = wrapper.telefonoDomicilio;
     }
-  
-    
     this.email.setValue(this.tbQoCliente.email);
     this.campania.setValue('');
     this.publicidad.setValue ('');
@@ -513,13 +504,14 @@ export class GestionNegociacionComponent implements OnInit {
         valorARecibir: this.negoW.credito.valorARecibir
       }
       this.dataSourceCreditoNegociacion.data.push( calculadora );
+      this.seleccionarCredito( this.dataSourceCreditoNegociacion.data[0] );
+      this.masterToggle(this.dataSourceCreditoNegociacion.data[0]) ;
       this.dataSourceTasacion.data = wrapper.joyas;
       this.calcular();  
       this.sinNotSer.setNotice("NEGOCIACION -> \"" + wrapper.credito.codigo + "\" Cargada correctamente.", "success");
     }else{
       this.sinNotSer.setNotice("SE HA INICIADO UNA NEGOCIACION -> \"" + wrapper.credito.codigo + "\". ", "success");
     }
-    this.loadingSubject.next(false);
   }
   public abrirPopupVerCotizacion(identificacion: string) {
     const dialogRefGuardar = this.dialog.open(VerCotizacionesComponent, {
@@ -552,7 +544,6 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   public popupDevolucion( ){
-    this.loadingSubject.next(false);
     this.identificacion.disable();
     let entryData = {
       titulo: 'Algo',
@@ -570,7 +561,6 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   public abrirPopupExcepciones(data: DataInjectExcepciones = null) {
-    this.loadingSubject.next(false);
     if (data == null) {
       data = new DataInjectExcepciones(false, false, true);
     }
@@ -616,7 +606,15 @@ export class GestionNegociacionComponent implements OnInit {
       control.setValue(null);
     });
   }
-  public getErrorMessage(pfield: string) { //@TODO: Revisar campos 
+  public getErrorMessageEdad(){
+    const errorRequerido = 'Ingresar valores';
+    const errorMin = 'No cumple la edad minima';
+    const errorMax = 'No cumple la edad maxima';
+    const input = this.formDatosCliente.get('edad');
+    // console.log('El required // El min // El max // El valor', input.hasError('required'), input.hasError('min'), input.hasError('max'), input.value );
+    return input.hasError('required') ? errorRequerido :  input.hasError('max') ? errorMax : input.hasError('min') ? errorMin : '';
+  }
+  public getErrorMessage(pfield: string) { 
     const errorRequerido = 'Ingresar valores';
     const errorNumero = 'Ingresar solo numeros'; 
     const maximo = "El maximo de caracteres es: ";
@@ -641,17 +639,14 @@ export class GestionNegociacionComponent implements OnInit {
       const input = this.nombresCompletos;
       return input.hasError('required') ? errorRequerido : '';
     }
-
     if (pfield && pfield === 'fechaDeNacimiento') {
       const input = this.fechaDeNacimiento;
       return input.hasError('required') ? errorRequerido : '';
     }
-
     if (pfield && pfield === 'nacionalidad') {
       const input = this.nacionalidad;
       return input.hasError('required') ? errorRequerido : '';
     }
-
     if (pfield && pfield === 'telefonoDomicilio') {
       const input = this.formDatosCliente.get('telefonoDomicilio');
       return input.hasError('required')
@@ -664,7 +659,6 @@ export class GestionNegociacionComponent implements OnInit {
               ? errorInsuficiente
               : '';
     }
-
     if (pfield && pfield == "email") {
       const input = this.email;
       return input.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo + this.email.errors.maxlength.requiredLength : '';
@@ -678,7 +672,6 @@ export class GestionNegociacionComponent implements OnInit {
       const input = this.movil;
       return input.hasError('required') ? errorRequerido : input.hasError('pattern') ? errorNumero : input.hasError('maxlength') ? errorLogitudExedida : input.hasError('minlength') ? errorInsuficiente : '';
     }
-
     if (pfield && pfield === 'telefonoDomicilio') {
       const input = this.formDatosCliente.get('telefonoDomicilio');
       return input.hasError('required')
@@ -691,7 +684,6 @@ export class GestionNegociacionComponent implements OnInit {
               ? errorInsuficiente
               : '';
     }
-
     if (pfield && pfield === 'tipoOro') {
       const input = this.movil;
       return input.hasError('required') ? errorRequerido : '';
@@ -750,11 +742,15 @@ export class GestionNegociacionComponent implements OnInit {
     this.cedula.disable();
   }
   public cargarEdad(){
+    console.log('cargarEdad');
     if(this.fechaDeNacimiento.valid){
+      console.log('Fecha de nacimeiento valida');
       const fechaSeleccionada = new Date(this.fechaDeNacimiento.value);
       const convertFechas = new RelativeDateAdapter();
+      console.log('Fecha ===>', fechaSeleccionada);
       this.par.getDiffBetweenDateInicioActual(convertFechas.format(fechaSeleccionada, "input"), "dd/MM/yyy").subscribe((rDiff: any) => {
         const diff: YearMonthDay = rDiff.entidad;
+        console.log('La edad? ===>', diff.year);
         this.edad.setValue( diff.year );
       });
     }
@@ -778,7 +774,6 @@ export class GestionNegociacionComponent implements OnInit {
     }
   }
   cargarJoya() {
-    //console.log('formulario tasacion ===>>>',this.formTasacion)
     if (this.formTasacion.invalid) {
       this.sinNotSer.setNotice('COMPLETE CORRECTAMENTE EL FORMULARIO', 'warning');
       return;
@@ -788,13 +783,13 @@ export class GestionNegociacionComponent implements OnInit {
       this.sinNotSer.setNotice('COMPLETE CORRECTAMENTE LA INFORMACION DEL CLIENTE', 'warning');
       return;
     }
-      //this.loadingSubject.next(true);
       if(this.negoW.excepciones && this.negoW.excepciones.find(ex=> (ex.tipoExcepcion == 'EXCEPCION_COBERTURA' || ex.tipoExcepcion == 'EXCEPCION_RIESGO')
        && ex.estadoExcepcion == EstadoExcepcionEnum.APROBADO) ){
         if( !confirm("USTED TIENE UNA EXCEPCION APROBADA. SI CAMBIA LAS GARANTIAS ESTA EXCEPCION SE ANULARA") ){
           return;
         }
-       }
+      }
+      this.loadTasacion.next(true);
       this.selection = new SelectionModel<any>(true, []);
       let joya = new TbQoTasacion();
       joya.descripcion = this.descripcion.value;
@@ -823,24 +818,22 @@ export class GestionNegociacionComponent implements OnInit {
      }
       if (this.elementJoya) {
         joya.id = this.elementJoya;
-       // const index = this.dataSourceTasacion.data.indexOf(this.elementJoya);
-       // this.dataSourceTasacion.data.splice(index, 1);
         this.elementJoya = null;
       }
       console.log('Mi joya a guardar ===>', joya);
       this.neg.agregarJoya(joya).subscribe((data: any) => {
           this.dataSourceTasacion = new MatTableDataSource<any>(data.entidades);
           this.sinNotSer.setNotice('SE GUARDO LA JOYA TASADA', 'success');
-        //this.loadingSubject.next(false);
         this.limpiarCamposTasacion();
         this.calcular();
         this.dataSourceCreditoNegociacion = new MatTableDataSource<any>();
+        this.loadTasacion.next(false);
       });
     
   }
   editar(element: TbQoTasacion) {
     console.log('Mi elemento ===>', element);
-    this.loadingSubject.next(true);
+    this.loadTasacion.next(true);
     let cliente = this.buildCliente();
     this.neg.verPrecios(cliente).subscribe(resp=>{
       this.catTipoOro = resp.entidades;
@@ -862,11 +855,11 @@ export class GestionNegociacionComponent implements OnInit {
       this.valorRealizacion.setValue(element.valorRealizacion);
       this.descripcion.setValue(element.descripcion);
       this.elementJoya = element.id;
-      this.loadingSubject.next(false);
+      this.loadTasacion.next(false);
     })
   }
   eliminar(element: TbQoTasacion) {
-    this.loadingSubject.next(true);
+    this.loadTasacion.next(true);
     this.tas.eliminarJoya(element.id).subscribe((data: any) => {
       if (data.entidad) {
         const index = this.dataSourceTasacion.data.indexOf(element);
@@ -881,7 +874,7 @@ export class GestionNegociacionComponent implements OnInit {
       } else {
         this.sinNotSer.setNotice('ERROR DESCONOCIDO', 'error');
       }
-      this.loadingSubject.next(false);
+      this.loadTasacion.next(false);
     });
   }
   /** ********************************************** @OPCIONES ***************************************/
@@ -891,26 +884,49 @@ export class GestionNegociacionComponent implements OnInit {
         this.sinNotSer.setNotice("EL MONTO SOLICITADO ES MAYOR AL MONTO FINANCIADO ACTUAL", 'error');
         return;
       }
-      this.loadingSubject.next(true);
+      this.loadOpciones.next(true);
       this.cal.simularOferta(this.negoW.credito.id,montoSolicitado,this.riesgoTotal).subscribe((data: any) => {
-        this.loadingSubject.next(false);
         if(data.entidad.simularResult.codigoError == 3 ){
           this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
+          this.loadOpciones.next(false);
           this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
-        }
-        if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
+          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
+        } else if(data.entidad.simularResult.codigoError == 1 ){
+          this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
+          this.loadOpciones.next(false);
+          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
+        } else if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
+            this.loadOpciones.next(false);
             this.selection = new SelectionModel<any>(true, []);
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+            this.mapearVariables(data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable)
         }else{
           this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
         }
         this.myStepper.selectedIndex = 5;
       },err=>{
-        this.loadingSubject.next(false);
       });
     } 
+  }
+  private mapearVariables(variables: Array<any>){
+    let variablesBase : Array<TbQoVariablesCrediticia> = new Array<TbQoVariablesCrediticia>();
+    this.loadVariables.next(true);
+    variables.forEach( e=>{
+      let variableBase : TbQoVariablesCrediticia = new TbQoVariablesCrediticia();
+      variableBase.codigo = e.codigo;
+      variableBase.nombre = e.nombre;
+      variableBase.valor  = e.valor;
+      variableBase.orden  = e.orden;
+      variablesBase.push( variableBase );
+    });
+    this.componenteVariable = false;
+    this.negoW.variables = variablesBase;
+    console.log("Las variables de bre =>", variablesBase);
+    this.sinNotSer.setNotice("LAS VARIABLES CREDITICIAS FUERON ACTUALIZADAS", 'success');
+    this.componenteVariable = true;
+    this.loadVariables.next(false);
   }
   updateCliente(event,control){
     if(control.invalid || (event instanceof  KeyboardEvent && event.key !='Tab') ){
@@ -987,11 +1003,14 @@ export class GestionNegociacionComponent implements OnInit {
       this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO",'warning');
       return;
     }
-      if(confirm("ESTA SEGURO DE GENERAR LA SOLICITUD DE CREDITO?")){
-        this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
-          this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
-       });
-      }
+    if(confirm("ESTA SEGURO DE GENERAR LA SOLICITUD DE CREDITO?")){
+      this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
+        this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
+      }, error =>{
+        console.log('eeorr', error.error.msgError);
+      this.sinNotSer.setNotice(error.error.msgError,'error');
+      });
+    }
   }
   regresar(){
     this.router.navigate(['negociacion/']);
@@ -1002,10 +1021,16 @@ export class GestionNegociacionComponent implements OnInit {
       this.myStepper.selectedIndex =1;
       return;
     }
+    if(!this.fechaDeNacimiento.value || this.edad.value < 18 || this.edad.value > 75 ){
+      this.sinNotSer.setNotice("INGRESE UNA FECHA VALIDA QUE CORRESPONDA A UNA EDAD VALIDA", 'error');
+      this.myStepper.selectedIndex =1;
+      return;
+    }
+    this.loadTasacion.next(true);
     let cliente = this.buildCliente();
     this.neg.verPrecios(cliente).subscribe(resp=>{
       this.catTipoOro = resp.entidades;
-      this.myStepper.selectedIndex =4;
+      this.loadTasacion.next(false);
     })
   }
   private _filter(value: Pais): Pais[] {

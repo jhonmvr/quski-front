@@ -1,6 +1,4 @@
-<div class="spinner-container" *ngIf="loading | async">
-  <mat-spinner class="spiner"></mat-spinner>
-</div>
+  
 <re-portlet>
   <re-portlet-header [title]="'Aprobación Fábrica Créditos Nuevos'" [class]="'kt-portlet__head--lg'">
     <ng-container ktPortletTools>
@@ -133,7 +131,7 @@
               </div>
               <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
-                  <input [formControl]="fechaUltimaActualizazion" placeholder="Fecha Última Actualización:" matInput [value]="fechaUltimaActualizazion | rDate" />
+                  <input [formControl]="fechaUltimaActualizazion" placeholder="Fecha Última Actualización:" matInput  [value]="fechaUltimaActualizazion.value | rDate"  />
                 </mat-form-field>
               </div>
             </div>
@@ -442,7 +440,7 @@
           </mat-tab>
           <mat-tab label="Variables crediticias">
             <div class="row mt-1 mb-1">
-              <div class="col-md-6 offset-md-3">
+              <div class="col-md-8 offset-md-2">
                 <kt-tabla-variables-crediticias *ngIf="this.crediW;" [base]='this.crediW.variables'>
                 </kt-tabla-variables-crediticias>
               </div>
@@ -451,7 +449,7 @@
 
           <mat-tab label="Riesgo acumulado">
             <div class="row mt-1 mb-1">
-              <div class="col-md-6 offset-md-3">
+              <div class="col-md-10 offset-md-1">
                 <ng-container *ngIf="this.crediW && this.crediW.riesgos; else elseTemplate">
                   <kt-tabla-riesgo-acumulado [base]="this.crediW.riesgos"></kt-tabla-riesgo-acumulado>
                 </ng-container>

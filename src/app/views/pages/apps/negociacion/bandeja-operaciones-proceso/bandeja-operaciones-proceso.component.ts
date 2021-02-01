@@ -97,7 +97,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
           }
           e.actividad = !e.actividad || e.actividad == ' ' || e.actividad.toUpperCase() == 'NULL' ? 'Sin Actividad' : e.actividad.replace(/_/gi," ");
           e.codigoOperacion = !e.codigoOperacion || e.codigoOperacion.toUpperCase() == 'NULL' ? "Sin Codigo Softbank": e.codigoOperacion;
-          e.montoFinanciado = !e.montoFinanciado || e.montoFinanciado == '0' ? 'No Aplica' : e.montoFinanciado+'$';
+          e.montoFinanciado = !e.montoFinanciado || e.montoFinanciado == '0' ? 'No Aplica' : '$'+e.montoFinanciado;
           e.estadoProceso = e.estadoProceso.replace(/_/gi," ");
           e.nombreCliente = e.nombreCliente.replace(/_/gi," ");
           e.proceso = e.proceso.replace(/_/gi," ");

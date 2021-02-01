@@ -25,24 +25,23 @@ export const environment = {
     appkey:"QUSKIBPM",
     agenciakey:"reAgencia",
     //SOFTBANK desarollo
-    //parametros
-    //app_p : 'aHR0cDovL2FwaWd3LnF1c2tpLmVjOjg0ODAvZ2VuZXJpYy1yZWxhdGl2ZS1yZXN0L3Jlc291cmNlcy9yZWxhdGl2ZS9nZXRSZWxhdGl2ZQo=',
-    //agente supervisor
-    //abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
-    //autenticacion 
-    //seg_a :"aHR0cDovLzIwMS4xODMuMjM4LjczOjE5OTEvYXBpL3NlZ3VyaWRhZC9sb2dpbg==",
-    //seguridad-resources
-    //seg_r :"aHR0cDovLzIwMS4xODMuMjM4LjczOjE5OTEvYXBpL3NlZ3VyaWRhZC8="
-    
-      //SOFTBANK PRUEBAS
-    //parametros
+    //app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU/cHJlZml4PWxvY2Fs',
     app_p : 'aHR0cDovLzEwLjM3LjEwLjE4MDo4NDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU',
     //agente supervisor
     abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
     //autenticacion 
-    seg_a :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC9sb2dpbgo=",
+    seg_a :"aHR0cDovLzIwMS4xODMuMjM4LjczOjE5OTEvYXBpL3NlZ3VyaWRhZC9sb2dpbg==",
     //seguridad-resources
-    seg_r :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC8="
+    seg_r :"aHR0cDovLzIwMS4xODMuMjM4LjczOjE5OTEvYXBpL3NlZ3VyaWRhZC8="
+    
+      //SOFTBANK PRUEBAS
+    //app_p : 'aHR0cDovLzEwLjM3LjEwLjE4MDo4NDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU',
+    //agente supervisor
+    //abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
+    //autenticacion 
+    //seg_a :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC9sb2dpbgo=",
+    //seguridad-resources
+    //seg_r :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC8="
 
     //DESARROLLO
     //parametros
