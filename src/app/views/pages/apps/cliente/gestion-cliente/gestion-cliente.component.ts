@@ -1173,7 +1173,7 @@ export class GestionClienteComponent implements OnInit {
                     this.wrapper.referencias = this.dataSourceReferencia.data;
                     //console.log(' Lo que guardo -> ', this.wrapper);
                     this.cli.registrarCliente(this.wrapper).subscribe((data: any) => {
-                      if (data.entidad && data.entidad.isCore && data.entidad.isSoftbank) {
+                      if (data.entidad && data.entidad.isCore ) {
                         this.loadingSubject.next(false);
                         this.sinNoticeService.setNotice("CLIENTE REGISTRADO CORRECTAMENTE", 'success');
                         if(this.origen == 'NEG'){ this.router.navigate(['credito-nuevo/generar-credito/', this.item]); }
