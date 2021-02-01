@@ -1061,6 +1061,15 @@ export class GestionClienteComponent implements OnInit {
     this.telefonoFijoR.setValue(element.telefonoFijo);
     this.estadoR.setValue( element.estado);
   }
+  validarReferencias(){
+    return this.dataSourceReferencia.data.find( x => !x.apellidos || !x.nombres || (!x.telefonoFijo && !x.telefonoMovil) || !x.parentesco )?true:false;
+  }
+  validarReferencia(x){
+    if(!x.apellidos || !x.nombres || (!x.telefonoFijo && !x.telefonoMovil) || !x.parentesco){
+      return {'background-color':'#ffa000', 'color': 'aliceblue !important'};
+    }
+    return {'background-color':'#ffffff00'};
+  }
   public guardar() {
     this.loadingSubject.next(true);
     if (this.formCliente.valid) {
@@ -1073,7 +1082,7 @@ export class GestionClienteComponent implements OnInit {
                   this.sinNoticeService.setNotice('EL EGRESO NO PUEDE SER MAYOR AL INGRESO DEL CLIENTE', 'warning');
                   return;
                 }
-                if(this.dataSourceReferencia.data.find( x => !x.apellidos || !x.nombres || (!x.telefonoFijo && !x.telefonoMovil) || !x.parentesco )){
+                if(this.validarReferencias()){
                   this.sinNoticeService.setNotice('ERROR ENCONTRADO EN LAS REFERENCIAS, REVISE ANTES DE GUARDAR', 'warning');
                   return;
                 }
