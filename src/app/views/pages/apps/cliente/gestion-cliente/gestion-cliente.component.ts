@@ -633,6 +633,30 @@ export class GestionClienteComponent implements OnInit {
           ? errorLogitudExedida
           : '';
     }
+    if (pfield && pfield === 'telefonoMovilR') {
+      const input = this.telefonoMovilR;
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('pattern')
+          ? errorNumero
+          : input.hasError('maxlength')
+            ? errorLogitudExedida
+            : input.hasError('minlength')
+              ? errorInsuficiente
+              : '';
+    }
+    if (pfield && pfield === 'telefonoFijoR') {
+      const input = this.telefonoFijoR;
+      return input.hasError('required')
+        ? errorRequerido
+        : input.hasError('pattern')
+          ? errorNumero
+          : input.hasError('maxlength')
+            ? errorLogitudExedida
+            : input.hasError('minlength')
+              ? errorInsuficiente
+              : '';
+    }
     if (pfield && pfield === 'telefonoFijo') {
       const input = this.telefonoFijo;
       return input.hasError('required')
@@ -984,13 +1008,13 @@ export class GestionClienteComponent implements OnInit {
       control.reset();
     });
   }
-  public nuevaReferencia() {
+   public nuevaReferencia() {
     const referencia = new TbReferencia;
     if (!this.formDatosReferenciasPersonales.valid) {
       this.sinNoticeService.setNotice("COMPLETE CORRECTAMENTE EL FORMULARIO", 'error');
       return;
     }
-    if (!this.apellidosRef.value) {
+    if (this.apellidosRef.invalid) {
       this.sinNoticeService.setNotice("NOMBRE O APELLIDO NO VALIDO", 'error');
       return;
     }
@@ -1003,11 +1027,7 @@ export class GestionClienteComponent implements OnInit {
       return;
     }
     let b = 0;
-    if (!this.telefonoMovilR.value || Number(this.telefonoMovilR.value) < 0) {
-      this.sinNoticeService.setNotice("NUMERO DE TELEFONO NO VALIDO", 'error');
-      return;
-    }
-    if (!this.telefonoFijoR.value || Number(this.telefonoFijoR.value) < 0) {
+    if ( this.telefonoFijoR.invalid && this.telefonoMovilR.invalid) {
       this.sinNoticeService.setNotice("NUMERO DE TELEFONO NO VALIDO", 'error');
       return;
     }
