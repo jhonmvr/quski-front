@@ -18,6 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
+import { SelectionModel } from '@angular/cdk/collections';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -38,7 +39,7 @@ export class CrearRenovacionComponent implements OnInit {
   private credit: { operacionAnterior: any, proceso: TbQoProceso, credito: TbQoCreditoNegociacion, excepciones: TbQoExcepcion[]}
   private numeroOperacion;
   public fechaUtil: diferenciaEnDias;
-  public seleccion;
+  selection = new SelectionModel<any>(true, []);
   private garantiasSimuladas: any[];
 
   private fechaServer;
@@ -277,7 +278,7 @@ export class CrearRenovacionComponent implements OnInit {
   }
   public solicitarExcepcionRiesgo(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion(  this.seleccion, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
+      this.cre.crearCreditoRenovacion(  this.selection.selected, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(false,true,false) );
@@ -289,7 +290,7 @@ export class CrearRenovacionComponent implements OnInit {
   }
   public solicitarExcepcionCliente(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion(  this.seleccion, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
+      this.cre.crearCreditoRenovacion(  this.selection.selected, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false) );
@@ -300,9 +301,9 @@ export class CrearRenovacionComponent implements OnInit {
     }
   }
   public solicitarExcepcionCobertura(){
-    if(this.seleccion){
+    if(this.selection.selected.length > 0){
       if(!this.credit.proceso){
-        this.cre.crearCreditoRenovacion(  this.seleccion, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
+        this.cre.crearCreditoRenovacion(  this.selection.selected, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
           if(data.entidad){
             this.credit = data.entidad;
             this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
@@ -338,8 +339,8 @@ export class CrearRenovacionComponent implements OnInit {
     });
   }
   public actualizarCliente(){
-    if( this.seleccion ){
-      this.cre.crearCreditoRenovacion( this.seleccion, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia, this.credit.proceso? this.credit.proceso.idReferencia : null ).subscribe( data =>{
+    if( this.selection.selected.length > 0 ){
+      this.cre.crearCreditoRenovacion( this.selection.selected, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia, this.credit.proceso? this.credit.proceso.idReferencia : null ).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           //console.log( 'Mi operacion ->', data.entidad );
@@ -350,9 +351,7 @@ export class CrearRenovacionComponent implements OnInit {
       this.sinNotSer.setNotice('Seleccione una opcion valida', 'error');
     }
   }
-  public guardarSeleccion(row){
-    this.seleccion = row;
-  }
+ 
   public simularOpciones(){
     this.loadingSubject.next(true);
     let cliente = {} as cliente;
@@ -405,5 +404,22 @@ export class CrearRenovacionComponent implements OnInit {
     dialogRef.afterClosed().subscribe(r => {
       this.router.navigate(['negociacion/bandeja-operaciones']);
     });
+  }
+
+  masterToggle(event) {
+    this.selection.clear()        
+    this.selection.select(event) 
+  }
+
+  checkboxLabel(row?): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSourceCreditoNegociacion.data.length;
+    return numSelected === numRows;
   }
 }
