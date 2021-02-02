@@ -1082,10 +1082,11 @@ export class GestionClienteComponent implements OnInit {
     this.estadoR.setValue( element.estado);
   }
   validarReferencias(){
-    return this.dataSourceReferencia.data.find( x => !x.apellidos || !x.nombres || (!x.telefonoFijo && !x.telefonoMovil) || !x.parentesco )?true:false;
+    console.log('validacion ===> ', this.dataSourceReferencia.data.find( x => !x.apellidos || !x.nombres || !x.telefonoFijo || !x.telefonoMovil || !x.parentesco ) ? true:false );
+    return this.dataSourceReferencia.data.find( x => !x.apellidos || !x.nombres || !x.telefonoFijo || !x.telefonoMovil || !x.parentesco )?true:false;
   }
   validarReferencia(x){
-    if(!x.apellidos || !x.nombres || (!x.telefonoFijo && !x.telefonoMovil) || !x.parentesco){
+    if(!x.apellidos || !x.nombres || !x.telefonoFijo || !x.telefonoMovil || !x.parentesco){
       return {'background-color':'#ffa000', 'color': 'aliceblue !important'};
     }
     return {'background-color':'#ffffff00'};
@@ -1202,7 +1203,7 @@ export class GestionClienteComponent implements OnInit {
                     this.wrapper.referencias = this.dataSourceReferencia.data;
                     //console.log(' Lo que guardo -> ', this.wrapper);
                     this.cli.registrarCliente(this.wrapper).subscribe((data: any) => {
-                      if (data.entidad && data.entidad.isCore && data.entidad.isSoftbank) {
+                      if (data.entidad && data.entidad.isCore ) {
                         this.loadingSubject.next(false);
                         this.sinNoticeService.setNotice("CLIENTE REGISTRADO CORRECTAMENTE", 'success');
                         if(this.origen == 'NEG'){ this.router.navigate(['credito-nuevo/generar-credito/', this.item]); }
