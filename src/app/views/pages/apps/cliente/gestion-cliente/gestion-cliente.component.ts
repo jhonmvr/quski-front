@@ -1062,10 +1062,11 @@ export class GestionClienteComponent implements OnInit {
     this.estadoR.setValue( element.estado);
   }
   validarReferencias(){
-    return this.dataSourceReferencia.data.find( x => !x.apellidos || !x.nombres || (!x.telefonoFijo && !x.telefonoMovil) || !x.parentesco )?true:false;
+    console.log('validacion ===> ', this.dataSourceReferencia.data.find( x => !x.apellidos || !x.nombres || !x.telefonoFijo || !x.telefonoMovil || !x.parentesco ) ? true:false );
+    return this.dataSourceReferencia.data.find( x => !x.apellidos || !x.nombres || !x.telefonoFijo || !x.telefonoMovil || !x.parentesco )?true:false;
   }
   validarReferencia(x){
-    if(!x.apellidos || !x.nombres || (!x.telefonoFijo && !x.telefonoMovil) || !x.parentesco){
+    if(!x.apellidos || !x.nombres || !x.telefonoFijo || !x.telefonoMovil || !x.parentesco){
       return {'background-color':'#ffa000', 'color': 'aliceblue !important'};
     }
     return {'background-color':'#ffffff00'};
