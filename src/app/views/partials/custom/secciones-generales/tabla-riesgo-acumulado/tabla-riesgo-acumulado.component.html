@@ -1,5 +1,5 @@
 
-<mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceRiesgoAcumulado">
+<mat-table matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSourceRiesgoAcumulado"  #exporter="matTableExporter">
     <ng-container matColumnDef="referencia">
         <mat-header-cell *matHeaderCellDef class="text-align">Referencia Mupi</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.referencia}} </mat-cell>
@@ -51,4 +51,5 @@
     <mat-header-row *matHeaderRowDef="displayedColumnsRiesgoAcumulado"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumnsRiesgoAcumulado"></mat-row>
 </mat-table>
+<button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'riesgo', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Excel</button>
 

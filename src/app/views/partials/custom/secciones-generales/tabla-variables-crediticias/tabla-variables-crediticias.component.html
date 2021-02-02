@@ -1,4 +1,4 @@
-<mat-table #table class="mat-elevation-z8"  [dataSource]="dataSourceVariablesCrediticias">
+<mat-table #table matTableExporter class="mat-elevation-z8" #exporter="matTableExporter" [dataSource]="dataSourceVariablesCrediticias">
     <ng-container matColumnDef="orden">
         <mat-header-cell  *matHeaderCellDef>Orden</mat-header-cell>
         <mat-cell *matCellDef="let element">
@@ -20,3 +20,4 @@
     <mat-header-row *matHeaderRowDef="displayedColumnsVariablesCrediticias"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumnsVariablesCrediticias"></mat-row>
 </mat-table>
+<button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'variables', sheet: 'sheet_name', Props: {Author: 'jhonmvr'}})">Excel</button>

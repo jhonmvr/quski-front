@@ -52,7 +52,7 @@
                     <form [formGroup]="formFecha">
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [min]="fechaServer" (dateChange)="validacionFecha()" matInput #inputFechaCuota
+                                <input [min]="diasMin" [max]="diasMax"  matInput #inputFechaCuota
                                     [matDatepicker]="pickerFechaCuota" placeholder="Fecha de la Cuota"
                                     [formControl]="fechaCuota"/>
                                 <mat-datepicker-toggle matSuffix [for]="pickerFechaCuota"></mat-datepicker-toggle>
@@ -64,7 +64,7 @@
             </ng-container>
 
             <mat-step label="Asignacion de Funda" [stepControl]="formFunda">
-                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource">
+                <mat-table matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSource"  #exporter="matTableExporter">
                     <ng-container matColumnDef="total">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element"> </mat-cell>
@@ -149,6 +149,7 @@
                     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                     <mat-footer-row *matFooterRowDef="displayedColumns;"></mat-footer-row>
                 </mat-table>
+                <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'tasacion', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Excel</button>
                 <form [formGroup]="formFunda">
                     <div class="row mt-3">
                         <div class="col-md-4 ">

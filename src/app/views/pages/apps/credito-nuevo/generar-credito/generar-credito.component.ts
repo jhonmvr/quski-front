@@ -108,6 +108,10 @@ export class GenerarCreditoComponent implements OnInit {
   public catEstadoJoya: Array<any>;
   public catExcepcionOperativa: Array<any>;
 
+
+  //dia de pago
+  diasMax;
+  diasMin;
   //negociacion
   dataSourceCreditoNegociacion = new MatTableDataSource<any>();
   displayedColumnsCreditoNegociacion = ['plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
@@ -218,12 +222,17 @@ export class GenerarCreditoComponent implements OnInit {
     }
   }
   public habilitarExcepcionOperativa(){
-    if(this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
+    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
       this.fechaRegularizacion.disable();
       this.fechaRegularizacion.setValue(null);
     }else{
       this.fechaRegularizacion.enable();
     }
+  }
+  setearDiaPago(dia):Date{
+    let fecha = new Date();
+    fecha.setDate(dia);
+    return fecha;
   }
   private cargarCampos(data: OperacionNuevoWrapper) {
     this.firmanteOperacion.setValue( this.catFirmanteOperacion.find(t=> t.codigo != null).nombre );
@@ -232,8 +241,8 @@ export class GenerarCreditoComponent implements OnInit {
     this.estadoOperacion.setValue(data.proceso.estadoProceso);
     this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
-    this.fechaCuota.setValue(data.credito.pagoDia ? new Date(data.credito.pagoDia) : null);
-    data.credito.pagoDia ? this.validacionFecha() : null;
+    this.fechaCuota.setValue(data.credito.pagoDia ? this.setearDiaPago(data.credito.pagoDia) : null);
+    //data.credito.pagoDia ? this.validacionFecha() : null;
     data.joyas.forEach(e=>{
       let objetoOro = this.catTipoOro.find(x => x.codigo == e.tipoOro );
       e.tipoOro = objetoOro.nombre;
@@ -316,16 +325,16 @@ export class GenerarCreditoComponent implements OnInit {
       this.fechaServer = new Date(fechaSistema.entidad);
     })
   }
-  public validacionFecha() {
+  /* public validacionFecha() {
     this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value), new Date(this.fechaServer))
-    if (Math.abs(this.fechaUtil.obtenerDias()) >= 30 && Math.abs(this.fechaUtil.obtenerDias()) <= 45) {
+    if (Math.abs(this.fechaUtil.obtenerDias()) >= this.diasMin && Math.abs(this.fechaUtil.obtenerDias()) <= this.diasMax) {
       this.sinNotSer.setNotice("FECHA DE PAGO VALIDA", 'success');
     } else {
       this.fechaCuota.setValue( null );
       this.fechaCuota.setValidators(Validators.required);
       this.sinNotSer.setNotice("DEBE ESCOGER ENTRE 30 Y 45 DÍAS", 'error');
     }
-  }
+  } */
   private obtenerCatalogosSoftbank() { 
     this.sof.consultarTipoFundaCS().subscribe((data: any) => {
       this.catTipoFunda = !data.existeError ? data.catalogo : "Error al cargar catalogo";
@@ -342,7 +351,15 @@ export class GenerarCreditoComponent implements OnInit {
                 this.sof.consultarEstadoJoyaCS().subscribe( (data:any) =>{
                   this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
                   this.par.findByTipo('EXC-OPV-NUEV',).subscribe( (data :any) =>{
-                    console.log('paramatreos -->', data);
+                    this.sof.consultarperiodoDiferimientoCS().subscribe(dias=>{
+                      if(dias && dias.catalogo && dias.catalogo && dias.catalogo[0]){
+                        this.diasMax = this.setearDiaPago(dias.catalogo[0].diasMaximo);
+                        this.diasMin = this.setearDiaPago(dias.catalogo[0].diasMinimo);
+                        console.log("setear dia pago ==>",this.diasMax,this.diasMin);
+                      }else{
+                        this.sinNotSer.setNotice("NO SE PUEDE LEER LOS PARAMETROS DIAS DE DIFERIMIENTO",'error');
+                      }
+                    });
                     this.catExcepcionOperativa = data.entidades ? data.entidades : {codigo: 'ERR', mensaje: 'Error al cargar catalogo'}
                       this.traerOperacion();
                   });
@@ -497,11 +514,10 @@ export class GenerarCreditoComponent implements OnInit {
         }
         this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).subscribe((dataDos: any) => {
           let file = JSON.parse( atob( dataDos.entidad ) );
-          if(file.typeAction == '6'){
+          if(file && file.typeAction == '6'){
             this.srcJoya = file.fileBase64;
             this.loadImgJoya.next(false);
-          }
-          if(file.typeAction == '7'){
+          } else if(file && file.typeAction == '7'){
             this.srcFunda= file.fileBase64;
             this.loadImgFunda.next(false);
           }

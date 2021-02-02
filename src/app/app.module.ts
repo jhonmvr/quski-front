@@ -63,7 +63,6 @@ import * as json from 'highlight.js/lib/languages/json';
 import { APP_BASE_HREF } from '@angular/common';
 import { LoaderInterceptor } from './core/interseptors/loader.interceptor';
 
-
 // tslint:disable-next-line:class-name
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 	wheelSpeed: 0.5,
@@ -113,7 +112,7 @@ export function hljsLanguages(): HighlightLanguage[] {
 		TranslateModule.forRoot(),
 		MatProgressSpinnerModule,
 		InlineSVGModule.forRoot(),
-		ThemeModule
+		ThemeModule,
 	],
 	exports: [],
 	providers: [
@@ -152,6 +151,7 @@ export function hljsLanguages(): HighlightLanguage[] {
 		HttpUtilsService,
 		TypesUtilsService,
 		LayoutUtilsService,
+		
 	],
 	bootstrap: [AppComponent]
 })

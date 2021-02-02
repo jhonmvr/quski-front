@@ -1012,6 +1012,9 @@ export class GestionNegociacionComponent implements OnInit {
       });
     }
   }
+  validarDirectiva(element){
+    console.log("===>>mi directiva",element);
+  }
   regresar(){
     this.router.navigate(['negociacion/']);
   }
