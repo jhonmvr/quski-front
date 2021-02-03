@@ -46,6 +46,7 @@ import { ListaExcepcionesComponent } from '../../../../views/partials/custom/pop
 import { ReasignarUsuarioComponent } from '../../../../views/partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
 import { NovacionHabilitanteComponent } from './novacion-habilitante/novacion-habilitante.component';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
+import { MatTableExporterModule } from 'mat-table-exporter';
 const routes: Routes = [
 	{
 		path: '',
@@ -70,7 +71,7 @@ const routes: Routes = [
 ];
 @NgModule({
   	imports: [
-		CommonModule,
+		CommonModule,MatTableExporterModule,
 		RouterModule.forChild(routes),
 		MatDialogModule,
 		CommonModule,

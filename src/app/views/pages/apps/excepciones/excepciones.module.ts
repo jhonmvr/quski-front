@@ -53,6 +53,7 @@ import { ExcepcionesComponent } from './excepciones.component';
 import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 const routes: Routes = [
 	{
@@ -85,7 +86,7 @@ const routes: Routes = [
 ];
 @NgModule({
 	imports: [
-
+		MatTableExporterModule,
 		CommonModule,
 		CommonModule,
 		RouterModule.forChild(routes),

@@ -187,6 +187,24 @@ export class SoftbankService extends BaseService {
     );
   }
   /**
+   *  ****************************** @CATALOGOS
+   */
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Catalogos periodoDiferimiento
+   */
+  consultarperiodoDiferimientoCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "periodoDiferimiento" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  /**
    * @author Oscar Romero - Developer five
    * @description Catalogos gradointeres
    */

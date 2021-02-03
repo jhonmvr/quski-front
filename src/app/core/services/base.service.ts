@@ -55,7 +55,7 @@ export class BaseService {
     }
   }
 
- /*  public setParameter() {
+  public setParameter() {
            localStorage.setItem('setRE000', 'true');
            this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
            //Url de acceso al rootcontext de seguridad core-security-web
@@ -84,8 +84,8 @@ export class BaseService {
            //parametros cloudstudio
            this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
            
-  } */
-
+  }
+/* 
   public setParameter() {
     localStorage.setItem('setRE000', 'true');
     this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
@@ -115,7 +115,7 @@ export class BaseService {
     //parametros cloudstudio
     this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
     
-}
+} */
   
 
   public getSystemDate() {
