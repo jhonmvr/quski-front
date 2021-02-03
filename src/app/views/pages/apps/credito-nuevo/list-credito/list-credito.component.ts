@@ -38,6 +38,8 @@ export interface WrapperBusqueda{
 export class ListCreditoComponent implements OnInit {
   public loading;
   public loadingSubject = new BehaviorSubject<boolean>(false);
+  enableDevolucionButton;
+  enableDevolucion = new BehaviorSubject<boolean>(false);
   public usuario: string;
   public rol: string;
   /** @FILTROS **/
@@ -104,6 +106,8 @@ export class ListCreditoComponent implements OnInit {
   ngOnInit() {
     this.sof.setParameter();
     this.loading = this.loadingSubject.asObservable();
+    this.enableDevolucionButton = this.enableDevolucion.asObservable();
+    this.enableDevolucion.next(false);
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.rol = "ASESOR";
     this.cargarCats();
@@ -176,6 +180,9 @@ export class ListCreditoComponent implements OnInit {
       e.estado = this.catEstado ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion) ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion).nombre : 'Sin Estado' : 'Sin estado';
       e.estadoProcesoGarantia = this.catEstadoProcesoGarantia ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia) ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia).nombre : 'Sin Estado': 'Sin Estado';
       e.estadoUbicacionGrantia = this.catEstadoUbicacionGarantia? this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGrantia) ? this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGrantia).nombre : 'Sin Estado': 'Sin Estado';
+      console.log("aqui")
+      this.validateEstadoGarantiasForDevolucion(e.codigoEstadoProcesoGarantia,e.codigoEstadoUbicacionGrantia)
+    
     });
     this.paginator.length = data.numeroTotalRegistros;
   }
@@ -212,5 +219,32 @@ export class ListCreditoComponent implements OnInit {
     } else{
       this.sinNotSer.setNotice('COMPLETE LOS CAMPOS CORRECTAMENTE', 'error');
     }
+  }
+
+  validateEstadoGarantiasForDevolucion(estadoProcesoG, estadoUbicacionG){
+    console.log("estado proceso",estadoProcesoG)
+    if (estadoProcesoG == 'UTI'){
+      console.log('entro a UTI')
+      if(estadoUbicacionG== 'AGE' ||  estadoUbicacionG== 'CUS'){
+        this.enableDevolucion.next(true);
+        console.log("deberia  funcar")
+
+      }
+    }
+  }
+
+  irDevolucion(row:any){
+    console.log("row", row)
+    console.log( this.catEstadoProcesoGarantia)
+    let codeCredito = JSON.stringify(row)
+    //this.encodeObjetos(row)
+    console.log("codeCredito",codeCredito)
+    this.router.navigate(['devolucion/solicitud-devolucion/', {objeto: codeCredito} ]);  
+  }
+
+
+  encodeObjetos(entrada){
+   
+    return  btoa(unescape(encodeURIComponent(JSON.stringify(entrada))))
   }
 }

@@ -138,7 +138,7 @@ joyasList  = [{"tipoOro": "18KILATES",
  dataSourceHeredero =new MatTableDataSource;
  //:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
 
-objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28gSmF2aWVyIFNlcnJhbm8gQXJldmFsbyIsCiAgICAiaWRDbGllbnRlIjogIjE3MDY1ODc3MjAiLAogICAgIm51bWVyb09wZXJhY2lvbiI6ICJjb2QtMTciLAogICAgIm51bWVyb09wZXJhY2lvbk1hZHJlIiA6ICJjb2QtMTAiLAogICAgIm51bWVyb09wZXJhY2lvbk11cGkiOiAiIiwKICAgICJmZWNoYUFwcm9iYWNpb24iIDogIjIwMjAtMTAtMTIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiMjAyMC0xMS0xMCIsCiAgICAibW9udG9GaW5hbmNpYWRvIjogIjg1MCIsCiAgICAiYXNlc29yIjogIkp1YW5pdG8iLAogICAgImVzdGFkb09wZXJhY2lvbiI6ICAiQ0FOQ0VMQURPIiwKICAgICJ0aXBvQ3JlZGl0byI6ICIiLAogICAgImNvZGlnb1RhYmxhQW1vcnRpemFjaW9uUXVza2kiOiJBMDEiLAogICAgImltcGFnbyI6ICJubyIsCiAgICAicmV0YW5xdWVvIjogIm5vIiwKICAgICJjb2JlcnR1cmFJbmljaWFsIjogIjEyMDAiLAogICAgImNvYmVydHVyYUFjdHVhbCI6ICIxMTAwIiwKICAgICJibG9xdWVvIjoiIiwKICAgICJkaWFzTW9yYSI6ICIiLAogICAgImVzdGFkb1ViaWNhY2lvbiI6IiIsCiAgICAiZXN0YWRvUHJvY2VzbyI6IiIsCiAgICAiY29kaWdvU2VydmljaW8iOiIiLAogICAgIm1pZ3JhZG8iOiAiIgp9'
+//objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28gSmF2aWVyIFNlcnJhbm8gQXJldmFsbyIsCiAgICAiaWRDbGllbnRlIjogIjE3MDY1ODc3MjAiLAogICAgIm51bWVyb09wZXJhY2lvbiI6ICJjb2QtMTciLAogICAgIm51bWVyb09wZXJhY2lvbk1hZHJlIiA6ICJjb2QtMTAiLAogICAgIm51bWVyb09wZXJhY2lvbk11cGkiOiAiIiwKICAgICJmZWNoYUFwcm9iYWNpb24iIDogIjIwMjAtMTAtMTIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiMjAyMC0xMS0xMCIsCiAgICAibW9udG9GaW5hbmNpYWRvIjogIjg1MCIsCiAgICAiYXNlc29yIjogIkp1YW5pdG8iLAogICAgImVzdGFkb09wZXJhY2lvbiI6ICAiQ0FOQ0VMQURPIiwKICAgICJ0aXBvQ3JlZGl0byI6ICIiLAogICAgImNvZGlnb1RhYmxhQW1vcnRpemFjaW9uUXVza2kiOiJBMDEiLAogICAgImltcGFnbyI6ICJubyIsCiAgICAicmV0YW5xdWVvIjogIm5vIiwKICAgICJjb2JlcnR1cmFJbmljaWFsIjogIjEyMDAiLAogICAgImNvYmVydHVyYUFjdHVhbCI6ICIxMTAwIiwKICAgICJibG9xdWVvIjoiIiwKICAgICJkaWFzTW9yYSI6ICIiLAogICAgImVzdGFkb1ViaWNhY2lvbiI6IiIsCiAgICAiZXN0YWRvUHJvY2VzbyI6IiIsCiAgICAiY29kaWdvU2VydmljaW8iOiIiLAogICAgIm1pZ3JhZG8iOiAiIgp9'
 datos
   // VARIABLES DE TRACKING
   public horaAsignacionCreacion: Date = null;
@@ -197,9 +197,9 @@ datos
     this.enableHerederoButton = this.enableHeredero.asObservable();
     this.enableHeredero.next(false);
     this.setFechaSistema();
-
-    
-    this.datos = this.decodeObjetoDatos(this.objetoDatos);
+    this.getParametros();
+    this.datos =  JSON.parse(this.parametroObjeto);
+    console.log(this.datos)
   
     this.consultarEstadosCivilesCS();
     this.consultarEducacionCS();
@@ -208,7 +208,7 @@ datos
     this.consultarPaisCS();
     this.consultarTipoCliente();
     this.consultarAgencia();
-    this.getParametros();
+   
     this.cargarDatos();
     this.getJoyas();
     //console.log("el encode", )
@@ -320,7 +320,7 @@ datos
       
        
         this.parametroObjeto = params.get('objeto');
-     
+        console.log(this.parametroObjeto)
        
       },
       error => {
