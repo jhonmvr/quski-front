@@ -53,6 +53,7 @@ import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-fo
 import { PartialsModule } from '../../../partials/partials.module';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 const routes: Routes = [
 	{
@@ -90,7 +91,7 @@ const routes: Routes = [
 @NgModule({
 	imports: [
 
-		CommonModule,
+		CommonModule,MatTableExporterModule,
 		RouterModule.forChild(routes),
 		MatDialogModule,
 		CommonModule,

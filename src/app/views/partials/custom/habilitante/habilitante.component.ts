@@ -145,7 +145,7 @@ export class HabilitanteComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+    this.buscar()
   }
 
   validateLoadData(  ){
@@ -201,14 +201,15 @@ export class HabilitanteComponent implements OnInit {
   }
 
   submit() {
-    /* //console.log("loadDocumentoHabilitante cargando rol: " + this.rol);
-    //console.log("loadDocumentoHabilitante cargando proceso: " + this.proceso);
-    //console.log("loadDocumentoHabilitante cargando referencia: " + this.referencia);
-    //console.log("loadDocumentoHabilitante cargando estadoOperacion: " + this.estadoOperacion);
-    //console.log("loadDocumentoHabilitante cargando tipoDocumento: " + this.tipoDocumento);
-    //console.log("==>entra a documentos habilitantes loadDocumentoHabilitante"); */
+    console.log("loadDocumentoHabilitante cargando rol: " + this.rol);
+    console.log("loadDocumentoHabilitante cargando proceso: " + this.proceso);
+    console.log("loadDocumentoHabilitante cargando referencia: " + this.referencia);
+    console.log("loadDocumentoHabilitante cargando estadoOperacion: " + this.estadoOperacion);
+    console.log("loadDocumentoHabilitante cargando tipoDocumento: " + this.tipoDocumento);
+    console.log("==>entra a documentos habilitantes loadDocumentoHabilitante"); 
     //this.uploadSubject.next(false);
     this.dataSourcesHabilitantes = new MatTableDataSource<any>();
+    console.log( "Datos entrada" ,this.tipoDocumento, this.referencia)
     this.dh.findByRolTipoDocumentoReferenciaProcesoEstadoOperacion(localStorage.getItem(environment.rolKey),this.tipoDocumento, this.referencia,
     this.proceso,this.estadoOperacion, this.p  ).subscribe(
         (data: any) => {
@@ -272,6 +273,7 @@ export class HabilitanteComponent implements OnInit {
   descargarPlantillaHabilitante(row:HabilitanteWrapper) {
     ////console.log(      "<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>",      this.codigoContratoLocal    );
     ////console.log("entra a submit var json " + row.id);
+    console.log("XD", row)
     this.dh.generatePlantillaHabilitantesByParams(
         row.servicio,row.idReferencia?String(row.idReferencia):null,
         row.idTipoDocumento?String(row.idTipoDocumento):null, row.proceso, 

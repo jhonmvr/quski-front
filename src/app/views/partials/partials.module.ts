@@ -123,6 +123,7 @@ import { SubirComprobanteComponent } from './custom/popups/popup-pago/subir-comp
 import { CreditoDialogComponent } from './custom/secciones-generales/credito-dialog/credito-dialog.component';
 import { RelativeDatePipe } from '../../../app/core/_base/layout/pipes/date-relative.pipe';
 import { LoaderComponent } from './custom/loader/loader.component';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 
 
@@ -261,6 +262,7 @@ import { LoaderComponent } from './custom/loader/loader.component';
 	],
 	imports: [
 
+		MatTableExporterModule,
 		CommonModule,
 		RouterModule,
 		FormsModule,

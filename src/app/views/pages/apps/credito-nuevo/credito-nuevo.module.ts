@@ -67,6 +67,7 @@ import { DetalleCreditoComponent } from './detalle-credito/detalle-credito.compo
 import { DialogoBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-bloqueo-fondos/dialogo-bloqueo-fondos.component';
 import { ModuleGuard } from '../../../../../app/core/auth';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 
 
@@ -147,7 +148,7 @@ const routes: Routes = [
 	  DialogoBloqueoFondosComponent,
 	],
   imports: [
-	CommonModule,
+	CommonModule,MatTableExporterModule,
 	RouterModule.forChild(routes),
 	MatDialogModule,
 	CommonModule,

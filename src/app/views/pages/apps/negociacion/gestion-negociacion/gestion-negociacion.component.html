@@ -323,7 +323,7 @@
 				</form>
 
 				
-				<mat-table *ngIf="dataSourceTasacion.data" id="tableTasacion" class="mat-elevation-z8" [dataSource]="dataSourceTasacion">
+				<mat-table matTableExporter *ngIf="dataSourceTasacion.data"  class="mat-elevation-z8" [dataSource]="dataSourceTasacion" #exporter="matTableExporter">
 					<ng-container matColumnDef="Accion" sticky>
 						<mat-header-cell *matHeaderCellDef>Acci&#243;n</mat-header-cell>
 						<mat-cell *matCellDef="let element">
@@ -421,6 +421,7 @@
 					<mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
 					<mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
 				</mat-table>
+				<button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'tasacion', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Excel</button>
 				<div *ngIf="dataSourceTasacion.data" class="row">
 					<div class="offset-5 col-2 mt-3">
 						<button mat-stroked-button color="primary" matStepperNext (click)="calcularOpciones()">
@@ -437,7 +438,7 @@
 						<mat-progress-bar *ngIf="loadOpciones.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
 					</div>
 				</div>
-				<mat-table #tableNegociacion class="tableOpciones"	[dataSource]="dataSourceCreditoNegociacion">
+				<mat-table matTableExporter  #tableNegociacion class="tableOpciones" #exporter="matTableExporter"	[dataSource]="dataSourceCreditoNegociacion ">
 					<ng-container matColumnDef="Accion">
 						<mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
 						<mat-cell *matCellDef="let row">
@@ -603,6 +604,7 @@
 					<mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
 					<mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>
 				</mat-table>
+				<button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'opciones', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Excel</button>
 				<form [formGroup]="formOpcionesCredito">
 					<div class="row mt-3">
 						<div class="col-md-2">

@@ -50,6 +50,7 @@ import { VerificacionFirmaComponent } from './verificacion-firma/verificacion-fi
 import { ModuleGuard } from '../../../../../app/core/auth';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 const routes: Routes = [
 	{
@@ -134,7 +135,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [SolicitudDevolucionComponent, DevolucionComponent, SeleccionFechaComponent, ListaPendientesComponent, AprobacionSolicitudComponent, ListaPendientesComponent, EntregaRecepcionComponent, DetalleDevolucionComponent, CancelacionSolicitudDevolucionComponent, AprobacionCancelacionComponent, VerificacionFirmaComponent],
   imports: [
-    CommonModule,
+    CommonModule,MatTableExporterModule,
 		RouterModule.forChild(routes),
 		PartialsModule,
 		MatDialogModule,

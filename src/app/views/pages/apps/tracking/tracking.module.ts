@@ -51,6 +51,7 @@ import {PartialsModule} from '../../../partials/partials.module';
 import { TrackingPagosComponent } from './tracking-pagos/tracking-pagos.component'
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
+import { MatTableExporterModule } from 'mat-table-exporter';
 const routes: Routes = [
 	{
 		path: '',
@@ -78,7 +79,7 @@ const routes: Routes = [
 
 @NgModule({
 	imports: [
-	CommonModule,
+	CommonModule,MatTableExporterModule,
     	RouterModule.forChild(routes),
     	MatDialogModule,
     	CommonModule,

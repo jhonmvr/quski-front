@@ -3,7 +3,7 @@
         <mat-card-title> Tabla de amortizacion </mat-card-title>
     </div>
     <div class="col-12 mb-2">
-        <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource">
+        <mat-table matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSource" #exporter="matTableExporter">
             <ng-container matColumnDef="cuota">
                 <mat-header-cell *matHeaderCellDef> Cuota </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{ element.cuota }} </mat-cell>
@@ -40,5 +40,6 @@
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
         </mat-table>
+        <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'amortizacion', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Excel</button>
     </div>
 </div>

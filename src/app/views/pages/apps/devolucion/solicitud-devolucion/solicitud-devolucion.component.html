@@ -4,7 +4,7 @@
 
     </re-portlet-header>
 	<re-portlet-body>
-        <mat-vertical-stepper #stepper >
+        <mat-vertical-stepper #stepper   [linear]="true">
             <mat-step label="Información de la operación">
                 <div class="row">
                     <div class="col-md-2">
@@ -341,13 +341,17 @@
         <mat-footer-row *matFooterRowDef="displayedColumnsJoyas; sticky: true"></mat-footer-row>
 
     </mat-table>
+
+    <div>
+        <button mat-button  (click)="registrarDevolucion()">Registrar Devolucion</button>
+    </div>
 </div>
             </mat-step>
 
            
             <mat-step label = "Documento Habilitantes">
-             <re-habilitante [proceso]="'DEVOLUCION'" [useType]="'FORM'"
-             [estadoOperacion]="'CANCELACION'" [referencia]="idDevolucion" [rol]="'1'" [tipoDocumento]="'8'">
+             <re-habilitante [proceso]="procesoHabilitante" [useType]="'FORM'"
+             [estadoOperacion]="estadoOperacion" [referencia]="idDevolucion" [rol]="'1'" [tipoDocumento]="'9'">
                 </re-habilitante> 
               
                 
