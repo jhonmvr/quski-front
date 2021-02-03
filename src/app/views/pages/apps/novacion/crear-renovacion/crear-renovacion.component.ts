@@ -60,6 +60,7 @@ export class CrearRenovacionComponent implements OnInit {
   public formOperacion: FormGroup = new FormGroup({});
   public codigoBpm = new FormControl();
   public codigoOperacion = new FormControl();
+  public recibirPagar = new FormControl();
   public proceso = new FormControl();
   public estadoProceso = new FormControl();
   public nombreCompleto = new FormControl();
@@ -92,6 +93,7 @@ export class CrearRenovacionComponent implements OnInit {
 
     this.formOperacion.addControl("codigoBpm", this.codigoBpm);
     this.formOperacion.addControl("codigoOperacion", this.codigoOperacion);
+    this.formOperacion.addControl("recibirPagar", this.recibirPagar);
     this.formOperacion.addControl("proceso", this.proceso);
     this.formOperacion.addControl("estadoProceso", this.estadoProceso);
     this.formOperacion.addControl("nombreCompleto", this.nombreCompleto);
@@ -188,6 +190,49 @@ export class CrearRenovacionComponent implements OnInit {
         this.totalValorR += element.valorRealizacion
         this.totalValorC += element.valorComercial
         this.dataSourceTasacion.data.push( garantia );
+        this.dataSourceCreditoNegociacion = new MatTableDataSource();
+      let calculadora: any = {
+        costoCustodia: this.credit.credito.costoCustodia,
+        costoFideicomiso: this.credit.credito.costoFideicomiso,
+        costoSeguro: this.credit.credito.costoSeguro,
+        costoTasacion: this.credit.credito.costoTasacion,
+        costoTransporte: this.credit.credito.costoTransporte,
+        costoValoracion: this.credit.credito.costoValoracion,
+        cuota: this.credit.credito.cuota,
+        custodiaDevengada: this.credit.credito.custodiaDevengada,
+        dividendoflujoplaneado: this.credit.credito.dividendoFlujoPlaneado,
+        dividendosprorrateoserviciosdiferido:this.credit.credito.dividendoProrrateo,
+        formaPagoCapital: this.credit.credito.formaPagoCapital,
+        formaPagoCustodia: this.credit.credito.formaPagoCustodia,
+        formaPagoCustodiaDevengada: this.credit.credito.formaPagoCustodiaDevengada,
+        formaPagoFideicomiso: this.credit.credito.formaPagoFideicomiso,
+        formaPagoGastoCobranza: this.credit.credito.formaPagoGastoCobranza,
+        formaPagoImpuestoSolca: this.credit.credito.formaPagoImpuestoSolca,
+        formaPagoInteres: this.credit.credito.formaPagoInteres,
+        formaPagoMora: this.credit.credito.formaPagoMora,
+        formaPagoSeguro: this.credit.credito.formaPagoSeguro,
+        formaPagoTasador: this.credit.credito.formaPagoTasador,
+        formaPagoTransporte: this.credit.credito.formaPagoTransporte,
+        formaPagoValoracion: this.credit.credito.formaPagoValoracion,
+        gastoCobranza: this.credit.credito.gastoCobranza,
+        impuestoSolca: this.credit.credito.impuestoSolca,
+        montoFinanciado: this.credit.credito.montoFinanciado,
+        montoPrevioDesembolso: this.credit.credito.montoPrevioDesembolso,
+        periodicidadPlazo: this.credit.credito.periodicidadPlazo,
+        periodoPlazo: this.credit.credito.periodoPlazo,
+        plazo: this.credit.credito.plazoCredito,
+        porcentajeflujoplaneado: this.credit.credito.porcentajeFlujoPlaneado,
+        saldoCapitalRenov: this.credit.credito.saldoCapitalRenov,
+        saldoInteres: this.credit.credito.saldoInteres,
+        saldoMora: this.credit.credito.saldoMora,
+        tipooferta: this.credit.credito.tipoOferta,
+        totalCostosOperacionAnterior: this.credit.credito.totalCostosOperacionAnterior,
+        totalGastosNuevaOperacion: this.credit.credito.totalGastosNuevaOperacion,
+        valorAPagar: this.credit.credito.valorAPagar,
+        valorARecibir: this.credit.credito.valorARecibir
+      }
+      this.dataSourceCreditoNegociacion.data.push( calculadora );
+      this.masterToggle( calculadora ) ;
       });
     }
     this.codigoOperacion.setValue(this.credit.operacionAnterior.credito.numeroOperacion);
@@ -326,7 +371,6 @@ export class CrearRenovacionComponent implements OnInit {
       data: data
     });
     dialogRefGuardar.afterClosed().subscribe((result: any) => {
-      //console.log('envio de RESP ' + JSON.stringify(result) + ' typeof respuesta ' + typeof (result));
       if (result) {
         this.abrirSalirGestion('Espere respuesta del aprobador para continuar con la negociacion.','EXCEPCION SOLICITADA');
       } else {
@@ -409,6 +453,7 @@ export class CrearRenovacionComponent implements OnInit {
   masterToggle(event) {
     this.selection.clear()        
     this.selection.select(event) 
+    this.recibirPagar.setValue( event.valorARecibir - event.valorAPagar);
   }
 
   checkboxLabel(row?): string {

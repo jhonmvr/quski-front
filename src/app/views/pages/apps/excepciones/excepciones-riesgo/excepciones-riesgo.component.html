@@ -81,75 +81,7 @@
               </div>
           </mat-step>
           <mat-step label="Tasacion">
-              <mat-table [dataSource]="dataSourceTasacion">
-                  <ng-container matColumnDef="NumeroPiezas">
-                      <mat-header-cell *matHeaderCellDef>N. de piezas</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.numeroPiezas }} </mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="TipoOro">
-                      <mat-header-cell *matHeaderCellDef> Tipo de oro </mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.tipoOro }} </mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="PesoBruto">
-                      <mat-header-cell *matHeaderCellDef>Peso bruto</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.pesoBruto }}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="DescuentoPesoPiedra">
-                      <mat-header-cell *matHeaderCellDef>Descuento piedra</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.descuentoPesoPiedra }}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="DescuentoSuelda">
-                      <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.descuentoSuelda }}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="PesoNeto">
-                      <mat-header-cell *matHeaderCellDef>Peso neto</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.pesoNeto }}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="precioOro">
-                      <mat-header-cell *matHeaderCellDef>Precio Oro</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.valorOro }}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="ValorAvaluo">
-                      <mat-header-cell *matHeaderCellDef>Valor aval&#250;o</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.valorAvaluo }}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="ValorAplicable">
-                      <mat-header-cell *matHeaderCellDef> Valor comercial</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.valorAplicable }}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="ValorRealizacion">
-                      <mat-header-cell *matHeaderCellDef>Valor realizaciòn</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.valorRealizacion}}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="valorComercial">
-                      <mat-header-cell *matHeaderCellDef>Valor Comercial</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.valorComercial }}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="tienePiedras">
-                      <mat-header-cell *matHeaderCellDef> Tiene Piedras </mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.tienePiedras?'SI':'NO'}}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="detallePiedras">
-                      <mat-header-cell *matHeaderCellDef>Detalle Piedras</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.detallePiedras}}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="TipoJoya">
-                      <mat-header-cell *matHeaderCellDef> Tipo de joya </mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.tipoJoya}}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="EstadoJoya">
-                      <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.estadoJoya }}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="Descripcion">
-                      <mat-header-cell *matHeaderCellDef>Descripci&#243;n</mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{ element.descripcion }}</mat-cell>
-                  </ng-container>
-
-                  <mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
-              </mat-table>
+            <kt-tabla-tasacion *ngIf="this.wp && this.wp.joyas;" [data]='this.wp.joyas' [tipo]="'T'"></kt-tabla-tasacion>
           </mat-step>
           <mat-step label="Opciones de Crédito">
               <div class="row">

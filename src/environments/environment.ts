@@ -9,7 +9,7 @@ export const environment = {
     authKey: 'authcekey',
     prefix:'local',
     authprefix:'relative ',
-    paramsize:14,
+    paramsize:16,
     aplicacion:'1',
     wsProtocol:'ws',
     hashWebSocketKey:"RE2000",
@@ -25,8 +25,7 @@ export const environment = {
     appkey:"QUSKIBPM",
     agenciakey:"reAgencia",
     //SOFTBANK desarollo
-    //app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU/cHJlZml4PWxvY2Fs',
-    app_p : 'aHR0cDovLzEwLjM3LjEwLjE4MDo4NDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU',
+    app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU',
     //agente supervisor
     abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
     //autenticacion 

@@ -1,8 +1,8 @@
-<mat-table *ngIf="dataSourceTasacion.data" id="tableTasacion" class="mat-elevation-z8"
+<mat-table *ngIf="!this.error" id="tableTasacion" class="mat-elevation-z8"
   [dataSource]="dataSourceTasacion">
   <ng-container matColumnDef="Total" sticky>
     <mat-header-cell *matHeaderCellDef>Totales</mat-header-cell>
-    <mat-cell *matCellDef="let element"></mat-cell>
+    <mat-cell *matCellDef="let element"> </mat-cell>
     <mat-footer-cell *matFooterCellDef> Total: </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="NumeroPiezas">
@@ -35,8 +35,8 @@
     <mat-cell *matCellDef="let element"> {{ element.pesoNeto }}<strong> gr</strong> </mat-cell>
     <mat-footer-cell *matFooterCellDef> {{ totalPesoN }} <strong> gr</strong> </mat-footer-cell>
   </ng-container>
-  <ng-container matColumnDef="precioOro">
-    <mat-header-cell *matHeaderCellDef>Precio Oro</mat-header-cell>
+  <ng-container matColumnDef="valorOro">
+    <mat-header-cell *matHeaderCellDef>Valor Oro</mat-header-cell>
     <mat-cell *matCellDef="let element"> {{ element.valorOro | currency: "USD":true:"1.2" }}</mat-cell>
     <mat-footer-cell *matFooterCellDef> {{ totalValorO | currency: "USD":true:"1.2" }} </mat-footer-cell>
   </ng-container>
@@ -62,31 +62,119 @@
   </ng-container>
   <ng-container matColumnDef="tienePiedras">
     <mat-header-cell *matHeaderCellDef> Tiene Piedras </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.tienePiedras?'SI':'NO'  | titlecase}}</mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.tienePiedras ? 'SI' : 'NO' | titlecase}}</mat-cell>
     <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="detallePiedras">
     <mat-header-cell *matHeaderCellDef>Detalle Piedras</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.detallePiedras ? element.detallePiedras : 'No aplica'  | titlecase}}</mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.detallePiedras ? element.detallePiedras : 'No aplica' | titlecase}}
+    </mat-cell>
     <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="TipoJoya">
     <mat-header-cell *matHeaderCellDef> Tipo de joya </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.tipoJoya  | titlecase}}</mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.tipoJoya | titlecase}}</mat-cell>
     <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="EstadoJoya">
     <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.estadoJoya  | titlecase }}</mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.estadoJoya | titlecase }}</mat-cell>
     <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="Descripcion">
     <mat-header-cell *matHeaderCellDef>Descripci&#243;n</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.descripcion  | titlecase }}</mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.descripcion | titlecase }}</mat-cell>
     <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
   </ng-container>
+
+
+
+
+  <ng-container matColumnDef="numeroGarantia">
+    <mat-header-cell *matHeaderCellDef>Numero Garantia</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.numeroGarantia}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="numeroExpediente">
+    <mat-header-cell *matHeaderCellDef>Numero Expediente</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.numeroExpediente}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="codigoTipoGarantia">
+    <mat-header-cell *matHeaderCellDef>Tipo Garantia</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.codigoTipoGarantia}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="codigoSubTipoGarantia">
+    <mat-header-cell *matHeaderCellDef>SubTipo Garantia</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.codigoSubTipoGarantia}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="tipoCobertura">
+    <mat-header-cell *matHeaderCellDef>Tipo Cobertura</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.tipoCobertura}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="fechaAvaluo">
+    <mat-header-cell *matHeaderCellDef>Fecha Avaluo</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.fechaAvaluo | rDate}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="idAgenciaRegistro">
+    <mat-header-cell *matHeaderCellDef>Agencia Registro</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.nombreAgenciaRegistro}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="idAgenciaCustodia">
+    <mat-header-cell *matHeaderCellDef>Agencia Custodia</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.nombreAgenciaCustodia}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="referencia">
+    <mat-header-cell *matHeaderCellDef> Referencia</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.referencia}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="descripcionJoya">
+    <mat-header-cell *matHeaderCellDef>Descripcion Joya</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.descripcionJoya}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="codigoEstadoProceso">
+    <mat-header-cell *matHeaderCellDef>Codigo Estado Proceso</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.codigoEstadoProceso}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="codigoEstadoUbicacion">
+    <mat-header-cell *matHeaderCellDef>Codigo Estado Ubicacion</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.codigoEstadoUbicacion}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="numeroFundaMadre">
+    <mat-header-cell *matHeaderCellDef>Numero Funda Madre</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.numeroFundaMadre ? element.numeroFundaMadre : 'Sin funda madre' | titlecase}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+  <ng-container matColumnDef="numeroFundaJoya">
+    <mat-header-cell *matHeaderCellDef>Numero Funda Joya</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.numeroFundaJoya}}</mat-cell>
+    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+  </ng-container>
+
+
+
+
+
+
 
   <mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
   <mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
 </mat-table>
+<div class="row" *ngIf="this.error" >
+  <div class="col-4 offset-4">
+    <strong> No se pudo mapear las garantias.</strong>
+  </div>
+</div>

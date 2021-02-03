@@ -90,26 +90,26 @@ export class BaseService {
     localStorage.setItem('setRE000', 'true');
     this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
     //Url de acceso al rootcontext de seguridad core-security-web
-    this.segRootContextUrl = 'http://localhost:28080/core-security-web/';
+    this.segRootContextUrl = 'http://localhost:8080/core-security-web/';
     //Url de acceso al resources de seguridad core-security-web
-    this.segResourcesUrl = 'http://localhost:28080/core-security-web/resources/';
+    this.segResourcesUrl = 'http://localhost:8080/core-security-web/resources/';
     //Full url para datos de usuario por rol core-security-web
-    this.userRolServiceUrl = 'http://localhost:28080/core-security-web/resources/usuarioRolRestController/getEntitiesByUsuario';
+    this.userRolServiceUrl = 'http://localhost:8080/core-security-web/resources/usuarioRolRestController/getEntitiesByUsuario';
     //Full url par datos del servicio core-security-web
     //Path al rootcontext de la app 
-    this.appRootContextUrl = 'http://localhost:28080/quski-oro-rest/';
+    this.appRootContextUrl = 'http://localhost:8080/quski-oro-rest/';
     //Path al resources de la app
-    this.appResourcesUrl = 'http://localhost:28080/quski-oro-rest/resources/';
+    this.appResourcesUrl = 'http://localhost:8080/quski-oro-rest/resources/';
     //Full url al servidor de websocket generic-relative-core
-    this.appWebSocketUrl = 'ws://localhost:28080/generic-relative-rest/relativews/';
+    this.appWebSocketUrl = 'ws://localhost:8080/generic-relative-rest/relativews/';
     //Path contextroot generic-relative-core
     //this.genericResourcesUrl = 'http://186.4.199.176:18080/generic-relative-rest/resources/';
-    this.genericResourcesUrl = 'http://localhost:28080/generic-relative-rest/resources/';
+    this.genericResourcesUrl = 'http://localhost:8080/generic-relative-rest/resources/';
     //object storage 
     this.mongoDb = atob(localStorage.getItem( environment.prefix + 'RE009')).replace(this.keyUnencrypt, '');
     this.mongoAlertaColeccion = atob(localStorage.getItem( environment.prefix + 'RE010')).replace(this.keyUnencrypt, '');
     //parametros quski
-    this.crmResourcesUrl = 'http://localhost:28080/quski-oro-satelite-crm-rest/resources/';
+    this.crmResourcesUrl = 'http://localhost:8080/quski-oro-satelite-crm-rest/resources/';
 
 
     //parametros cloudstudio

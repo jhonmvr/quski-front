@@ -39,14 +39,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   public crediW: AprobacionWrapper;
   public catalogos: CatalogosWrapper;
   catMotivoDevolucionAprobacion: any;
-  public totalNumeroJoya: number;
-  public totalPesoB: number;
-  public totalPesoN: number;
-  public totalValorA: number;
-  public totalValorR: number;
-  public totalValorC: number;
-  public totalValorO: number;
-
 
   /** @OPERACION */
   public formDisable: FormGroup = new FormGroup({});
@@ -410,26 +402,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     });
     this.numeroFunda.setValue( ap.credito.numeroFunda ) ;
     this.tipoFunda.setValue( ap.credito.codigoTipoFunda ? this.catalogos ? this.catalogos.catTipoFunda ? this.catalogos.catTipoFunda.find(x => x.codigo ) ? this.catalogos.catTipoFunda.find(x => x.codigo ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo');
-    this.crediW.joyas.forEach( e=>{
-      e.tipoOro = e.tipoOro ? 
-                    this.catalogos ? 
-                      this.catalogos.catTipoOro ? 
-                        this.catalogos.catTipoOro.find(x => x.codigo == e.tipoOro) ?
-                          this.catalogos.catTipoOro.find(x => x.codigo == e.tipoOro).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-      e.tipoJoya =  e.tipoJoya ?
-                      this.catalogos ?
-                        this.catalogos.catTipoJoya ?
-                          this.catalogos.catTipoJoya.find( x => x.codigo ) ?
-                            this.catalogos.catTipoJoya.find( x => x.codigo ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-      e.estadoJoya =  e.estadoJoya ?
-                        this.catalogos ?
-                          this.catalogos.catEstadoJoya ?
-                            this.catalogos.catEstadoJoya.find( x => x.codigo) ?
-                              this.catalogos.catEstadoJoya.find( x => x.codigo).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-
-
-    });
-
     this.tipoProceso.setValue( ap.proceso.proceso );
     /** @DATOS_CREDITO_NUEVO */
     this.plazo.setValue( ap.credito.plazoCredito);

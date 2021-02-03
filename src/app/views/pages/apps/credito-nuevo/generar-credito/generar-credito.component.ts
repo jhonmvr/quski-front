@@ -15,7 +15,6 @@ import { OperacionSoft } from '../../../../../core/model/softbank/OperacionSoft'
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
-import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { environment } from '../../../../../../environments/environment';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -81,16 +80,6 @@ export class GenerarCreditoComponent implements OnInit {
   public numeroOperacion = new FormControl('');
   public deudaInicial = new FormControl('');
 
-  /** @TABLA_JOYAS **/
-  public displayedColumns = ['total','numeroPiezas', 'tipoOro', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto', 'tieneDescuento', 'descuentoPesoPiedra', 'descuentoSuelda', 'pesoNeto', 'valorOro', 'valorAvaluo', 'valorComercial', 'valorRealizacion'];
-  public dataSource = new MatTableDataSource<TbQoTasacion>();
-  public totalNumeroJoya: number;
-  public totalPesoB: number;
-  public totalPesoN: number;
-  public totalValorA: number;
-  public totalValorR: number;
-  public totalValorC: number;
-  public totalValorO: number;
   /** @FOTOS_FUNDA_JOYA **/
   private joyaFoto  = {idRol:"1",proceso:"FUNDA",estadoOperacion:"",tipoDocumento:"6"}
   private fundaFoto = {idRol:"1",proceso:"FUNDA",estadoOperacion:"",tipoDocumento:"7"}
@@ -244,7 +233,6 @@ export class GenerarCreditoComponent implements OnInit {
     })
     this.excepcionOperativa.setValue( data.proceso.estadoProceso == 'CREADO' ? this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') : null );
     this.habilitarExcepcionOperativa();
-    this.dataSource.data = data.joyas;
     this.numeroCuenta.setValue( data.cuentas[0].cuenta);
     this.tipoCuenta.setValue( this.catCuenta.find( x => x.id == data.cuentas[0].banco) );
     this.tipoCuenta.disable();
@@ -259,7 +247,6 @@ export class GenerarCreditoComponent implements OnInit {
         }
       });
     }
-    this.calcular();
     if( data.credito.numeroFunda){
       this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.id.toString());
       this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
@@ -273,27 +260,6 @@ export class GenerarCreditoComponent implements OnInit {
     x.push(data.credito);
     this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(x);
     this.loadingSubject.next(false);
-  }
-  private calcular() {
-    this.totalPesoN = 0;
-    this.totalPesoB = 0;
-    this.totalValorR = 0;
-    this.totalValorA = 0;
-    this.totalValorC = 0;
-    this.totalValorO = 0;
-    this.totalNumeroJoya = 0
-    if (this.dataSource.data) {
-      this.dataSource.data.forEach(element => {
-        this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-        this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
-        this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
-        this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
-        this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
-        this.totalValorO = Number(this.totalValorO) + Number(element.valorOro);
-        this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas);
-        this.totalPesoBrutoFunda.setValue( this.totalPesoB );
-      });
-    }
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {

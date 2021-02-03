@@ -144,21 +144,6 @@ export class JoyaService extends BaseService {
       )
     );
   }
-
-
-/*  public findLoteByEstado() {
-    let serviceUrl = this.appResourcesUrl + "tipoOroRestController/listAllEntities";
-    this.params = new HttpParams()
-      .set('isPaginated', ('N'));
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options).pipe(
-      tap( // Log the result or error
-        (data: any) => data,
-        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog); }
-      )
-    );
-  }*/
-
   public findByEstadoJoya(estado: string) {
     let serviceUrl = this.appResourcesUrl + "joyaRestController/findByEstadoMvCodigoTipo";
     this.params = new HttpParams()

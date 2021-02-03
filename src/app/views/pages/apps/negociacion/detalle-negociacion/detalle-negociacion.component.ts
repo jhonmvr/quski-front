@@ -12,7 +12,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { MatDialog, MatTableDataSource } from '@angular/material';
-import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 
 @Component({
@@ -37,11 +36,8 @@ export class DetalleNegociacionComponent implements OnInit {
   public correo = new FormControl('',[])
   public campania = new FormControl('',[])
   public aprobadoMupi = new FormControl('',[])
-  dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
-  displayedColumnsTasacion = ['NumeroPiezas', 'TipoOro', 'TipoJoya', 'EstadoJoya', 'Descripcion',
-    'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'tienePiedras', 'detallePiedras', 'ValorOro'];
-    dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
-    displayedColumnsCreditoNegociacion = ['plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
+  dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
+  displayedColumnsCreditoNegociacion = ['plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
       'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
       'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
       'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
@@ -117,7 +113,6 @@ export class DetalleNegociacionComponent implements OnInit {
         this.telefonoDomicilio.setValue( e.numero );
       }
     }); 
-    this.dataSourceTasacion.data = ap.joyas? ap.joyas : null;
     this.dataSourceCreditoNegociacion.data.push( ap.credito? ap.credito : null );
     this.sinNotSer.setNotice('Detalle de credito en proceso cargado', 'success');
     this.loadingSubject.next(false);

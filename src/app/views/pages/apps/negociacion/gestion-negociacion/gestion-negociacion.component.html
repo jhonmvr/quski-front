@@ -208,7 +208,8 @@
 									(selectionChange)="setPrecioOro()">
 									<mat-option>--</mat-option>
 									<mat-option *ngFor="let tipoOro of catTipoOro" [value]="tipoOro">
-										{{ tipoOro.nombre }}</mat-option>
+										{{ tipoOro.nombre }}
+									</mat-option>
 								</mat-select>
 								<mat-error>{{ getErrorMessage('tipoOro')  }}</mat-error>
 							</mat-form-field>
