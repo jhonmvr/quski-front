@@ -105,6 +105,11 @@
 				</form>
             </mat-step>
             <mat-step label='Comprobante De Pago'>
+                <div class="row">
+					<div class="col">
+						<mat-progress-bar *ngIf="loadComprobante.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+					</div>
+				</div>
 				<mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante" >
 					<ng-container matColumnDef="accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>

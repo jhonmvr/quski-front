@@ -42,7 +42,7 @@ export class NovacionHabilitanteComponent implements OnInit {
   public nombreCodeudor = new FormControl('', [Validators.required]);
   public dataSourceComprobante = new MatTableDataSource<any>();
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','descargarComprobante'];
-
+  public loadComprobante  = new BehaviorSubject<boolean>(false);
   public catCuenta;
   public catfirma = ['SI','NO'];
   public catfirmadaOperacion: {nombre, codigo}[];
@@ -126,6 +126,7 @@ export class NovacionHabilitanteComponent implements OnInit {
     this.router.navigate(['negociacion/bandeja-operaciones']);
   }
   public agregarComprobante(){
+    this.loadComprobante.next(true);
     const dialogRef = this.dialog.open(PopupPagoComponent, {
       width: "800px",
       height: "auto",
@@ -144,7 +145,7 @@ export class NovacionHabilitanteComponent implements OnInit {
     const data = this.dataSourceComprobante.data;
     data.push(r);
     this.dataSourceComprobante = new MatTableDataSource<any>( data );
-    //console.log('data =======>', this.dataSourceComprobante.data);
+    this.loadComprobante.next(false);
   }
   public solicitarAprobacion(){
     if(this.dataSourceComprobante.data){
@@ -194,8 +195,6 @@ export class NovacionHabilitanteComponent implements OnInit {
         this.credit.credito.identificacionCodeudor = this.identificacionCodeudor.value;
         this.credit.credito.nombreCompletoCodeudor = this.nombreCodeudor.value;
       }
-      //public firmadaOperacion = new FormControl('', [Validators.required]);
-      //public firmaRegularizada = new FormControl('', [Validators.required]);
       this.cre.crearOperacionRenovacion( this.credit.credito).subscribe( (data: any) =>{
         if(data.entidad){
            this.pro.cambiarEstadoProceso(this.credit.credito.tbQoNegociacion.id,"RENOVACION","PENDIENTE_APROBACION").subscribe( (data: any) =>{
@@ -218,7 +217,9 @@ export class NovacionHabilitanteComponent implements OnInit {
 
   }
   public descargarComprobante(row){
-    saveAs( row.comprobante.fileBase64, row.comprobante.name);
+    var file = new File([row.comprobante.fileBase64], row.comprobante.name, {type: "image/*;"});
+    saveAs(file);
+    //saveAs( row.comprobante.fileBase64, row.comprobante.name);
   }
   /** @FUNCIONALIDAD */
   private cargarCatalogos(){
