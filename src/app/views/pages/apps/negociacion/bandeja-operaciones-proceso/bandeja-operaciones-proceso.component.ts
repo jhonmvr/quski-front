@@ -193,10 +193,11 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public buscar( limite: number, pagina: number ){
     if(this.formFiltro.valid){
       let w;
-      if(limite && pagina){
+      if(limite || pagina){
          w = new WrapperBusqueda(this.paginator.pageSize,this.paginator.pageIndex, null);
       }else{
-         w = new WrapperBusqueda();
+        this.paginator.pageIndex = 0; 
+         w = new WrapperBusqueda(this.paginator.pageSize);
       }
       if(this.estado.value != "" && this.estado.value != null){
         //console.log("estado -->", this.estado.value);

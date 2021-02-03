@@ -153,16 +153,18 @@ export class BandejaAprobadorComponent implements OnInit {
     return true;
   }
   public paged() {
+    console.log( 'El tamano 7u7 ==>',this.paginator.pageSize);
     this.buscar(this.paginator.pageSize, this.paginator.pageIndex);
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BOTONES ** */
   public buscar(limite: number, pagina: number ){
     if(this.formFiltro.valid){
       let w;
-      if(limite && pagina){
+      if(limite || pagina){
          w = new BusquedaAprobadorWrapper(this.paginator.pageSize,this.paginator.pageIndex);
       }else{
-         w = new BusquedaAprobadorWrapper();
+        this.paginator.pageIndex = 0; 
+         w = new BusquedaAprobadorWrapper(this.paginator.pageSize);
       }
       if(this.codigo.value != "" && this.codigo.value != null){
         w.codigo = this.codigo.value;
