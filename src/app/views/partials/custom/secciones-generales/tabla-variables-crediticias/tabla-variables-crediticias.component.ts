@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
-import { MatTableDataSource, MAT_DIALOG_DATA } from '@angular/material';
-import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
-import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { VariablesCrediticiasService } from '../../../../../core/services/quski/variablesCrediticias.service';
+import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
 import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
+import { MatTableDataSource } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({

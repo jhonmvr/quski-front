@@ -231,15 +231,6 @@ export class GenerarCreditoComponent implements OnInit {
     this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     this.fechaCuota.setValue(data.credito.pagoDia ? this.setearDiaPago(data.credito.pagoDia) : null);
-    //data.credito.pagoDia ? this.validacionFecha() : null;
-    data.joyas.forEach(e=>{
-      let objetoOro = this.catTipoOro.find(x => x.codigo == e.tipoOro );
-      e.tipoOro = objetoOro.nombre;
-      let objetoJoya = this.catTipoJoya.find(x => x.codigo == e.tipoJoya);
-      e.tipoJoya = objetoJoya.nombre;
-      let objetoEstado = this.catEstadoJoya.find( x => x.codigo == e.estadoJoya);
-      e.estadoJoya = objetoEstado.nombre;
-    })
     this.excepcionOperativa.setValue( data.proceso.estadoProceso == 'CREADO' ? this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') : null );
     this.habilitarExcepcionOperativa();
     this.numeroCuenta.setValue( data.cuentas[0].cuenta);

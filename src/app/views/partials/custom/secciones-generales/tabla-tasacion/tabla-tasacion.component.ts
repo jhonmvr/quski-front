@@ -2,6 +2,7 @@ import { SoftbankService } from './../../../../../core/services/quski/softbank.s
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { MatTableDataSource } from '@angular/material';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'kt-tabla-tasacion',
@@ -28,9 +29,13 @@ export class TablaTasacionComponent implements OnInit {
   public catTipoOro: Array<any>;
   public catEstadoProceso: Array<any>;
   public catEstadoUbicacion: Array<any>;
-  @Input() data: Array<any>;
+  private dataObservable: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>(null);
+  @Input() set data( list :  Array<any>){
+    this.dataObservable.next( list );
+  }
   @Input() tipo: string; //[T: TbQoTasacion, G: GarantiasSoftbank, A: TbQoTasacionConAcciones];
-  @Output() entidades: EventEmitter<Array<TbQoTasacion>> = new EventEmitter<Array<TbQoTasacion>>();
+  @Output() rowEdit: EventEmitter<TbQoTasacion> = new EventEmitter<TbQoTasacion>();
+  @Output() rowDelete: EventEmitter<TbQoTasacion> = new EventEmitter<TbQoTasacion>();
   constructor(    
     private sof: SoftbankService,
   ) { 
@@ -41,21 +46,22 @@ export class TablaTasacionComponent implements OnInit {
     this.cargarCats();
   }
   private inicioDeFlujo(data) {
-    this.dataSourceTasacion.data = data;
-    if(this.tipo == 'T'){
+    this.dataObservable.subscribe( data =>{
+      this.error = this.tipo ? false : true;
+      this.displayedColumnsTasacion = 
+      this.tipo == 'G'       
+        ? ['numeroGarantia','numeroExpediente','codigoTipoGarantia','Descripcion','tipoCobertura','valorComercial','ValorAvaluo','ValorRealizacion','valorOro','fechaAvaluo','idAgenciaRegistro','idAgenciaCustodia','referencia','TipoJoya','descripcionJoya','EstadoJoya','TipoOro','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','PesoNeto','codigoEstadoProceso','codigoEstadoUbicacion','numeroFundaMadre','numeroFundaJoya','NumeroPiezas','DescuentoSuelda']
+          : this.tipo == 'A' 
+            ? ['Accion','NumeroPiezas', 'TipoOro','PesoBruto','PesoNeto', 'valorOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'DescuentoSuelda', 'TipoJoya', 'EstadoJoya', 'Descripcion', 'tienePiedras','DescuentoPesoPiedra', 'detallePiedras',]
+              : this.tipo == 'T' 
+                ? ['Total', 'NumeroPiezas', 'TipoOro','PesoBruto','PesoNeto', 'valorOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'DescuentoSuelda', 'TipoJoya', 'EstadoJoya', 'Descripcion', 'tienePiedras','DescuentoPesoPiedra', 'detallePiedras',]
+                  : [];
+      this.dataSourceTasacion.data = data;
       this.formateo();
       this.calcular();
-    }else if( this.tipo == 'G'){
-      this.displayedColumnsTasacion = ['numeroGarantia','numeroExpediente','codigoTipoGarantia','Descripcion','tipoCobertura','valorComercial','ValorAvaluo','ValorRealizacion','valorOro','fechaAvaluo','idAgenciaRegistro','idAgenciaCustodia','referencia','TipoJoya','descripcionJoya','EstadoJoya','TipoOro','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','PesoNeto','codigoEstadoProceso','codigoEstadoUbicacion','numeroFundaMadre','numeroFundaJoya','NumeroPiezas','DescuentoSuelda'];
-      this.formateo();
-      this.calcular();
-    }else if( this.tipo == 'A'){
-      this.dataSourceTasacion.data = data
-
-      this.calcular();
-    }else{
+    }, error =>{
       this.error = true;
-    }
+    });
   }
   private cargarCats(){
     this.sof.consultarTipoJoyaCS().subscribe( (data: any) =>{
@@ -95,12 +101,12 @@ export class TablaTasacionComponent implements OnInit {
                           this.catTipoOro.find(x => x.codigo == e.tipoOro).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
       e.tipoJoya =  e.tipoJoya ?
                       this.catTipoJoya ?
-                          this.catTipoJoya.find( x => x.codigo ) ?
-                            this.catTipoJoya.find( x => x.codigo ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+                          this.catTipoJoya.find( x => x.codigo == e.tipoJoya ) ?
+                            this.catTipoJoya.find( x => x.codigo == e.tipoJoya ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
       e.estadoJoya =  e.estadoJoya ?
                         this.catEstadoJoya ?
-                            this.catEstadoJoya.find( x => x.codigo == e.tipoJoya) ?
-                              this.catEstadoJoya.find( x => x.codigo == e.tipoJoya).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+                            this.catEstadoJoya.find( x => x.codigo == e.estadoJoya) ?
+                              this.catEstadoJoya.find( x => x.codigo == e.estadoJoya).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
       e.codigoTipoGarantia =  e.codigoTipoGarantia ?
                                 this.catTipoGarantia ?
                                   this.catTipoGarantia.find(x => x.codigo == e.codigoTipoGarantia) ? 
@@ -152,7 +158,12 @@ export class TablaTasacionComponent implements OnInit {
     }
   }
   /** ********************************************* @ACCIONES ********************* **/
-
+  public editar(entidad: TbQoTasacion) {
+    this.rowEdit.emit(entidad);
+  }
+  public eliminar(entidad: TbQoTasacion) {
+    this.rowDelete.emit(entidad);
+  }
  
 
 }
