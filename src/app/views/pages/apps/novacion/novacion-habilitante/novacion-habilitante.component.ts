@@ -26,12 +26,14 @@ import { saveAs } from 'file-saver';
 export class NovacionHabilitanteComponent implements OnInit {
   public loading;
   public usuario: string;
+   //dia de pago
+   diasMax;
+   diasMin;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
   public formOperacion: FormGroup = new FormGroup({});
   public tipoDeCuenta = new FormControl('', [Validators.required]);
   public numeroCuenta = new FormControl('', [Validators.required]);
-  public firmaRegularizada = new FormControl('', [Validators.required]);
   public diaFijoPago = new FormControl('', [Validators.required]);
   public firmanteOperacion = new FormControl('', [Validators.required]);
   public tipoCliente = new FormControl('', [Validators.required]);
@@ -46,7 +48,6 @@ export class NovacionHabilitanteComponent implements OnInit {
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','descargarComprobante'];
   public loadComprobante  = new BehaviorSubject<boolean>(false);
   public catCuenta;
-  public catfirma = ['SI','NO'];
   public catfirmadaOperacion: {nombre, codigo}[];
   public catFirmanteOperacion;
   public catTipoCliente;
@@ -78,7 +79,6 @@ export class NovacionHabilitanteComponent implements OnInit {
 
     this.formOperacion.addControl("tipoDeCuenta", this.tipoDeCuenta);
     this.formOperacion.addControl("numeroCuenta", this.numeroCuenta);
-    this.formOperacion.addControl("firmaRegularizada", this.firmaRegularizada);
     this.formOperacion.addControl("firmanteCuenta", this.firmanteOperacion);
     this.formOperacion.addControl("tipoCliente", this.tipoCliente);
 
@@ -250,6 +250,20 @@ export class NovacionHabilitanteComponent implements OnInit {
     this.par.findByTipo('EXC-OPV-NUEV',).subscribe( (data :any) =>{
       this.catExcepcionOperativa = data.entidades ? data.entidades : {codigo: 'ERR', mensaje: 'Error al cargar catalogo'}
     });
+    this.sof.consultarperiodoDiferimientoCS().subscribe(dias=>{
+      if(dias && dias.catalogo && dias.catalogo && dias.catalogo[0]){
+        this.diasMax = this.setearDiaPago(dias.catalogo[0].diasMaximo);
+        this.diasMin = this.setearDiaPago(dias.catalogo[0].diasMinimo);
+        console.log("setear dia pago ==>",this.diasMax,this.diasMin);
+      }else{
+        this.sinNotSer.setNotice("NO SE PUEDE LEER LOS PARAMETROS DIAS DE DIFERIMIENTO",'error');
+      }
+    });
+  }
+  setearDiaPago(dia):Date{
+    let fecha = new Date();
+    fecha.setDate(dia);
+    return fecha;
   }
   public abrirSalirGestion(mensaje: string, titulo?: string) {
     let data = {

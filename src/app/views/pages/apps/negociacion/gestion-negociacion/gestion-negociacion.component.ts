@@ -115,12 +115,12 @@ export class GestionNegociacionComponent implements OnInit {
   private elementJoya;
 
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
-  displayedColumnsCreditoNegociacion = ['Accion', 'plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
-    'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
-    'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
-    'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
-    'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
-    'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
+  displayedColumnsCreditoNegociacion = ['Accion', 'plazo','periodoPlazo', 'periodicidadPlazo','tipooferta','montoFinanciado','valorARecibir','cuota','totalGastosNuevaOperacion','costoCustodia', 'costoTransporte','costoTasacion','costoSeguro','impuestoSolca',
+     'costoFideicomiso', 
+    'formaPagoCapital', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
+    'formaPagoGastoCobranza','saldoInteres',
+    'saldoMora', 'gastoCobranza', 'saldoCapitalRenov', 'montoPrevioDesembolso', 
+    'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 
     'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
   riesgoTotal: any;
   coberturaExcepcionada;
@@ -310,28 +310,7 @@ export class GestionNegociacionComponent implements OnInit {
       });
     } 
   }
-/*   private calcular() {
-    this.totalPesoN = 0;
-    this.totalDescgr = 0;
-    this.totalPesoB = 0;
-    this.totalValorR = 0;
-    this.totalValorA = 0;
-    this.totalValorC = 0;
-    this.totalValorO = 0;
-    this.totalNumeroJoya = 0
-    if (this.dataSourceTasacion.data) {
-      this.dataSourceTasacion.data.forEach(element => {
-        this.totalPesoN  = (Number(this.totalPesoN) + Number(element.pesoNeto)).toFixed(2);
-        this.totalDescgr = (Number(this.totalDescgr) + Number(element.descuentoPesoPiedra)).toFixed(2);
-        this.totalPesoB  = (Number(this.totalPesoB) + Number(element.pesoBruto)).toFixed(2);
-        this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
-        this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
-        this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
-        this.totalValorO = Number(this.totalValorO) + Number(element.valorOro);
-        this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas);
-      });
-    }
-  } */
+
   private iniciarNegociacionFromCot(id : number ){
     this.neg.iniciarNegociacionFromCot( id, this.usuario, this.agencia).subscribe( (wrapper: any) =>{
       if (wrapper.entidad.respuesta) {

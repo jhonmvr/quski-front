@@ -193,7 +193,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   }
   public negar(){ 
     if(this.observacionAprobador.valid){
-      //console.log('ME FUI A NEGAR')
       this.simulado = false;
       let mensaje = 'Negar la excepcion de cobertura para: ' + this.wp.credito.codigo+'?'; 
       const dialogRef = this.dialog.open(ConfirmarAccionComponent, {

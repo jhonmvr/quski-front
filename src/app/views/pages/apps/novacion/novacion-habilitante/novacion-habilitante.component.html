@@ -36,16 +36,14 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4" *ngIf="this.credit && this.credit.credito.periodoPlazo == 'C'">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required [formControl]="firmaRegularizada" placeholder="firmaRegularizada">
-                                    <mat-option *ngFor="let element of catfirma" [value]="element">
-                                        {{element }}
-                                    </mat-option>
-                                </mat-select>
+                                <input [min]="diasMin" [max]="diasMax"  matInput #inputFechaCuota
+                                    [matDatepicker]="pickerFechaCuota" [formControl]="diaFijoPago" placeholder="Dia Fijo Pago">
+                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCuota"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerFechaCuota></mat-datepicker>
                             </mat-form-field>
-                        </div>		
-
+                        </div>			
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select required [formControl]="tipoCliente" placeholder="Tipo Cliente" (selectionChange)="cambiarCliente()">
@@ -55,13 +53,6 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4" *ngIf="this.credit && this.credit.credito.periodoPlazo == 'C'">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [matDatepicker]="picker6" [formControl]="diaFijoPago" placeholder="Dia Fijo Pago">
-                                <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
-                                <mat-datepicker #picker6></mat-datepicker>
-                            </mat-form-field>
-                        </div>			
                     </div>
                     <div class="row" *ngIf="tipoCliente.value && (tipoCliente.value.codigo == 'SAP' || tipoCliente.value.codigo == 'CYA')">
                         <div class="col-md-4">

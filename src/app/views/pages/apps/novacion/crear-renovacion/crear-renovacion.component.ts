@@ -1,5 +1,6 @@
 import { SolicitudDeExcepcionesComponent } from '../../../../partials/custom/popups/solicitud-de-excepciones/solicitud-de-excepciones.component';
 import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { DataInjectExcepciones } from '../../../../../core/model/wrapper/DataInjectExcepciones';
@@ -147,7 +148,9 @@ export class CrearRenovacionComponent implements OnInit {
     });
   }
   private cargarCampos() {
-    this.formOperacion.disable();
+    this.codigoOperacion.setValue(this.credit.operacionAnterior.credito.numeroOperacion);
+    this.nombreCompleto.setValue(this.credit.operacionAnterior.cliente.nombreCompleto);
+    this.cedulaCliente.setValue(this.credit.operacionAnterior.cliente.identificacion);
     this.totalPesoB      = 0;
     this.totalPesoN      = 0;
     this.totalValorO     = 0;
@@ -160,10 +163,13 @@ export class CrearRenovacionComponent implements OnInit {
     this.codigoBpm.setValue( this.credit.credito ? this.credit.credito.codigo : 'Sin asignar')
     this.proceso.setValue(   this.credit.proceso ? this.credit.proceso.proceso : 'Sin asignar');
     this.estadoProceso.setValue(this.credit.proceso ? this.credit.proceso.estadoProceso : 'Sin asignar');
+    this.formOperacion.disable();
     let dataC : Array<any> = new Array<any>();
     this.dataSourceTasacion = new MatTableDataSource<any>(dataC);
     if(this.credit.operacionAnterior && this.credit.operacionAnterior.garantias){
+      this.garantiasSimuladas = new Array<any>();
       this.credit.operacionAnterior.garantias.forEach(element => {
+        this.garantiasSimuladas.push( element );
         this.total++;
         let garantia = {
           tipoOro: this.catTipoOro ? this.catTipoOro.find( x => x.codigo == element.codigoTipoOro ) ? this.catTipoOro.find( x => x.codigo == element.codigoTipoOro ).nombre: 'Error de Catalogo' : 'Error de Catalogo',
@@ -172,11 +178,11 @@ export class CrearRenovacionComponent implements OnInit {
           descripcion: element.descripcionJoya ? element.descripcionJoya : 'Sin descripcion',
           detallePiedras: element.detallePiedras ? element.detallePiedras : 'Sin detalle',
           descuentoPesoPiedra: element.descuentoPiedras,
-          total: this.total,
-          numeroPiezas: element.numeroPiezas,
           pesoBruto: element.pesoBruto,
-          descuentoSuelda : element.descuentoSuelda,
+          numeroPiezas: element.numeroPiezas,
+          total: this.total,
           pesoNeto: element.pesoNeto,
+          descuentoSuelda : element.descuentoSuelda,
           valorOro: element.valorOro,
           valorAvaluo: element.valorAvaluo,
           valorRealizacion : element.valorRealizacion,
@@ -190,7 +196,10 @@ export class CrearRenovacionComponent implements OnInit {
         this.totalValorR += element.valorRealizacion
         this.totalValorC += element.valorComercial
         this.dataSourceTasacion.data.push( garantia );
-        this.dataSourceCreditoNegociacion = new MatTableDataSource();
+      });
+    }
+    if(this.credit.credito){
+      this.dataSourceCreditoNegociacion = new MatTableDataSource();
       let calculadora: any = {
         costoCustodia: this.credit.credito.costoCustodia,
         costoFideicomiso: this.credit.credito.costoFideicomiso,
@@ -233,14 +242,9 @@ export class CrearRenovacionComponent implements OnInit {
       }
       this.dataSourceCreditoNegociacion.data.push( calculadora );
       this.masterToggle( calculadora ) ;
-      });
     }
-    this.codigoOperacion.setValue(this.credit.operacionAnterior.credito.numeroOperacion);
-    this.nombreCompleto.setValue(this.credit.operacionAnterior.cliente.nombreCompleto);
-    this.cedulaCliente.setValue(this.credit.operacionAnterior.cliente.identificacion);
     this.validarProceso();
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + this.credit.operacionAnterior.credito.numeroOperacion + ".", "success");
-    this.loadingSubject.next(false);
   }
   public validarProceso(){
     if(this.credit.proceso){
@@ -384,18 +388,31 @@ export class CrearRenovacionComponent implements OnInit {
   }
   public actualizarCliente(){
     if( this.selection.selected.length > 0 ){
-      this.cre.crearCreditoRenovacion( this.selection.selected, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia, this.credit.proceso? this.credit.proceso.idReferencia : null ).subscribe( data =>{
-        if(data.entidad){
-          this.credit = data.entidad;
-          //console.log( 'Mi operacion ->', data.entidad );
-          this.router.navigate(['cliente/gestion-cliente/NOV/',this.credit.proceso.idReferencia]);
+      let mensaje = "Crear operacion para el credito: " + this.numeroOperacion;
+      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        width: "800px",
+        height: "auto",
+        data: mensaje
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        this.loadingSubject.next(true);
+        if(r){
+          this.cre.crearCreditoRenovacion( this.selection.selected[0], this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia, this.credit.proceso? this.credit.proceso.idReferencia : null ).subscribe( data =>{
+            if(data.entidad){
+              this.credit = data.entidad;
+              //console.log( 'Mi operacion ->', data.entidad );
+              this.router.navigate(['cliente/gestion-cliente/NOV/',this.credit.proceso.idReferencia]);
+            }
+          });
+        }else{
+          this.loadingSubject.next(false);
+          this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
         }
       });
     }else{
       this.sinNotSer.setNotice('Seleccione una opcion valida', 'error');
     }
   }
- 
   public simularOpciones(){
     this.loadingSubject.next(true);
     let cliente = {} as cliente;
