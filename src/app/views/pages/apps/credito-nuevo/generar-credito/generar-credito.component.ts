@@ -230,9 +230,6 @@ export class GenerarCreditoComponent implements OnInit {
     this.estadoOperacion.setValue(data.proceso.estadoProceso);
     this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
-    this.fechaCuota.setValue(data.credito.pagoDia ? this.setearDiaPago(data.credito.pagoDia) : null);
-    this.excepcionOperativa.setValue( data.proceso.estadoProceso == 'CREADO' ? this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') : null );
-    this.habilitarExcepcionOperativa();
     this.numeroCuenta.setValue( data.cuentas[0].cuenta);
     this.tipoCuenta.setValue( this.catCuenta.find( x => x.id == data.cuentas[0].banco) );
     this.tipoCuenta.disable();
@@ -248,6 +245,9 @@ export class GenerarCreditoComponent implements OnInit {
       });
     }
     if( data.credito.numeroFunda){
+      this.excepcionOperativa.setValue( data.proceso.estadoProceso == 'CREADO' || data.proceso.estadoProceso == 'EXCEPCIONADO' ? this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') : null );
+      this.habilitarExcepcionOperativa();
+      this.fechaCuota.setValue(data.credito.pagoDia ? new Date(data.credito.pagoDia) : null);
       this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.id.toString());
       this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
       this.pesoFunda.setValue( this.catTipoFunda ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) : null : null )
@@ -282,16 +282,7 @@ export class GenerarCreditoComponent implements OnInit {
       this.fechaServer = new Date(fechaSistema.entidad);
     })
   }
-  /* public validacionFecha() {
-    this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value), new Date(this.fechaServer))
-    if (Math.abs(this.fechaUtil.obtenerDias()) >= this.diasMin && Math.abs(this.fechaUtil.obtenerDias()) <= this.diasMax) {
-      this.sinNotSer.setNotice("FECHA DE PAGO VALIDA", 'success');
-    } else {
-      this.fechaCuota.setValue( null );
-      this.fechaCuota.setValidators(Validators.required);
-      this.sinNotSer.setNotice("DEBE ESCOGER ENTRE 30 Y 45 DÍAS", 'error');
-    }
-  } */
+
   private obtenerCatalogosSoftbank() { 
     this.sof.consultarTipoFundaCS().subscribe((data: any) => {
       this.catTipoFunda = !data.existeError ? data.catalogo : "Error al cargar catalogo";
@@ -329,14 +320,16 @@ export class GenerarCreditoComponent implements OnInit {
     });
   }
   /** ********************************************* @OPERACION ********************* **/
-  public obtenerNumeroFunda() {
+  public obtenerNumeroFunda(anular?: boolean ) {
     this.loadingSubject.next(true);
     this.operacionNuevo.credito
     this.operacionNuevo.credito.pagoDia = this.fechaCuota.value? this.fechaCuota.value : null;
     this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
     this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
+    this.operacionNuevo.credito.numeroFunda = anular ? null : this.numeroFunda.value;
     this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
     this.operacionNuevo.credito.idAgencia = this.agencia;
+    this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value;
 
     this.cre.numeroDeFunda( this.operacionNuevo.credito ).subscribe( (data: any) =>{
       if(data.entidad){
@@ -360,6 +353,7 @@ export class GenerarCreditoComponent implements OnInit {
       this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
       this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
       this.operacionNuevo.credito.idAgencia = this.agencia;
+      this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value;
       this.operacionNuevo.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
       this.operacionNuevo.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
       this.cre.crearOperacionNuevo( this.operacionNuevo.credito, this.correoAsesor ).subscribe( (data: any) =>{

@@ -9,6 +9,7 @@ import { ParametroService } from '../../../../../core/services/quski/parametro.s
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
+import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatTableDataSource } from '@angular/material';
@@ -52,15 +53,15 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   displayedColumnsCobertura = ['plazo','montoCredito','riesgoAcumulado','valorDesembolso','cuota'];
 
   public formDatosExcepcion: FormGroup = new FormGroup({});
-  public cobertura = new FormControl('', [Validators.required, ]);
+  public cobertura = new FormControl('', [Validators.required]);
   public observacionAprobador = new FormControl('', [Validators.required]);
   public observacionAsesor = new FormControl('', []);
   public usuarioAsesor = new FormControl('', []);
 
   public coberturaActual = new FormControl('', []);
-  public montoActual = new FormControl('', []);
-  public valorComercial = new FormControl('', []);
-  public valorAvaluo = new FormControl('', []);
+  public montoActual = new FormControl('', [ValidateDecimal]);
+  public valorComercial = new FormControl('', [ValidateDecimal]);
+  public valorAvaluo = new FormControl('', [ValidateDecimal]);
 
   constructor(
     private route: ActivatedRoute,
@@ -109,8 +110,8 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       totalValorComercial += e.valorComercial;
     }); 
     this.coberturaActual.setValue( this.wp.variables.find( v => v.codigo == 'Cobertura') ? this.wp.variables.find( v => v.codigo == 'Cobertura').valor : 'No aplica');
-    this.valorComercial.setValue( totalValorComercial );
-    this.valorAvaluo.setValue( totalValorAvaluo );
+    this.valorComercial.setValue( totalValorComercial.toFixed(2) );
+    this.valorAvaluo.setValue( totalValorAvaluo.toFixed(2) );
     this.montoActual.disable();
     this.coberturaActual.disable();
     this.valorComercial.disable();
@@ -161,8 +162,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.loadingSubject.next(true);
     this.par.findByNombre('COBERTURA_MINIMA').subscribe( (data: any) =>{
       if(data.entidad){
-        console.log('Quiero el valor =>', data.entidad.valor);
-        if(this.cobertura.valid && this.observacionAprobador.valid  && this.cobertura.value >= data.entidad.valor){
+        if(this.cobertura.valid && this.observacionAprobador.valid  && this.cobertura.value >= Number(data.entidad.valor) ){
           this.wp.proceso.proceso == "RENOVACION" ? 
           this.cal.simularOfertaExcepcionadaRenovacion(this.wp.credito.id, this.cobertura.value).subscribe( (data: any) =>{
             !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
@@ -198,7 +198,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
           if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
             && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
             && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
-              this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado);
+              this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado.toFixed(2));
               this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
           }
         },err=>{
@@ -209,7 +209,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
-            this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado);
+            this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado.toFixed(2));
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
       },err=>{

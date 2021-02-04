@@ -490,7 +490,7 @@
           </div>
           <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="diaPagoFijo" placeholder="Día Pago Fijo:" matInput />
+              <input [formControl]="diaPagoFijo" placeholder="Día Pago Fijo:" matInput [value]="diaPagoFijo.value | rDate" />
             </mat-form-field>
           </div>
           <div class="col-md-6">
@@ -521,16 +521,6 @@
           <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
               <input [formControl]="tablaAmortizacion" placeholder="Tabla Amortizacion" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-6">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="fechaVencimiento" placeholder="Fecha de vencimiento:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-6">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="fechaEfectiva" placeholder="Fecha Efectiva:" matInput />
             </mat-form-field>
           </div>
           <div class="col-md-6">

@@ -425,8 +425,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.totalCostoNuevaOperacion.setValue( ap.credito.totalCostoNuevaOperacion);
 
     /** @DATOS_INSTRUCCION_OPERATIVA */
-    this.tipoCuenta.setValue( ap.cuenta.banco );
-    this.numeroCuenta.setValue( ap.cuenta.cuenta );
+    this.tipoCuenta.setValue( ap.cuenta.banco ? this.catalogos ? this.catalogos.catBanco ? this.catalogos.catBanco.find( x => x.id == ap.cuenta.banco ) ? this.catalogos.catBanco.find( x => x.id == ap.cuenta.banco ).nombre : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo' );
+    this.numeroCuenta.setValue( ap.cuenta.cuenta  );
     this.firmaRegularizada.setValue( ap.credito.firmanteOperacion ? ap.credito.firmanteOperacion  :  'Falta valdiar' );
     this.diaPagoFijo.setValue( ap.credito.pagoDia ? ap.credito.pagoDia : 'No aplica');
     this.firmadaOperacion.setValue( ap.credito.firmanteOperacion ? ap.credito.firmanteOperacion  :  'Falta valdiar' );

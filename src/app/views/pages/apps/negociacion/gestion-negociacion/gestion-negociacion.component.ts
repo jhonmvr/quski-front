@@ -92,7 +92,7 @@ export class GestionNegociacionComponent implements OnInit {
   public tipoOro = new FormControl('', [Validators.required]);
   public pesoNeto = new FormControl('', [Validators.required,ValidateDecimal,Validators.min(1)]);
   public pesoBruto = new FormControl('', [Validators.required,ValidateDecimal]);
-  public numeroPiezas = new FormControl('', [Validators.required]);
+  public numeroPiezas = new FormControl('', [Validators.required, Validators.max(60)]);
   public tipoJoya = new FormControl('', [Validators.required]);
   public estado = new FormControl('', [Validators.required]);
   public descuentoPiedra = new FormControl('', [Validators.required,ValidateDecimal]);
@@ -112,10 +112,6 @@ export class GestionNegociacionComponent implements OnInit {
 
   telefonoMovil;
   telefonoFijo;
-  // TABLA DE TASACION
-  // ---- @TODO: Crear un data source para la tabla 
-  //dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
-  //displayedColumnsTasacion = ['Accion', 'NumeroPiezas', 'TipoOro','PesoBruto','PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'DescuentoSuelda', 'TipoJoya', 'EstadoJoya', 'Descripcion', 'tienePiedras','DescuentoPesoPiedra', 'detallePiedras',];
   private elementJoya;
 
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
@@ -271,7 +267,23 @@ export class GestionNegociacionComponent implements OnInit {
             this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
             return;
           });
-        } else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.APROBADO  && e.tipoExcepcion == 'EXCEPCION_RIESGO'){
+        } else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.NEGADO  && e.tipoExcepcion == 'EXCEPCION_COBERTURA'){
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE COBERTURA NEGADA'}
+          });
+        } else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.APROBADO  && e.tipoExcepcion == 'EXCEPCION_CLIENTE'){
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {mensaje:'Observacion Asesor: ' + e.observacionAsesor 
+            +'\n' + 'Observacion Aprobador: ' + e.observacionAprobador 
+            ,titulo:'EXCEPCION DE CLIENTE APROBADA'}
+          });
+        }else if(e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.APROBADO  && e.tipoExcepcion == 'EXCEPCION_RIESGO'){
           const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
             width: "800px",
             height: "auto",
