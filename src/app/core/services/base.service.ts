@@ -55,6 +55,16 @@ export class BaseService {
     }
   }
 
+  public dataURItoBlob(dataURI) {
+    var byteString = atob(dataURI);
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    var blob = new Blob([ab]);
+    return blob;
+  }
   public setParameter() {
            localStorage.setItem('setRE000', 'true');
            this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));

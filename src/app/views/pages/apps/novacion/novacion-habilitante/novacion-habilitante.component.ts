@@ -4,6 +4,7 @@ import { CreditoNegociacionService } from '../../../../../core/services/quski/cr
 import { PopupPagoComponent } from '../../../../partials/custom/popups/popup-pago/popup-pago.component';
 import { RegistrarPagoService } from '../../../../../core/services/quski/registrarPago.service';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
+import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
@@ -32,8 +33,7 @@ export class NovacionHabilitanteComponent implements OnInit {
   public numeroCuenta = new FormControl('', [Validators.required]);
   public firmaRegularizada = new FormControl('', [Validators.required]);
   public diaFijoPago = new FormControl('', [Validators.required]);
-  public firmadaOperacion = new FormControl('', [Validators.required]);
-  public firmanteCuenta = new FormControl('', [Validators.required]);
+  public firmanteOperacion = new FormControl('', [Validators.required]);
   public tipoCliente = new FormControl('', [Validators.required]);
   public identificacionApoderado = new FormControl('', [Validators.required]);
   public nombreApoderado = new FormControl('', [Validators.required]);
@@ -41,6 +41,8 @@ export class NovacionHabilitanteComponent implements OnInit {
   public identificacionCodeudor = new FormControl('', [Validators.required]);
   public nombreCodeudor = new FormControl('', [Validators.required]);
   public dataSourceComprobante = new MatTableDataSource<any>();
+  public excepcionOperativa = new FormControl('');
+  public fechaRegularizacion = new FormControl('');
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','descargarComprobante'];
   public loadComprobante  = new BehaviorSubject<boolean>(false);
   public catCuenta;
@@ -48,8 +50,10 @@ export class NovacionHabilitanteComponent implements OnInit {
   public catfirmadaOperacion: {nombre, codigo}[];
   public catFirmanteOperacion;
   public catTipoCliente;
+  public catExcepcionOperativa: Array<any>;
   idNegociacion: any;
   credit: {credito: TbQoCreditoNegociacion};
+  aprobar: boolean;
 
   
   
@@ -57,6 +61,7 @@ export class NovacionHabilitanteComponent implements OnInit {
   constructor(
     private cre: CreditoNegociacionService,
     private reg: RegistrarPagoService,
+    private par: ParametroService,
     private sof: SoftbankService,
     private pro: ProcesoService,
     private route: ActivatedRoute,
@@ -74,8 +79,7 @@ export class NovacionHabilitanteComponent implements OnInit {
     this.formOperacion.addControl("tipoDeCuenta", this.tipoDeCuenta);
     this.formOperacion.addControl("numeroCuenta", this.numeroCuenta);
     this.formOperacion.addControl("firmaRegularizada", this.firmaRegularizada);
-    this.formOperacion.addControl("firmadaOperacion", this.firmadaOperacion);
-    this.formOperacion.addControl("firmanteCuenta", this.firmanteCuenta);
+    this.formOperacion.addControl("firmanteCuenta", this.firmanteOperacion);
     this.formOperacion.addControl("tipoCliente", this.tipoCliente);
 
   }
@@ -117,10 +121,20 @@ export class NovacionHabilitanteComponent implements OnInit {
     this.tipoDeCuenta.disable();
     this.numeroCuenta.setValue( wr.cuentas[0].cuenta );
     this.numeroCuenta.disable();
-    this.firmanteCuenta.setValue( this.catFirmanteOperacion ? this.catFirmanteOperacion[0] ? this.catFirmanteOperacion[0] :{nombre: 'Error cargando catalogo'} :{nombre: 'Error cargando catalogo'} )
-    this.firmanteCuenta.disable();
+    this.firmanteOperacion.setValue( this.catFirmanteOperacion ? this.catFirmanteOperacion[0] ? this.catFirmanteOperacion[0] :{nombre: 'Error cargando catalogo'} :{nombre: 'Error cargando catalogo'} )
+    this.firmanteOperacion.disable();
+    this.excepcionOperativa.setValue( wr.proceso.estadoProceso == 'CREADO' || wr.proceso.estadoProceso == 'EXCEPCIONADO' ? this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') : null );
+    this.habilitarExcepcionOperativa();
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.credito.codigo + ".", "success");
     this.loadingSubject.next(false);
+  }
+  public habilitarExcepcionOperativa(){
+    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
+      this.fechaRegularizacion.disable();
+      this.fechaRegularizacion.setValue(null);
+    }else{
+      this.fechaRegularizacion.enable();
+    }
   }
   public regresar(){
     this.router.navigate(['negociacion/bandeja-operaciones']);
@@ -148,66 +162,69 @@ export class NovacionHabilitanteComponent implements OnInit {
     this.loadComprobante.next(false);
   }
   public solicitarAprobacion(){
-    if(this.dataSourceComprobante.data){
-      if(this.formOperacion.valid){
-        let mensaje = "Solicitar la aprobacion del credito: " + this.credit.credito.codigo;
-        const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-          width: "800px",
-          height: "auto",
-          data: mensaje
-        });
-        dialogRef.afterClosed().subscribe(r => {
-          this.loadingSubject.next(true);
-          if(r){
-            let wraper = { pagos: this.dataSourceComprobante.data, asesor: this.usuario, idCredito: this.credit.credito.id};  
-            this.reg.crearRegistrarComprobanteRenovacion(wraper).subscribe( (data: any)=>{
-              if(data.entidades){
-                this.crearOperacion();
-              }else{
-              this.sinNotSer.setNotice('ERRROR AL GUARDAR LOS COMPROBANTES','error');
-              }
-            }, error =>{
-              this.sinNotSer.setNotice('ERROR EN EL SERVICIO' + error,'error');
-            });
-          }else{
-            this.loadingSubject.next(false);
-            this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
-          }
-        });  
-      }else{
-        this.sinNotSer.setNotice('Complete los campos correctamente','error');
-      }
-    }else{
-      this.sinNotSer.setNotice('CARGUE AL MENOS UN COMPROBANTE DE PAGOS','error');
-    }
-  }
-  private crearOperacion(){
-      this.credit.credito.numeroCuenta = this.numeroCuenta.value;
-      this.credit.credito.pagoDia = this.diaFijoPago.value;
-      this.credit.credito.firmanteOperacion = this.firmanteCuenta.value.codigo;
-      this.credit.credito.tipoCliente = this.tipoCliente.value.codigo;
-      if( this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA'){
-        this.credit.credito.identificacionApoderado = this.identificacionApoderado.value;
-        this.credit.credito.nombreCompletoApoderado = this.nombreApoderado.value;
-        this.credit.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value;
-      }
-      if(this.tipoCliente.value.codigo == 'SCD' || this.tipoCliente.value.codigo == 'CYA'){
-        this.credit.credito.identificacionCodeudor = this.identificacionCodeudor.value;
-        this.credit.credito.nombreCompletoCodeudor = this.nombreCodeudor.value;
-      }
-      this.cre.crearOperacionRenovacion( this.credit.credito).subscribe( (data: any) =>{
-        if(data.entidad){
-           this.pro.cambiarEstadoProceso(this.credit.credito.tbQoNegociacion.id,"RENOVACION","PENDIENTE_APROBACION").subscribe( (data: any) =>{
+    if(this.formOperacion.valid){
+      let mensaje = "Solicitar la aprobacion del credito: " + this.credit.credito.codigo;
+      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        width: "800px",
+        height: "auto",
+        data: mensaje
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        this.loadingSubject.next(true);
+        if(r){
+          this.pro.cambiarEstadoProceso(this.credit.credito.tbQoNegociacion.id,"RENOVACION","PENDIENTE_APROBACION").subscribe( (data: any) =>{
             if(data.entidad){
+              this.sinNotSer.setNotice('CREDITO ENVIADO A APROBACION FABRICA','success');
               this.router.navigate(['negociacion/bandeja-operaciones']);
             }
           });
         }else{
-          this.sinNotSer.setNotice('ERROCREACION EL CREDITO EN SOFTBANK', 'error');
+          this.loadingSubject.next(false);
+          this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
+        }
+      });  
+    }else{
+      this.sinNotSer.setNotice('Complete los campos correctamente','error');
+    }
+  }
+  public crearOperacion(){
+    if(this.dataSourceComprobante.data.length > 0){
+      let wraper = { pagos: this.dataSourceComprobante.data, asesor: this.usuario, idCredito: this.credit.credito.id};  
+      this.reg.crearRegistrarComprobanteRenovacion(wraper).subscribe( (data: any)=>{
+        if(data.entidades){
+          this.credit.credito.numeroCuenta = this.numeroCuenta.value;
+          this.credit.credito.pagoDia = this.diaFijoPago.value;
+          this.credit.credito.firmanteOperacion = this.firmanteOperacion.value.codigo;
+          this.credit.credito.tipoCliente = this.tipoCliente.value.codigo;
+          if( this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA'){
+            this.credit.credito.identificacionApoderado = this.identificacionApoderado.value;
+            this.credit.credito.nombreCompletoApoderado = this.nombreApoderado.value;
+            this.credit.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value;
+          }
+          if(this.tipoCliente.value.codigo == 'SCD' || this.tipoCliente.value.codigo == 'CYA'){
+            this.credit.credito.identificacionCodeudor = this.identificacionCodeudor.value;
+            this.credit.credito.nombreCompletoCodeudor = this.nombreCodeudor.value;
+          }
+          this.credit.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
+          this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
+          this.cre.crearOperacionRenovacion( this.credit.credito).subscribe( (data: any) =>{
+            if(data.entidad){
+              this.aprobar = true;
+            }else{
+              this.sinNotSer.setNotice('ERROR CREACION EL CREDITO EN SOFTBANK', 'error');
+            }
+          }, error =>{
+            this.sinNotSer.setNotice('ERROR EN LA CREACION DE LA OPERACION: Probablemente por la tabla de amoritzacion', 'error');
+          });
+        }else{
+        this.sinNotSer.setNotice('ERRROR AL GUARDAR LOS COMPROBANTES','error');
         }
       }, error =>{
-        this.sinNotSer.setNotice('ERROR EN LA CREACION DE LA OPERACION: Probablemente por la tabla de amoritzacion', 'error');
+        this.sinNotSer.setNotice('ERROR EN EL SERVICIO' + error,'error');
       });
+    }else {
+      this.sinNotSer.setNotice('INGRESE AL MENOS UN COMPROBANTE DE PAGOS','warning');
+    }
   }
   public eliminarComprobante(row){
     const index = this.dataSourceComprobante.data.indexOf(row);
@@ -217,9 +234,7 @@ export class NovacionHabilitanteComponent implements OnInit {
 
   }
   public descargarComprobante(row){
-    var file = new File([row.comprobante.fileBase64], row.comprobante.name, {type: "image/*;"});
-    saveAs(file);
-    //saveAs( row.comprobante.fileBase64, row.comprobante.name);
+    saveAs(this.cre.dataURItoBlob(row.comprobante.fileBase64), row.comprobante.name);    
   }
   /** @FUNCIONALIDAD */
   private cargarCatalogos(){
@@ -231,6 +246,9 @@ export class NovacionHabilitanteComponent implements OnInit {
     });
     this.sof.consultarTipoClienteCS().subscribe( data =>{
       this.catTipoCliente = data.catalogo ? data.catalogo :  ['No se cargo el catalogo. Error'];
+    });
+    this.par.findByTipo('EXC-OPV-NUEV',).subscribe( (data :any) =>{
+      this.catExcepcionOperativa = data.entidades ? data.entidades : {codigo: 'ERR', mensaje: 'Error al cargar catalogo'}
     });
   }
   public abrirSalirGestion(mensaje: string, titulo?: string) {

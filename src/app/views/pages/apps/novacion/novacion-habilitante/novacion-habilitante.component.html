@@ -29,7 +29,7 @@
                         </div>					
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required [formControl]="firmanteCuenta" placeholder="firmanteCuenta">
+                                <mat-select required [formControl]="firmanteOperacion" placeholder="firmante Operacion">
                                     <mat-option *ngFor="let element of catFirmanteOperacion" [value]="element">
                                         {{element.nombre }}
                                     </mat-option>
@@ -45,15 +45,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>		
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required [formControl]="firmadaOperacion" placeholder="Firmada Operacion">
-                                    <mat-option *ngFor="let element of catfirmadaOperacion" [value]="element">
-                                        {{element.nombre }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
+
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select required [formControl]="tipoCliente" placeholder="Tipo Cliente" (selectionChange)="cambiarCliente()">
@@ -102,6 +94,24 @@
 							</mat-form-field>
                         </div>		
                     </div>
+                    <div class="row">
+                        <div class="col-4 offset-2">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select required placeholder="Tipo Excepcion"  [formControl]="excepcionOperativa" (selectionChange)="habilitarExcepcionOperativa()">
+                                    <mat-option *ngFor="let element of catExcepcionOperativa" [value]="element" >
+                                        {{element.valor }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [matDatepicker]="picker6" [formControl]="fechaRegularizacion" placeholder="Fecha de regularizacion">
+                                <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                                <mat-datepicker #picker6></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
 				</form>
             </mat-step>
             <mat-step label='Comprobante De Pago'>
@@ -142,7 +152,7 @@
                     <ng-container matColumnDef="descargarComprobante">
 						<mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
 						<mat-cell *matCellDef="let row">
-                            <a (click)="descargarComprobante(row)">
+                            <a *ngIf="row.comprobante" (click)="descargarComprobante(row)">
 								<mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
                             </a>
                         </mat-cell>					
@@ -162,7 +172,12 @@
             </mat-step>
             <mat-step label='Documentos Legales'>
 				<re-habilitante [proceso]="'CREDITONUEVO'" [useType]="'LIST'" [tipoDocumento]="'5'" [referencia]="" [rol]="'7'"> </re-habilitante>
-                <div class="row">
+                <div class="row" *ngIf="!aprobar">
+                    <div class="col-md-5 offset-md-5">
+                        <button  mat-raised-button color="accent" (click)="crearOperacion()">Crear Operacion</button>
+                    </div>
+                </div>
+                <div class="row" *ngIf="aprobar">
                     <div class="col-md-5 offset-md-5">
                         <button  mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
                     </div>
