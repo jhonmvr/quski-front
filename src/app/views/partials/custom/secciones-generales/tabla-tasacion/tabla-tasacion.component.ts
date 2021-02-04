@@ -52,9 +52,9 @@ export class TablaTasacionComponent implements OnInit {
       this.tipo == 'G'       
         ? ['numeroGarantia','numeroExpediente','codigoTipoGarantia','Descripcion','tipoCobertura','valorComercial','ValorAvaluo','ValorRealizacion','valorOro','fechaAvaluo','idAgenciaRegistro','idAgenciaCustodia','referencia','TipoJoya','descripcionJoya','EstadoJoya','TipoOro','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','PesoNeto','codigoEstadoProceso','codigoEstadoUbicacion','numeroFundaMadre','numeroFundaJoya','NumeroPiezas','DescuentoSuelda']
           : this.tipo == 'A' 
-            ? ['Accion','NumeroPiezas', 'TipoOro','PesoBruto','PesoNeto', 'valorOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'DescuentoSuelda', 'TipoJoya', 'EstadoJoya', 'Descripcion', 'tienePiedras','DescuentoPesoPiedra', 'detallePiedras',]
+            ?     ['Accion','NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','valorComercial','ValorRealizacion',]
               : this.tipo == 'T' 
-                ? ['Total', 'NumeroPiezas', 'TipoOro','PesoBruto','PesoNeto', 'valorOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'DescuentoSuelda', 'TipoJoya', 'EstadoJoya', 'Descripcion', 'tienePiedras','DescuentoPesoPiedra', 'detallePiedras',]
+                ? ['Total', 'NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','valorComercial','ValorRealizacion']
                   : [];
       this.dataSourceTasacion.data = data;
       this.formateo();
