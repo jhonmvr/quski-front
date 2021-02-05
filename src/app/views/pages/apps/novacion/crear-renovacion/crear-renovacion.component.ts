@@ -37,21 +37,11 @@ export class CrearRenovacionComponent implements OnInit {
   private riesgoTotal: number;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
-  private credit: { operacionAnterior: any, proceso: TbQoProceso, credito: TbQoCreditoNegociacion, excepciones: TbQoExcepcion[]}
+  public credit: { operacionAnterior: any, proceso: TbQoProceso, credito: TbQoCreditoNegociacion, excepciones: TbQoExcepcion[]}
   private numeroOperacion;
   public fechaUtil: diferenciaEnDias;
   selection = new SelectionModel<any>(true, []);
   private garantiasSimuladas: any[];
-
-  private fechaServer;
-  public totalPesoB;
-  public totalPesoN;
-  public totalValorO;
-  public totalNumeroJoya;
-  public totalValorA;
-  public totalValorR;
-  public totalValorC;
-  public total;
 
   /** @CATALOGOS */
   public catTipoOro: Array<any>;
@@ -67,8 +57,6 @@ export class CrearRenovacionComponent implements OnInit {
   public nombreCompleto = new FormControl();
   public cedulaCliente = new FormControl();
   
-  public dataSourceTasacion = new MatTableDataSource<any>();
-  public displayedColumnsTasacion = ['Total','NumeroPiezas','PesoBruto','PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'TipoOro','TipoJoya', 'EstadoJoya', 'Descripcion',  'DescuentoSuelda', 'tienePiedras', 'detallePiedras','DescuentoPesoPiedra'];
   public dataSourceCreditoNegociacion = new MatTableDataSource<any>();
   public displayedColumnsCreditoNegociacion = ['accion','plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
     'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
@@ -151,36 +139,23 @@ export class CrearRenovacionComponent implements OnInit {
     this.codigoOperacion.setValue(this.credit.operacionAnterior.credito.numeroOperacion);
     this.nombreCompleto.setValue(this.credit.operacionAnterior.cliente.nombreCompleto);
     this.cedulaCliente.setValue(this.credit.operacionAnterior.cliente.identificacion);
-    this.totalPesoB      = 0;
-    this.totalPesoN      = 0;
-    this.totalValorO     = 0;
-    this.totalNumeroJoya = 0;
-    this.totalValorA     = 0;
-    this.totalValorR     = 0;
-    this.totalValorC     = 0;
-    this.total           = 0;
     this.numeroOperacion = this.credit.operacionAnterior.credito.numeroOperacion;
     this.codigoBpm.setValue( this.credit.credito ? this.credit.credito.codigo : 'Sin asignar')
     this.proceso.setValue(   this.credit.proceso ? this.credit.proceso.proceso : 'Sin asignar');
     this.estadoProceso.setValue(this.credit.proceso ? this.credit.proceso.estadoProceso : 'Sin asignar');
     this.formOperacion.disable();
-    let dataC : Array<any> = new Array<any>();
-    this.dataSourceTasacion = new MatTableDataSource<any>(dataC);
     if(this.credit.operacionAnterior && this.credit.operacionAnterior.garantias){
       this.garantiasSimuladas = new Array<any>();
-      this.credit.operacionAnterior.garantias.forEach(element => {
-        this.garantiasSimuladas.push( element );
-        this.total++;
+      /* this.credit.operacionAnterior.garantias.forEach(element => {
         let garantia = {
-          tipoOro: this.catTipoOro ? this.catTipoOro.find( x => x.codigo == element.codigoTipoOro ) ? this.catTipoOro.find( x => x.codigo == element.codigoTipoOro ).nombre: 'Error de Catalogo' : 'Error de Catalogo',
-          tipoJoya: this.catTipoJoya ? this.catTipoJoya.find(x=> x.codigo == element.codigoTipoJoya) ? this.catTipoJoya.find(x=> x.codigo == element.codigoTipoJoya).nombre : 'Error en catalogo' : 'Error en catalogo',
-          estadoJoya: this.catEstadoJoya ? this.catEstadoJoya.find(x=> x.codigo == element.codigoEstadoJoya) ? this.catEstadoJoya.find(x=> x.codigo == element.codigoEstadoJoya).nombre : 'Error en catalogo' : 'Error en catalogo',
-          descripcion: element.descripcionJoya ? element.descripcionJoya : 'Sin descripcion',
-          detallePiedras: element.detallePiedras ? element.detallePiedras : 'Sin detalle',
+          tipoOro: element.codigoTipoOro,
+          tipoJoya: element.codigoTipoJoya,
+          estadoJoya: element.codigoEstadoJoya,
+          descripcion: element.descripcionJoya,
+          detallePiedras: element.detallePiedras,
           descuentoPesoPiedra: element.descuentoPiedras,
           pesoBruto: element.pesoBruto,
           numeroPiezas: element.numeroPiezas,
-          total: this.total,
           pesoNeto: element.pesoNeto,
           descuentoSuelda : element.descuentoSuelda,
           valorOro: element.valorOro,
@@ -188,15 +163,8 @@ export class CrearRenovacionComponent implements OnInit {
           valorRealizacion : element.valorRealizacion,
           valorComercial :  element.valorComercial
         };
-        this.totalPesoB += element.pesoBruto;
-        this.totalPesoN += element.pesoNeto
-        this.totalValorO += element.valorOro
-        this.totalNumeroJoya += element.numeroPiezas
-        this.totalValorA += element.valorAvaluo
-        this.totalValorR += element.valorRealizacion
-        this.totalValorC += element.valorComercial
-        this.dataSourceTasacion.data.push( garantia );
-      });
+        this.garantiasSimuladas.push( garantia );
+      }); */
     }
     if(this.credit.credito){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
@@ -400,7 +368,6 @@ export class CrearRenovacionComponent implements OnInit {
           this.cre.crearCreditoRenovacion( this.selection.selected[0], this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia, this.credit.proceso? this.credit.proceso.idReferencia : null ).subscribe( data =>{
             if(data.entidad){
               this.credit = data.entidad;
-              //console.log( 'Mi operacion ->', data.entidad );
               this.router.navigate(['cliente/gestion-cliente/NOV/',this.credit.proceso.idReferencia]);
             }
           });

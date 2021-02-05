@@ -9,6 +9,7 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './tabla-tasacion.component.html',
   styleUrls: ['./tabla-tasacion.component.scss']
 })
+
 export class TablaTasacionComponent implements OnInit {
   public error: boolean= false;
   public dataSourceTasacion = new MatTableDataSource<any>();
@@ -38,23 +39,23 @@ export class TablaTasacionComponent implements OnInit {
   @Output() rowDelete: EventEmitter<TbQoTasacion> = new EventEmitter<TbQoTasacion>();
   constructor(    
     private sof: SoftbankService,
-  ) { 
-    this.sof.setParameter();
-  }
-
-  ngOnInit() {
-    this.cargarCats();
-  }
-  private inicioDeFlujo(data) {
-    this.dataObservable.subscribe( data =>{
-      this.error = this.tipo ? false : true;
-      this.displayedColumnsTasacion = 
-      this.tipo == 'G'       
-        ? ['numeroGarantia','numeroExpediente','codigoTipoGarantia','Descripcion','tipoCobertura','valorComercial','ValorAvaluo','ValorRealizacion','valorOro','fechaAvaluo','idAgenciaRegistro','idAgenciaCustodia','referencia','TipoJoya','descripcionJoya','EstadoJoya','TipoOro','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','PesoNeto','codigoEstadoProceso','codigoEstadoUbicacion','numeroFundaMadre','numeroFundaJoya','NumeroPiezas','DescuentoSuelda']
+    ) { 
+      this.sof.setParameter();
+    }
+    
+    ngOnInit() {
+      this.cargarCats();
+    }
+    private inicioDeFlujo(data) {
+      this.dataObservable.subscribe( data =>{
+        this.error = this.tipo ? false : true;
+        this.displayedColumnsTasacion = 
+        this.tipo == 'G'       
+        ? ['Total','NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro', 'ValorAvaluo','ValorRealizacion','valorComercial']
           : this.tipo == 'A' 
-            ?     ['Accion','NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','valorComercial','ValorRealizacion',]
+            ?     ['Accion','NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','ValorRealizacion','valorComercial']
               : this.tipo == 'T' 
-                ? ['Total', 'NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','valorComercial','ValorRealizacion']
+                ? ['Total', 'NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','ValorRealizacion','valorComercial']
                   : [];
       this.dataSourceTasacion.data = data;
       this.formateo();
@@ -95,14 +96,17 @@ export class TablaTasacionComponent implements OnInit {
   }
   private formateo(){
     this.dataSourceTasacion.data.forEach(e=>{
+      e.codigoTipoOro ? e.tipoOro = e.codigoTipoOro : null;
       e.tipoOro = e.tipoOro ? 
                     this.catTipoOro ? 
                         this.catTipoOro.find(x => x.codigo == e.tipoOro) ?
                           this.catTipoOro.find(x => x.codigo == e.tipoOro).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+      e.codigoTipoJoya ?  e.tipoJoya =  e.codigoTipoJoya : null;
       e.tipoJoya =  e.tipoJoya ?
                       this.catTipoJoya ?
                           this.catTipoJoya.find( x => x.codigo == e.tipoJoya ) ?
                             this.catTipoJoya.find( x => x.codigo == e.tipoJoya ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+      e.codigoEstadoJoya ? e.estadoJoya = e.codigoEstadoJoya : null;
       e.estadoJoya =  e.estadoJoya ?
                         this.catEstadoJoya ?
                             this.catEstadoJoya.find( x => x.codigo == e.estadoJoya) ?
@@ -133,6 +137,7 @@ export class TablaTasacionComponent implements OnInit {
                                       this.catEstadoUbicacion.find(x=> x.codigo == e.codigoEstadoUbicacion).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
       e.descuentoPesoPiedra = e.descuentoPiedras ? e.descuentoPiedras : e.descuentoPesoPiedra;
       e.descuentoSuelda     = e.descuentoSuelda  ? e.descuentoSuelda  : e.descuentoSuelda;
+      e.descripcion ? e.descripcion : 'Sin descripcion';
     });
   }
   private calcular() {

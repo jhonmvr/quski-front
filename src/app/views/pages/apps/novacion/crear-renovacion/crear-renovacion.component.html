@@ -48,7 +48,9 @@
 				</form>
 			</mat-step>
 			<mat-step label='Detalle de garantias'> 
-				<mat-table class="garantia" [dataSource]="dataSourceTasacion" >
+                <kt-tabla-tasacion *ngIf="this.credit.operacionAnterior && this.credit.operacionAnterior.garantias;" [data]="this.credit.operacionAnterior.garantias" [tipo]="'G'"></kt-tabla-tasacion>
+
+<!-- 				<mat-table class="garantia" [dataSource]="dataSourceTasacion">
                     <ng-container matColumnDef="Total">
                         <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ element.total }} </mat-cell>
@@ -138,7 +140,7 @@
 					<mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
 					<mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
 					<mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
-                </mat-table>
+                </mat-table> -->
                 <div class="row mt-2">
                     <div class="col-4 offset-5">
                         <button mat-stroked-button color="primary" matStepperNext (click)="simularOpciones()">
