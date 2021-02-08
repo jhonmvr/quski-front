@@ -247,7 +247,7 @@ export class NovacionHabilitanteComponent implements OnInit {
     this.sof.consultarTipoClienteCS().subscribe( data =>{
       this.catTipoCliente = data.catalogo ? data.catalogo :  ['No se cargo el catalogo. Error'];
     });
-    this.par.findByTipo('EXC-OPV-NUEV',).subscribe( (data :any) =>{
+    this.par.findByTipo('EXC-OPV-RENV',).subscribe( (data :any) =>{
       this.catExcepcionOperativa = data.entidades ? data.entidades : {codigo: 'ERR', mensaje: 'Error al cargar catalogo'}
     });
     this.sof.consultarperiodoDiferimientoCS().subscribe(dias=>{

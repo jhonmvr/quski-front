@@ -34,7 +34,7 @@
 							</mat-form-field>
 						</div>
 						<div class=" offset-md-1 col-md-4">
-							<button mat-stroked-button color="primary" (click)="buscarCliente()">
+							<button mat-stroked-button color="primary" (click)="buscarCliente()" [disabled]="bloquearBusqueda">
 								<mat-icon style="font-size: 24px;" color="primary" matTooltipPosition="above">search
 								</mat-icon>
 								<span color="primary">Buscar cliente </span>
@@ -351,7 +351,19 @@
 					</ng-container>
 					<ng-container matColumnDef="plazo">
 						<mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.plazo }}</mat-cell>
+						<mat-cell *matCellDef="let element"> 
+							{{ 
+							element.plazo ? 
+							element.plazo == '60'  ? '60 Dias (Al Vcto.)' : 
+							element.plazo == '90'  ? '90 Dias (Al Vcto.)' : 
+							element.plazo == '120' ? '120 Dias (Al Vcto.)' : 
+							element.plazo == '6'   ? '6	Cuotas' : 
+							element.plazo == '9'   ? '9	Cuotas' : 
+							element.plazo == '12'  ? '12 Cuotas' : 
+							element.plazo == '18'  ? '18 Cuotas' : 
+							element.plazo : 'Error'
+							}}
+					</mat-cell>
 					</ng-container>
 					<ng-container matColumnDef="periodoPlazo">
 						<mat-header-cell *matHeaderCellDef>periodo Plazo</mat-header-cell>
@@ -359,7 +371,13 @@
 					</ng-container>
 					<ng-container matColumnDef="periodicidadPlazo">
 						<mat-header-cell *matHeaderCellDef>periodicidad Plazo</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.periodicidadPlazo }}</mat-cell>
+						<mat-cell *matCellDef="let element"> 
+							{{ 
+								element.periodicidadPlazo ?
+								element.periodicidadPlazo == 'M' ? 'Meses' :
+								element.periodicidadPlazo : 'Error'
+							}}
+						</mat-cell>
 					</ng-container>
 					<ng-container matColumnDef="montoFinanciado">
 						<mat-header-cell *matHeaderCellDef>monto Financiado</mat-header-cell>
@@ -378,7 +396,7 @@
 						<mat-cell *matCellDef="let element"> {{ element.costoCustodia }}</mat-cell>
 					</ng-container>
 					<ng-container matColumnDef="costoFideicomiso">
-						<mat-header-cell *matHeaderCellDef>costo Fideicomiso</mat-header-cell>
+						<mat-header-cell *matHeaderCellDef>costo Resguardo</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.costoFideicomiso }}</mat-cell>
 					</ng-container>
 					<ng-container matColumnDef="costoSeguro">
@@ -487,7 +505,13 @@
 					</ng-container>
 					<ng-container matColumnDef="tipooferta">
 						<mat-header-cell *matHeaderCellDef>tipo oferta</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.tipooferta }}</mat-cell>
+						<mat-cell *matCellDef="let element"> 
+							{{ 
+								element.tipooferta ? 
+								element.tipooferta == 'N' ? 'Nuevo' :
+								element.tipooferta : 'Error'
+							}}
+						</mat-cell>
 					</ng-container>
 					<ng-container matColumnDef="porcentajeflujoplaneado">
 						<mat-header-cell *matHeaderCellDef>porcentaje flujo planeado</mat-header-cell>

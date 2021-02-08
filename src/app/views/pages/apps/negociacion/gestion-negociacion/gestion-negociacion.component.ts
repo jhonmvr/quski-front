@@ -115,15 +115,10 @@ export class GestionNegociacionComponent implements OnInit {
   private elementJoya;
 
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
-  displayedColumnsCreditoNegociacion = ['Accion', 'plazo','periodoPlazo', 'periodicidadPlazo','tipooferta','montoFinanciado','valorARecibir','cuota','totalGastosNuevaOperacion','costoCustodia', 'costoTransporte','costoTasacion','costoSeguro','impuestoSolca',
-     'costoFideicomiso', 
-    'formaPagoCapital', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
-    'formaPagoGastoCobranza','saldoInteres',
-    'saldoMora', 'gastoCobranza', 'saldoCapitalRenov', 'montoPrevioDesembolso', 
-    'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 
-    'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
+  displayedColumnsCreditoNegociacion = ['Accion', 'plazo','periodicidadPlazo','tipooferta','montoFinanciado','valorARecibir','cuota','totalGastosNuevaOperacion','costoCustodia', 'costoTransporte','costoTasacion','costoSeguro','costoFideicomiso','impuestoSolca'];
   riesgoTotal: any;
   coberturaExcepcionada;
+  bloquearBusqueda: boolean;
 
 
   constructor(
@@ -421,6 +416,7 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   private cargarValores(wrapper: NegociacionWrapper, cargar: boolean) {
+    this.bloquearBusqueda = true;
     this.tbQoCliente= wrapper.credito.tbQoNegociacion.tbQoCliente;
     this.cedula.setValue(this.tbQoCliente.cedulaCliente);
     this.identificacion.setValue(this.tbQoCliente.cedulaCliente);
