@@ -161,12 +161,8 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
                 this.loadingSubject.next(false);
               }
             });
-          }else {
-            //console.log("Me cai en la busqueda de enums de procesos :c");
           }
         });
-      } else{
-        //console.log("Me cai buscando Los estados de procesos :c ");
       }
     });
   }
