@@ -30,7 +30,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public rol: string;
 
   public loadingSubject = new BehaviorSubject<boolean>(false);
-  private catAgencia : Array<Agencia>;
+  public catAgencia : Array<Agencia>;
   public catProceso : Array<string>;
   public catEstadoProceso : Array<string>;
   public catActividad : Array<string>;
@@ -48,6 +48,9 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public fechaCreacionHasta = new FormControl('');
   public estado = new FormControl('');
   public actividad = new FormControl('');
+  public codigoBpm = new FormControl('');
+  public codigoSoft = new FormControl('');
+  public agencia = new FormControl('');
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   dataSource = new MatTableDataSource<OperacionesProcesoWrapper>();
@@ -70,6 +73,9 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     this.formFiltro.addControl("fechaCreacionHasta", this.fechaCreacionHasta);
     this.formFiltro.addControl("estado", this.estado);
     this.formFiltro.addControl("actividad", this.actividad);
+    this.formFiltro.addControl("codigoBpm", this.codigoBpm);
+    this.formFiltro.addControl("codigoSoft", this.codigoSoft);
+    this.formFiltro.addControl("agencia", this.agencia);
   }
 
   ngOnInit() {
@@ -126,7 +132,12 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         input.hasError("minlength") ? errorInsuficiente :
           "";
     }
-
+    if (pfield && pfield === 'codigos') {
+      const input = this.nombreCompleto;
+      return input.hasError("maxlength") ? errorLogitudExedida :
+        input.hasError("minlength") ? errorInsuficiente :
+          "";
+    }
     if (pfield && pfield === "identificacion") {
       const input = this.formFiltro.get("identificacion");
       return input.hasError("pattern") ? errorNumero :
@@ -196,31 +207,30 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
          w = new WrapperBusqueda(this.paginator.pageSize);
       }
       if(this.estado.value != "" && this.estado.value != null){
-        //console.log("estado -->", this.estado.value);
         w.estado = this.estado.value.replace(/ /gi,"_",);
+      }      
+      if(this.codigoBpm.value){
+        w.codigoBpm = this.codigoBpm.value.replace(/ /gi,"",);
+      }      
+      if(this.codigoSoft.value){
+        w.codigoSoft = this.codigoSoft.value.replace(/ /gi,"",);
       }
       if(this.actividad.value != "" && this.actividad.value!= null){
-        //console.log("actividad -->", this.actividad.value);
         w.actividad = this.actividad.value.replace(/ /gi,"_",);
       }
       if(this.fechaCreacionDesde.value != "" && this.fechaCreacionDesde.value!= null){
-        //console.log("fechaCreacionDesde -->", this.fechaCreacionDesde.value);
         w.fechaCreacionDesde = this.fechaCreacionDesde.value;
       }
       if(this.fechaCreacionHasta.value != "" && this.fechaCreacionHasta.value!= null){
-        //console.log("fechaCreacionHasta -->", this.fechaCreacionHasta.value);
         w.fechaCreacionHasta = this.fechaCreacionHasta.value;
       }
       if(this.identificacion.value != "" && this.identificacion.value!= null){
-        //console.log("identificacion -->", this.identificacion.value);
         w.identificacion = this.identificacion.value;
       }
       if(this.nombreCompleto.value != "" && this.nombreCompleto.value!= null){
-        //console.log("nombreCompleto -->", this.nombreCompleto.value);
         w.nombreCompleto = this.nombreCompleto.value;
       }
       if(this.proceso.value != ""  && this.proceso.value!= null){
-        //console.log("proceso -->", this.proceso.value);
         w.proceso = this.proceso.value.replace(/ /gi,"_",);
       }
 
@@ -241,12 +251,10 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         this.router.navigate(['negociacion/gestion-negociacion/NEG/',row.id]);    
       }
       if(row.proceso == 'RENOVACION'){
-        //console.log('row.codigoBpm ? ->', row.codigoBpm);
         this.router.navigate(['novacion/crear-novacion/NOV/', row.id]);
       }
       if(row.proceso == 'DEVOLUCION'){
         this.sinNotSer.setNotice("HISTORIA DE DEVOLUCION AUN NO EXISTE","error");
-        //console.log('Me fui jiji ->',row.id);
         this.limpiarFiltros();
         this.router.navigate(['negociacion/bandeja-operaciones']);
       }

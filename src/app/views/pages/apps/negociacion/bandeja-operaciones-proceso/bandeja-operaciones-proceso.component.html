@@ -11,17 +11,27 @@
             <div class="col-12">
                 <form [formGroup]="formFiltro">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input [formControl]="nombreCompleto" placeholder="Cliente" autocomplete="on" matInput />
                                 <mat-error>{{ getErrorMessage("nombreCompleto") }}</mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" matInput numeric numericType="number"
                                     (keypress)="numberOnly($event)" />
                                 <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input [formControl]="codigoBpm" placeholder="Codigo Bpm" autocomplete="off" matInput/>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input [formControl]="codigoSoft" placeholder="Codigo Soft" autocomplete="off" matInput/>
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
@@ -32,6 +42,20 @@
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Estado" [formControl]="estado">
+                                    <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Actividad" [formControl]="actividad">
+                                    <mat-option *ngFor="let element of catActividad" [value]="element">{{ element }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="offset-2 col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Fecha Creacion Desde: </mat-label>
                                 <input matInput #inputFechaCreacionDesde [matDatepicker]="pickerFechaCreacionDesde" [formControl]="fechaCreacionDesde"/>
@@ -47,17 +71,10 @@
                                 <mat-datepicker #pickerFechaCreacionHasta></mat-datepicker>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 offset-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Estado" [formControl]="estado">
-                                    <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Actividad" [formControl]="actividad">
-                                    <mat-option *ngFor="let element of catActividad" [value]="element">{{ element }}</mat-option>
+                                <mat-select placeholder="Agencia" [formControl]="agencia">
+                                    <mat-option *ngFor="let element of catAgencia" [value]="element">{{ element.nombre }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
