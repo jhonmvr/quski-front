@@ -40,11 +40,6 @@
                             <input matInput [formControl]="telefonoCasa" placeholder="Telefono Domicilio" />
                         </mat-form-field>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="telefonoOficina" placeholder="Telefono Otros" />
-                        </mat-form-field>
-                    </div>
                 </div>
             </mat-step>
             <mat-step label="Datos Credito">
@@ -56,7 +51,7 @@
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion" [value] ="fechaCreacion.value  | rDate" />
+                            <input matInput [formControl]="fechaAprobacion" placeholder="Fecha Aprobacion" [value] ="fechaAprobacion.value  | rDate" />
                         </mat-form-field>
                     </div>
                     <div class="col-4">

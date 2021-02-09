@@ -46,24 +46,23 @@ export class TablaTasacionComponent implements OnInit {
     ngOnInit() {
       this.cargarCats();
     }
-    private inicioDeFlujo(data) {
-      this.dataObservable.subscribe( data =>{
+    private inicioDeFlujo() {
+      this.dataObservable.subscribe (p=>{
         this.error = this.tipo ? false : true;
         this.displayedColumnsTasacion = 
         this.tipo == 'G'       
         ? ['Total','NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro', 'ValorAvaluo','ValorRealizacion','valorComercial']
-          : this.tipo == 'A' 
-            ?     ['Accion','NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','ValorRealizacion','valorComercial']
-              : this.tipo == 'T' 
-                ? ['Total', 'NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','ValorRealizacion','valorComercial']
-                  : [];
-      this.dataSourceTasacion.data = data;
-      this.formateo();
-      this.calcular();
-    }, error =>{
-      this.error = true;
-    });
-  }
+        : this.tipo == 'A' 
+        ?     ['Accion','NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','ValorRealizacion','valorComercial']
+        : this.tipo == 'T' 
+        ? ['Total', 'NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','ValorRealizacion','valorComercial']
+        : [];
+        this.dataSourceTasacion = new MatTableDataSource<any>(p);
+        //this.formateo();
+        this.calcular();
+      });
+    
+    }
   private cargarCats(){
     this.sof.consultarTipoJoyaCS().subscribe( (data: any) =>{
       this.catTipoGarantia = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
@@ -83,7 +82,7 @@ export class TablaTasacionComponent implements OnInit {
                     this.catEstadoProceso = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
                     this.sof.consultarEstadoUbicacionCS().subscribe( (data: any) =>{
                       this.catEstadoUbicacion= !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
-                      this.inicioDeFlujo(this.data);
+                      this.inicioDeFlujo();
                     });  
                   });
                 });  
@@ -94,51 +93,51 @@ export class TablaTasacionComponent implements OnInit {
       });
     });  
   }
-  private formateo(){
-    this.dataSourceTasacion.data.forEach(e=>{
-      e.codigoTipoOro ? e.tipoOro = e.codigoTipoOro : null;
-      e.tipoOro = e.tipoOro ? 
-                    this.catTipoOro ? 
-                        this.catTipoOro.find(x => x.codigo == e.tipoOro) ?
-                          this.catTipoOro.find(x => x.codigo == e.tipoOro).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-      e.codigoTipoJoya ?  e.tipoJoya =  e.codigoTipoJoya : null;
-      e.tipoJoya =  e.tipoJoya ?
-                      this.catTipoJoya ?
-                          this.catTipoJoya.find( x => x.codigo == e.tipoJoya ) ?
-                            this.catTipoJoya.find( x => x.codigo == e.tipoJoya ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-      e.codigoEstadoJoya ? e.estadoJoya = e.codigoEstadoJoya : null;
-      e.estadoJoya =  e.estadoJoya ?
-                        this.catEstadoJoya ?
-                            this.catEstadoJoya.find( x => x.codigo == e.estadoJoya) ?
-                              this.catEstadoJoya.find( x => x.codigo == e.estadoJoya).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-      e.codigoTipoGarantia =  e.codigoTipoGarantia ?
-                                this.catTipoGarantia ?
-                                  this.catTipoGarantia.find(x => x.codigo == e.codigoTipoGarantia) ? 
-                                    this.catTipoGarantia.find(x => x.codigo == e.codigoTipoGarantia).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-      e.tipoCobertura = e.tipoCobertura ? 
-                          this.catTipoCobertura ?
-                            this.catTipoCobertura.find(x => x.codigo == e.tipoCobertura ) ? 
-                              this.catTipoCobertura.find(x => x.codigo == e.tipoCobertura).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-      e.nombreAgenciaCustodia = e.nombreAgenciaCustodia ? 
-                                  this.catAgencia ?
-                                    this.catAgencia.find(x => x.id == e.idAgenciaCustodia) ?
-                                      this.catAgencia.find(x => x.id == e.idAgenciaCustodia).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-      e.nombreAgenciaRegistro = e.nombreAgenciaRegistro ?
-                                  this.catAgencia ?
-                                    this.catAgencia.find(x => x.id == e.idAgenciaRegistro) ?
-                                      this.catAgencia.find(x => x.id == e.idAgenciaRegistro).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-      e.codigoEstadoProceso = e.codigoEstadoProceso ?
-                              this.catEstadoProceso ?
-                                this.catEstadoProceso.find(x=> x.codigo == e.codigoEstadoProceso) ? 
-                                  this.catEstadoProceso.find(x=> x.codigo == e.codigoEstadoProceso).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-      e.codigoEstadoUbicacion = e.codigoEstadoUbicacion ?
-                                  this.catEstadoUbicacion ?
-                                    this.catEstadoUbicacion.find(x=> x.codigo == e.codigoEstadoUbicacion) ? 
-                                      this.catEstadoUbicacion.find(x=> x.codigo == e.codigoEstadoUbicacion).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-      e.descuentoPesoPiedra = e.descuentoPiedras ? e.descuentoPiedras : e.descuentoPesoPiedra;
-      e.descuentoSuelda     = e.descuentoSuelda  ? e.descuentoSuelda  : e.descuentoSuelda;
-      e.descripcion ? e.descripcion : 'Sin descripcion';
-    });
+  forTipoOro(e){
+    let tipoOro = e.tipoOro;
+    if(e.codigoTipoOro ){
+      tipoOro = e.codigoTipoOro;
+    }
+    let x = this.catTipoOro.find(x => x.codigo == tipoOro);
+    if(tipoOro && this.catTipoOro && x){
+      
+      return x.nombre;
+    }else{
+      return 'Error Catalogo' ;
+    }
+  }
+  forTipoJoya(e){
+    let tipoJoya = e.tipoJoya;
+    if(e.codigoTipoJoya ){
+      tipoJoya = e.codigoTipoJoya;
+    }
+    let x = this.catTipoJoya.find(x => x.codigo == tipoJoya);
+    if(tipoJoya && this.catTipoJoya && x){
+      return x.nombre;
+    }else{
+      return 'Error Catalogo' ;
+    }
+  }
+  forEstadoJoya(e){
+    let estadoJoya = e.estadoJoya;
+    if(e.codigoEstadoJoya ){
+      estadoJoya = e.codigoEstadoJoya;
+    }
+    let x = this.catEstadoJoya.find(x => x.codigo == estadoJoya);
+    if(estadoJoya && this.catEstadoJoya && x){
+      return x.nombre;
+    }else{
+      return 'Error Catalogo' ;
+    }
+  }
+  forDescuentoPesoPiedra(e){
+    return e.descuentoPiedras ? e.descuentoPiedras : e.descuentoPesoPiedra ? e.desdescuentoPesoPiedra : 0;
+  }
+  forDescuentoSuelda(e){
+    return e.descuentoSuelda  ? e.descuentoSuelda  : e.descuentoSuelda;
+  }
+  forDescripcion(e){
+    return e.descripcion ? e.descripcion : e.descripcionJoya ? e.descripcionJoya : 'Sin descripcion';
   }
   private calcular() {
     this.totalPesoN = 0;
@@ -152,7 +151,7 @@ export class TablaTasacionComponent implements OnInit {
     if (this.dataSourceTasacion.data) {
       this.dataSourceTasacion.data.forEach(element => {
         this.totalPesoN  = (Number(this.totalPesoN) + Number(element.pesoNeto)).toFixed(2);
-        this.totalDescgr = (Number(this.totalDescgr) + Number(element.descuentoPesoPiedra)).toFixed(2);
+        this.totalDescgr = (Number(this.totalDescgr) + Number(element.descuentoPiedras ? element.descuentoPiedras : element.descuentoPesoPiedra ? element.desdescuentoPesoPiedra : 0 )).toFixed(2);
         this.totalPesoB  = (Number(this.totalPesoB) + Number(element.pesoBruto)).toFixed(2);
         this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
         this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);

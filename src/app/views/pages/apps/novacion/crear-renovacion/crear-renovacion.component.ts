@@ -49,6 +49,7 @@ export class CrearRenovacionComponent implements OnInit {
   public catEstadoJoya: Array<any>;
   /** @FORMULARIOS */
   public formOperacion: FormGroup = new FormGroup({});
+  public formOpcionesCredito: FormGroup = new FormGroup({});
   public codigoBpm = new FormControl();
   public codigoOperacion = new FormControl();
   public recibirPagar = new FormControl();
@@ -56,6 +57,7 @@ export class CrearRenovacionComponent implements OnInit {
   public estadoProceso = new FormControl();
   public nombreCompleto = new FormControl();
   public cedulaCliente = new FormControl();
+  public montoSolicitado = new FormControl();
   
   public dataSourceCreditoNegociacion = new MatTableDataSource<any>();
   public displayedColumnsCreditoNegociacion = ['accion','plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
@@ -65,6 +67,8 @@ export class CrearRenovacionComponent implements OnInit {
     'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
     'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
     'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
+  recibirOpagar: any;
+  //garantias: any[];
   constructor(
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
@@ -87,6 +91,7 @@ export class CrearRenovacionComponent implements OnInit {
     this.formOperacion.addControl("estadoProceso", this.estadoProceso);
     this.formOperacion.addControl("nombreCompleto", this.nombreCompleto);
     this.formOperacion.addControl("cedulaCliente", this.cedulaCliente);
+    this.formOpcionesCredito.addControl("montoSolicitado", this.montoSolicitado);
   }
 
   ngOnInit() {
@@ -135,6 +140,13 @@ export class CrearRenovacionComponent implements OnInit {
       } 
     });
   }
+  public numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
   private cargarCampos() {
     this.codigoOperacion.setValue(this.credit.operacionAnterior.credito.numeroOperacion);
     this.nombreCompleto.setValue(this.credit.operacionAnterior.cliente.nombreCompleto);
@@ -144,28 +156,6 @@ export class CrearRenovacionComponent implements OnInit {
     this.proceso.setValue(   this.credit.proceso ? this.credit.proceso.proceso : 'Sin asignar');
     this.estadoProceso.setValue(this.credit.proceso ? this.credit.proceso.estadoProceso : 'Sin asignar');
     this.formOperacion.disable();
-    if(this.credit.operacionAnterior && this.credit.operacionAnterior.garantias){
-      this.garantiasSimuladas = new Array<any>();
-      /* this.credit.operacionAnterior.garantias.forEach(element => {
-        let garantia = {
-          tipoOro: element.codigoTipoOro,
-          tipoJoya: element.codigoTipoJoya,
-          estadoJoya: element.codigoEstadoJoya,
-          descripcion: element.descripcionJoya,
-          detallePiedras: element.detallePiedras,
-          descuentoPesoPiedra: element.descuentoPiedras,
-          pesoBruto: element.pesoBruto,
-          numeroPiezas: element.numeroPiezas,
-          pesoNeto: element.pesoNeto,
-          descuentoSuelda : element.descuentoSuelda,
-          valorOro: element.valorOro,
-          valorAvaluo: element.valorAvaluo,
-          valorRealizacion : element.valorRealizacion,
-          valorComercial :  element.valorComercial
-        };
-        this.garantiasSimuladas.push( garantia );
-      }); */
-    }
     if(this.credit.credito){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
       let calculadora: any = {
@@ -270,14 +260,12 @@ export class CrearRenovacionComponent implements OnInit {
     }
     
   }
-
-  
   public validarCliente(){
     this.par.findByNombre('EDAD_MAXIMA').subscribe( (data: any) =>{
       if(data.entidad){
         console.log('Edad  maxima? ===>', data.entidad.valor);
         let valor = data.entidad.valor;
-        this.par.getDiffBetweenDateInicioActual(this.credit.operacionAnterior.cliente.fechaNacimiento, 'dd/MM/yyyy').subscribe( (data: any) =>{
+        this.par.getDiffBetweenDateInicioActual(this.credit.operacionAnterior.cliente.fechaNacimiento, 'yyyy-MM-dd').subscribe( (data: any) =>{
           console.log('Mi data de calcular edad ===>', data);
           if(data.entidad.year > valor && this.validCliente){
             this.credit.excepciones ? this.credit.excepciones.forEach(e =>{
@@ -381,15 +369,23 @@ export class CrearRenovacionComponent implements OnInit {
     }
   }
   public simularOpciones(){
+    console.log('data =>', this.dataSourceCreditoNegociacion.data);
+    if(this.dataSourceCreditoNegociacion.data.length < 1 || !this.montoSolicitado.value || ( this.montoSolicitado.value > this.dataSourceCreditoNegociacion.data[0].montoFinanciado  ) ){
+      this.sinNotSer.setNotice("EL MONTO SOLICITADO ES MAYOR AL MONTO FINANCIADO ACTUAL", 'error');
+      return;
+    }
     this.loadingSubject.next(true);
     let cliente = {} as cliente;
     cliente.identificacion = this.credit.operacionAnterior.cliente.identificacion;
     let fecha = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
     let mes = (fecha.getMonth() < 10 ? fecha.getMonth() == 0 ? '12':'0'+fecha.getMonth() : fecha.getMonth())  
     cliente.fechaNacimiento = (fecha.getDate() < 10 ? '0'+fecha.getDate() : fecha.getDate()) +'/' + mes +'/' + fecha.getFullYear(); 
-    this.credit.operacionAnterior.cliente = cliente;
-    //this.credit.operacionAnterior.fechaNacimiento = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
-    this.cal.simularOfertaRenovacion(this.riesgoTotal,this.credit.credito? this.credit.credito.cobertura? this.credit.credito.cobertura : 0 : 0,this.agencia, this.credit.operacionAnterior).subscribe( (data: any) =>{
+    let wrapper : any = { cliente: null, credito: null, garantias: null}
+    wrapper.cliente =  cliente;
+    wrapper.credito = this.credit.operacionAnterior.credito;
+    wrapper.garantias = this.credit.operacionAnterior.garantias;
+    let cobertura = this.credit.credito ? this.credit.credito.cobertura? this.credit.credito.cobertura : 0 : 0;
+    this.cal.simularOfertaRenovacion(this.riesgoTotal, cobertura ,this.agencia, this.montoSolicitado.value, wrapper).subscribe( (data: any) =>{
       if(data.entidad){
         //console.log('Data de simulacion -->',data.entidad);
         data.entidad.simularResult.codigoError > 0 ? this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
@@ -438,6 +434,11 @@ export class CrearRenovacionComponent implements OnInit {
     this.selection.clear()        
     this.selection.select(event) 
     this.recibirPagar.setValue( event.valorARecibir - event.valorAPagar);
+    if(this.recibirPagar.value > 0){
+      this.recibirOpagar = 'recibir';
+    }else{
+      this.recibirOpagar = 'pagar';
+    }
   }
 
   checkboxLabel(row?): string {

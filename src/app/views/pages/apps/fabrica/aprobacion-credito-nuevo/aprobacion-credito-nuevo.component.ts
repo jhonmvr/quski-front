@@ -427,8 +427,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     /** @DATOS_INSTRUCCION_OPERATIVA */
     this.tipoCuenta.setValue( ap.cuenta.banco ? this.catalogos ? this.catalogos.catBanco ? this.catalogos.catBanco.find( x => x.id == ap.cuenta.banco ) ? this.catalogos.catBanco.find( x => x.id == ap.cuenta.banco ).nombre : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo' );
     this.numeroCuenta.setValue( ap.cuenta.cuenta  );
-    this.firmaRegularizada.setValue( ap.credito.firmanteOperacion ? ap.credito.firmanteOperacion  :  'Falta valdiar' );
-    this.diaPagoFijo.setValue( ap.credito.pagoDia ? ap.credito.pagoDia : 'No aplica');
+    this.firmaRegularizada.setValue( 'Falta validar' );
+    this.diaPagoFijo.setValue( ap.credito.pagoDia ? new Date(ap.credito.pagoDia) : 'No aplica');
     this.firmadaOperacion.setValue( ap.credito.firmanteOperacion ? ap.credito.firmanteOperacion  :  'Falta valdiar' );
 
     /** @OPERACION_NUEVA */
@@ -439,7 +439,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.estadoOperacion.setValue( ap.credito.estadoSoftbank );
     this.fechaVencimiento.setValue( ap.credito.fechaVencimiento );
     this.fechaEfectiva.setValue( ap.credito.fechaEfectiva );
-    this.valorDesembolso.setValue( ap.credito.montoDesembolso ? ap.credito.montoDesembolso : 'Falta validar'  );
+    this.valorDesembolso.setValue( ap.credito.aRecibirCliente );
     this.montoFinanciado.setValue(  ap.credito.montoFinanciado );
     this.cuota.setValue( ap.credito.cuota );
     this.totalInteres.setValue(  ap.credito.saldoInteres );

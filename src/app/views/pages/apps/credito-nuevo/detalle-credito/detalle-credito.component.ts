@@ -26,9 +26,8 @@ export class DetalleCreditoComponent implements OnInit {
   public email = new FormControl();
   public telefonoMovil = new FormControl();
   public telefonoCasa = new FormControl();
-  public telefonoOficina = new FormControl();
   public numeroOperacion = new FormControl();
-  public fechaCreacion = new FormControl();
+  public fechaAprobacion = new FormControl();
   public fechaVencimiento = new FormControl();
   public montoFinanciado = new FormControl();
   public asesor = new FormControl();
@@ -67,9 +66,8 @@ export class DetalleCreditoComponent implements OnInit {
     this.formInformacion.addControl("email", this.email);
     this.formInformacion.addControl("telefonoMovil", this.telefonoMovil);
     this.formInformacion.addControl("telefonoCasa", this.telefonoCasa);
-    this.formInformacion.addControl("telefonoOficina", this.telefonoOficina);
     this.formInformacion.addControl("numeroOperacion", this.numeroOperacion);
-    this.formInformacion.addControl("fechaCreacion", this.fechaCreacion);
+    this.formInformacion.addControl("fechaAprobacion", this.fechaAprobacion);
     this.formInformacion.addControl("fechaVencimiento", this.fechaVencimiento);
     this.formInformacion.addControl("montoFinanciado", this.montoFinanciado);
     this.formInformacion.addControl("asesor", this.asesor);
@@ -119,21 +117,17 @@ export class DetalleCreditoComponent implements OnInit {
     this.cedula.setValue( this.wrapper.cliente.identificacion );
     this.email.setValue( this.wrapper.cliente.email );
     !this.wrapper.cliente.telefonos ? null : this.wrapper.cliente.telefonos.forEach(e => {
-      if(e.codigoTipoTelefono == "M" && e.activo){
+      if(e.codigoTipoTelefono == "CEL" && e.activo){
         this.telefonoMovil.setValue( e.numero );
       }
-      if(e.codigoTipoTelefono == "F" && e.activo){
+      if(e.codigoTipoTelefono == "DOM" && e.activo){
         this.telefonoCasa.setValue( e.numero );
-      }
-      if(e.codigoTipoTelefono == "CEL" && e.activo){
-        this.telefonoOficina.setValue( e.numero );
       }
     });
     this.telefonoMovil.setValue( this.telefonoMovil.value ? this.telefonoMovil.value : 'No aplica');
     this.telefonoCasa.setValue( this.telefonoCasa.value ? this.telefonoCasa.value : 'No aplica');
-    this.telefonoOficina.setValue( this.telefonoOficina.value ? this.telefonoOficina.value : 'No aplica');
     this.numeroOperacion.setValue( this.wrapper.credito.numeroOperacion );
-    this.fechaCreacion.setValue( this.wrapper.credito.fechaSolicitud );
+    this.fechaAprobacion.setValue( this.wrapper.credito.fechaAprobacion );
     this.fechaVencimiento.setValue( this.wrapper.credito.fechaVencimiento );
     this.montoFinanciado.setValue( this.wrapper.credito.montoFinanciado );
     this.asesor.setValue( this.wrapper.credito.codigoUsuarioAsesor );

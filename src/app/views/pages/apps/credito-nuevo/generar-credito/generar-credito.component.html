@@ -262,11 +262,6 @@
                                 <input matInput [formControl]="deudaInicial" readonly placeholder="Deuda Inicial">
                             </mat-form-field>
                         </div>
-<!--                         <div class="col-md-3">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="riesgoTotalCliente" readonly placeholder="Riesgo Total Cliente">
-                            </mat-form-field>
-                        </div> -->
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input matInput [formControl]="recibirCliente" readonly placeholder="A Recibir Cliente">
@@ -280,18 +275,31 @@
                         </div>
                     </div>
                     <mat-table id='tableNegociacion' class="tableOpciones"	[dataSource]="dataSourceCreditoNegociacion">
-                      
                         <ng-container matColumnDef="plazo">
                             <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{ element.plazoCredito }}</mat-cell>
-                        </ng-container>
-                        <ng-container matColumnDef="periodoPlazo">
-                            <mat-header-cell *matHeaderCellDef>periodo Plazo</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{ element.periodoPlazo }}</mat-cell>
+                            <mat-cell *matCellDef="let element"> 
+                                {{ 
+                                element.plazoCredito ? 
+                                element.plazoCredito == '60'  ? '60 Dias (Al Vcto.)' : 
+                                element.plazoCredito == '90'  ? '90 Dias (Al Vcto.)' : 
+                                element.plazoCredito == '120' ? '120 Dias (Al Vcto.)' : 
+                                element.plazoCredito == '6'   ? '6	Cuotas' : 
+                                element.plazoCredito == '9'   ? '9	Cuotas' : 
+                                element.plazoCredito == '12'  ? '12 Cuotas' : 
+                                element.plazoCredito == '18'  ? '18 Cuotas' : 
+                                element.plazoCredito : 'Error'
+                                }}
+                            </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="periodicidadPlazo">
-                            <mat-header-cell *matHeaderCellDef>periodicidad Plazo</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{ element.periodicidadPlazo }}</mat-cell>
+                            <mat-header-cell *matHeaderCellDef>Periodicidad Plazo</mat-header-cell>
+                            <mat-cell *matCellDef="let element"> 
+                                {{ 
+                                    element.periodicidadPlazo ?
+                                    element.periodicidadPlazo == 'M' ? 'Meses' :
+                                    element.periodicidadPlazo : 'Error'
+                                }}
+                            </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="montoFinanciado">
                             <mat-header-cell *matHeaderCellDef>monto Financiado</mat-header-cell>
@@ -418,8 +426,14 @@
                             <mat-cell *matCellDef="let element"> {{ element.formaPagoCustodiaDevengada }}</mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="tipooferta">
-                            <mat-header-cell *matHeaderCellDef>tipo oferta</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{ element.tipoOferta }}</mat-cell>
+                            <mat-header-cell *matHeaderCellDef>Tipo oferta</mat-header-cell>
+                            <mat-cell *matCellDef="let element"> 
+                                {{ 
+                                    element.tipoOferta ? 
+                                    element.tipoOferta == 'N' ? 'Nuevo' :
+                                    element.tipoOferta : 'Error'
+                                }}
+                            </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="porcentajeflujoplaneado">
                             <mat-header-cell *matHeaderCellDef>porcentaje flujo planeado</mat-header-cell>

@@ -85,23 +85,21 @@
                 </div>
             </mat-step>
             <mat-step label="Riesgo Acumulado">
-                <div class="row mt-1 mb-1">
-                    <div class="col-md-10 offset-md-1">
-                        <ng-container *ngIf="this.detalle && this.detalle.riesgos; else elseTemplate2">
-                            <kt-tabla-riesgo-acumulado [base]="this.detalle.riesgos"></kt-tabla-riesgo-acumulado>
-                        </ng-container>
-                        <ng-template #elseTemplate2>
-                            <strong> NO POSEE RIESGO ACUMULADO </strong>
-                        </ng-template>
+                <div class="row mt-1 mb-1" >
+                    <div class="col" *ngIf="this.detalle && this.detalle.riesgos;">
+                        <kt-tabla-riesgo-acumulado [base]="this.detalle.riesgos"></kt-tabla-riesgo-acumulado>
+                    </div>
+                    <div class="col-4 offset-4" *ngIf="!this.detalle || !this.detalle.riesgos;">
+                        <strong> NO POSEE RIESGO ACUMULADO </strong>
                     </div>
                 </div>
             </mat-step>
             <mat-step label="Garantias">
                 <div class="row">
-                    <div class="col-10 offset-1">
-                        <kt-tabla-tasacion *ngIf="detalle && detalle.joyas" [data]='this.detalle.joyas' [tipo]="'T'"></kt-tabla-tasacion>
+                    <div class="col" *ngIf="detalle && detalle.joyas">
+                        <kt-tabla-tasacion [data]='this.detalle.joyas' [tipo]="'T'"></kt-tabla-tasacion>
                     </div>
-                    <div class="col-4 offset-4"  *ngIf="detalle && !detalle.joyas">
+                    <div class="col-4 offset-4"  *ngIf="!detalle || !detalle.joyas">
                         <strong> NO POSEE JOYAS RELACIONADAS </strong>
                     </div>
                 </div>
@@ -112,15 +110,33 @@
                         <mat-table #tableNegociacion class="garantia"	[dataSource]="dataSourceCreditoNegociacion">
                             <ng-container matColumnDef="plazo">
                                 <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.plazoCredito }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> 
+                                    {{ 
+                                    element.plazoCredito ? 
+                                    element.plazoCredito == '60'  ? '60 Dias (Al Vcto.)' : 
+                                    element.plazoCredito == '90'  ? '90 Dias (Al Vcto.)' : 
+                                    element.plazoCredito == '120' ? '120 Dias (Al Vcto.)' : 
+                                    element.plazoCredito == '6'   ? '6	Cuotas' : 
+                                    element.plazoCredito == '9'   ? '9	Cuotas' : 
+                                    element.plazoCredito == '12'  ? '12 Cuotas' : 
+                                    element.plazoCredito == '18'  ? '18 Cuotas' : 
+                                    element.plazoCredito : 'Error'
+                                    }}
+                                </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="periodoPlazo">
                                 <mat-header-cell *matHeaderCellDef>periodo Plazo</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.periodoPlazo }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="periodicidadPlazo">
-                                <mat-header-cell *matHeaderCellDef>periodicidad Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.periodicidadPlazo }}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef>Periodicidad Plazo</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> 
+                                    {{ 
+                                        element.periodicidadPlazo ?
+                                        element.periodicidadPlazo == 'M' ? 'Meses' :
+                                        element.periodicidadPlazo : 'Error'
+                                    }}
+                                </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="montoFinanciado">
                                 <mat-header-cell *matHeaderCellDef>monto Financiado</mat-header-cell>
@@ -247,8 +263,14 @@
                                 <mat-cell *matCellDef="let element"> {{ element.formaPagoCustodiaDevengada }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="tipooferta">
-                                <mat-header-cell *matHeaderCellDef>tipo oferta</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.tipoOferta }}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef>Tipo oferta</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> 
+                                    {{ 
+                                        element.tipoOferta ? 
+                                        element.tipoOferta == 'N' ? 'Nuevo' :
+                                        element.tipoOferta : 'Error'
+                                    }}
+                                </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="porcentajeflujoplaneado">
                                 <mat-header-cell *matHeaderCellDef>porcentaje flujo planeado</mat-header-cell>
