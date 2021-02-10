@@ -20,6 +20,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { utils } from 'protractor';
+import { RETURN } from 'mat-table-exporter';
 
 
 
@@ -302,13 +303,10 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
       if (data.params.id) {
         this.loadingSubject.next(true);
         this.cre.traerCreditoNegociacionExistente(data.params.id).subscribe((data: any) => {
-          //console.log('Credito --> ', data.entidad);
-          if (!data.entidad.existeError) {
-            this.crediW = data.entidad;
-            this.traerCatalogos();
-          }else{
-            this.loadingSubject.next(false);
-            this.sinNotSer.setNotice('ERROR AL CARGAR CREDITO: '+ data.entidad.mensaje, 'error');
+          this.crediW = data.entidad;
+          this.traerCatalogos();
+          if (data.entidad.existeError) {
+            this.sinNotSer.setNotice('FALTAN DATOS EN EL CREDITO: '+ data.entidad.mensaje, 'warning');
           }
         });
       } else {
@@ -447,21 +445,68 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
     this.loadingSubject.next(false);
   }
-  public aprobar(){
-    if( this.observacionAprobador.value && this.codigoCash.value ){
-      let mensaje = "Aprobar el credito: " + this.crediW.credito.codigo + ".";
-      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-        width: "800px",
-        height: "auto",
-        data: mensaje
-      });
-      dialogRef.afterClosed().subscribe(r => {
-        this.loadingSubject.next(true);
-        if(r){
-          this.par.getSystemDate().subscribe( ( data : any ) =>{
-            if(data.entidad){
-              console.log('Que me traes? =>', data.entidad);
-              //let fecha = new Date( data.entidad );
+  public enviarRespuesta( aprobar ){
+    if( !this.observacionAprobador.value ){
+      this.sinNotSer.setNotice('INGRESE LA OBSERVACION DEL APROBADOR','warning');
+      return;
+    }
+    if( aprobar && !this.codigoCash.value ){
+        this.sinNotSer.setNotice('INGRESE EL CODIGO CASH','warning');
+        return;
+    }
+    if( !aprobar && !this.motivoDevolucion.value ){
+      this.sinNotSer.setNotice('INGRESE EL MOTIVO DE DEVOLUCION','warning');
+      return;
+    }
+    let mensaje = aprobar ? "Aprobar el credito: " + this.crediW.credito.codigo + "." : "Devolver a la negociacion el credito: " + this.crediW.credito.codigo + ".";
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if(r){
+        this.cre.aprobarNuevo(
+          this.crediW.credito.id, 
+          this.observacionAprobador.value, 
+          aprobar? this.codigoCash.value: null,
+          this.agencia,
+          this.usuario,
+          aprobar? null: this.motivoDevolucion.value.codigo,
+          aprobar ).subscribe( (data: any) =>{
+            if(!data.entidad){
+              this.sinNotSer.setNotice('ERROR ENVIANDO LA RESPUESTA: ' + data.entidad, 'error');
+            }
+            if(aprobar && data.entidd && data.entidad.estadoProceso == 'APROBADO'){
+              this.sinNotSer.setNotice(this.crediW.credito.codigo + ' FUE APROBADO.', 'success');
+              this.router.navigate(['aprobador']);
+            }
+            if(!aprobar && data.entidad && data.entidad.estadoProceso == 'DEVUELTO'){
+              this.sinNotSer.setNotice(this.crediW.credito.codigo + ' FUE DEVUELTO AL ASESOR.', 'success');
+              this.router.navigate(['aprobador']);
+            }
+
+
+          }, error =>{
+            console.log('Error =>', error.error.msgError);
+            this.sinNotSer.setNotice('Ocurrio un error: ' + error.error.msgError, 'error');
+          });
+      }else{
+          this.sinNotSer.setNotice('SE CANCELO LA ACCION','warning');
+      }
+    });
+  }
+/*   public aprobar(){
+    let mensaje = "Aprobar el credito: " + this.crediW.credito.codigo + ".";
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if(r){
+        this.par.getSystemDate().subscribe( ( data : any ) =>{
+          if(data.entidad){
               let otraFecha = new RelativeDateAdapter();
               let datos  = new DatosRegistro( otraFecha.formatBack(new Date( data.entidad ), 'input'), this.usuario, this.agencia );
               let wrapper: OperacionAprobar = new OperacionAprobar( this.crediW.credito.numeroOperacion, datos );
@@ -470,7 +515,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
                   this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id,"NUEVO","APROBADO").subscribe( (data: any) =>{
                     if(data.entidad){
                       this.cre.devolverAprobar( this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe( (data : any) =>{
-                        this.loadingSubject.next(false);
                         if(data.entidad){
                           this.router.navigate(['aprobador']);  
                         }else{
@@ -478,16 +522,16 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
                         }
                       });
                     }else{
-                      this.loadingSubject.next(false);
+                      
                       this.sinNotSer.setNotice('ERROR INTERNO','error');
                     }
                   });
                 }else{
-                  this.loadingSubject.next(false);
+                  
                   this.sinNotSer.setNotice(data.mensaje,'error');
                 }
               }, error =>{
-                this.loadingSubject.next(false);
+                
                 this.sinNotSer.setNotice(error.Mensaje,'error');
               });
             }
@@ -497,9 +541,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
           this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
         }
       });
-    }else{
-      this.sinNotSer.setNotice('COMPLETE LOS CAMPOS DE RESULTADO DE OPERACION CORRECTAMENTE','error');
-    }
   }
   public devolver(){
     if( this.observacionAprobador.value && this.motivoDevolucion.value ){
@@ -533,7 +574,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     }else{
       this.sinNotSer.setNotice('COMPLETE LOS CAMPOS DE RESULTADO DE OPERACION CORRECTAMENTE','error');
     }
-  }
+  } */
   public regresar(){
     this.router.navigate(['aprobador']);  
   }
