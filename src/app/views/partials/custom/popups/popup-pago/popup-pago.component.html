@@ -2,9 +2,19 @@
     <div class="row m-5">
         <div class="col-md-3">
             <mat-form-field class="mat-form-field-fluid">
-                <input matInput [formControl]="intitucionFinanciera" placeholder="Intitucion Financiera"/>
+                <mat-select required  placeholder="Intitucion Financiera"  [formControl]="intitucionFinanciera">
+                    <mat-option *ngFor="let element of catBanco" [value]="element">
+                        {{element.nombre }}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
+        <div class="col-md-3">
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="cuenta" placeholder="Cuenta" numeric numericType="number"
+                (keypress)="numberOnly($event)" />
+            </mat-form-field>
+        </div>			
         <div class="col-md-3">
             <mat-form-field class="mat-form-field-fluid">
                 <input matInput [formControl]="numeroDeposito" placeholder="NumeroDeposito" numeric numericType="number"
@@ -17,12 +27,6 @@
                 (keypress)="numberOnly($event)" />
             </mat-form-field>
         </div>		
-        <div class="col-md-3">
-            <mat-form-field class="mat-form-field-fluid">
-                <input matInput [formControl]="cuenta" placeholder="Cuenta" numeric numericType="number"
-                (keypress)="numberOnly($event)" />
-            </mat-form-field>
-        </div>			
         <div class="col-md-4 offset-4">
             <mat-form-field class="mat-form-field-fluid">
                 <input matInput [matDatepicker]="picker6" [formControl]="fechaPago" placeholder="Fecha Pago">

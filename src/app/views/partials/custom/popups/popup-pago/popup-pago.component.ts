@@ -1,4 +1,5 @@
 import { SubirComprobanteComponent } from './subir-comprobante/subir-comprobante.component';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -35,11 +36,13 @@ export class PopupPagoComponent implements OnInit {
   public cuenta = new FormControl('', [Validators.required]);
   public fechaPago = new FormControl('', [Validators.required]);
   public file: any;
+  catBanco: {id: number, nombre:string}[];
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: any,
+    @Inject(MAT_DIALOG_DATA) private data: { id : number, banco: number, numeroCuenta: string },
     public dialogRefGuardar: MatDialogRef<any>,
     private dialog: MatDialog,
     private sinNoticeService: ReNoticeService,
+    private sof: SoftbankService,
   ) {
     this.formOperacion.addControl("intitucionFinanciera", this.intitucionFinanciera);
     this.formOperacion.addControl("numeroDeposito", this.numeroDeposito);
@@ -49,6 +52,17 @@ export class PopupPagoComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.cargarCatalogos();
+  }
+  private cargarCatalogos(){
+    this.sof.consultarBancosCS().subscribe( data =>{
+      this.catBanco = data.catalogo ? data.catalogo :  {nombre: 'No se cargo el catalogo. Error', id: 0};
+      this.intitucionFinanciera.setValue(this.catBanco.find(x => x.id == this.data.banco) ? this.catBanco.find(x => x.id == this.data.banco) : {nombre: 'No se cargo el catalogo. Error', id: 0});
+      this.intitucionFinanciera.value.nombre ? this.cuenta.setValue( this.data.numeroCuenta ) : 'Error cargando numero de cuenta'; 
+    });
+  }
+  public chanceBanco(){
+    
   }
   public cancelar(){
     this.dialogRefGuardar.close(false);
@@ -64,7 +78,7 @@ export class PopupPagoComponent implements OnInit {
     if(this.formOperacion.valid){
       let d = {
         idTipoDocumento: 10,
-        idCredito: this.data
+        idCredito: this.data.id
       };
       const dialogRef = this.dialog.open(SubirComprobanteComponent, {
         width: '500px',

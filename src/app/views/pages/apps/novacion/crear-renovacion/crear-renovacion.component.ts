@@ -370,9 +370,11 @@ export class CrearRenovacionComponent implements OnInit {
   }
   public simularOpciones(){
     console.log('data =>', this.dataSourceCreditoNegociacion.data);
-    if(this.dataSourceCreditoNegociacion.data.length < 1 || !this.montoSolicitado.value || ( this.montoSolicitado.value > this.dataSourceCreditoNegociacion.data[0].montoFinanciado  ) ){
-      this.sinNotSer.setNotice("EL MONTO SOLICITADO ES MAYOR AL MONTO FINANCIADO ACTUAL", 'error');
-      return;
+    if(this.montoSolicitado.value){
+      if(this.dataSourceCreditoNegociacion.data.length < 1 || ( this.montoSolicitado.value > this.dataSourceCreditoNegociacion.data[0].montoFinanciado  ) ){
+        this.sinNotSer.setNotice("EL MONTO SOLICITADO ES MAYOR AL MONTO FINANCIADO ACTUAL", 'error');
+        return;
+      }
     }
     this.loadingSubject.next(true);
     let cliente = {} as cliente;
@@ -385,7 +387,8 @@ export class CrearRenovacionComponent implements OnInit {
     wrapper.credito = this.credit.operacionAnterior.credito;
     wrapper.garantias = this.credit.operacionAnterior.garantias;
     let cobertura = this.credit.credito ? this.credit.credito.cobertura? this.credit.credito.cobertura : 0 : 0;
-    this.cal.simularOfertaRenovacion(this.riesgoTotal, cobertura ,this.agencia, this.montoSolicitado.value, wrapper).subscribe( (data: any) =>{
+    let monto = this.montoSolicitado.value ? this.montoSolicitado.value : null;
+    this.cal.simularOfertaRenovacion(this.riesgoTotal, cobertura ,this.agencia, monto, wrapper).subscribe( (data: any) =>{
       if(data.entidad){
         //console.log('Data de simulacion -->',data.entidad);
         data.entidad.simularResult.codigoError > 0 ? this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')

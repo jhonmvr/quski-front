@@ -67,7 +67,10 @@ export class CalculadoraService extends BaseService {
   public simularOfertaRenovacion(riesgoTotal, coberturaExcepcionada, codigoAgencia, montoSolicitado, wrapper) {
     const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOfertaRenovacion';
     this.params = new HttpParams();
-    this.params = this.params.set('riesgoTotal',riesgoTotal).set('coberturaExcepcionada',coberturaExcepcionada).set('codigoAgencia',codigoAgencia).set('montoSolicitado',montoSolicitado);
+    this.params = this.params.set('riesgoTotal',riesgoTotal).set('coberturaExcepcionada',coberturaExcepcionada).set('codigoAgencia',codigoAgencia)
+    if(montoSolicitado){
+      this.params.set('montoSolicitado',montoSolicitado);
+    }
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, wrapper, this.options).pipe(
       tap( // Log the result or error

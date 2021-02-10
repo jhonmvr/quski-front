@@ -71,22 +71,22 @@
                                 <mat-datepicker #pickerFechaCreacionHasta></mat-datepicker>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4 offset-4">
+                       <!--  <div class="col-md-4 offset-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Agencia" [formControl]="agencia">
                                     <mat-option *ngFor="let element of catAgencia" [value]="element">{{ element.nombre }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="row">
-                        <div class="col-2">
-                            <a (click)="irNegociacion()" matTooltip="Nueva Negociacion" style="font-size: 12px; vertical-align: middle;">
+                        <div class="col-3">
+                            <a href="javascript:void(0);" (click)="irNegociacion()" matTooltip="Nueva Negociacion" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">post_add</mat-icon>
                                 <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Nueva Negociacion</span>
                             </a>
                         </div>
-                        <div class="col-4 offset-3">
+                        <div class="col-4 offset-1">
                             <button mat-raised-button color="basic" (click)="buscar(null,null)">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>
                                 <span >Buscar Operacion</span>
