@@ -1,7 +1,7 @@
 <re-portlet>
   <re-portlet-header [title]="'Cotizacion'" [class]="'kt-portlet__head--lg'">
     <ng-container class="d-flex justify-content-around" ktPortletTools>
-      <a href="javascript:void(0);" matTooltip="Guardar Cotizacion" (click)="guardarCotizacion(false)"
+      <a href="javascript:void(0);" matTooltip="Guardar Cotizacion" (click)="guardar(false)" 
         style="font-size: 12px; vertical-align: middle;">
         <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">save</mat-icon>
         <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Guardar Cotizacion</span>
@@ -44,9 +44,9 @@
                 <mat-error>{{ getErrorMessage("nombresCompletos") }}</mat-error>
               </mat-form-field>
             </div>
-            <div *ngIf="wCotiz && wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente" class="offset-md-2 col-md-4">
+            <div *ngIf="wCotiz && wCotiz.cotizacion.tbQoCliente" class="offset-md-2 col-md-4">
               <button mat-raised-button
-                (click)="abrirPopupVerCotizacion(wCotiz && wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.cedulaCliente)">
+                (click)="abrirPopupVerCotizacion(wCotiz && wCotiz.cotizacion.tbQoCliente.cedulaCliente)">
                 <mat-icon style="font-size: 32px" matTooltipPosition="above" class="blue-icon">remove_red_eye</mat-icon>
                 <span class="blue-icon">Ver cotizacion</span>
               </button>
@@ -161,77 +161,134 @@
 					</div>	
 				</div>
 				<form [formGroup]="formTasacion" *ngIf="this.catTipoOro">
-					<div class="row">
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<mat-select placeholder="Tipo oro:" [formControl]="tipoOro"
-									(selectionChange)="setPrecioOro()">
-									<mat-option>--</mat-option>
-									<mat-option *ngFor="let tipoOro of catTipoOro" [value]="tipoOro">
-										{{ tipoOro.nombre }}
-									</mat-option>
-								</mat-select>
-								<mat-error>{{ getErrorMessage('tipoOro')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Precio oro:" [formControl]="valorOro" readonly>
-								<span matSuffix>$</span>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Peso bruto:" [formControl]="pesoNetoEstimado">
-								<span matSuffix>Gr</span>
-								<mat-error>{{ getErrorMessage('pesoBruto')  }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-					<div class="row">
-						<div class="offset-5 col-2 mb-5">
-							<button mat-stroked-button color="primary" (click)="cargarJoya()">
-								<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline
-								</mat-icon>
-								<span color="primary">Agregar</span>
-							</button>
-						</div>
-					</div>
+          <div class="row">
+            <div class="col-6">
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="mat-form-field-fluid">
+                    <mat-select placeholder="Tipo oro:" [formControl]="tipoOro"
+                      (selectionChange)="setPrecioOro()">
+                      <mat-option>--</mat-option>
+                      <mat-option *ngFor="let tipoOro of catTipoOro" [value]="tipoOro">
+                        {{ tipoOro.nombre }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>{{ getErrorMessage('tipoOro')  }}</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="mat-form-field-fluid">
+                    <input matInput placeholder="Peso bruto:" [formControl]="pesoNetoEstimado">
+                    <span matSuffix>Gr</span>
+                    <mat-error>{{ getErrorMessage('pesoBruto')  }}</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6 offset-3">
+                  <mat-form-field class="mat-form-field-fluid">
+                    <input matInput placeholder="Precio oro:" [formControl]="valorOro" readonly>
+                    <span matSuffix>$</span>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="offset-5 col-2 mb-5">
+                  <button mat-stroked-button color="primary" (click)="cargarJoya()">
+                    <mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline
+                    </mat-icon>
+                    <span color="primary">Agregar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 mt-5">
+              <ng-container *ngIf="this.wCotiz && this.wCotiz.joyas;" class="mt-5" >
+                <kt-tabla-tasacion class="mt-5"  [data]='this.wCotiz.joyas' (rowEdit)='editar($event)' (rowDelete)='eliminar($event)' [tipo]="'C'"></kt-tabla-tasacion>
+              </ng-container>
+            </div>
+          </div>
 				</form>
 
-				<kt-tabla-tasacion *ngIf="this.wCotiz && this.wCotiz.joyas;" [data]='this.wCotiz.joyas' (rowEdit)='editar($event)' (rowDelete)='eliminar($event)' [tipo]="'C'"></kt-tabla-tasacion>
-				<!-- <div *ngIf="this.wCotiz && this.wCotiz.joyas" class="row">
+				<div *ngIf="this.wCotiz && this.wCotiz.joyas" class="row">
 					<div class="offset-5 col-2 mt-3">
-						<button mat-stroked-button color="primary" matStepperNext (click)="calcularOpciones()">
-							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
-							<span color="primary">Calcular Opciones</span>
-						</button>
+            <button mat-stroked-button color="warn" (click)="calcularOpciones()">Simular Opciones</button>
 					</div>
-				</div> -->
-        <div class="row mt-5">
-          <div class="offset-md-5 col-md-2" >
-            <button mat-button matTooltip="Simular Opciones de credito" (click)="stepper.next()" (click)="simular()">
-              <mat-icon style="font-size: 24px;" class="orange-icon" matTooltipPosition="above">search</mat-icon>
-              <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Simular</span>
-            </button>
-          </div>
-        </div>
+				</div>
       </mat-step>
 
-      <mat-step [stepControl]="formOpciones">
-        <ng-template matStepLabel>Opciones de Crédito </ng-template>
-        <div class="row">
-          <div class="col">
-            <kt-tabla-oferta-calculadora *ngIf="consultaOferta" [consulta]='consultaOferta'></kt-tabla-oferta-calculadora>
-          </div>
-        </div>
+      <mat-step [stepControl]="formOpciones" label="Opciones de Crédito">
+        <mat-table matTableExporter  #tableNegociacion class="tableOpciones" #exporter="matTableExporter"	[dataSource]="dataSource">
+              <ng-container matColumnDef="plazo">
+                <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
+                <mat-cell *matCellDef="let element"> 
+                  {{ 
+                  element.plazo ? 
+                  element.plazo == '60'  ? '60 Dias (Al Vcto.)' : 
+                  element.plazo == '90'  ? '90 Dias (Al Vcto.)' : 
+                  element.plazo == '120' ? '120 Dias (Al Vcto.)' : 
+                  element.plazo == '6'   ? '6	Cuotas' : 
+                  element.plazo == '9'   ? '9	Cuotas' : 
+                  element.plazo == '12'  ? '12 Cuotas' : 
+                  element.plazo == '18'  ? '18 Cuotas' : 
+                  element.plazo : 'Error'
+                  }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="periodicidadPlazo">
+                <mat-header-cell *matHeaderCellDef>Periodo De Plazo</mat-header-cell>
+                <mat-cell *matCellDef="let element"> 
+                  {{ 
+                    element.periodicidadPlazo ?
+                    element.periodicidadPlazo == 'M' ? 'Meses' :
+                    element.periodicidadPlazo : 'Error'
+                  }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="montoFinanciado">
+                <mat-header-cell *matHeaderCellDef>Monto Financiado</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.montoFinanciado }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="valorARecibir">
+                <mat-header-cell *matHeaderCellDef>Valor A Recibir</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.valorARecibir }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="cuota">
+                <mat-header-cell *matHeaderCellDef>Cuota</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.cuota }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="totalGastosNuevaOperacion">
+                <mat-header-cell *matHeaderCellDef>Total Gastos</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.totalGastosNuevaOperacion }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="costoCustodia">
+                <mat-header-cell *matHeaderCellDef>Costo Custodia</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.costoCustodia }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="costoTasacion">
+                <mat-header-cell *matHeaderCellDef>Costo Tasacion</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.costoTasacion }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="costoSeguro">
+                <mat-header-cell *matHeaderCellDef>Costo Seguro</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.costoSeguro }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="costoFideicomiso">
+                <mat-header-cell *matHeaderCellDef>Costo Resguardo</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.costoFideicomiso }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="impuestoSolca">
+                <mat-header-cell *matHeaderCellDef>Impuesto Solca</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.impuestoSolca }}</mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </mat-table>
         <div class="row">
           <div class="col">
             <form [formGroup]="formOpciones">
               <div class="row">
                 <div class="col-md-6">
                   <mat-form-field>
-                    <mat-select placeholder="Grado Interes" [formControl]="fgradoInteres" required="true">
+                    <mat-select placeholder="Grado Interes" [formControl]="gradoInteres" required>
                       <mat-option>--</mat-option>
                       <mat-option *ngFor="let interes of catGradosInteres" [value]="interes">
                         {{ interes.valor }}
@@ -242,13 +299,18 @@
                 </div>
                 <div class="col-md-6">
                   <mat-form-field>
-                    <mat-select placeholder="Motivo de Desestimiento" [formControl]="fmotivoDesestimiento" required>
+                    <mat-select placeholder="Motivo de Desestimiento" [formControl]="motivoDesestimiento" required>
                       <mat-option>--</mat-option>
                       <mat-option *ngFor="let motivoDesestimiento of catMotivoDesestimiento" [value]="motivoDesestimiento">
                         {{motivoDesestimiento.valor }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="offset-5 col-2 mt-3">
+                  <button mat-stroked-button (click)="guardar(true)">Negociar</button>
                 </div>
               </div>
             </form>

@@ -1,34 +1,27 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
-import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { SubheaderService } from '../../../../../core/_base/layout';
-import { TbQoPrecioOro } from '../../../../../core/model/quski/TbQoPrecioOro';
-import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { SolicitudAutorizacionDialogComponent } from '../../../../partials/custom/popups/solicitud-autorizacion-dialog/solicitud-autorizacion-dialog.component';
-import { ValidateCedula } from '../../../../../core/util/validate.util';
-import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
-import { ParametroService } from '../../../../../core/services/quski/parametro.service';
-import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
-import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
-import { CotizacionService } from '../../../../../core/services/quski/cotizacion.service';
-import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
-import { TbQoTipoOro, } from '../../../../../core/model/quski/TbQoTipoOro';
-import { Router } from '@angular/router';
-import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
-import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
-import { TbQoCotizador } from '../../../../../core/model/quski/TbQoCotizador';
-import { PrecioOroService } from '../../../../../core/services/quski/precioOro.service';
 import { VerCotizacionesComponent } from '../../../../partials/custom/popups/ver-cotizaciones/ver-cotizaciones.component';
-import { ConsultaOferta } from '../../../../../core/model/calculadora/consultaOferta';
-import { OpcionesDeCredito } from '../../../../../core/model/calculadora/opcionesDeCredito';
-import { TbQoDetalleCredito } from '../../../../../core/model/quski/TbQoDetalleCredito';
-import { MensajeEdadComponent } from '../../../../partials/custom/popups/mensaje-edad/mensaje-edad.component';
-import { environment } from '../../../../../../environments/environment';
-import { TbQoTelefonoCliente } from '../../../../../core/model/quski/TbQoTelefonoCliente';
-import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
+import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
+import { CalculadoraService } from '../../../../../core/services/quski/calculadora.service';
+import { CotizacionService } from '../../../../../core/services/quski/cotizacion.service';
+import { TbQoRiesgoAcumulado } from '../../../../../core/model/quski/TbQoRiesgoAcumulado';
+import { TbQoTelefonoCliente } from '../../../../../core/model/quski/TbQoTelefonoCliente';
+import { ParametroService } from '../../../../../core/services/quski/parametro.service';
+import { TbQoDetalleCredito } from '../../../../../core/model/quski/TbQoDetalleCredito';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
+import { TbQoCotizador } from '../../../../../core/model/quski/TbQoCotizador';
+import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
+import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
+import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
+import { environment } from '../../../../../../environments/environment';
+import { ValidateCedula } from '../../../../../core/util/validate.util';
+import { SubheaderService } from '../../../../../core/_base/layout';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -45,7 +38,7 @@ export class GestionCotizacionComponent implements OnInit {
   private riesgoTotal: number;
   private elementJoya;
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
-  public wCotiz : { joyas: TbQoTasacion[], variables: TbQoVariablesCrediticia[], riesgos: TbQoRiesgoAcumulado[], creditoCotizacion: TbQoDetalleCredito, telefonoMovil: TbQoTelefonoCliente, telefonoDomicilio: TbQoTelefonoCliente, tipoOro: any[], excepcionBre: string}
+  public wCotiz : { joyas: TbQoTasacion[], variables: TbQoVariablesCrediticia[], riesgos: TbQoRiesgoAcumulado[], opciones: TbQoDetalleCredito[], telefonoMovil: TbQoTelefonoCliente, telefonoDomicilio: TbQoTelefonoCliente, excepcionBre: string, cotizacion: TbQoCotizador}
   
   /** @CATALOGOS **/ 
   public catPais: Array<any>;
@@ -75,20 +68,16 @@ export class GestionCotizacionComponent implements OnInit {
   public tipoOro = new FormControl('', [Validators.required]);
   public pesoNetoEstimado = new FormControl('', [Validators.required]);
   public valorOro = new FormControl('', [Validators.required, ValidateDecimal]);
-  public fgradoInteres = new FormControl('', [Validators.required]);
-  public fmotivoDesestimiento = new FormControl('', [Validators.required]);
-  
-  
-  
-  public consultaOferta: ConsultaOferta;
-  dataSourceCredito = new MatTableDataSource<TbQoDetalleCredito>();
-  displayedColumnsCredito = ['Accion', 'plazo','periodicidadPlazo','tipooferta','montoFinanciado','valorARecibir','cuota','totalGastosNuevaOperacion','costoCustodia', 'costoTransporte','costoTasacion','costoSeguro','costoFideicomiso','impuestoSolca'];
+  public gradoInteres = new FormControl('', [Validators.required]);
+  public motivoDesestimiento = new FormControl('', [Validators.required]);
+  dataSource = new MatTableDataSource<TbQoDetalleCredito>();
+  displayedColumns = ['plazo','periodicidadPlazo','montoFinanciado','valorARecibir','cuota','totalGastosNuevaOperacion','costoCustodia','costoTasacion','costoSeguro','costoFideicomiso','impuestoSolca'];
   
   constructor(
     private cot: CotizacionService,
     private sof: SoftbankService,
     private par: ParametroService,
-    private pre: PrecioOroService,
+    private cal: CalculadoraService,
     private neg: NegociacionService,
     private router: Router,
     private subheaderService: SubheaderService,
@@ -98,7 +87,6 @@ export class GestionCotizacionComponent implements OnInit {
     this.sof.setParameter();
     this.cot.setParameter();
     this.par.setParameter();
-    this.pre.setParameter();
 
     // FORM CLIENTE
     this.formBusqueda.addControl('cedula', this.identificacion);
@@ -112,11 +100,8 @@ export class GestionCotizacionComponent implements OnInit {
     this.formCliente.addControl('campania', this.campania);
     this.formCliente.addControl('publicidad', this.publicidad);
     this.formCliente.addControl('aprobacionMupi  ', this.aprobacionMupi);
-    // FORM VARIABLES CREDITICIAS 
-    // OPCIONES DE CREDITO
-    this.formOpciones.addControl('fgradoInteres', this.fgradoInteres);
-    this.formOpciones.addControl('fmotivoDesestimiento', this.fmotivoDesestimiento);
-    // FORM PRECIO ORO
+    this.formOpciones.addControl('gradoInteres', this.gradoInteres);
+    this.formOpciones.addControl('motivoDesestimiento', this.motivoDesestimiento);
     this.formTasacion.addControl('tipoOro  ', this.tipoOro);
     this.formTasacion.addControl('pesoNetoEstimado  ', this.pesoNetoEstimado);
     this.formTasacion.addControl('valorOro', this.valorOro);
@@ -126,12 +111,9 @@ export class GestionCotizacionComponent implements OnInit {
     this.sof.setParameter();
     this.cot.setParameter();
     this.par.setParameter();
-    this.pre.setParameter();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem( 'idAgencia' );
     this.consultaCatalogos();
-
-
   }
   /********************************************* @BUSQUEDA *********************    */
   public buscarCliente() {
@@ -213,7 +195,6 @@ export class GestionCotizacionComponent implements OnInit {
       this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
     });
   }
-
   /********************************************* @FUNCIONES *********************    */
   private limpiarCotizacion() {
     Object.keys(this.formBusqueda.controls).forEach((name) => {
@@ -382,11 +363,11 @@ export class GestionCotizacionComponent implements OnInit {
   }
   private setearValores(cargar: boolean) {
     this.bloquearBusqueda = true;
-    this.nombresCompletos.setValue(this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.nombreCompleto);
-    this.campania.setValue(this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.campania);
-    this.correoElectronico.setValue(this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.email);
-    this.fechaNacimiento.setValue(this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.fechaNacimiento ? new Date( this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.fechaNacimiento ) : null );
-    this.nacionalidad.setValue(this.catPais ? this.catPais.find(p=> p.id == this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.nacionalidad) : null);
+    this.nombresCompletos.setValue(this.wCotiz.cotizacion.tbQoCliente.nombreCompleto);
+    this.campania.setValue(this.wCotiz.cotizacion.tbQoCliente.campania);
+    this.correoElectronico.setValue(this.wCotiz.cotizacion.tbQoCliente.email);
+    this.fechaNacimiento.setValue(this.wCotiz.cotizacion.tbQoCliente.fechaNacimiento ? new Date( this.wCotiz.cotizacion.tbQoCliente.fechaNacimiento ) : null );
+    this.nacionalidad.setValue(this.catPais ? this.catPais.find(p=> p.id == this.wCotiz.cotizacion.tbQoCliente.nacionalidad) : null);
     this.cargarEdad();
     if(this.wCotiz.telefonoMovil){
       this.movil.setValue(this.wCotiz.telefonoMovil.numero);
@@ -394,23 +375,23 @@ export class GestionCotizacionComponent implements OnInit {
     if(this.wCotiz.telefonoDomicilio){
       this.telefonoDomicilio.setValue(this.wCotiz.telefonoDomicilio.numero);
     }
-    this.aprobacionMupi.setValue( cargar ? this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.aprobacionMupi : '');
-    this.publicidad.setValue( cargar ? this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.publicidad : '');
-    this.campania.setValue( cargar ? this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.campania : '');
+    this.aprobacionMupi.setValue( cargar ? this.wCotiz.cotizacion.tbQoCliente.aprobacionMupi : '');
+    this.publicidad.setValue( cargar ? this.wCotiz.cotizacion.tbQoCliente.publicidad : '');
+    this.campania.setValue( cargar ? this.wCotiz.cotizacion.tbQoCliente.campania : '');
 
     if(cargar){
-      this.sinNoticeService.setNotice("COTIZACION -> \"" + this.wCotiz.creditoCotizacion.tbQoCotizador.codigoCotizacion + "\" Cargada correctamente.", "success");  
+      this.sinNoticeService.setNotice("COTIZACION -> \"" + this.wCotiz.cotizacion.codigoCotizacion + "\" Cargada correctamente.", "success");  
     }else{
-      this.sinNoticeService.setNotice("SE HA INICIADO UNA NEGOCIACION -> \"" + this.wCotiz.creditoCotizacion.tbQoCotizador.codigoCotizacion + "\". ", "success");
+      this.sinNoticeService.setNotice("SE HA INICIADO UNA NEGOCIACION -> \"" + this.wCotiz.cotizacion.codigoCotizacion + "\". ", "success");
     }    
-    this.subheaderService.setTitle('CODIGO BPM: ' + this.wCotiz.creditoCotizacion.tbQoCotizador.codigoCotizacion);
+    this.subheaderService.setTitle('CODIGO BPM: ' + this.wCotiz.cotizacion.codigoCotizacion);
     if (this.wCotiz.excepcionBre){
       this.sinNoticeService.setNotice('EL CLIENTE PRESENTA LA SIGUENTE RESTRICCION: '+ this.wCotiz.excepcionBre, 'warning');
     } 
   }
   public abrirPopupVerCotizacion(identificacion: string) {
     const dialogRefGuardar = this.dialog.open(VerCotizacionesComponent, {
-      width: '900px',
+      width: '1200px',
       height: 'auto',
       data: identificacion
     });
@@ -435,25 +416,22 @@ export class GestionCotizacionComponent implements OnInit {
     })
   }
   private buildCliente(){
-    let telefonoMovil:  { numero, tipoTelefono};
-    let telefonoFijo: { numero, tipoTelefono};
     if( this.telefonoDomicilio.value){
-      telefonoFijo =
-      {
-        numero: this.telefonoDomicilio.value,
-        tipoTelefono:'DOM'
-      }
+      this.wCotiz.telefonoDomicilio = new TbQoTelefonoCliente();
+      this.wCotiz.telefonoDomicilio.numero = this.movil.value;
+      this.wCotiz.telefonoDomicilio.tipoTelefono = 'DOM';
+      this.wCotiz.telefonoDomicilio.tbQoCliente = this.wCotiz.cotizacion.tbQoCliente;
     }
     if( this.movil.value){
-      telefonoMovil =
-      {
-        numero: this.movil.value,
-        tipoTelefono:'CEL'
-      }
+      this.wCotiz.telefonoMovil = new TbQoTelefonoCliente();
+      this.wCotiz.telefonoMovil.numero = this.movil.value;
+      this.wCotiz.telefonoMovil.tipoTelefono = 'CEL';
+      this.wCotiz.telefonoMovil.tbQoCliente = this.wCotiz.cotizacion.tbQoCliente;
     }
+
     let cliente = {
-      id: this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.id,
-      cedulaCliente: this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.cedulaCliente,
+      id: this.wCotiz.cotizacion.tbQoCliente.id,
+      cedulaCliente: this.wCotiz.cotizacion.tbQoCliente.cedulaCliente,
       aprobacionMupi: this.aprobacionMupi.value,
       campania:this.campania.value,
       fechaNacimiento:this.fechaNacimiento.value,
@@ -461,12 +439,19 @@ export class GestionCotizacionComponent implements OnInit {
       publicidad:this.publicidad.value,
       tbQoTelefonoClientes: new Array()
     };
-    if(telefonoMovil){
-      cliente.tbQoTelefonoClientes.push(telefonoMovil);
+    if(this.wCotiz.telefonoMovil){
+    cliente.tbQoTelefonoClientes.push(this.wCotiz.telefonoMovil);
     }
-    if(telefonoFijo){
-      cliente.tbQoTelefonoClientes.push(telefonoFijo);
+    if(this.wCotiz.telefonoDomicilio ){
+      cliente.tbQoTelefonoClientes.push(this.wCotiz.telefonoDomicilio );
     }
+    this.wCotiz.cotizacion.tbQoCliente.nombreCompleto = this.nombresCompletos.value;
+    this.wCotiz.cotizacion.tbQoCliente.publicidad = this.publicidad.value;
+    this.wCotiz.cotizacion.tbQoCliente.fechaNacimiento =this.fechaNacimiento.value;
+    this.wCotiz.cotizacion.tbQoCliente.edad = this.edad.value;
+    this.wCotiz.cotizacion.tbQoCliente.nacionalidad = this.nacionalidad.value.id;
+    this.wCotiz.cotizacion.tbQoCliente.email = this.correoElectronico.value;
+    this.wCotiz.cotizacion.tbQoCliente.campania = this.campania.value;
     return cliente;
   }
   public cargarJoya() {
@@ -474,7 +459,7 @@ export class GestionCotizacionComponent implements OnInit {
       this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE EL FORMULARIO', 'warning');
       return;
     }
-    if( !this.wCotiz || !this.wCotiz.creditoCotizacion || !this.wCotiz.creditoCotizacion.id){
+    if( !this.wCotiz || !this.wCotiz.cotizacion || !this.wCotiz.cotizacion.id){
       this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE LA INFORMACION DEL CLIENTE', 'warning');
       return;
     }
@@ -483,7 +468,7 @@ export class GestionCotizacionComponent implements OnInit {
     joya.pesoNeto = this.pesoNetoEstimado.value;
     joya.tipoOro = this.tipoOro.value.codigo;
     joya.valorOro = this.valorOro.value;
-    joya.tbQoDetalleCredito = { id : this.wCotiz.creditoCotizacion.id };
+    joya.tbQoCotizador = { id : this.wCotiz.cotizacion.id };
      if(this.wCotiz.riesgos){
       this.riesgoTotal = 0 ;
       this.wCotiz.riesgos.forEach(p=>{
@@ -498,14 +483,15 @@ export class GestionCotizacionComponent implements OnInit {
         this.wCotiz.joyas = data.entidades;
         this.sinNoticeService.setNotice('SE GUARDO LA JOYA,', 'success');
         this.limpiarCamposTasacion();
-        this.dataSourceCredito = new MatTableDataSource<any>();
+        this.dataSource = new MatTableDataSource<any>();
       });
   }
   public editar(element: TbQoTasacion) {
     let cliente = this.buildCliente();
     this.neg.verPrecios(cliente).subscribe(resp=>{
       this.catTipoOro = resp.entidades;
-      this.tipoOro.setValue(this.catTipoOro ? this.catTipoOro.find(t => t.nombre == element.tipoOro) ? this.catTipoOro.find(t => t.nombre == element.tipoOro) : "No definido" : 'No definido' );
+      console.log(' tipo oro => ', element.tipoOro)
+      this.tipoOro.setValue(this.catTipoOro ? this.catTipoOro.find(t => t.codigo == element.tipoOro) ? this.catTipoOro.find(t => t.codigo == element.tipoOro) : "No definido" : 'No definido' );
       this.pesoNetoEstimado.setValue(element.pesoBruto);
       this.valorOro.setValue(element.valorOro);
       this.elementJoya = element.id;
@@ -533,284 +519,110 @@ export class GestionCotizacionComponent implements OnInit {
       this.valorOro.setValue(this.tipoOro.value.valorOro)
     }
   }
+  /********************************************* @OPCIONES *********************    */
 
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-  public guardarCotizacion(cotizador: TbQoCotizador, idCliente: number) {
-    if (cotizador == null) {
-      cotizador = new TbQoCotizador();
+  public calcularOpciones() {
+    if (this.wCotiz.joyas.length < 1) {
+      this.sinNoticeService.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'warning');
+      return;
     }
-    cotizador.tbQoCliente.id = idCliente;
-    this.cot.persistEntity(cotizador).subscribe((data: any) => {
-      if (data.entidad != null) {
-      } else {
-        this.sinNoticeService.setNotice('ERROR EN CORE INTERNO COTIZADOR, NO SE CREO', 'error');
+    this.cal.simularOfertaCotizacion(this.wCotiz.cotizacion.id).subscribe((data: any) => {
+      if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
+        && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
+        && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion){
+          this.dataSource = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+          this.mapearVariables(data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable);
+          this.mapearOpciones( data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+          this.myStepper.selectedIndex = 5;
       }
-    }, error => {
-      if (JSON.stringify(error).indexOf('codError') > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice('ERROR EN CORE INTERNO COTIZADOR, ERROR DESCONOCIDO', 'error');
+      if(data.entidad.simularResult.codigoError == 3 ){
+        this.wCotiz.excepcionBre = data.entidad.simularResult.mensaje
+        this.sinNoticeService.setNotice('Posible  Excepcion: '+ this.wCotiz.excepcionBre, 'warning');
+      }
+      if(data.entidad.simularResult.codigoError == 1 ){
+        this.sinNoticeService.setNotice('Posible  Error: '+ data.entidad.simularResult.mensaje, 'error');
       }
     });
   }
-
-  /********************************************* @PRECIOORO *********************    */
-  
-
-  /**
-   * @description Método que realiza la simulación de las ofertas
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-08-16
-   * @memberof ListCotizarComponent
-   */
-  simular() {
-    this.consultaOferta = new ConsultaOferta();
-    this.consultaOferta.identificacionCliente = this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.cedulaCliente;
-    this.consultaOferta.precioOro = 0;
-    this.consultaOferta.pesoGr = 0;
-    this.consultaOferta.pesoNeto = 0;
-
-    this.consultaOferta.fechaNacimiento = this.wCotiz.creditoCotizacion.tbQoCotizador.tbQoCliente.fechaNacimiento;
+  private mapearVariables(variables: Array<any>){
+    let variablesBase : Array<TbQoVariablesCrediticia> = new Array<TbQoVariablesCrediticia>();
+    variables.forEach( e=>{
+      let variableBase : TbQoVariablesCrediticia = new TbQoVariablesCrediticia();
+      variableBase.codigo = e.codigo;
+      variableBase.nombre = e.nombre;
+      variableBase.valor  = e.valor;
+      variableBase.orden  = e.orden;
+      variablesBase.push( variableBase );
+    });
+    this.wCotiz.variables = variablesBase;
+    this.sinNoticeService.setNotice("LAS VARIABLES CREDITICIAS FUERON ACTUALIZADAS", 'success');
   }
+  private mapearOpciones(simulaciones: any[]){
+    let opciones : Array<TbQoDetalleCredito> = new Array<TbQoDetalleCredito>();
+    simulaciones.forEach( e=>{
+      let opcion: TbQoDetalleCredito = new TbQoDetalleCredito();
+      opcion.plazo = e.plazo;
+      opcion.periodoPlazo = e.periodicidadPlazo;
+      opcion.montoPreaprobado = e.montoFinanciado;
+      opcion.recibirCliente = e.valorARecibir;
+      opcion.valorCuota = e.cuota;
+      opcion.costoNuevaOperacion = e.totalGastosNuevaOperacion;
+      opcion.costoCustodia = e.costoCustodia;
+      opcion.costoTasacion = e.costoTasacion;
+      opcion.costoSeguro = e.costoSeguro;
+      opcion.costoResguardado = e.costoFideicomiso;
+      opcion.solca = e.impuestoSolca;
+      opcion.tbQoCotizador.id = this.wCotiz.cotizacion.id 
+      opciones.push( opcion );
+    })
+    this.wCotiz.opciones = opciones;
 
-
-  /**
-   * @description Método que se llama desde la pagina para realizar el calculo de la edad
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-08-16
-   * @private
-   * @memberof ListCotizarComponent
-   */
-  onChangeFechaNacimiento() {
-    const fechaSeleccionada = new Date(
-      this.fechaNacimiento.value
-    );
-    //console.log('FECHA SELECCIONADA' + fechaSeleccionada);
+  }
+  /********************************************* @GUARDAR *********************    */
+  public guardar(negociar){
+    if(!this.formCliente.valid){
+      this.sinNoticeService.setNotice('Complete la seccion del cliente.','warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    }
+    if(negociar && this.wCotiz.joyas.length < 1){
+      this.sinNoticeService.setNotice('Agregue al menos una joya para negociar.','warning');
+      this.myStepper.selectedIndex = 4;
+      return;
+    }
+    if(!this.formOpciones.valid){
+      this.sinNoticeService.setNotice('Complete los campos de opciones de credito','warning');
+      this.myStepper.selectedIndex = 5;
+      return;
+    }
+    this.buildCliente();
+    this.wCotiz.cotizacion.gradoInteres = this.gradoInteres.value.valor;
+    this.wCotiz.cotizacion.motivoDeDesestimiento = this.motivoDesestimiento.value.valor;
+    this.cot.guardarGestion( this.wCotiz ).subscribe( (data: any) =>{
+      if(data.entidad && negociar){
+        this.sinNoticeService.setNotice('Cotizacion guardada y enviada a negociacion', 'success');
+        this.router.navigate(['negociacion/gestion-negociacion/COT/', data.entidad.id]);
+      }
+      if(data.entidad && !negociar){
+        this.sinNoticeService.setNotice('Cotizacion guardada.', 'success');
+        this.router.navigate(['negociacion/bandeja-operaciones']);
+      }
+    }, error =>{
+      this.sinNoticeService.setNotice('Ocurrio un error: ' + error.error.msgError, 'error');
+    });
+  }
+  /********************************************* @FALTA_VALIDAR *********************    */
+  public onChangeFechaNacimiento() {
+    const fechaSeleccionada = new Date( this.fechaNacimiento.value );
     if (fechaSeleccionada) {
       this.getDiffFechas(fechaSeleccionada, 'dd/MM/yyy');
-      this.validarEdad();
-      //console.log('VALOR DE LA FECHA' + this.fechaNacimiento.value);
-    } else {
-      this.sinNoticeService.setNotice(
-        'El valor de la fecha es nulo',
-        'warning'
-      );
-    }
+    } 
   }
-  /**
-   * @description Método que realiza la valida de la edad
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-08-16
-   * @private
-   * @memberof ListCotizarComponent
-   */
-  private validarEdad() {
-    //console.log('INICIA VALIDAR EDAD');
-
-    const consulta = new ConsultaOferta();
-    consulta.identificacionCliente = this.identificacion.value;
-    consulta.tipoOroKilataje = '18K';
-    consulta.fechaNacimiento = this.fechaNacimiento.value;
-/*     this.ing.getInformacionOferta(consulta).subscribe((data: any) => {
-      if (data && data.entidad.simularResult.mensaje !== '') {
-        this.mensaje = data.entidad.simularResult.mensaje;
-        this.validacionEdad(this.mensaje);
-      } else {
-      }
-    }, error => {
-      this.sinNoticeService.setNotice('ERROR AL CARGAR VALIDACIONES', 'info');
-      if (JSON.stringify(error).indexOf('codError') > 0) {
-        const b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice('ERROR AL CARGAR', 'error');
-      }
-    }); */
-  }
-  /**
-   * @description Método que limpia los campos de la seccion de Precio oro
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-08-16
-   * @private
-   * @memberof ListCotizarComponent
-   */
-  private limpiarCamposPrecioOro() {
-    Object.keys(this.formTasacion.controls).forEach((name) => {
-      const control = this.formTasacion.controls[name];
-      control.setErrors(null);
-      control.setValue(null);
-      control.reset();
-    });
-  }
-  /**
-   * @description
-   * @author Kléber Guerra  - Relative Engine
-   * @date 2020-08-16
-   * @private
-   * @param {Date} fecha
-   * @param {string} format
-   * @memberof ListCotizarComponent
-   */
   private getDiffFechas(fecha: Date, format: string) {
     const convertFechas = new RelativeDateAdapter();
     this.par.getDiffBetweenDateInicioActual(convertFechas.format(fecha, 'input'), format).subscribe((rDiff: any) => {
-      //console.log('RESPUESTA DE EDAD', JSON.stringify(rDiff));
       const diff: YearMonthDay = rDiff.entidad;
       this.edad.setValue(diff.year);
-      //console.log('La edad es ' + this.edad.value);
-      const edad = this.edad.value;
-      if (edad != undefined && edad != null && edad < 18) {
-        this.edad
-          .get('edad')
-          .setErrors({ 'server-error': 'error' });
-      }
-    },
-      error => {
-        if (JSON.stringify(error).indexOf('codError') > 0) {
-          const b = error.error;
-          this.sinNoticeService.setNotice(b.msgError, 'error');
-        } else {
-          this.sinNoticeService.setNotice(
-            'Error obtener diferencia de fechas',
-            'error'
-          );
-        }
-      }
-    );
-  }
-
-
-
-  compararNombres(tipoOro1: TbQoTipoOro, tipoOro2: TbQoTipoOro) {
-    if (tipoOro1 == null || tipoOro2 == null) {
-      return false;
-    }
-    return tipoOro1.quilate === tipoOro2.quilate;
-  }
-
-  /******************************************** @GUARDAR  ********************************************************/
-  
-  public submit(flujo: string) {
-    /* if (this.formCliente.valid) {
-      if (this.formOpciones.valid) {
-        if (this.entidadCliente != null) {                      // 1re item (setear valores)
-          if (this.wCotiz.creditoCotizacion.tbQoCotizador != null) {                    // 2do item (setear valores)
-            if (this.entidadesOpcionesCreditos != null) {         // 3er item (llamar metodo )
-              this.loadingSubject.next(true);
-              this.guardado(this.entidadCliente, this.wCotiz.creditoCotizacion.tbQoCotizador, this.entidadesOpcionesCreditos);
-              if (flujo == 'NEGOCIAR') {
-                this.router.navigate(['negociacion/gestion-negociacion/COT', this.wCotiz.creditoCotizacion.tbQoCotizador.id]);
-              } else {
-                this.router.navigate(['dashboard']);
-              }
-            } else {
-              this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DE OPCIONES DE CREDITO', 'error');
-
-            }
-          } else {
-            this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DE COTIZADOR', 'error');
-          }
-        } else {
-          this.sinNoticeService.setNotice('ERROR, NO EXISTEN DATOS DEL CLIENTE', 'error');
-        }
-
-      } else {
-        this.sinNoticeService.setNotice('INGRESE TODOS LOS CAMPOS DE LA SECCION DE OPCIONES DE CREDITO', 'error');
-      }
-    } else {
-      this.sinNoticeService.setNotice('INGRESE TODOS LOS CAMPOS DE LA SECCION CLIENTE', 'error');
-    }
-
- */
-  }
-  private guardado(cliente: TbQoCliente, cotizador: TbQoCotizador, opcionesDeCredito: Array<OpcionesDeCredito>) {
-    // CLIENTE 
-    cliente.primerNombre = this.nombresCompletos.value;
-    cliente.campania = this.campania.value;
-    cliente.nacionalidad = this.nacionalidad.value;
-    cliente.email = this.correoElectronico.value;
-    cliente.fechaNacimiento = this.fechaNacimiento.value;
-    cliente.edad = this.edad.value;
-    cliente.aprobacionMupi = this.aprobacionMupi.value;
-    cliente.cedulaCliente = this.identificacion.value;
-    cliente.publicidad = this.publicidad.value;
-    // COTIZADOR
-    cotizador.gradoInteres = this.fgradoInteres.value.valor;
-    cotizador.motivoDeDesestimiento = this.fmotivoDesestimiento.value.valor;
-    cotizador.tbQoCliente = cliente;
-    // DETALLE DE CREDITO
-    const listDetalleCredito = new Array<TbQoDetalleCredito>();
-    opcionesDeCredito.forEach(e => {
-      const dcr = new TbQoDetalleCredito();
-      dcr.costoResguardado = e.costoFideicomiso;
-      dcr.costoSeguro = e.costoSeguro;
-      dcr.costoCustodia = e.costoCustodia;
-      dcr.costoNuevaOperacion = e.totalGastosNuevaOperacion;
-      dcr.costoTasacion = e.costoTasacion;
-      dcr.costoTransporte = e.costoTransporte;
-      dcr.costoValoracion = e.costoValoracion;
-      dcr.montoPreaprobado = e.montoFinanciado;
-      dcr.periodoPlazo = e.periodoPlazo;
-      dcr.plazo = e.plazo;
-      dcr.recibirCliente = e.valorARecibir;
-      dcr.solca = e.impuestoSolca;
-      dcr.valorCuota = e.cuota;
-      dcr.tbQoCotizador = cotizador;
-      listDetalleCredito.push(dcr);
     });
-    this.guardarGestion(listDetalleCredito);
-  }
-  private guardarGestion(entidades: Array<TbQoDetalleCredito>) {
-
-  /*   this.det.persistEntities(entidades).subscribe((data: any) => {
-      if (data.entidades) {
-
-        //console.log('TbQoDetalleCredito guardadas -----> ', data.entidades);
-        //this.entidadesDetalleCreditos = data.entidades;
-      } else {
-        //console.log(' No se guardaron ---->', data);
-      }
-    }, error => {
-      if (JSON.stringify(error).indexOf('codError') > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice('ERROR EN CORE INTERNO, ERROR DESCONOCIDO', 'error');
-      }
-    }); */
   }
 }
