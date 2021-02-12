@@ -18,13 +18,14 @@ export class TbQoTasacion{
     valorRealizacion : number;
     valorComercial: number;
     tienePiedras;
+    tbQoDetalleCredito: any;
     detallePiedras: string;
     valorOro: number;
     id : number;
     fechaActualizacion : Date;
     fechaCreacion : Date;
     tbQoCreditoNegociacion : any;
-    constructor(){
-        this.tbQoCreditoNegociacion = new TbQoCreditoNegociacion();
+    constructor(tbQoDetalleCredito?){
+        !tbQoDetalleCredito ? this.tbQoCreditoNegociacion = new TbQoCreditoNegociacion():null;
     } 
 }

@@ -47,12 +47,11 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 
 // Component
 import { CotizarComponent } from './cotizar.component';
-import { ListCotizarComponent } from './list-cotizar/list-cotizar.component';
+import { GestionCotizacionComponent } from './gestion-cotizacion/gestion-cotizacion.component';
 import { DetalleCotizacionComponent } from './detalle-cotizacion/detalle-cotizacion.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
-import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
 import { MatTableExporterModule } from 'mat-table-exporter';
 
 const routes: Routes = [
@@ -68,12 +67,12 @@ const routes: Routes = [
 				pathMatch: 'full'
 			},
 			{
-				path: 'lista-cotizacion',
-				component: ListCotizarComponent
+				path: 'gestion-cotizacion',
+				component: GestionCotizacionComponent
 			},
 			{
-				path: 'lista-cotizacion/:id',
-				component: ListCotizarComponent
+				path: 'gestion-cotizacion/:id',
+				component: GestionCotizacionComponent
 			},
 			{
 				path: 'detalle-cotizacion',
@@ -143,7 +142,7 @@ const routes: Routes = [
 	],
 	declarations: [
 		CotizarComponent,
-		ListCotizarComponent,
+		GestionCotizacionComponent,
 		DetalleCotizacionComponent,
 	],
 	entryComponents: [

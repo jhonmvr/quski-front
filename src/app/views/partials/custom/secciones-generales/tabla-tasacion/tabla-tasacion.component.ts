@@ -56,6 +56,8 @@ export class TablaTasacionComponent implements OnInit {
         ?     ['Accion','NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','ValorRealizacion','valorComercial']
         : this.tipo == 'T' 
         ? ['Total', 'NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','ValorRealizacion','valorComercial']
+        : this.tipo == 'C' 
+        ? ['Accion','TipoOro', 'valorOro', 'PesoBruto']
         : [];
         this.dataSourceTasacion = new MatTableDataSource<any>(p);
         //this.formateo();

@@ -192,15 +192,12 @@ export class GestionNegociacionComponent implements OnInit {
   public loadCatalogo(){
     this.sof.consultarPaisCS().subscribe((data: any) => {
       this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-      
     });
     this.sof.consultarMotivoDevolucionAprobacionCS().subscribe((data: any) => {
       this.catMotivoDevolucion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-      
     });
     this.sof.consultarTipoJoyaCS().subscribe((data: any) => {
       this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-      
     });
     this.sof.consultarEstadoJoyaCS().subscribe((data: any) => {
       this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";

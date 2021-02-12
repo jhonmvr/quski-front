@@ -44,10 +44,5 @@ export class ConsultaOferta  {
     this.valorRealizacion = 232.07;
     this.numeroPiezas = 1;
     this.descuentoSuelda = 0.00;
-
-
-
-
-
   }
 }
