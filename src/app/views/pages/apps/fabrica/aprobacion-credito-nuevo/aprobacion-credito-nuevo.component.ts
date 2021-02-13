@@ -139,7 +139,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   public tipoCuenta = new FormControl('', []);
   public excepcionOperativa = new FormControl('', []);
   public numeroCuenta = new FormControl('', []);
-  public firmaRegularizada = new FormControl('', []);
   public diaPagoFijo = new FormControl('', []);
   public firmadaOperacion = new FormControl('', []);
   public tipoCliente = new FormControl('', []);
@@ -254,7 +253,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.formDisable.addControl( "totalCostoNuevaOperacion", this.totalCostoNuevaOperacion );
     this.formDisable.addControl( "tipoCuenta", this.tipoCuenta );
     this.formDisable.addControl( "numeroCuenta", this.numeroCuenta );
-    this.formDisable.addControl( "firmaRegularizada", this.firmaRegularizada );
     this.formDisable.addControl( "diaPagoFijo", this.diaPagoFijo );
     this.formDisable.addControl( "firmadaOperacion", this.firmadaOperacion );
     this.formDisable.addControl( "tipoCliente", this.tipoCliente );
@@ -425,7 +423,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     /** @DATOS_INSTRUCCION_OPERATIVA */
     this.tipoCuenta.setValue( ap.cuenta.banco ? this.catalogos ? this.catalogos.catBanco ? this.catalogos.catBanco.find( x => x.id == ap.cuenta.banco ) ? this.catalogos.catBanco.find( x => x.id == ap.cuenta.banco ).nombre : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo' );
     this.numeroCuenta.setValue( ap.cuenta.cuenta  );
-    this.firmaRegularizada.setValue( 'Falta validar' );
     this.diaPagoFijo.setValue( ap.credito.pagoDia ? new Date(ap.credito.pagoDia) : 'No aplica');
     this.firmadaOperacion.setValue( ap.credito.firmanteOperacion ? ap.credito.firmanteOperacion  :  'Falta valdiar' );
 
@@ -477,7 +474,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
             if(!data.entidad){
               this.sinNotSer.setNotice('ERROR ENVIANDO LA RESPUESTA: ' + data.entidad, 'error');
             }
-            if(aprobar && data.entidd && data.entidad.estadoProceso == 'APROBADO'){
+            if(aprobar && data.entidad && data.entidad.estadoProceso == 'APROBADO'){
               this.sinNotSer.setNotice(this.crediW.credito.codigo + ' FUE APROBADO.', 'success');
               this.router.navigate(['aprobador']);
             }
@@ -496,85 +493,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
       }
     });
   }
-/*   public aprobar(){
-    let mensaje = "Aprobar el credito: " + this.crediW.credito.codigo + ".";
-    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-      width: "800px",
-      height: "auto",
-      data: mensaje
-    });
-    dialogRef.afterClosed().subscribe(r => {
-      if(r){
-        this.par.getSystemDate().subscribe( ( data : any ) =>{
-          if(data.entidad){
-              let otraFecha = new RelativeDateAdapter();
-              let datos  = new DatosRegistro( otraFecha.formatBack(new Date( data.entidad ), 'input'), this.usuario, this.agencia );
-              let wrapper: OperacionAprobar = new OperacionAprobar( this.crediW.credito.numeroOperacion, datos );
-              this.sof.operacionAprobarCS( wrapper ).subscribe( (data: any) =>{
-                if(!data.existeError){
-                  this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id,"NUEVO","APROBADO").subscribe( (data: any) =>{
-                    if(data.entidad){
-                      this.cre.devolverAprobar( this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe( (data : any) =>{
-                        if(data.entidad){
-                          this.router.navigate(['aprobador']);  
-                        }else{
-                          this.sinNotSer.setNotice('Error actualizando el credito','error');
-                        }
-                      });
-                    }else{
-                      
-                      this.sinNotSer.setNotice('ERROR INTERNO','error');
-                    }
-                  });
-                }else{
-                  
-                  this.sinNotSer.setNotice(data.mensaje,'error');
-                }
-              }, error =>{
-                
-                this.sinNotSer.setNotice(error.Mensaje,'error');
-              });
-            }
-          });
-        }else{
-          this.loadingSubject.next(false);
-          this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
-        }
-      });
-  }
-  public devolver(){
-    if( this.observacionAprobador.value && this.motivoDevolucion.value ){
-      let mensaje = "Devolver a la negociacion el credito: " + this.crediW.credito.codigo + ".";
-      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-        width: "800px",
-        height: "auto",
-        data: mensaje
-      });
-      dialogRef.afterClosed().subscribe(r => {
-        this.loadingSubject.next(true);
-        if(r){
-          this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id,"NUEVO","DEVUELTO").subscribe( (data: any) =>{
-            if(data.entidad){
-              this.cre.devolverAprobar( this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe( (data : any) =>{
-                this.loadingSubject.next(false);
-                if(data.entidad){
-                  //console.log('El nuevo estado -> ',data.entidad.estadoProceso);
-                  this.router.navigate(['aprobador']);  
-                }else{
-                  this.sinNotSer.setNotice('Error actualizando el credito','error');
-                }
-              });
-            }
-          });
-        }else{
-          this.loadingSubject.next(false);
-          this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
-        }
-      });
-    }else{
-      this.sinNotSer.setNotice('COMPLETE LOS CAMPOS DE RESULTADO DE OPERACION CORRECTAMENTE','error');
-    }
-  } */
+
   public regresar(){
     this.router.navigate(['aprobador']);  
   }

@@ -1047,7 +1047,7 @@ export class GestionClienteComponent implements OnInit {
       const data = this.dataSourceReferencia.data;
       this.dataSourceReferencia.data = data;
     }
-    const data = this.dataSourceReferencia.data;
+    const data = this.dataSourceReferencia.data ? this.dataSourceReferencia.data : new Array<any>();
     data.push(referencia);
     this.dataSourceReferencia.data = data;
     this.element = null;
@@ -1059,18 +1059,6 @@ export class GestionClienteComponent implements OnInit {
       return item ? item.nombre : null ;
     }
   }
-/*   public deleteReferencia(element : TbReferencia) {
-    const index = this.dataSourceReferencia.data.indexOf(element);
-    !this.wrapper.referencias ? this.wrapper.referencias = new Array<TbReferencia>(): null;
-    if(element.idSoftbank){
-      element.estado = 'INA';
-      element.parentesco = element.parentesco.codigo;
-      this.wrapper.referencias.push( element );
-    }
-    this.dataSourceReferencia.data.splice(index, 1);
-    const data = this.dataSourceReferencia.data;
-    this.dataSourceReferencia.data = data;
-  } */
   public editarReferencia(element : TbReferencia ) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
