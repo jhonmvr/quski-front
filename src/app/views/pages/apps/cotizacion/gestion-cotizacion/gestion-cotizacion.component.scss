@@ -1,0 +1,345 @@
+.spiner{
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 50%;
+  right: 50%; 
+}
+mat-dialog-content{
+  display: flex;
+  text-align: center;
+}
+.example-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    min-width: 300px;
+    position: relative;
+  }
+  .material-icons {
+    font-size: 31px !important;
+    height: 31px;
+    width: 34px;
+    color: gray;
+    text-align: center;
+  }
+  .mat-button .mat-button-wrapper > *,
+  .mat-fab .mat-button-wrapper > *,
+  .mat-flat-button .mat-button-wrapper > *,
+  .mat-icon-button .mat-button-wrapper > *,
+  .mat-mini-fab .mat-button-wrapper > *,
+  .mat-raised-button .mat-button-wrapper > *,
+  .mat-stroked-button .mat-button-wrapper > * {
+    vertical-align: baseline;
+  }
+  .mat-button,
+  .mat-flat-button,
+  .mat-icon-button,
+  .mat-stroked-button {
+    min-width: 28px;
+    height: fit-content;
+  }
+  example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+  
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .example-header {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    font-size: 20px;
+  }
+  
+  .example-table {
+    overflow: auto;
+    min-height: 300px;
+  }
+  
+  .mat-table-sticky {
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .body{
+    text-align: center;
+  }
+  .mat-footer-row {
+    font-weight: bold;
+    justify-content: start;
+  }
+  .h1.mat-dialog-title{
+    text-align: center;
+  }
+  
+  .mat-header-cell {
+    flex-direction: column;
+    justify-content: center;
+    font-size: smaller;
+    
+  }
+  .mat-cell {
+    text-align: center;
+    justify-content:center;
+    font-size: smaller;
+  }
+
+  .tableOpciones{
+    overflow: auto;
+  }
+  .mat-header-cell, .mat-footer-cell, .mat-cell {
+    min-width: 80px;
+    box-sizing: border-box;
+  }
+#tableTasacion{
+  overflow: auto;
+  width: 100%;
+}
+.mat-footer-cell{
+  font-weight: bold;
+  text-align: center;
+  justify-content:center;
+  font-size: smaller;
+}
+  
+  table {
+    width: 100%;
+  }
+ 
+  .white-icon {
+    color: white;
+  }
+  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  .white-icon svg {
+      fill: white;
+  }
+  
+  .blue-icon {
+    color:#3399ff;
+  }
+  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  .blue-icon svg {
+      fill: #3399ff;
+  }
+  
+  .orange-icon {
+    color:#ff9900;
+  }
+  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  .orange-icon svg {
+      fill: #ff9900;
+  }
+  
+  .green-icon {
+    color:#00cc00;
+  }
+  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  .green-icon svg {
+      fill: #00cc00;
+  }
+
+
+  ::ng-deep snack-bar-container.success-snackbar {
+    color: white;
+    background-color: #00cc00;
+    border-color: white;
+    font-weight: 400;
+  }
+  
+  ::ng-deep snack-bar-container.warning-snackbar {
+    color: white;
+    background-color: #cc8b00;
+    border-color: white;
+    font-weight: 400;
+  }
+
+  ::ng-deep snack-bar-container.error-snackbar {
+    color: white;
+    background-color: red;
+    border-color: white;
+    font-weight: 400;
+  }    
+
+  ::ng-deep snack-bar-container.error-snackbar {
+    color: rgb(14, 0, 0);
+    background-color: rgb(197, 179, 13);
+    border-color: rgb(255, 251, 251);
+    font-weight: 400;
+  }
+
+
+  ::ng-deep .custom-class .mat-simple-snackbar {
+    color: green;
+  }
+    // tabla negociacion
+
+    .tableNegociacion{
+      width: 100%;
+    }
+    
+    .tableNegociacion.mat-column-Accion {
+      flex: 0 0 50px;
+    }
+  
+    .mat-column-plazo {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-periodoPlazo {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-periodicidadPlazo {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-montoFinanciado {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-valorARecibir {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-valorAPagar {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-costoCustodia {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-costoFideicomiso {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-costoSeguro {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-costoTasacion {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-costoTransporte {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-costoValoracion {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-impuestoSolca {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoImpuestoSolca {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoCapital {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoCustodia {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoFideicomiso {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoInteres {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoMora {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoGastoCobranza {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoSeguro {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoTasador {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoTransporte {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoValoracion {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-saldoInteres {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-saldoMora {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-gastoCobranza {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-cuota {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-saldoCapitalRenov {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-montoPrevioDesembolso {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-totalGastosNuevaOperacion {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-totalCostosOperacionAnterior {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-custodiaDevengada {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-formaPagoCustodiaDevengada {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-tipooferta {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-porcentajeflujoplaneado {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-dividendoflujoplaneado {
+      flex: 0 0 100px;
+    }
+  
+    .mat-column-dividendosprorrateoserviciosdiferido {
+      flex: 0 0 100px;
+    }

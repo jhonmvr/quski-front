@@ -192,15 +192,12 @@ export class GestionNegociacionComponent implements OnInit {
   public loadCatalogo(){
     this.sof.consultarPaisCS().subscribe((data: any) => {
       this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-      
     });
     this.sof.consultarMotivoDevolucionAprobacionCS().subscribe((data: any) => {
       this.catMotivoDevolucion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-      
     });
     this.sof.consultarTipoJoyaCS().subscribe((data: any) => {
       this.catTipoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-      
     });
     this.sof.consultarEstadoJoyaCS().subscribe((data: any) => {
       this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
@@ -310,8 +307,8 @@ export class GestionNegociacionComponent implements OnInit {
     this.neg.iniciarNegociacionFromCot( id, this.usuario, this.agencia).subscribe( (wrapper: any) =>{
       if (wrapper.entidad.respuesta) {
         this.negoW = wrapper.entidad;
-        if (this.negoW.excepcionBre == "") {
-          this.cargarValores(this.negoW, false);
+        if (!this.negoW.excepcionBre) {
+          this.cargarValores(this.negoW, true);
         } else {
           this.abrirPopupExcepciones( new DataInjectExcepciones(true) );
         }
@@ -498,7 +495,7 @@ export class GestionNegociacionComponent implements OnInit {
   }
   public abrirPopupVerCotizacion(identificacion: string) {
     const dialogRefGuardar = this.dialog.open(VerCotizacionesComponent, {
-      width: '900px',
+      width: '1200px',
       height: 'auto',
       data: identificacion
     });
@@ -576,6 +573,7 @@ export class GestionNegociacionComponent implements OnInit {
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {
+
       mensaje: dataMensaje,
       titulo: dataTitulo ? dataTitulo : null
     }

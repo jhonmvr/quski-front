@@ -1,16 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
-//import { Http, Headers, Response, RequestOptions, HttpParams, ResponseContentType } from '@angular/http';
-import { ReNoticeService } from '../../services/re-notice.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from '../../../core/model/page';
-import { DatePipe } from '@angular/common';
 import { TbQoCotizador } from '../../model/quski/TbQoCotizador';
-
-
-
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
+import { TbQoTasacion } from '../../model/quski/TbQoTasacion';
+import { environment } from '../../../../../src/environments/environment';
 @Injectable({
   providedIn: "root"
 })
@@ -34,6 +30,94 @@ export class CotizacionService extends BaseService {
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  } 
+  buscarGestionCotizacion(id: number) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest+ 'buscarGestionCotizacion';
+    this.params = this.params.set('id', id.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap(
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  } 
+    /**
+   * @author Jeroham Cadenas - Developer Twelve
+   */
+   public iniciarCotizacion(cedula, asesor, idAgencia){
+    let serviceUrl = this.appResourcesUrl + this.urlRest+ 'iniciarCotizacion';
+    this.params = this.params.set('cedula', cedula).set('asesor', asesor).set('idAgencia', idAgencia);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( 
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }   
+    /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @param p Page
+   * @param cedula string
+   */
+  public findByCedula(p: Page, cedula: string) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'findByCedula';
+    this.setSearchParams(p);
+    this.params = this.params.append('cedula', cedula);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  } 
+  agregarJoya(joya: TbQoTasacion) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'agregarJoya';
+    this.params = new HttpParams().set('asesor',atob(localStorage.getItem(environment.userKey)));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, joya,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  guardarGestion(wrapper) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'guardarGestion';
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  public eliminarJoya(id : number) {
+    this.params = new HttpParams().set('id', id.toString())
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'eliminarJoya';
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+   /**
+   * @author Jeroham Cadenas - Developer Twelve
+   */
+  public iniciarCotizacionEquifax(cedula, asesor, idAgencia){
+    let serviceUrl = this.appResourcesUrl + this.urlRest+ 'iniciarCotizacionEquifax';
+    this.params = this.params.set('cedula', cedula).set('asesor', asesor).set('idAgencia', idAgencia);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( 
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )

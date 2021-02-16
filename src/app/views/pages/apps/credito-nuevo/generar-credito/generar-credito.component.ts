@@ -241,9 +241,11 @@ export class GenerarCreditoComponent implements OnInit {
         }
       });
     }
-    if( data.credito.numeroFunda){
-      this.excepcionOperativa.setValue( data.proceso.estadoProceso == 'CREADO' || data.proceso.estadoProceso == 'EXCEPCIONADO' ? this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') : null );
+    if( this.catExcepcionOperativa ){
+      this.excepcionOperativa.setValue( data.credito.excepcionOperativa ? this.catExcepcionOperativa.find(x => x.valor == data.credito.excepcionOperativa) : this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') );
       this.habilitarExcepcionOperativa();
+    }
+    if( data.credito.numeroFunda){
       this.fechaCuota.setValue(data.credito.pagoDia ? new Date(data.credito.pagoDia) : null);
       this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.id.toString());
       this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());

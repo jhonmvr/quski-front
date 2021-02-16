@@ -53,7 +53,7 @@ export class NovacionHabilitanteComponent implements OnInit {
   public catTipoCliente;
   public catExcepcionOperativa: Array<any>;
   idNegociacion: any;
-  credit: {credito: TbQoCreditoNegociacion};
+  credit: {credito: TbQoCreditoNegociacion, cuentas: any};
   aprobar: boolean;
 
   
@@ -144,7 +144,7 @@ export class NovacionHabilitanteComponent implements OnInit {
     const dialogRef = this.dialog.open(PopupPagoComponent, {
       width: "800px",
       height: "auto",
-      data: this.credit.credito.id
+      data: { id : this.credit.credito.id, banco: this.credit.cuentas[0].banco, numeroCuenta: this.credit.cuentas[0].cuenta }
     });
     dialogRef.afterClosed().subscribe(r => {
       if (r) {
