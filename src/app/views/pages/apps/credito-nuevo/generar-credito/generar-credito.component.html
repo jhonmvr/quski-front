@@ -456,7 +456,48 @@
 
             <mat-step label="Documento Habilitantes">
                 <ng-container *ngIf="existeCredito">
-                    <re-habilitante [proceso]="'CREDITONUEVO'" [useType]="'LIST'" [tipoDocumento]="'5'" [referencia]="this.operacionNuevo.credito.id" [rol]="'7'"> </re-habilitante>
+                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourcesHabilitantes">
+                        <ng-container matColumnDef="N">
+                          <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
+                          <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>
+                          <td mat-footer-cell *matFooterCellDef> - </td>
+                        </ng-container>
+                        <ng-container matColumnDef="descripcion">
+                          <mat-header-cell *matHeaderCellDef>Descripción </mat-header-cell>
+                          <mat-cell *matCellDef="let element"> Documento habilitante</mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="generar">
+                          <mat-header-cell *matHeaderCellDef>Generar </mat-header-cell>
+                          <mat-cell  *matCellDef="let element">
+                           <a href="javascript:void(0);" (click)="descargarPlantillaHabilitante()" >
+                              <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Descarga archivo">cloud_download</mat-icon>
+                              <span style="position: relative;top: -10px;margin-left: 5px;">Descarga Plantilla</span>
+                            </a>
+                          </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="respaldar">
+                          <mat-header-cell *matHeaderCellDef>Subir </mat-header-cell>
+                          <mat-cell *matCellDef="let element">
+                            <a href="javascript:void(0);"  (click)="subirArchivoCredito(); $event.preventDefault()">
+                                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
+                                <span style="position: relative;top: -10px;margin-left: 5px;">Carga Archivo</span>
+                            </a>
+                          </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="archivoCargado">
+                          <mat-header-cell *matHeaderCellDef>Archivo cargado </mat-header-cell>
+                          <mat-cell *matCellDef="let element"> 
+                              <a href="javascript:void(0);"
+                              (click)="descargarArchivoHabilitante()">
+                                  <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Descarga Digital">get_app</mat-icon> 
+                                  <span style="position: relative;top: -10px;margin-left: 5px;">Descarga Digital</span>
+                                </a>
+                          </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="['N','descripcion','generar','respaldar','archivoCargado']"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: ['N','descripcion','generar','respaldar','archivoCargado'];"></mat-row>
+                      
+                      </mat-table>
                     <div class="row">
                         <div class="col-md-5 offset-md-5">
                             <button  mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
