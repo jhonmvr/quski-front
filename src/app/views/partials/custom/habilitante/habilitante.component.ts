@@ -275,7 +275,7 @@ export class HabilitanteComponent implements OnInit {
     ////console.log("entra a submit var json " + row.id);
     console.log("XD", row)
     this.dh.generatePlantillaHabilitantesByParams(
-        row.servicio,row.idReferencia?String(row.idReferencia):null,
+        row.servicio, row.idReferencia == null ? this.referencia :  String(row.idReferencia),
         row.idTipoDocumento?String(row.idTipoDocumento):null, row.proceso, 
         row.estadoOperacion, 
         row.idDocumentoHabilitante?String(row.idDocumentoHabilitante):null,"PDF"
