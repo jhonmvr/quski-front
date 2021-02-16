@@ -15,13 +15,12 @@ import { OperacionSoft } from '../../../../../core/model/softbank/OperacionSoft'
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
-import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { environment } from '../../../../../../environments/environment';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'kt-generar-credito',
   templateUrl: './generar-credito.component.html',
@@ -81,16 +80,6 @@ export class GenerarCreditoComponent implements OnInit {
   public numeroOperacion = new FormControl('');
   public deudaInicial = new FormControl('');
 
-  /** @TABLA_JOYAS **/
-  public displayedColumns = ['total','numeroPiezas', 'tipoOro', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto', 'tieneDescuento', 'descuentoPesoPiedra', 'descuentoSuelda', 'pesoNeto', 'valorOro', 'valorAvaluo', 'valorComercial', 'valorRealizacion'];
-  public dataSource = new MatTableDataSource<TbQoTasacion>();
-  public totalNumeroJoya: number;
-  public totalPesoB: number;
-  public totalPesoN: number;
-  public totalValorA: number;
-  public totalValorR: number;
-  public totalValorC: number;
-  public totalValorO: number;
   /** @FOTOS_FUNDA_JOYA **/
   private joyaFoto  = {idRol:"1",proceso:"FUNDA",estadoOperacion:"",tipoDocumento:"6"}
   private fundaFoto = {idRol:"1",proceso:"FUNDA",estadoOperacion:"",tipoDocumento:"7"}
@@ -114,13 +103,9 @@ export class GenerarCreditoComponent implements OnInit {
   diasMin;
   //negociacion
   dataSourceCreditoNegociacion = new MatTableDataSource<any>();
-  displayedColumnsCreditoNegociacion = ['plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
-  'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
-  'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
-  'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
-  'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
-  'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
-  'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
+  dataSourcesHabilitantes = new MatTableDataSource<any>([{id:""}]);
+  displayedColumnsCreditoNegociacion = ['plazo','periodicidadPlazo','tipooferta','montoFinanciado','valorARecibir','cuota','totalGastosNuevaOperacion','costoCustodia', 'costoTransporte','costoTasacion','costoSeguro','costoFideicomiso','impuestoSolca'];
+
 
 
   constructor(
@@ -133,6 +118,7 @@ export class GenerarCreditoComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private router: Router,
+    private os:ObjectStorageService,
     private sinNotSer: ReNoticeService,
   ) {
     this.cre.setParameter();
@@ -241,19 +227,6 @@ export class GenerarCreditoComponent implements OnInit {
     this.estadoOperacion.setValue(data.proceso.estadoProceso);
     this.cedulaCliente.setValue(data.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
-    this.fechaCuota.setValue(data.credito.pagoDia ? this.setearDiaPago(data.credito.pagoDia) : null);
-    //data.credito.pagoDia ? this.validacionFecha() : null;
-    data.joyas.forEach(e=>{
-      let objetoOro = this.catTipoOro.find(x => x.codigo == e.tipoOro );
-      e.tipoOro = objetoOro.nombre;
-      let objetoJoya = this.catTipoJoya.find(x => x.codigo == e.tipoJoya);
-      e.tipoJoya = objetoJoya.nombre;
-      let objetoEstado = this.catEstadoJoya.find( x => x.codigo == e.estadoJoya);
-      e.estadoJoya = objetoEstado.nombre;
-    })
-    this.excepcionOperativa.setValue( data.proceso.estadoProceso == 'CREADO' ? this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') : null );
-    this.habilitarExcepcionOperativa();
-    this.dataSource.data = data.joyas;
     this.numeroCuenta.setValue( data.cuentas[0].cuenta);
     this.tipoCuenta.setValue( this.catCuenta.find( x => x.id == data.cuentas[0].banco) );
     this.tipoCuenta.disable();
@@ -268,8 +241,12 @@ export class GenerarCreditoComponent implements OnInit {
         }
       });
     }
-    this.calcular();
+    if( this.catExcepcionOperativa ){
+      this.excepcionOperativa.setValue( data.credito.excepcionOperativa ? this.catExcepcionOperativa.find(x => x.valor == data.credito.excepcionOperativa) : this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') );
+      this.habilitarExcepcionOperativa();
+    }
     if( data.credito.numeroFunda){
+      this.fechaCuota.setValue(data.credito.pagoDia ? new Date(data.credito.pagoDia) : null);
       this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.id.toString());
       this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
       this.pesoFunda.setValue( this.catTipoFunda ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) : null : null )
@@ -282,27 +259,6 @@ export class GenerarCreditoComponent implements OnInit {
     x.push(data.credito);
     this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(x);
     this.loadingSubject.next(false);
-  }
-  private calcular() {
-    this.totalPesoN = 0;
-    this.totalPesoB = 0;
-    this.totalValorR = 0;
-    this.totalValorA = 0;
-    this.totalValorC = 0;
-    this.totalValorO = 0;
-    this.totalNumeroJoya = 0
-    if (this.dataSource.data) {
-      this.dataSource.data.forEach(element => {
-        this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-        this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
-        this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
-        this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
-        this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
-        this.totalValorO = Number(this.totalValorO) + Number(element.valorOro);
-        this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas);
-        this.totalPesoBrutoFunda.setValue( this.totalPesoB );
-      });
-    }
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
@@ -325,16 +281,7 @@ export class GenerarCreditoComponent implements OnInit {
       this.fechaServer = new Date(fechaSistema.entidad);
     })
   }
-  /* public validacionFecha() {
-    this.fechaUtil = new diferenciaEnDias(new Date(this.fechaCuota.value), new Date(this.fechaServer))
-    if (Math.abs(this.fechaUtil.obtenerDias()) >= this.diasMin && Math.abs(this.fechaUtil.obtenerDias()) <= this.diasMax) {
-      this.sinNotSer.setNotice("FECHA DE PAGO VALIDA", 'success');
-    } else {
-      this.fechaCuota.setValue( null );
-      this.fechaCuota.setValidators(Validators.required);
-      this.sinNotSer.setNotice("DEBE ESCOGER ENTRE 30 Y 45 DÍAS", 'error');
-    }
-  } */
+
   private obtenerCatalogosSoftbank() { 
     this.sof.consultarTipoFundaCS().subscribe((data: any) => {
       this.catTipoFunda = !data.existeError ? data.catalogo : "Error al cargar catalogo";
@@ -372,14 +319,16 @@ export class GenerarCreditoComponent implements OnInit {
     });
   }
   /** ********************************************* @OPERACION ********************* **/
-  public obtenerNumeroFunda() {
+  public obtenerNumeroFunda(anular?: boolean ) {
     this.loadingSubject.next(true);
     this.operacionNuevo.credito
     this.operacionNuevo.credito.pagoDia = this.fechaCuota.value? this.fechaCuota.value : null;
     this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
     this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
+    this.operacionNuevo.credito.numeroFunda = anular ? null : this.numeroFunda.value;
     this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
     this.operacionNuevo.credito.idAgencia = this.agencia;
+    this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value;
 
     this.cre.numeroDeFunda( this.operacionNuevo.credito ).subscribe( (data: any) =>{
       if(data.entidad){
@@ -403,6 +352,7 @@ export class GenerarCreditoComponent implements OnInit {
       this.operacionNuevo.credito.numeroCuenta =  this.numeroCuenta.value;
       this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
       this.operacionNuevo.credito.idAgencia = this.agencia;
+      this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value;
       this.operacionNuevo.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
       this.operacionNuevo.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
       this.cre.crearOperacionNuevo( this.operacionNuevo.credito, this.correoAsesor ).subscribe( (data: any) =>{
@@ -549,5 +499,61 @@ export class GenerarCreditoComponent implements OnInit {
         }
       });
     }
+  }
+
+  descargarPlantillaHabilitante(){
+    this.sof.descargarHabilitanteCredito( this.numeroOperacion.value).subscribe(habilitante=>{
+      
+      this.os.getObjectById(habilitante.uriHabilitantes, this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+        ////console.log("entra a submit var json " + JSON.stringify( atob(data.entidad) ));
+        if( data && data.entidad ){
+          let obj=JSON.parse( atob(data.entidad) );
+          //console.log("entra a retorno json " + JSON.stringify( obj ));
+          const byteCharacters = atob(obj.fileBase64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray]);
+          saveAs(blob , obj.name);
+        }else {
+          this.sinNotSer.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
+        }
+      },
+      error => {
+        //console.log("================>error: " + JSON.stringify(error));
+        this.sinNotSer.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
+      });
+    });
+   
+  }
+
+  subirArchivoCredito(){
+
+  }
+
+  descargarArchivoHabilitante(row){
+    this.os.getObjectById( row.objectId,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+      ////console.log("entra a submit var json " + JSON.stringify( atob(data.entidad) ));
+      if( data && data.entidad ){
+        let obj=JSON.parse( atob(data.entidad) );
+        //console.log("entra a retorno json " + JSON.stringify( obj ));
+        const byteCharacters = atob(obj.fileBase64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], {type: row.mimeType});
+        saveAs(blob , row.descripcionTipoDocumento + ".pdf");
+      }else {
+        this.sinNotSer.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
+      }
+    },
+    error => {
+      //console.log("================>error: " + JSON.stringify(error));
+      this.sinNotSer.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
+    });
   }
 }

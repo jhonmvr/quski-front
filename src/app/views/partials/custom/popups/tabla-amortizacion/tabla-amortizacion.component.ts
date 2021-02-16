@@ -9,7 +9,7 @@ import { CuotasAmortizacion } from '../../../../../core/model/softbank/CuotasAmo
 })
 export class TablaAmortizacionComponent implements OnInit {
   /** ** @TABLA ** */
-  displayedColumns = ['cuota','fechaPago','capital','interes','seguro','otros','total','saldoCapital',];
+  displayedColumns = ['cuota','fechaPago','capital','interes','otros','total','saldoCapital',];
   dataSource = new MatTableDataSource<CuotasAmortizacion>();
 
   constructor(

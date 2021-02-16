@@ -25,7 +25,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
   // INPUT GENERAL
   @Input() isGuardar: boolean = false;
   @Input() base: TbQoRiesgoAcumulado[] = null;
-
+  saldoTotal
   /**Obligatorio paginacion */
   public p: Page = new Page();
   public pageSize = 5;
@@ -75,6 +75,10 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
     this.rie.setParameter();
     if(this.base != null){
       this.dataSourceRiesgoAcumulado.data = this.base;
+      this.saldoTotal = 0;
+      this.dataSourceRiesgoAcumulado.data.forEach( e=>{
+        this.saldoTotal  = (Number(this.saldoTotal) + Number(e.saldo)).toFixed(2);
+      });
     }else{
       if (this.idCliente != null && this.cedula == null) {
         //this.initiateTablePaginator();

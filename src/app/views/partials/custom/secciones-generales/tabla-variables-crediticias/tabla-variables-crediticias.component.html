@@ -20,4 +20,8 @@
     <mat-header-row *matHeaderRowDef="displayedColumnsVariablesCrediticias"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumnsVariablesCrediticias"></mat-row>
 </mat-table>
-<button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'variables', sheet: 'sheet_name', Props: {Author: 'jhonmvr'}})">Excel</button>
+<div class="row">
+    <div class="col-1 offset-11">
+      <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'variables', sheet: 'sheet_name', Props: {Author: 'jhonmvr'}})">Exportar</button>
+    </div>
+</div>

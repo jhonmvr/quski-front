@@ -10,7 +10,6 @@ import { ProcesoService } from '../../../../../core/services/quski/proceso.servi
 import { DatosRegistro } from '../../../../../core/model/softbank/DatosRegistro';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
-import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { environment } from '../../../../../../environments/environment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -111,8 +110,6 @@ export class AprobacionNovacionComponent implements OnInit {
   public dataSourceReferencia = new MatTableDataSource<TbReferencia>();
   /** @INSTRUCCION_OPERATIVA */
   public tipoProceso = new FormControl('', []);
-  public displayedColumns = ['total', 'numeroPiezas', 'tipoOro', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto', 'tieneDescuento', 'descuentoPesoPiedra', 'descuentoSuelda', 'pesoNeto', 'valorOro', 'valorAvaluo', 'valorComercial', 'valorRealizacion'];
-  public dataSource = new MatTableDataSource<TbQoTasacion>();
   public numeroFunda = new FormControl('', []);
   public tipoFunda = new FormControl('', []);
   public tipoCuenta = new FormControl('', []);
@@ -430,10 +427,8 @@ export class AprobacionNovacionComponent implements OnInit {
     this.dataSourceReferencia.data = ap.referencias;
     this.numeroFunda.setValue(ap.credito.numeroFunda);
     this.tipoFunda.setValue(ap.credito.codigoTipoFunda);
-    this.dataSource.data = ap.joyas;
 
     this.tipoProceso.setValue(ap.proceso.proceso);
-    this.calcular();
     /** @DATOS_CREDITO_NUEVO */
     this.plazo.setValue(ap.credito.plazoCredito);
     this.tipoOferta.setValue(ap.credito.tipoOferta == "N" ? 'NUEVO' : ap.credito.tipoOferta);
@@ -497,26 +492,6 @@ export class AprobacionNovacionComponent implements OnInit {
     this.antValorPrecancelacion.setValue( "No tengo.");
 
     this.loadingSubject.next(false);
-  }
-  private calcular() {
-    this.totalPesoN = 0;
-    this.totalPesoB = 0;
-    this.totalValorR = 0;
-    this.totalValorA = 0;
-    this.totalValorC = 0;
-    this.totalValorO = 0;
-    this.totalNumeroJoya = 0
-    if (this.dataSource.data) {
-      this.dataSource.data.forEach(element => {
-        this.totalPesoN = Number(this.totalPesoN) + Number(element.pesoNeto);
-        this.totalPesoB = Number(this.totalPesoB) + Number(element.pesoBruto);
-        this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
-        this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
-        this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
-        this.totalValorO = Number(this.totalValorO) + Number(element.valorOro);
-        this.totalNumeroJoya = Number(this.totalNumeroJoya) + Number(element.numeroPiezas);
-      });
-    }
   }
   public aprobar() {
     if (this.observacionAprobador.value && this.codigoCash.value) {

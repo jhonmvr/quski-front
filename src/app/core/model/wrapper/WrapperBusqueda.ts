@@ -6,7 +6,9 @@ export class WrapperBusqueda{
     fechaCreacionHasta: Date;
     estado: string;
     actividad: string;
-    asesor: string;
+    asesor: string;    
+    codigoBpm: string;
+    codigoSoft: string;
     numberItems: number
     numberPage:number
     constructor(numberItems?: number, numberPage?: number, asesor?: string){

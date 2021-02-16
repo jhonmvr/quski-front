@@ -1,24 +1,23 @@
-import { EstadoExcepcionEnum } from './../../../../../core/enum/EstadoExcepcionEnum';
-import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
-import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ClienteService } from '../../../../../core/services/quski/cliente.service';
-import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
-import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
-import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
-import { ParametroService } from '../../../../../core/services/quski/parametro.service';
-import { TbQoTracking } from '../../../../../core/model/quski/TbQoTracking';
-import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
-import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
-import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
-import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
+import { EstadoExcepcionEnum } from './../../../../../core/enum/EstadoExcepcionEnum';
+import { ClienteService } from '../../../../../core/services/quski/cliente.service';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
+import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
+import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
+import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { BehaviorSubject } from 'rxjs';
 
 
 
@@ -108,6 +107,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     private cli: ClienteService,
     private tra: TrackingService,
     private pro: ProcesoService,
+    private dialog: MatDialog,
     private route: ActivatedRoute,
     private exs: ExcepcionService,
     private router: Router,
@@ -364,21 +364,31 @@ export class ExcepcionesClienteComponent implements OnInit {
       }
     });
   }
-
-
-
   aprobarExcepcion(aprueba){
     if(this.observacionAprobador.invalid){
       this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE EL LOS CAMPOS OBLIGATORIOS','warning');
       return;
     }
-    this.exs.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(p=>{
-      this.router.navigate(['../../aprobador/bandeja-excepciones']);
-    },error=>{
-      this.router.navigate(['../../aprobador/bandeja-excepciones']);
+    let mensaje = "Aprobar excepcion de cliente para: " + this.entidadCliente.nombreCompleto;
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      this.loadingSubject.next(true);
+      if(r){
+        this.exs.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(p=>{
+          this.router.navigate(['../../aprobador/bandeja-excepciones']);
+          this.sinNoticeService.setNotice('EXCEPCION DE CLIENTE APROBADA','success');
+        },error=>{
+          this.sinNoticeService.setNotice('ERROR AL ENVIAR RESPUESTA','error');
+          this.router.navigate(['../../aprobador/bandeja-excepciones']);
+        });
+      }else{
+        this.loadingSubject.next(false);
+        this.sinNoticeService.setNotice('SE CANCELO LA ACCION','error');
+      }
     });
   }
-
- 
-
 }

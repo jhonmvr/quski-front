@@ -312,17 +312,4 @@ export class ClienteService extends BaseService {
       )
     );
   }
-
-  crearClienSoftBank(clienteSoftBank: any) {
-     const serviceUrl ='http://201.183.238.73:1991/api/cliente/crear';
-    this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, clienteSoftBank, this.options).pipe(
-      tap( // Log the result or error
-        (data: any) => data,
-        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
-      )
-    );
-  }
-
-
 }

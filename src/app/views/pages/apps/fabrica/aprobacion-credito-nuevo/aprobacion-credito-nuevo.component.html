@@ -7,12 +7,6 @@
           arrow_back</mat-icon>
         <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
       </a>
-      <a href="javascript:void(0);" matTooltip="Enviar Respuesta" style="font-size: 12px; vertical-align: middle;">
-        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="blue-icon">save
-        </mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Enviar
-          Respuesta</span>
-      </a>
     </ng-container>
   </re-portlet-header>
 
@@ -422,7 +416,7 @@
           <mat-tab label="Tasacion">
             <div class="row mt-1 mb-1">
               <div class="col-md-12">
-                <kt-tabla-tasacion *ngIf="this.crediW;" [data]='this.crediW.joyas'></kt-tabla-tasacion>
+                <kt-tabla-tasacion *ngIf="this.crediW;" [data]='this.crediW.joyas' [tipo]="'T'"></kt-tabla-tasacion>
               </div>
             </div>
             <div class="row mt-3">
@@ -490,7 +484,7 @@
           </div>
           <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="diaPagoFijo" placeholder="Día Pago Fijo:" matInput />
+              <input [formControl]="diaPagoFijo" placeholder="Día Pago Fijo:" matInput [value]="diaPagoFijo.value | rDate" />
             </mat-form-field>
           </div>
           <div class="col-md-6">
@@ -505,7 +499,7 @@
           </div>
           <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="firmaRegularizada" placeholder="Firma Regularizada :" matInput />
+              <input [formControl]="cuota" placeholder="Cuota:" matInput />
             </mat-form-field>
           </div>
           <div class="col-md-6">
@@ -521,16 +515,6 @@
           <div class="col-md-6">
             <mat-form-field class="mat-form-field-fluid">
               <input [formControl]="tablaAmortizacion" placeholder="Tabla Amortizacion" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-6">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="fechaVencimiento" placeholder="Fecha de vencimiento:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-md-6">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="fechaEfectiva" placeholder="Fecha Efectiva:" matInput />
             </mat-form-field>
           </div>
           <div class="col-md-6">
@@ -633,11 +617,6 @@
               <input [formControl]="totalInteres" placeholder="Total Interés:" matInput />
             </mat-form-field>
           </div>
-          <div class="col-md-6">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="cuota" placeholder="Cuota:" matInput />
-            </mat-form-field>
-          </div>
         </div>
       </mat-step>
 
@@ -671,14 +650,14 @@
           </div>
           <div class="row mt-3">
             <div class="offset-md-2 col-md-2">
-              <button mat-raised-button color="primary" (click)="aprobar()">
+              <button mat-raised-button color="primary" (click)="enviarRespuesta(true)">
                 <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
                 </mat-icon>
                 <span class="white-icon">Aprobar</span>
               </button>
             </div>
             <div class="offset-md-1 col-md-2">
-              <button mat-raised-button color="warn" (click)="devolver()">
+              <button mat-raised-button color="warn" (click)="enviarRespuesta(false)">
                 <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
                 </mat-icon>
                 <span class="white-icon">Devolver</span>

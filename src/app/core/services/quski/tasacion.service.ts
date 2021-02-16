@@ -3,11 +3,8 @@ import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Page } from '../../model/page';
 import { TbQoTasacion } from '../../model/quski/TbQoTasacion';
-
-
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
-import { ReNoticeService } from '../re-notice.service';
 @Injectable({
   providedIn: 'root'
 })

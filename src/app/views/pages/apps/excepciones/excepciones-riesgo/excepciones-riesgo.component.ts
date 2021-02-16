@@ -9,7 +9,6 @@ import { NegociacionService } from '../../../../../core/services/quski/negociaci
 import { environment } from '../../../../../../environments/environment';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
-import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
 import { TbQoCreditoNegociacion } from '../../../../../../app/core/model/quski/TbQoCreditoNegociacion';
 import { CalculadoraService } from '../../../../../../app/core/services/quski/calculadora.service';
@@ -40,8 +39,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   mensaje;
 
 
-  dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
-  displayedColumnsTasacion = ['NumeroPiezas', 'TipoOro', 'PesoBruto', 'DescuentoPesoPiedra', 'DescuentoSuelda', 'PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorAplicable', 'ValorRealizacion', 'valorComercial', 'tienePiedras', 'detallePiedras','TipoJoya', 'EstadoJoya', 'Descripcion',];
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
   displayedColumnsCreditoNegociacion = ['plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
   'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
@@ -148,7 +145,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     this.telefonoDomicilio.setValue( wp.telefonoDomicilio ? wp.telefonoDomicilio.numero : null );
     this.telefonoMovil.setValue( wp.telefonoMovil ? wp.telefonoMovil.numero : null );
     this.email.setValue( wp.credito.tbQoNegociacion.tbQoCliente.email );
-    this.dataSourceTasacion.data = wp.joyas;
     this.observacionAsesor.disable();
     this.calcularOpciones();
     this.camposAdicinales( );
@@ -170,7 +166,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
         this.loadingSubject.next(false);
   }
   public calcularOpciones() {
-    if (this.dataSourceTasacion && this.dataSourceTasacion.data && this.dataSourceTasacion.data.length > 0) {
+    if (this.wp && this.wp.joyas && this.wp.joyas.length > 0) {
       this.loadingSubject.next(true);
       this.cal.simularOferta(this.wp.credito.id, null, null).subscribe((data: any) => {
         this.loadingSubject.next(false);
@@ -197,7 +193,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   }
   public negar(){ 
     if(this.observacionAprobador.valid){
-      //console.log('ME FUI A NEGAR')
       this.simulado = false;
       let mensaje = 'Negar la excepcion de cobertura para: ' + this.wp.credito.codigo+'?'; 
       const dialogRef = this.dialog.open(ConfirmarAccionComponent, {

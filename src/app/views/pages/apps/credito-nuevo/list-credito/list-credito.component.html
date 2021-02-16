@@ -169,13 +169,14 @@
                     <ng-container matColumnDef="accion">
                         <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
                         <mat-cell *matCellDef="let row">
-                            <a (click)="irNovar(row)" matTooltip="Novar el credito" style="font-size: 12px; vertical-align: middle;">
+                            <a *ngIf="row.tipoCredito == 'Vencimiento' || ( row.tipoCredito == 'Cuotas' && row.retanqueo)" 
+                                (click)="irNovar(row)" matTooltip="Novar el credito" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">autorenew</mat-icon>
                             </a>
-                            <a (click)="irDetalle(row)" matTooltip="Ver el detalle" style="font-size: 12px; vertical-align: middle;">
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">remove_red_eye</mat-icon>
-                            </a>
                             <a *ngIf="enableDevolucionButton | async" (click)="irDevolucion(row)" matTooltip="Devolucion" style="font-size: 12px; vertical-align: middle;">
+                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">get_app</mat-icon>
+                            </a>
+                            <a (click)="irDetalle(row)" matTooltip="Ver el detalle" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">remove_red_eye</mat-icon>
                             </a>
                         </mat-cell>
@@ -200,11 +201,14 @@
                     <ng-container matColumnDef="fechaSolicitud">
                         <mat-header-cell *matHeaderCellDef>Fecha Solicitud</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.fechaSolicitud | rDate}} </mat-cell>
-        
                     </ng-container>
                     <ng-container matColumnDef="fechaAprobacion">
                         <mat-header-cell *matHeaderCellDef>Fecha Aprobacion</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.fechaAprobacion | rDate}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaVencimiento">
+                        <mat-header-cell *matHeaderCellDef>Fecha Vencimiento</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaVencimiento | rDate}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="montoFinanciado">
                         <mat-header-cell *matHeaderCellDef>Monto Financiado</mat-header-cell>
@@ -232,11 +236,11 @@
                     </ng-container>
                     <ng-container matColumnDef="impago">
                         <mat-header-cell *matHeaderCellDef>Impago</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.impago}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.impago ? 'Si' : 'No'}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="retanqueo">
                         <mat-header-cell *matHeaderCellDef>Retanqueo</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.retanqueo}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.retanqueo ? 'Si' : 'No'}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="coberturaInicial">
                         <mat-header-cell *matHeaderCellDef>Cobertura Inicial</mat-header-cell>
@@ -260,7 +264,7 @@
                     </ng-container>
                     <ng-container matColumnDef="esMigrado">
                         <mat-header-cell *matHeaderCellDef>Migrado</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.esMigrado}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.esMigrado ? 'Si' : 'No'}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="numeroCuotas">
                         <mat-header-cell *matHeaderCellDef>Numero Cuotas</mat-header-cell>

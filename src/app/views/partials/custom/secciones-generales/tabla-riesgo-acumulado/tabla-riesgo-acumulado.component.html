@@ -1,55 +1,87 @@
-
-<mat-table matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSourceRiesgoAcumulado"  #exporter="matTableExporter">
+<mat-table matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSourceRiesgoAcumulado"
+    #exporter="matTableExporter">
     <ng-container matColumnDef="referencia">
         <mat-header-cell *matHeaderCellDef class="text-align">Referencia Mupi</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.referencia}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> Saldo Total:  </mat-footer-cell>
+
     </ng-container>
     <ng-container matColumnDef="numeroOperacion">
         <mat-header-cell *matHeaderCellDef class="text-align">Número Operación</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.numeroOperacion}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
     </ng-container>
     <ng-container matColumnDef="codigoCarteraQuski">
         <mat-header-cell *matHeaderCellDef class="text-align">Código Cartera Quski</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.codigoCarteraQuski}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
     </ng-container>
     <ng-container matColumnDef="tipoOperacion">
         <mat-header-cell *matHeaderCellDef class="text-align">Tipo Operación</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.tipoOperacion}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
     </ng-container>
     <ng-container matColumnDef="fechaEfectiva">
         <mat-header-cell *matHeaderCellDef class="text-align"> Fecha Efectiva</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaEfectiva | date:'yyyy-MM-dd'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaEfectiva | date:'yyyy-MM-dd'}}
+        </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
     </ng-container>
     <ng-container matColumnDef="fechaVencimiento">
         <mat-header-cell *matHeaderCellDef class="text-align">Fecha Vencimiento</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaVencimiento | date:'yyyy-MM-dd'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaVencimiento | date:'yyyy-MM-dd'}}
+        </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
     </ng-container>
     <ng-container matColumnDef="valorAlDia">
         <mat-header-cell *matHeaderCellDef class="text-align">Valor Al Día </mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.valorAlDia}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
     </ng-container>
     <ng-container matColumnDef="diasMoraActual">
         <mat-header-cell *matHeaderCellDef class="text-align">Días Mora Actual</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.diasMoraActual}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
     </ng-container>
     <ng-container matColumnDef="saldo">
         <mat-header-cell *matHeaderCellDef class="text-align"> Saldo </mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.saldo}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.saldo | currency: "USD":true:"1.2" }} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{ saldoTotal | currency: "USD":true:"1.2" }} </mat-footer-cell>
+
     </ng-container>
     <ng-container matColumnDef="primeraCuotaVigente">
         <mat-header-cell *matHeaderCellDef class="text-align">Primera Cuota Vigente</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.primeraCuotaVigente}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
     </ng-container>
     <ng-container matColumnDef="estadoPrimeraCuotaVigente">
         <mat-header-cell *matHeaderCellDef class="text-align">Estado Primera Cuota Vigente</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.estadoPrimeraCuotaVigente}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
     </ng-container>
     <ng-container matColumnDef="estadoOperacion">
         <mat-header-cell *matHeaderCellDef class="text-align"> Estado Operación</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.estadoOperacion}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumnsRiesgoAcumulado"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumnsRiesgoAcumulado"></mat-row>
-</mat-table>
-<button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'riesgo', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Excel</button>
+    <mat-footer-row *matFooterRowDef="displayedColumnsRiesgoAcumulado; sticky: true"></mat-footer-row>
 
+</mat-table>
+<div class="row">
+    <div class="col-1 offset-11">
+        <button mat-raised-button
+            (click)="exporter.exportTable('xlsx', {fileName:'riesgo', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
+    </div>
+</div>

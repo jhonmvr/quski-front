@@ -64,92 +64,7 @@
             </ng-container>
 
             <mat-step label="Asignacion de Funda" [stepControl]="formFunda">
-                <mat-table matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSource"  #exporter="matTableExporter">
-                    <ng-container matColumnDef="total">
-                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                        <mat-cell *matCellDef="let element"> </mat-cell>
-                        <mat-footer-cell *matFooterCellDef>  Total:  </mat-footer-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="numeroPiezas">
-                        <mat-header-cell *matHeaderCellDef>Numero Piezas</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.numeroPiezas}}</mat-cell>
-                        <mat-footer-cell *matFooterCellDef>  {{ totalNumeroJoya  }}</mat-footer-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="tipoOro">
-                        <mat-header-cell *matHeaderCellDef >Tipo de Oro</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.tipoOro}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="tipoJoya">
-                        <mat-header-cell *matHeaderCellDef >Tipo de Joya</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.tipoJoya }} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="estadoJoya">
-                        <mat-header-cell *matHeaderCellDef >Estado de Joya</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.estadoJoya }} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="descripcion">
-                        <mat-header-cell *matHeaderCellDef>Descripcion</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.descripcion}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="pesoBruto">
-                        <mat-header-cell *matHeaderCellDef>Peso Bruto (Gr)</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.pesoBruto}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalPesoB  }} </mat-footer-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="tieneDescuento">
-                        <mat-header-cell *matHeaderCellDef>Tiene descuentos</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.fechaNacimiento | rDate}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="descuentoPesoPiedra">
-                        <mat-header-cell *matHeaderCellDef>Descuento Peso Piedra</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.descuentoPesoPiedra}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="descuentoSuelda">
-                        <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.descuentoSuelda}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="pesoNeto">
-                        <mat-header-cell *matHeaderCellDef>Peso Neto (Gr)</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.pesoNeto}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalPesoN  }} </mat-footer-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="valorOro">
-                        <mat-header-cell *matHeaderCellDef>Valor oro</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.valorOro | currency: "USD":true:"1.2"}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalValorO  }}  </mat-footer-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="valorAvaluo">
-                        <mat-header-cell *matHeaderCellDef>Valor Avaluo</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.valorAvaluo | currency: "USD":true:"1.2"}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalValorA | currency: "USD":true:"1.2" }} </mat-footer-cell>
-
-                    </ng-container>
-                    <ng-container matColumnDef="valorComercial">
-                        <mat-header-cell *matHeaderCellDef>Valor Comercial  </mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.valorComercial | currency: "USD":true:"1.2"}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalValorC | currency: "USD":true:"1.2" }} </mat-footer-cell>
-
-                    </ng-container>
-                    <ng-container matColumnDef="valorRealizacion">
-                        <mat-header-cell *matHeaderCellDef>Valor Realizacion</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.valorRealizacion | currency: "USD":true:"1.2"}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalValorR | currency: "USD":true:"1.2" }}  </mat-footer-cell>
-
-                    </ng-container>
-
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                    <mat-footer-row *matFooterRowDef="displayedColumns;"></mat-footer-row>
-                </mat-table>
-                <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'tasacion', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Excel</button>
+                <kt-tabla-tasacion *ngIf="this.operacionNuevo;" [data]='this.operacionNuevo.joyas' [tipo]="'T'"></kt-tabla-tasacion>
                 <form [formGroup]="formFunda">
                     <div class="row mt-3">
                         <div class="col-md-4 ">
@@ -176,7 +91,7 @@
                     <div class="row">
                         <ng-container *ngIf="anular">
                             <div class="offset-md-5 col-md-6 ">
-                                <button mat-raised-button (click)="generarCredito(true)"><span class="blue-icon"> Anular Funda </span></button>
+                                <button mat-raised-button (click)="obtenerNumeroFunda(true)"><span class="blue-icon"> Anular Funda </span></button>
                             </div>
                         </ng-container>
                     </div>
@@ -347,11 +262,6 @@
                                 <input matInput [formControl]="deudaInicial" readonly placeholder="Deuda Inicial">
                             </mat-form-field>
                         </div>
-<!--                         <div class="col-md-3">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="riesgoTotalCliente" readonly placeholder="Riesgo Total Cliente">
-                            </mat-form-field>
-                        </div> -->
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input matInput [formControl]="recibirCliente" readonly placeholder="A Recibir Cliente">
@@ -365,18 +275,31 @@
                         </div>
                     </div>
                     <mat-table id='tableNegociacion' class="tableOpciones"	[dataSource]="dataSourceCreditoNegociacion">
-                      
                         <ng-container matColumnDef="plazo">
                             <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{ element.plazoCredito }}</mat-cell>
-                        </ng-container>
-                        <ng-container matColumnDef="periodoPlazo">
-                            <mat-header-cell *matHeaderCellDef>periodo Plazo</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{ element.periodoPlazo }}</mat-cell>
+                            <mat-cell *matCellDef="let element"> 
+                                {{ 
+                                element.plazoCredito ? 
+                                element.plazoCredito == '60'  ? '60 Dias (Al Vcto.)' : 
+                                element.plazoCredito == '90'  ? '90 Dias (Al Vcto.)' : 
+                                element.plazoCredito == '120' ? '120 Dias (Al Vcto.)' : 
+                                element.plazoCredito == '6'   ? '6	Cuotas' : 
+                                element.plazoCredito == '9'   ? '9	Cuotas' : 
+                                element.plazoCredito == '12'  ? '12 Cuotas' : 
+                                element.plazoCredito == '18'  ? '18 Cuotas' : 
+                                element.plazoCredito : 'Error'
+                                }}
+                            </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="periodicidadPlazo">
-                            <mat-header-cell *matHeaderCellDef>periodicidad Plazo</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{ element.periodicidadPlazo }}</mat-cell>
+                            <mat-header-cell *matHeaderCellDef>Periodicidad Plazo</mat-header-cell>
+                            <mat-cell *matCellDef="let element"> 
+                                {{ 
+                                    element.periodicidadPlazo ?
+                                    element.periodicidadPlazo == 'M' ? 'Meses' :
+                                    element.periodicidadPlazo : 'Error'
+                                }}
+                            </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="montoFinanciado">
                             <mat-header-cell *matHeaderCellDef>monto Financiado</mat-header-cell>
@@ -503,8 +426,14 @@
                             <mat-cell *matCellDef="let element"> {{ element.formaPagoCustodiaDevengada }}</mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="tipooferta">
-                            <mat-header-cell *matHeaderCellDef>tipo oferta</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{ element.tipoOferta }}</mat-cell>
+                            <mat-header-cell *matHeaderCellDef>Tipo oferta</mat-header-cell>
+                            <mat-cell *matCellDef="let element"> 
+                                {{ 
+                                    element.tipoOferta ? 
+                                    element.tipoOferta == 'N' ? 'Nuevo' :
+                                    element.tipoOferta : 'Error'
+                                }}
+                            </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="porcentajeflujoplaneado">
                             <mat-header-cell *matHeaderCellDef>porcentaje flujo planeado</mat-header-cell>
@@ -527,7 +456,48 @@
 
             <mat-step label="Documento Habilitantes">
                 <ng-container *ngIf="existeCredito">
-                    <re-habilitante [proceso]="'CREDITONUEVO'" [useType]="'LIST'" [tipoDocumento]="'5'" [referencia]="this.operacionNuevo.credito.id" [rol]="'7'"> </re-habilitante>
+                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourcesHabilitantes">
+                        <ng-container matColumnDef="N">
+                          <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
+                          <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>
+                          <td mat-footer-cell *matFooterCellDef> - </td>
+                        </ng-container>
+                        <ng-container matColumnDef="descripcion">
+                          <mat-header-cell *matHeaderCellDef>Descripción </mat-header-cell>
+                          <mat-cell *matCellDef="let element"> Documento habilitante</mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="generar">
+                          <mat-header-cell *matHeaderCellDef>Generar </mat-header-cell>
+                          <mat-cell  *matCellDef="let element">
+                           <a href="javascript:void(0);" (click)="descargarPlantillaHabilitante()" >
+                              <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Descarga archivo">cloud_download</mat-icon>
+                              <span style="position: relative;top: -10px;margin-left: 5px;">Descarga Plantilla</span>
+                            </a>
+                          </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="respaldar">
+                          <mat-header-cell *matHeaderCellDef>Subir </mat-header-cell>
+                          <mat-cell *matCellDef="let element">
+                            <a href="javascript:void(0);"  (click)="subirArchivoCredito(); $event.preventDefault()">
+                                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
+                                <span style="position: relative;top: -10px;margin-left: 5px;">Carga Archivo</span>
+                            </a>
+                          </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="archivoCargado">
+                          <mat-header-cell *matHeaderCellDef>Archivo cargado </mat-header-cell>
+                          <mat-cell *matCellDef="let element"> 
+                              <a href="javascript:void(0);"
+                              (click)="descargarArchivoHabilitante()">
+                                  <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Descarga Digital">get_app</mat-icon> 
+                                  <span style="position: relative;top: -10px;margin-left: 5px;">Descarga Digital</span>
+                                </a>
+                          </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="['N','descripcion','generar','respaldar','archivoCargado']"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: ['N','descripcion','generar','respaldar','archivoCargado'];"></mat-row>
+                      
+                      </mat-table>
                     <div class="row">
                         <div class="col-md-5 offset-md-5">
                             <button  mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>

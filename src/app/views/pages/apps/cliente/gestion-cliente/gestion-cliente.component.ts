@@ -18,10 +18,10 @@ import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatTableDataSource, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { map, startWith } from 'rxjs/operators';
 
 export interface User {
@@ -42,6 +42,7 @@ export class GestionClienteComponent implements OnInit {
   public loading;
   usuario
   agencia
+  @ViewChild('stepper', { static: true }) stepper: MatStepper;
   private origen: string;
   private item: any;
   public totalActivo: number = 0;
@@ -1046,7 +1047,7 @@ export class GestionClienteComponent implements OnInit {
       const data = this.dataSourceReferencia.data;
       this.dataSourceReferencia.data = data;
     }
-    const data = this.dataSourceReferencia.data;
+    const data = this.dataSourceReferencia.data ? this.dataSourceReferencia.data : new Array<any>();
     data.push(referencia);
     this.dataSourceReferencia.data = data;
     this.element = null;
@@ -1058,18 +1059,6 @@ export class GestionClienteComponent implements OnInit {
       return item ? item.nombre : null ;
     }
   }
-/*   public deleteReferencia(element : TbReferencia) {
-    const index = this.dataSourceReferencia.data.indexOf(element);
-    !this.wrapper.referencias ? this.wrapper.referencias = new Array<TbReferencia>(): null;
-    if(element.idSoftbank){
-      element.estado = 'INA';
-      element.parentesco = element.parentesco.codigo;
-      this.wrapper.referencias.push( element );
-    }
-    this.dataSourceReferencia.data.splice(index, 1);
-    const data = this.dataSourceReferencia.data;
-    this.dataSourceReferencia.data = data;
-  } */
   public editarReferencia(element : TbReferencia ) {
     this.sinNoticeService.setNotice("EDITAR INFORMACION ", 'success');
     this.element = element;
@@ -1101,13 +1090,15 @@ export class GestionClienteComponent implements OnInit {
               if (this.formDatosIngreso.valid) {
                 if( this.valorIngreso.value < this.valorEgreso.value ){
                   this.sinNoticeService.setNotice('EL EGRESO NO PUEDE SER MAYOR AL INGRESO DEL CLIENTE', 'warning');
+                  this.stepper.selectedIndex = 5                
                   return;
                 }
                 if(this.validarReferencias()){
                   this.sinNoticeService.setNotice('ERROR ENCONTRADO EN LAS REFERENCIAS, REVISE ANTES DE GUARDAR', 'warning');
+                  this.stepper.selectedIndex = 8                 
                   return;
                 }
-                if (this.avaluoActivo.valid || this.avaluoPasivo.valid) {
+                if (this.avaluoActivo.valid || this.avaluoPasivo.valid) { 
                   if (this.dataSourceReferencia.data.length > 1) {
                     this.wrapper.cliente.actividadEconomica = this.actividadEconomica.value ? this.actividadEconomica.value.id : null;
                     this.wrapper.cliente.apellidoMaterno = this.apellidoMaterno.value;
@@ -1217,34 +1208,42 @@ export class GestionClienteComponent implements OnInit {
                   } else {
                     this.loadingSubject.next(false);
                     this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS EN  LA SECCION DE REFERENCIAS PERSONALES", 'error');
-                  }
+                    this.stepper.selectedIndex = 8
+    }
                 } else {
                   this.loadingSubject.next(false);
                   this.sinNoticeService.setNotice("AGREGUE AL MENOS UN PATRIMONIO ACTIVO O PASIVO", 'error');
+                  this.stepper.selectedIndex = 6
                 }
               } else {
                 this.loadingSubject.next(false);
                 this.sinNoticeService.setNotice("AGREGUE AL MENOS UN INGRESO O UN EGRESO", 'error');
+                this.stepper.selectedIndex = 5
               }
             } else {
               this.loadingSubject.next(false);
               this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS ECONOMICOS DEL CLIENTE", 'error');
+              this.stepper.selectedIndex = 4
             }
           } else {
             this.loadingSubject.next(false);
             this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DIRECCION LABORAL", 'error');
+            this.stepper.selectedIndex = 3
           }
         } else {
           this.loadingSubject.next(false);
           this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DIRECCION DE DOMICILIO", 'error');
+          this.stepper.selectedIndex = 2
         }
       } else {
         this.loadingSubject.next(false);
         this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS DE CONTACTO DEL CLIENTE", 'error');
+        this.stepper.selectedIndex = 1
       }
     } else {
       this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS PERSONALES DEL CLIENTE", 'error');
+      this.stepper.selectedIndex = 0
     }
   }
 

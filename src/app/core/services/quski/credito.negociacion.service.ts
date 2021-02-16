@@ -146,6 +146,17 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
+  public aprobarNuevo(idCredito: number, descripcion: string, cash: string, agencia: number, usuario: string, codigoMotivo: string, aprobar: boolean) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'aprobarNuevo';
+    this.params = new HttpParams().set('idCredito',idCredito.toString()).set('descripcion',descripcion).set('cash',cash).set('agencia',agencia.toString()).set('usuario',usuario).set('codigoMotivo',codigoMotivo).set('aprobar', aprobar ? 'true':'false');
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
   public traerCreditoNegociacion(idNegociacion: number) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerCreditoNegociacion';
     this.params = new HttpParams().set('idNegociacion', idNegociacion.toString());

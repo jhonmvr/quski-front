@@ -34,7 +34,7 @@
 							</mat-form-field>
 						</div>
 						<div class=" offset-md-1 col-md-4">
-							<button mat-stroked-button color="primary" (click)="buscarCliente()">
+							<button mat-stroked-button color="primary" (click)="buscarCliente()" [disabled]="bloquearBusqueda">
 								<mat-icon style="font-size: 24px;" color="primary" matTooltipPosition="above">search
 								</mat-icon>
 								<span color="primary">Buscar cliente </span>
@@ -59,8 +59,8 @@
 								<input matInput [formControl]="cedula" placeholder="Cedula:"  />
 							</mat-form-field>
 						</div>
-						<div *ngIf="false" class="col-md-3">
-							<button mat-stroked-button disabled
+						<div class="col-md-3">
+							<button mat-stroked-button
 								(click)="abrirPopupVerCotizacion(negoW.credito.tbQoNegociacion.tbQoCliente.cedulaCliente)">
 								<mat-icon style="font-size: 32px" matTooltipPosition="above" class="blue-icon">
 									remove_red_eye
@@ -208,7 +208,8 @@
 									(selectionChange)="setPrecioOro()">
 									<mat-option>--</mat-option>
 									<mat-option *ngFor="let tipoOro of catTipoOro" [value]="tipoOro">
-										{{ tipoOro.nombre }}</mat-option>
+										{{ tipoOro.nombre }}
+									</mat-option>
 								</mat-select>
 								<mat-error>{{ getErrorMessage('tipoOro')  }}</mat-error>
 							</mat-form-field>
@@ -320,108 +321,8 @@
 						</div>
 					</div>
 				</form>
-
-				
-				<mat-table matTableExporter *ngIf="dataSourceTasacion.data"  class="mat-elevation-z8" [dataSource]="dataSourceTasacion" #exporter="matTableExporter">
-					<ng-container matColumnDef="Accion" sticky>
-						<mat-header-cell *matHeaderCellDef>Acci&#243;n</mat-header-cell>
-						<mat-cell *matCellDef="let element">
-							<a (click)="eliminar(element)">
-								<mat-icon matTooltip="Borrar">delete</mat-icon>
-							</a>
-							<a (click)="editar(element)">
-								<mat-icon matTooltip="Editar">edit</mat-icon>
-							</a>
-						</mat-cell>
-                        <mat-footer-cell *matFooterCellDef>  Total:  </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="NumeroPiezas">
-						<mat-header-cell *matHeaderCellDef>N. de piezas</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.numeroPiezas }} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef>  {{ totalNumeroJoya }}</mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="TipoOro">
-						<mat-header-cell *matHeaderCellDef> Tipo de oro </mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.tipoOro }} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="PesoBruto">
-						<mat-header-cell *matHeaderCellDef>Peso bruto</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.pesoBruto }}<strong> gr</strong></mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalPesoB }} <strong> gr</strong></mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="DescuentoPesoPiedra">
-						<mat-header-cell *matHeaderCellDef>Descuento piedra</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.descuentoPesoPiedra }}<strong> gr</strong></mat-cell>
-                        <mat-footer-cell *matFooterCellDef>  {{ totalDescgr }} <strong> gr</strong></mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="DescuentoSuelda">
-						<mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.descuentoSuelda }}</mat-cell>
-                        <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="PesoNeto">
-						<mat-header-cell *matHeaderCellDef>Peso neto</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.pesoNeto }}<strong> gr</strong> </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalPesoN  }} <strong> gr</strong> </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="precioOro">
-						<mat-header-cell *matHeaderCellDef>Precio Oro</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.valorOro | currency: "USD":true:"1.2" }}</mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalValorO | currency: "USD":true:"1.2" }}  </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="ValorAvaluo">
-						<mat-header-cell *matHeaderCellDef>Valor aval&#250;o</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.valorAvaluo | currency: "USD":true:"1.2" }}</mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalValorA | currency: "USD":true:"1.2" }} </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="ValorAplicable">
-						<mat-header-cell *matHeaderCellDef> Valor Aplicable</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.valorAplicable | currency: "USD":true:"1.2" }}</mat-cell>
-						<td align="right" mat-footer-cell *matFooterCellDef> </td>
-					</ng-container>
-					<ng-container matColumnDef="ValorRealizacion">
-						<mat-header-cell *matHeaderCellDef>Valor realizaciòn</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.valorRealizacion | currency: "USD":true:"1.2" }}</mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalValorR | currency: "USD":true:"1.2" }}  </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="valorComercial">
-						<mat-header-cell *matHeaderCellDef>Valor Comercial</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.valorComercial | currency: "USD":true:"1.2" }}</mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ totalValorC | currency: "USD":true:"1.2" }} </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="tienePiedras">
-						<mat-header-cell *matHeaderCellDef> Tiene Piedras </mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.tienePiedras?'SI':'NO'}}</mat-cell>
-                        <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="detallePiedras">
-						<mat-header-cell *matHeaderCellDef>Detalle Piedras</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.detallePiedras ? element.detallePiedras : 'No aplica'}}</mat-cell>
-                        <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="TipoJoya">
-						<mat-header-cell *matHeaderCellDef> Tipo de joya </mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.tipoJoya}}</mat-cell>
-                        <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="EstadoJoya">
-						<mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.estadoJoya }}</mat-cell>
-                        <mat-footer-cell *matFooterCellDef> No aplica </mat-footer-cell>
-					</ng-container>
-					<ng-container matColumnDef="Descripcion">
-						<mat-header-cell *matHeaderCellDef>Descripci&#243;n</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.descripcion }}</mat-cell>
-                        <mat-footer-cell *matFooterCellDef>  No aplica </mat-footer-cell>
-					</ng-container>
-
-					<mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
-					<mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
-					<mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
-				</mat-table>
-				<button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'tasacion', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Excel</button>
-				<div *ngIf="dataSourceTasacion.data" class="row">
+				<kt-tabla-tasacion *ngIf="this.negoW && this.negoW.joyas;" [data]='this.negoW.joyas' (rowEdit)='editar($event)' (rowDelete)='eliminar($event)' [tipo]="'A'"></kt-tabla-tasacion>
+				<div *ngIf="this.negoW && this.negoW.joyas" class="row">
 					<div class="offset-5 col-2 mt-3">
 						<button mat-stroked-button color="primary" matStepperNext (click)="calcularOpciones()">
 							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
@@ -450,7 +351,19 @@
 					</ng-container>
 					<ng-container matColumnDef="plazo">
 						<mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.plazo }}</mat-cell>
+						<mat-cell *matCellDef="let element"> 
+							{{ 
+							element.plazo ? 
+							element.plazo == '60'  ? '60 Dias (Al Vcto.)' : 
+							element.plazo == '90'  ? '90 Dias (Al Vcto.)' : 
+							element.plazo == '120' ? '120 Dias (Al Vcto.)' : 
+							element.plazo == '6'   ? '6	Cuotas' : 
+							element.plazo == '9'   ? '9	Cuotas' : 
+							element.plazo == '12'  ? '12 Cuotas' : 
+							element.plazo == '18'  ? '18 Cuotas' : 
+							element.plazo : 'Error'
+							}}
+						</mat-cell>
 					</ng-container>
 					<ng-container matColumnDef="periodoPlazo">
 						<mat-header-cell *matHeaderCellDef>periodo Plazo</mat-header-cell>
@@ -458,7 +371,13 @@
 					</ng-container>
 					<ng-container matColumnDef="periodicidadPlazo">
 						<mat-header-cell *matHeaderCellDef>periodicidad Plazo</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.periodicidadPlazo }}</mat-cell>
+						<mat-cell *matCellDef="let element"> 
+							{{ 
+								element.periodicidadPlazo ?
+								element.periodicidadPlazo == 'M' ? 'Meses' :
+								element.periodicidadPlazo : 'Error'
+							}}
+						</mat-cell>
 					</ng-container>
 					<ng-container matColumnDef="montoFinanciado">
 						<mat-header-cell *matHeaderCellDef>monto Financiado</mat-header-cell>
@@ -477,7 +396,7 @@
 						<mat-cell *matCellDef="let element"> {{ element.costoCustodia }}</mat-cell>
 					</ng-container>
 					<ng-container matColumnDef="costoFideicomiso">
-						<mat-header-cell *matHeaderCellDef>costo Fideicomiso</mat-header-cell>
+						<mat-header-cell *matHeaderCellDef>costo Resguardo</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.costoFideicomiso }}</mat-cell>
 					</ng-container>
 					<ng-container matColumnDef="costoSeguro">
@@ -586,7 +505,13 @@
 					</ng-container>
 					<ng-container matColumnDef="tipooferta">
 						<mat-header-cell *matHeaderCellDef>tipo oferta</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.tipooferta }}</mat-cell>
+						<mat-cell *matCellDef="let element"> 
+							{{ 
+								element.tipooferta ? 
+								element.tipooferta == 'N' ? 'Nuevo' :
+								element.tipooferta : 'Error'
+							}}
+						</mat-cell>
 					</ng-container>
 					<ng-container matColumnDef="porcentajeflujoplaneado">
 						<mat-header-cell *matHeaderCellDef>porcentaje flujo planeado</mat-header-cell>
@@ -603,7 +528,11 @@
 					<mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
 					<mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>
 				</mat-table>
-				<button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'opciones', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Excel</button>
+				<div class="row">
+					<div class="col-1 offset-11">
+						<button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'opciones', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
+					</div>
+				  </div>
 				<form [formGroup]="formOpcionesCredito">
 					<div class="row mt-3">
 						<div class="col-md-2">

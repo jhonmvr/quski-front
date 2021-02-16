@@ -2,12 +2,8 @@ import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TbQoNegociacion } from '../../model/quski/TbQoNegociacion';
-
-
-
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
-import { ReNoticeService } from '../re-notice.service';
 import { TbQoTasacion } from '../../model/quski/TbQoTasacion';
 import { environment } from '../../../../../src/environments/environment';
 @Injectable({

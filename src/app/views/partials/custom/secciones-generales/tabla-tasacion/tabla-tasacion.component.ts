@@ -1,22 +1,19 @@
+import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
-import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
-import { MatTableDataSource, MAT_DIALOG_DATA } from '@angular/material';
-import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
-import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
-import { VariablesCrediticiasService } from '../../../../../core/services/quski/variablesCrediticias.service';
-import { IntegracionService } from '../../../../../core/services/quski/integracion.service';
-import { PersonaConsulta } from '../../../../../core/model/calculadora/personaConsulta';
-import { TasacionService } from '../../../../../core/services/quski/tasacion.service';
-import { Page } from '../../../../../core/model/page';
+import { MatTableDataSource } from '@angular/material';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'kt-tabla-tasacion',
   templateUrl: './tabla-tasacion.component.html',
   styleUrls: ['./tabla-tasacion.component.scss']
 })
+
 export class TablaTasacionComponent implements OnInit {
-  public dataSourceTasacion = new MatTableDataSource<TbQoTasacion>();
-  public displayedColumnsTasacion = ['Total', 'NumeroPiezas', 'TipoOro','PesoBruto','PesoNeto', 'precioOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'DescuentoSuelda', 'TipoJoya', 'EstadoJoya', 'Descripcion', 'tienePiedras','DescuentoPesoPiedra', 'detallePiedras',];
+  public error: boolean= false;
+  public dataSourceTasacion = new MatTableDataSource<any>();
+  public displayedColumnsTasacion = ['Total', 'NumeroPiezas', 'TipoOro','PesoBruto','PesoNeto', 'valorOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'DescuentoSuelda', 'TipoJoya', 'EstadoJoya', 'Descripcion', 'tienePiedras','DescuentoPesoPiedra', 'detallePiedras',];
   totalPesoN: any;
   totalDescgr: any;
   totalPesoB: any;
@@ -25,17 +22,126 @@ export class TablaTasacionComponent implements OnInit {
   totalValorC: number;
   totalValorO: number;
   totalNumeroJoya: number;
-  @Input() data: Array<TbQoTasacion>;
-  @Output() entidades: EventEmitter<Array<TbQoTasacion>> = new EventEmitter<Array<TbQoTasacion>>();
-  constructor() {}
-
-  ngOnInit() {
-    this.inicioDeFlujo(this.data);
-
+  public catTipoGarantia: Array<any>;
+  public catTipoCobertura: Array<any>;
+  public catAgencia: Array<any>;
+  public catTipoJoya: Array<any>;
+  public catEstadoJoya: Array<any>;
+  public catTipoOro: Array<any>;
+  public catEstadoProceso: Array<any>;
+  public catEstadoUbicacion: Array<any>;
+  private dataObservable: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>(null);
+  @Input() set data( list :  Array<any>){
+    this.dataObservable.next( list );
   }
-  private inicioDeFlujo(data) {
-    this.dataSourceTasacion.data = data
-    this.calcular();
+  @Input() tipo: string; //[T: TbQoTasacion, G: GarantiasSoftbank, A: TbQoTasacionConAcciones];
+  @Output() rowEdit: EventEmitter<TbQoTasacion> = new EventEmitter<TbQoTasacion>();
+  @Output() rowDelete: EventEmitter<TbQoTasacion> = new EventEmitter<TbQoTasacion>();
+  constructor(    
+    private sof: SoftbankService,
+    ) { 
+      this.sof.setParameter();
+    }
+    
+    ngOnInit() {
+      this.cargarCats();
+    }
+    private inicioDeFlujo() {
+      this.dataObservable.subscribe (p=>{
+        this.error = this.tipo ? false : true;
+        this.displayedColumnsTasacion = 
+        this.tipo == 'G'       
+        ? ['Total','NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro', 'ValorAvaluo','ValorRealizacion','valorComercial']
+        : this.tipo == 'A' 
+        ?     ['Accion','NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','ValorRealizacion','valorComercial']
+        : this.tipo == 'T' 
+        ? ['Total', 'NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro','ValorAvaluo','ValorRealizacion','valorComercial']
+        : this.tipo == 'C' 
+        ? ['Accion','TipoOro', 'valorOro', 'PesoBruto']
+        : this.tipo == 'CD' 
+        ? ['Total','TipoOro','valorOro', 'PesoBruto']
+        : [];
+        this.dataSourceTasacion = new MatTableDataSource<any>(p);
+        //this.formateo();
+        this.calcular();
+      });
+    
+    }
+  private cargarCats(){
+    this.sof.consultarTipoJoyaCS().subscribe( (data: any) =>{
+      this.catTipoGarantia = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+      this.sof.consultarTipoCoberturaCS().subscribe( (data: any) =>{
+        this.catTipoCobertura = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+        this.sof.consultarTipoCoberturaCS().subscribe( (data: any) =>{
+          this.catTipoCobertura = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+          this.sof.consultarAgenciasCS().subscribe( (data: any) =>{
+            this.catAgencia = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+            this.sof.consultarTipoJoyaCS().subscribe( (data: any) =>{
+              this.catTipoJoya = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+              this.sof.consultarEstadoJoyaCS().subscribe( (data: any) =>{
+                this.catEstadoJoya = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+                this.sof.consultarTipoOroCS().subscribe( (data: any) =>{
+                  this.catTipoOro = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+                  this.sof.consultarEstadoProcesoCS().subscribe( (data: any) =>{
+                    this.catEstadoProceso = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+                    this.sof.consultarEstadoUbicacionCS().subscribe( (data: any) =>{
+                      this.catEstadoUbicacion= !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+                      this.inicioDeFlujo();
+                    });  
+                  });
+                });  
+              });
+            });     
+          });
+        });
+      });
+    });  
+  }
+  forTipoOro(e){
+    let tipoOro = e.tipoOro;
+    if(e.codigoTipoOro ){
+      tipoOro = e.codigoTipoOro;
+    }
+    let x = this.catTipoOro.find(x => x.codigo == tipoOro);
+    if(tipoOro && this.catTipoOro && x){
+      
+      return x.nombre;
+    }else{
+      return 'Error Catalogo' ;
+    }
+  }
+  forTipoJoya(e){
+    let tipoJoya = e.tipoJoya;
+    if(e.codigoTipoJoya ){
+      tipoJoya = e.codigoTipoJoya;
+    }
+    let x = this.catTipoJoya.find(x => x.codigo == tipoJoya);
+    if(tipoJoya && this.catTipoJoya && x){
+      return x.nombre;
+    }else{
+      return 'Error Catalogo' ;
+    }
+  }
+  forEstadoJoya(e){
+    let estadoJoya = e.estadoJoya;
+    if(e.codigoEstadoJoya ){
+      estadoJoya = e.codigoEstadoJoya;
+    }
+    let x = this.catEstadoJoya.find(x => x.codigo == estadoJoya);
+    if(estadoJoya && this.catEstadoJoya && x){
+      return x.nombre;
+    }else{
+      return 'Error Catalogo' ;
+    }
+  }
+  forDescuentoPesoPiedra(e){
+    return e.descuentoPiedras ? e.descuentoPiedras : e.descuentoPesoPiedra ? e.desdescuentoPesoPiedra : 0;
+  }
+  forDescuentoSuelda(e){
+    return e.descuentoSuelda  ? e.descuentoSuelda  : e.descuentoSuelda;
+  }
+  forDescripcion(e){
+    return e.descripcion ? e.descripcion : e.descripcionJoya ? e.descripcionJoya : 'Sin descripcion';
   }
   private calcular() {
     this.totalPesoN = 0;
@@ -49,7 +155,7 @@ export class TablaTasacionComponent implements OnInit {
     if (this.dataSourceTasacion.data) {
       this.dataSourceTasacion.data.forEach(element => {
         this.totalPesoN  = (Number(this.totalPesoN) + Number(element.pesoNeto)).toFixed(2);
-        this.totalDescgr = (Number(this.totalDescgr) + Number(element.descuentoPesoPiedra)).toFixed(2);
+        this.totalDescgr = (Number(this.totalDescgr) + Number(element.descuentoPiedras ? element.descuentoPiedras : element.descuentoPesoPiedra ? element.desdescuentoPesoPiedra : 0 )).toFixed(2);
         this.totalPesoB  = (Number(this.totalPesoB) + Number(element.pesoBruto)).toFixed(2);
         this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
         this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
@@ -59,5 +165,14 @@ export class TablaTasacionComponent implements OnInit {
       });
     }
   }
+  /** ********************************************* @ACCIONES ********************* **/
+  public editar(entidad: TbQoTasacion) {
+    this.rowEdit.emit(entidad);
+  }
+  public eliminar(entidad: TbQoTasacion) {
+    this.rowDelete.emit(entidad);
+  }
+ 
+
 }
 

@@ -74,7 +74,7 @@ export class ListCreditoComponent implements OnInit {
   /** @CREDITOS **/
   dataSource = new MatTableDataSource<any>();
   displayedColumns = ['accion', 'nombreCliente', 'identificacion', 'numeroOperacionMadre', 'numeroOperacion',
-   'fechaSolicitud', 'fechaAprobacion','montoFinanciado','saldo', 'estado' , 'tipoCredito', 'tablaArmotizacion' ,
+   'fechaSolicitud','fechaAprobacion','fechaVencimiento','montoFinanciado','saldo', 'estado' , 'tipoCredito', 'tablaArmotizacion' ,
    'plazo','numeroCuotas', 'impago','esMigrado', 'retanqueo' , 'coberturaInicial','coberturaActual', 'diasMora',
   'EstadoProcesoGarantia', 'EstadoUbicacionGrantia'];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -172,10 +172,7 @@ export class ListCreditoComponent implements OnInit {
     this.loadingSubject.next(false);
     this.dataSource.data = data.operaciones;
     this.dataSource.data.forEach(e=>{
-      e.retanqueo = e.retanqueo ? 'SI' : 'NO';
       e.numeroOperacionMadre = e.numeroOperacionMadre ? e.numeroOperacionMadre : 'No aplica';
-      e.impago = e.impago ? 'Si' : 'NO';
-      e.esMigrado = e.esMigrado ? 'SI' : 'NO';
       e.tablaArmotizacion = e.codigoTipoTablaArmotizacionQuski;
       e.estado = this.catEstado ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion) ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion).nombre : 'Sin Estado' : 'Sin estado';
       e.estadoProcesoGarantia = this.catEstadoProcesoGarantia ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia) ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia).nombre : 'Sin Estado': 'Sin Estado';

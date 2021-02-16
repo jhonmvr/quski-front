@@ -11,17 +11,27 @@
             <div class="col-12">
                 <form [formGroup]="formFiltro">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input [formControl]="nombreCompleto" placeholder="Cliente" autocomplete="on" matInput />
                                 <mat-error>{{ getErrorMessage("nombreCompleto") }}</mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" matInput numeric numericType="number"
                                     (keypress)="numberOnly($event)" />
                                 <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input [formControl]="codigoBpm" placeholder="Codigo Bpm" autocomplete="off" matInput/>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input [formControl]="codigoSoft" placeholder="Codigo Soft" autocomplete="off" matInput/>
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
@@ -29,22 +39,6 @@
                                 <mat-select placeholder="Proceso" [formControl]="proceso">
                                     <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}</mat-option>
                                 </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-label>Fecha Creacion Desde: </mat-label>
-                                <input matInput #inputFechaCreacionDesde [matDatepicker]="pickerFechaCreacionDesde" [formControl]="fechaCreacionDesde"/>
-                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionDesde"></mat-datepicker-toggle>
-                                <mat-datepicker #pickerFechaCreacionDesde></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-label>Fecha Creacion Hasta: </mat-label>
-                                <input matInput #inputFechaCreacionHasta [matDatepicker]="pickerFechaCreacionHasta" [formControl]="fechaCreacionHasta"/>
-                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionHasta"></mat-datepicker-toggle>
-                                <mat-datepicker #pickerFechaCreacionHasta></mat-datepicker>
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
@@ -61,15 +55,38 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
+                        <div class="offset-2 col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-label>Fecha Creacion Desde: </mat-label>
+                                <input matInput #inputFechaCreacionDesde [matDatepicker]="pickerFechaCreacionDesde" [formControl]="fechaCreacionDesde"/>
+                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionDesde"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerFechaCreacionDesde></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-label>Fecha Creacion Hasta: </mat-label>
+                                <input matInput #inputFechaCreacionHasta [matDatepicker]="pickerFechaCreacionHasta" [formControl]="fechaCreacionHasta"/>
+                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionHasta"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerFechaCreacionHasta></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                       <!--  <div class="col-md-4 offset-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Agencia" [formControl]="agencia">
+                                    <mat-option *ngFor="let element of catAgencia" [value]="element">{{ element.nombre }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div> -->
                     </div>
                     <div class="row">
-                        <div class="col-2">
-                            <a (click)="irNegociacion()" matTooltip="Nueva Negociacion" style="font-size: 12px; vertical-align: middle;">
+                        <div class="col-3">
+                            <a href="javascript:void(0);" (click)="irNegociacion()" matTooltip="Nueva Negociacion" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">post_add</mat-icon>
                                 <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Nueva Negociacion</span>
                             </a>
                         </div>
-                        <div class="col-4 offset-3">
+                        <div class="col-4 offset-1">
                             <button mat-raised-button color="basic" (click)="buscar(null,null)">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>
                                 <span >Buscar Operacion</span>

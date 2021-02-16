@@ -1039,4 +1039,24 @@ export class SoftbankService extends BaseService {
       )
     );
   } 
+
+  /**
+   * ********************************@habilitantes
+   */
+  /**
+   * @author Jeroham Cadenas - Developer Twelve
+   * @description Simula una tabla de amortizacion
+   * @param simulacionTablaAmortizacion 
+   */
+  descargarHabilitanteCredito( codigoCredito ) {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCredito + "operacion/habilitante" ;
+    let wrapper =  {numeroOperacion:codigoCredito};
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  } 
 }

@@ -7,10 +7,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
   styleUrls: ['./riesgo-acumulado.component.scss']
 })
 export class RiesgoAcumuladoComponent implements OnInit {
-  private identificacion: string;
-  private idCliente: number;
-  private isGuardar: boolean;
-  private isPaged: boolean;
+  public identificacion: string;
+  public idCliente: number;
+  public isGuardar: boolean;
+  public isPaged: boolean;
   public core: boolean = false;
   public soft: boolean = false;
   constructor(
