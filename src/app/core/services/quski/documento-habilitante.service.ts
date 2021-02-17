@@ -104,6 +104,9 @@ export class DocumentoHabilitanteService extends BaseService {
     if (idReferencia && idReferencia !== "") {
       this.params = this.params.set("idReferencia", idReferencia);
     }
+    if (estadoOperacion && estadoOperacion !== "") {
+      this.params = this.params.set("estadoOperacion", estadoOperacion);
+    }
     if (proceso && proceso !== "") {
       this.params = this.params.set("proceso", proceso);
     }

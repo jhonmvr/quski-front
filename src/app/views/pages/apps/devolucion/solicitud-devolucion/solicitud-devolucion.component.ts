@@ -388,6 +388,7 @@ datos
 
         console.log(data.entidad.id)
         this.idDevolucion = data.entidad.id
+        this.setTipoHabilitantePorTipoCliente();
         this.stepper.selectedIndex = 5;
       //  this.router.navigate(['negociacion/bandeja-operaciones'    ]);
       } else {
@@ -553,7 +554,7 @@ consultarCatalogosGarantias(){
     this.catalogoEstadoJoya = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
   });
   this.css.consultarTipoOroCS().subscribe( (data: any) =>{
-    this.catalogoTipoOro = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+    this.catalogoTipoOro = !data.existeError ? data.catalogo : null;
   });  
 }
 
@@ -633,10 +634,13 @@ this.creditoService.traerCreditoVigente(codigoOperacion).subscribe((data: any) =
     console.log("garantias", this.joyasList)
     this.dataSourceJoyas.data = data.entidad.garantias
     this.dataSourceJoyas.data.forEach(e=>{
-      e.codigoTipoOro = this.catalogoTipoOro.find(x => x.codigo ==e.codigoTipoOro) ? this.catalogoTipoOro.find(x => x.codigo == e.codigoTipoOro).nombre : 'Error en catalogo';
+      if(this.catalogoTipoOro){
+        const x = this.catalogoTipoOro.find(x => x.codigo ==e.codigoTipoOro);
+        e.codigoTipoOro =x?x.find(x => x.codigo == e.codigoTipoOro).nombre : 'Error en catalogo';
+      }
       e.codigoEstadoJoya =this.catalogoEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya) ? this.catalogoEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya).nombre : 'Error en catalogo';
       e.codigoTipoJoya= this.catalogoTipoJoya.find(x => x.codigo == e.codigoTipoGarantia) ? this.catalogoTipoJoya.find(x => x.codigo == e.codigoTipoGarantia).nombre : 'Error en catalogo';
-      e.tienePiedras=e.tienePiedras? 'Si': 'No';
+      e.tienePiedras=e.tienePiedras == 'true'? 'Si': 'No';
       e.detallePiedras=e.detallePiedras ? e.detallePiedras : 'Sin detalle'; 
       e.numeroFundaMadre = e.numeroFundaMadre ? e.numeroFundaMadre : 'Sin funda madre';  
       console.log("total peso neto", this.totalPesoNeto + " xd" , e.pesoNeto)
@@ -652,6 +656,18 @@ this.creditoService.traerCreditoVigente(codigoOperacion).subscribe((data: any) =
     this.sinNoticeService.setNotice('ERROR AL CARGAR CREDITO: '+ data.entidad.mensaje, 'error');
   }
 });
+}
+
+setTipoHabilitantePorTipoCliente(){
+  if (this.tipoCliente.value === 'HEREDERO'){
+    this.estadoOperacion="SOLICITUDHEREDEROS"
+  } 
+  if(this.tipoCliente.value === 'APODERADO'){
+    this.estadoOperacion="SOLICITUDHEREDEROS"
+  }else{
+    this.estadoOperacion="SOLICITUD"
+  }
+  
 }
 
 } 
