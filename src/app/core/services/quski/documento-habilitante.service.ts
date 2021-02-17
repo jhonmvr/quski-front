@@ -100,7 +100,7 @@ export class DocumentoHabilitanteService extends BaseService {
     // this.params = new HttpParams();
     this.setSearchParams(p);
     this.params = new HttpParams().set("idRol", idRol);
-    this.params = new HttpParams().set("idTipoDocumento", idTipoDocumento);
+    this.params = this.params.set("idTipoDocumento", idTipoDocumento);
     if (idReferencia && idReferencia !== "") {
       this.params = this.params.set("idReferencia", idReferencia);
     }
@@ -365,7 +365,7 @@ export class DocumentoHabilitanteService extends BaseService {
     this.params = this.params.set("estadoOperacion", estadoOperacion);
     this.params = this.params.set("idReferencia", idReferencia);
     this.params = this.params.set("format", format);
-    this.options = { responseType: 'arraybuffer',headers: this.headers,  params: this.params };
+    this.options = { headers: this.headers,  params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,

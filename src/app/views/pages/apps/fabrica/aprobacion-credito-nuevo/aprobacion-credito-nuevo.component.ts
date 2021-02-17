@@ -484,9 +484,6 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
             }
 
 
-          }, error =>{
-            console.log('Error =>', error.error.msgError);
-            this.sinNotSer.setNotice('Ocurrio un error: ' + error.error.msgError, 'error');
           });
       }else{
           this.sinNotSer.setNotice('SE CANCELO LA ACCION','warning');

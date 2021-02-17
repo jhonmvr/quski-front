@@ -22,8 +22,8 @@ import { saveAs } from 'file-saver';
 export class HabilitanteComponent implements OnInit {
 
   TYPE_FORM="FORM";
-  TYPE_LIST="LIST"
-
+  TYPE_LIST="LIST";
+  buscarObservable:BehaviorSubject<boolean>=new BehaviorSubject<boolean>(true);
   rolSubject:BehaviorSubject<string>=new BehaviorSubject<string>("");
   tipoDocumentoSubject:BehaviorSubject<string>=new BehaviorSubject<string>("");
   referenciaSubject:BehaviorSubject<string>=new BehaviorSubject<string>("");
@@ -201,6 +201,7 @@ export class HabilitanteComponent implements OnInit {
   }
 
   submit() {
+    this.buscarObservable.next(true);
     console.log("loadDocumentoHabilitante cargando rol: " + this.rol);
     console.log("loadDocumentoHabilitante cargando proceso: " + this.proceso);
     console.log("loadDocumentoHabilitante cargando referencia: " + this.referencia);
@@ -213,6 +214,7 @@ export class HabilitanteComponent implements OnInit {
     this.dh.findByRolTipoDocumentoReferenciaProcesoEstadoOperacion(localStorage.getItem(environment.rolKey),this.tipoDocumento, this.referencia,
     this.proceso,this.estadoOperacion, this.p  ).subscribe(
         (data: any) => {
+          this.buscarObservable.next(false);
           //console.log("resultadotipos de documento " + JSON.stringify(data));
           if (data && data.list) {
             let existentes=data.list.filter(e=>e.estaCargado==true);
@@ -230,6 +232,7 @@ export class HabilitanteComponent implements OnInit {
           }
         },
         error => {
+          this.buscarObservable.next(false);
           this.uploadSubject.next(true);
           if (JSON.stringify(error).indexOf("codError") > 0) {
             let b = error.error;
@@ -273,6 +276,7 @@ export class HabilitanteComponent implements OnInit {
   descargarPlantillaHabilitante(row:HabilitanteWrapper) {
     ////console.log(      "<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>",      this.codigoContratoLocal    );
     ////console.log("entra a submit var json " + row.id);
+   
     console.log("XD", row)
     this.dh.generatePlantillaHabilitantesByParams(
         row.servicio, row.idReferencia == null ? this.referencia :  String(row.idReferencia),
@@ -280,9 +284,31 @@ export class HabilitanteComponent implements OnInit {
         row.estadoOperacion, 
         row.idDocumentoHabilitante?String(row.idDocumentoHabilitante):null,"PDF"
       ).subscribe((data: any) => {
-          //console.log("descargarNotificacion datos xx " + data);
+          console.log("descargarNotificacion datos xx ", data);
           ////console.log("descargarNotificacion datos " + JSON.stringify(data));
-          if (data) {            
+          if(data.uriHabilitantes){
+            this.os.getObjectById(data.uriHabilitantes, this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+              ////console.log("entra a submit var json " + JSON.stringify( atob(data.entidad) ));
+              if( data && data.entidad ){
+                let obj=JSON.parse( atob(data.entidad) );
+                //console.log("entra a retorno json " + JSON.stringify( obj ));
+                const byteCharacters = atob(obj.fileBase64);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray]);
+                saveAs(blob , obj.name);
+              }else {
+                this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
+              }
+            },
+            error => {
+              //console.log("================>error: " + JSON.stringify(error));
+              this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
+            });
+          }else if (data) {            
             let blob = new Blob([data], { type: 'application/pdf'});
             saveAs(blob, row.descripcionTipoDocumento + ".pdf");
             this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
@@ -389,6 +415,17 @@ export class HabilitanteComponent implements OnInit {
       //console.log("===>>errorrrr al cierre: ");
       this.sinNoticeService.setNotice("ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO","error");
     }
+  }
+
+  accionUno(){
+
+  }
+  
+  accionDos(){
+
+  }
+  accionTres(){
+
   }
 
 }
