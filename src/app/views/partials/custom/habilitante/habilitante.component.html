@@ -48,7 +48,7 @@
     </div>
     <div class="col-md-2">
         <a href="javascript:void(0);"  *ngIf="getPermiso('ACCION_UNO',acciones) && enableEnd" 
-        (click)="validateVolverTerminar()" matTooltip="Termina Habilitantes" style="font-size: 12px; vertical-align: middle;">
+        (click)="accionUno()" matTooltip="Termina Habilitantes" style="font-size: 12px; vertical-align: middle;">
             <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="">check-circle</mat-icon>
             <span style="position: relative;top: -10px;margin-left: 5px;">Termina Habilitantes</span>
         </a>
@@ -59,7 +59,7 @@
     </div>
     
     <div class="col-md-2" *ngIf="getPermiso('ACCION_DOS',acciones)">
-      <a href="javascript:void(0);"    (click)="anularContrato()" matTooltip="Anular Contrato" style="font-size: 12px; vertical-align: middle;">
+      <a href="javascript:void(0);"    (click)="accionDos()" matTooltip="Anular Contrato" style="font-size: 12px; vertical-align: middle;">
        <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="">cancel</mat-icon>
           <span style="position: relative;top: -10px;">Rechazar</span>
       </a>
@@ -67,7 +67,7 @@
 
   
     <div class="col-md-2"  *ngIf="getPermiso('ACCION_TRES',acciones)" >
-      <a href="javascript:void(0);"   (click)="reversoRenovacion()" matTooltip="Reverso Renovacion"
+      <a href="javascript:void(0);"   (click)="accionTres()" matTooltip="Reverso Renovacion"
        style="font-size: 12px; vertical-align: middle;">
        <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="">cancel</mat-icon>
           <span style="position: relative;top: -10px;">Rechazar</span>

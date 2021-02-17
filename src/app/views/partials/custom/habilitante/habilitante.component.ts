@@ -391,5 +391,16 @@ export class HabilitanteComponent implements OnInit {
     }
   }
 
+  accionUno(){
+
+  }
+  
+  accionDos(){
+
+  }
+  accionTres(){
+
+  }
+
 }
 
