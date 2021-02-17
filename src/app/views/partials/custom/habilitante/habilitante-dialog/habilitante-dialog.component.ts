@@ -56,7 +56,8 @@ export class HabilitanteDialogComponent implements OnInit {
       let file = <File>event.target.files[0];
       let mimeType = file.type;
       let mimeSize = file.size;
-      if (mimeSize < 600000) {
+      let size:number = Number(((mimeSize/1024)/1024).toFixed(2)); 
+      if (size < 7) {
         reader.readAsDataURL(file);
         reader.onload = () => {
           this.uploadSubject.next(true);
