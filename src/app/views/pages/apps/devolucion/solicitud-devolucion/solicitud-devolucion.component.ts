@@ -15,6 +15,7 @@ import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { DevolucionService } from '../../../../../core/services/quski/devolucion.service';
 import { ValidateCedula } from '../../../../../core/util/validate.util';
+import { CreditoService } from '../../../../../core/services/quski/credito.service';
 
 @Component({
   selector: 'kt-solicitud-devolucion',
@@ -118,6 +119,9 @@ joyasList  = [{"tipoOro": "18KILATES",
   catalogoTipoCliente
   catalogoAgencia
   tipoClienteList = ['DEUDOR', 'HEREDERO']
+  catalogoTipoOro
+  catalogoTipoJoya
+  catalogoEstadoJoya
   /// src 
   listTablaHeredero = []
   parametroObjeto 
@@ -133,7 +137,7 @@ joyasList  = [{"tipoOro": "18KILATES",
   displayedColumnsCredito= ['fechaAprobacion','fechaVencimiento','monto']
  /**Obligatorio paginacion */
  p = new Page();
- dataSourceJoyas = new MatTableDataSource;
+ dataSourceJoyas = new MatTableDataSource<any>();
  dataSourceContrato = new MatTableDataSource;
  dataSourceHeredero =new MatTableDataSource;
  //:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
@@ -153,9 +157,9 @@ datos
   public actividad: string;
   public procesoDocumentosLegales: string;
   public catalago
-  totalPesoNeto
-  totalPesoBruto
-  totalValorAvaluo 
+  totalPesoNeto=0
+  totalPesoBruto=0
+  totalValorAvaluo=0 
 
  @ViewChild('paginator', { static: true })  paginator: MatPaginator;
  @ViewChild( 'stepper', { static: true })  stepper: MatStepper;
@@ -177,7 +181,8 @@ datos
     private css: SoftbankService, 
     private route: ActivatedRoute,
     private router: Router,
-    private devService: DevolucionService) { 
+    private devService: DevolucionService,
+    private creditoService: CreditoNegociacionService) { 
       this.cns.setParameter();
       this.css.setParameter();
       this.devService.setParameter();
@@ -199,8 +204,9 @@ datos
     this.setFechaSistema();
     this.getParametros();
     this.datos =  JSON.parse(this.parametroObjeto);
-    console.log(this.datos)
-  
+
+    console.log(" Hello" ,this.datos)
+    this.consultarCatalogosGarantias();
     this.consultarEstadosCivilesCS();
     this.consultarEducacionCS();
     this.consultaGeneroCS();
@@ -210,7 +216,7 @@ datos
     this.consultarAgencia();
    
     this.cargarDatos();
-    this.getJoyas();
+   // this.getJoyas();
     //console.log("el encode", )
     //console.log(typeof(this.catalagoEstadosCiviles))
     //console.log( this.catalagoEstadosCiviles)
@@ -252,20 +258,22 @@ datos
     
     let listDatosCreditos = []
     this.consultarClienteCS();
+    this.consultarGarantia(this.datos.numeroOperacion);
     this.objetoCredito.fechaAprobacion = this.datos.fechaAprobacion
     this.objetoCredito.fechaVencimiento = this.datos.fechaVencimiento
     this.objetoCredito.monto = this.datos.montoFinanciado
     listDatosCreditos.push(this.objetoCredito)
     //console.log(listDatosCreditos)
     this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
-    this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)
+
+  //  this.getJoyas()
     //console.log("datasource Credito"  , this.objetoCredito)
     //console.log(this.datos.nombreCliente)
     this.procesoDev.setValue("DEVOLUCION")
     this.nombresCompletos.setValue(this.datos.nombreCliente)
     this.codigoOperacion.setValue(this.datos.numeroOperacion)
 
-    this .cedulaCliente.setValue(this.datos.idCliente)
+    this .cedulaCliente.setValue(this.datos.identificacion)
   }
 
 
@@ -273,13 +281,14 @@ datos
     let entidadConsultaCliente = new ConsultaCliente();
     
     ////console.log(" "  + cedula)
-    entidadConsultaCliente.identificacion = this.datos.idCliente;
-    entidadConsultaCliente.idTipoIdentificacion = 1;
+    entidadConsultaCliente.identificacion = this.datos.identificacion;
+    entidadConsultaCliente.idTipoIdentificacion = this.datos.idTipoIdentificacion;
 
     this.css.consultarClienteCS(entidadConsultaCliente).subscribe((data: any) => {
       if (data) {
       //console.log(data) 
       //console.log(data.codigoEstadoCivil)
+      console.log("cliente",data)
       this.nivelEducacion.setValue(this.buscarEnCatalogo(this.catalogoEducacion, data.codigoEducacion).nombre)
       this.genero.setValue(this.buscarEnCatalogo(this.catalogoGenero, data.codigoSexo).nombre)
       this.estadoCivil.setValue(this.buscarEnCatalogo(this.catalagoEstadosCiviles, data.codigoEstadoCivil).nombre)
@@ -287,6 +296,9 @@ datos
       this.nacionalidad.setValue(this.catalogoPais.find(p=>p.id==data.idPais).nombre)
       console.log("fecha nacimiento", data.fechaNacimiento)
       this.edad.setValue(Math.floor(this.getEdad(data.fechaNacimiento)))
+      this.separacionBienes.setValue(data.esSeparacionesDeBienes == false ?  'NO' : 'SI')
+   
+      
       //this.lugarNacimiento.setValue(this.catalogoPais.find(p=>p.idDivisionNivelBajo==data.idPais).nombre)
 
       } else {
@@ -376,6 +388,7 @@ datos
 
         console.log(data.entidad.id)
         this.idDevolucion = data.entidad.id
+        this.setTipoHabilitantePorTipoCliente();
         this.stepper.selectedIndex = 5;
       //  this.router.navigate(['negociacion/bandeja-operaciones'    ]);
       } else {
@@ -409,7 +422,7 @@ getEdad(fechaValue){
  getJoyas(){
   this.totalResults = this.joyasList.length;
   //console.log( this.joyasList)
-  this.dataSourceJoyas = new MatTableDataSource<any>(this.joyasList);
+  this.dataSourceJoyas =  new MatTableDataSource<any>();
   this.calcular()
   //console.log(this.totalValorAvaluo)
  }
@@ -533,6 +546,18 @@ consultarAgencia(){
   })
 }
 
+consultarCatalogosGarantias(){
+  this.css.consultarTipoJoyaCS().subscribe( (data: any) =>{
+    this.catalogoTipoJoya = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+  });     
+  this.css.consultarEstadoJoyaCS().subscribe( (data: any) =>{
+    this.catalogoEstadoJoya = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+  });
+  this.css.consultarTipoOroCS().subscribe( (data: any) =>{
+    this.catalogoTipoOro = !data.existeError ? data.catalogo : null;
+  });  
+}
+
 validateHeredero(event){
   if (this.tipoCliente.value.toUpperCase()==="HEREDERO" ){
     this.enableHeredero.next(true)
@@ -596,8 +621,53 @@ public getErrorMessage(pfield: string) { //@TODO: Revisar campos
   }
 
 
+
+
+}
+consultarGarantia(codigoOperacion){
+    
+this.creditoService.traerCreditoVigente(codigoOperacion).subscribe((data: any) => {
+  //console.log('Credito --> ', data.entidad);
+  if (!data.entidad.existeError) {
+    console.log( data.entidad);
+    this.joyasList= data.entidad.garantias
+    console.log("garantias", this.joyasList)
+    this.dataSourceJoyas.data = data.entidad.garantias
+    this.dataSourceJoyas.data.forEach(e=>{
+      if(this.catalogoTipoOro){
+        const x = this.catalogoTipoOro.find(x => x.codigo ==e.codigoTipoOro);
+        e.codigoTipoOro =x?x.find(x => x.codigo == e.codigoTipoOro).nombre : 'Error en catalogo';
+      }
+      e.codigoEstadoJoya =this.catalogoEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya) ? this.catalogoEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya).nombre : 'Error en catalogo';
+      e.codigoTipoJoya= this.catalogoTipoJoya.find(x => x.codigo == e.codigoTipoGarantia) ? this.catalogoTipoJoya.find(x => x.codigo == e.codigoTipoGarantia).nombre : 'Error en catalogo';
+      e.tienePiedras=e.tienePiedras == 'true'? 'Si': 'No';
+      e.detallePiedras=e.detallePiedras ? e.detallePiedras : 'Sin detalle'; 
+      e.numeroFundaMadre = e.numeroFundaMadre ? e.numeroFundaMadre : 'Sin funda madre';  
+      console.log("total peso neto", this.totalPesoNeto + " xd" , e.pesoNeto)
+      this.totalPesoNeto = Number(this.totalPesoNeto) + Number(e.pesoNeto);
+      this.totalPesoBruto = Number(this.totalPesoBruto) + Number(e.pesoBruto);
+      this.totalValorAvaluo = Number(this.totalValorAvaluo) + Number(e.valorAvaluo);
+
+
+
+    })
+  }else{
+    this.loadingSubject.next(false);
+    this.sinNoticeService.setNotice('ERROR AL CARGAR CREDITO: '+ data.entidad.mensaje, 'error');
+  }
+});
 }
 
-
+setTipoHabilitantePorTipoCliente(){
+  if (this.tipoCliente.value === 'HEREDERO'){
+    this.estadoOperacion="SOLICITUDHEREDEROS"
+  } 
+  if(this.tipoCliente.value === 'APODERADO'){
+    this.estadoOperacion="SOLICITUDHEREDEROS"
+  }else{
+    this.estadoOperacion="SOLICITUD"
+  }
+  
+}
 
 } 

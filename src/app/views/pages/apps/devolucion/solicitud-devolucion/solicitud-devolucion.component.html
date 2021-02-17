@@ -263,27 +263,27 @@
 
         <ng-container matColumnDef="tipoOro">
         <mat-header-cell *matHeaderCellDef>Tipo de oro</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.tipoOro}}</mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.codigoTipoOro}}</mat-cell>
         <td  mat-footer-cell *matFooterCellDef> Total </td>    
         </ng-container>
         <ng-container matColumnDef="tipoJoya">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de joya</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.tipoJoya}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.codigoTipoJoya}} </mat-cell>
             <td mat-footer-cell *matFooterCellDef>&#8212; </td>
         </ng-container>
         <ng-container matColumnDef="estadoJoya">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Estado de Joya</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.estadoJoya}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.codigoEstadoJoya}} </mat-cell>
             <td mat-footer-cell *matFooterCellDef>&#8212; </td>
         </ng-container>
         <ng-container matColumnDef="descripcion">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Descripción</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.descripcion}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.descripcionJoyas}} </mat-cell>
             <td mat-footer-cell *matFooterCellDef>&#8212; </td>
         </ng-container>
         <ng-container matColumnDef="pesoBruto">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Peso Bruto</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.pesoBruto}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.pesoBruto | number: '1.2'}} </mat-cell>
             <td  mat-footer-cell *matFooterCellDef>{{totalPesoBruto | number: '1.2' }}</td> 
         </ng-container>
         <ng-container matColumnDef="tienePiedras">
@@ -304,7 +304,7 @@
 
         <ng-container matColumnDef="pesoNeto">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Peso Neto</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.pesoNeto}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.pesoNeto | number: '1.2'}} </mat-cell>
             <td  mat-footer-cell *matFooterCellDef>{{totalPesoNeto | number: '1.2' }}</td> 
         </ng-container>
 
@@ -317,13 +317,13 @@
 
         <ng-container matColumnDef="numeroFundaMadre">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Número Funda Madre</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.fundaMadre}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.numeroFundaMadre}} </mat-cell>
             <td mat-footer-cell *matFooterCellDef>&#8212; </td>
 
         </ng-container>
         <ng-container matColumnDef="numeroFundaActual">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Número Funda Actual</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.fundaActual}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.numeroFundaJoya}} </mat-cell>
             <td mat-footer-cell *matFooterCellDef>&#8212; </td>
 
         </ng-container>
@@ -351,7 +351,7 @@
            
             <mat-step label = "Documento Habilitantes">
              <re-habilitante [proceso]="procesoHabilitante" [useType]="'FORM'"
-             [estadoOperacion]="estadoOperacion" [referencia]="idDevolucion" [rol]="'1'" [tipoDocumento]="'9'">
+             [estadoOperacion]="estadoOperacion" [referencia]="idDevolucion" [rol]="'1'" >
                 </re-habilitante> 
               
                 

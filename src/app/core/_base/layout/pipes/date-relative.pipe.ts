@@ -8,17 +8,23 @@ import { environment } from "../../../../../environments/environment";
   name: "rDate"
 })
 export class RelativeDatePipe implements PipeTransform {
-  constructor(private datePipe: DatePipe) {}
+  constructor(private datePipe: DatePipe) { }
 
   transform(value: Object, ...options: string[]) {
-    let xx =localStorage.getItem(environment.prefix +'RE011');
-    let x = xx?atob( xx):'';
-    let y =localStorage.getItem( environment.prefix + 'RE014')
-    const formato =y? atob(y).replace(x, ''):null;
-    if(formato){
-      return this.datePipe.transform(value,formato , ...options);
-    }else{
-      return this.datePipe.transform(value,FORMAT_DATE, ...options);
+
+    try {
+      let xx = localStorage.getItem(environment.prefix + 'RE011');
+      let x = xx ? atob(xx) : '';
+      let y = localStorage.getItem(environment.prefix + 'RE014')
+      const formato = y ? atob(y).replace(x, '') : null;
+      if (formato) {
+        return this.datePipe.transform(value, formato, ...options);
+      } else {
+        return this.datePipe.transform(value, FORMAT_DATE, ...options);
+      }
+    } catch {
+      console.log("error al intentar parcear la fecha | rDate");
+      return value;
     }
   }
 }

@@ -456,7 +456,9 @@
 
             <mat-step label="Documento Habilitantes">
                 <ng-container *ngIf="existeCredito">
-                    <re-habilitante [proceso]="'CREDITONUEVO'" [useType]="'LIST'" [tipoDocumento]="'5'" [referencia]="this.operacionNuevo.credito.id" [rol]="'7'"> </re-habilitante>
+                    <re-habilitante [proceso]="'NUEVO'" [useType]="'FORM'"
+             [estadoOperacion]="estadoOperacion.value" [referencia]="numeroOperacion.value" >
+                </re-habilitante> 
                     <div class="row">
                         <div class="col-md-5 offset-md-5">
                             <button  mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>

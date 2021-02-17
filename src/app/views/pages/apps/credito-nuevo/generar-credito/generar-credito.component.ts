@@ -20,7 +20,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'kt-generar-credito',
   templateUrl: './generar-credito.component.html',
@@ -103,6 +103,7 @@ export class GenerarCreditoComponent implements OnInit {
   diasMin;
   //negociacion
   dataSourceCreditoNegociacion = new MatTableDataSource<any>();
+  dataSourcesHabilitantes = new MatTableDataSource<any>([{id:""}]);
   displayedColumnsCreditoNegociacion = ['plazo','periodicidadPlazo','tipooferta','montoFinanciado','valorARecibir','cuota','totalGastosNuevaOperacion','costoCustodia', 'costoTransporte','costoTasacion','costoSeguro','costoFideicomiso','impuestoSolca'];
 
 
@@ -117,6 +118,7 @@ export class GenerarCreditoComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private router: Router,
+    private os:ObjectStorageService,
     private sinNotSer: ReNoticeService,
   ) {
     this.cre.setParameter();
@@ -498,4 +500,6 @@ export class GenerarCreditoComponent implements OnInit {
       });
     }
   }
+
+  
 }
