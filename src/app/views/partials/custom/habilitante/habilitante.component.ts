@@ -22,8 +22,8 @@ import { saveAs } from 'file-saver';
 export class HabilitanteComponent implements OnInit {
 
   TYPE_FORM="FORM";
-  TYPE_LIST="LIST"
-
+  TYPE_LIST="LIST";
+  buscarObservable:BehaviorSubject<boolean>=new BehaviorSubject<boolean>(true);
   rolSubject:BehaviorSubject<string>=new BehaviorSubject<string>("");
   tipoDocumentoSubject:BehaviorSubject<string>=new BehaviorSubject<string>("");
   referenciaSubject:BehaviorSubject<string>=new BehaviorSubject<string>("");
@@ -201,6 +201,7 @@ export class HabilitanteComponent implements OnInit {
   }
 
   submit() {
+    this.buscarObservable.next(true);
     console.log("loadDocumentoHabilitante cargando rol: " + this.rol);
     console.log("loadDocumentoHabilitante cargando proceso: " + this.proceso);
     console.log("loadDocumentoHabilitante cargando referencia: " + this.referencia);
@@ -213,6 +214,7 @@ export class HabilitanteComponent implements OnInit {
     this.dh.findByRolTipoDocumentoReferenciaProcesoEstadoOperacion(localStorage.getItem(environment.rolKey),this.tipoDocumento, this.referencia,
     this.proceso,this.estadoOperacion, this.p  ).subscribe(
         (data: any) => {
+          this.buscarObservable.next(false);
           //console.log("resultadotipos de documento " + JSON.stringify(data));
           if (data && data.list) {
             let existentes=data.list.filter(e=>e.estaCargado==true);
@@ -230,6 +232,7 @@ export class HabilitanteComponent implements OnInit {
           }
         },
         error => {
+          this.buscarObservable.next(false);
           this.uploadSubject.next(true);
           if (JSON.stringify(error).indexOf("codError") > 0) {
             let b = error.error;
