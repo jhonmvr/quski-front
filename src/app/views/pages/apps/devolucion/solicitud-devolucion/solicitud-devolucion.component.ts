@@ -56,7 +56,8 @@ export class SolicitudDevolucionComponent implements OnInit{
   fechaUtil:diferenciaEnDias;
   fechaServer;
 ///operativa
-
+  numeroFunda
+  numeroFundaMadre
 joyasList  = [{"tipoOro": "18KILATES", 
 "tipoJoya":"VARIOS", 
 "estadoJoya":"BUEN ESTADOS",
@@ -122,6 +123,7 @@ joyasList  = [{"tipoOro": "18KILATES",
   catalogoTipoOro
   catalogoTipoJoya
   catalogoEstadoJoya
+  catalogoDivisionPolitica
   /// src 
   listTablaHeredero = []
   parametroObjeto 
@@ -186,6 +188,7 @@ datos
       this.cns.setParameter();
       this.css.setParameter();
       this.devService.setParameter();
+     
       this.heredero.addControl("cedulaHeredero", this.cedulaHeredero);
       this.heredero.addControl("nombreHeredero", this.nombreHeredero);
       this.devolucionForm.addControl("tipoCliente", this.tipoCliente);
@@ -196,24 +199,26 @@ datos
   }
 
   ngOnInit() {
+   
     this.cns.setParameter();
     this.css.setParameter();
     this.devService.setParameter();
     this.enableHerederoButton = this.enableHeredero.asObservable();
     this.enableHeredero.next(false);
     this.setFechaSistema();
-    this.getParametros();
-    this.datos =  JSON.parse(this.parametroObjeto);
-
-    console.log(" Hello" ,this.datos)
     this.consultarCatalogosGarantias();
     this.consultarEstadosCivilesCS();
     this.consultarEducacionCS();
     this.consultaGeneroCS();
-    this.consultarLugaresCS();
     this.consultarPaisCS();
     this.consultarTipoCliente();
     this.consultarAgencia();
+  
+    this.getParametros();
+    this.datos =  JSON.parse(this.parametroObjeto);
+
+    console.log(" Hello" ,this.datos)
+  
    
     this.cargarDatos();
    // this.getJoyas();
@@ -265,7 +270,7 @@ datos
     listDatosCreditos.push(this.objetoCredito)
     //console.log(listDatosCreditos)
     this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
-
+    console.log("Hello",this.datos)
   //  this.getJoyas()
     //console.log("datasource Credito"  , this.objetoCredito)
     //console.log(this.datos.nombreCliente)
@@ -297,7 +302,8 @@ datos
       console.log("fecha nacimiento", data.fechaNacimiento)
       this.edad.setValue(Math.floor(this.getEdad(data.fechaNacimiento)))
       this.separacionBienes.setValue(data.esSeparacionesDeBienes == false ?  'NO' : 'SI')
-   
+      console.log(this.catalogoDivisionPolitica)
+      this.lugarNacimiento.setValue(this.buscarEnCatalogo(this.catalogoDivisionPolitica, data.idLugarNacimiento))
       
       //this.lugarNacimiento.setValue(this.catalogoPais.find(p=>p.idDivisionNivelBajo==data.idPais).nombre)
 
@@ -317,8 +323,9 @@ datos
   }
 
   buscarEnCatalogo(nombreCatalogo, codigoObjeto){
+   if(nombreCatalogo){
     return nombreCatalogo.find(p=>p.codigo==codigoObjeto)
-
+   }
   }
 
   encriptarDatos(objeto){
@@ -348,9 +355,9 @@ datos
     } 
     let tbQoDevolucion = new TbQoDevolucion()
     tbQoDevolucion.codigo =  "";
-    tbQoDevolucion.asesor = "Asesor quemado"
+    tbQoDevolucion.asesor = localStorage.getItem("nombre")
     tbQoDevolucion.idAgencia = localStorage.getItem("idResidenciaAgencia") == null ? "" : localStorage.getItem("idResidenciaAgencia")
-    tbQoDevolucion.nombreAgenciaSolicitud = "quemada"
+    tbQoDevolucion.nombreAgenciaSolicitud = localStorage.getItem("nombreAgencia")
     tbQoDevolucion.aprobador = "";
     tbQoDevolucion.nombreCliente= this.nombresCompletos.value
     tbQoDevolucion.cedulaCliente = this.cedulaCliente.value
@@ -367,8 +374,8 @@ datos
     tbQoDevolucion.observaciones = this.observaciones.value
     tbQoDevolucion.agenciaEntrega = this.agenciaEntrega.value.nombre
     tbQoDevolucion.codigoOperacionMadre = this.datos.numeroOperacionMadre == null ? "" : this.datos.numeroOperacionMadre
-    tbQoDevolucion.fundaMadre = "QUEMADA-13"
-    tbQoDevolucion.fundaActual = "ACTQUE-14"
+    tbQoDevolucion.fundaMadre = this.numeroFundaMadre
+    tbQoDevolucion.fundaActual = this.numeroFunda
     //console.log(this.agenciaEntrega.value)
     tbQoDevolucion.agenciaEntregaId  = this.agenciaEntrega.value.id
     //console.log(this.encodeObjetos(this.joyasList))
@@ -389,6 +396,7 @@ datos
         console.log(data.entidad.id)
         this.idDevolucion = data.entidad.id
         this.setTipoHabilitantePorTipoCliente();
+        console.log(this.estadoOperacion)
         this.stepper.selectedIndex = 5;
       //  this.router.navigate(['negociacion/bandeja-operaciones'    ]);
       } else {
@@ -426,10 +434,6 @@ getEdad(fechaValue){
   this.calcular()
   //console.log(this.totalValorAvaluo)
  }
-
-
- 
-
 
 calcular(){
 
@@ -515,16 +519,7 @@ consultarPaisCS(){
   })
 }
 
-consultarLugaresCS(){
-  
-    this.css.consultarDivicionPoliticaConsolidadaCS().subscribe((data:any)=>{
-      if(!data.existeError){
-        //console.log(data)
-        this.catalogoLugarNacimiento = data.divisionPoliticaConsolidado
-      }
-    })
 
-}
 
 
 consultarTipoCliente(){
@@ -557,6 +552,16 @@ consultarCatalogosGarantias(){
     this.catalogoTipoOro = !data.existeError ? data.catalogo : null;
   });  
 }
+
+consultarDivisionPolitica(){
+  this.css.consultarDivicionPoliticaCS().subscribe((data:any)=>{
+    this.catalogoDivisionPolitica = !data.existeError ? data.catalogo : null;
+    console.log("division", data)
+
+    console.log("division",  this.catalogoDivisionPolitica)
+  })
+}
+
 
 validateHeredero(event){
   if (this.tipoCliente.value.toUpperCase()==="HEREDERO" ){
@@ -633,14 +638,17 @@ this.creditoService.traerCreditoVigente(codigoOperacion).subscribe((data: any) =
     this.joyasList= data.entidad.garantias
     console.log("garantias", this.joyasList)
     this.dataSourceJoyas.data = data.entidad.garantias
+    this.numeroFunda = data.entidad.garantias[0].numeroFunda
+    this.numeroFundaMadre = data.entidad.garantias[0].numeroFundaMadre
     this.dataSourceJoyas.data.forEach(e=>{
       if(this.catalogoTipoOro){
-        const x = this.catalogoTipoOro.find(x => x.codigo ==e.codigoTipoOro);
-        e.codigoTipoOro =x?x.find(x => x.codigo == e.codigoTipoOro).nombre : 'Error en catalogo';
+      
+        e.codigoTipoOro = this.catalogoTipoOro.find(x => x.codigo ==e.codigoTipoOro)?  this.catalogoTipoOro.find(x => x.codigo ==e.codigoTipoOro): 'Error en catalogo';
       }
+      console.log(typeof(e.tienePiedras))
       e.codigoEstadoJoya =this.catalogoEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya) ? this.catalogoEstadoJoya.find(x=> x.codigo == e.codigoEstadoJoya).nombre : 'Error en catalogo';
       e.codigoTipoJoya= this.catalogoTipoJoya.find(x => x.codigo == e.codigoTipoGarantia) ? this.catalogoTipoJoya.find(x => x.codigo == e.codigoTipoGarantia).nombre : 'Error en catalogo';
-      e.tienePiedras=e.tienePiedras == 'true'? 'Si': 'No';
+      e.tienePiedras= e.tienePiedras == true? 'Si': 'No';
       e.detallePiedras=e.detallePiedras ? e.detallePiedras : 'Sin detalle'; 
       e.numeroFundaMadre = e.numeroFundaMadre ? e.numeroFundaMadre : 'Sin funda madre';  
       console.log("total peso neto", this.totalPesoNeto + " xd" , e.pesoNeto)
@@ -659,12 +667,14 @@ this.creditoService.traerCreditoVigente(codigoOperacion).subscribe((data: any) =
 }
 
 setTipoHabilitantePorTipoCliente(){
+  console.log(this.tipoCliente.value)
   if (this.tipoCliente.value === 'HEREDERO'){
     this.estadoOperacion="SOLICITUDHEREDEROS"
   } 
   if(this.tipoCliente.value === 'APODERADO'){
     this.estadoOperacion="SOLICITUDHEREDEROS"
-  }else{
+  }
+  if(this.tipoCliente.value === 'DEUDOR'){
     this.estadoOperacion="SOLICITUD"
   }
   
