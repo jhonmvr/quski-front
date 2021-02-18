@@ -60,84 +60,93 @@
                     </div>
                 </div>
             </mat-step>
-            <!-- DIA DE PAGO-->
-            <mat-step label="Día de pago">
-                <div class="mat-table__wrapper">
-                    <table mat-table class="mat-elevation-z20" #tabla [dataSource]=" dataSourceRubros">
-                        <ng-container matColumnDef="rubro">
-                            <th mat-header-cell *matHeaderCellDef> Rubros </th>
-                            <td mat-cell *matCellDef="let articulo"> {{articulo.rubro}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="valor">
-                            <th mat-header-cell *matHeaderCellDef> Valor </th>
-                            <td mat-cell *matCellDef="let articulo"> {{articulo.proyectado}} </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="columna"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columna;"></tr>
-                    </table>
+            <mat-step label="Tabla Rubros">
+                <div class="row">
+                    <div class="col-8 offset-2">
+                        <mat-table #table class="mat-elevation-z8 garantia" [dataSource]="dataSourceRubro">
+                            <ng-container matColumnDef="rubro">
+                                <mat-header-cell *matHeaderCellDef>Rubro</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.rubro}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="numeroCuota">
+                                <mat-header-cell *matHeaderCellDef>Numero Cuota</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.numeroCuota}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="proyectado">
+                                <mat-header-cell *matHeaderCellDef>Proyectado</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.proyectado}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="calculado">
+                                <mat-header-cell *matHeaderCellDef>Calculado</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.calculado }} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="estado">
+                                <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.estado }} </mat-cell>
+                            </ng-container>
+        
+                            <mat-header-row *matHeaderRowDef="displayedColumnsRubro"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumnsRubro;"></mat-row>
+                        </mat-table>
+                    </div>
                 </div>
             </mat-step>
             <!-- Tabla de pagos -->
             <mat-step label="Pagos">
-                <table mat-table [dataSource]=" dataSource" class="mat-elevation-z8" #tabla1>
-
-                    <ng-container matColumnDef="accion">
-                        <th mat-header-cell *matHeaderCellDef>Accion </th>
-                        <td mat-cell *matCellDef="let j">
-                            <button mat-icon-button  (click)="deletFila(j)">
-                                <mat-icon style="font-size: 62px" matTooltipPosition="above" matTooltip="Eliminar">cancel
-                                </mat-icon>
-                            </button>
-                        </td>
+                <div class="row">
+					<div class="col">
+						<mat-progress-bar *ngIf="loadComprobante.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+					</div>
+				</div>
+                <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante" >
+					<ng-container matColumnDef="accion">
+                        <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <a (click)="eliminarComprobante(row)">
+								<mat-icon matTooltip="Eliminar">delete</mat-icon>
+                            </a>
+                        </mat-cell>
+					</ng-container>
+					<ng-container matColumnDef="intitucionFinanciera">
+						<mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.intitucionFinanciera }} </mat-cell>
                     </ng-container>
-
-                    <ng-container matColumnDef="institucionFinanciera">
-                        <th mat-header-cell *matHeaderCellDef> Institucion Financiera </th>
-                        <td mat-cell *matCellDef="let articulo"> {{articulo.institucionFinanciera}} </td>
+                    <ng-container matColumnDef="cuenta">
+						<mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.cuenta }} </mat-cell>
                     </ng-container>
-
-                    <ng-container matColumnDef="cuentas">
-                        <th mat-header-cell *matHeaderCellDef> Cuentas </th>
-                        <td mat-cell *matCellDef="let articulo"> {{articulo.cuentas}} </td>
-                    </ng-container>
-
                     <ng-container matColumnDef="fechaPago">
-                        <th mat-header-cell *matHeaderCellDef> Fecha Pago </th>
-                        <td mat-cell *matCellDef="let articulo"> {{articulo.fechaPago | rDate }} </td>
+						<mat-header-cell *matHeaderCellDef>Fecha Pago</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.fechaPago | rDate}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroDeDeposito">
+						<mat-header-cell *matHeaderCellDef>Numero De Deposito</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.numeroDeposito }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorDepositado">
+						<mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.valorDepositado }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="descargarComprobante">
+						<mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
+						<mat-cell *matCellDef="let row">
+                            <a *ngIf="row.comprobante" (click)="descargarComprobante(row)">
+								<mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
+                            </a>
+                        </mat-cell>					
                     </ng-container>
 
-                    <ng-container matColumnDef="numeroDeposito">
-                        <th mat-header-cell *matHeaderCellDef> Numero de deposito </th>
-                        <td mat-cell *matCellDef="let articulo"> {{articulo.numeroDeposito}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="valorPagado">
-                        <th mat-header-cell *matHeaderCellDef> Valor Depositado </th>
-                        <td mat-cell *matCellDef="let articulo"> {{articulo.valorPagado}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="subir">
-                        <th mat-header-cell *matHeaderCellDef> Subir Comprobante </th>
-                        <td mat-cell *matCellDef="let j;">
-                                <button *ngIf="banderaGuardar.asObservable() | async" type="submit" mat-icon-button focusable="false" (click)="subirComprobante(j)">
-                                    <mat-icon style="font-size: 42px" matTooltipPosition="above"
-                                        matTooltip="Subir Comprobante">cloud_upload</mat-icon>
-                                </button>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="descargar">
-                        <th mat-header-cell *matHeaderCellDef> Descarga Comprobante </th>
-                        <td mat-cell *matCellDef="let j;">
-                            <button *ngIf="banderaDescargar.asObservable() | async" mat-icon-button focusable="false" (click)="descargarComprobante(j)" >
-                                <mat-icon style="font-size: 42px" matTooltipPosition="above"
-                                    matTooltip="Descarga Comprobante">cloud_download</mat-icon>
-                            </button>
-                        </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-                    <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
-                </table>
+					<mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
+					<mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
+                </mat-table>
+                <div class="row mt-2">
+                    <div class="col-2 offset-5">
+                        <button mat-stroked-button color="primary" (click)="agregarComprobante()">
+							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
+							<span color="primary">Agregar Comprobante</span>
+						</button>
+                    </div>
+                </div>
 
                 <div class="row mb-5">
                     <div class="col-md-4">

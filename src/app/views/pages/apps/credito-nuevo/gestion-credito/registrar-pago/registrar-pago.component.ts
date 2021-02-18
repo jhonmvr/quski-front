@@ -1,24 +1,21 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { MatDialog, MatTable, MatTableDataSource, MatSort } from '@angular/material';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ReNoticeService } from '../../../../../../core/services/re-notice.service';
-import { RegistarPagoDialogComponent } from './registar-pago-dialog/registar-pago-dialog';
-import { SoftbankService } from './../../../../../../core/services/quski/softbank.service';
-import { SubheaderService } from '../../../../../../core/_base/layout/services/subheader.service';
+import { PopupPagoComponent } from '../../../../../partials/custom/popups/popup-pago/popup-pago.component';
 import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
-import { ClienteSoftbank } from '../../../../../../core/model/softbank/ClienteSoftbank';
-import { BehaviorSubject } from 'rxjs';
-import { TbQoRegistrarPago } from './../../../../../../core/model/quski/TbQoRegistrarPago';
-import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
-import { Page } from '../../../../../../core/model/page';
-import { environment } from './../..`/../../../../../../../environments/environment';
-import { DataUpload } from './../../../../../../core/interfaces/data-upload';
+import { SubheaderService } from '../../../../../../core/_base/layout/services/subheader.service';
 import { ObjectStorageService } from './../../../../../../core/services/object-storage.service';
 import { ReFileUploadService } from './../../../../../../core/services/re-file-upload.service';
-import { UploadFileComponent } from '../../upload-file/upload-file.component';
-import { HabilitanteWrapper } from './../../../../../../core/model/wrapper/habilitante-wrapper';
+import { SoftbankService } from './../../../../../../core/services/quski/softbank.service';
+import { RegistarPagoDialogComponent } from './registar-pago-dialog/registar-pago-dialog';
+import { ClienteService } from '../../../../../../core/services/quski/cliente.service';
+import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
+import { ReNoticeService } from '../../../../../../core/services/re-notice.service';
+import { DataUpload } from './../../../../../../core/interfaces/data-upload';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatDialog, MatTableDataSource} from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Page } from '../../../../../../core/model/page';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { saveAs } from 'file-saver';
-import { toPublicName } from '@angular/compiler/src/i18n/serializers/xmb';
 
 
 /**
@@ -30,8 +27,17 @@ import { toPublicName } from '@angular/compiler/src/i18n/serializers/xmb';
   styleUrls: ['./registrar-pago.component.scss']
 })
 export class RegistrarPagoComponent implements OnInit {
-  loading;
-  loadingSubject = new BehaviorSubject<boolean>(false);
+  /** @TABLAS **/
+  public displayedColumnsRubro = ['rubro','numeroCuota', 'proyectado', 'calculado', 'estado'];
+  public dataSourceRubro = new MatTableDataSource<any>();
+  public loadComprobante  = new BehaviorSubject<boolean>(false);
+  private datosMupi: any;
+  public dataSourceComprobante = new MatTableDataSource<any>();
+  public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','descargarComprobante'];
+
+  
+
+
   banderaGuardar = new BehaviorSubject<boolean>(false);
   banderaDescargar = new BehaviorSubject<boolean>(false);
   private uploadSubject = new BehaviorSubject<boolean>(false);
@@ -42,7 +48,6 @@ export class RegistrarPagoComponent implements OnInit {
   columnas = ['accion', 'institucionFinanciera', 'cuentas', 'fechaPago', 'numeroDeposito', 'valorPagado', 'subir', 'descargar'];
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  dataSourceRubros: MatTableDataSource<any> = new MatTableDataSource<any>();
   totalResults: number;
   p = new Page();
 
@@ -66,11 +71,12 @@ export class RegistrarPagoComponent implements OnInit {
    * 
    */
   constructor(
+    private route: ActivatedRoute,
     private css: SoftbankService,
+    private cli: ClienteService,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
     private registrarPagoService: RegistrarPagoService,
-    private noticeService: ReNoticeService,
     private upload: ReFileUploadService, 
     private os: ObjectStorageService,
     public dialog: MatDialog) {
@@ -92,15 +98,105 @@ export class RegistrarPagoComponent implements OnInit {
     this.registrarPagoService.setParameter();
     this.upload.setParameter();
     this.os.setParameter();
-    this.testoperacionConsultaCS();
-    this.consultarClienteSoftbankCS();
-    this.testconsultaRubrosCS();
-    //falta el de rubros pre cancelacion
+    this.iniciarBusqueda();
     this.subheaderService.setTitle("Registrar Pago");
-    this.loading = this.loadingSubject.asObservable();
-    // this.submit();
   }
-  submit() {}
+  private iniciarBusqueda(){
+    this.route.paramMap.subscribe((data: any) => {
+      if (data.params.item) {
+        let row = JSON.parse(atob(data.params.item));
+        console.log('Mi row =>', row);
+        this.cedula.setValue(row.identificacion);
+        this.nombreCliente.setValue(row.nombreCliente);
+        this.codigoOperacion.setValue( row.numeroOperacion );
+        this.tipoCredito.setValue( row.tipoCredito );
+        this.consultarCuentaMupi( row.identificacion);
+        this.consultaRubros( row.numeroOperacion);
+      }
+    });
+  }
+  private consultarCuentaMupi( cedula ){
+    this.cli.consultarCuentaMupi( cedula).subscribe( (dta: any) =>{
+      if(dta.entidad){
+        this.datosMupi = dta.entidad;
+        this.codigoCuentaMupi.setValue(dta.entidad.numeroCuenta);
+
+      }
+    });
+  }
+  private consultaRubros( numero ) {
+    this.css.consultaRubrosCS(numero).subscribe((data: any) => {
+      if (data) {
+        this.dataSourceRubro = new MatTableDataSource<any>(data.rubros);
+      } else {
+        this.sinNoticeService.setNotice("No me trajo datos 'consultaRubrosCS'", 'error');
+      }
+    }, error => {
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice("Error no fue cacturado en 'entidadConsultaRubros' :(", 'error');
+      }
+    })
+  }
+  public agregarComprobante(){
+    this.loadComprobante.next(true);
+    console.log('Datos mupi =>', this.datosMupi);
+    const dialogRef = this.dialog.open(PopupPagoComponent, {
+      width: "800px",
+      height: "auto",
+      data: { id : '1', banco: this.datosMupi.institucionFinanciera, numeroCuenta: this.datosMupi.numeroCuenta }
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if (r) {
+        this.sinNoticeService.setNotice('ARCHIVO CARGADO CORRECTAMENTE','success');
+        this.cargarComprobante(r);
+      }else{
+        this.sinNoticeService.setNotice('ERROR CARGANDO ARCHIVO','error');
+      }
+    });
+  }
+  private cargarComprobante(r) {
+    const data = this.dataSourceComprobante.data;
+    data.push(r);
+    this.dataSourceComprobante = new MatTableDataSource<any>( data );
+    this.loadComprobante.next(false);
+  }
+  public eliminarComprobante(row){
+    const index = this.dataSourceComprobante.data.indexOf(row);
+    this.dataSourceComprobante.data.splice(index, 1);
+    const data = this.dataSourceComprobante.data;
+    this.dataSourceComprobante.data = data;
+  }  
+  public descargarComprobante(row){
+    saveAs(this.cli.dataURItoBlob(row.comprobante.fileBase64), row.comprobante.name);    
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   cargarPagos() {
     //console.log("entra a popUp angregar pago")
     let idReferenciaHab = this.id;
@@ -121,14 +217,9 @@ export class RegistrarPagoComponent implements OnInit {
       }
     });
   }
-  deletFila(row) {
-    let data = this.dataSource.data;
-    //console.log("esta es la fila q quiero borrar", row)
-    data.splice(row, 1);
-    this.dataSource = new MatTableDataSource<any>(data);
-  };
 
-  subirComprobante(j) {
+
+/*   subirComprobante(j) {
     //console.log("registro ",j)
     const dialogRef = this.dialog.open(UploadFileComponent, {
       width: "auto",
@@ -145,8 +236,8 @@ export class RegistrarPagoComponent implements OnInit {
     this.banderaGuardar.next(false);
       }
     });
-  }
-
+  } */
+/* 
   descargarComprobante(j) {
     //console.log("Archivo subido --->>>>> ", j);
     this.os.getObjectById( j.archivo,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
@@ -172,89 +263,11 @@ export class RegistrarPagoComponent implements OnInit {
         this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
       });
   }
-
-  
-  consultarClienteSoftbankCS() {
-    let entidadConsultaCliente = new ClienteSoftbank();
-    //let cedula = this.identificacion.value;
-    ////console.log(" "  + cedula)
-    entidadConsultaCliente.identificacion = "1311066441";
-    entidadConsultaCliente.idTipoIdentificacion = 1;
-
-    this.css.consultarClienteSoftbankCS(entidadConsultaCliente).subscribe((data: any) => {
-      if (data) {
-        this.cedula.setValue(data.identificacion);
-        this.nombreCliente.setValue(data.nombreCompleto);
-        let cuentasBancaCliente = data.cuentasBancariasCliente[0];
-        ////console.log(" cuenta banco --->",cuentasBancaCliente.cuenta )
-        this.codigoCuentaMupi.setValue("5248548563");
-        this.tipoCredito.setValue("CUOTAS");
-        ////console.log("Consulta del cliente en Cloustudio --> " + JSON.stringify(data));
-      } else {
-        this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaCliente'", 'error');
-      }
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("Error no fue cacturado en 'consultarClienteCS' :(", 'error');
-
-      }
-    });
-  }
-
-  testoperacionConsultaCS() {
-    let entidadConsultaOperacion = new ClienteSoftbank();
-    entidadConsultaOperacion.identificacion = "1311066441";
-    entidadConsultaOperacion.idTipoIdentificacion = 1;
-    this.css.operacionConsultaCS(entidadConsultaOperacion).subscribe((data: any) => {
-      if (data.operaciones[0]) {
-        let codOpera = data.operaciones[0];
-        this.codigoOperacion.setValue(codOpera.numeroOperacion);
-        ////console.log("Consulta de Operacion en Cloustudio --> " + JSON.stringify(data.operaciones[0]));
-      } else {
-        this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaOperacion'", 'error');
-      }
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("Error no fue cacturado en 'entidadConsultaOperacion' :(", 'error');
-
-      }
-    });
-  }
-
-
-  testconsultaRubrosCS() {
-    let entidadConsultaRubros;
-    entidadConsultaRubros = 2020001984;
-    this.css.consultaRubrosCS(entidadConsultaRubros).subscribe((data: any) => {
-      if (data) {
-        let rubro = data.rubros;
-        this.dataSourceRubros = new MatTableDataSource<any>(rubro.filter(e => e.estado == "ACTIVO"));
-        ////console.log("Consulta de Rubros en Cloustudio --> " + JSON.stringify(data));
-      } else {
-        this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaRubros'", 'error');
-      }
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("Error no fue cacturado en 'entidadConsultaRubros' :(", 'error');
-
-      }
-    })
-  };
+ */
 
   guardar() {
     //console.log("voy a guardar ")
-    this.loadingSubject.next(true);
     if (this.formRegistrarPago.invalid) {
-      this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS REGISTRAR PAGOS", 'warning');
       return;
     }
@@ -287,10 +300,8 @@ export class RegistrarPagoComponent implements OnInit {
         this.dataSource.data = p.entidad.pagos;
         this.banderaDescargar.next(true);
       }
-      this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
     }, error => {
-      this.loadingSubject.next(false);
     }
     )
 

@@ -57,8 +57,12 @@ export class PopupPagoComponent implements OnInit {
   private cargarCatalogos(){
     this.sof.consultarBancosCS().subscribe( data =>{
       this.catBanco = data.catalogo ? data.catalogo :  {nombre: 'No se cargo el catalogo. Error', id: 0};
-      this.intitucionFinanciera.setValue(this.catBanco.find(x => x.id == this.data.banco) ? this.catBanco.find(x => x.id == this.data.banco) : {nombre: 'No se cargo el catalogo. Error', id: 0});
-      this.intitucionFinanciera.value.nombre ? this.cuenta.setValue( this.data.numeroCuenta ) : 'Error cargando numero de cuenta'; 
+      let banco = this.catBanco.find(x => x.id == this.data.banco);
+      if(banco){
+        this.intitucionFinanciera.setValue( banco );
+        this.cuenta.setValue( this.data.numeroCuenta );
+
+      }
     });
   }
   public chanceBanco(){

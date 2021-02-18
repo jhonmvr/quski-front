@@ -142,6 +142,9 @@ export class ListCreditoComponent implements OnInit {
   public irNegociacion(){
     this.router.navigate(['negociacion/gestion-negociacion']);    
   }
+  public irRegistrarPago(row: any){
+    this.router.navigate(['credito-nuevo/registrar-pago/', btoa(JSON.stringify(row)) ]);    
+  }
   public irDetalle(row: any){
     this.router.navigate(['credito-nuevo/detalle-credito/', row.numeroOperacion]);    
   }

@@ -105,7 +105,7 @@ const routes: Routes = [
 				component: GestionCreditoComponent
 			},
 			{
-				path: 'gestion-credito/registrar-pago',
+				path: 'registrar-pago/:item',
 				component: RegistrarPagoComponent
 			},
 			{
