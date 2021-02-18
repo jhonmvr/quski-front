@@ -30,24 +30,21 @@ import { ReNoticeService } from '../re-notice.service';
       )
     );
   }
- public crearRegistrarPagoConRelaciones(registrarPagoWrapper) {
+  public crearRegistrarComprobanteRenovacion(registro) {
+    const serviceUrl = this.appResourcesUrl + 'registrarPagoRestController/crearRegistrarComprobanteRenovacion';
     this.options = { headers: this.headers, params: this.params };
-    const serviceUrl =
-      this.appResourcesUrl + 'registrarPagoRestController/crearRegistrarPago';
-
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, registrarPagoWrapper, this.options).pipe(
+    return this.http.post(serviceUrl, registro, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
   }
-  public crearRegistrarComprobanteRenovacion(registro) {
-    const serviceUrl = this.appResourcesUrl + 'registrarPagoRestController/crearRegistrarComprobanteRenovacion';
-    this.options = { headers: this.headers, params: this.params };
+  public iniciarProcesoRegistrarPago(registro) {
+    const serviceUrl = this.appResourcesUrl + 'registrarPagoRestController/iniciarProcesoRegistrarPago';
+    this.options = { headers: this.headers };
     return this.http.post(serviceUrl, registro, this.options).pipe(
-      tap( // Log the result or error
+      tap( 
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
