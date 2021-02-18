@@ -31,7 +31,7 @@ export class SubirComprobanteComponent implements OnInit {
       this.uploading = this.uploadSubject.asObservable();
     }
     onFileChange(event, elemento) {
-      let relatedstr = this.data.idCredito;
+      let relatedstr = this.data.idCredito ? this.data.idCredito : "0";
       let process = "NOVACION";
       let reader = new FileReader();
       if (event.target.files && event.target.files.length > 0) {

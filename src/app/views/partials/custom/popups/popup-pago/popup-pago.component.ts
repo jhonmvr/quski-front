@@ -82,7 +82,7 @@ export class PopupPagoComponent implements OnInit {
     if(this.formOperacion.valid){
       let d = {
         idTipoDocumento: 10,
-        idCredito: this.data.id
+        idCredito: this.data.id ? this.data.id : null,
       };
       const dialogRef = this.dialog.open(SubirComprobanteComponent, {
         width: '500px',
