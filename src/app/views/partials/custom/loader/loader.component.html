@@ -1,5 +1,9 @@
-<div *ngIf="flat | async" class="spinner-container">
- <!--  <div class="spinner spinner-bubble spinner-bubble-danger m-5"></div> -->
+<div *ngIf="flat | async" class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-wrapper spinner-container">
+  <div class="spinner spinner-bubble spinner-bubble-info" style="position: fixed;
+  left: 50%;
+  right: 50%;
+  top: 50%;
+  z-index: 10000;"></div>
 
-  <mat-spinner style="left: 50%; top: 50%;"></mat-spinner>
+ <!--  <mat-spinner style="left: 50%; top: 50%;"></mat-spinner> -->
 </div>
