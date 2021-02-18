@@ -162,6 +162,7 @@
                 </div>
             </div>
         </form>
+        <mat-progress-bar mode="indeterminate" *ngIf="loadingSubject.asObservable() | async"></mat-progress-bar>
         <div class="row mt-5">
             <div class="col">
 

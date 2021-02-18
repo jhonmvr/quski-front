@@ -38,24 +38,23 @@ export class LoaderInterceptor implements HttpInterceptor {
     }
 
     HandleError(error: any) {
+      //debugger;
+      //console.log("eror===>>>>",JSON.stringify(error))
         if (JSON.stringify(error).indexOf("codError") > 0) {
           let b = error.error;
           this.sinNoticeService.setNotice(b.msgError, 'error');
         } else if(error.error instanceof  Blob){
             this.sinNoticeService.setNotice("NO SE ENCUENTRA O NO EXISTE ", 'error');
-         }else if(error.error instanceof ProgressEvent){
-            this.sinNoticeService.setNotice("NO SE PUEDE ACCEDER AL SERVICIO REVISE SU CONEXIÓN A INTERNET O VPN", 'error');
          }
          else if(error instanceof HttpErrorResponse ){
           if(error.status != 200 ){
             if(error.message){
                 this.sinNoticeService.setNotice(error.message, 'error');
-            }else{
-                this.sinNoticeService.setNotice(error.error, 'error');
-              ////console.log(error);
             }
           }
-        }
+        }else if(error.error instanceof ProgressEvent){
+          this.sinNoticeService.setNotice("NO SE PUEDE ACCEDER AL SERVICIO REVISE SU CONEXIÓN A INTERNET O VPN", 'error');
+       }
         let errorMessage = '';
         if (error.status === 401) {
           errorMessage = 'Error: ' + error.statusText;

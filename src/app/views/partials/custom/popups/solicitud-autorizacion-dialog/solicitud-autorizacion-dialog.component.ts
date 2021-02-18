@@ -206,7 +206,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
           if (data) {
             //this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
             ////console.log("datos de salida",data);
-            saveAs(data, 'Carta solicitud Autorizacion Buro' + '.pdf');
+            saveAs( data, 'Carta solicitud Autorizacion Buro' + '.pdf');
             this.enableLoadArchivo.next(true);
             this.enableConsultar.next(false);
             this.enableDownload.next(false);
@@ -216,15 +216,7 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
               'error'
             );
           }
-        },
-        error => {
-          //console.log('================>error: ' + JSON.stringify(error));
-          this.sinNoticeService.setNotice(
-            'ERROR DESCARGA DE PLANTILLA HABILITANTE',
-            'error'
-          );
-        }
-      );
+        });
     } else
       this.sinNoticeService.setNotice('INGRESA LOS NOMBRES COMPLETOS  ', 'error');
   }

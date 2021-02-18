@@ -62,14 +62,18 @@ export class SoftbankService extends BaseService {
     );
   }
   public buscarCreditos( wrapper: any ) {
-    let serviceUrl = this.appResourcesUrl + "softbankClienteRestController/buscarCreditos";
-    this.options = { Headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+    let serviceUrl = this.softBaseBankUrl + 'api/prestamo/operacion/consultaGlobal';
+    let headers = new HttpHeaders().set("Content-Type", "application/json")
+    .set("Accept", "application/json");
+    this.options = {Headers: headers };
+    let x = this.http.post(serviceUrl, wrapper, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
+        console.log("peticion===>>",x)
+    return x;
   }
   /**
    * @author Jeroham Cadenas - Developer Twelve

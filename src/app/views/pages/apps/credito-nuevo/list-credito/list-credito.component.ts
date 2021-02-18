@@ -166,10 +166,10 @@ export class ListCreditoComponent implements OnInit {
     wrapper = wrapper ? wrapper : { numeroPagina: 1, tamanioPagina: 5 } as WrapperBusqueda;
 
     this.sof.buscarCreditos(wrapper).subscribe( (data: any) =>{
-      data.entidad && data.entidad.operaciones ?   
-      this.cargarTabla( data.entidad ):
+      data && data.operaciones ?   
+      this.cargarTabla( data ):
         this.sinNotSer.setNotice('No existen creditos relacionados', 'error') ; 
-    });
+    },error=>{this.loadingSubject.next(false);});
   }
   private cargarTabla( data: any ){
     this.loadingSubject.next(false);
@@ -204,12 +204,18 @@ export class ListCreditoComponent implements OnInit {
       w.codigoUsuarioAsesor = this.asesor.value ? this.asesor.value.codigo : null;
       w.identificacion = this.cedulaCliente.value ? this.cedulaCliente.value : null;
       w.plazo = this.plazo.value ? this.plazo.value : null;
-      w.fechaInicioSolicitud = this.fechaCreacionDesde.value ? this.fechaCreacionDesde.value.getFullYear()+'-'+this.fechaCreacionDesde.value.getMonth()+'-'+ this.fechaCreacionDesde.value.getDate(): null;
-      w.fechaFinSolicitud = this.fechaCreacionHasta.value ? this.fechaCreacionHasta.value.getFullYear()+'-'+this.fechaCreacionHasta.value.getMonth()+'-'+this.fechaCreacionHasta.value.getDate() : null;
-      w.fechaInicioAprobacion = this.fechaAprobacionDesde.value ? this.fechaAprobacionDesde.value.getFullYear()+'-'+this.fechaAprobacionDesde.value.getMonth()+'-'+this.fechaAprobacionDesde.value.getDate() : null;
-      w.fechaFinAprobacion = this.fechaAprobacionHasta.value ? this.fechaAprobacionHasta.value.getFullYear()+'-'+this.fechaAprobacionHasta.value.getMonth()+'-'+this.fechaAprobacionHasta.value.getDate() : null;
-      w.fechaInicioVencimiento = this.fechaVencimientoDesde.value ? this.fechaVencimientoDesde.value.getFullYear()+'-'+this.fechaVencimientoDesde.value.getMonth()+'-'+this.fechaVencimientoDesde.value.getDate() : null;
-      w.fechaFinVencimiento = this.fechaVencimientoHasta.value ? this.fechaVencimientoHasta.value.getFullYear()+'-'+this.fechaVencimientoHasta.value.getMonth()+'-'+this.fechaVencimientoHasta.value.getDate() : null;
+      w.fechaInicioSolicitud = this.fechaCreacionDesde.value ? this.fechaCreacionDesde.value.getFullYear()+'-'+
+              ('00' + (this.fechaCreacionDesde.value.getMonth()+1)).slice(-2)+'-'+ this.fechaCreacionDesde.value.getDate(): null;
+      w.fechaFinSolicitud = this.fechaCreacionHasta.value ? this.fechaCreacionHasta.value.getFullYear()+'-'+
+              ('00' + (this.fechaCreacionHasta.value.getMonth()+1)).slice(-2)+'-'+this.fechaCreacionHasta.value.getDate() : null;
+      w.fechaInicioAprobacion = this.fechaAprobacionDesde.value ? this.fechaAprobacionDesde.value.getFullYear()+'-'+
+              ('00' + (this.fechaAprobacionDesde.value.getMonth()+1)).slice(-2)+'-'+this.fechaAprobacionDesde.value.getDate() : null;
+      w.fechaFinAprobacion = this.fechaAprobacionHasta.value ? this.fechaAprobacionHasta.value.getFullYear()+'-'+
+              ('00' + (this.fechaAprobacionHasta.value.getMonth()+1)).slice(-2)+'-'+this.fechaAprobacionHasta.value.getDate() : null;
+      w.fechaInicioVencimiento = this.fechaVencimientoDesde.value ? this.fechaVencimientoDesde.value.getFullYear()+'-'+
+              ('00' + (this.fechaVencimientoDesde.value.getMonth()+1)).slice(-2)+'-'+this.fechaVencimientoDesde.value.getDate() : null;
+      w.fechaFinVencimiento = this.fechaVencimientoHasta.value ? this.fechaVencimientoHasta.value.getFullYear()+'-'+
+              ('00' + (this.fechaVencimientoHasta.value.getMonth()+1)).slice(-2)+'-'+this.fechaVencimientoHasta.value.getDate() : null;
       w.codigoEstadoOperacion = this.estado.value ? this.estado.value.codigo : null;
       w.nombreCliente = this.nombreCliente.value ? this.nombreCliente.value : null;
       w.esCuotas = this.tipoCredito.value ? this.tipoCredito.value.valor : null;

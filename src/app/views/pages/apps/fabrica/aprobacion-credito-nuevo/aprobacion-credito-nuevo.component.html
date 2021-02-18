@@ -621,7 +621,9 @@
       </mat-step>
 
       <mat-step label="Habilitantes">
-        <re-habilitante></re-habilitante>
+        <re-habilitante [proceso]="'NUEVO'" [useType]="'FORM'"
+            [referencia]="numeroOperacion.value" >
+                </re-habilitante> 
       </mat-step>
 
       <mat-step label="Resultado de la operación">
