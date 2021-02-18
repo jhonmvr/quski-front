@@ -231,7 +231,6 @@ export class NovacionHabilitanteComponent implements OnInit {
     this.dataSourceComprobante.data.splice(index, 1);
     const data = this.dataSourceComprobante.data;
     this.dataSourceComprobante.data = data;
-
   }
   public descargarComprobante(row){
     saveAs(this.cre.dataURItoBlob(row.comprobante.fileBase64), row.comprobante.name);    
