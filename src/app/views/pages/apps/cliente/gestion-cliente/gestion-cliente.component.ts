@@ -854,11 +854,11 @@ export class GestionClienteComponent implements OnInit {
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BOTONES ** */
   public cargarComponenteHabilitante() {
-    if (this.wrapper.cliente.id != null && this.wrapper.cliente.id != 0) {
+    if (this.wrapper.cliente.id != null && this.wrapper.cliente.id != 0 && this.identificacion.value) {
       const dialogRef = this.dialog.open(DialogCargarHabilitanteComponent, {
-        width: "auto-max",
-        height: "auto-max",
-        data: this.wrapper.cliente.id
+        width: "900px",
+        height: "400px",
+        data: this.identificacion.value
       });
     } else {
       this.sinNoticeService.setNotice("ERROR NO HAY CLIENTE PARA ACTUALIZAR LOS HABILITANTES", 'error');

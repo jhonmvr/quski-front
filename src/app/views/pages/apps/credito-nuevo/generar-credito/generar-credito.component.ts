@@ -30,7 +30,7 @@ import { saveAs } from 'file-saver';
 export class GenerarCreditoComponent implements OnInit {
   /** @VARIABLES_GLOBALES **/
   public operacionNuevo: OperacionNuevoWrapper;
-  private item: number;
+  public item;
   public loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loadImgJoya = new BehaviorSubject<boolean>(false);
@@ -412,12 +412,12 @@ export class GenerarCreditoComponent implements OnInit {
   public cargarFotoJoya() {
     this.srcJoya = null;
     this.loadImgJoya.next(true);
-    this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.operacionNuevo.credito.id.toString(), this.joyaFoto.tipoDocumento);
+    this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.item, this.joyaFoto.tipoDocumento);
   }
   public cargarFotoFunda() {
     this.srcFunda = null;
     this.loadImgFunda.next(true);
-    this.loadArchivoCliente(this.fundaFoto.proceso, this.fundaFoto.estadoOperacion, this.operacionNuevo.credito.id.toString(), this.fundaFoto.tipoDocumento);
+    this.loadArchivoCliente(this.fundaFoto.proceso, this.fundaFoto.estadoOperacion, this.item, this.fundaFoto.tipoDocumento);
   }
   private loadArchivoCliente(procesoS: string, estadoOperacionS: string, referenciaS: string, idTipoDocumentoS: string) {
     let envioModel : DialogDataHabilitante = {

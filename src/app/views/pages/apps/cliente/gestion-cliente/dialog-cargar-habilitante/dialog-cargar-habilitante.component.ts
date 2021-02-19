@@ -20,6 +20,7 @@ export class DialogCargarHabilitanteComponent implements OnInit {
     
   }
   ngOnInit(): void {
+    
     this.idRef = this.data;
   }
 }

@@ -456,8 +456,7 @@
 
             <mat-step label="Documento Habilitantes">
                 <ng-container *ngIf="existeCredito">
-                    <re-habilitante [proceso]="'NUEVO'" [useType]="'FORM'"
-             [referencia]="numeroOperacion.value" >
+                    <re-habilitante [proceso]="'NUEVO'" [useType]="'FORM'" [referencia]="item" >
                 </re-habilitante> 
                     <div class="row">
                         <div class="col-md-5 offset-md-5">

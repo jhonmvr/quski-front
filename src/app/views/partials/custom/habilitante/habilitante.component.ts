@@ -202,7 +202,7 @@ export class HabilitanteComponent implements OnInit {
 
   submit() {
     this.buscarObservable.next(true);
-    console.log("loadDocumentoHabilitante cargando rol: " + this.rol);
+    console.log("loadDocumentoHabilitante cargando rol: " + localStorage.getItem(environment.rolKey));
     console.log("loadDocumentoHabilitante cargando proceso: " + this.proceso);
     console.log("loadDocumentoHabilitante cargando referencia: " + this.referencia);
     console.log("loadDocumentoHabilitante cargando estadoOperacion: " + this.estadoOperacion);
@@ -224,7 +224,7 @@ export class HabilitanteComponent implements OnInit {
               this.enableEnd=false;
             }
             this.dataSourcesHabilitantes = new MatTableDataSource<HabilitanteWrapper>(data.list);
-            this.getPermisoAccion();
+            //this.getPermisoAccion();
             this.totalResults=data.totalResults;
           } else {
             //console.log("no hay datos ");
@@ -261,8 +261,8 @@ export class HabilitanteComponent implements OnInit {
             byteNumbers[i] = byteCharacters.charCodeAt(i);
         }
         const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], {type: row.mimeType});
-        saveAs(blob , row.descripcionTipoDocumento + ".pdf");
+        const blob = new Blob([byteArray]);
+        saveAs(blob , obj.name);
       }else {
         this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
       }

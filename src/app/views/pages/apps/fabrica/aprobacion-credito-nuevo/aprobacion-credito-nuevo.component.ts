@@ -35,7 +35,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   public usuario: string;
   public agencia: any;
   public fechaActual: string;
-
+  public item;
+  public varHabilitante = {proceso:'',referencia:''};
   public loadingSubject = new BehaviorSubject<boolean>(false);
   public crediW: AprobacionWrapper;
   public catalogos: CatalogosWrapper;
@@ -299,6 +300,9 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   private traerCreditoNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
+        this.item = data.params.id;
+        this.varHabilitante.referencia= this.item;
+        this.varHabilitante.proceso='NUEVO,FUNDA';
         this.loadingSubject.next(true);
         this.cre.traerCreditoNegociacionExistente(data.params.id).subscribe((data: any) => {
           this.crediW = data.entidad;
