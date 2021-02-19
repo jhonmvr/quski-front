@@ -1,5 +1,6 @@
 import { ConfirmarAccionComponent } from '../../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { PopupPagoComponent } from '../../../../../partials/custom/popups/popup-pago/popup-pago.component';
+import { SimulacionPrecancelacion } from '../../../../../../core/model/softbank/SimulacionPrecancelacion';
 import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
 import { SubheaderService } from '../../../../../../core/_base/layout/services/subheader.service';
 import { SoftbankService } from './../../../../../../core/services/quski/softbank.service';
@@ -85,8 +86,8 @@ export class RegistrarPagoComponent implements OnInit {
             this.codigoOperacion.setValue( row.numeroOperacion );
             this.nombreCliente.setValue(row.nombreCliente);
             this.tipoCredito.setValue( row.tipoCredito );
-            this.valorPreCancelado.setValue('45');
             this.consultaRubros( row.numeroOperacion);
+            this.simulacionPrecancelacion( row.numeroOperacion );
           }
         });
       }
@@ -107,6 +108,24 @@ export class RegistrarPagoComponent implements OnInit {
         this.sinNoticeService.setNotice("Error no fue cacturado en 'entidadConsultaRubros' :(", 'error');
       }
     })
+  }
+  private simulacionPrecancelacion( numeroOperacion ){
+    this.cli.getSystemDate().subscribe( (data: any) =>{
+      let fecha  = new Date(data.entidad)
+      let meses  = (fecha.getMonth() > Number(9) ? '' : '0') + fecha.getMonth();
+      let dias   = (fecha.getDate()  > Number(9) ? '' : '0') + fecha.getDate();
+      let fechaC = fecha.getFullYear() + '-' + meses + '-' + dias;
+      let wrapper: SimulacionPrecancelacion = { 
+        numeroPrestamo: numeroOperacion, 
+        fechaPrecancelacion: fechaC
+      }
+      this.css.simularPrecancelacionCS( wrapper ).subscribe( (data: any) =>{
+        if(data){
+          this.valorPreCancelado.setValue( data.valorTotal );
+        }
+      });
+      console.log('Formateada =>', wrapper.fechaPrecancelacion);
+    });
   }
   public agregarComprobante(){
     this.loadComprobante.next(true);
