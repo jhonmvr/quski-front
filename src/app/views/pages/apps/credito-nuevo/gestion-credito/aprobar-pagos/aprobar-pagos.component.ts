@@ -1,17 +1,14 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTable, MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatTable, MatDialog, MatTableDataSource,  } from '@angular/material';
 import { DialogoAprobarPagosComponent } from './dialogo-aprobar-pagos/dialogo-aprobar-pagos.component';
 import { DialogoRechazarPagosComponent } from './dialogo-rechazar-pagos/dialogo-rechazar-pagos.component';
 import { BehaviorSubject } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SoftbankService } from './../../../../../../core/services/quski/softbank.service';
-import { SubheaderService } from './../../../../../../core/_base/layout';
 import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
 import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { stringify } from 'querystring';
-import { Key } from 'protractor';
 import { environment } from './../..`/../../../../../../..//environments/environment';
 import { ObjectStorageService } from './../../../../../../core/services/object-storage.service';
 import { saveAs } from 'file-saver';
@@ -22,18 +19,12 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./aprobar-pagos.component.scss']
 })
 export class AprobarPagosComponent implements OnInit {
-  loading;
-  //loadingSubject = new BehaviorSubject<boolean>(false);
-  columnas = ['institucionFinanciera', 'cuentas', 'fechaPago', 'numeroDeposito', 'valorPagado', 'descargar'];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  dataSourceRubros: MatTableDataSource<any> = new MatTableDataSource<any>();
-  //totalResults: number;
-  //p = new Page();
-  //paginator: MatPaginator;
-  columna: string[] = ['rubro', 'valor'];
-  //total: string;
-  //@ViewChild('tabla1', { static: true }) sort: MatSort;
-  
+  private usuario;
+  private agencia;
+  public dataSourceComprobante = new MatTableDataSource<any>();
+  public displayedColumnsComprobante = ['intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','descargarComprobante'];
+  public displayedColumnsRubro = ['rubro','numeroCuota', 'proyectado', 'calculado', 'estado'];
+  public dataSourceRubro = new MatTableDataSource<any>();
   
   private idCliente : string;
   private estado : string;
@@ -42,52 +33,93 @@ export class AprobarPagosComponent implements OnInit {
   public nombreCliente = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cedula = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public codigoOperacion = new FormControl('', [Validators.required, Validators.maxLength(13)]);
-  public codigoCuentaMupi = new FormControl('', [Validators.required, Validators.maxLength(13)]);
+  public cuentaMupi = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public tipoCredito = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public valorPreCancelado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public valorDepositado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public observacion = new FormControl('', [Validators.maxLength(150)]);
-  
-  /**
-   * 
-   * @param  sinNoticeService;
-   * 
-   */
-  loadingSubject = new BehaviorSubject<boolean>(false);
+ 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private css: SoftbankService,
-    private subheaderService: SubheaderService,
+    private reg: RegistrarPagoService,
+    private sof: SoftbankService,
     private sinNoticeService: ReNoticeService,
-    private rp: RegistrarPagoService,
-    private os: ObjectStorageService,
     public dialog: MatDialog
     ) {
-    this.css.setParameter();
-    this.rp.setParameter();
-    this.os.setParameter();
+    this.sof.setParameter();
+    this.reg.setParameter();
     this.formAprobarPago.addControl("nombresCliente", this.nombreCliente);
     this.formAprobarPago.addControl("cedula", this.cedula);
     this.formAprobarPago.addControl("codigoOperacion", this.codigoOperacion);
-    this.formAprobarPago.addControl("codigoCuentaMupi", this.codigoCuentaMupi);
+    this.formAprobarPago.addControl("cuentaMupi", this.cuentaMupi);
     this.formAprobarPago.addControl("tipoCredito", this.tipoCredito);
     this.formAprobarPago.addControl("valorPreCancelado", this.valorPreCancelado);
     this.formAprobarPago.addControl("valorDepositado", this.valorDepositado);
     this.formAprobarPago.addControl("observacion", this.observacion);
   }
   ngOnInit() {
-    this.css.setParameter();
-    this.rp.setParameter();
-    this.os.setParameter();
-    this.testconsultaRubrosCS();
-    this.ConsultarPagosId();
-    this.subheaderService.setTitle("Aprobar Pagos");
+    this.reg.setParameter();
+    this.sof.setParameter();
+    this.consultaInicial();
+    this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.agencia = localStorage.getItem( 'idAgencia' );    
+    this.formAprobarPago.disable();
+  }
+  private consultaInicial() {
+    this.route.paramMap.subscribe((data: any) => {
+      if (data.params.id) {
+        let tipodb = "REGISTRO_PAGO";
+        this.reg.clientePagoByIdCliente(data.params.id, tipodb).subscribe((data: any) => {
+          if(data.entidades){
+            this.dataSourceComprobante.data = data.entidades;
+            let cliente = data.entidades[0].tbQoClientePago;
+            this.nombreCliente.setValue(cliente.nombreCliente);
+            this.cedula.setValue(cliente.cedula);
+            this.consultaRubrosCS(cliente.codigoOperacion);
+            this.codigoOperacion.setValue(cliente.codigoOperacion);
+            this.cuentaMupi.setValue(cliente.codigoCuentaMupi);
+            this.tipoCredito.setValue(cliente.tipoCredito);
+            this.valorPreCancelado.setValue(cliente.valorPrecancelado);
+            this.valorDepositado.setValue(cliente.valorDepositado);
+            this.observacion.setValue(cliente.observacion);
+            this.estado = cliente.estado;
+            this.tipo = cliente.tipo;
+          }
+        }, error => {
+          if (JSON.stringify(error).indexOf("codError") > 0) {
+            let b = error.error;
+            this.sinNoticeService.setNotice(b.msgError, 'error');
+          } else {
+            this.sinNoticeService.setNotice("Error no fue cacturado en 'clientePagoByIdCliente' :(", 'error');
+
+          }
+        })
+      } else {
+
+      }
+    })
+  }
+  private consultaRubrosCS(numeroOperacion) {
+    this.sof.consultaRubrosCS(numeroOperacion).subscribe((data: any) => {
+      if (data) {
+        this.dataSourceRubro = new MatTableDataSource<any>(data.rubros);
+      } else {
+        this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaRubros'", 'error');
+      }
+    }, error => {
+      if (JSON.stringify(error).indexOf("codError") > 0) {
+        let b = error.error;
+        this.sinNoticeService.setNotice(b.msgError, 'error');
+      } else {
+        this.sinNoticeService.setNotice("Error no fue cacturado en 'entidadConsultaRubros' :(", 'error');
+      }
+    })
+  }
+  public enviarRespuesta(aprobar){
 
   }
-  submit() {
-    
-  }
+
 
   id;
   Aprobar() {
@@ -108,14 +140,12 @@ export class AprobarPagosComponent implements OnInit {
       }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
         
     let user = localStorage.getItem(localStorage.key(2));
-    this.rp.aprobarPago(this.idCliente, this.estado, this.tipo, user ).subscribe(q => {
+    this.reg.aprobarPago(this.idCliente, this.estado, this.tipo, user ).subscribe(q => {
       //console.log(" >>> ", this.rp);
 
-      this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
       this.router.navigate(['../../asesor/bandeja-principal', this.idCliente]);
     }, error => {
-      this.loadingSubject.next(false);
     });
   });
   }
@@ -137,175 +167,18 @@ export class AprobarPagosComponent implements OnInit {
     }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
       
   let user = localStorage.getItem(localStorage.key(2));
-    this.rp.rechazarPago(this.idCliente, this.estado, this.tipo, user ).subscribe(p => {
+    this.reg.rechazarPago(this.idCliente, this.estado, this.tipo, user ).subscribe(p => {
       //console.log(" >>> ", this.rp);
 
-      this.loadingSubject.next(false);
       this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
       this.router.navigate(['../../asesor/bandeja-principal', this.idCliente]);
     }, error => {
-      this.loadingSubject.next(false);
     })
     });
   }
-  deletFila(row) {
-    let data = this.dataSource.data;
-    //console.log("esta es la fila q quiero borrar", row)
-    data.splice(row, 1);
-    this.dataSource = new MatTableDataSource<any>(data);
-  };
 
-
-  /*subirComprobante() {
-    if (confirm("Realmente quiere subir?")) {
-
-    }
-  }*/
   descargarComprobante(j) {
-    this.os.getObjectById( j.archivo,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
-      if (confirm("Realmente quiere descargar?")) {
-        if( data && data.entidad ){
-          let obj=JSON.parse( atob(data.entidad) );
-          //console.log("entra a retorno json " + JSON.stringify( obj ));
-          const byteCharacters = atob(obj.fileBase64);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-              byteNumbers[i] = byteCharacters.charCodeAt(i);
-          }
-          const byteArray = new Uint8Array(byteNumbers);
-          const blob = new Blob([byteArray], {type: j});
-          saveAs(blob , obj.name);
-        }else {
-          this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
-        }
-      }
-      },
-      error => {
-        //console.log("================>error: " + JSON.stringify(error));
-        this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
-      });
-  }
-
-
-
-
-  ConsultarPagosId() {
-    this.route.paramMap.subscribe((data: any) => {
-      data.params.id
-      //console.log(" id = ? " , data.params.id)
-      if (data.params.id) {
-        this.idCliente = data.params.id;
-        let tipodb = "REGISTRO_PAGO";
-        this.rp.clientePagoByIdCliente(this.idCliente, tipodb).subscribe((data: any) => {
-          if (data) {
-            if(data.entidad && data.entidad.pagos){
-              this.dataSource.data = data.entidad.pagos;
-            }
-            let cliente = data.entidades[0].tbQoClientePago;
-            this.nombreCliente.setValue(cliente.nombreCliente);
-            this.cedula.setValue(cliente.cedula);
-            this.codigoOperacion.setValue(cliente.codigoOperacion);
-            this.codigoCuentaMupi.setValue(cliente.codigoCuentaMupi);
-            this.tipoCredito.setValue(cliente.tipoCredito);
-            this.valorPreCancelado.setValue(cliente.valorPrecancelado);
-            this.valorDepositado.setValue(cliente.valorDepositado);
-            this.observacion.setValue(cliente.observacion);
-            this.estado = cliente.estado;
-            this.tipo = cliente.tipo;
-            localStorage.getItem(localStorage.key(2));
-            //console.log("user:--->>>"+localStorage.getItem(localStorage.key(2)) );
-            //console.log("Cliente: ----> ", this.estado);
-            //console.log("Consulta de pagos en clientePagoByIdCliente --> " + JSON.stringify(data));
-            
-            this.dataSource = new MatTableDataSource<any>(data.entidades);
-          } else {
-            this.sinNoticeService.setNotice("No me trajo datos 'clientePagoByIdCliente'", 'error');
-          }
-        }, error => {
-          if (JSON.stringify(error).indexOf("codError") > 0) {
-            let b = error.error;
-            this.sinNoticeService.setNotice(b.msgError, 'error');
-          } else {
-            this.sinNoticeService.setNotice("Error no fue cacturado en 'clientePagoByIdCliente' :(", 'error');
-
-          }
-        })
-      } else {
-
-      }
-    })
-  }
-  testconsultaRubrosCS() {
-    let entidadConsultaRubros;
-    entidadConsultaRubros = 2020001984;
-    this.css.consultaRubrosCS(entidadConsultaRubros).subscribe((data: any) => {
-      if (data) {
-        let rubro = data.rubros;
-        this.dataSourceRubros = new MatTableDataSource<any>(rubro.filter(e => e.estado == "ACTIVO"));
-        //console.log("Consulta de Rubros en Cloustudio --> " + JSON.stringify(data));
-      } else {
-        this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaRubros'", 'error');
-      }
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("Error no fue cacturado en 'entidadConsultaRubros' :(", 'error');
-
-      }
-    })
-  }
-  /**
- * 
- * @param pfield 
- * @description MENSAJES DE ERRORES.
- */
-  getErrorMessage(pfield: string) {
-    const errorRequerido = 'Ingresar valores';
-    const errorEmail = 'Correo Incorrecto';
-    const errorNumero = 'Ingreso solo numeros';
-    const errorFormatoIngreso = 'Use el formato : 0.00';
-    const invalidIdentification = 'La identificacion no es valida';
-    const errorLogitudExedida = 'La longitud sobrepasa el limite';
-    const errorInsuficiente = 'La longitud es insuficiente';
-    let errorrequiredo = "Ingresar valores";
-
-    if (pfield && pfield === "cedula") {
-      const input = this.formAprobarPago.get("cedula");
-      return input.hasError("required")
-        ? errorRequerido
-        : input.hasError("pattern")
-          ? errorNumero
-          : input.hasError("invalid-cedula")
-            ? invalidIdentification
-            : input.hasError("maxlength")
-              ? errorLogitudExedida
-              : input.hasError("minlength")
-                ? errorInsuficiente
-                : "";
-    }
-    if (pfield && pfield == "cedula") {
-      return this.cedula.hasError('required') ? errorrequiredo : '';
-    }
-    if (pfield && pfield == "codigoCuentaMupi") {
-      return this.codigoCuentaMupi.hasError('required') ? errorrequiredo : '';
-    }
-    if (pfield && pfield == "codigoOperacion") {
-      return this.codigoOperacion.hasError('required') ? errorrequiredo : '';
-    }
-    if (pfield && pfield == "nombreCliente") {
-      return this.nombreCliente.hasError('required') ? errorrequiredo : '';
-    }
-    if (pfield && pfield == "tipoCredito") {
-      return this.tipoCredito.hasError('required') ? errorrequiredo : '';
-    }
-    if (pfield && pfield == "valorPreCancelado") {
-      return this.valorPreCancelado.hasError('required') ? errorrequiredo : '';
-    }
-    if (pfield && pfield == "valorDepositado") {
-      return this.valorDepositado.hasError('required') ? errorrequiredo : '';
-    }
+    //this.os.getObjectById( j.archivo,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
   }
 }
 

@@ -5,167 +5,127 @@
     <re-portlet-body>
         <mat-vertical-stepper>
             <mat-step label="Información de Crédito">
-
-
                 <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Nombre del cliente:</label>
-                    </div>
                     <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="nombreCliente" required>
-                            <mat-error>{{ getErrorMessage("nombreCliente") }}</mat-error>
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="nombreCliente" placeholder="Nombre del cliente:"/>
                         </mat-form-field>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Cédula:</label>
-                    </div>
                     <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="cedula" required>
-                            <mat-error>{{ getErrorMessage("cedula") }}</mat-error>
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="cedula" placeholder="Cédula:"/>
                         </mat-form-field>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Código de Operación:</label>
-                    </div>
                     <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="codigoOperacion" required>
-                            <mat-error>{{ getErrorMessage("codigoOperacion") }}</mat-error>
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="cuentaMupi" placeholder="Cuenta Mupi:"/>
                         </mat-form-field>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Código cuenta Mupi:</label>
-                    </div>
                     <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="codigoCuentaMupi" required>
-                            <mat-error>{{ getErrorMessage("codigoCuentaMupi") }}</mat-error>
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="codigoOperacion" placeholder="Código de Operación:"/>
                         </mat-form-field>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label style="font-weight:bold">Tipo de crédito:</label>
-                    </div>
                     <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                            <input matInput [formControl]="tipoCredito" required>
-                            <mat-error>{{ getErrorMessage("tipoCredito") }}</mat-error>
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="tipoCredito" placeholder="Tipo de crédito:"/>
                         </mat-form-field>
                     </div>
                 </div>
             </mat-step>
-            <!-- DIA DE PAGO-->
-            <mat-step label="Día de pago">
-                <div class="mat-table__wrapper">
-                    <table mat-table class="mat-elevation-z20" #tabla1 [dataSource]=" dataSourceRubros">
-                        <ng-container matColumnDef="rubro">
-                            <th mat-header-cell *matHeaderCellDef> Rubros </th>
-                            <td mat-cell *matCellDef="let articulo"> {{articulo.rubro}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="valor">
-                            <th mat-header-cell *matHeaderCellDef> Valor </th>
-                            <td mat-cell *matCellDef="let articulo"> {{articulo.proyectado}} </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="columna"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columna;"></tr>
-                    </table>
+            <mat-step label="Tabla de rubros">
+                <div class="row">
+                    <div class="col-8 offset-2">
+                        <mat-table #table class="mat-elevation-z8 garantia" [dataSource]="dataSourceRubro">
+                            <ng-container matColumnDef="rubro">
+                                <mat-header-cell *matHeaderCellDef>Rubro</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.rubro}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="numeroCuota">
+                                <mat-header-cell *matHeaderCellDef>Numero Cuota</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.numeroCuota}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="proyectado">
+                                <mat-header-cell *matHeaderCellDef>Proyectado</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.proyectado}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="calculado">
+                                <mat-header-cell *matHeaderCellDef>Calculado</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.calculado }} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="estado">
+                                <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.estado }} </mat-cell>
+                            </ng-container>
+        
+                            <mat-header-row *matHeaderRowDef="displayedColumnsRubro"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumnsRubro;"></mat-row>
+                        </mat-table>
+                    </div>
                 </div>
             </mat-step>
-            <!-- Tabla de pagos -->
-            <mat-step label="Pagos">
-                <div class="mat-table__wrapper">
-                    <table mat-table class="mat-elevation-z20" #tabla [dataSource]="dataSource">
-
-                        <ng-container matColumnDef="institucionFinanciera">
-                            <th mat-header-cell *matHeaderCellDef> Institucion Financiera </th>
-                            <td mat-cell *matCellDef="let articulo"> {{articulo.institucionFinanciera}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="cuentas">
-                            <th mat-header-cell *matHeaderCellDef> Cuentas </th>
-                            <td mat-cell *matCellDef="let articulo"> {{articulo.cuentas}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="fechaPago">
-                            <th mat-header-cell *matHeaderCellDef> Fecha Pago </th>
-                            <td mat-cell *matCellDef="let articulo"> {{articulo.fechaPago  | rDate}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="numeroDeposito">
-                            <th mat-header-cell *matHeaderCellDef> Numero de deposito </th>
-                            <td mat-cell *matCellDef="let articulo"> {{articulo.numeroDeposito}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="valorPagado">
-                            <th mat-header-cell *matHeaderCellDef> Valor Depositado </th>
-                            <td mat-cell *matCellDef="let articulo"> {{articulo.valorPagado | number: '1.2-2'}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="descargar">
-                            <th mat-header-cell *matHeaderCellDef> Descarga Foto </th>
-                            <td mat-cell *matCellDef="let j ">
-                                <button mat-icon-button focusable="false" (click)="descargarComprobante(j)">
-                                    <mat-icon style="font-size: 42px" matTooltipPosition="above"
-                                        matTooltip="Descarga Comprobante">cloud_download</mat-icon>
-                                </button>
-                                
-                            </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
-                    </table>
-                </div>
-                <div>
-
-                </div>
-                <div class="row">
-                    <div class="col-md-1.5">
-
-                        <label style="font-weight:bold">Valor Pre-cancelacion: </label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field>
-                            <input matInput [formControl]="valorPreCancelado" required>
+            <mat-step label="Comprobantes de Pagos">
+                <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante" >
+					<ng-container matColumnDef="intitucionFinanciera">
+						<mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.institucionFinanciera }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="cuenta">
+						<mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.cuentas }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaPago">
+						<mat-header-cell *matHeaderCellDef>Fecha Pago</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.fechaPago | rDate}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroDeDeposito">
+						<mat-header-cell *matHeaderCellDef>Numero De Deposito</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.numeroDeposito }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorDepositado">
+						<mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.valorPagado | currency: "USD":true:"1.2" }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="descargarComprobante">
+						<mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
+						<mat-cell *matCellDef="let row">
+                            <a *ngIf="row.idComprobante" (click)="descargarComprobante(row.idComprobante)">
+								<mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
+                            </a>
+                        </mat-cell>					
+                    </ng-container>
+					<mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
+					<mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
+                </mat-table>
+                <div class="row mt-2">
+                    <div class="offset-2 col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="valorPreCancelado" placeholder="Valor Pre-cancelacion:"/>
                         </mat-form-field>
                     </div>
-                    <div class="col-md-1.5">
-
-                        <label style="font-weight:bold">Valor Depositado: </label>
-                    </div>
-                    <div class="col-md-2">
-                        <mat-form-field>
-                            <input matInput [formControl]="valorDepositado" required>
+                    <div class="offset-2 col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="valorDepositado" placeholder="Valor Depositado:"/>
                         </mat-form-field>
                     </div>
                 </div>
-
-                <label style="font-weight:bold"> Obsevaciones </label>
-                <div class="col-md-8">
-                    <mat-form-field class="example-full-width" color="black">
-                        <input matInput [formControl]="observacion">
-                        <input matInput type="text">
-                    </mat-form-field>
-                </div>
                 <div class="row">
-                    <div>
-                        <button mat-raised-button color="white" focusable="false" (click)="Aprobar()">
-                            Aprobar
-                        </button>
+                    <div class="offset-1 col-md-10">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="observacion" type="text" rows="2">
+                        </mat-form-field>
                     </div>
-                    <div>
-                        <button mat-raised-button color="white" focusable="false" (click)="Rechazar()">
-                            Rechazar
-                        </button>
+                </div>
+                <div class="row mt-3">
+                    <div class="offset-md-3 col-md-2">
+                      <button mat-raised-button color="primary" (click)="enviarRespuesta(true)">
+                        <span class="white-icon">Aprobar</span>
+                      </button>
+                    </div>
+                    <div class="offset-md-1 col-md-2">
+                      <button mat-raised-button color="warn" (click)="enviarRespuesta(false)">
+                        <span class="white-icon">Rechazar</span>
+                      </button>
                     </div>
                 </div>
             </mat-step>

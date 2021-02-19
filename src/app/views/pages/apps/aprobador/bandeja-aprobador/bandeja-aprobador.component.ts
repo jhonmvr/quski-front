@@ -218,9 +218,9 @@ export class BandejaAprobadorComponent implements OnInit {
                   this.limpiarFiltros();   
                 }
                 if(row.proceso =="PAGO"){
-                  this.sinNotSer.setNotice("APROBACION PAGO, SIN DESARROLLO","error");
+                  this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
                   this.limpiarFiltros();
-                  this.router.navigate(['aprobador']);    
+                  this.router.navigate(['credito-nuevo/gestion-credito/aprobar-pagos/',row.id]);    
                 }
                 if(row.proceso =="DEVOLUCION"){
                   this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
