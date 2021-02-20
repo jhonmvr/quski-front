@@ -89,7 +89,7 @@
                     <ng-container matColumnDef="descargarComprobante">
 						<mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
 						<mat-cell *matCellDef="let row">
-                            <a *ngIf="row.idComprobante" (click)="descargarComprobante(row.idComprobante)">
+                            <a *ngIf="row.idComprobante" (click)="descargarComprobante(row)">
 								<mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
                             </a>
                         </mat-cell>					

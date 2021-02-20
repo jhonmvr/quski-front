@@ -53,14 +53,11 @@ import { GenerarCreditoComponent } from './generar-credito/generar-credito.compo
 import { GestionCreditoComponent } from './gestion-credito/gestion-credito.component';
 import { ListCreditoComponent } from './list-credito/list-credito.component';
 import { RegistrarPagoComponent } from './gestion-credito/registrar-pago/registrar-pago.component';
-import { RegistarPagoDialogComponent } from './gestion-credito/registrar-pago/registar-pago-dialog/registar-pago-dialog';
 import { BloquearCreditoComponent } from './gestion-credito/bloquear-credito/bloquear-credito.component';
 import { DialogoBloquearCreditoComponent } from './gestion-credito/bloquear-credito/dialogo-bloquear-credito/dialogo-bloquear-credito.component';
 import { AprobarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/aprobar-bloqueo-fondos.component';
 import { AprobarPagosComponent } from './gestion-credito/aprobar-pagos/aprobar-pagos.component';
 import { UploadFileComponent } from './upload-file/upload-file.component';
-import { DialogoAprobarPagosComponent } from './gestion-credito/aprobar-pagos/dialogo-aprobar-pagos/dialogo-aprobar-pagos.component';
-import { DialogoRechazarPagosComponent } from './gestion-credito/aprobar-pagos/dialogo-rechazar-pagos/dialogo-rechazar-pagos.component';
 import { DialogoAprobarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-aprobar-bloqueo-fondos/dialogo-aprobar-bloqueo-fondos.component';
 import { DialogoRechazarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos.component';
 import { DetalleCreditoComponent } from './detalle-credito/detalle-credito.component';
@@ -130,7 +127,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [CreditoNuevoComponent,
-	RegistarPagoDialogComponent,
 	 GenerarCreditoComponent, 
 	 GestionCreditoComponent,
 	  ListCreditoComponent,
@@ -139,9 +135,7 @@ const routes: Routes = [
 	  DialogoBloquearCreditoComponent,
 	  AprobarBloqueoFondosComponent,
 	  AprobarPagosComponent,
-	  DialogoAprobarPagosComponent,
 	  UploadFileComponent,
-	  DialogoRechazarPagosComponent,
 	  DialogoAprobarBloqueoFondosComponent,
 	  DialogoRechazarBloqueoFondosComponent,
 	  DetalleCreditoComponent,
@@ -199,10 +193,13 @@ providers: [
 	},
 ],
 exports:[],
-entryComponents: [RegistarPagoDialogComponent, DialogoBloquearCreditoComponent,
+entryComponents: [
+	DialogoBloquearCreditoComponent,
 	DialogoBloqueoFondosComponent,
-	DialogoAprobarBloqueoFondosComponent,DialogoRechazarBloqueoFondosComponent,
-	DialogoAprobarPagosComponent, UploadFileComponent,DialogoRechazarPagosComponent]
+	DialogoAprobarBloqueoFondosComponent,
+	DialogoRechazarBloqueoFondosComponent,
+	UploadFileComponent,
+]
 })
 
 

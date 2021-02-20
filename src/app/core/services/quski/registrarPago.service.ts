@@ -61,10 +61,9 @@ import { ReNoticeService } from '../re-notice.service';
       )
     );
   }
-  public clientePagoByIdCliente(idPago: string, tipo: string) {
-    const serviceUrl =
-      this.appResourcesUrl + 'registrarPagoRestController/findByIdClientePago';
-    this.params = new HttpParams().set('id', idPago).set('tipo', tipo);
+  public clientePagoByIdCliente(idPago: string) {
+    const serviceUrl = this.appResourcesUrl + 'registrarPagoRestController/findByIdClientePago';
+    this.params = new HttpParams().set('id', idPago);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -92,6 +91,18 @@ import { ReNoticeService } from '../re-notice.service';
       this.appResourcesUrl + 'registrarPagoRestController/aprobar';
       this.params = new HttpParams().set('id', id ).set('estado', estado).set('tipo', tipo).set('nombre',nombre);
       //this.params= new HttpParams().set('estado', estado);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  public enviarRespuesta( id, isRegistro, isAprobar, nombreAprobador, correoAprobador) {
+    this.options = { headers: this.headers, params: this.params };
+    const serviceUrl =  this.appResourcesUrl + 'registrarPagoRestController/enviarRespuesta';
+      this.params = new HttpParams().set('id', id ).set('isRegistro', isRegistro ).set('isAprobar', isAprobar ).set('nombreAprobador', nombreAprobador ).set('correoAprobador', correoAprobador )
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

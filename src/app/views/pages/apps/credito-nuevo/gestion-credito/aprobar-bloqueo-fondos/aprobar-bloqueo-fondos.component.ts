@@ -199,8 +199,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
       //console.log(" id = ? ", data.params.id)
       if (data.params.id) {
         this.idCliente = data.params.id;
-        let tipodb = "BLOQUEO_FONDO";
-        this.rp.clientePagoByIdCliente(this.idCliente, tipodb).subscribe((data: any) => {
+        this.rp.clientePagoByIdCliente(this.idCliente).subscribe((data: any) => {
           if (data) {
             let cliente = data.entidades[0].tbQoClientePago;
             this.nombreCliente.setValue(cliente.nombreCliente);

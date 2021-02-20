@@ -13,6 +13,9 @@ export class TbQoClientePago{
 	observacion : String;
 	estado: String;
 	tipo: String;
+	codigo
+	aprobador
+	asesor
 
 	
 	constructor(){

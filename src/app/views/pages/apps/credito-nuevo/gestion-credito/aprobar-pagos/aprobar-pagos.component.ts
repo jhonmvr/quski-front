@@ -1,17 +1,17 @@
-
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTable, MatDialog, MatTableDataSource,  } from '@angular/material';
-import { DialogoAprobarPagosComponent } from './dialogo-aprobar-pagos/dialogo-aprobar-pagos.component';
-import { DialogoRechazarPagosComponent } from './dialogo-rechazar-pagos/dialogo-rechazar-pagos.component';
-import { BehaviorSubject } from 'rxjs';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { SoftbankService } from './../../../../../../core/services/quski/softbank.service';
-import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
+import { ConfirmarAccionComponent } from './../../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from './../..`/../../../../../../..//environments/environment';
 import { ObjectStorageService } from './../../../../../../core/services/object-storage.service';
+import { SoftbankService } from './../../../../../../core/services/quski/softbank.service';
+import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
+import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
+import { environment } from './../..`/../../../../../../../environments/environment';
+import { SubheaderService } from './../../../../../../core/_base/layout';
+import { MatDialog, MatTableDataSource,  } from '@angular/material';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
+
 
 @Component({
   selector: 'kt-aprobar-pagos',
@@ -19,16 +19,15 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./aprobar-pagos.component.scss']
 })
 export class AprobarPagosComponent implements OnInit {
-  private usuario;
-  private agencia;
+  public usuario;
+  public item: any;
+  public correoUsuario: string;
+  public cliente: TbQoClientePago;
   public dataSourceComprobante = new MatTableDataSource<any>();
   public displayedColumnsComprobante = ['intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','descargarComprobante'];
   public displayedColumnsRubro = ['rubro','numeroCuota', 'proyectado', 'calculado', 'estado'];
   public dataSourceRubro = new MatTableDataSource<any>();
   
-  private idCliente : string;
-  private estado : string;
-  private tipo : string;
   public formAprobarPago: FormGroup = new FormGroup({});
   public nombreCliente = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cedula = new FormControl('', [Validators.required, Validators.maxLength(13)]);
@@ -43,12 +42,15 @@ export class AprobarPagosComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private reg: RegistrarPagoService,
+    private obj: ObjectStorageService,
     private sof: SoftbankService,
     private sinNoticeService: ReNoticeService,
+    private subheaderService: SubheaderService,
     public dialog: MatDialog
     ) {
-    this.sof.setParameter();
-    this.reg.setParameter();
+      this.sof.setParameter();
+      this.obj.setParameter();
+      this.reg.setParameter();
     this.formAprobarPago.addControl("nombresCliente", this.nombreCliente);
     this.formAprobarPago.addControl("cedula", this.cedula);
     this.formAprobarPago.addControl("codigoOperacion", this.codigoOperacion);
@@ -59,43 +61,39 @@ export class AprobarPagosComponent implements OnInit {
     this.formAprobarPago.addControl("observacion", this.observacion);
   }
   ngOnInit() {
+    this.obj.setParameter();
     this.reg.setParameter();
     this.sof.setParameter();
     this.consultaInicial();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.agencia = localStorage.getItem( 'idAgencia' );    
+    this.correoUsuario = localStorage.getItem( 'email' );
     this.formAprobarPago.disable();
   }
   private consultaInicial() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
-        let tipodb = "REGISTRO_PAGO";
-        this.reg.clientePagoByIdCliente(data.params.id, tipodb).subscribe((data: any) => {
+        this.item = data.params.id;
+        this.reg.clientePagoByIdCliente(data.params.id).subscribe((data: any) => {
           if(data.entidades){
             this.dataSourceComprobante.data = data.entidades;
-            let cliente = data.entidades[0].tbQoClientePago;
-            this.nombreCliente.setValue(cliente.nombreCliente);
-            this.cedula.setValue(cliente.cedula);
-            this.consultaRubrosCS(cliente.codigoOperacion);
-            this.codigoOperacion.setValue(cliente.codigoOperacion);
-            this.cuentaMupi.setValue(cliente.codigoCuentaMupi);
-            this.tipoCredito.setValue(cliente.tipoCredito);
-            this.valorPreCancelado.setValue(cliente.valorPrecancelado);
-            this.valorDepositado.setValue(cliente.valorDepositado);
-            this.observacion.setValue(cliente.observacion);
-            this.estado = cliente.estado;
-            this.tipo = cliente.tipo;
-          }
-        }, error => {
-          if (JSON.stringify(error).indexOf("codError") > 0) {
-            let b = error.error;
-            this.sinNoticeService.setNotice(b.msgError, 'error');
-          } else {
-            this.sinNoticeService.setNotice("Error no fue cacturado en 'clientePagoByIdCliente' :(", 'error');
+            this.cliente = data.entidades[0].tbQoClientePago;
+            this.nombreCliente.setValue(this.cliente.nombreCliente);
+            this.cedula.setValue(this.cliente.cedula);
+            this.consultaRubrosCS(this.cliente.codigoOperacion);
+            this.codigoOperacion.setValue(this.cliente.codigoOperacion);
+            this.cuentaMupi.setValue(this.cliente.codigoCuentaMupi);
+            this.tipoCredito.setValue(this.cliente.tipoCredito);
+            this.valorPreCancelado.setValue(this.cliente.valorPrecancelado);
+            this.valorDepositado.setValue(this.cliente.valorDepositado);
+            this.observacion.setValue(this.cliente.observacion);
+            this.subheaderService.setTitle( "Proceso: " + this.cliente.codigo );
 
           }
+        }, error => {
+          this.sinNoticeService.setNotice(error.error.msgError, 'error');
         })
       } else {
+        this.sinNoticeService.setNotice("ID DE REFERNCIA NO ENCONTRADO", 'error');
 
       }
     })
@@ -105,80 +103,51 @@ export class AprobarPagosComponent implements OnInit {
       if (data) {
         this.dataSourceRubro = new MatTableDataSource<any>(data.rubros);
       } else {
-        this.sinNoticeService.setNotice("No me trajo datos 'entidadConsultaRubros'", 'error');
+        this.sinNoticeService.setNotice("SIN RUBROS PARA ESTA OPERACION", 'warning');
       }
     }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("Error no fue cacturado en 'entidadConsultaRubros' :(", 'error');
-      }
-    })
+      this.sinNoticeService.setNotice(error.error.msgError, 'error');
+    });
   }
   public enviarRespuesta(aprobar){
-
-  }
-
-
-  id;
-  Aprobar() {
-    //console.log("entra a popUp Aprobrar ")
-    let idReferenciaHab = this.id;
-    const dialogRef = this.dialog.open(DialogoAprobarPagosComponent, {
-      width: "auto-max",
-      height: "auto-max",
-      data: idReferenciaHab
-    });
-    dialogRef.afterClosed().subscribe(a => {
-      //console.log("datos de salida popUp", r)
-      /*let wrapperRespuesta = new TbQoClientePago();
-    
-    wrapperRespuesta.observacion = this.observacion.value;*/
-    
-      if (this.tipo == "APROBADO"){
-      }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
-        
-    let user = localStorage.getItem(localStorage.key(2));
-    this.reg.aprobarPago(this.idCliente, this.estado, this.tipo, user ).subscribe(q => {
-      //console.log(" >>> ", this.rp);
-
-      this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
-      this.router.navigate(['../../asesor/bandeja-principal', this.idCliente]);
-    }, error => {
-    });
-  });
-  }
-  Rechazar() {
-    //console.log("entra a popUp Rechazar")
-    let idReferenciaHab = this.id;
-    const dialogRef = this.dialog.open(DialogoRechazarPagosComponent, {
-      width: "auto-max",
-      height: "auto-max",
-      data: idReferenciaHab
-    });
+    let mensaje = aprobar ? 
+    "Aprobar el proceso de registro de pago con el codigo: " + this.cliente.codigo:
+    "Negar el proceso de registro de pago con el codigo: " + this.cliente.codigo;
+      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        width: "800px",
+        height: "auto",
+        data: mensaje
+      });
     dialogRef.afterClosed().subscribe(r => {
-      //console.log("datos de salida popUp", r)
-      /*let wrapperRespuesta = new TbQoClientePago();
-    
-    wrapperRespuesta.observacion = this.observacion.value;*/
-    
-    if (this.tipo == "APROBADO"){
-    }this.sinNoticeService.setNotice("CLIENTE YA ESTA GUARDADO", 'error');
-      
-  let user = localStorage.getItem(localStorage.key(2));
-    this.reg.rechazarPago(this.idCliente, this.estado, this.tipo, user ).subscribe(p => {
-      //console.log(" >>> ", this.rp);
-
-      this.sinNoticeService.setNotice("CLIENTE GUARDADO CORRECTAMENTE", 'success');
-      this.router.navigate(['../../asesor/bandeja-principal', this.idCliente]);
-    }, error => {
-    })
+      if(r){
+        this.reg.enviarRespuesta(this.cliente.id, true, aprobar, this.usuario, this.correoUsuario).subscribe((data: any) => {
+          if(data.entidad.estadoProceso){
+            if(aprobar && data.entidad.estadoProceso == "APROBADO"){
+              this.sinNoticeService.setNotice("PROCESO DE PAGO APROBADO CORRECTAMENTE", 'success');
+              this.router.navigate(['aprobador']);
+            } else if(!aprobar && data.entidad.estadoProceso == "RECHAZADO"){
+              this.sinNoticeService.setNotice("PROCESO DE PAGO RECHAZADO CORRECTAMENTE", 'success')
+              this.router.navigate(['aprobador']);
+            } else{
+              this.sinNoticeService.setNotice(" ERROR, PROCESO DE PAGO NO FUE ACTUALIZADO", 'error')
+            }
+          }else{
+            this.sinNoticeService.setNotice(" ERROR PROCESO DE PAGO DESCONOCIDO", 'error');
+          }
+        }, error => {
+          this.sinNoticeService.setNotice(error.error.msgError, 'error');
+        });
+      }else{
+        this.sinNoticeService.setNotice('SE CANCELO LA ACCION','error');
+      }
     });
   }
-
-  descargarComprobante(j) {
-    //this.os.getObjectById( j.archivo,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+  descargarComprobante(row) {
+    this.obj.findObjectById( this.obj.mongoDb,  environment.mongoHabilitanteCollection, row.idComprobante).subscribe((data:any)=>{
+      let json = JSON.parse(atob(data.entidad));
+      console.log('Data? =>',json);
+      saveAs(this.obj.dataURItoBlob(json.fileBase64), json.name);   
+    }) 
   }
 }
 
