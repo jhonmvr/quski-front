@@ -6,7 +6,7 @@ export class TbQoClientePago{
     nombreCliente : String;
 	cedula : String;
 	codigoOperacion : String;
-	codigoCuentaMupi : String;
+	codigoCuentaMupi : any;
 	tipoCredito : String;
 	valorPrecancelado : number;
 	valorDepositado : number;

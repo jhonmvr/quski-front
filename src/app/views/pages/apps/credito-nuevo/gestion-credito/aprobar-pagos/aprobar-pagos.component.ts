@@ -21,6 +21,7 @@ import { saveAs } from 'file-saver';
 export class AprobarPagosComponent implements OnInit {
   public usuario;
   public item: any;
+  private catBanco: {id: number, nombre:string}[];
   public correoUsuario: string;
   public cliente: TbQoClientePago;
   public dataSourceComprobante = new MatTableDataSource<any>();
@@ -64,6 +65,7 @@ export class AprobarPagosComponent implements OnInit {
     this.obj.setParameter();
     this.reg.setParameter();
     this.sof.setParameter();
+    this.cargarCatalogos();
     this.consultaInicial();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.correoUsuario = localStorage.getItem( 'email' );
@@ -81,7 +83,10 @@ export class AprobarPagosComponent implements OnInit {
             this.cedula.setValue(this.cliente.cedula);
             this.consultaRubrosCS(this.cliente.codigoOperacion);
             this.codigoOperacion.setValue(this.cliente.codigoOperacion);
-            this.cuentaMupi.setValue(this.cliente.codigoCuentaMupi);
+            let banco = this.catBanco.find(x => x.id == this.cliente.codigoCuentaMupi);
+            if(banco){
+              this.cuentaMupi.setValue( banco.nombre );
+            }
             this.tipoCredito.setValue(this.cliente.tipoCredito);
             this.valorPreCancelado.setValue(this.cliente.valorPrecancelado);
             this.valorDepositado.setValue(this.cliente.valorDepositado);
@@ -97,6 +102,11 @@ export class AprobarPagosComponent implements OnInit {
 
       }
     })
+  }
+  private cargarCatalogos(){
+    this.sof.consultarBancosCS().subscribe( data =>{
+      this.catBanco = data.catalogo ? data.catalogo :  {nombre: 'No se cargo el catalogo. Error', id: 0};
+    });
   }
   private consultaRubrosCS(numeroOperacion) {
     this.sof.consultaRubrosCS(numeroOperacion).subscribe((data: any) => {
