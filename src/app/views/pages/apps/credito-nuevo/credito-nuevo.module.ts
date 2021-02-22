@@ -54,7 +54,6 @@ import { GestionCreditoComponent } from './gestion-credito/gestion-credito.compo
 import { ListCreditoComponent } from './list-credito/list-credito.component';
 import { RegistrarPagoComponent } from './gestion-credito/registrar-pago/registrar-pago.component';
 import { BloquearCreditoComponent } from './gestion-credito/bloquear-credito/bloquear-credito.component';
-import { DialogoBloquearCreditoComponent } from './gestion-credito/bloquear-credito/dialogo-bloquear-credito/dialogo-bloquear-credito.component';
 import { AprobarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/aprobar-bloqueo-fondos.component';
 import { AprobarPagosComponent } from './gestion-credito/aprobar-pagos/aprobar-pagos.component';
 import { UploadFileComponent } from './upload-file/upload-file.component';
@@ -132,7 +131,6 @@ const routes: Routes = [
 	  ListCreditoComponent,
 	  RegistrarPagoComponent,
 	  BloquearCreditoComponent,
-	  DialogoBloquearCreditoComponent,
 	  AprobarBloqueoFondosComponent,
 	  AprobarPagosComponent,
 	  UploadFileComponent,
@@ -194,7 +192,6 @@ providers: [
 ],
 exports:[],
 entryComponents: [
-	DialogoBloquearCreditoComponent,
 	DialogoBloqueoFondosComponent,
 	DialogoAprobarBloqueoFondosComponent,
 	DialogoRechazarBloqueoFondosComponent,

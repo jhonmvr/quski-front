@@ -72,12 +72,12 @@ import { ReNoticeService } from '../re-notice.service';
       )
     );
   }
-  public bloqueoFondosConRelaciones(registrarBloqueoFondoWrapper) {
+  public iniciarProcesoRegistrarBloqueo(registrarBloqueoWrapper) {
     this.options = { headers: this.headers, params: this.params };
     const serviceUrl =
-      this.appResourcesUrl + 'registrarPagoRestController/bloqueoFondo';
+      this.appResourcesUrl + 'registrarPagoRestController/iniciarProcesoRegistrarBloqueo';
     this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, registrarBloqueoFondoWrapper, this.options).pipe(
+    return this.http.post(serviceUrl, registrarBloqueoWrapper, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
