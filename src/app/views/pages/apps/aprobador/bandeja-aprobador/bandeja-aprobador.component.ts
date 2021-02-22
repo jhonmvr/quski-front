@@ -213,14 +213,13 @@ export class BandejaAprobadorComponent implements OnInit {
                   this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
                   this.router.navigate(['fabrica/aprobacion-novacion/',row.id]);    
                 }
-                if(row.proceso =="COTIZACION"){
-                  this.sinNotSer.setNotice("ERROR, CONTACTE SOPORTE","error");
-                  this.limpiarFiltros();   
-                }
-                if(row.proceso =="PAGO"){
+                if(row.proceso =="PAGO" && row.codigoBpm.includes('PAGO') ){
                   this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                  this.limpiarFiltros();
-                  this.router.navigate(['credito-nuevo/gestion-credito/aprobar-pagos/',row.id]);    
+                  this.router.navigate(['credito-nuevo/gestion-credito/aprobar-pagos/',row.id]);
+                }
+                if(row.proceso =="PAGO" && row.codigoBpm.includes('BLOQ') ){
+                  this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+                  this.router.navigate(['credito-nuevo/gestion-credito/aprobar-bloqueo-fondos/',row.id]);  
                 }
                 if(row.proceso =="DEVOLUCION"){
                   this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
@@ -232,7 +231,7 @@ export class BandejaAprobadorComponent implements OnInit {
                 }
                 
                 if(row.proceso =="VERIFICACION TELEFONICA"){
-                  this.sinNotSer.setNotice("APROBACION VERIFICACION TELEFONICA, SIN DESARROLLO","error");
+                  this.sinNotSer.setNotice("APROBACION VERIFICACION TELEFONICA, SIN DESARROLLO",'warning');
                   this.limpiarFiltros();
                   this.router.navigate(['aprobador']);    
                 }

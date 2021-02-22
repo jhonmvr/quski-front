@@ -92,16 +92,14 @@ export class AprobarPagosComponent implements OnInit {
             this.valorDepositado.setValue(this.cliente.valorDepositado);
             this.observacion.setValue(this.cliente.observacion);
             this.subheaderService.setTitle( "Proceso: " + this.cliente.codigo );
-
           }
         }, error => {
           this.sinNoticeService.setNotice(error.error.msgError, 'error');
         })
       } else {
         this.sinNoticeService.setNotice("ID DE REFERNCIA NO ENCONTRADO", 'error');
-
       }
-    })
+    });
   }
   private cargarCatalogos(){
     this.sof.consultarBancosCS().subscribe( data =>{

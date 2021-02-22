@@ -57,10 +57,7 @@ import { BloquearCreditoComponent } from './gestion-credito/bloquear-credito/blo
 import { AprobarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/aprobar-bloqueo-fondos.component';
 import { AprobarPagosComponent } from './gestion-credito/aprobar-pagos/aprobar-pagos.component';
 import { UploadFileComponent } from './upload-file/upload-file.component';
-import { DialogoAprobarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-aprobar-bloqueo-fondos/dialogo-aprobar-bloqueo-fondos.component';
-import { DialogoRechazarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos/dialogo-rechazar-bloqueo-fondos.component';
 import { DetalleCreditoComponent } from './detalle-credito/detalle-credito.component';
-import { DialogoBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/dialogo-bloqueo-fondos/dialogo-bloqueo-fondos.component';
 import { ModuleGuard } from '../../../../../app/core/auth';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { MatTableExporterModule } from 'mat-table-exporter';
@@ -112,10 +109,6 @@ const routes: Routes = [
 				path: 'gestion-credito/aprobar-bloqueo-fondos/:id',
 				component: AprobarBloqueoFondosComponent
 			},
-			/*{
-				path: 'gestion-credito/aprobar-pagos',
-				component: AprobarPagosComponent
-			},*/
 			{
 				path: 'gestion-credito/aprobar-pagos/:id',
 				component: AprobarPagosComponent
@@ -134,10 +127,7 @@ const routes: Routes = [
 	  AprobarBloqueoFondosComponent,
 	  AprobarPagosComponent,
 	  UploadFileComponent,
-	  DialogoAprobarBloqueoFondosComponent,
-	  DialogoRechazarBloqueoFondosComponent,
 	  DetalleCreditoComponent,
-	  DialogoBloqueoFondosComponent,
 	],
   imports: [
 	CommonModule,MatTableExporterModule,
@@ -192,9 +182,6 @@ providers: [
 ],
 exports:[],
 entryComponents: [
-	DialogoBloqueoFondosComponent,
-	DialogoAprobarBloqueoFondosComponent,
-	DialogoRechazarBloqueoFondosComponent,
 	UploadFileComponent,
 ]
 })
