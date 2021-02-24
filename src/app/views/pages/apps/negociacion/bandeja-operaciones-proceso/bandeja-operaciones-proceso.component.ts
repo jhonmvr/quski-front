@@ -254,9 +254,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         this.router.navigate(['novacion/crear-novacion/NOV/', row.id]);
       }
       if(row.proceso == 'DEVOLUCION'){
-        this.sinNotSer.setNotice("HISTORIA DE DEVOLUCION AUN NO EXISTE","error");
-        this.limpiarFiltros();
-        this.router.navigate(['negociacion/bandeja-operaciones']);
+        this.router.navigate(['devolucion/solicitud-devolucion/CREA/',row.id]);
       }
     }
   }

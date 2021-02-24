@@ -32,6 +32,7 @@ export class TbQoDevolucion {
     ciudadTevcol: string;
     nombreAgenciaSolicitud : string;
     agenciaEntregaId: number;
+    fechaEfectiva: any;
     pesoBruto: number;
     valorAvaluo: number;
 

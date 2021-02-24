@@ -174,7 +174,8 @@
                                 (click)="irNovar(row)" matTooltip="Novar el credito" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">autorenew</mat-icon>
                             </a>
-                            <a *ngIf="enableDevolucionButton | async" (click)="irDevolucion(row)" matTooltip="Devolucion" style="font-size: 12px; vertical-align: middle;">
+                            <a *ngIf="row.codigoEstadoProcesoGarantia == 'UTI' && (row.codigoEstadoUbicacionGrantia == 'AGE' || row.codigoEstadoUbicacionGrantia == 'CUS')" 
+                            (click)="irDevolucion(row)" matTooltip="Devolucion" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">get_app</mat-icon>
                             </a>
                             <a (click)="irDetalle(row)" matTooltip="Ver el detalle" style="font-size: 12px; vertical-align: middle;">

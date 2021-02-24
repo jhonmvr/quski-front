@@ -98,6 +98,21 @@
     <mat-cell *matCellDef="let element"> {{ forDescripcion(element) | titlecase }}</mat-cell>
     <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
   </ng-container>
+  <ng-container matColumnDef="NumeroFundaMadre">
+    <mat-header-cell *matHeaderCellDef >Número Funda Madre</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.numeroFundaMadre}} </mat-cell>
+    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+</ng-container>
+<ng-container matColumnDef="NumeroFundaActual">
+    <mat-header-cell *matHeaderCellDef >Número Funda Actual</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.numeroFundaJoya}} </mat-cell>
+    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+</ng-container>
+<ng-container matColumnDef="CiudadTevcol">
+    <mat-header-cell *matHeaderCellDef >Ciudad TEVCOL</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{forAgenciaCustodia(element)}} </mat-cell>
+    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+</ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
