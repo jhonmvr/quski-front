@@ -34,35 +34,8 @@
                 </div>
             </mat-step>
             <mat-step label="Tabla de rubros">
-                <div class="row">
-                    <div class="col-8 offset-2">
-                        <mat-table #table class="mat-elevation-z8 garantia" [dataSource]="dataSourceRubro">
-                            <ng-container matColumnDef="rubro">
-                                <mat-header-cell *matHeaderCellDef>Rubro</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.rubro}} </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="numeroCuota">
-                                <mat-header-cell *matHeaderCellDef>Numero Cuota</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.numeroCuota}}</mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="proyectado">
-                                <mat-header-cell *matHeaderCellDef>Proyectado</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.proyectado}} </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="calculado">
-                                <mat-header-cell *matHeaderCellDef>Calculado</mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.calculado }} </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="estado">
-                                <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.estado }} </mat-cell>
-                            </ng-container>
-        
-                            <mat-header-row *matHeaderRowDef="displayedColumnsRubro"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumnsRubro;"></mat-row>
-                        </mat-table>
-                    </div>
-                </div>
+                <kt-tabla-custom [data]="dataSourceRubro.data" [nombreRubro]="'rubro'" [numeroCuota]="'numeroCuota'" [numeroOperacion]="codigoOperacion.value"></kt-tabla-custom>
+              
             </mat-step>
             <mat-step label="Comprobantes de Pagos">
                 <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante" >

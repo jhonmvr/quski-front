@@ -96,18 +96,12 @@ export class RegistrarPagoComponent implements OnInit {
   private consultaRubros( numero ) {
     this.css.consultaRubrosCS(numero).subscribe((data: any) => {
       if (data) {
+        
         this.dataSourceRubro = new MatTableDataSource<any>(data.rubros);
       } else {
         this.sinNoticeService.setNotice("No me trajo datos 'consultaRubrosCS'", 'error');
       }
-    }, error => {
-      if (JSON.stringify(error).indexOf("codError") > 0) {
-        let b = error.error;
-        this.sinNoticeService.setNotice(b.msgError, 'error');
-      } else {
-        this.sinNoticeService.setNotice("Error no fue cacturado en 'entidadConsultaRubros' :(", 'error');
-      }
-    })
+    });
   }
   private simulacionPrecancelacion( numeroOperacion ){
     this.cli.getSystemDate().subscribe( (data: any) =>{

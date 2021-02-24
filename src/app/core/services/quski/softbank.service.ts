@@ -1063,4 +1063,19 @@ export class SoftbankService extends BaseService {
       )
     );
   } 
+
+  consultaAbonos( numeroOperacion,cuota ) {
+    let serviceUrl = this.softBaseBankUrl + "api/prestamo/operacion/abono/consulta" ;
+    let wrapper =  {
+      "numeroOperacion":numeroOperacion,
+      "cuotas":[cuota]
+    }
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  } 
 }
