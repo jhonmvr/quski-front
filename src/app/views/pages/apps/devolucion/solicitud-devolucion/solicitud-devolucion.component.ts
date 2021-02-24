@@ -24,6 +24,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SolicitudDevolucionComponent implements OnInit {
   public item: any;
+  objetoCredito = new Object();
+  public idReferencia;
   public wrapperSoft: any;
   public wrapperDevolucion: { proceso: TbQoProceso, devolucion: TbQoDevolucion }
   public catGenero: Array<any>;
@@ -162,6 +164,11 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.fechaNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.fechaNacimiento : this.wrapperSoft.cliente.fechaNacimiento);
     this.nacionalidad.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nacionalidad : this.wrapperSoft.cliente.idPaisNacimiento);
     this.lugarNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.lugarNacimiento : this.wrapperSoft.cliente.idLugarNacimiento);
+    this.objetoCredito['fechaAprobacion'] = this.wrapperSoft.credito.fechaAprobacion
+    this.objetoCredito['fechaVencimiento'] = this.wrapperSoft.credito.fechaVencimiento
+    this.objetoCredito['monto'] = this.wrapperSoft.credito.montoFinanciado
+    this.dataSourceContrato = new MatTableDataSource<any>([this.objetoCredito]);
+    console.log("estos los datos de la tabla =>>>", this.dataSourceContrato.data)
     this.onChangeFechaNacimiento();
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
   }
@@ -320,6 +327,9 @@ export class SolicitudDevolucionComponent implements OnInit {
     wrapper.pesoBruto = this.totalPesoB;
     wrapper.fechaEfectiva = this.wrapperSoft.credito.fechaAprobacion;
     wrapper.valorCustodiaAprox = 12.00
+    wrapper.codeHerederos = this.encodeObjetos({heredero:this.listTablaHeredero});
+    wrapper.codeDetalleCredito = this.encodeObjetos([this.objetoCredito]);
+    wrapper.codeDetalleGarantia = this.encodeObjetos(this.wrapperSoft.garantias);
     //wrapper.codeHerederos;
 	  //wrapper.valorCustodiaAprox;
 	  //wrapper.arribo;
@@ -330,6 +340,9 @@ export class SolicitudDevolucionComponent implements OnInit {
       if (data.entidad) {
         console.log( 'data Devolucion =>', data.entidad);
         this.wrapperDevolucion = data.entidad;
+       
+          this.idReferencia=data.entidad.devolucion.id;
+    
         this.setTipoHabilitantePorTipoCliente();
         this.sinNoticeService.setNotice("Guardado correctamente","success");
       } else {
@@ -377,12 +390,12 @@ export class SolicitudDevolucionComponent implements OnInit {
       this.estadoOperacion = "SOLICITUD"
     }
   }
-/* 
+
   decodeObjetoDatos(entrada) {
     return JSON.parse(atob(entrada))
   }
   encodeObjetos(entrada) {
     return btoa(unescape(encodeURIComponent(JSON.stringify(entrada))))
   }
-   */
+   
 } 

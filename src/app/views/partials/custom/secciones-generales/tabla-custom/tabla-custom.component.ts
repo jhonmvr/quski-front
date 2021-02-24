@@ -49,7 +49,7 @@ export class TablaCustomComponent implements OnInit {
             this.displayedColumns.forEach(columna=>{
             
               if(element[this.nombreRubro] == columna){
-                dato[columna]=element['proyectado']
+                dato[columna]=element['proyectado'] + ' - ' + element['estado']
                 //console.log("valor ==>>> ", columna, dato[columna])
               }
             });
