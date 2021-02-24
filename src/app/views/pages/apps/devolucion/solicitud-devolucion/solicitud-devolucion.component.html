@@ -120,8 +120,7 @@
 
                 <div class="mat-table__wrapper">
 
-                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceContrato" matSort
-                        #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClearM>
+                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceContrato" >
 
                         <ng-container matColumnDef="fechaAprobacion">
                             <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
@@ -129,11 +128,11 @@
 
                         </ng-container>
                         <ng-container matColumnDef="fechaVencimiento">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de Vencimiento</mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef >Fecha de Vencimiento</mat-header-cell>
                             <mat-cell *matCellDef="let element"> {{element.fechaVencimiento | rDate}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="monto">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef >Monto</mat-header-cell>
                             <mat-cell *matCellDef="let element"> {{element.monto | number: '1.2'}} </mat-cell>
 
                         </ng-container>
@@ -247,8 +246,7 @@
             </mat-step>
 
             <mat-step label="Documento Habilitantes">
-                <re-habilitante *ngIf="this.wrapperDevolucion" [proceso]="this.wrapperDevolucion.proceso.proceso" [useType]="'FORM'" [estadoOperacion]="estadoOperacion"
-                    [referencia]="this.wrapperDevolucion.devolucion.id" [rol]="'1'"> </re-habilitante>
+                <re-habilitante [proceso]="'SOLICITUD'" [useType]="'FORM'"   [referencia]="idReferencia" > </re-habilitante>
             </mat-step>
         </mat-vertical-stepper>
         <div>
