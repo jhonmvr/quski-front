@@ -56,8 +56,6 @@ const routes: Routes = [
 	{
 		path: '',
 		component: DevolucionComponent,
-		// canActivate: [ModuleGuard],
-		// data: { moduleName: 'ecommerce' },
 		children: [
 			{
 				path: '',
@@ -68,11 +66,7 @@ const routes: Routes = [
 				component: SolicitudDevolucionComponent
 			},
 			{
-				path: 'aprobar-solicitud-devolucion',
-				component: AprobacionSolicitudComponent
-			},
-			{
-				path: 'aprobar-solicitud-devolucion/:idDevolucion',
+				path: 'aprobar-solicitud-devolucion/:item',
 				component: AprobacionSolicitudComponent
 			},
 			{

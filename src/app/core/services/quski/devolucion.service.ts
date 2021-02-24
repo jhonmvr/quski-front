@@ -70,11 +70,11 @@ export class DevolucionService extends BaseService {
   }
 
 
-  public aprobarDevolucion(id){
-    let serviceUrl = this.appResourcesUrl + "devolucionRestController/aprobarSolicitudDevolucion";
-    this.params = this.params.set('id', id);  
+  public aprobarNegarSolicitudDevolucion(idDevolucion, aprobado){
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/aprobarNegarSolicitudDevolucion";
+    this.params = this.params.set('idDevolucion', idDevolucion).set('aprobado', aprobado) 
     this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, null,  this.options).pipe(
+    return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
