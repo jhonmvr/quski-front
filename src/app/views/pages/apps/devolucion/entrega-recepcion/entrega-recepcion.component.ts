@@ -17,50 +17,49 @@ import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
   templateUrl: './entrega-recepcion.component.html',
   styleUrls: ['./entrega-recepcion.component.scss']
 })
-export class EntregaRecepcionComponent implements OnInit{
+export class EntregaRecepcionComponent implements OnInit {
   public formCancelacion: FormGroup = new FormGroup({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
   // datos operacion
   public codigoOperacion = new FormControl('');
   public procesoDev = new FormControl('');
 
+  proceso = "DEVOLUCION"
+  //datos cliente
+  public cedulaCliente = new FormControl('');
+  public nombresCompletos = new FormControl('');
+  public nivelEducacion = new FormControl('');
+  public genero = new FormControl('');
+  public estadoCivil = new FormControl('');
+  public separacionBienes = new FormControl('');
+  public fechaNacimiento = new FormControl('');
+  public nacionalidad = new FormControl('');
+  public lugarNacimiento = new FormControl('');
+  public edad = new FormControl('');
 
-  proceso= "DEVOLUCION"
- //datos cliente
- public cedulaCliente = new FormControl('');
- public nombresCompletos = new FormControl('');
- public nivelEducacion = new FormControl('');
- public genero = new FormControl('');
- public estadoCivil = new FormControl('');
- public separacionBienes = new FormControl('');
- public fechaNacimiento = new FormControl('');
- public nacionalidad = new FormControl('');
- public lugarNacimiento = new FormControl('');
- public edad = new FormControl('');
-
- //GESTION DEVOLUCION
- public tipoCliente = new FormControl('');
- public observaciones = new FormControl('');
- public agenciaEntrega = new FormControl('');
- public valorCustodia = new FormControl('');
- public cedulaHeredero = new FormControl('');
- public nombreHeredero = new FormControl('');
- idDevolucion
-  fechaUtil:diferenciaEnDias;
+  //GESTION DEVOLUCION
+  public tipoCliente = new FormControl('');
+  public observaciones = new FormControl('');
+  public agenciaEntrega = new FormControl('');
+  public valorCustodia = new FormControl('');
+  public cedulaHeredero = new FormControl('');
+  public nombreHeredero = new FormControl('');
+  idDevolucion
+  fechaUtil: diferenciaEnDias;
   fechaServer;
-///operativa
+  ///operativa
 
-joyasList  = []
+  joyasList = []
 
-totalPesoBruto
-totalPesoNeto
-totalValorAvaluo
+  totalPesoBruto
+  totalPesoNeto
+  totalValorAvaluo
   //url=;objeto=ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIiLAogICAgImZlY2hhVmVuY2ltaWVudG8iOiAiIiwKICAgICJtb250b0ZpbmFuY2lhZG8iOiAiNzAwIiwKICAgICJhc2Vzb3IiOiAiSnVhbml0byIsCiAgICAiZXN0YWRvT3BlcmFjaW9uIjogICJDQU5DRUxBRE8iLAogICAgInRpcG9DcmVkaXRvIjogIiIsCiAgICAiY29kaWdvVGFibGFBbW9ydGl6YWNpb25RdXNraSI6IkEwMSIsCiAgICAiaW1wYWdvIjogIm5vIiwKICAgICJyZXRhbnF1ZW8iOiAibm8iLAogICAgImNvYmVydHVyYUluaWNpYWwiOiAiMTIwMCIsCiAgICAiY29iZXJ0dXJhQWN0dWFsIjogIjExMDAiLAogICAgImJsb3F1ZW8iOiIiLAogICAgImRpYXNNb3JhIjogIiIsCiAgICAiZXN0YWRvVWJpY2FjaW9uIjoiIiwKICAgICJlc3RhZG9Qcm9jZXNvIjoiIiwKICAgICJjb2RpZ29TZXJ2aWNpbyI6IiIsCiAgICAibWlncmFkbyI6ICIiCgp9
   ///
-  
-  
+
+
   //observables
-  objetoCredito ={
+  objetoCredito = {
     "fechaAprobacion": "",
     "fechaVencimiento": "",
     "monto": ""
@@ -68,7 +67,7 @@ totalValorAvaluo
 
   enableHerederoButton;
   enableHeredero = new BehaviorSubject<boolean>(false);
- 
+
   clienteSoftbank
   totalResults
 
@@ -83,63 +82,52 @@ totalValorAvaluo
   tipoClienteList = ['DEUDOR', 'HEREDERO']
   /// src 
   listTablaHeredero = []
-  parametroObjeto 
-  idCreditoNegociacion= 96
+  parametroObjeto
+  idCreditoNegociacion = 96
   //TABLA
   displayedColumnsJoyas = ['tipoOro', 'tipoJoya', 'estadoJoya', 'descripcion', 'pesoBruto',
-  'tienePiedras','detallePiedras','descuentoPesoPiedra', 'pesoNeto', 
-   'valorAvaluo', 'numeroFundaMadre',
-   'numeroFundaActual', 'ciudadTevcol'];
-  
-  
-  displayedColumnsHeredero = ['cedula', 'nombre']
-  displayedColumnsCredito= ['fechaAprobacion','fechaVencimiento','monto']
- /**Obligatorio paginacion */
- p = new Page();
- dataSourceJoyas = new MatTableDataSource;
- dataSourceContrato = new MatTableDataSource;
- dataSourceHeredero =new MatTableDataSource;
- //:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
+    'tienePiedras', 'detallePiedras', 'descuentoPesoPiedra', 'pesoNeto',
+    'valorAvaluo', 'numeroFundaMadre',
+    'numeroFundaActual', 'ciudadTevcol'];
 
-objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIyMDIwLTEwLTEyIiwKICAgICJmZWNoYVZlbmNpbWllbnRvIjogIjIwMjAtMTEtMTAiLAogICAgIm1vbnRvRmluYW5jaWFkbyI6ICI3MDAiLAogICAgImFzZXNvciI6ICJKdWFuaXRvIiwKICAgICJlc3RhZG9PcGVyYWNpb24iOiAgIkNBTkNFTEFETyIsCiAgICAidGlwb0NyZWRpdG8iOiAiIiwKICAgICJjb2RpZ29UYWJsYUFtb3J0aXphY2lvblF1c2tpIjoiQTAxIiwKICAgICJpbXBhZ28iOiAibm8iLAogICAgInJldGFucXVlbyI6ICJubyIsCiAgICAiY29iZXJ0dXJhSW5pY2lhbCI6ICIxMjAwIiwKICAgICJjb2JlcnR1cmFBY3R1YWwiOiAiMTEwMCIsCiAgICAiYmxvcXVlbyI6IiIsCiAgICAiZGlhc01vcmEiOiAiIiwKICAgICJlc3RhZG9VYmljYWNpb24iOiIiLAogICAgImVzdGFkb1Byb2Nlc28iOiIiLAogICAgImNvZGlnb1NlcnZpY2lvIjoiIiwKICAgICJtaWdyYWRvIjogIiIKCn0='
-datos
-  // VARIABLES DE TRACKING
-  public horaAsignacionCreacion: Date = null;
-  public horaInicioCreacion: Date;
-  public horaAtencionCreacion: Date;
-  public horaFinalCreacion: Date = null;
-  public procesoCreacion: string;
-  public horaInicioDocumentosLegales: Date;
-  public horaAsignacionDocumentosLegales: Date;
-  public horaAtencionDocumentosLegales: Date;
-  public horaFinalDocumentosLegales: Date;
-  public actividad: string;
+
+  displayedColumnsHeredero = ['cedula', 'nombre']
+  displayedColumnsCredito = ['fechaAprobacion', 'fechaVencimiento', 'monto']
+  /**Obligatorio paginacion */
+  p = new Page();
+  dataSourceJoyas = new MatTableDataSource;
+  dataSourceContrato = new MatTableDataSource;
+  dataSourceHeredero = new MatTableDataSource;
+  //:MatTableDataSource<TbMiCliente>=new MatTableDataSource<TbMiCliente>();
+
+  objetoDatos = 'ewogICAgIm5vbWJyZUNsaWVudGUiOiAiRGllZ28iLAogICAgImlkQ2xpZW50ZSI6ICIxMzExMDY2NDQyIiwKICAgICJudW1lcm9PcGVyYWNpb24iOiAiY29kLTEyIiwKICAgICJudW1lcm9PcGVyYWNpb25NYWRyZSIgOiAiIiwKICAgICJudW1lcm9PcGVyYWNpb25NdXBpIjogIiIsCiAgICAiZmVjaGFBcHJvYmFjaW9uIiA6ICIyMDIwLTEwLTEyIiwKICAgICJmZWNoYVZlbmNpbWllbnRvIjogIjIwMjAtMTEtMTAiLAogICAgIm1vbnRvRmluYW5jaWFkbyI6ICI3MDAiLAogICAgImFzZXNvciI6ICJKdWFuaXRvIiwKICAgICJlc3RhZG9PcGVyYWNpb24iOiAgIkNBTkNFTEFETyIsCiAgICAidGlwb0NyZWRpdG8iOiAiIiwKICAgICJjb2RpZ29UYWJsYUFtb3J0aXphY2lvblF1c2tpIjoiQTAxIiwKICAgICJpbXBhZ28iOiAibm8iLAogICAgInJldGFucXVlbyI6ICJubyIsCiAgICAiY29iZXJ0dXJhSW5pY2lhbCI6ICIxMjAwIiwKICAgICJjb2JlcnR1cmFBY3R1YWwiOiAiMTEwMCIsCiAgICAiYmxvcXVlbyI6IiIsCiAgICAiZGlhc01vcmEiOiAiIiwKICAgICJlc3RhZG9VYmljYWNpb24iOiIiLAogICAgImVzdGFkb1Byb2Nlc28iOiIiLAogICAgImNvZGlnb1NlcnZpY2lvIjoiIiwKICAgICJtaWdyYWRvIjogIiIKCn0='
+  datos
   public procesoDocumentosLegales: string;
   public catalago
 
 
- @ViewChild('paginator', { static: true })  paginator: MatPaginator;
- @ViewChild( 'stepper', { static: true })  stepper: MatStepper;
- /* documentos habilitantes
- totalResults: number;
- pageSize = 5;
- currentPage;
- proceso= "CREDITONUEVO"
- 
- */
- /**Obligatorio ordenamiento */
- @ViewChild('sort1', {static: true}) sort: MatSort;
+  @ViewChild('paginator', { static: true }) paginator: MatPaginator;
+  @ViewChild('stepper', { static: true }) stepper: MatStepper;
+  /* documentos habilitantes
+  totalResults: number;
+  pageSize = 5;
+  currentPage;
+  proceso= "CREDITONUEVO"
   
+  */
+  /**Obligatorio ordenamiento */
+  @ViewChild('sort1', { static: true }) sort: MatSort;
+
 
   constructor(
-    private cns: CreditoNegociacionService, 
-    private sinNoticeService: ReNoticeService, 
+    private cns: CreditoNegociacionService,
+    private sinNoticeService: ReNoticeService,
     public dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
-    private devService: DevolucionService) { 
-      this.cns.setParameter();
-      this.devService.setParameter();
+    private devService: DevolucionService) {
+    this.cns.setParameter();
+    this.devService.setParameter();
   }
   ngOnInit() {
     this.cns.setParameter();
@@ -154,42 +142,41 @@ datos
     //console.log(typeof(this.catalagoEstadosCiviles))
     //console.log( this.catalagoEstadosCiviles)
 
-   
-   
-    
+
+
+
   }
 
-  
-  ngAfterViewInit(){
-   // this.buscar();
+
+  ngAfterViewInit() {
+    // this.buscar();
   }
- /**
-   * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
-   */
+  /**
+    * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
+    */
 
 
-     /**
-   * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
-   */
- 
+  /**
+* Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
+*/
 
-  decodeObjetoDatos(entrada){
-    
-   // let array = new Array();
-   // array.push(JSON.parse(decodeURIComponent(escape( atob(this.objetoDatos)))));
+
+  decodeObjetoDatos(entrada) {
+
+    // let array = new Array();
+    // array.push(JSON.parse(decodeURIComponent(escape( atob(this.objetoDatos)))));
     return JSON.parse(atob(entrada))
-   
   }
 
 
-  encodeObjetos(entrada){
-   
-    return  btoa(unescape(encodeURIComponent(JSON.stringify(entrada))))
+  encodeObjetos(entrada) {
+
+    return btoa(unescape(encodeURIComponent(JSON.stringify(entrada))))
   }
-  cargarDatos(){
+  cargarDatos() {
     let listDatosCreditos = []
-    this.devService.getDevolucion(this.idDevolucion).subscribe((data:any)=> {
-      if(data.entidad){
+    this.devService.getDevolucion(this.idDevolucion).subscribe((data: any) => {
+      if (data.entidad) {
         //console.log("Hello", data.entidad)
         this.codigoOperacion.setValue(data.entidad.codigoOperacion)
         this.procesoDev.setValue("DEVOLUCION")
@@ -206,34 +193,34 @@ datos
         this.genero.setValue(data.entidad.genero);
         this.validateHeredero();
         this.valorCustodia.setValue(data.entidad.valorCustodiaAprox.toFixed(2))
-        this.joyasList=this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
+        this.joyasList = this.decodeObjetoDatos(data.entidad.codeDetalleGarantia)
         this.listTablaHeredero = this.decodeObjetoDatos(data.entidad.heredero.codeHerederos);
         listDatosCreditos.push(this.decodeObjetoDatos(data.entidad.codeDetalleCredito))
         this.dataSourceContrato = new MatTableDataSource<any>(listDatosCreditos)
-        this.dataSourceJoyas =  new MatTableDataSource<any>(this.joyasList)
-        this.dataSourceHeredero=new MatTableDataSource<any>(this.listTablaHeredero);
+        this.dataSourceJoyas = new MatTableDataSource<any>(this.joyasList)
+        this.dataSourceHeredero = new MatTableDataSource<any>(this.listTablaHeredero);
         this.calcularTotalizados();
       }
     })
-  
-  
+
+
   }
 
 
 
-  encriptarDatos(objeto){
+  encriptarDatos(objeto) {
     return btoa(unescape(encodeURIComponent(objeto)))
   }
 
   getParametros(): void {
-   
+
     this.route.paramMap.subscribe(
       (params: Params) => {
-      
-       
+
+
         this.idDevolucion = params.get('idDevolucion');
         //console.log("parametro", this.idDevolucion)
-       
+
       },
       error => {
         this.sinNoticeService.setNotice('Ocurrio un error al obtener el codigo del contrato: ' + JSON.stringify(error), 'error');
@@ -241,74 +228,66 @@ datos
     );
   }
 
-setFechaSistema(){
-  this.cns.getSystemDate().subscribe((fechaSistema: any) => {
-   this.fechaServer = new Date( fechaSistema.entidad);
-   //console.log(this.fechaServer) 
-  })
-}
-  
-getEdad(fechaValue){
-  this.fechaUtil = new diferenciaEnDias(new Date(fechaValue),new Date( this.fechaServer) )
-  return this.fechaUtil.obtenerDias()/365
- }
- 
- calcularTotalizados(){
-
-  this.totalPesoNeto =0;
-  this.totalPesoBruto =0; 
-  this.totalValorAvaluo = 0
-
-  let ind = 0;
-  if (this.dataSourceJoyas.data) {
-    ////console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
- 
-    this.joyasList.forEach(element => {
-      
-
-     
-    this.totalPesoNeto = Number(this.totalPesoNeto) + Number(element.pesoNeto);
-    this.totalPesoBruto = Number(this.totalPesoBruto) + Number(element.pesoBruto);
-    this.totalValorAvaluo = Number(this.totalValorAvaluo) + Number(element.valorAvaluo);
-
-    });
-    
+  setFechaSistema() {
+    this.cns.getSystemDate().subscribe((fechaSistema: any) => {
+      this.fechaServer = new Date(fechaSistema.entidad);
+      //console.log(this.fechaServer) 
+    })
   }
-  //console.log("XD" , this.totalPesoNeto)
-}
+
+  getEdad(fechaValue) {
+    this.fechaUtil = new diferenciaEnDias(new Date(fechaValue), new Date(this.fechaServer))
+    return this.fechaUtil.obtenerDias() / 365
+  }
+
+  calcularTotalizados() {
+
+    this.totalPesoNeto = 0;
+    this.totalPesoBruto = 0;
+    this.totalValorAvaluo = 0
+
+    let ind = 0;
+    if (this.dataSourceJoyas.data) {
+      ////console.log("<<<<<<<<<<Data source >>>>>>>>>> "+ JSON.stringify(this.dataSourceContratos.data));
+
+      this.joyasList.forEach(element => {
 
 
 
-/* ----------TRACKING-------*/
+        this.totalPesoNeto = Number(this.totalPesoNeto) + Number(element.pesoNeto);
+        this.totalPesoBruto = Number(this.totalPesoBruto) + Number(element.pesoBruto);
+        this.totalValorAvaluo = Number(this.totalValorAvaluo) + Number(element.valorAvaluo);
+
+      });
+
+    }
+    //console.log("XD" , this.totalPesoNeto)
+  }
 
 
 
 
 
+  validateHeredero() {
+    if (this.tipoCliente.value.toUpperCase() === "HEREDERO") {
+      this.enableHeredero.next(true)
 
-validateHeredero(){
-  if (this.tipoCliente.value.toUpperCase()==="HEREDERO" ){
-    this.enableHeredero.next(true)
-    
-} else if (this.tipoCliente.value.toUpperCase()==="DEUDOR" ){
-  this.enableHeredero.next(false)
-  
-}
-}
+    } else if (this.tipoCliente.value.toUpperCase() === "DEUDOR") {
+      this.enableHeredero.next(false)
 
-guardar(){
-  this.devService.guardarEntregaRecepcion(this.idDevolucion).subscribe((data:any)=> {
-    this.sinNoticeService.setNotice(
-      "Guardado correctamente",
-      "success"
-    );
-    this.router.navigate(['negociacion/bandeja-operaciones'    ]);
-    //console.log(data.entidad)
-  }, error => {
-    this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
-  })
-}
+    }
+  }
 
-
-
+  guardar() {
+    this.devService.guardarEntregaRecepcion(this.idDevolucion).subscribe((data: any) => {
+      this.sinNoticeService.setNotice(
+        "Guardado correctamente",
+        "success"
+      );
+      this.router.navigate(['negociacion/bandeja-operaciones']);
+      //console.log(data.entidad)
+    }, error => {
+      this.sinNoticeService.setNotice("Error en la aprobacion ", 'error');
+    })
+  }
 } 

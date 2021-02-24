@@ -59,7 +59,7 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				redirectTo: 'set-arribo',
+				redirectTo: 'pendientes-arribo',
 				pathMatch: 'full'
 			},{
 				path: 'solicitud-devolucion/:cod/:item',
@@ -77,11 +77,6 @@ const routes: Routes = [
 				path: 'pendientes-arribo',
 				component: ListaPendientesComponent
 			},
-
-			{
-				path: 'entrega-recepcion',
-				component: EntregaRecepcionComponent
-			},
 			{
 				path: 'entrega-recepcion/:idDevolucion',
 				component: EntregaRecepcionComponent
@@ -91,11 +86,6 @@ const routes: Routes = [
 				path: 'detalle-devolucion/:idDevolucion',
 				component: DetalleDevolucionComponent
 			},
-			{
-				path: 'detalle-devolucion',
-				component: DetalleDevolucionComponent
-			},
-
 			{
 				path: 'cancelacion-solicitud',
 				component: CancelacionSolicitudDevolucionComponent

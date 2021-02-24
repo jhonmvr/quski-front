@@ -8,7 +8,6 @@ import { Page } from '../../../../../core/model/page';
 import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { DevolucionService } from '../../../../../core/services/quski/devolucion.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { SubheaderService } from '../../../../../core/_base/layout';
 import { AddFechaComponent } from '../../../../partials/custom/add-fecha/add-fecha.component';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
@@ -76,13 +75,10 @@ export class SeleccionFechaComponent implements OnInit {
     this.loading = this.loadingSubject.asObservable();
     this.consultarAgencia();
     this.initiateTablePaginator();
-    //Se ejecuta cuando se hace click en el ordenamiento en el mattable
     this.sort.sortChange.subscribe(() => {
-      //console.log("sort changed "  );
       this.initiateTablePaginator();
       this.buscar();
     });
-    
   }
 
   /**

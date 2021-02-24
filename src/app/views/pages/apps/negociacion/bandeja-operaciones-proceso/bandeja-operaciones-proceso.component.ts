@@ -242,18 +242,25 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   }
   public verDetalle(row: OperacionesProcesoWrapper ){
     if(row.id != null){
-      this.router.navigate(['negociacion/detalle-negociacion/', row.id]);    
+      if(row.proceso == 'NUEVO'){
+        this.router.navigate(['negociacion/detalle-negociacion/', row.id]);       
+      }else if(row.proceso == 'RENOVACION'){
+        
+      }else if(row.proceso == 'DEVOLUCION'){
+        this.router.navigate(['devolucion/detalle-devolucion/',row.id]);
+      }
+   
     }
   }
   public verOperacion(row: OperacionesProcesoWrapper ){
     if(row.id != null){
       if(row.proceso == 'NUEVO'){
         this.router.navigate(['negociacion/gestion-negociacion/NEG/',row.id]);    
-      }
-      if(row.proceso == 'RENOVACION'){
+      }else if(row.proceso == 'RENOVACION'){
         this.router.navigate(['novacion/crear-novacion/NOV/', row.id]);
-      }
-      if(row.proceso == 'DEVOLUCION'){
+      }else if(row.proceso == 'DEVOLUCION' && row.estadoProceso == 'ARRIBADO'){
+        this.router.navigate(['devolucion/entrega-recepcion/',row.id]);
+      }else if(row.proceso == 'DEVOLUCION' ){
         this.router.navigate(['devolucion/solicitud-devolucion/CREA/',row.id]);
       }
     }

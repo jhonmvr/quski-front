@@ -222,9 +222,17 @@ export class BandejaAprobadorComponent implements OnInit {
                   this.router.navigate(['credito-nuevo/gestion-credito/aprobar-bloqueo-fondos/',row.id]);  
                 }
                 if(row.proceso =="DEVOLUCION"){
-                  this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+                  this.pro.findByIdReferencia(row.id, row.proceso).subscribe( (dat:any) =>{
+                    if(dat.entidad.estadoProceso == 'PENDIENTE_APROBACION_FIRMA'){
+                      this.router.navigate(['devolucion/verificacion-firmas/', row.id]);
+                      this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+                    }else{
+                      this.router.navigate(['devolucion/aprobar-solicitud-devolucion/', row.id]);
+                      this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+                    }
+                  });
                   this.router.navigate(['devolucion/aprobar-solicitud-devolucion/', row.id]);
-                }
+                } 
                 if(row.proceso =="CANCELACION DEVOLUCION"){
                   this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
                   this.router.navigate(['devolucion/aprobacion-cancelacion-solicitud/', row.id]);

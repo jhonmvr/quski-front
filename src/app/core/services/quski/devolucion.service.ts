@@ -82,19 +82,6 @@ export class DevolucionService extends BaseService {
     );
   }
 
-
-  public rechazarDevolucion(id){
-    let serviceUrl = this.appResourcesUrl + "devolucionRestController/rechazarSolicitudDevolucion";
-    this.params = this.params.set('id', id);  
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, null,  this.options).pipe(
-      tap( // Log the result or error
-        (data: any) => data,
-        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
-      )
-    );
-  }
-
   public busquedaSeleccionarFechas(page:Page, codigoOperacion, agencia, fechaAprobacionDesde,fechaAprobacionHasta, 
     identificacion){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/buscarDevolucion";  
