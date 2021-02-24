@@ -1,0 +1,59 @@
+<h2>Detalle de pago</h2>
+
+<div class="row">
+    <table mat-table id="pago" [dataSource]="dataSource">
+        <ng-container matColumnDef="Accion">
+            <th mat-header-cell *matHeaderCellDef> Estado </th>
+            <td mat-cell *matCellDef="let row"> <button mat-raised-button color="primary" (click)="setDataRubro(row.detalle)">Detalle</button> </td>
+        </ng-container>
+        <ng-container matColumnDef="Estado">
+            <th mat-header-cell *matHeaderCellDef> Estado </th>
+            <td mat-cell *matCellDef="let row"> {{row.codigoEstadoRubro}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Fecha">
+            <th mat-header-cell *matHeaderCellDef> Fecha </th>
+            <td mat-cell *matCellDef="let row"> {{row.fecha | rDate}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Observacion">
+            <th mat-header-cell *matHeaderCellDef> Observacion </th>
+            <td mat-cell *matCellDef="let row"> {{row.observacion}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Usuario">
+            <th mat-header-cell *matHeaderCellDef> Usuario </th>
+            <td mat-cell *matCellDef="let row"> {{row.codigoUsuario}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Referencia">
+            <th mat-header-cell *matHeaderCellDef> Referencia </th>
+            <td mat-cell *matCellDef="let row"> {{row.referencia}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Saldo">
+            <th mat-header-cell *matHeaderCellDef> Saldo </th>
+            <td mat-cell *matCellDef="let row"> {{row.saldo}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Valor">
+            <th mat-header-cell *matHeaderCellDef> Valor </th>
+            <td mat-cell *matCellDef="let row"> {{row.valor}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="['Accion','Estado','Fecha','Observacion','Usuario','Referencia','Saldo','Valor']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['Accion','Estado','Fecha','Observacion','Usuario','Referencia','Saldo','Valor'];"></tr>
+    </table>
+</div>
+<h4>Detalle rubros pagados</h4>
+<div class="row">
+    <table mat-table id="detalle" [dataSource]="dataRubro">
+        <ng-container matColumnDef="Rubro">
+            <th mat-header-cell *matHeaderCellDef> Rubro </th>
+            <td mat-cell *matCellDef="let row"> {{rubro(row.idRubro)}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Saldo">
+            <th mat-header-cell *matHeaderCellDef> Saldo </th>
+            <td mat-cell *matCellDef="let row"> {{row.saldo}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Valor">
+            <th mat-header-cell *matHeaderCellDef> Valor </th>
+            <td mat-cell *matCellDef="let row"> {{row.valor}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="['Rubro','Saldo','Valor']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['Rubro','Saldo','Valor'];"></tr>
+    </table>
+</div>

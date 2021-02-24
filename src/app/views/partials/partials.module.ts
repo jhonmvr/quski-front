@@ -124,6 +124,8 @@ import { CreditoDialogComponent } from './custom/secciones-generales/credito-dia
 import { RelativeDatePipe } from '../../../app/core/_base/layout/pipes/date-relative.pipe';
 import { LoaderComponent } from './custom/loader/loader.component';
 import { MatTableExporterModule } from 'mat-table-exporter';
+import { TablaCustomComponent } from './custom/secciones-generales/tabla-custom/tabla-custom.component';
+import { TablePagoComponent } from './custom/secciones-generales/tabla-custom/table-pago/table-pago.component';
 
 
 
@@ -199,10 +201,13 @@ import { MatTableExporterModule } from 'mat-table-exporter';
 		TablaAmortizacionComponent,
 		DevolucionCreditoComponent,
 		PopupPagoComponent,
-		SubirComprobanteComponent
+		SubirComprobanteComponent,
+		TablaCustomComponent,
+		TablePagoComponent
 
 	],
 	exports: [
+		TablaCustomComponent,
 		WidgetModule,
 		PortletModule,
 		RelativeDatePipe,
@@ -331,7 +336,8 @@ import { MatTableExporterModule } from 'mat-table-exporter';
 		AddFechaComponent,
 		TablaAmortizacionComponent,
 		PopupPagoComponent,
-		SubirComprobanteComponent
+		SubirComprobanteComponent,
+		TablePagoComponent
 
 	]
 })
