@@ -61,10 +61,10 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				redirectTo: 'solicitud-devolucion',
+				redirectTo: 'set-arribo',
 				pathMatch: 'full'
 			},{
-				path: 'solicitud-devolucion',
+				path: 'solicitud-devolucion/:cod/:item',
 				component: SolicitudDevolucionComponent
 			},
 			{

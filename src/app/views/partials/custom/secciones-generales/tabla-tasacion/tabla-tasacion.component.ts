@@ -3,13 +3,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { MatTableDataSource } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
-
 @Component({
   selector: 'kt-tabla-tasacion',
   templateUrl: './tabla-tasacion.component.html',
   styleUrls: ['./tabla-tasacion.component.scss']
 })
-
 export class TablaTasacionComponent implements OnInit {
   public error: boolean= false;
   public dataSourceTasacion = new MatTableDataSource<any>();
@@ -30,6 +28,7 @@ export class TablaTasacionComponent implements OnInit {
   public catTipoOro: Array<any>;
   public catEstadoProceso: Array<any>;
   public catEstadoUbicacion: Array<any>;
+  public catDivision: Array<any>;
   private dataObservable: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>(null);
   @Input() set data( list :  Array<any>){
     this.dataObservable.next( list );
@@ -60,6 +59,8 @@ export class TablaTasacionComponent implements OnInit {
         ? ['Accion','TipoOro', 'valorOro', 'PesoBruto']
         : this.tipo == 'CD' 
         ? ['Total','TipoOro','valorOro', 'PesoBruto']
+        : this.tipo == 'DV' 
+        ? ['Total','NumeroPiezas','TipoOro','TipoJoya','EstadoJoya','Descripcion','PesoBruto','tienePiedras','detallePiedras','DescuentoPesoPiedra','DescuentoSuelda','PesoNeto','valorOro', 'ValorAvaluo',        'NumeroFundaMadre','NumeroFundaActual','CiudadTevcol']
         : [];
         this.dataSourceTasacion = new MatTableDataSource<any>(p);
         //this.formateo();
@@ -86,7 +87,12 @@ export class TablaTasacionComponent implements OnInit {
                     this.catEstadoProceso = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
                     this.sof.consultarEstadoUbicacionCS().subscribe( (data: any) =>{
                       this.catEstadoUbicacion= !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
-                      this.inicioDeFlujo();
+                      this.sof.consultarDivicionPoliticaCS().subscribe((data: any) => {
+                        if (!data.existeError) {
+                          this.catDivision= !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+                          this.inicioDeFlujo();
+                        }
+                      }); 
                     });  
                   });
                 });  
@@ -130,6 +136,20 @@ export class TablaTasacionComponent implements OnInit {
     let x = this.catEstadoJoya.find(x => x.codigo == estadoJoya);
     if(estadoJoya && this.catEstadoJoya && x){
       return x.nombre;
+    }else{
+      return 'Error Catalogo' ;
+    }
+  }
+  forAgenciaCustodia(e){
+    let agenciaCustodia = e.idAgenciaCustodia;
+    let x = this.catAgencia.find(x => x.id == agenciaCustodia);
+    if(agenciaCustodia && this.catAgencia && x){
+      let idTecCol = x.idUbicacionTevcol;
+      let m = this.catDivision.find(x => x.id == agenciaCustodia);
+      if(idTecCol && m){
+        return m.nombre;
+
+      }
     }else{
       return 'Error Catalogo' ;
     }
