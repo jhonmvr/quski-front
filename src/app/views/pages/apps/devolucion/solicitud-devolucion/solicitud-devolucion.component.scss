@@ -18,88 +18,6 @@
 
     justify-content: start;
   }
-
-
-
-.mat-column-tipoOro {
-    flex: 0 0 100px;
-    justify-content: start;
-   
-}
-
-
-.mat-column-tipoJoya {
-    flex: 0 0 100px;
-    justify-content: start;
-
-}
-
-.mat-column-estadoJoya {
-    flex: 0 0 100px;
-    justify-content: start;
-
-}
-
-.mat-column-descripcion {
-    flex: 0 0 100px;
-    justify-content: start;
-  
-}
-.mat-column-pesoBruto {
-    flex: 0 0 75px;
-    justify-content: start;
-
-}
-.mat-column-pesoNeto {
-    flex: 0 0 75px;
-    justify-content: start;
-   
-}
-.mat-column-valorAvaluo {
-    flex: 0 0 75px;
-    justify-content: start;
- 
-}
-
-
-
-.mat-column-tienePiedras {
-    flex: 0 0 75px;
-    justify-content: start;
- 
-}
-
-.mat-column-detallePiedras {
-    flex: 0 0 100px;
-    justify-content: start;
-
-}
-
-.mat-column-descuentoPesoPiedra {
-    flex: 0 0 100px;
-    justify-content: start;
-
-}
-
-.mat-column-numeroFundaMadre {
-    flex: 0 0 100px;
-    justify-content: start;
-
-}
-
-.mat-column-numeroFundaActual {
-    flex: 0 0 100px;
-    justify-content: start;
-
-}
-.mat-column-ciudadTevcol {
-    flex: 0 0 100px;
-    justify-content: start;
-
-}
-
-
-
 .mat-column-cedula {
    width: 150px;
     justify-content: start;
@@ -116,3 +34,102 @@
     flex: 0 0 100px;
     justify-content: start;
 }
+.spiner{
+    display: block;
+    position: fixed;
+    z-index: 1031;
+    top: 50%;
+    right: 50%; 
+  }
+  .material-icons {
+    font-size: 31px !important;
+    height: 31px;
+    width: 34px;
+    color: gray;
+    text-align: center;
+  }
+  .warning-icons {
+    font-size: 31px !important;
+    height: 31px;
+    width: 34px;
+    color: gray;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  .mat-button .mat-button-wrapper > *,
+  .mat-fab .mat-button-wrapper > *,
+  .mat-flat-button .mat-button-wrapper > *,
+  .mat-icon-button .mat-button-wrapper > *,
+  .mat-mini-fab .mat-button-wrapper > *,
+  .mat-raised-button .mat-button-wrapper > *,
+  .mat-stroked-button .mat-button-wrapper > * {
+    vertical-align: baseline;
+  }
+  .mat-header-cell {
+    flex-direction: column;
+    justify-content: center;
+    font-size: smaller;
+    
+  }
+  
+  .mat-cell {
+    text-align: center;
+    justify-content:center;
+    font-size: smaller;
+  }
+  .mat-footer-cell{
+    text-align: center;
+    justify-content:center;
+    font-size: smaller;
+  }
+  .mat-button,
+  .mat-flat-button,
+  .mat-icon-button,
+  .mat-stroked-button {
+    min-width: 28px; //da espacio al data table
+    height: fit-content !important; //quita fondo cuando sobrepone
+  }
+  
+  .white-icon {
+    color: white;
+  }
+  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  .white-icon svg {
+      fill: white;
+  }
+  
+  .blue-icon {
+    color:#3399ff;
+  }
+  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  .blue-icon svg {
+      fill: #3399ff;
+  }
+  .orange-icon {
+    color:#ff9900;
+  }
+    /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  .orange-icon svg {
+    fill: #ff9900;
+  }
+  .textArea {
+    color: black;
+    background-color: white;
+    border-color: silver;
+    font-weight: 400;
+  }
+  
+  .warning {
+    color: white;
+    background-color: #cc8b00;
+    border-color: white;
+    font-weight: 400;
+  }
+
+  .error-snackbar {
+    color: white;
+    background-color: red;
+    border-color: white;
+    font-weight: 400;
+  }    

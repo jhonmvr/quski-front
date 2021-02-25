@@ -29,11 +29,13 @@ export class TbQoDevolucion {
     genero: string;
     fundaActual: string;
     fundaMadre: string;
+    cedulaApoderado: any;
     ciudadTevcol: string;
     nombreAgenciaSolicitud : string;
     agenciaEntregaId: number;
     fechaEfectiva: any;
     pesoBruto: number;
+    nombreApoderado: any;
     valorAvaluo: number;
 
     constructor(){

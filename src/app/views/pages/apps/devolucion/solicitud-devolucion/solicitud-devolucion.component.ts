@@ -43,7 +43,7 @@ export class SolicitudDevolucionComponent implements OnInit {
 
 
 
-  public heredero: FormGroup = new FormGroup({});
+  public formTipoCliente: FormGroup = new FormGroup({});
   public devolucionForm: FormGroup = new FormGroup({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
   // datos operacion
@@ -64,22 +64,21 @@ export class SolicitudDevolucionComponent implements OnInit {
   public edad = new FormControl('');
   //GESTION DEVOLUCION
   public tipoCliente = new FormControl('', [Validators.required]);
-  public observaciones = new FormControl('');
+  public observaciones = new FormControl('', [Validators.required]);
   public agenciaEntrega = new FormControl('', [Validators.required]);
-  public valorCustodia = new FormControl('');
+  public valorCustodia = new FormControl('', [Validators.required]);
   public cedulaHeredero = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
   public nombreHeredero = new FormControl('', [Validators.required]);
+  public cedulaApoderado= new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
+  public nombreApoderado = new FormControl('', [Validators.required]);
 
-
-
-
+  dataSourceDetalle = new MatTableDataSource<any>();
+  displayedColumnsDetalle = ['fechaAprobacion', 'fechaVencimiento', 'monto']
+  dataSourceHeredero = new MatTableDataSource<any>();
+  displayedColumnsHeredero = ['accion','cedula', 'nombre']
   listTablaHeredero = []
 
-  displayedColumnsHeredero = ['cedula', 'nombre']
-  displayedColumnsCredito = ['fechaAprobacion', 'fechaVencimiento', 'monto']
   /**Obligatorio paginacion */
-  dataSourceContrato = new MatTableDataSource;
-  dataSourceHeredero = new MatTableDataSource;
 
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
@@ -98,12 +97,16 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.sof.setParameter();
     this.dev.setParameter();
 
-    this.heredero.addControl("cedulaHeredero", this.cedulaHeredero);
-    this.heredero.addControl("nombreHeredero", this.nombreHeredero);
     this.devolucionForm.addControl("tipoCliente", this.tipoCliente);
     this.devolucionForm.addControl("observaciones", this.observaciones);
-    this.devolucionForm.addControl("agenciaEntrega", this.agenciaEntrega);
     this.devolucionForm.addControl("valorCustodia", this.valorCustodia);
+    this.devolucionForm.addControl("agenciaEntrega", this.agenciaEntrega);
+
+    this.formTipoCliente.addControl("cedulaHeredero", this.cedulaHeredero);
+    this.formTipoCliente.addControl("nombreHeredero", this.nombreHeredero);
+    this.formTipoCliente.addControl("cedulaApoderado", this.cedulaApoderado);
+    this.formTipoCliente.addControl("nombreApoderado", this.nombreApoderado);
+
 
   }
 
@@ -155,7 +158,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     console.log('Wrapper SOFTBANK => ', this.wrapperSoft);
     console.log('Wrapper PROCESO => ', this.wrapperDevolucion);
     this.numeroOperacion.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : this.wrapperSoft.credito.numeroOperacion );
-    this.estadoProceso.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.proceso.estadoProceso : 'No Iniciado');
+    this.estadoProceso.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.proceso.estadoProceso : 'PROCESO NO INICIADO');
     this.nombresCompletos.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nombreCliente : this.wrapperSoft.cliente.nombreCompleto);
     this.cedulaCliente.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.cedulaCliente : this.wrapperSoft.cliente.identificacion);
     this.nivelEducacion.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nivelEducacion : this.wrapperSoft.cliente.codigoEducacion);
@@ -164,12 +167,26 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.fechaNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.fechaNacimiento : this.wrapperSoft.cliente.fechaNacimiento);
     this.nacionalidad.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nacionalidad : this.wrapperSoft.cliente.idPaisNacimiento);
     this.lugarNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.lugarNacimiento : this.wrapperSoft.cliente.idLugarNacimiento);
+    if(this.wrapperDevolucion){
+      let objetoHeredero = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeHerederos );
+      console.log('Wrapper  => objetoHeredero', objetoHeredero.heredero);
+      this.dataSourceHeredero = new MatTableDataSource<any>(objetoHeredero.heredero);
+      this.nombreApoderado.setValue( this.wrapperDevolucion.devolucion.nombreApoderado );
+      this.cedulaApoderado.setValue( this.wrapperDevolucion.devolucion.cedulaApoderado );
+      this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
+      this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
+      this.agenciaEntrega.setValue( this.catAgencia.find( x => x.id == this.wrapperDevolucion.devolucion.agenciaEntregaId ));
+      this.tipoCliente.setValue( this.catTipoCliente.find( x => x.codigo == this.wrapperDevolucion.devolucion.tipoCliente ));
+      let objetoCredito = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeDetalleCredito );
+      this.dataSourceDetalle = new MatTableDataSource<any>([objetoCredito]);
+    }
     this.objetoCredito['fechaAprobacion'] = this.wrapperSoft.credito.fechaAprobacion
     this.objetoCredito['fechaVencimiento'] = this.wrapperSoft.credito.fechaVencimiento
     this.objetoCredito['monto'] = this.wrapperSoft.credito.montoFinanciado
-    this.dataSourceContrato = new MatTableDataSource<any>([this.objetoCredito]);
-    console.log("estos los datos de la tabla =>>>", this.dataSourceContrato.data)
+    this.dataSourceDetalle = new MatTableDataSource<any>([this.objetoCredito]);
+    console.log("estos los datos de la tabla =>>>", this.dataSourceDetalle.data)
     this.onChangeFechaNacimiento();
+    this.desactivarCampos();
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
   }
   
@@ -293,6 +310,24 @@ export class SolicitudDevolucionComponent implements OnInit {
       const input = this.nombreHeredero;
       return input.hasError('required') ? errorRequerido : '';
     }
+    if (pfield && pfield === "cedulaApoderado") {
+      const input = this.cedulaHeredero.value
+      return input.hasError("required")
+        ? errorRequerido
+        : input.hasError("pattern")
+          ? errorNumero
+          : input.hasError("invalid-identification")
+            ? invalidIdentification
+            : input.hasError("maxlength")
+              ? errorLogitudExedida
+              : input.hasError("minlength")
+                ? errorInsuficiente
+                : "";
+    }
+    if (pfield && pfield === 'nombreApoderado') {
+      const input = this.nombreHeredero;
+      return input.hasError('required') ? errorRequerido : '';
+    }
   }
   /** ********************************************* @FLUJO ********************* **/
   public registrarDevolucion() {
@@ -326,16 +361,12 @@ export class SolicitudDevolucionComponent implements OnInit {
     wrapper.valorAvaluo = this.totalValorA;
     wrapper.pesoBruto = this.totalPesoB;
     wrapper.fechaEfectiva = this.wrapperSoft.credito.fechaAprobacion;
-    wrapper.valorCustodiaAprox = 12.00
+    wrapper.valorCustodiaAprox = this.valorCustodia.value;
     wrapper.codeHerederos = this.encodeObjetos({heredero:this.listTablaHeredero});
     wrapper.codeDetalleCredito = this.encodeObjetos([this.objetoCredito]);
     wrapper.codeDetalleGarantia = this.encodeObjetos(this.wrapperSoft.garantias);
-    //wrapper.codeHerederos;
-	  //wrapper.valorCustodiaAprox;
-	  //wrapper.arribo;
-	  //wrapper.devuelto;
-	  //wrapper.nombreApoderado;
-	  //wrapper.cedulaApoderado; 
+	  wrapper.nombreApoderado = this.nombreApoderado.value ? this.nombreApoderado.value : null;
+    wrapper.cedulaApoderado = this.cedulaApoderado.value ? this.cedulaApoderado.value : null; 
     this.dev.registrarSolicitudDevolucion(wrapper).subscribe((data: any) => {
       if (data.entidad) {
         console.log( 'data Devolucion =>', data.entidad);
@@ -373,10 +404,56 @@ export class SolicitudDevolucionComponent implements OnInit {
       objetoHeredero.nombre = this.nombreHeredero.value
       this.listTablaHeredero.push(objetoHeredero)
       this.dataSourceHeredero = new MatTableDataSource<any>(this.listTablaHeredero);
-      //console.log(this.listTablaHeredero)
+      this.limpiarCampos();
     } else {
-      this.sinNoticeService.setNotice("Debe agregar el nombre del heredero", 'error');
+      this.sinNoticeService.setNotice("INGRESE CORRECTAMENTE LOS CAMPOS DE HEREDERO", 'warning');
     }
+  }
+  public eliminarHeredero( row ){
+    let lits = this.dataSourceHeredero.data;
+    const index = lits.indexOf(row);
+    lits.splice(index, 1);
+    const dataC = lits;
+    this.dataSourceHeredero.data = dataC;
+    if (this.dataSourceHeredero.data.length < 1) {
+      this.dataSourceHeredero.data = null;
+    }else{
+      this.listTablaHeredero = new Array<any>();
+      this.dataSourceHeredero.data.forEach( e=>{
+        let objetoHeredero = { cedula: "", nombre: "" }
+        objetoHeredero.cedula = e.cedula;
+        objetoHeredero.nombre = e.nombre;
+        this.listTablaHeredero.push(objetoHeredero);
+      });
+    }
+  }  
+  public numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+  public limpiarCampos(){
+    Object.keys(this.formTipoCliente.controls).forEach((name) => {
+      const control = this.formTipoCliente.controls[name];
+      control.setErrors(null);
+      control.setValue(null);
+      control.reset();
+    });
+    this.formTipoCliente.reset();
+  }
+
+  private desactivarCampos(){
+    this.cedulaCliente.disable();
+    this.nombresCompletos.disable();
+    this.nivelEducacion.disable();
+    this.genero.disable();
+    this.estadoCivil.disable();
+    this.fechaNacimiento.disable();
+    this.nacionalidad.disable();
+    this.lugarNacimiento.disable();
+    this.edad.disable();
   }
   private setTipoHabilitantePorTipoCliente() {
     console.log(this.tipoCliente.value)
@@ -390,7 +467,6 @@ export class SolicitudDevolucionComponent implements OnInit {
       this.estadoOperacion = "SOLICITUD"
     }
   }
-
   decodeObjetoDatos(entrada) {
     return JSON.parse(atob(entrada))
   }
