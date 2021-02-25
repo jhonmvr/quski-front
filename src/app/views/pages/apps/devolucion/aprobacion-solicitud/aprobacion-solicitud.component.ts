@@ -43,22 +43,22 @@ export class AprobacionSolicitudComponent implements OnInit {
   public nivelEducacion = new FormControl('');
   public genero = new FormControl('');
   public estadoCivil = new FormControl('');
-  public separacionBienes = new FormControl('');
   public fechaNacimiento = new FormControl('');
   public nacionalidad = new FormControl('');
   public lugarNacimiento = new FormControl('');
   public edad = new FormControl('');
-
-  //GESTION DEVOLUCION
   public tipoCliente = new FormControl('');
   public observaciones = new FormControl('');
   public agenciaEntrega = new FormControl('');
   public valorCustodia = new FormControl('');
-  public cedulaHeredero = new FormControl('');
-  public nombreHeredero = new FormControl('');
+  public cedulaApoderado = new FormControl('');
+  public nombreApoderado = new FormControl('');
+  dataSourceDetalle = new MatTableDataSource<any>();
+  displayedColumnsDetalle = ['fechaAprobacion', 'fechaVencimiento', 'monto']
+  dataSourceHeredero = new MatTableDataSource<any>();
 
+  displayedColumnsHeredero = ['cedula', 'nombre']
 
-  //observables
   objetoCredito = {
     "fechaAprobacion": "",
     "fechaVencimiento": "",
@@ -68,10 +68,6 @@ export class AprobacionSolicitudComponent implements OnInit {
 
 
 
-  displayedColumnsHeredero = ['cedula', 'nombre']
-  displayedColumnsCredito = ['fechaAprobacion', 'fechaVencimiento', 'monto']
-  dataSourceContrato = new MatTableDataSource;
-  dataSourceHeredero = new MatTableDataSource;
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
   constructor(
@@ -86,7 +82,23 @@ export class AprobacionSolicitudComponent implements OnInit {
     this.cre.setParameter();
     this.sof.setParameter();
     this.dev.setParameter();
-
+    this.formCreditoNuevo.addControl("numeroOperacion", this.numeroOperacion );
+    this.formCreditoNuevo.addControl("proceso", this.proceso );
+    this.formCreditoNuevo.addControl("cedulaCliente", this.cedulaCliente );
+    this.formCreditoNuevo.addControl("nombresCompletos", this.nombresCompletos );
+    this.formCreditoNuevo.addControl("nivelEducacion", this.nivelEducacion );
+    this.formCreditoNuevo.addControl("genero", this.genero );
+    this.formCreditoNuevo.addControl("estadoCivil", this.estadoCivil );
+    this.formCreditoNuevo.addControl("fechaNacimiento", this.fechaNacimiento );
+    this.formCreditoNuevo.addControl("nacionalidad", this.nacionalidad );
+    this.formCreditoNuevo.addControl("lugarNacimiento", this.lugarNacimiento );
+    this.formCreditoNuevo.addControl("edad", this.edad );
+    this.formCreditoNuevo.addControl("tipoCliente", this.tipoCliente );
+    this.formCreditoNuevo.addControl("observaciones", this.observaciones );
+    this.formCreditoNuevo.addControl("agenciaEntrega", this.agenciaEntrega );
+    this.formCreditoNuevo.addControl("valorCustodia", this.valorCustodia );
+    this.formCreditoNuevo.addControl("cedulaApoderado", this.cedulaApoderado );
+    this.formCreditoNuevo.addControl("nombreApoderado", this.nombreApoderado );
   }
 
   ngOnInit() {
@@ -120,6 +132,7 @@ export class AprobacionSolicitudComponent implements OnInit {
     this.validacion();
     console.log('Wrapper SOFTBANK => ', this.wrapperSoft);
     console.log('Wrapper PROCESO => ', this.wrapperDevolucion);
+    this.formCreditoNuevo.disable();
     this.numeroOperacion.setValue( this.wrapperDevolucion.devolucion.codigoOperacion);
     this.proceso.setValue( this.wrapperDevolucion.proceso.proceso );
     this.nombresCompletos.setValue( this.wrapperDevolucion.devolucion.nombreCliente );
@@ -135,6 +148,19 @@ export class AprobacionSolicitudComponent implements OnInit {
     this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
     this.agenciaEntrega.setValue(this.wrapperDevolucion.devolucion.agenciaEntrega);
     this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
+    if(this.wrapperDevolucion){
+      let objetoHeredero = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeHerederos );
+      console.log('Wrapper  => objetoHeredero', objetoHeredero.heredero);
+      this.dataSourceHeredero = new MatTableDataSource<any>(objetoHeredero.heredero);
+      this.nombreApoderado.setValue( this.wrapperDevolucion.devolucion.nombreApoderado );
+      this.cedulaApoderado.setValue( this.wrapperDevolucion.devolucion.cedulaApoderado );
+      this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
+      this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
+      this.agenciaEntrega.setValue( this.catAgencia.find( x => x.id == this.wrapperDevolucion.devolucion.agenciaEntregaId ));
+      this.tipoCliente.setValue( this.catTipoCliente.find( x => x.codigo == this.wrapperDevolucion.devolucion.tipoCliente ));
+      let objetoCredito = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeDetalleCredito );
+      this.dataSourceDetalle = new MatTableDataSource<any>([objetoCredito]);
+    }
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
   }
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
@@ -202,6 +228,13 @@ export class AprobacionSolicitudComponent implements OnInit {
       }
     });
   }
+  decodeObjetoDatos(entrada) {
+    return JSON.parse(atob(entrada))
+  }
+  encodeObjetos(entrada) {
+    return btoa(unescape(encodeURIComponent(JSON.stringify(entrada))))
+  }
+   
   public respuesta( aprobado ) {
     let mensaje = aprobado ? 'Aprobar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo+'.':
       'Negar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo+'.';
