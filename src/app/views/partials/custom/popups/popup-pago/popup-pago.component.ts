@@ -1,4 +1,5 @@
 import { SubirComprobanteComponent } from './subir-comprobante/subir-comprobante.component';
+import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -20,6 +21,7 @@ export interface WrapperRegistro{
   valorDepositado;
   cuenta;
   fechaPago;
+  tipoPago;
 }
 
 @Component({
@@ -33,14 +35,17 @@ export class PopupPagoComponent implements OnInit {
   public intitucionFinanciera = new FormControl('', [Validators.required]);
   public numeroDeposito = new FormControl('', [Validators.required]);
   public valorDepositado = new FormControl('', [Validators.required]);
+  public tipoPago = new FormControl('', [Validators.required]);
   public cuenta = new FormControl('', [Validators.required]);
   public fechaPago = new FormControl('', [Validators.required]);
   public file: any;
   catBanco: {id: number, nombre:string}[];
+  catTipoPago; any;
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: { id : number, banco: number, numeroCuenta: string },
     public dialogRefGuardar: MatDialogRef<any>,
     private dialog: MatDialog,
+    private par: ParametroService,
     private sinNoticeService: ReNoticeService,
     private sof: SoftbankService,
   ) {
@@ -53,6 +58,8 @@ export class PopupPagoComponent implements OnInit {
 
   ngOnInit() {
     this.cargarCatalogos();
+    this.intitucionFinanciera.disable();
+    this.cuenta.disable();
   }
   private cargarCatalogos(){
     this.sof.consultarBancosCS().subscribe( data =>{
@@ -61,8 +68,11 @@ export class PopupPagoComponent implements OnInit {
       if(banco){
         this.intitucionFinanciera.setValue( banco );
         this.cuenta.setValue( this.data.numeroCuenta );
-
       }
+    });
+    this.par.findByTipo('TIPO-PAGO-COMP').subscribe( (data: any) =>{
+      this.catTipoPago = data.entidades ? data.entidades : {nombre: 'ERR', valor: 'Error al cargar catalogo'}
+      
     });
   }
   public chanceBanco(){
@@ -107,7 +117,8 @@ export class PopupPagoComponent implements OnInit {
         numeroDeposito: this.numeroDeposito.value,
         valorDepositado: this.valorDepositado.value,
         cuenta: this.cuenta.value,
-        fechaPago: this.fechaPago.value
+        fechaPago: this.fechaPago.value,
+        tipoPago: this.tipoPago.value.valor
       };
       this.dialogRefGuardar.close(wrapperRegistro);
       console.log('Regresando de Subir Comprobante ----> ' + wrapperRegistro);

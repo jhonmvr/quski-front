@@ -111,6 +111,19 @@
                     </div>
                 </div>
                 <div class="row mt-3">
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <mat-select required  placeholder="Tipo de Pago"  [formControl]="tipoPagoProceso">
+                                <mat-option *ngFor="let element of catTipoPagoProceso" [value]="element">
+                                    {{element.nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="mat-form-field-fluid">
+
+                            <input matInput [formControl]="valorPreCancelado" placeholder="Valor de PreCancelacion"/>
+                        </mat-form-field>
+                      </div>
                     <div class="col-md-10">
                       <textarea class="form-control border" [formControl]="observacion" rows="5" placeholder="Observaciones: " matInput></textarea>
                     </div>

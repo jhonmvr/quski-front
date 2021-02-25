@@ -27,16 +27,23 @@
                 (keypress)="numberOnly($event)" />
             </mat-form-field>
         </div>		
-        <div class="col-md-4 offset-4">
+        <div class="col-md-3 offset-3">
             <mat-form-field class="mat-form-field-fluid">
                 <input matInput [matDatepicker]="picker6" [formControl]="fechaPago" placeholder="Fecha Pago">
                 <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
                 <mat-datepicker #picker6></mat-datepicker>
             </mat-form-field>
         </div>	
-        <div class="offset-4">
+        <div class="col-md-3 offset-3">
+            <mat-form-field class="mat-form-field-fluid">
+                <mat-select required  placeholder="Tipo de Pago"  [formControl]="tipoPago">
+                    <mat-option *ngFor="let element of catTipoPago" [value]="element">
+                        {{element.nombre }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>	
 
-        </div>
         <div class="col-4 offset-4 pl-3 ml-3">
             <button mat-stroked-button color="basic" matStepperNext (click)="loadArchivoCliente()">
                 <span color="primary">Cargar Comprobante</span>

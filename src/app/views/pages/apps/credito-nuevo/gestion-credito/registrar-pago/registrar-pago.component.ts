@@ -3,6 +3,7 @@ import { PopupPagoComponent } from '../../../../../partials/custom/popups/popup-
 import { SimulacionPrecancelacion } from '../../../../../../core/model/softbank/SimulacionPrecancelacion';
 import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
 import { SubheaderService } from '../../../../../../core/_base/layout/services/subheader.service';
+import { ParametroService } from './../../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from './../../../../../../core/services/quski/softbank.service';
 import { ClienteService } from '../../../../../../core/services/quski/cliente.service';
 import { ReNoticeService } from '../../../../../../core/services/re-notice.service';
@@ -32,6 +33,7 @@ export class RegistrarPagoComponent implements OnInit {
   private totalValorDepositado: any;
   private usuario;
   private agencia;
+  catTipoPagoProceso: Array<any>;
   public dataSourceComprobante = new MatTableDataSource<any>();
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','descargarComprobante'];
   public formRegistrarPago: FormGroup = new FormGroup({});
@@ -43,11 +45,13 @@ export class RegistrarPagoComponent implements OnInit {
   public valorPreCancelado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public valorDepositado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public observacion = new FormControl('', [Validators.maxLength(150)]);
+  public tipoPagoProceso = new FormControl('', [Validators.required, Validators.maxLength(13)]);
 
   constructor(
     private css: SoftbankService,
     private cli: ClienteService,
     private reg: RegistrarPagoService,
+    private par: ParametroService,
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
@@ -67,6 +71,7 @@ export class RegistrarPagoComponent implements OnInit {
   ngOnInit() {
     this.css.setParameter();
     this.reg.setParameter();
+    this.cargarCatalogos();
     this.iniciarBusqueda();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem( 'idAgencia' );    
@@ -184,13 +189,14 @@ export class RegistrarPagoComponent implements OnInit {
       if(r){
         let list = new Array<any>( );
         this.dataSourceComprobante.data.forEach( e=>{
-          let item: { comprobante, cuenta, fechaPago, intitucionFinanciera, numeroDeposito, valorDepositado} = {
+          let item: { comprobante, cuenta, fechaPago, intitucionFinanciera, numeroDeposito, valorDepositado, tipoPago} = {
             comprobante: e.comprobante,
             cuenta: e.cuenta,
             fechaPago: e.fechaPago,
             intitucionFinanciera: e.intitucionFinanciera.id,
             numeroDeposito: e.numeroDeposito,
             valorDepositado: e.valorDepositado,
+            tipoPago: e.tipoPago
           };
           list.push( item );
         });
@@ -206,7 +212,8 @@ export class RegistrarPagoComponent implements OnInit {
           observacion: this.observacion.value,
           valorDepositado: this.valorDepositado.value,
           valorPrecancelado: this.valorPreCancelado.value,
-          idBanco: this.datosMupi.institucionFinanciera
+          idBanco: this.datosMupi.institucionFinanciera,
+          tipoPagoProceso: this.tipoPagoProceso.value.valor
         }
         this.reg.iniciarProcesoRegistrarPago( wrapper ).subscribe( (data: any) =>{
           console.log('Data.Entidad => ', data.entidad);
@@ -227,5 +234,10 @@ export class RegistrarPagoComponent implements OnInit {
   }
   public regresar(){
     this.router.navigate(['credito-nuevo/lista-credito']);
+  }
+  public cargarCatalogos(){
+    this.par.findByTipo('TIPO-PAGO-PROCESO').subscribe( (data: any) =>{
+      this.catTipoPagoProceso = data.entidades ? data.entidades : {nombre: 'ERR', valor: 'Error al cargar catalogo'}
+    });
   }
 }
