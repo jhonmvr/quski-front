@@ -1,164 +1,149 @@
-
-
-<mat-progress-bar mode="indeterminate" *ngIf="loading | async"></mat-progress-bar>
-
 <re-portlet>
     <re-portlet-header [title]="'SELECCION DE FECHA DE ARRIBO '" [class]="'kt-portlet__head--lg'">
-        
-		<ng-container ktPortletTools>
-            <a href="javascript:void(0);" (click)="buscar()" matTooltip="Buscar" style="font-size: 12px; vertical-align: middle;">
-                <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above" >search</mat-icon>
-                <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar </span>
-            </a>
-        
-
-        </ng-container>
+        <ng-container ktPortletTools>
+			<a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
+				<mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
+				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
+			</a>
+		</ng-container>
     </re-portlet-header>
     <re-portlet-body>
-        <!-- start::FILTERS & GROUP ACTIONS -->
-        <div class="kt-form">
-            <!-- start::FILTERS -->
-            <div class="kt-form__filtration">
-                <div class="row align-items-center">
-                   
-                    <div class="col-md-3 kt-margin-bottom-10-mobile">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="codigoOperacion" placeholder="Codigo Operación " autocomplete="off">
-                        </mat-form-field>
-                      
-                    </div>
-                    <div class="col-md-3 kt-margin-bottom-10-mobile">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="cedulaCliente" placeholder="Identificación " autocomplete="off">
-                        </mat-form-field>
-                      
-                    </div>
-            
-                    <div class="col-md-3 kt-margin-bottom-10-mobile">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <mat-select placeholder="Agencia" [formControl]="agencia">
-                               
-                                <mat-option *ngFor="let agen of catalogoAgencia " [value]="agen">
-                                    {{agen.nombre}}
-                                </mat-option>
-                            </mat-select>   
-                        </mat-form-field>
-                    </div>
+        <form [formGroup]="formFiltros">
+        <div class="row">
+                <div class="col-md-4">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input matInput [formControl]="codigoOperacion" placeholder="Numero Operación: "
+                            autocomplete="off">
+                    </mat-form-field>
                 </div>
-                <div class="row align-items-center" >
-                    <div class="col-md-3 kt-margin-bottom-10-mobile">
-                        <mat-form-field>
-                            <input matInput [matDatepicker]="pckFechaCreacionDesde" 
-                            [formControl]="fechaAprobacionDesde" placeholder="Fecha de aprobación desde">
-                            <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionDesde"></mat-datepicker-toggle>
-                            <mat-datepicker #pckFechaCreacionDesde></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-3 kt-margin-bottom-10-mobile">
-                        <mat-form-field>
-                            <input matInput [matDatepicker]="pckFechaCreacionFin" 
-                            [formControl]="fechaAprobacionFin" placeholder="Fecha de aprobación hasta">
-                            <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionFin"></mat-datepicker-toggle>
-                            <mat-datepicker #pckFechaCreacionFin></mat-datepicker>
-                        </mat-form-field>
-                       
-                    </div>
-              
+                <div class="col-md-4">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input matInput [formControl]="cedulaCliente" placeholder="Cedula: " autocomplete="off">
+                    </mat-form-field>
                 </div>
-                <a href="javascript:void(0);" (click)="descargarExcel()" matTooltip="Buscar" style="font-size: 12px; vertical-align: middle;">
-                    <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above" >cloud_download</mat-icon>
-                    <span style="position: relative;top: -10px;margin-left: 5px;" class="cloud_download">Descargar excel </span>
-                </a>
+                <div class="col-md-4">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <mat-select placeholder="Agencia Entrega" [formControl]="agenciaEntrega">
+                            <mat-option *ngFor="let element of catAgencia " [value]="element">
+                                {{element.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class=" offset-2 col-md-4">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input matInput [matDatepicker]="pckFechaCreacionDesde" [formControl]="fechaAprobacionDesde"
+                            placeholder="Fecha de aprobación desde: ">
+                        <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionDesde"></mat-datepicker-toggle>
+                        <mat-datepicker #pckFechaCreacionDesde></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input matInput [matDatepicker]="pckFechaCreacionFin" [formControl]="fechaAprobacionFin"
+                            placeholder="Fecha de aprobación hasta: ">
+                        <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionFin"></mat-datepicker-toggle>
+                        <mat-datepicker #pckFechaCreacionFin></mat-datepicker>
+                    </mat-form-field>
+                </div>
             </div>
-        </div> 
-        <!-- END FILTERS -->
-        
-        <!--START MAT TABLE-->
-        <div class="mat-table__wrapper">
-            <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
-            matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
-                <ng-container matColumnDef="accion">
-                    <mat-header-cell *matHeaderCellDef>
-                        Accion
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let row" style="text-align: center !important;">
-                        <mat-checkbox [checked]="isCheck(row)" (click)="$event.stopPropagation() 
-                        && addRemove(row)" (change)="$event ? selection.toggle(row) : null">
-                        </mat-checkbox>
-                    </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="fechaSolicitud">
-                <mat-header-cell *matHeaderCellDef>Fecha de la Solicitud</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.fechaSolicitud | rDate}}</mat-cell>
-            </ng-container>
-                <ng-container matColumnDef="agenciaSolicitud">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Agencia de solicitud</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.nombreAgenciaSolicitud}} </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="agenciaEntrega">
-                    <mat-header-cell *matHeaderCellDef>Agencia entrega</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.agenciaEntrega}} </mat-cell>
-                </ng-container>
-                
-                <ng-container matColumnDef="codigoOperacionMadre">
-                    <mat-header-cell *matHeaderCellDef>Código de operación Madre</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.codigoOperacionMadre}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="codigoOperacion">
-                    <mat-header-cell *matHeaderCellDef>Código Operación</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.codigoOperacion}} </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="nombreCliente">
-                <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.nombreCliente}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="identificacion">
-                <mat-header-cell *matHeaderCellDef>Identificación</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.cedulaCliente}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="fundaMadre">
-                <mat-header-cell *matHeaderCellDef>Funda Madre</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fundaMadre}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="fundaActual">
-                    <mat-header-cell *matHeaderCellDef>Funda Actual</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.fundaActual}} </mat-cell>
-                </ng-container>
-            <ng-container matColumnDef="ciudadTevcol">
-                    <mat-header-cell *matHeaderCellDef>Ciudad Tevcol</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.ciudadTevcol}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="fechaArriboAgencia">
-                <mat-header-cell *matHeaderCellDef>Fecha Arribo Agencia</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaArriboAgencia  | rDate}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="nombreAsesor">
-                <mat-header-cell *matHeaderCellDef>Nombre Asesor</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.asesor}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="fechaAprobacion">
-                <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaAprobacion  | rDate}} </mat-cell>
-            </ng-container>
-      
-            
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            </mat-table>
-            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" 
-            [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
-            </mat-paginator>
-            
+        </form>
+        <div class="row">
+            <div class="col-2 offset-5">
+                <button mat-raised-button color="primary" (click)="buscar()">
+                    <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+                    </mat-icon>
+                    <span class="white-icon">Buscar Devoluciones</span>
+                </button>
+            </div>
         </div>
+        <div class="row mt-5">
+            <div class="col">
+                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource" matSort #sort1="matSort"
+                    matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
+                    <ng-container matColumnDef="accion">
+                        <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <mat-checkbox *ngIf="!row.fechaArriboAgencia" [checked]="isCheck(row)" (click)="$event.stopPropagation() 
+                                && addRemove(row)" (change)="$event ? selection.toggle(row) : null">
+                            </mat-checkbox>
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaSolicitud">
+                        <mat-header-cell *matHeaderCellDef>Fecha de la Solicitud</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.fechaSolicitud | rDate}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="codigo">
+                        <mat-header-cell *matHeaderCellDef>Codigo Bpm</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.codigo }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="agenciaSolicitud">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Agencia de solicitud</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.nombreAgenciaSolicitud | titlecase }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="agenciaEntrega">
+                        <mat-header-cell *matHeaderCellDef>Agencia entrega</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.agenciaEntrega | titlecase }} </mat-cell>
+                    </ng-container>
 
-        <a href="javascript:void(0);" (click)="seleccionarFecha()" matTooltip="Seleccionar Fecha de Arribo"
-        style="font-size: 12px; vertical-align: middle;">
-        <mat-icon style="font-size: 32px" matTooltipPosition="above">move_to_inbox</mat-icon>
-        <span style="position: relative;top: -10px;margin-left: 5px;">Seleccionar Fecha</span>
-        </a>
-        <!--end MAT TABLE-->
+                    <ng-container matColumnDef="codigoOperacionMadre">
+                        <mat-header-cell *matHeaderCellDef>Código de operación Madre</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.codigoOperacionMadre ? element.codigoOperacionMadre : 'No Aplica' }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="codigoOperacion">
+                        <mat-header-cell *matHeaderCellDef>Código Operación</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.codigoOperacion}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="nombreCliente">
+                        <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.nombreCliente | titlecase}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="identificacion">
+                        <mat-header-cell *matHeaderCellDef>Identificación</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.cedulaCliente}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fundaMadre">
+                        <mat-header-cell *matHeaderCellDef>Funda Madre</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.fundaMadre ? element.fundaMadre : 'No Aplica' }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fundaActual">
+                        <mat-header-cell *matHeaderCellDef>Funda Actual</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.fundaActual}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="ciudadTevcol">
+                        <mat-header-cell *matHeaderCellDef>Ciudad Tevcol</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.ciudadTevcol | titlecase}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaArriboAgencia">
+                        <mat-header-cell *matHeaderCellDef>Fecha Arribo Agencia</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaArriboAgencia | rDate}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="nombreAsesor">
+                        <mat-header-cell *matHeaderCellDef>Nombre Asesor</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.asesor | titlecase}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaAprobacion">
+                        <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaAprobacion | rDate}} </mat-cell>
+                    </ng-container>
 
-    </re-portlet-body>    
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+                    [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+                </mat-paginator>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2 offset-5">
+                <button mat-raised-button (click)="seleccionarFecha()">
+                    <mat-icon style="font-size: 32px" matTooltipPosition="above">move_to_inbox</mat-icon>
+                    <span>Seleccionar Fecha De Arribo</span>
+                </button>
+            </div>
+        </div>
+    </re-portlet-body>
     <re-portlet-footer></re-portlet-footer>
 </re-portlet>

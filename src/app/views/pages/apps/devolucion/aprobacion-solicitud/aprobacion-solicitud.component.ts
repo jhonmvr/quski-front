@@ -156,7 +156,7 @@ export class AprobacionSolicitudComponent implements OnInit {
       this.cedulaApoderado.setValue( this.wrapperDevolucion.devolucion.cedulaApoderado );
       this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
       this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
-      this.agenciaEntrega.setValue( this.catAgencia.find( x => x.id == this.wrapperDevolucion.devolucion.agenciaEntregaId ));
+      this.agenciaEntrega.setValue( this.wrapperDevolucion.devolucion.agenciaEntrega );
       this.tipoCliente.setValue( this.catTipoCliente.find( x => x.codigo == this.wrapperDevolucion.devolucion.tipoCliente ));
       let objetoCredito = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeDetalleCredito );
       this.dataSourceDetalle = new MatTableDataSource<any>([objetoCredito]);

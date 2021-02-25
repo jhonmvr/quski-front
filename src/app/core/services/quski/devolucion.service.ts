@@ -82,8 +82,7 @@ export class DevolucionService extends BaseService {
     );
   }
 
-  public busquedaSeleccionarFechas(page:Page, codigoOperacion, agencia, fechaAprobacionDesde,fechaAprobacionHasta, 
-    identificacion){
+  public buscarDevolucion(page:Page, codigoOperacion, agencia, fechaAprobacionDesde,fechaAprobacionHasta, identificacion){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/buscarDevolucion";  
     this.params = new HttpParams()
     .set('page', (page.pageNumber == null ? "" : page.pageNumber.toString()))
