@@ -93,7 +93,8 @@
                 </div>
             </mat-step>
             <mat-step label="Detalle de Garantía">
-                <kt-tabla-tasacion *ngIf="wrapperSoft && wrapperSoft.garantias;" [data]='wrapperSoft.garantias' [tipo]="'DV'"></kt-tabla-tasacion>
+                <kt-tabla-tasacion *ngIf="wrapperSoft && wrapperSoft.garantias;" [data]='wrapperSoft.garantias'
+                    [tipo]="'DV'"></kt-tabla-tasacion>
             </mat-step>
             <mat-step label="Gestion Devolución">
                 <div class="row">
@@ -115,8 +116,8 @@
                     <div class="col-8">
                         <mat-form-field class="mat-form-field-fluid">
                             <mat-label>Observacion Del Asesor: </mat-label>
-                            <textarea class="form-control border" rows="5"
-                            placeholder="Observacion Del Asesor: " [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
+                            <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: "
+                                [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
                         </mat-form-field>
                     </div>
                 </div>
@@ -150,19 +151,26 @@
                 </div>
             </mat-step>
             <mat-step label="Documento Habilitantes">
-                <div class="row">
-                    <div class="col-4 offset-4">
-                        <button mat-button (click)="respuesta(true)">Aprobar Solicitud</button>
+                <re-habilitante [proceso]="'SOLICITUD'" [useType]="'FORM'" [referencia]="item">
+                </re-habilitante>
+                <div class="row mt-3">
+                    <div class="offset-md-2 col-md-2">
+                      <button mat-raised-button color="primary" (click)="respuesta(true)">
+                        <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+                        </mat-icon>
+                        <span class="white-icon">Aprobar Solicitud</span>
+                      </button>
                     </div>
-                    <div class="col-4 offset-1">
-                        <button mat-button (click)="respuesta(false)">Rechazar Solicitud</button>
+                    <div class="offset-md-1 col-md-2">
+                      <button mat-raised-button color="warn" (click)="respuesta(false)">
+                        <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+                        </mat-icon>
+                        <span class="white-icon">Devolver Solicitud</span>
+                      </button>
                     </div>
-                </div>
+                  </div>
             </mat-step>
         </mat-vertical-stepper>
-
-        
-
     </re-portlet-body>
 
 </re-portlet>

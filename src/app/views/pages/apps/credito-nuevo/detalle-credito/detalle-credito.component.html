@@ -143,7 +143,7 @@
                     </div>
                 </div>
             </mat-step>
-            <mat-step label="Rubros">
+            <mat-step label="Tabla de amortizacion">
                 <kt-tabla-custom [data]="dataSourceRubro.data" [nombreRubro]="'rubro'" [numeroCuota]="'numeroCuota'" [numeroOperacion]="numeroOperacion.value"></kt-tabla-custom>
               
                 
@@ -151,9 +151,15 @@
             <mat-step label="Garantias">
                 <kt-tabla-tasacion *ngIf="this.wrapper && this.wrapper.garantias;" [data]='this.wrapper.garantias' [tipo]="'G'"></kt-tabla-tasacion>
             </mat-step>
-            <mat-step label="Habilitantes">
-                <re-habilitante [proceso]="'CREDITONUEVO'" [useType]="'LIST'" [tipoDocumento]="'5'" [rol]="'7'"> </re-habilitante>
-            </mat-step>
+           <!--  <mat-step label="Habilitantes">
+                <div class="row">
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =numeroOperacion.value " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}" >Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedula.value "   style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}" >Habilitante Cliente</button>
+                  </div>
+                  <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'"
+                      [referencia]="varHabilitante.referencia" >
+                          </re-habilitante> 
+            </mat-step> -->
         </mat-vertical-stepper>
     </re-portlet-body>
     <re-portlet-footer></re-portlet-footer>
