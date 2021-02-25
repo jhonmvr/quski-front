@@ -20,6 +20,8 @@ import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCred
   styleUrls: ['./detalle-negociacion.component.scss']
 })
 export class DetalleNegociacionComponent implements OnInit {
+  varHabilitante = {proceso:'CLIENTE',referencia:''};
+  referencia;
   public loading;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   public detalle: DetalleNegociacionWrapper;
@@ -73,11 +75,13 @@ export class DetalleNegociacionComponent implements OnInit {
   private traerCreditoNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
+        this.referencia = data.params.id
         this.loadingSubject.next(true);
         this.cre.traerCreditoNegociacion(data.params.id).subscribe((data: any) => {
           //console.log('Credito --> ', data.entidad);
           if (!data.entidad.existeError) {
             this.detalle = data.entidad;
+            
             this.setearValores( this.detalle );
           }else{
             this.salirDeGestion("Error al intentar cargar el credito: "+ data.entidad.mensaje);
@@ -109,6 +113,9 @@ export class DetalleNegociacionComponent implements OnInit {
     this.dataSourceCreditoNegociacion.data.push( ap.credito? ap.credito : null );
     this.sinNotSer.setNotice('Detalle de credito en proceso cargado', 'success');
     this.loadingSubject.next(false);
+
+    this.varHabilitante.referencia= this.cedula.value;
+    this.varHabilitante.proceso = 'CLIENTE';
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {

@@ -15,6 +15,7 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./detalle-credito.component.scss']
 })
 export class DetalleCreditoComponent implements OnInit {
+  varHabilitante= {proceso:'',referencia:''};
 
   public  loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -148,6 +149,8 @@ export class DetalleCreditoComponent implements OnInit {
     this.dataSourceRubro.data = this.wrapper.rubros;
     this.sinNotSer.setNotice('CREDITO CARGADO CORRECTAMENTE','success');
     this.loadingSubject.next(false);
+    this.varHabilitante.proceso='CLIENTE';
+    this.varHabilitante.referencia =this.cedula.value 
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {

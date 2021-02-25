@@ -74,7 +74,7 @@ const routes: Routes = [
 				component: SeleccionFechaComponent
 			},
 			{
-				path: 'pendientes-arribo',
+				path: 'lista-pendientes',
 				component: ListaPendientesComponent
 			},
 			{

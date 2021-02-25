@@ -207,6 +207,8 @@
                 </div>
             </mat-step>
             <mat-step label="Documento Habilitantes">
+                <re-habilitante [proceso]="'SOLICITUD'" [useType]="'FORM'" [referencia]="item">
+                </re-habilitante>
                 <div>
                     <a href="javascript:void(0);" (click)="respuesta(true)" matTooltip="Aprobar Solicitud" style="font-size: 12px; vertical-align: middle;">
                         <mat-icon style="font-size: 32px" matTooltipPosition="above">move_to_inbox</mat-icon>
@@ -219,6 +221,7 @@
                     </a>
                 </div>
             </mat-step>
+          
         </mat-vertical-stepper>
 
         
