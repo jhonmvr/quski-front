@@ -1,17 +1,15 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef, MatPaginator, MatSort, MatTableDataSource, MAT_DIALOG_DATA } from '@angular/material';
-import { BehaviorSubject } from 'rxjs';
-import { SelectionModel } from '@angular/cdk/collections';
-import { BusquedaDevolucionWrapper } from '../../../../../core/model/quski/BusquedaDevolucionWrapper';
-import { Page } from '../../../../../core/model/page';
-import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
-import { DevolucionService } from '../../../../../core/services/quski/devolucion.service';
-import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { AddFechaComponent } from '../../../../partials/custom/add-fecha/add-fecha.component';
-import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
-import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { RegistroFechaArribo } from '../../../../../core/model/wrapper/RegistroFechaArribo';
+import { DevolucionService } from '../../../../../core/services/quski/devolucion.service';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Page } from '../../../../../core/model/page';
 
 @Component({
   selector: 'kt-seleccion-fecha',
@@ -169,30 +167,42 @@ export class SeleccionFechaComponent implements OnInit {
       this.sinNoticeService.setNotice("SELECCIONE AL MENOS UN ITEM DE LA TABLA", "warning");
       return;
     }
-    const dialogRef = this.dialog.open(AddFechaComponent, {
-      height: 'auto',
-      width: '700px',
+    let mensaje = "Seleccionar fecha de arribo para las devoluciones seleccionadas?";
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
     });
-    dialogRef.afterClosed().subscribe((resultado) => {
-      if (resultado) {
-        let listIdDevolucion =[];
-        this.selection.selected.forEach(x=> listIdDevolucion.push(x.id))
-        let objetoRegistroFechaArribo = new RegistroFechaArribo
-        objetoRegistroFechaArribo.fechaArribo = resultado;
-        objetoRegistroFechaArribo.idDevoluciones = listIdDevolucion;
-        this.dev.registrarFechaArribo(objetoRegistroFechaArribo).subscribe((data:any)=>{
-          if(data){
-            this.sinNoticeService.setNotice("SE HA ASIGNADO LA FECHA DE ARRIBO A LA(s) DEVOLUCION(es) SELECCIONADA(s)", "success")
+    dialogRef.afterClosed().subscribe(r => {
+      if(r){
+        const dialogRef = this.dialog.open(AddFechaComponent, {
+          height: 'auto',
+          width: '700px',
+        });
+        dialogRef.afterClosed().subscribe((resultado) => {
+          if (resultado) {
+            let listIdDevolucion =[];
+            this.selection.selected.forEach(x=> listIdDevolucion.push(x.id))
+            let objetoRegistroFechaArribo = new RegistroFechaArribo
+            objetoRegistroFechaArribo.fechaArribo = resultado;
+            objetoRegistroFechaArribo.idDevoluciones = listIdDevolucion;
+            this.dev.registrarFechaArribo(objetoRegistroFechaArribo).subscribe((data:any)=>{
+              if(data){
+                this.sinNoticeService.setNotice("SE HA ASIGNADO LA FECHA DE ARRIBO A LA(s) DEVOLUCION(es) SELECCIONADA(s)", "success")
+                this.eliminarSelect();
+                this.buscar();
+              } 
+            },error =>{
+              this.sinNoticeService.setNotice( error.error.msgError, "error")
+            });
+          }else {
             this.eliminarSelect();
             this.buscar();
-          } 
-        },error =>{
-          this.sinNoticeService.setNotice( error.error.msgError, "error")
+          }
         });
-      }else {
-        this.eliminarSelect();
-        this.buscar();
+      }else{
+          this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');
       }
-    })
+    });
   }
 }

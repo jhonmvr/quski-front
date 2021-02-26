@@ -78,17 +78,13 @@ const routes: Routes = [
 				component: ListaPendientesComponent
 			},
 			{
-				path: 'entrega-recepcion/:idDevolucion',
+				path: 'entrega-recepcion/:item',
 				component: EntregaRecepcionComponent
 			},
 			
 			{
-				path: 'detalle-devolucion/:idDevolucion',
+				path: 'detalle-devolucion/:item',
 				component: DetalleDevolucionComponent
-			},
-			{
-				path: 'cancelacion-solicitud',
-				component: CancelacionSolicitudDevolucionComponent
 			},
 			{
 				path: 'cancelacion-solicitud/:idDevolucion',
@@ -97,21 +93,15 @@ const routes: Routes = [
 			{
 				path: 'aprobacion-cancelacion-solicitud/:idDevolucion',
 				component: AprobacionCancelacionComponent
-			},	{
+			},	
+			{
 				path: 'aprobacion-cancelacion-solicitud',
 				component: AprobacionCancelacionComponent
 			},
 			{
 				path: 'verificacion-firmas/:idDevolucion',
 				component: VerificacionFirmaComponent
-			},	{
-				path: 'verificacion-firmas',
-				component: VerificacionFirmaComponent
-			},
-
-
-		
-
+			}
 		]
 	}
 ];
