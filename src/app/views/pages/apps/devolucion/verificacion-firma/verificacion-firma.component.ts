@@ -54,6 +54,7 @@ export class VerificacionFirmaComponent implements OnInit {
   public displayedColumnsDetalle = ['fechaAprobacion', 'fechaVencimiento', 'monto'];
   public dataSourceHeredero = new MatTableDataSource<any>();
   public displayedColumnsHeredero = ['cedula', 'nombre'];
+  idReferencia
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
   constructor(
@@ -182,6 +183,7 @@ export class VerificacionFirmaComponent implements OnInit {
     console.log('Wrapper PROCESO => ', this.wrapperDevolucion);
     this.titulo = "VERIFICACION DE FIRMAS DE DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo;
     this.formCreditoNuevo.disable();
+    this.idReferencia = this.wrapperDevolucion.devolucion.id
     this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);
     this.estadoProceso.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ") );
     this.nombresCompletos.setValue(this.wrapperDevolucion.devolucion.nombreCliente);
@@ -217,31 +219,41 @@ export class VerificacionFirmaComponent implements OnInit {
   }
   public enviarRespuesta( aprobar ) {
     let mensaje = aprobar ? " Aprobar la verificacion de firmas del proceso: "+ this.wrapperDevolucion.devolucion.codigo+'. ' :
-      'Devolver la verificacion de firmas del proceso: '+ this.wrapperDevolucion.devolucion.codigo+'. ';
-    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-      width: "800px",
-      height: "auto",
-      data: mensaje
-    });
-    dialogRef.afterClosed().subscribe(r => {
-      if(r && aprobar){
-        this.dev.aprobarVerificacionFirmas(this.item).subscribe((data: any) => {
-          this.sinNoticeService.setNotice(" SE APROBO LA VERIFICACION DE FIRMAS.", "success");
-          this.router.navigate(['aprobador/bandeja-aprobador']);
-        }, error => {
-          this.sinNoticeService.setNotice(error.error.msgError, 'error');
+    'Devolver la verificacion de firmas del proceso: '+ this.wrapperDevolucion.devolucion.codigo+'. ';
+    this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data:any)=>{
+      if(data.entidad.bandera){
+        const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+          width: "800px",
+          height: "auto",
+          data: mensaje
         });
-      }else if( r && !aprobar){
-        this.dev.rechazarVerificacionFirmas(this.item).subscribe((data: any) => {
-          this.sinNoticeService.setNotice("SE RECHAZO LA VERIFICACION DE FIRMAS.", "success");
-          this.router.navigate(['aprobador/bandeja-aprobador']);
-        }, error => {
-          this.sinNoticeService.setNotice( error.error.msgError, 'error');
-        })      
-      }else {
-        this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');
+        dialogRef.afterClosed().subscribe(r => {
+          if(r && aprobar){
+            this.dev.aprobarVerificacionFirmas(this.item).subscribe((data: any) => {
+              this.sinNoticeService.setNotice(" SE APROBO LA VERIFICACION DE FIRMAS.", "success");
+              this.router.navigate(['aprobador/bandeja-aprobador']);
+            }, error => {
+              this.sinNoticeService.setNotice(error.error.msgError, 'error');
+            });
+          }else if( r && !aprobar){
+            this.dev.rechazarVerificacionFirmas(this.item).subscribe((data: any) => {
+              this.sinNoticeService.setNotice("SE RECHAZO LA VERIFICACION DE FIRMAS.", "success");
+              this.router.navigate(['aprobador/bandeja-aprobador']);
+            }, error => {
+              this.sinNoticeService.setNotice( error.error.msgError, 'error');
+            })      
+          }else {
+            this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');
+          }
+        });
       }
-    });
+      else{
+        this.sinNoticeService.setNotice(data.entidad.mensaje, 'error');
+      }
+    })
+
+
+   
   
   }
   public rechazar() {
