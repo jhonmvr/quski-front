@@ -1,7 +1,13 @@
 <re-portlet>
-    <re-portlet-header [title]="'APROBACION DE SOLICITUD DE DEVOLUCION DE GARANTIAS'" [class]="'kt-portlet__head--lg'">
-
-
+    <re-portlet-header [title]="titulo" [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTools>
+            <a (click)="regresar()" matTooltip="Regresar a gestion cliente"
+                style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+                    arrow_back</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+            </a>
+        </ng-container>
     </re-portlet-header>
     <re-portlet-body>
         <mat-vertical-stepper #stepper>
@@ -165,7 +171,7 @@
                       <button mat-raised-button color="warn" (click)="respuesta(false)">
                         <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
                         </mat-icon>
-                        <span class="white-icon">Devolver Solicitud</span>
+                        <span class="white-icon">Rechazar Solicitud</span>
                       </button>
                     </div>
                   </div>

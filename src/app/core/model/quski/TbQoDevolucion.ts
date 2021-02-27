@@ -19,6 +19,10 @@ export class TbQoDevolucion {
     fechaNacimiento: string;
     nacionalidad:string;
     lugarNacimiento:string;
+    fechaActualizacion : Date      // null,
+    fechaCreacion : Date           // "2020-01-16",
+    fechaAprobacionSolicitud : Date      // null,
+    fechaArribo : Date           // "2020-01-16",
     tipoCliente:string;
     observaciones:string;
     agenciaEntrega : string;

@@ -1,7 +1,13 @@
 <re-portlet>
     <re-portlet-header [title]="'SOLICITUD DE DEVOLUCION DE GARANTIAS'" [class]="'kt-portlet__head--lg'">
-
-
+        <ng-container ktPortletTools>
+            <a (click)="regresar()" matTooltip="Regresar a gestion cliente"
+                style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+                    arrow_back</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+            </a>
+        </ng-container>
     </re-portlet-header>
     <re-portlet-body>
         <mat-vertical-stepper #stepper >
@@ -38,7 +44,7 @@
                     </div>
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="nivelEducacion" placeholder="Nivel de Educación:">
+                            <input matInput [formControl]="nivelEducacion" placeholder="Nivel de Educación:" [value]="nivelEducacion.value.nombre">
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">

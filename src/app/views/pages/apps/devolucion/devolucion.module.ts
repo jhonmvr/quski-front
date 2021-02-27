@@ -78,40 +78,25 @@ const routes: Routes = [
 				component: ListaPendientesComponent
 			},
 			{
-				path: 'entrega-recepcion/:idDevolucion',
+				path: 'entrega-recepcion/:item',
 				component: EntregaRecepcionComponent
 			},
-			
 			{
-				path: 'detalle-devolucion/:idDevolucion',
+				path: 'detalle-devolucion/:item',
 				component: DetalleDevolucionComponent
 			},
 			{
-				path: 'cancelacion-solicitud',
+				path: 'cancelacion-solicitud/:item',
 				component: CancelacionSolicitudDevolucionComponent
 			},
 			{
-				path: 'cancelacion-solicitud/:idDevolucion',
-				component: CancelacionSolicitudDevolucionComponent
-			},
-			{
-				path: 'aprobacion-cancelacion-solicitud/:idDevolucion',
+				path: 'aprobacion-cancelacion-solicitud/:item',
 				component: AprobacionCancelacionComponent
-			},	{
-				path: 'aprobacion-cancelacion-solicitud',
-				component: AprobacionCancelacionComponent
-			},
+			},	
 			{
-				path: 'verificacion-firmas/:idDevolucion',
+				path: 'verificacion-firmas/:item',
 				component: VerificacionFirmaComponent
-			},	{
-				path: 'verificacion-firmas',
-				component: VerificacionFirmaComponent
-			},
-
-
-		
-
+			}
 		]
 	}
 ];

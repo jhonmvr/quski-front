@@ -45,7 +45,6 @@ export class SolicitudDevolucionComponent implements OnInit {
 
   public formTipoCliente: FormGroup = new FormGroup({});
   public devolucionForm: FormGroup = new FormGroup({});
-  private loadingSubject = new BehaviorSubject<boolean>(false);
   // datos operacion
   public numeroOperacion = new FormControl('');
   public estadoProceso = new FormControl('');
@@ -151,17 +150,27 @@ export class SolicitudDevolucionComponent implements OnInit {
       }
     });
   }
-  private validacion() {
+  private validacion( numeroOperacion ) {
+    this.dev.validarProcesoActivo( numeroOperacion ).subscribe( (data: any) =>{
+      if(data.entidad && data.entidad.existe){
+        this.salirDeGestion( data.entidad.mensaje,'Proceso Activo.');
+      }
+    });
   }
   private cargarCampos() {
-    this.validacion();
     console.log('Wrapper SOFTBANK => ', this.wrapperSoft);
     console.log('Wrapper PROCESO => ', this.wrapperDevolucion);
+    this.validacion( this.wrapperSoft.credito.numeroOperacion );
+    !this.wrapperSoft.garantias || this.wrapperSoft.garantias.length < 1 ? this.salirDeGestion('No existen joyas relacionadas a este credito.','Faltan Joyas.') : null;
     this.numeroOperacion.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : this.wrapperSoft.credito.numeroOperacion );
-    this.estadoProceso.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.proceso.estadoProceso : 'PROCESO NO INICIADO');
+    this.estadoProceso.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ",) : 'PROCESO NO INICIADO');
     this.nombresCompletos.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nombreCliente : this.wrapperSoft.cliente.nombreCompleto);
     this.cedulaCliente.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.cedulaCliente : this.wrapperSoft.cliente.identificacion);
-    this.nivelEducacion.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nivelEducacion : this.wrapperSoft.cliente.codigoEducacion);
+    let codEducacion = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nivelEducacion : this.wrapperSoft.cliente.codigoEducacion;
+    let itemEducacion = this.catEducacion.find( x => x.codigo == codEducacion );
+    if(this.catEducacion && itemEducacion ){
+      this.nivelEducacion.setValue( itemEducacion );
+    }
     this.genero.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.genero : this.wrapperSoft.cliente.codigoSexo);
     this.estadoCivil.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.estadoCivil : this.wrapperSoft.cliente.codigoEstadoCivil);
     this.fechaNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.fechaNacimiento : this.wrapperSoft.cliente.fechaNacimiento);
@@ -192,7 +201,6 @@ export class SolicitudDevolucionComponent implements OnInit {
   
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
-    this.loadingSubject.next(false);
     let pData = {
       mensaje: dataMensaje,
       titulo: dataTitulo ? dataTitulo : null
@@ -210,7 +218,6 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.router.navigate(['credito-nuevo/']);
   }
   public onChangeFechaNacimiento() {
-    this.loadingSubject.next(true);
     const fechaSeleccionada = new Date(
       this.fechaNacimiento.value
     );
@@ -223,14 +230,10 @@ export class SolicitudDevolucionComponent implements OnInit {
         if (edad != undefined && edad != null && edad < 18) {
           this.edad.get("edad").setErrors({ "server-error": "error" });
         }
-        this.loadingSubject.next(false);
       });
     } else {
-      this.sinNoticeService.setNotice(
-        "El valor de la fecha es nulo",
-        "warning"
+      this.sinNoticeService.setNotice("EL VALOR DE LA FECHA ES NULO.","warning"
       );
-      this.loadingSubject.next(false);
     }
   }
   private cargarCatalogos() {
@@ -331,8 +334,8 @@ export class SolicitudDevolucionComponent implements OnInit {
   }
   /** ********************************************* @FLUJO ********************* **/
   public registrarDevolucion() {
-    if (this.devolucionForm.invalid) {
-      this.sinNoticeService.setNotice('Llene los datos requeridos', 'warning');
+    if (this.devolucionForm.invalid || !this.wrapperSoft || !this.wrapperSoft.garantias ) {
+      this.sinNoticeService.setNotice('COMPLETE LOS DATOS REQUERIDOS', 'warning');
       return;
     }
     let wrapper = new TbQoDevolucion();
@@ -343,7 +346,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     wrapper.nombreCliente = this.nombresCompletos.value;
     wrapper.cedulaCliente = this.cedulaCliente.value;
     wrapper.codigoOperacion = this.numeroOperacion.value;
-    wrapper.nivelEducacion = this.nivelEducacion.value;
+    wrapper.nivelEducacion = this.nivelEducacion.value.codigo;
     wrapper.estadoCivil = this.estadoCivil.value;
     wrapper.fechaNacimiento = this.fechaNacimiento.value;
     wrapper.nacionalidad = this.nacionalidad.value;
@@ -371,15 +374,17 @@ export class SolicitudDevolucionComponent implements OnInit {
       if (data.entidad) {
         console.log( 'data Devolucion =>', data.entidad);
         this.wrapperDevolucion = data.entidad;
-       
-          this.idReferencia=data.entidad.devolucion.id;
-    
+        this.idReferencia=data.entidad.devolucion.id;
         this.setTipoHabilitantePorTipoCliente();
-        this.sinNoticeService.setNotice("Guardado correctamente","success");
+        this.sinNoticeService.setNotice("PROCESO DE DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo + ". CREADO CORRECTAMENTE.","success");
+        this.stepper.selectedIndex = 5;
       } else {
-        this.sinNoticeService.setNotice( "Ocurrio un error al guardar","warning"  );
+        this.sinNoticeService.setNotice( " ERROR AL GUARDAR PROCESO. ",'error'  );
       }
-    })
+    }, error =>{
+      this.sinNoticeService.setNotice( error.error.msgError,'error'  );
+
+    });
   }
   public solicitarAprobacion(){
     this.pro.cambiarEstadoProceso(this.wrapperDevolucion.devolucion.id, this.wrapperDevolucion.proceso.proceso, 'PENDIENTE_APROBACION').subscribe( (data: any) =>{
@@ -443,8 +448,9 @@ export class SolicitudDevolucionComponent implements OnInit {
     });
     this.formTipoCliente.reset();
   }
-
   private desactivarCampos(){
+    this.numeroOperacion.disable();
+    this.estadoProceso.disable();
     this.cedulaCliente.disable();
     this.nombresCompletos.disable();
     this.nivelEducacion.disable();

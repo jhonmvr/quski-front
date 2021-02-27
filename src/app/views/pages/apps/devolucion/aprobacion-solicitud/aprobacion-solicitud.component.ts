@@ -21,6 +21,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class AprobacionSolicitudComponent implements OnInit {
   public item: any;
+  public titulo: any;
   public wrapperSoft: any;
   public wrapperDevolucion: { proceso: TbQoProceso, devolucion: TbQoDevolucion }
   public catGenero: Array<any>;
@@ -54,19 +55,9 @@ export class AprobacionSolicitudComponent implements OnInit {
   public cedulaApoderado = new FormControl('');
   public nombreApoderado = new FormControl('');
   dataSourceDetalle = new MatTableDataSource<any>();
-  displayedColumnsDetalle = ['fechaAprobacion', 'fechaVencimiento', 'monto']
+  displayedColumnsDetalle = ['fechaAprobacion', 'fechaVencimiento', 'monto'];
   dataSourceHeredero = new MatTableDataSource<any>();
-
-  displayedColumnsHeredero = ['cedula', 'nombre']
-
-  objetoCredito = {
-    "fechaAprobacion": "",
-    "fechaVencimiento": "",
-    "monto": ""
-  }
-
-
-
+  displayedColumnsHeredero = ['cedula', 'nombre'];
 
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
@@ -126,15 +117,13 @@ export class AprobacionSolicitudComponent implements OnInit {
       }
     });
   }
-  private validacion() {
-  }
   private cargarCampos() {
-    this.validacion();
     console.log('Wrapper SOFTBANK => ', this.wrapperSoft);
     console.log('Wrapper PROCESO => ', this.wrapperDevolucion);
+    this.titulo = "APROBACION DE SOLICITUD DE DEVOLUCION: "+  this.wrapperDevolucion.devolucion.codigo;
     this.formCreditoNuevo.disable();
     this.numeroOperacion.setValue( this.wrapperDevolucion.devolucion.codigoOperacion);
-    this.proceso.setValue( this.wrapperDevolucion.proceso.proceso );
+    this.proceso.setValue( this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ")  );
     this.nombresCompletos.setValue( this.wrapperDevolucion.devolucion.nombreCliente );
     this.cedulaCliente.setValue( this.wrapperDevolucion.devolucion.cedulaCliente );
     this.nivelEducacion.setValue( this.wrapperDevolucion.devolucion.nivelEducacion);
@@ -159,7 +148,7 @@ export class AprobacionSolicitudComponent implements OnInit {
       this.agenciaEntrega.setValue( this.wrapperDevolucion.devolucion.agenciaEntrega );
       this.tipoCliente.setValue( this.catTipoCliente.find( x => x.codigo == this.wrapperDevolucion.devolucion.tipoCliente ));
       let objetoCredito = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeDetalleCredito );
-      this.dataSourceDetalle = new MatTableDataSource<any>([objetoCredito]);
+      this.dataSourceDetalle = new MatTableDataSource<any>(objetoCredito);
     }
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
   }
@@ -178,7 +167,7 @@ export class AprobacionSolicitudComponent implements OnInit {
     });
   }
   public regresar() {
-    this.router.navigate(['credito-nuevo/']);
+    this.router.navigate(['aprobador/bandeja-aprobador']);
   }
   public onChangeFechaNacimiento() {
     const fechaSeleccionada = new Date(

@@ -54,7 +54,17 @@ export class DevolucionService extends BaseService {
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
-
+  }
+  public validarProcesoActivo(numeroOperacion){
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/validarProcesoActivo";
+    this.params = this.params.set('numeroOperacion', numeroOperacion);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
   }
   public getDevolucion (id){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/getEntity";
@@ -104,7 +114,7 @@ export class DevolucionService extends BaseService {
       )
     );
   }
-  public busquedaArribo(page:Page, codigoOperacion){
+  public buscarDevolucionPendienteArribo(page:Page, codigoOperacion, agencia){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/buscarDevolucionPendienteArribo";  
     this.params = new HttpParams()
     .set('page', (page.pageNumber == null ? "" : page.pageNumber.toString()))
@@ -112,12 +122,8 @@ export class DevolucionService extends BaseService {
     .set('sortFields', (page.sortFields == null ? "" : page.sortFields))
     .set('sortDirections', (page.sortDirections == null ? "" : page.sortDirections))
     .set('isPaginated', (page.isPaginated == null ? "" : page.isPaginated))
-    .set('codigoOperacion', codigoOperacion == null ? "" : codigoOperacion);
-
-    if (localStorage.getItem('agencia')) {
-      this.params = this.params.set('agencia', localStorage.getItem('agencia'));
-    }
-
+    .set('codigoOperacion', codigoOperacion == null ? "" : codigoOperacion)
+    .set('agencia', agencia);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -144,12 +150,8 @@ export class DevolucionService extends BaseService {
     );
 
   }
-  public registrarArribo(idDevoluciones: Array<number>)
-  {
-    let serviceUrl = this.appResourcesUrl + "devolucionRestController/registrarArribo";  
-
-      
-
+  public registrarArribo(idDevoluciones: Array<number>){
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/registrarArribo";   
     this.options = { headers: this.headers,  params: this.params };
     return this.http.post(serviceUrl, idDevoluciones ,this.options).pipe(
       tap( // Log the result or error
@@ -157,7 +159,6 @@ export class DevolucionService extends BaseService {
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
-
   }
 
   public cancelacionSolicitud(id){

@@ -1,120 +1,107 @@
-  
-
 <re-portlet>
     <re-portlet-header [title]="'PENDIENTE DE ARRIBO A AGENCIA'" [class]="'kt-portlet__head--lg'">
-        
-		<ng-container ktPortletTools>
-           
-
-        </ng-container>
     </re-portlet-header>
     <re-portlet-body>
-        <!-- start::FILTERS & GROUP ACTIONS -->
-        <div class="kt-form">
-            <!-- start::FILTERS -->
-            <div class="kt-form__filtration">
-                <div class="row align-items-center">
-                   
-                    <div class="col-md-3 kt-margin-bottom-10-mobile">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="codigoOperacion" placeholder="Código Operación " autocomplete="off">
-                        </mat-form-field>
-                      
-                    </div>
-                    <a href="javascript:void(0);" (click)="buscar()" matTooltip="Buscar" style="font-size: 12px; vertical-align: middle;">
-                        <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above" >search</mat-icon>
-                        <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar</span>
-                    </a>
-                 
+        <form [formGroup]="formFiltros">
+            <div class="row mt-4">
+                <div class="offset-4 col-4">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input matInput [formControl]="codigoOperacion" placeholder="Numero Operación: "
+                            autocomplete="off">
+                    </mat-form-field>
                 </div>
-       
-              
             </div>
-        </div> 
-        <!-- END FILTERS -->
-        
-        <!--START MAT TABLE-->
-        <div class="mat-table__wrapper">
-            <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
-            matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
-            <ng-container matColumnDef="accion">
-                <mat-header-cell *matHeaderCellDef>
-                    Acción
-                </mat-header-cell>
-                <mat-cell *matCellDef="let row" style="text-align: center !important;">
-                    <mat-checkbox [checked]="isCheck(row)" (click)="$event.stopPropagation() 
-                    && addRemove(row)" (change)="$event ? selection.toggle(row) : null">
-                    </mat-checkbox>
-                </mat-cell>
-            </ng-container>
-                <ng-container matColumnDef="fechaSolicitud">
-                <mat-header-cell *matHeaderCellDef>Fecha de la Solicitud</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.fechaSolicitud | rDate}}</mat-cell>
-            </ng-container>
-                           
-                <ng-container matColumnDef="codigoOperacionMadre">
-                    <mat-header-cell *matHeaderCellDef>Código de operacion Madre</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.codigoOperacionMadre}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="codigoOperacion">
-                    <mat-header-cell *matHeaderCellDef>Código Operacion</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.codigoOperacion}} </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="nombreCliente">
-                <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.nombreCliente}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="identificacion">
-                <mat-header-cell *matHeaderCellDef>Identificación</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.cedulaCliente}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="fundaMadre">
-                <mat-header-cell *matHeaderCellDef>Funda Madre</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fundaMadre}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="fundaActual">
-                    <mat-header-cell *matHeaderCellDef>Funda Actual</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.fundaActual}} </mat-cell>
-                </ng-container>
-            <ng-container matColumnDef="ciudadTevcol">
-                    <mat-header-cell *matHeaderCellDef>Ciudad Tevcol</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element.ciudadTevcol}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="fechaArriboAgencia">
-                <mat-header-cell *matHeaderCellDef>Fecha Arribo Agencia</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaArriboAgencia | rDate}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="fechaAprobacion">
-                <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.fechaAprobacion | rDate}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="valorAvaluo">
-                <mat-header-cell *matHeaderCellDef>Valor Avalúo</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.valorAvaluao | number: '1.2'}} </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="pesoBruto">
-                <mat-header-cell *matHeaderCellDef>Peso Bruto</mat-header-cell>
-                <mat-cell *matCellDef="let element">{{element.pesoBruto | number: '1.2'}} </mat-cell>
-            </ng-container>
-      
-            
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            </mat-table>
-            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" 
-            [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
-            </mat-paginator>
-            
+            <div class="row">
+                <div class="offset-5 col-3">
+                    <button mat-raised-button color="primary" (click)="buscar()">
+                        <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+                        </mat-icon>
+                        <span class="white-icon">Buscar Devoluciones</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="row mt-5">
+            <div class="col">
+                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource" matSort #sort1="matSort"
+                    matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
+                    <ng-container matColumnDef="accion">
+                        <mat-header-cell *matHeaderCellDef>
+                            Acción
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" style="text-align: center !important;">
+                            <mat-checkbox [checked]="isCheck(row)" (click)="$event.stopPropagation() 
+                        && addRemove(row)" (change)="$event ? selection.toggle(row) : null">
+                            </mat-checkbox>
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaSolicitud">
+                        <mat-header-cell *matHeaderCellDef>Fecha de la Solicitud</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.fechaSolicitud | rDate}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="codigo">
+                        <mat-header-cell *matHeaderCellDef>Codigo Bpm</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.codigo }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="codigoOperacionMadre">
+                        <mat-header-cell *matHeaderCellDef>Código de operacion Madre</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.codigoOperacionMadre}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="codigoOperacion">
+                        <mat-header-cell *matHeaderCellDef>Código Operacion</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.codigoOperacion}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="nombreCliente">
+                        <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.nombreCliente | titlecase }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="identificacion">
+                        <mat-header-cell *matHeaderCellDef>Identificación</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.cedulaCliente}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fundaMadre">
+                        <mat-header-cell *matHeaderCellDef>Funda Madre</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.fundaMadre ? element.fundaMadre : 'No Aplica' }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fundaActual">
+                        <mat-header-cell *matHeaderCellDef>Funda Actual</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.fundaActual}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="ciudadTevcol">
+                        <mat-header-cell *matHeaderCellDef>Ciudad Tevcol</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.ciudadTevcol | titlecase }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaArriboAgencia">
+                        <mat-header-cell *matHeaderCellDef>Fecha Arribo Agencia</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaArriboAgencia | rDate}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaAprobacion">
+                        <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaAprobacion | rDate}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorAvaluo">
+                        <mat-header-cell *matHeaderCellDef>Valor Avalúo</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.valorAvaluao | currency: "USD":true:"1.2" }}  </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="pesoBruto">
+                        <mat-header-cell *matHeaderCellDef>Peso Bruto</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.pesoBruto | number: '1.2'}} Gr </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+                    [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+                </mat-paginator>
+            </div>
         </div>
-
-        <a href="javascript:void(0);" (click)="confirmarArribo()" matTooltip="Confirmar Arribo"
-        style="font-size: 12px; vertical-align: middle;">
-        <mat-icon style="font-size: 32px" matTooltipPosition="above">move_to_inbox</mat-icon>
-        <span style="position: relative;top: -10px;margin-left: 5px;">Confirmar arribo</span>
-        </a>
-        <!--end MAT TABLE-->
-
-    </re-portlet-body>    
+        <div class="row">
+            <div class="col-2 offset-6">
+                <button mat-raised-button (click)="confirmarArribo()">
+                    <span>Confirmar arribo</span>
+                </button>
+            </div>
+        </div>
+    </re-portlet-body>
     <re-portlet-footer></re-portlet-footer>
 </re-portlet>

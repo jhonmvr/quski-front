@@ -252,6 +252,11 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
    
     }
   }
+  public cancelarDevolucion(row: OperacionesProcesoWrapper ){
+    if(row.id != null){
+        this.router.navigate(['devolucion/cancelacion-solicitud/', row.id]);       
+    }
+  }
   public verOperacion(row: OperacionesProcesoWrapper ){
     if(row.id != null){
       if(row.proceso == 'NUEVO'){
