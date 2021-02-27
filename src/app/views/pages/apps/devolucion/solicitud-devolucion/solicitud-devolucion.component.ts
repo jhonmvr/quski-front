@@ -1,4 +1,5 @@
 import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { DevolucionService } from '../../../../../core/services/quski/devolucion.service';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
@@ -15,7 +16,6 @@ import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'kt-solicitud-devolucion',
@@ -68,13 +68,13 @@ export class SolicitudDevolucionComponent implements OnInit {
   public valorCustodia = new FormControl('', [Validators.required]);
   public cedulaHeredero = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
   public nombreHeredero = new FormControl('', [Validators.required]);
-  public cedulaApoderado= new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
+  public cedulaApoderado = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
   public nombreApoderado = new FormControl('', [Validators.required]);
 
   dataSourceDetalle = new MatTableDataSource<any>();
   displayedColumnsDetalle = ['fechaAprobacion', 'fechaVencimiento', 'monto']
   dataSourceHeredero = new MatTableDataSource<any>();
-  displayedColumnsHeredero = ['accion','cedula', 'nombre']
+  displayedColumnsHeredero = ['accion', 'cedula', 'nombre']
   listTablaHeredero = []
 
   /**Obligatorio paginacion */
@@ -115,7 +115,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.dev.setParameter();
     this.cargarCatalogos();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.agencia = localStorage.getItem( 'idAgencia' );
+    this.agencia = localStorage.getItem('idAgencia');
     this.inicioFlujo();
   }
   private inicioFlujo() {
@@ -134,9 +134,9 @@ export class SolicitudDevolucionComponent implements OnInit {
         }
         if (json.params.cod == 'CREA') {
           this.item = json.params.item;
-          this.dev.buscarProcesoDevolucion( this.item ).subscribe( (data:any) =>{
+          this.dev.buscarProcesoDevolucion(this.item).subscribe((data: any) => {
             this.wrapperDevolucion = data.entidad;
-            this.cre.traerCreditoVigente( this.wrapperDevolucion.devolucion.codigoOperacion ).subscribe((data: any) => {
+            this.cre.traerCreditoVigente(this.wrapperDevolucion.devolucion.codigoOperacion).subscribe((data: any) => {
               if (data.entidad) {
                 this.wrapperSoft = data.entidad;
                 this.cargarCampos();
@@ -145,48 +145,48 @@ export class SolicitudDevolucionComponent implements OnInit {
               }
             });
           });
-          
+
         }
       }
     });
   }
-  private validacion( numeroOperacion ) {
-    this.dev.validarProcesoActivo( numeroOperacion ).subscribe( (data: any) =>{
-      if(data.entidad && data.entidad.existe){
-        this.salirDeGestion( data.entidad.mensaje,'Proceso Activo.');
+  private validacion(numeroOperacion) {
+    this.dev.validarProcesoActivo(numeroOperacion).subscribe((data: any) => {
+      if (data.entidad && data.entidad.existe) {
+        this.salirDeGestion(data.entidad.mensaje, 'Proceso Activo.');
       }
     });
   }
   private cargarCampos() {
     console.log('Wrapper SOFTBANK => ', this.wrapperSoft);
     console.log('Wrapper PROCESO => ', this.wrapperDevolucion);
-    this.validacion( this.wrapperSoft.credito.numeroOperacion );
-    !this.wrapperSoft.garantias || this.wrapperSoft.garantias.length < 1 ? this.salirDeGestion('No existen joyas relacionadas a este credito.','Faltan Joyas.') : null;
-    this.numeroOperacion.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : this.wrapperSoft.credito.numeroOperacion );
-    this.estadoProceso.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ",) : 'PROCESO NO INICIADO');
+    this.validacion(this.wrapperSoft.credito.numeroOperacion);
+    !this.wrapperSoft.garantias || this.wrapperSoft.garantias.length < 1 ? this.salirDeGestion('No existen joyas relacionadas a este credito.', 'Faltan Joyas.') : null;
+    this.numeroOperacion.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : this.wrapperSoft.credito.numeroOperacion);
+    this.estadoProceso.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi, " ",) : 'PROCESO NO INICIADO');
     this.nombresCompletos.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nombreCliente : this.wrapperSoft.cliente.nombreCompleto);
     this.cedulaCliente.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.cedulaCliente : this.wrapperSoft.cliente.identificacion);
     let codEducacion = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nivelEducacion : this.wrapperSoft.cliente.codigoEducacion;
-    let itemEducacion = this.catEducacion.find( x => x.codigo == codEducacion );
-    if(this.catEducacion && itemEducacion ){
-      this.nivelEducacion.setValue( itemEducacion );
+    let itemEducacion = this.catEducacion.find(x => x.codigo == codEducacion);
+    if (this.catEducacion && itemEducacion) {
+      this.nivelEducacion.setValue(itemEducacion);
     }
     this.genero.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.genero : this.wrapperSoft.cliente.codigoSexo);
     this.estadoCivil.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.estadoCivil : this.wrapperSoft.cliente.codigoEstadoCivil);
     this.fechaNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.fechaNacimiento : this.wrapperSoft.cliente.fechaNacimiento);
     this.nacionalidad.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nacionalidad : this.wrapperSoft.cliente.idPaisNacimiento);
     this.lugarNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.lugarNacimiento : this.wrapperSoft.cliente.idLugarNacimiento);
-    if(this.wrapperDevolucion){
-      let objetoHeredero = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeHerederos );
+    if (this.wrapperDevolucion) {
+      let objetoHeredero = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeHerederos);
       console.log('Wrapper  => objetoHeredero', objetoHeredero.heredero);
       this.dataSourceHeredero = new MatTableDataSource<any>(objetoHeredero.heredero);
-      this.nombreApoderado.setValue( this.wrapperDevolucion.devolucion.nombreApoderado );
-      this.cedulaApoderado.setValue( this.wrapperDevolucion.devolucion.cedulaApoderado );
+      this.nombreApoderado.setValue(this.wrapperDevolucion.devolucion.nombreApoderado);
+      this.cedulaApoderado.setValue(this.wrapperDevolucion.devolucion.cedulaApoderado);
       this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
       this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
-      this.agenciaEntrega.setValue( this.catAgencia.find( x => x.id == this.wrapperDevolucion.devolucion.agenciaEntregaId ));
-      this.tipoCliente.setValue( this.catTipoCliente.find( x => x.codigo == this.wrapperDevolucion.devolucion.tipoCliente ));
-      let objetoCredito = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeDetalleCredito );
+      this.agenciaEntrega.setValue(this.catAgencia.find(x => x.id == this.wrapperDevolucion.devolucion.agenciaEntregaId));
+      this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo == this.wrapperDevolucion.devolucion.tipoCliente));
+      let objetoCredito = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeDetalleCredito);
       this.dataSourceDetalle = new MatTableDataSource<any>([objetoCredito]);
     }
     this.objetoCredito['fechaAprobacion'] = this.wrapperSoft.credito.fechaAprobacion
@@ -198,7 +198,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.desactivarCampos();
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
   }
-  
+
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {
@@ -232,7 +232,7 @@ export class SolicitudDevolucionComponent implements OnInit {
         }
       });
     } else {
-      this.sinNoticeService.setNotice("EL VALOR DE LA FECHA ES NULO.","warning"
+      this.sinNoticeService.setNotice("EL VALOR DE LA FECHA ES NULO.", "warning"
       );
     }
   }
@@ -244,8 +244,8 @@ export class SolicitudDevolucionComponent implements OnInit {
       let tipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
       this.catTipoCliente = new Array<any>();
       this.catTipoCliente.push({ codigo: "HER", nombre: "HEREDERO" });
-      this.catTipoCliente.push( tipoCliente.find(x => x.codigo == 'SAP') );
-      this.catTipoCliente.push( tipoCliente.find(x => x.codigo == 'DEU') );
+      this.catTipoCliente.push(tipoCliente.find(x => x.codigo == 'SAP'));
+      this.catTipoCliente.push(tipoCliente.find(x => x.codigo == 'DEU'));
       console.log(' cat tipo cliente =>', this.catTipoCliente);
     });
     this.sof.consultarPaisCS().subscribe((data: any) => {
@@ -262,21 +262,21 @@ export class SolicitudDevolucionComponent implements OnInit {
     });
     this.sof.consultarDivicionPoliticaCS().subscribe((data: any) => {
       if (!data.existeError) {
-        this.catDivision= !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+        this.catDivision = !data.existeError ? data.catalogo : { nombre: 'Error al cargar catalogo' };
       }
-    }); 
+    });
   }
-  forAgenciaCustodia(e){
+  forAgenciaCustodia(e) {
     let agenciaCustodia = e.idAgenciaCustodia;
     let x = this.catAgencia.find(x => x.id == agenciaCustodia);
-    if(agenciaCustodia && this.catAgencia && x){
+    if (agenciaCustodia && this.catAgencia && x) {
       let idTecCol = x.idUbicacionTevcol;
       let m = this.catDivision.find(x => x.id == agenciaCustodia);
-      if(idTecCol && m){
+      if (idTecCol && m) {
         return m.nombre;
       }
-    }else{
-      return 'Error Catalogo' ;
+    } else {
+      return 'Error Catalogo';
     }
   }
   private calcular() {
@@ -284,7 +284,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.totalValorA = 0;
     if (this.wrapperSoft.garantias) {
       this.wrapperSoft.garantias.forEach(element => {
-        this.totalPesoB  = (Number(this.totalPesoB) + Number(element.pesoBruto)).toFixed(2);
+        this.totalPesoB = (Number(this.totalPesoB) + Number(element.pesoBruto)).toFixed(2);
         this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
       });
     }
@@ -334,72 +334,93 @@ export class SolicitudDevolucionComponent implements OnInit {
   }
   /** ********************************************* @FLUJO ********************* **/
   public registrarDevolucion() {
-    if (this.devolucionForm.invalid || !this.wrapperSoft || !this.wrapperSoft.garantias ) {
+    if (this.devolucionForm.invalid || !this.wrapperSoft || !this.wrapperSoft.garantias) {
       this.sinNoticeService.setNotice('COMPLETE LOS DATOS REQUERIDOS', 'warning');
       return;
     }
-    let wrapper = new TbQoDevolucion();
-    wrapper.id = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.id : null;
-    wrapper.asesor = this.usuario;
-    wrapper.idAgencia = this.agencia;
-    wrapper.nombreAgenciaSolicitud = localStorage.getItem("nombreAgencia");
-    wrapper.nombreCliente = this.nombresCompletos.value;
-    wrapper.cedulaCliente = this.cedulaCliente.value;
-    wrapper.codigoOperacion = this.numeroOperacion.value;
-    wrapper.nivelEducacion = this.nivelEducacion.value.codigo;
-    wrapper.estadoCivil = this.estadoCivil.value;
-    wrapper.fechaNacimiento = this.fechaNacimiento.value;
-    wrapper.nacionalidad = this.nacionalidad.value;
-    wrapper.genero = this.genero.value;
-    wrapper.lugarNacimiento = this.lugarNacimiento.value;
-    wrapper.tipoCliente = this.tipoCliente.value.codigo;
-    wrapper.observaciones = this.observaciones.value;
-    wrapper.agenciaEntrega = this.agenciaEntrega.value.nombre;
-    wrapper.agenciaEntregaId = this.agenciaEntrega.value.id;
-    wrapper.codigoOperacionMadre = this.wrapperSoft.credito.numeroOperacionMadre ? this.wrapperSoft.credito.numeroOperacionMadre : null;
-    wrapper.fundaActual = this.wrapperSoft.garantias[0].numeroFundaJoya;
-    wrapper.fundaMadre = this.wrapperSoft.garantias[0].numeroFundaMadre;
-    wrapper.ciudadTevcol = this.forAgenciaCustodia(this.wrapperSoft.garantias[0]);
-    this.calcular();
-    wrapper.valorAvaluo = this.totalValorA;
-    wrapper.pesoBruto = this.totalPesoB;
-    wrapper.fechaEfectiva = this.wrapperSoft.credito.fechaAprobacion;
-    wrapper.valorCustodiaAprox = this.valorCustodia.value;
-    wrapper.codeHerederos = this.encodeObjetos({heredero:this.listTablaHeredero});
-    wrapper.codeDetalleCredito = this.encodeObjetos([this.objetoCredito]);
-    wrapper.codeDetalleGarantia = this.encodeObjetos(this.wrapperSoft.garantias);
-	  wrapper.nombreApoderado = this.nombreApoderado.value ? this.nombreApoderado.value : null;
-    wrapper.cedulaApoderado = this.cedulaApoderado.value ? this.cedulaApoderado.value : null; 
-    this.dev.registrarSolicitudDevolucion(wrapper).subscribe((data: any) => {
-      if (data.entidad) {
-        console.log( 'data Devolucion =>', data.entidad);
-        this.wrapperDevolucion = data.entidad;
-        this.idReferencia=data.entidad.devolucion.id;
-        this.setTipoHabilitantePorTipoCliente();
-        this.sinNoticeService.setNotice("PROCESO DE DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo + ". CREADO CORRECTAMENTE.","success");
-        this.stepper.selectedIndex = 5;
+    let mensaje = " Crear o actualizar el proceso de devolucon para el credito: " + this.wrapperSoft.credito.numeroOperacion;
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if (r) {
+        let wrapper = new TbQoDevolucion();
+        wrapper.id = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.id : null;
+        wrapper.asesor = this.usuario;
+        wrapper.idAgencia = this.agencia;
+        wrapper.nombreAgenciaSolicitud = localStorage.getItem("nombreAgencia");
+        wrapper.nombreCliente = this.nombresCompletos.value;
+        wrapper.cedulaCliente = this.cedulaCliente.value;
+        wrapper.codigoOperacion = this.numeroOperacion.value;
+        wrapper.nivelEducacion = this.nivelEducacion.value.codigo;
+        wrapper.estadoCivil = this.estadoCivil.value;
+        wrapper.fechaNacimiento = this.fechaNacimiento.value;
+        wrapper.nacionalidad = this.nacionalidad.value;
+        wrapper.genero = this.genero.value;
+        wrapper.lugarNacimiento = this.lugarNacimiento.value;
+        wrapper.tipoCliente = this.tipoCliente.value.codigo;
+        wrapper.observaciones = this.observaciones.value;
+        wrapper.agenciaEntrega = this.agenciaEntrega.value.nombre;
+        wrapper.agenciaEntregaId = this.agenciaEntrega.value.id;
+        wrapper.codigoOperacionMadre = this.wrapperSoft.credito.numeroOperacionMadre ? this.wrapperSoft.credito.numeroOperacionMadre : null;
+        wrapper.fundaActual = this.wrapperSoft.garantias[0].numeroFundaJoya;
+        wrapper.fundaMadre = this.wrapperSoft.garantias[0].numeroFundaMadre;
+        wrapper.ciudadTevcol = this.forAgenciaCustodia(this.wrapperSoft.garantias[0]);
+        this.calcular();
+        wrapper.valorAvaluo = this.totalValorA;
+        wrapper.pesoBruto = this.totalPesoB;
+        wrapper.fechaEfectiva = this.wrapperSoft.credito.fechaAprobacion;
+        wrapper.valorCustodiaAprox = this.valorCustodia.value;
+        wrapper.codeHerederos = this.encodeObjetos({ heredero: this.listTablaHeredero });
+        wrapper.codeDetalleCredito = this.encodeObjetos([this.objetoCredito]);
+        wrapper.codeDetalleGarantia = this.encodeObjetos(this.wrapperSoft.garantias);
+        wrapper.nombreApoderado = this.nombreApoderado.value ? this.nombreApoderado.value : null;
+        wrapper.cedulaApoderado = this.cedulaApoderado.value ? this.cedulaApoderado.value : null;
+        this.dev.registrarSolicitudDevolucion(wrapper).subscribe((data: any) => {
+          if (data.entidad) {
+            console.log('data Devolucion =>', data.entidad);
+            this.wrapperDevolucion = data.entidad;
+            this.idReferencia = data.entidad.devolucion.id;
+            this.setTipoHabilitantePorTipoCliente();
+            this.sinNoticeService.setNotice("PROCESO DE DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo + ". CREADO CORRECTAMENTE.", "success");
+            this.stepper.selectedIndex = 5;
+          } else {
+            this.sinNoticeService.setNotice(" ERROR AL GUARDAR PROCESO. ", 'error');
+          }
+        }, error => {
+          this.sinNoticeService.setNotice(error.error.msgError, 'error');
+        });
       } else {
-        this.sinNoticeService.setNotice( " ERROR AL GUARDAR PROCESO. ",'error'  );
+        this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'warning');
       }
-    }, error =>{
-      this.sinNoticeService.setNotice( error.error.msgError,'error'  );
-
     });
   }
-  public solicitarAprobacion(){
-    this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data:any)=>{
-      if(data.entidad.bandera){
-        this.pro.cambiarEstadoProceso(this.wrapperDevolucion.devolucion.id, this.wrapperDevolucion.proceso.proceso, 'PENDIENTE_APROBACION').subscribe( (data: any) =>{
-          if(data.entidad && data.entidad.estadoProceso == 'PENDIENTE_APROBACION'){
-            this.router.navigate(['negociacion/bandeja-operaciones']);
+  public solicitarAprobacion() {
+    let mensaje = " Enviar a aprobador la solicitud de devolucion de garantia para el proceso: " + this.wrapperDevolucion.devolucion.codigo;
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if (r) {
+        this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data:any)=>{
+          if(data.entidad.bandera){
+            this.pro.cambiarEstadoProceso(this.wrapperDevolucion.devolucion.id, this.wrapperDevolucion.proceso.proceso, 'PENDIENTE_APROBACION').subscribe( (data: any) =>{
+              if(data.entidad && data.entidad.estadoProceso == 'PENDIENTE_APROBACION'){
+                this.router.navigate(['negociacion/bandeja-operaciones']);
+              }
+            });
+          }else {
+            this.sinNoticeService.setNotice(data.entidad.mensaje, 'error');
           }
-        });
-      }else {
-        this.sinNoticeService.setNotice(data.entidad.mensaje, 'error');
+        })
+      } else {
+        this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'warning');
       }
-    })
-     
-    
+    });
   }
   /** ********************************************* @HEREDERO ********************* **/
   public agregarHeredero() {
@@ -422,7 +443,7 @@ export class SolicitudDevolucionComponent implements OnInit {
       this.sinNoticeService.setNotice("INGRESE CORRECTAMENTE LOS CAMPOS DE HEREDERO", 'warning');
     }
   }
-  public eliminarHeredero( row ){
+  public eliminarHeredero(row) {
     let lits = this.dataSourceHeredero.data;
     const index = lits.indexOf(row);
     lits.splice(index, 1);
@@ -430,16 +451,16 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.dataSourceHeredero.data = dataC;
     if (this.dataSourceHeredero.data.length < 1) {
       this.dataSourceHeredero.data = null;
-    }else{
+    } else {
       this.listTablaHeredero = new Array<any>();
-      this.dataSourceHeredero.data.forEach( e=>{
+      this.dataSourceHeredero.data.forEach(e => {
         let objetoHeredero = { cedula: "", nombre: "" }
         objetoHeredero.cedula = e.cedula;
         objetoHeredero.nombre = e.nombre;
         this.listTablaHeredero.push(objetoHeredero);
       });
     }
-  }  
+  }
   public numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -447,7 +468,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     }
     return true;
   }
-  public limpiarCampos(){
+  public limpiarCampos() {
     Object.keys(this.formTipoCliente.controls).forEach((name) => {
       const control = this.formTipoCliente.controls[name];
       control.setErrors(null);
@@ -456,7 +477,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     });
     this.formTipoCliente.reset();
   }
-  private desactivarCampos(){
+  private desactivarCampos() {
     this.numeroOperacion.disable();
     this.estadoProceso.disable();
     this.cedulaCliente.disable();
@@ -487,5 +508,5 @@ export class SolicitudDevolucionComponent implements OnInit {
   encodeObjetos(entrada) {
     return btoa(unescape(encodeURIComponent(JSON.stringify(entrada))))
   }
-   
+
 } 

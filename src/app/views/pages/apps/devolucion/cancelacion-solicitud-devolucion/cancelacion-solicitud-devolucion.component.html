@@ -1,5 +1,5 @@
 <re-portlet>
-    <re-portlet-header [title]="'titulo'" [class]="'kt-portlet__head--lg'">
+    <re-portlet-header [title]="titulo" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
             <a (click)="regresar()" matTooltip="Regresar a gestion cliente"
                 style="font-size: 12px; vertical-align: middle;">
@@ -186,7 +186,7 @@
                 </re-habilitante> 
                 <div class="row">
                     <div class="col-2 offset-5">
-                        <button mat-stroked-button (click)="anularSolicitud()">Anular Solicitud</button>
+                        <button mat-stroked-button (click)="iniciarProcesoCancelacion()">Anular Solicitud</button>
                     </div>
                 </div>
             </mat-step>
