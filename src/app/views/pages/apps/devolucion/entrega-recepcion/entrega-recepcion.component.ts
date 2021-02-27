@@ -19,6 +19,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./entrega-recepcion.component.scss']
 })
 export class EntregaRecepcionComponent implements OnInit {
+  public titulo: any;
   public formCreditoNuevo: FormGroup = new FormGroup({});
   public numeroOperacion = new FormControl('');
   public procesoDev = new FormControl('');
@@ -116,8 +117,9 @@ export class EntregaRecepcionComponent implements OnInit {
   }
   private cargarCampos() {
     this.formCreditoNuevo.disable();
+    this.titulo = "ENTREGA RECEPCION: " + this.wrapperDevolucion.devolucion.codigo;
     this.numeroOperacion.setValue( this.wrapperDevolucion.devolucion.codigoOperacion);
-    this.procesoDev.setValue( this.wrapperDevolucion.proceso.estadoProceso );
+    this.procesoDev.setValue( this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ")  );
     this.nombresCompletos.setValue( this.wrapperDevolucion.devolucion.nombreCliente );
     this.cedulaCliente.setValue( this.wrapperDevolucion.devolucion.cedulaCliente );
     this.nivelEducacion.setValue( this.wrapperDevolucion.devolucion.nivelEducacion);

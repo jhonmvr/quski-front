@@ -81,25 +81,20 @@ const routes: Routes = [
 				path: 'entrega-recepcion/:item',
 				component: EntregaRecepcionComponent
 			},
-			
 			{
 				path: 'detalle-devolucion/:item',
 				component: DetalleDevolucionComponent
 			},
 			{
-				path: 'cancelacion-solicitud/:idDevolucion',
+				path: 'cancelacion-solicitud/:item',
 				component: CancelacionSolicitudDevolucionComponent
 			},
 			{
-				path: 'aprobacion-cancelacion-solicitud/:idDevolucion',
+				path: 'aprobacion-cancelacion-solicitud/:item',
 				component: AprobacionCancelacionComponent
 			},	
 			{
-				path: 'aprobacion-cancelacion-solicitud',
-				component: AprobacionCancelacionComponent
-			},
-			{
-				path: 'verificacion-firmas/:idDevolucion',
+				path: 'verificacion-firmas/:item',
 				component: VerificacionFirmaComponent
 			}
 		]

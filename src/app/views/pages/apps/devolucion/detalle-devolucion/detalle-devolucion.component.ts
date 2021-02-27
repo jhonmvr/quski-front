@@ -52,6 +52,7 @@ export class DetalleDevolucionComponent implements OnInit {
   public displayedColumnsDetalle = ['fechaAprobacion', 'fechaVencimiento', 'monto'];
   public dataSourceHeredero: MatTableDataSource<any> = new MatTableDataSource<any>();
   public displayedColumnsHeredero = ['cedula', 'nombre'];
+  public titulo: string;
 
   constructor(
     private cre: CreditoNegociacionService,
@@ -117,8 +118,9 @@ export class DetalleDevolucionComponent implements OnInit {
   }
   private cargarCampos() {
     this.formCreditoNuevo.disable();
+    this.titulo = 'DETALLE DE PROCESO DE DEVOLUCION: '+ this.wrapperDevolucion.devolucion.codigo;
     this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);
-    this.procesoDev.setValue(this.wrapperDevolucion.proceso.estadoProceso);
+    this.procesoDev.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ")  );
     this.nombresCompletos.setValue(this.wrapperDevolucion.devolucion.nombreCliente);
     this.cedulaCliente.setValue(this.wrapperDevolucion.devolucion.cedulaCliente);
     this.nivelEducacion.setValue(this.wrapperDevolucion.devolucion.nivelEducacion);

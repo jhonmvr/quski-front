@@ -114,10 +114,14 @@
                                     <mat-icon matTooltip="Ver Detalle">remove_red_eye</mat-icon>
                                 </a>
                             </ng-container>
-
                             <ng-container *ngIf="rol == 'SUPERVISOR'">
                                 <a (click)="reasignar(row)">
                                     <mat-icon matTooltip="Reasignar Asesor">account_circle</mat-icon>
+                                </a>
+                            </ng-container>
+                            <ng-container *ngIf="row.proceso == 'DEVOLUCION'">
+                                <a (click)="cancelarDevolucion(row)"matTooltip="Cancelar Devolucion" style="font-size: 12px; vertical-align: middle;">
+                                    <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">highlight_off</mat-icon>
                                 </a>
                             </ng-container>
                         </mat-cell>
