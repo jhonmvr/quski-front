@@ -207,12 +207,59 @@ export class DevolucionService extends BaseService {
       )
     );
   }
-  validateAprobarCancelarSolicitud(idDevolucion: any) {
+//Validacion
+
+existeCancelacionCancelacion(idDevolucion: any) {
+  this.params = new HttpParams().set('idDevolucion', idDevolucion);
+  let serviceUrl = this.appResourcesUrl + "devolucionRestController/existeProcesoCancelacionVigente";
+  this.options = { headers: this.headers, params: this.params };
+  return this.http.get(serviceUrl, this.options);
+}
+
+  validarAprobarCancelacionSolicitud(idDevolucion: any) {
     this.params = new HttpParams().set('idDevolucion', idDevolucion);
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateAprobarCancelarSolicitud";
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
+
+
+  validarCancelacionSolicitud(idDevolucion: any) {
+    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateCancelarSolicitud";
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+
+  validateSolicitarAprobacion(idDevolucion: any) {
+    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateSolicitarAprobacion";
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  validateAprobarRechazarSolicitud(idDevolucion: any) {
+    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateAprobarRechazarSolicitud";
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  validateEntregaRecepcion(idDevolucion: any) {
+    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateEntregaRecepcion";
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  validateVerificacionFirma(idDevolucion: any) {
+    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateVerificacionFirma";
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options);
+  }
+  
+
+
+
+/////////
   public guardarEntregaRecepcion(id){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/guardarEntregaRecepcion";
     this.params = this.params.set('idDevolucion', id);  

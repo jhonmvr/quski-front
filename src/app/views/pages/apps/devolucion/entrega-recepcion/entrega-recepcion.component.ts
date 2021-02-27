@@ -54,6 +54,7 @@ export class EntregaRecepcionComponent implements OnInit {
   public catTipoCliente: Array<any>;
   public catAgencia: Array<any>;
   public catDivision: Array<any>;
+  idReferencia
 
   constructor(
     private sinNoticeService: ReNoticeService,
@@ -133,6 +134,7 @@ export class EntregaRecepcionComponent implements OnInit {
     this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
     this.agenciaEntrega.setValue(this.wrapperDevolucion.devolucion.agenciaEntrega);
     this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
+    this.idReferencia = this.wrapperDevolucion.devolucion.id
     if(this.wrapperDevolucion){
       let objetoHeredero = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeHerederos );
       this.dataSourceHeredero = new MatTableDataSource<any>(objetoHeredero.heredero);
@@ -214,26 +216,34 @@ export class EntregaRecepcionComponent implements OnInit {
   }
   public guardar() {
     let mensaje = " Generar acta de entrega y enviar al aprobador para verificacion de firmas.";
-    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-      width: "800px",
-      height: "auto",
-      data: mensaje
-    });
-    dialogRef.afterClosed().subscribe(r => {
-      if(r){
-        this.dev.guardarEntregaRecepcion(this.item).subscribe( (data: any) => {
-          if(data.entidad){
-            this.sinNoticeService.setNotice('ACTA DE ENTREGA GUARDADA CORRECTAMENTE','success');
-            this.router.navigate(['negociacion/bandeja-operaciones']);
-          }else {
-            this.sinNoticeService.setNotice('ERROR AL CAMBIAR DE ESTADO DE DEVOLUCION', 'error');
-          }
-        }, error => {
-          this.sinNoticeService.setNotice(error.error.msgError, 'error');
+    this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data:any)=>{
+      if(data.entidad.bandera){
+        const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+          width: "800px",
+          height: "auto",
+          data: mensaje
         });
-      }else{
-          this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');
+        dialogRef.afterClosed().subscribe(r => {
+          if(r){
+            this.dev.guardarEntregaRecepcion(this.item).subscribe( (data: any) => {
+              if(data.entidad){
+                this.sinNoticeService.setNotice('ACTA DE ENTREGA GUARDADA CORRECTAMENTE','success');
+                this.router.navigate(['negociacion/bandeja-operaciones']);
+              }else {
+                this.sinNoticeService.setNotice('ERROR AL CAMBIAR DE ESTADO DE DEVOLUCION', 'error');
+              }
+            }, error => {
+              this.sinNoticeService.setNotice(error.error.msgError, 'error');
+            });
+          }else{
+              this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');
+          }
+        });
+      }else {
+
       }
-    });
+    })
+
+ 
   }
 } 

@@ -406,11 +406,17 @@ export class SolicitudDevolucionComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(r => {
       if (r) {
-        this.pro.cambiarEstadoProceso(this.wrapperDevolucion.devolucion.id, this.wrapperDevolucion.proceso.proceso, 'PENDIENTE_APROBACION').subscribe((data: any) => {
-          if (data.entidad && data.entidad.estadoProceso == 'PENDIENTE_APROBACION') {
-            this.router.navigate(['negociacion/bandeja-operaciones']);
+        this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data:any)=>{
+          if(data.entidad.bandera){
+            this.pro.cambiarEstadoProceso(this.wrapperDevolucion.devolucion.id, this.wrapperDevolucion.proceso.proceso, 'PENDIENTE_APROBACION').subscribe( (data: any) =>{
+              if(data.entidad && data.entidad.estadoProceso == 'PENDIENTE_APROBACION'){
+                this.router.navigate(['negociacion/bandeja-operaciones']);
+              }
+            });
+          }else {
+            this.sinNoticeService.setNotice(data.entidad.mensaje, 'error');
           }
-        });
+        })
       } else {
         this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'warning');
       }
