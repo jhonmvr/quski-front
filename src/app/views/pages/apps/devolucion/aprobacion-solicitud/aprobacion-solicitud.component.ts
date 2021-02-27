@@ -73,23 +73,23 @@ export class AprobacionSolicitudComponent implements OnInit {
     this.cre.setParameter();
     this.sof.setParameter();
     this.dev.setParameter();
-    this.formCreditoNuevo.addControl("numeroOperacion", this.numeroOperacion );
-    this.formCreditoNuevo.addControl("proceso", this.proceso );
-    this.formCreditoNuevo.addControl("cedulaCliente", this.cedulaCliente );
-    this.formCreditoNuevo.addControl("nombresCompletos", this.nombresCompletos );
-    this.formCreditoNuevo.addControl("nivelEducacion", this.nivelEducacion );
-    this.formCreditoNuevo.addControl("genero", this.genero );
-    this.formCreditoNuevo.addControl("estadoCivil", this.estadoCivil );
-    this.formCreditoNuevo.addControl("fechaNacimiento", this.fechaNacimiento );
-    this.formCreditoNuevo.addControl("nacionalidad", this.nacionalidad );
-    this.formCreditoNuevo.addControl("lugarNacimiento", this.lugarNacimiento );
-    this.formCreditoNuevo.addControl("edad", this.edad );
-    this.formCreditoNuevo.addControl("tipoCliente", this.tipoCliente );
-    this.formCreditoNuevo.addControl("observaciones", this.observaciones );
-    this.formCreditoNuevo.addControl("agenciaEntrega", this.agenciaEntrega );
-    this.formCreditoNuevo.addControl("valorCustodia", this.valorCustodia );
-    this.formCreditoNuevo.addControl("cedulaApoderado", this.cedulaApoderado );
-    this.formCreditoNuevo.addControl("nombreApoderado", this.nombreApoderado );
+    this.formCreditoNuevo.addControl("numeroOperacion", this.numeroOperacion);
+    this.formCreditoNuevo.addControl("proceso", this.proceso);
+    this.formCreditoNuevo.addControl("cedulaCliente", this.cedulaCliente);
+    this.formCreditoNuevo.addControl("nombresCompletos", this.nombresCompletos);
+    this.formCreditoNuevo.addControl("nivelEducacion", this.nivelEducacion);
+    this.formCreditoNuevo.addControl("genero", this.genero);
+    this.formCreditoNuevo.addControl("estadoCivil", this.estadoCivil);
+    this.formCreditoNuevo.addControl("fechaNacimiento", this.fechaNacimiento);
+    this.formCreditoNuevo.addControl("nacionalidad", this.nacionalidad);
+    this.formCreditoNuevo.addControl("lugarNacimiento", this.lugarNacimiento);
+    this.formCreditoNuevo.addControl("edad", this.edad);
+    this.formCreditoNuevo.addControl("tipoCliente", this.tipoCliente);
+    this.formCreditoNuevo.addControl("observaciones", this.observaciones);
+    this.formCreditoNuevo.addControl("agenciaEntrega", this.agenciaEntrega);
+    this.formCreditoNuevo.addControl("valorCustodia", this.valorCustodia);
+    this.formCreditoNuevo.addControl("cedulaApoderado", this.cedulaApoderado);
+    this.formCreditoNuevo.addControl("nombreApoderado", this.nombreApoderado);
   }
 
   ngOnInit() {
@@ -120,34 +120,34 @@ export class AprobacionSolicitudComponent implements OnInit {
   private cargarCampos() {
     console.log('Wrapper SOFTBANK => ', this.wrapperSoft);
     console.log('Wrapper PROCESO => ', this.wrapperDevolucion);
-    this.titulo = "APROBACION DE SOLICITUD DE DEVOLUCION: "+  this.wrapperDevolucion.devolucion.codigo;
+    this.titulo = "APROBACION DE SOLICITUD DE DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo;
     this.formCreditoNuevo.disable();
-    this.numeroOperacion.setValue( this.wrapperDevolucion.devolucion.codigoOperacion);
-    this.proceso.setValue( this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ")  );
-    this.nombresCompletos.setValue( this.wrapperDevolucion.devolucion.nombreCliente );
-    this.cedulaCliente.setValue( this.wrapperDevolucion.devolucion.cedulaCliente );
-    this.nivelEducacion.setValue( this.wrapperDevolucion.devolucion.nivelEducacion);
-    this.genero.setValue( this.wrapperDevolucion.devolucion.genero );
-    this.estadoCivil.setValue( this.wrapperDevolucion.devolucion.estadoCivil );
-    this.fechaNacimiento.setValue( this.wrapperDevolucion.devolucion.fechaNacimiento );
-    this.nacionalidad.setValue( this.wrapperDevolucion.devolucion.nacionalidad);
-    this.lugarNacimiento.setValue( this.wrapperDevolucion.devolucion.lugarNacimiento );
+    this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);
+    this.proceso.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi, " "));
+    this.nombresCompletos.setValue(this.wrapperDevolucion.devolucion.nombreCliente);
+    this.cedulaCliente.setValue(this.wrapperDevolucion.devolucion.cedulaCliente);
+    this.nivelEducacion.setValue(this.wrapperDevolucion.devolucion.nivelEducacion);
+    this.genero.setValue(this.wrapperDevolucion.devolucion.genero);
+    this.estadoCivil.setValue(this.wrapperDevolucion.devolucion.estadoCivil);
+    this.fechaNacimiento.setValue(this.wrapperDevolucion.devolucion.fechaNacimiento);
+    this.nacionalidad.setValue(this.wrapperDevolucion.devolucion.nacionalidad);
+    this.lugarNacimiento.setValue(this.wrapperDevolucion.devolucion.lugarNacimiento);
     this.onChangeFechaNacimiento();
     this.tipoCliente.setValue(this.wrapperDevolucion.devolucion.tipoCliente);
     this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
     this.agenciaEntrega.setValue(this.wrapperDevolucion.devolucion.agenciaEntrega);
     this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
-    if(this.wrapperDevolucion){
-      let objetoHeredero = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeHerederos );
+    if (this.wrapperDevolucion) {
+      let objetoHeredero = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeHerederos);
       console.log('Wrapper  => objetoHeredero', objetoHeredero.heredero);
       this.dataSourceHeredero = new MatTableDataSource<any>(objetoHeredero.heredero);
-      this.nombreApoderado.setValue( this.wrapperDevolucion.devolucion.nombreApoderado );
-      this.cedulaApoderado.setValue( this.wrapperDevolucion.devolucion.cedulaApoderado );
+      this.nombreApoderado.setValue(this.wrapperDevolucion.devolucion.nombreApoderado);
+      this.cedulaApoderado.setValue(this.wrapperDevolucion.devolucion.cedulaApoderado);
       this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
       this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
-      this.agenciaEntrega.setValue( this.wrapperDevolucion.devolucion.agenciaEntrega );
-      this.tipoCliente.setValue( this.catTipoCliente.find( x => x.codigo == this.wrapperDevolucion.devolucion.tipoCliente ));
-      let objetoCredito = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeDetalleCredito );
+      this.agenciaEntrega.setValue(this.wrapperDevolucion.devolucion.agenciaEntrega);
+      this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo == this.wrapperDevolucion.devolucion.tipoCliente));
+      let objetoCredito = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeDetalleCredito);
       this.dataSourceDetalle = new MatTableDataSource<any>(objetoCredito);
     }
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
@@ -223,36 +223,36 @@ export class AprobacionSolicitudComponent implements OnInit {
   encodeObjetos(entrada) {
     return btoa(unescape(encodeURIComponent(JSON.stringify(entrada))))
   }
-   
-  public respuesta( aprobado ) {
-    let mensaje = aprobado ? 'Aprobar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo+'.':
-      'Negar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo+'.';
+
+  public respuesta(aprobado) {
+    let mensaje = aprobado ? 'Aprobar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo + '.' :
+      'Negar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo + '.';
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-        width: "800px",
-        height: "auto",
-        data: mensaje
-      });
-      dialogRef.afterClosed().subscribe(r => {
-        if(r){
-          this.dev.aprobarNegarSolicitudDevolucion(this.item, aprobado).subscribe((data: any) => {
-            if(data.entidad){
-              if( aprobado && data.entidad.proceso.estadoProceso == 'PENDIENTE_FECHA'){
-                this.sinNoticeService.setNotice("SE HA APROBADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
-                this.router.navigate(['aprobador/bandeja-aprobador']);
-              }else if( !aprobado && data.entidad.proceso.estadoProceso == 'RECHAZADO'){
-                this.sinNoticeService.setNotice("SE HA RECHAZADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
-                this.router.navigate(['aprobador/bandeja-aprobador']);
-              } else{
-                this.sinNoticeService.setNotice("ERROR AL APROBAR O NEGAR EL PROCESO", 'error');
-              }
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if (r) {
+        this.dev.aprobarNegarSolicitudDevolucion(this.item, aprobado).subscribe((data: any) => {
+          if (data.entidad) {
+            if (aprobado && data.entidad.proceso.estadoProceso == 'PENDIENTE_FECHA') {
+              this.sinNoticeService.setNotice("SE HA APROBADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
+              this.router.navigate(['aprobador/bandeja-aprobador']);
+            } else if (!aprobado && data.entidad.proceso.estadoProceso == 'RECHAZADO') {
+              this.sinNoticeService.setNotice("SE HA RECHAZADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
+              this.router.navigate(['aprobador/bandeja-aprobador']);
+            } else {
+              this.sinNoticeService.setNotice("ERROR AL APROBAR O NEGAR EL PROCESO", 'error');
             }
-          }, error => {
-            this.sinNoticeService.setNotice(error.error.msgError, 'error');
-          })
-        }else{
-          this.sinNoticeService.setNotice("SE CANCELO LA ACCION", 'warning');
-        }
-      });
+          }
+        }, error => {
+          this.sinNoticeService.setNotice(error.error.msgError, 'error');
+        })
+      } else {
+        this.sinNoticeService.setNotice("SE CANCELO LA ACCION", 'warning');
+      }
+    });
   }
 
 } 

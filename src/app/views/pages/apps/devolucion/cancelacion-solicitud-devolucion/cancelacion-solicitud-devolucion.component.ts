@@ -1,4 +1,5 @@
 import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { DevolucionService } from '../../../../../core/services/quski/devolucion.service';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
@@ -8,6 +9,7 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
+import { environment } from '../../../../../../environments/environment';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -43,6 +45,8 @@ export class CancelacionSolicitudDevolucionComponent implements OnInit {
   public fechaArribo = new FormControl('');
   public fechaRecepcionAgencia = new FormControl('');
   public item: any;
+  private usuario: string;
+  private agencia: string;
   public wrapperSoft: any;
   public wrapperDevolucion: { proceso: TbQoProceso, devolucion: TbQoDevolucion }
   public catGenero: Array<any>;
@@ -102,6 +106,8 @@ export class CancelacionSolicitudDevolucionComponent implements OnInit {
     this.dev.setParameter();
     this.cargarCatalogos();
     this.inicioFlujo();
+    this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.agencia = localStorage.getItem( 'idAgencia' );
   }
 
   public regresar() {
@@ -224,45 +230,26 @@ export class CancelacionSolicitudDevolucionComponent implements OnInit {
       }
     });
   }
-
-
-
-
-
-
-  anularSolicitud() {
-    this.dev.cancelacionSolicitud(this.item).subscribe((data: any) => {
-      if (data.entidad) {
-        this.sinNoticeService.setNotice("Se ha registrado la solicitud de cancelacion", "success")
-        //console.log("Exito")
-        this.router.navigate(['negociacion/bandeja-operaciones']);
+  public iniciarProcesoCancelacion() {
+    let mensaje = " Crear un proceso de cancelacion de devolucion para el proceso: " + this.wrapperDevolucion.devolucion.codigo;
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if (r) {
+        this.dev.iniciarProcesoCancelacion(this.item, this.usuario).subscribe((data: any) => {
+          if (data.entidad) {
+            this.sinNoticeService.setNotice("SE HA CREADO Y ENVIADO A APROBACION EL PROCESO: "+ data.entidad, "success")
+            this.router.navigate(['negociacion/bandeja-operaciones']);
+          }
+        }, error =>{
+          this.sinNoticeService.setNotice(error.error.codError, 'warning');
+        });
       } else {
-        this.sinNoticeService.setNotice("Error al registrar", "error")
+        this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'warning');
       }
-
-    })
+    });
   }
-
-  validateExisteProcesoCancelacion() {
-    this.dev.existeCancelacionCancelacion(this.item).subscribe((data: any) => {
-      if (data.entidad) {
-        this.sinNoticeService.setNotice("Ya existe un proceso de cancelación para la devolución", "warning")
-      } else {
-      }
-    })
-  }
-
-  validateCancelacion() {
-    this.dev.validarCancelacionSolicitud(this.item).subscribe((data: any) => {
-      if (data.entidad.bandera) {
-
-      } else {
-        this.sinNoticeService.setNotice(data.entidad.mensaje, "warning")
-      }
-    })
-
-
-
-  }
-
 } 

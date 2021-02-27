@@ -55,6 +55,17 @@ export class DevolucionService extends BaseService {
       )
     );
   }
+  public buscarProcesoCancelacion(idDevolucion){
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/buscarProcesoCancelacion";
+    this.params = this.params.set('idDevolucion', idDevolucion);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
   public validarProcesoActivo(numeroOperacion){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/validarProcesoActivo";
     this.params = this.params.set('numeroOperacion', numeroOperacion);
@@ -161,11 +172,11 @@ export class DevolucionService extends BaseService {
     );
   }
 
-  public cancelacionSolicitud(id){
-    let serviceUrl = this.appResourcesUrl + "devolucionRestController/cancelarSolicitudDevolucion";
-    this.params = this.params.set('id', id);  
+  public iniciarProcesoCancelacion(id, usuario){
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/iniciarProcesoCancelacion";
+    this.params = this.params.set('id', id).set('usuario', usuario);  
     this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, null, this.options).pipe(
+    return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
@@ -174,7 +185,7 @@ export class DevolucionService extends BaseService {
   }
 
   
-  public aprobacionCancelacionSolicitud(id){
+  public aprobarCancelacionSolicitudDevolucion(id){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/aprobarCancelacionSolicitudDevolucion";
     this.params = this.params.set('id', id);  
     this.options = { headers: this.headers, params: this.params };
@@ -185,9 +196,7 @@ export class DevolucionService extends BaseService {
       )
     );
   }
-
-  
-  public rechazarCancelacionSolicitud(id){
+  public rechazarCancelacionSolicitudDevolucion(id){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/rechazarCancelacionSolicitudDevolucion";
     this.params = this.params.set('id', id);  
     this.options = { headers: this.headers, params: this.params };
@@ -198,32 +207,12 @@ export class DevolucionService extends BaseService {
       )
     );
   }
-
-
-  validarAprobarCancelacionSolicitud(idDevolucion: any) {
+  validateAprobarCancelarSolicitud(idDevolucion: any) {
     this.params = new HttpParams().set('idDevolucion', idDevolucion);
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateAprobarCancelarSolicitud";
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
-
-
-  validarCancelacionSolicitud(idDevolucion: any) {
-    this.params = new HttpParams().set('idDevolucion', idDevolucion);
-    let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateCancelarSolicitud";
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
-  }
-
-
-  existeCancelacionCancelacion(idDevolucion: any) {
-    this.params = new HttpParams().set('idDevolucion', idDevolucion);
-    let serviceUrl = this.appResourcesUrl + "devolucionRestController/existeProcesoCancelacionVigente";
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options);
-  }
-
-
   public guardarEntregaRecepcion(id){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/guardarEntregaRecepcion";
     this.params = this.params.set('idDevolucion', id);  
