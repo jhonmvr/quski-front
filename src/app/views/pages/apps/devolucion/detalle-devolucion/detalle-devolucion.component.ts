@@ -53,6 +53,7 @@ export class DetalleDevolucionComponent implements OnInit {
   public dataSourceHeredero: MatTableDataSource<any> = new MatTableDataSource<any>();
   public displayedColumnsHeredero = ['cedula', 'nombre'];
   public titulo: string;
+  public idReferencia;
 
   constructor(
     private cre: CreditoNegociacionService,
@@ -118,6 +119,7 @@ export class DetalleDevolucionComponent implements OnInit {
   }
   private cargarCampos() {
     this.formCreditoNuevo.disable();
+    this.idReferencia =this.wrapperDevolucion.devolucion.id
     this.titulo = 'DETALLE DE PROCESO DE DEVOLUCION: '+ this.wrapperDevolucion.devolucion.codigo;
     this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);
     this.procesoDev.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ")  );
