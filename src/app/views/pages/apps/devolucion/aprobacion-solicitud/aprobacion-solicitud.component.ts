@@ -36,6 +36,7 @@ export class AprobacionSolicitudComponent implements OnInit {
   public formCreditoNuevo: FormGroup = new FormGroup({});
   public numeroOperacion = new FormControl('');
   public proceso = new FormControl('');
+  idReferencia;
 
 
   //datos cliente
@@ -133,6 +134,7 @@ export class AprobacionSolicitudComponent implements OnInit {
     this.nacionalidad.setValue( this.wrapperDevolucion.devolucion.nacionalidad);
     this.lugarNacimiento.setValue( this.wrapperDevolucion.devolucion.lugarNacimiento );
     this.onChangeFechaNacimiento();
+    this.idReferencia = this.wrapperDevolucion.devolucion.id;
     this.tipoCliente.setValue(this.wrapperDevolucion.devolucion.tipoCliente);
     this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
     this.agenciaEntrega.setValue(this.wrapperDevolucion.devolucion.agenciaEntrega);
@@ -234,21 +236,30 @@ export class AprobacionSolicitudComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.dev.aprobarNegarSolicitudDevolucion(this.item, aprobado).subscribe((data: any) => {
-            if(data.entidad){
-              if( aprobado && data.entidad.proceso.estadoProceso == 'PENDIENTE_FECHA'){
-                this.sinNoticeService.setNotice("SE HA APROBADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
-                this.router.navigate(['aprobador/bandeja-aprobador']);
-              }else if( !aprobado && data.entidad.proceso.estadoProceso == 'RECHAZADO'){
-                this.sinNoticeService.setNotice("SE HA RECHAZADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
-                this.router.navigate(['aprobador/bandeja-aprobador']);
-              } else{
-                this.sinNoticeService.setNotice("ERROR AL APROBAR O NEGAR EL PROCESO", 'error');
-              }
+          this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data:any)=>{
+            if(data.entidad.bandera){
+              this.dev.aprobarNegarSolicitudDevolucion(this.item, aprobado).subscribe((data: any) => {
+                if(data.entidad){
+                  if( aprobado && data.entidad.proceso.estadoProceso == 'PENDIENTE_FECHA'){
+                    this.sinNoticeService.setNotice("SE HA APROBADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
+                    this.router.navigate(['aprobador/bandeja-aprobador']);
+                  }else if( !aprobado && data.entidad.proceso.estadoProceso == 'RECHAZADO'){
+                    this.sinNoticeService.setNotice("SE HA RECHAZADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
+                    this.router.navigate(['aprobador/bandeja-aprobador']);
+                  } else{
+                    this.sinNoticeService.setNotice("ERROR AL APROBAR O NEGAR EL PROCESO", 'error');
+                  }
+                }
+              }, error => {
+                this.sinNoticeService.setNotice(error.error.msgError, 'error');
+              })
             }
-          }, error => {
-            this.sinNoticeService.setNotice(error.error.msgError, 'error');
+            else{
+              this.sinNoticeService.setNotice(data.entidad.mensaje, 'error');
+            }
           })
+       
+         
         }else{
           this.sinNoticeService.setNotice("SE CANCELO LA ACCION", 'warning');
         }
