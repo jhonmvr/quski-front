@@ -110,7 +110,7 @@ export class AprobacionCancelacionComponent implements OnInit {
   }
 
   public regresar() {
-    this.router.navigate(['negociacion/bandeja-operaciones']);
+    this.router.navigate(['aprobador/bandeja-aprobador']);
   }
   private decodeObjetoDatos(entrada) {
     return JSON.parse(atob(entrada))
@@ -243,7 +243,8 @@ export class AprobacionCancelacionComponent implements OnInit {
         if( aprobado ){
           this.dev.aprobarCancelacionSolicitudDevolucion(this.item).subscribe((data: any) => {
             if (data.entidad) {
-              this.sinNoticeService.setNotice("SE HA CANCELADO CORRECTAMENTE LA DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo, "success")
+              this.sinNoticeService.setNotice("SE HA CANCELADO CORRECTAMENTE LA DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo, "success");
+              this.router.navigate(['aprobador/bandeja-aprobador']);
             }
           }, error =>{
             this.sinNoticeService.setNotice(error.error.codError, 'warning')
@@ -252,6 +253,7 @@ export class AprobacionCancelacionComponent implements OnInit {
           this.dev.rechazarCancelacionSolicitudDevolucion(this.item).subscribe((data: any) => {
             if (data.entidad) {
               this.sinNoticeService.setNotice("SE HA CANCELADO CORRRECTAMENTE LA DEVOLUCION: "+ this.wrapperDevolucion.devolucion.codigo, "success")
+              this.router.navigate(['aprobador/bandeja-aprobador']);
             } 
           }, error =>{
             this.sinNoticeService.setNotice(error.error.msgError, "error")
