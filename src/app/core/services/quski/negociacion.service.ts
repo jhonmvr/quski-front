@@ -112,7 +112,7 @@ export class NegociacionService extends BaseService {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'agregarJoya';
     this.params = new HttpParams().set('asesor',atob(localStorage.getItem(environment.userKey)));
     this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, joya,this.options).pipe(
+    return this.http.post(serviceUrl, joya, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
