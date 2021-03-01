@@ -216,29 +216,31 @@ export class EntregaRecepcionComponent implements OnInit {
   }
   public guardar() {
     let mensaje = " Generar acta de entrega y enviar al aprobador para verificacion de firmas.";
+    
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if(r){
+        this.dev.guardarEntregaRecepcion(this.item).subscribe( (data: any) => {
+          if(data.entidad){
+            this.sinNoticeService.setNotice('ACTA DE ENTREGA GUARDADA CORRECTAMENTE','success');
+            this.router.navigate(['negociacion/bandeja-operaciones']);
+          }else {
+            this.sinNoticeService.setNotice('ERROR AL CAMBIAR DE ESTADO DE DEVOLUCION', 'error');
+          }
+        }, error => {
+          this.sinNoticeService.setNotice(error.error.msgError, 'error');
+        });
+      }else{
+          this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');
+      }
+    });
+    
     this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data:any)=>{
       if(data.entidad.bandera){
-        const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-          width: "800px",
-          height: "auto",
-          data: mensaje
-        });
-        dialogRef.afterClosed().subscribe(r => {
-          if(r){
-            this.dev.guardarEntregaRecepcion(this.item).subscribe( (data: any) => {
-              if(data.entidad){
-                this.sinNoticeService.setNotice('ACTA DE ENTREGA GUARDADA CORRECTAMENTE','success');
-                this.router.navigate(['negociacion/bandeja-operaciones']);
-              }else {
-                this.sinNoticeService.setNotice('ERROR AL CAMBIAR DE ESTADO DE DEVOLUCION', 'error');
-              }
-            }, error => {
-              this.sinNoticeService.setNotice(error.error.msgError, 'error');
-            });
-          }else{
-              this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');
-          }
-        });
       }else {
 
       }
