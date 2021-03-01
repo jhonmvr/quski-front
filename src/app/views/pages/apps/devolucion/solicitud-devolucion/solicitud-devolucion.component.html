@@ -49,12 +49,12 @@
                     </div>
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="genero" placeholder="Género: ">
+                            <input matInput [formControl]="genero" placeholder="Género: " [value]="genero.value.nombre">
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="estadoCivil" placeholder="Estado Civil: ">
+                            <input matInput [formControl]="estadoCivil" placeholder="Estado Civil: " [value]="estadoCivil.value.nombre">
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">
@@ -65,7 +65,7 @@
                     </div>
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="nacionalidad" placeholder="Nacionalidad:">
+                            <input matInput [formControl]="nacionalidad" placeholder="Nacionalidad:" [value]="nacionalidad.value.nacionalidad">
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">

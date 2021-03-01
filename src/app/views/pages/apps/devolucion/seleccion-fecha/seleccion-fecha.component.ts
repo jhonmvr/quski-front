@@ -6,6 +6,7 @@ import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/m
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
+import { SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -43,6 +44,7 @@ export class SeleccionFechaComponent implements OnInit {
 
   constructor(
     private dev: DevolucionService,
+    private subheaderService: SubheaderService,
     private sof: SoftbankService,
     private sinNoticeService: ReNoticeService,
     private dialog: MatDialog 
@@ -61,6 +63,7 @@ export class SeleccionFechaComponent implements OnInit {
     this.sof.setParameter();
     this.cargarCatalogos();
     this.buscar();
+    this.subheaderService.setTitle('FLUJO DE DEVOLUCION');
   }
   private cargarCatalogos() {
     this.sof.consultarAgenciasCS().subscribe((data: any) => {
@@ -210,7 +213,7 @@ export class SeleccionFechaComponent implements OnInit {
                 this.buscar();
               } 
             },error =>{
-              this.sinNoticeService.setNotice( error.error.msgError, "error")
+              this.sinNoticeService.setNotice( error.error.codError, 'warning');
             });
           }else {
             this.eliminarSelect();

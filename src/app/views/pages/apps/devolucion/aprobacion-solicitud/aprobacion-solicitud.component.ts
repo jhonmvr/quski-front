@@ -10,6 +10,7 @@ import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
+import { SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -67,6 +68,7 @@ export class AprobacionSolicitudComponent implements OnInit {
     private cre: CreditoNegociacionService,
     private sinNoticeService: ReNoticeService,
     public dialog: MatDialog,
+    private subheaderService: SubheaderService,
     private sof: SoftbankService,
     private par: ParametroService,
     private route: ActivatedRoute,
@@ -100,6 +102,8 @@ export class AprobacionSolicitudComponent implements OnInit {
     this.dev.setParameter();
     this.cargarCatalogos();
     this.inicioFlujo();
+    this.subheaderService.setTitle('FLUJO DE DEVOLUCION');
+
   }
   private inicioFlujo() {
     this.route.paramMap.subscribe((json: any) => {
@@ -128,12 +132,17 @@ export class AprobacionSolicitudComponent implements OnInit {
     this.proceso.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi, " "));
     this.nombresCompletos.setValue(this.wrapperDevolucion.devolucion.nombreCliente);
     this.cedulaCliente.setValue(this.wrapperDevolucion.devolucion.cedulaCliente);
-    this.nivelEducacion.setValue(this.wrapperDevolucion.devolucion.nivelEducacion);
-    this.genero.setValue(this.wrapperDevolucion.devolucion.genero);
-    this.estadoCivil.setValue(this.wrapperDevolucion.devolucion.estadoCivil);
     this.fechaNacimiento.setValue(this.wrapperDevolucion.devolucion.fechaNacimiento);
-    this.nacionalidad.setValue(this.wrapperDevolucion.devolucion.nacionalidad);
-    this.lugarNacimiento.setValue(this.wrapperDevolucion.devolucion.lugarNacimiento);
+
+    this.nivelEducacion.setValue( this.cargarItem(this.catEducacion, this.wrapperDevolucion.devolucion.nivelEducacion, true).nombre);
+    this.genero.setValue(this.cargarItem(this.catGenero, this.wrapperDevolucion.devolucion.genero, true).nombre);
+    this.estadoCivil.setValue(this.cargarItem(this.catEstadoCivil, this.wrapperDevolucion.devolucion.estadoCivil, true).nombre);
+    this.nacionalidad.setValue(this.cargarItem(this.catPais, this.wrapperDevolucion.devolucion.nacionalidad, false).nacionalidad);
+    let itemParroquia = this.cargarItem(this.catDivision, this.wrapperDevolucion.devolucion.lugarNacimiento, false);
+    let itemCanton = this.cargarItem(this.catDivision, itemParroquia.idPadre, false);
+    let itemProvincia = this.cargarItem(this.catDivision, itemCanton.idPadre, false);
+    this.lugarNacimiento.setValue( (itemParroquia ? itemParroquia.nombre : '' ) + (itemCanton ? ' / ' + itemCanton.nombre : '' ) + (itemProvincia ? ' / ' + itemProvincia.nombre : '') );
+
     this.onChangeFechaNacimiento();
     this.idReferencia = this.wrapperDevolucion.devolucion.id;
     this.tipoCliente.setValue(this.wrapperDevolucion.devolucion.tipoCliente);
@@ -154,6 +163,19 @@ export class AprobacionSolicitudComponent implements OnInit {
       this.dataSourceDetalle = new MatTableDataSource<any>(objetoCredito);
     }
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
+  }
+  private cargarItem(catalogo, cod, index) {
+    if (index && catalogo) {
+      let item = catalogo.find(x => x.codigo == cod);
+      if (catalogo && item) {
+        return item;
+      }
+    }else if(!index && catalogo){
+      let item = catalogo.find(x => x.id == cod);
+      if (catalogo && item) {
+        return item;
+      }
+    }
   }
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {
@@ -237,30 +259,8 @@ export class AprobacionSolicitudComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(r => {
       if (r) {
-        this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data:any)=>{
-          if(data.entidad.bandera){
-            this.dev.aprobarNegarSolicitudDevolucion(this.item, aprobado).subscribe((data: any) => {
-              if(data.entidad){
-                if (aprobado && data.entidad.proceso.estadoProceso == 'PENDIENTE_FECHA') {
-                  this.sinNoticeService.setNotice("SE HA APROBADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
-                  this.router.navigate(['aprobador/bandeja-aprobador']);
-                } else if (!aprobado && data.entidad.proceso.estadoProceso == 'RECHAZADO') {
-                  this.sinNoticeService.setNotice("SE HA RECHAZADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
-                  this.router.navigate(['aprobador/bandeja-aprobador']);
-                } else {
-                  this.sinNoticeService.setNotice("ERROR AL APROBAR O NEGAR EL PROCESO", 'error');
-                }
-              }
-            }, error => {
-              this.sinNoticeService.setNotice(error.error.msgError, 'error');
-            })
-          }
-          else{
-            this.sinNoticeService.setNotice(data.entidad.mensaje, 'error');
-          }
-        })
         this.dev.aprobarNegarSolicitudDevolucion(this.item, aprobado).subscribe((data: any) => {
-          if (data.entidad) {
+          if(data.entidad){
             if (aprobado && data.entidad.proceso.estadoProceso == 'PENDIENTE_FECHA') {
               this.sinNoticeService.setNotice("SE HA APROBADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
               this.router.navigate(['aprobador/bandeja-aprobador']);
@@ -272,7 +272,7 @@ export class AprobacionSolicitudComponent implements OnInit {
             }
           }
         }, error => {
-          this.sinNoticeService.setNotice(error.error.msgError, 'error');
+          this.sinNoticeService.setNotice(error.error.codError.replace(/_/gi, " "), 'warning');
         })
       } else {
         this.sinNoticeService.setNotice("SE CANCELO LA ACCION", 'warning');

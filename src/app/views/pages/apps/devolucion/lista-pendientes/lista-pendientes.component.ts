@@ -41,7 +41,7 @@ export class ListaPendientesComponent implements OnInit {
 
   ngOnInit() {
     this.dev.setParameter();
-    this.subheaderService.setTitle('Pendiente de arribo');
+    this.subheaderService.setTitle('FLUJO DE DEVOLUCION');
     this.agencia = Number(localStorage.getItem( 'idAgencia' ));
     this.initiateTablePaginator();
     this.buscar();
@@ -130,6 +130,8 @@ export class ListaPendientesComponent implements OnInit {
           } else {
             this.noticeService.setNotice("ERROR AL REGISTRAR.", "error")
           }
+        }, error =>{
+          this.noticeService.setNotice( error.error.codError.replace(/_/gi, " "), 'warning');
         });
       } else {
         this.noticeService.setNotice("SE CANCELO LA ACCION", 'warning');

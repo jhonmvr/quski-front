@@ -1,11 +1,5 @@
-src/app/core/services/base.service.ts
-src/environments/
-workspace.code-workspace
-Save.code-workspace
 node_modules
+workspace.code-workspace
+base.service.ts
 .gitignore
-.vscode/
-src/index.html
-.gitignore
-src/environments/environment.ts
-src/environments/environment.prod.ts
+src/environments

@@ -13,6 +13,7 @@ import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { ValidateCedula } from '../../../../../core/util/validate.util';
+import { SubheaderService } from '../../../../../core/_base/layout';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -81,12 +82,14 @@ export class SolicitudDevolucionComponent implements OnInit {
   /**Obligatorio paginacion */
 
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
+  idLugarNacimiento: any;
 
   constructor(
     private cre: CreditoNegociacionService,
     private dev: DevolucionService,
     private pro: ProcesoService,
     private sof: SoftbankService,
+    private subheaderService: SubheaderService,
     private par: ParametroService,
     private sinNoticeService: ReNoticeService,
     public dialog: MatDialog,
@@ -118,12 +121,14 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem('idAgencia');
     this.inicioFlujo();
+    this.subheaderService.setTitle('FLUJO DE DEVOLUCION');
+
   }
   private inicioFlujo() {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.cod && json.params.item) {
         this.cod = json.params.cod;
-        if ( json.params.cod == 'NUEV' ) {
+        if (json.params.cod == 'NUEV') {
           this.item = json.params.item;
           this.cre.traerCreditoVigente(json.params.item).subscribe((data: any) => {
             if (data.entidad) {
@@ -154,7 +159,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     });
   }
   private validacion(numeroOperacion) {
-    if(this.cod != 'EDIT'){
+    if (this.cod != 'EDIT') {
       this.dev.validarProcesoActivo(numeroOperacion).subscribe((data: any) => {
         if (data.entidad && data.entidad.existe) {
           this.salirDeGestion(data.entidad.mensaje, 'Proceso Activo.');
@@ -163,27 +168,31 @@ export class SolicitudDevolucionComponent implements OnInit {
     }
   }
   private cargarCampos() {
-    console.log('Wrapper SOFTBANK => ', this.wrapperSoft);
-    console.log('Wrapper PROCESO => ', this.wrapperDevolucion);
     this.validacion(this.wrapperSoft.credito.numeroOperacion);
     !this.wrapperSoft.garantias || this.wrapperSoft.garantias.length < 1 ? this.salirDeGestion('No existen joyas relacionadas a este credito.', 'Faltan Joyas.') : null;
+
     this.numeroOperacion.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : this.wrapperSoft.credito.numeroOperacion);
     this.estadoProceso.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi, " ",) : 'PROCESO NO INICIADO');
     this.nombresCompletos.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nombreCliente : this.wrapperSoft.cliente.nombreCompleto);
     this.cedulaCliente.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.cedulaCliente : this.wrapperSoft.cliente.identificacion);
+
     let codEducacion = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nivelEducacion : this.wrapperSoft.cliente.codigoEducacion;
-    let itemEducacion = this.catEducacion.find(x => x.codigo == codEducacion);
-    if (this.catEducacion && itemEducacion) {
-      this.nivelEducacion.setValue(itemEducacion);
-    }
-    this.genero.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.genero : this.wrapperSoft.cliente.codigoSexo);
-    this.estadoCivil.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.estadoCivil : this.wrapperSoft.cliente.codigoEstadoCivil);
+    this.nivelEducacion.setValue( this.cargarItem(this.catEducacion, codEducacion, true));
+    let codGenero = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.genero : this.wrapperSoft.cliente.codigoSexo;
+    this.genero.setValue(this.cargarItem(this.catGenero, codGenero, true));
+    let codEstadoCivil = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.estadoCivil : this.wrapperSoft.cliente.codigoEstadoCivil;
+    this.estadoCivil.setValue(this.cargarItem(this.catEstadoCivil, codEstadoCivil, true));
+    let codNacionalidad = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nacionalidad : this.wrapperSoft.cliente.idPaisNacimiento;
+    this.nacionalidad.setValue(this.cargarItem(this.catPais, codNacionalidad, false));
+    this.idLugarNacimiento = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.lugarNacimiento : this.wrapperSoft.cliente.idLugarNacimiento;
+    let itemParroquia = this.cargarItem(this.catDivision, this.idLugarNacimiento, false);
+    let itemCanton = this.cargarItem(this.catDivision, itemParroquia.idPadre, false);
+    let itemProvincia = this.cargarItem(this.catDivision, itemCanton.idPadre, false);
+    this.lugarNacimiento.setValue( (itemParroquia ? itemParroquia.nombre : '' ) + (itemCanton ? ' / ' + itemCanton.nombre : '' ) + (itemProvincia ? ' / ' + itemProvincia.nombre : '') );
+
     this.fechaNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.fechaNacimiento : this.wrapperSoft.cliente.fechaNacimiento);
-    this.nacionalidad.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nacionalidad : this.wrapperSoft.cliente.idPaisNacimiento);
-    this.lugarNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.lugarNacimiento : this.wrapperSoft.cliente.idLugarNacimiento);
     if (this.wrapperDevolucion) {
       let objetoHeredero = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeHerederos);
-      console.log('Wrapper  => objetoHeredero', objetoHeredero.heredero);
       this.dataSourceHeredero = new MatTableDataSource<any>(objetoHeredero.heredero);
       this.nombreApoderado.setValue(this.wrapperDevolucion.devolucion.nombreApoderado);
       this.cedulaApoderado.setValue(this.wrapperDevolucion.devolucion.cedulaApoderado);
@@ -198,10 +207,22 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.objetoCredito['fechaVencimiento'] = this.wrapperSoft.credito.fechaVencimiento
     this.objetoCredito['monto'] = this.wrapperSoft.credito.montoFinanciado
     this.dataSourceDetalle = new MatTableDataSource<any>([this.objetoCredito]);
-    console.log("estos los datos de la tabla =>>>", this.dataSourceDetalle.data)
     this.onChangeFechaNacimiento();
     this.desactivarCampos();
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
+  }
+  private cargarItem(catalogo, cod, index) {
+    if (index && catalogo) {
+      let item = catalogo.find(x => x.codigo == cod);
+      if (catalogo && item) {
+        return item;
+      }
+    }else if(!index && catalogo){
+      let item = catalogo.find(x => x.id == cod);
+      if (catalogo && item) {
+        return item;
+      }
+    }
   }
 
   /** ********************************************* @FUNCIONALIDAD ********************* **/
@@ -360,11 +381,11 @@ export class SolicitudDevolucionComponent implements OnInit {
         wrapper.cedulaCliente = this.cedulaCliente.value;
         wrapper.codigoOperacion = this.numeroOperacion.value;
         wrapper.nivelEducacion = this.nivelEducacion.value.codigo;
-        wrapper.estadoCivil = this.estadoCivil.value;
+        wrapper.estadoCivil = this.estadoCivil.value.codigo;
+        wrapper.genero = this.genero.value.codigo;
+        wrapper.nacionalidad = this.nacionalidad.value.id;
+        wrapper.lugarNacimiento = this.idLugarNacimiento;
         wrapper.fechaNacimiento = this.fechaNacimiento.value;
-        wrapper.nacionalidad = this.nacionalidad.value;
-        wrapper.genero = this.genero.value;
-        wrapper.lugarNacimiento = this.lugarNacimiento.value;
         wrapper.tipoCliente = this.tipoCliente.value.codigo;
         wrapper.observaciones = this.observaciones.value;
         wrapper.agenciaEntrega = this.agenciaEntrega.value.nombre;
@@ -395,7 +416,7 @@ export class SolicitudDevolucionComponent implements OnInit {
             this.sinNoticeService.setNotice(" ERROR AL GUARDAR PROCESO. ", 'error');
           }
         }, error => {
-          this.sinNoticeService.setNotice(error.error.msgError, 'error');
+          this.sinNoticeService.setNotice(error.error.codError, 'warning');
         });
       } else {
         this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'warning');
@@ -411,16 +432,13 @@ export class SolicitudDevolucionComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(r => {
       if (r) {
-        this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data:any)=>{
-          if(data.entidad.bandera){
-            this.pro.cambiarEstadoProceso(this.wrapperDevolucion.devolucion.id, this.wrapperDevolucion.proceso.proceso, 'PENDIENTE_APROBACION').subscribe( (data: any) =>{
-              if(data.entidad && data.entidad.estadoProceso == 'PENDIENTE_APROBACION'){
-                this.router.navigate(['negociacion/bandeja-operaciones']);
-              }
-            });
-          }else {
-            this.sinNoticeService.setNotice(data.entidad.mensaje, 'error');
+        this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data: any) => {
+          if (data.entidad) {
+            this.sinNoticeService.setNotice( 'EL PROCESO DE DEVOLUCION SE ENVIO A APROBACION', 'success');
+            this.router.navigate(['negociacion/bandeja-operaciones']);
           }
+        }, error =>{
+          this.sinNoticeService.setNotice( error.error.codError.replace(/_/gi, " "), 'warning');
         })
       } else {
         this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'warning');

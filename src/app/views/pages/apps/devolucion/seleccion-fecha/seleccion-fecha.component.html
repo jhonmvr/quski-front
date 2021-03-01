@@ -64,8 +64,8 @@
             </div>
           </div>
         <div class="row mt-5">
-            <div class="col">
-                <mat-table #table matTableExporter #exporter="matTableExporter" class="mat-elevation-z8" [dataSource]="dataSource" matSort #sort1="matSort"
+            <div class="col-12">
+                <mat-table  matTableExporter #tableFecha class="tableFecha"  #exporter="matTableExporter" [dataSource]="dataSource" matSort #sort1="matSort"
                     matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
                     <ng-container matColumnDef="accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
@@ -90,11 +90,6 @@
                     <ng-container matColumnDef="agenciaEntrega">
                         <mat-header-cell *matHeaderCellDef>Agencia entrega</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.agenciaEntrega | titlecase }} </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="codigoOperacionMadre">
-                        <mat-header-cell *matHeaderCellDef>Código de operación Madre</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.codigoOperacionMadre ? element.codigoOperacionMadre : 'No Aplica' }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="codigoOperacion">
                         <mat-header-cell *matHeaderCellDef>Código Operación</mat-header-cell>

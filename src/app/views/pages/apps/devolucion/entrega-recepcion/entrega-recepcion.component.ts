@@ -9,6 +9,7 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
+import { SubheaderService } from '../../../../../core/_base/layout';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -61,6 +62,7 @@ export class EntregaRecepcionComponent implements OnInit {
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
     private dialog: MatDialog,
+    private subheaderService: SubheaderService,
     private par: ParametroService,
     private route: ActivatedRoute,
     private router: Router,
@@ -94,6 +96,7 @@ export class EntregaRecepcionComponent implements OnInit {
     this.par.setParameter();
     this.cargarCatalogos();
     this.inicioFlujo();
+    this.subheaderService.setTitle('FLUJO DE DEVOLUCION');
   }
   private decodeObjetoDatos(entrada) {
     return JSON.parse(atob(entrada))
@@ -123,17 +126,22 @@ export class EntregaRecepcionComponent implements OnInit {
     this.procesoDev.setValue( this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ")  );
     this.nombresCompletos.setValue( this.wrapperDevolucion.devolucion.nombreCliente );
     this.cedulaCliente.setValue( this.wrapperDevolucion.devolucion.cedulaCliente );
-    this.nivelEducacion.setValue( this.wrapperDevolucion.devolucion.nivelEducacion);
-    this.genero.setValue( this.wrapperDevolucion.devolucion.genero );
-    this.estadoCivil.setValue( this.wrapperDevolucion.devolucion.estadoCivil );
     this.fechaNacimiento.setValue( this.wrapperDevolucion.devolucion.fechaNacimiento );
-    this.nacionalidad.setValue( this.wrapperDevolucion.devolucion.nacionalidad);
-    this.lugarNacimiento.setValue( this.wrapperDevolucion.devolucion.lugarNacimiento );
     this.onChangeFechaNacimiento();
     this.tipoCliente.setValue(this.wrapperDevolucion.devolucion.tipoCliente);
     this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
     this.agenciaEntrega.setValue(this.wrapperDevolucion.devolucion.agenciaEntrega);
     this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
+
+    this.nivelEducacion.setValue( this.cargarItem(this.catEducacion, this.wrapperDevolucion.devolucion.nivelEducacion, true).nombre);
+    this.genero.setValue(this.cargarItem(this.catGenero, this.wrapperDevolucion.devolucion.genero, true).nombre);
+    this.estadoCivil.setValue(this.cargarItem(this.catEstadoCivil, this.wrapperDevolucion.devolucion.estadoCivil, true).nombre);
+    this.nacionalidad.setValue(this.cargarItem(this.catPais, this.wrapperDevolucion.devolucion.nacionalidad, false).nacionalidad);
+    let itemParroquia = this.cargarItem(this.catDivision, this.wrapperDevolucion.devolucion.lugarNacimiento, false);
+    let itemCanton = this.cargarItem(this.catDivision, itemParroquia.idPadre, false);
+    let itemProvincia = this.cargarItem(this.catDivision, itemCanton.idPadre, false);
+    this.lugarNacimiento.setValue( (itemParroquia ? itemParroquia.nombre : '' ) + (itemCanton ? ' / ' + itemCanton.nombre : '' ) + (itemProvincia ? ' / ' + itemProvincia.nombre : '') );
+
     this.idReferencia = this.wrapperDevolucion.devolucion.id
     if(this.wrapperDevolucion){
       let objetoHeredero = this.decodeObjetoDatos( this.wrapperDevolucion.devolucion.codeHerederos );
@@ -149,6 +157,19 @@ export class EntregaRecepcionComponent implements OnInit {
       this.dataSourceDetalle = new MatTableDataSource<any>(objetoCredito);
     }
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
+  }
+  private cargarItem(catalogo, cod, index) {
+    if (index && catalogo) {
+      let item = catalogo.find(x => x.codigo == cod);
+      if (catalogo && item) {
+        return item;
+      }
+    }else if(!index && catalogo){
+      let item = catalogo.find(x => x.id == cod);
+      if (catalogo && item) {
+        return item;
+      }
+    }
   }
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {
@@ -226,26 +247,17 @@ export class EntregaRecepcionComponent implements OnInit {
       if(r){
         this.dev.guardarEntregaRecepcion(this.item).subscribe( (data: any) => {
           if(data.entidad){
-            this.sinNoticeService.setNotice('ACTA DE ENTREGA GUARDADA CORRECTAMENTE','success');
+            this.sinNoticeService.setNotice('PROCESO DE DEVOLUCION ENVIADO A APROBACION DE FIRMAS','success');
             this.router.navigate(['negociacion/bandeja-operaciones']);
           }else {
             this.sinNoticeService.setNotice('ERROR AL CAMBIAR DE ESTADO DE DEVOLUCION', 'error');
           }
         }, error => {
-          this.sinNoticeService.setNotice(error.error.msgError, 'error');
+          this.sinNoticeService.setNotice(error.error.codError.replace(/_/gi, " "), 'warning');
         });
       }else{
           this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');
       }
     });
-    
-    this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data:any)=>{
-      if(data.entidad.bandera){
-      }else {
-
-      }
-    })
-
- 
   }
 } 

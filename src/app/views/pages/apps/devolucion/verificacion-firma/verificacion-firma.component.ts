@@ -10,6 +10,7 @@ import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
+import { SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -61,6 +62,7 @@ export class VerificacionFirmaComponent implements OnInit {
     private cre: CreditoNegociacionService,
     private sinNoticeService: ReNoticeService,
     public dialog: MatDialog,
+    private subheaderService: SubheaderService,
     private sof: SoftbankService,
     private par: ParametroService,
     private route: ActivatedRoute,
@@ -94,6 +96,8 @@ export class VerificacionFirmaComponent implements OnInit {
     this.dev.setParameter();
     this.cargarCatalogos();
     this.inicioFlujo();
+    this.subheaderService.setTitle('FLUJO DE DEVOLUCION');
+
   }
   private inicioFlujo() {
     this.route.paramMap.subscribe((json: any) => {
@@ -185,15 +189,20 @@ export class VerificacionFirmaComponent implements OnInit {
     this.formCreditoNuevo.disable();
     this.idReferencia = this.wrapperDevolucion.devolucion.id
     this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);
-    this.estadoProceso.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ") );
+    this.estadoProceso.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi, " "));
     this.nombresCompletos.setValue(this.wrapperDevolucion.devolucion.nombreCliente);
     this.cedulaCliente.setValue(this.wrapperDevolucion.devolucion.cedulaCliente);
-    this.nivelEducacion.setValue(this.wrapperDevolucion.devolucion.nivelEducacion);
-    this.genero.setValue(this.wrapperDevolucion.devolucion.genero);
-    this.estadoCivil.setValue(this.wrapperDevolucion.devolucion.estadoCivil);
     this.fechaNacimiento.setValue(this.wrapperDevolucion.devolucion.fechaNacimiento);
-    this.nacionalidad.setValue(this.wrapperDevolucion.devolucion.nacionalidad);
-    this.lugarNacimiento.setValue(this.wrapperDevolucion.devolucion.lugarNacimiento);
+
+    this.nivelEducacion.setValue(this.cargarItem(this.catEducacion, this.wrapperDevolucion.devolucion.nivelEducacion, true).nombre);
+    this.genero.setValue(this.cargarItem(this.catGenero, this.wrapperDevolucion.devolucion.genero, true).nombre);
+    this.estadoCivil.setValue(this.cargarItem(this.catEstadoCivil, this.wrapperDevolucion.devolucion.estadoCivil, true).nombre);
+    this.nacionalidad.setValue(this.cargarItem(this.catPais, this.wrapperDevolucion.devolucion.nacionalidad, false).nacionalidad);
+    let itemParroquia = this.cargarItem(this.catDivision, this.wrapperDevolucion.devolucion.lugarNacimiento, false);
+    let itemCanton = this.cargarItem(this.catDivision, itemParroquia.idPadre, false);
+    let itemProvincia = this.cargarItem(this.catDivision, itemCanton.idPadre, false);
+    this.lugarNacimiento.setValue((itemParroquia ? itemParroquia.nombre : '') + (itemCanton ? ' / ' + itemCanton.nombre : '') + (itemProvincia ? ' / ' + itemProvincia.nombre : ''));
+
     this.onChangeFechaNacimiento();
     this.tipoCliente.setValue(this.wrapperDevolucion.devolucion.tipoCliente);
     this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
@@ -214,50 +223,48 @@ export class VerificacionFirmaComponent implements OnInit {
     }
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
   }
+  private cargarItem(catalogo, cod, index) {
+    if (index && catalogo) {
+      let item = catalogo.find(x => x.codigo == cod);
+      if (catalogo && item) {
+        return item;
+      }
+    } else if (!index && catalogo) {
+      let item = catalogo.find(x => x.id == cod);
+      if (catalogo && item) {
+        return item;
+      }
+    }
+  }
   private decodeObjetoDatos(entrada) {
     return JSON.parse(atob(entrada))
   }
-  public enviarRespuesta( aprobar ) {
-    let mensaje = aprobar ? " Aprobar la verificacion de firmas del proceso: "+ this.wrapperDevolucion.devolucion.codigo+'. ' :
-    'Devolver la verificacion de firmas del proceso: '+ this.wrapperDevolucion.devolucion.codigo+'. ';
-    this.dev.validateSolicitarAprobacion(this.idReferencia).subscribe((data:any)=>{
-      if(data.entidad.bandera){
-        const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-          width: "800px",
-          height: "auto",
-          data: mensaje
+  public enviarRespuesta(aprobar) {
+    let mensaje = aprobar ? " Aprobar la verificacion de firmas del proceso: " + this.wrapperDevolucion.devolucion.codigo + '. ' :
+      'Devolver la verificacion de firmas del proceso: ' + this.wrapperDevolucion.devolucion.codigo + '. ';
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if (r && aprobar) {
+        this.dev.aprobarVerificacionFirmas(this.item).subscribe((data: any) => {
+          this.sinNoticeService.setNotice(" SE APROBO LA VERIFICACION DE FIRMAS.", "success");
+          this.router.navigate(['aprobador/bandeja-aprobador']);
+        }, error => {
+          this.sinNoticeService.setNotice(error.error.codError.replace(/_/gi, " "), 'warning');
         });
-        dialogRef.afterClosed().subscribe(r => {
-          if(r && aprobar){
-            this.dev.aprobarVerificacionFirmas(this.item).subscribe((data: any) => {
-              this.sinNoticeService.setNotice(" SE APROBO LA VERIFICACION DE FIRMAS.", "success");
-              this.router.navigate(['aprobador/bandeja-aprobador']);
-            }, error => {
-              this.sinNoticeService.setNotice(error.error.msgError, 'error');
-            });
-          }else if( r && !aprobar){
-            this.dev.rechazarVerificacionFirmas(this.item).subscribe((data: any) => {
-              this.sinNoticeService.setNotice("SE RECHAZO LA VERIFICACION DE FIRMAS.", "success");
-              this.router.navigate(['aprobador/bandeja-aprobador']);
-            }, error => {
-              this.sinNoticeService.setNotice( error.error.msgError, 'error');
-            })      
-          }else {
-            this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');
-          }
-        });
+      } else if (r && !aprobar) {
+        this.dev.rechazarVerificacionFirmas(this.item).subscribe((data: any) => {
+          this.sinNoticeService.setNotice("SE RECHAZO LA VERIFICACION DE FIRMAS.", "success");
+          this.router.navigate(['aprobador/bandeja-aprobador']);
+        }, error => {
+          this.sinNoticeService.setNotice(error.error.codError.replace(/_/gi, " "), 'warning');
+        })
+      } else {
+        this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'warning');
       }
-      else{
-        this.sinNoticeService.setNotice(data.entidad.mensaje, 'error');
-      }
-    })
-
-
-   
-  
+    });
   }
-  public rechazar() {
-    
-  }
-
 } 

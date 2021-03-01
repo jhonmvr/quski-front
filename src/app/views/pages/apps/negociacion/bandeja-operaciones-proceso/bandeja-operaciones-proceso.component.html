@@ -109,7 +109,7 @@
                                     <mat-icon matTooltip="Ver Operacion">edit</mat-icon>
                                 </a>
                             </ng-container>
-                            <ng-container *ngIf="row.proceso != 'PAGO'">
+                            <ng-container *ngIf="row.proceso != 'CANCELACION DEVOLUCION' && row.proceso != 'PAGO'">
                                 <a (click)="verDetalle(row)">
                                     <mat-icon matTooltip="Ver Detalle">remove_red_eye</mat-icon>
                                 </a>
@@ -119,7 +119,7 @@
                                     <mat-icon matTooltip="Reasignar Asesor">account_circle</mat-icon>
                                 </a>
                             </ng-container>
-                            <ng-container *ngIf="row.proceso == 'DEVOLUCION'">
+                            <ng-container *ngIf="row.proceso == 'DEVOLUCION' && row.estadoProceso != 'APROBADO' && row.estadoProceso != 'RECHAZADO' && row.estadoProceso != 'CANCELADO'">
                                 <a (click)="cancelarDevolucion(row)"matTooltip="Cancelar Devolucion" style="font-size: 12px; vertical-align: middle;">
                                     <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">highlight_off</mat-icon>
                                 </a>
