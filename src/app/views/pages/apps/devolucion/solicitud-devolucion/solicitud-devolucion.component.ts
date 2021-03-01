@@ -24,6 +24,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class SolicitudDevolucionComponent implements OnInit {
   public item: any;
+  cod;
   objetoCredito = new Object();
   public idReferencia;
   public wrapperSoft: any;
@@ -121,7 +122,8 @@ export class SolicitudDevolucionComponent implements OnInit {
   private inicioFlujo() {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.cod && json.params.item) {
-        if (json.params.cod == 'NUEV') {
+        this.cod = json.params.cod;
+        if ( json.params.cod == 'NUEV' ) {
           this.item = json.params.item;
           this.cre.traerCreditoVigente(json.params.item).subscribe((data: any) => {
             if (data.entidad) {
@@ -132,10 +134,11 @@ export class SolicitudDevolucionComponent implements OnInit {
             }
           });
         }
-        if (json.params.cod == 'CREA') {
+        if (json.params.cod == 'CREA' || json.params.cod == 'EDIT') {
           this.item = json.params.item;
           this.dev.buscarProcesoDevolucion(this.item).subscribe((data: any) => {
             this.wrapperDevolucion = data.entidad;
+            this.idReferencia = data.entidad.devolucion.id
             this.cre.traerCreditoVigente(this.wrapperDevolucion.devolucion.codigoOperacion).subscribe((data: any) => {
               if (data.entidad) {
                 this.wrapperSoft = data.entidad;
@@ -151,11 +154,13 @@ export class SolicitudDevolucionComponent implements OnInit {
     });
   }
   private validacion(numeroOperacion) {
-    this.dev.validarProcesoActivo(numeroOperacion).subscribe((data: any) => {
-      if (data.entidad && data.entidad.existe) {
-        this.salirDeGestion(data.entidad.mensaje, 'Proceso Activo.');
-      }
-    });
+    if(this.cod != 'EDIT'){
+      this.dev.validarProcesoActivo(numeroOperacion).subscribe((data: any) => {
+        if (data.entidad && data.entidad.existe) {
+          this.salirDeGestion(data.entidad.mensaje, 'Proceso Activo.');
+        }
+      });
+    }
   }
   private cargarCampos() {
     console.log('Wrapper SOFTBANK => ', this.wrapperSoft);

@@ -30,11 +30,18 @@
   <ng-container matColumnDef="archivoCargado">
     <mat-header-cell *matHeaderCellDef>Archivo cargado </mat-header-cell>
     <mat-cell *matCellDef="let element"> 
-        <a href="javascript:void(0);" *ngIf="getPermiso('DESCARGA_ARC',element.roles) && element.estaCargado" 
+        <a href="javascript:void(0);" *ngIf="getPermiso('DESCARGA_ARC',element.roles) && element.objectId" 
         (click)="descargarArchivoHabilitante(element)">
             <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Descarga Digital">get_app</mat-icon> 
             <span style="position: relative;top: -10px;margin-left: 5px;">Descarga Digital</span>
           </a>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="archivo">
+    <mat-header-cell *matHeaderCellDef>Archivo cargado </mat-header-cell>
+    <mat-cell *matCellDef="let element"> 
+      <mat-icon *ngIf="!element.objectId">close</mat-icon>
+      <mat-icon *ngIf="element.objectId">check</mat-icon>
     </mat-cell>
   </ng-container>
   <mat-header-row *matHeaderRowDef="displayedColumnDocumentos"></mat-header-row>

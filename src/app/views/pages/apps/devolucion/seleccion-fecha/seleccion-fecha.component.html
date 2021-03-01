@@ -57,9 +57,15 @@
                 </button>
             </div>
         </div>
+        <div class="row">
+            <div class="col-1 offset-11">
+              <button mat-raised-button
+                (click)="exporter.exportTable('xlsx', {fileName:'reporte de egresos', sheet: 'sheet_name', Props: {Author: 'jhonmvr'}})">Exportar</button>
+            </div>
+          </div>
         <div class="row mt-5">
             <div class="col">
-                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource" matSort #sort1="matSort"
+                <mat-table #table matTableExporter #exporter="matTableExporter" class="mat-elevation-z8" [dataSource]="dataSource" matSort #sort1="matSort"
                     matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
                     <ng-container matColumnDef="accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
@@ -126,8 +132,18 @@
                         <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.fechaAprobacion | rDate}} </mat-cell>
                     </ng-container>
-
-
+                    <ng-container matColumnDef="estadoUbicacion">
+                        <mat-header-cell *matHeaderCellDef>Estado Ubicacion</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.estadoUbicacion}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="estadoProceso">
+                        <mat-header-cell *matHeaderCellDef>Estado proceso</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.estadoProceso}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="bloqueo">
+                        <mat-header-cell *matHeaderCellDef>Descripcion bloqueo</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.bloqueo}} </mat-cell>
+                    </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                 </mat-table>

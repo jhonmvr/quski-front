@@ -28,7 +28,9 @@ export class SeleccionFechaComponent implements OnInit {
   @ViewChild('sort1', {static: true}) sort: MatSort;
   p = new Page();
   dataSource : MatTableDataSource<any> = new MatTableDataSource<any>();
-  displayedColumns = ['accion','codigo','codigoOperacion', 'identificacion','nombreCliente','agenciaSolicitud','fundaMadre' ,'fundaActual', 'ciudadTevcol', 'agenciaEntrega', 'nombreAsesor', 'fechaSolicitud','fechaAprobacion','fechaArriboAgencia'];
+  displayedColumns = ['accion','codigo','codigoOperacion', 'identificacion','nombreCliente',
+  'agenciaSolicitud','fundaMadre' ,'fundaActual', 'ciudadTevcol', 'agenciaEntrega', 'nombreAsesor', 'fechaSolicitud',
+  'fechaAprobacion','fechaArriboAgencia','estadoUbicacion','estadoProceso','bloqueo'];
   @ViewChild(MatPaginator, { static: true }) 
   paginator: MatPaginator;
   totalResults: number;
@@ -123,10 +125,25 @@ export class SeleccionFechaComponent implements OnInit {
       if(data){
         this.dataSource = new MatTableDataSource<any>();
         console.log("Data de la busqueda =>", data.list);
+        this.setEstadoGarantias(data.list);
         this.paginator.length = data.totalResults;
         this.dataSource.data = data.list;
       }
     })
+  }
+  setEstadoGarantias(dataList){
+    dataList.forEach(element => {
+      this.sof.garantiasByOperacionMadre(element.codigoOperacionMadre?element.codigoOperacionMadre:element.codigoOperacion).subscribe(data=>{
+        if(data && data.garantias && data.garantias[0]){
+          element.bloqueo = 'no hay descripcion del bloqueo';
+          element.estadoProceso = data.garantias[0].codigoEstadoProceso;
+          element.estadoUbicacion = data.garantias[0].codigoEstadoUbicacion;
+        }
+      });
+
+     
+
+    });
   }
    /**
    * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador

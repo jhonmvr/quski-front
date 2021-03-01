@@ -104,7 +104,8 @@ export class HabilitanteComponent implements OnInit {
     "descripcion",
     "generar",
     "respaldar",
-    "archivoCargado"
+    "archivoCargado",
+    "archivo"
   ];
   private uploadSubject = new BehaviorSubject<boolean>(true);
   public uploading;
