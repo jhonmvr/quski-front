@@ -191,10 +191,11 @@ export class BandejaAprobadorComponent implements OnInit {
     }
   }
   public abrirSolicitud(row: OperacionesAprobadorWrapper ){
+    let mensaje 
     console.log("la fila", row)
     if(row.proceso =='DEVOLUCION'){
       this.pro.findByIdReferencia(row.id, row.proceso).subscribe( (dat:any) =>{ 
-        let mensaje = row.aprobador == 'Libre'
+        mensaje = row.aprobador == 'Libre'
         ? 'Tomar y gestionar la operacion '+row.codigoBpm+  " " +dat.entidad.estadoProceso+'.' 
         : 'Tomar la operacion '+row.codigoBpm+ " " +dat.entidad.estadoProceso + ', que actualmente esta tomada por: '+ row.aprobador;
         
@@ -202,16 +203,16 @@ export class BandejaAprobadorComponent implements OnInit {
       })
 
     }else{
-    let mensaje = row.aprobador == 'Libre'
+    mensaje = row.aprobador == 'Libre'
       ? 'Tomar y gestionar la operacion '+row.codigoBpm+'.' 
       : 'Tomar la operacion '+row.codigoBpm+', que actualmente esta tomada por: '+ row.aprobador;
-
+    }
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
         width: "800px",
         height: "auto",
         data: mensaje
       });
-      
+    
       dialogRef.afterClosed().subscribe(r => {
         if(r){
           if(row.id != null){
@@ -267,5 +268,5 @@ export class BandejaAprobadorComponent implements OnInit {
 
       });
   }
-}
+
 }

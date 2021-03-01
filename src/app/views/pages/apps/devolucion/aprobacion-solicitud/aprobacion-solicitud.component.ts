@@ -20,6 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./aprobacion-solicitud.component.scss']
 })
 export class AprobacionSolicitudComponent implements OnInit {
+  varHabilitante = {referencia:"",proceso:""}
   public item: any;
   public titulo: any;
   public wrapperSoft: any;
