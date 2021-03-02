@@ -179,17 +179,18 @@
                             <input matInput [formControl]="fechaRecepcionAgencia" placeholder="Fecha de recepción en agencia:"  [value]="fechaNacimiento.value | rDate">
                         </mat-form-field>
                     </div>
+                    <div class="col-12">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <mat-label>Observacion De Cancelacion: </mat-label>
+                            <textarea class="form-control border" rows="5" placeholder="Observacion De Cancelacion: "
+                                [formControl]="observacionCancelacion" [value]="observacionCancelacion.value" matInput> </textarea>
+                        </mat-form-field>
+                    </div>
                 </div>
             </mat-step>
             <mat-step label = "Documento Habilitantes">
-                
-                <div class="row">
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='SOLICITUD,ENTREGA,TERMINACIONCONTRATO';varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}" >Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedulaCliente.value "   style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}" >Habilitante Cliente</button>
-                  </div>
-                  <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'"
-                      [referencia]="varHabilitante.referencia" >
-                          </re-habilitante> 
+                <re-habilitante [proceso]="'SOLICITUD,ENTREGA,TERMINACIONCONTRATO'" [useType]="'FORM'" [referencia]="item" [estadoOperacion]="'DETALLE'">
+                </re-habilitante>
                 <div class="row mt-3">
                     <div class="offset-3 col-2">
                       <button mat-raised-button color="primary" (click)="enviarRespuesta(true)">

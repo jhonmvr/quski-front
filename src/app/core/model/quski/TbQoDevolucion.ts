@@ -12,11 +12,13 @@ export class TbQoDevolucion {
     cedulaCliente: string;
     codigoOperacionMadre: string;
     codigoOperacion: string;
+    observacionCancelacion: string;
     nivelEducacion: string;
     estadoCivil: string;
     separacionBienes: string;
     estado: string;
     fechaNacimiento: string;
+    esMigrado: boolean;
     nacionalidad:string;
     lugarNacimiento:string;
     fechaActualizacion : Date      // null,
