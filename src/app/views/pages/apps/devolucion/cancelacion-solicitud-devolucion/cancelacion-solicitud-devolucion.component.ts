@@ -255,7 +255,7 @@ export class CancelacionSolicitudDevolucionComponent implements OnInit {
     });
   }
   public iniciarProcesoCancelacion() {
-    if(this.observacionCancelacion.value){
+    if(!this.observacionCancelacion.value){
       this.sinNoticeService.setNotice('INGRESE UN MOTIVO DE LA CANCELACION. ', 'warning')
       return;
     }
