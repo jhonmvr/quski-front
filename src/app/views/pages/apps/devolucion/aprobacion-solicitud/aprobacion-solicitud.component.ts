@@ -14,6 +14,7 @@ import { SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'kt-aprobacion-solicitud',
@@ -163,6 +164,8 @@ export class AprobacionSolicitudComponent implements OnInit {
       this.dataSourceDetalle = new MatTableDataSource<any>(objetoCredito);
     }
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
+    this.varHabilitante.proceso='SOLICITUD';
+    this.varHabilitante.referencia=this.item;
   }
   private cargarItem(catalogo, cod, index) {
     if (index && catalogo) {

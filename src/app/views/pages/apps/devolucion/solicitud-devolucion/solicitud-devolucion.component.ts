@@ -186,7 +186,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.nacionalidad.setValue(this.cargarItem(this.catPais, codNacionalidad, false));
     this.idLugarNacimiento = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.lugarNacimiento : this.wrapperSoft.cliente.idLugarNacimiento;
     let itemParroquia = this.cargarItem(this.catDivision, this.idLugarNacimiento, false);
-    let itemCanton = this.cargarItem(this.catDivision, itemParroquia.idPadre, false);
+    let itemCanton = this.cargarItem(this.catDivision, itemParroquia?itemParroquia.idPadre:'', false);
     let itemProvincia = this.cargarItem(this.catDivision, itemCanton.idPadre, false);
     this.lugarNacimiento.setValue( (itemParroquia ? itemParroquia.nombre : '' ) + (itemCanton ? ' / ' + itemCanton.nombre : '' ) + (itemProvincia ? ' / ' + itemProvincia.nombre : '') );
 
@@ -265,6 +265,8 @@ export class SolicitudDevolucionComponent implements OnInit {
   private cargarCatalogos() {
     this.sof.consultarAgenciasCS().subscribe((data: any) => {
       this.catAgencia = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      this.catAgencia =this.catAgencia.filter((valor) =>valor.idUbicacionTevcol == localStorage.getItem('idTevcolAgencia')); 
+     
     });
     this.sof.consultarTipoClienteCS().subscribe((data: any) => {
       let tipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
