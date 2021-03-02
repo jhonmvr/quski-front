@@ -269,7 +269,6 @@ export class SolicitudDevolucionComponent implements OnInit {
       if(this.catAgencia instanceof Array){
         this.catAgencia2 = this.catAgencia.filter(p=>p.idUbicacionTevcol == localStorage.getItem('idTevcolAgencia'));
       }
-      console.log("cat2",this.catAgencia,this.catAgencia2)
     });
       this.sof.consultarPaisCS().subscribe((data: any) => {
         this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
