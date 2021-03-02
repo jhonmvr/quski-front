@@ -294,7 +294,6 @@ export class SolicitudDevolucionComponent implements OnInit {
           });
         });
       });
-    });
   }
   forAgenciaCustodia(e) {
     let agenciaCustodia = e.idAgenciaCustodia;

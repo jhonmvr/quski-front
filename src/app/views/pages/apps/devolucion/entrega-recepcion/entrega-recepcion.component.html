@@ -156,7 +156,7 @@
                 </div>
             </mat-step>
             <mat-step label = "Documento Habilitantes">
-                <re-habilitante [proceso]="'TERMINACIONCONTRATO,ENTREGA'" [useType]="'FORM'" [referencia]="this.item"></re-habilitante> 
+                <re-habilitante [proceso]="varHabilitante" [useType]="'FORM'" [referencia]="this.item"></re-habilitante> 
                 <div class="row">
                     <div class="offset-4 col-3">
                         <button mat-raised-button color="primary" (click)="guardar()">
