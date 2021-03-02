@@ -187,7 +187,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.idLugarNacimiento = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.lugarNacimiento : this.wrapperSoft.cliente.idLugarNacimiento;
     let itemParroquia = this.cargarItem(this.catDivision, this.idLugarNacimiento, false);
     let itemCanton = this.cargarItem(this.catDivision, itemParroquia?itemParroquia.idPadre:'', false);
-    let itemProvincia = this.cargarItem(this.catDivision, itemCanton.idPadre, false);
+    let itemProvincia = this.cargarItem(this.catDivision, itemCanton?itemCanton.idPadre:'', false);
     this.lugarNacimiento.setValue( (itemParroquia ? itemParroquia.nombre : '' ) + (itemCanton ? ' / ' + itemCanton.nombre : '' ) + (itemProvincia ? ' / ' + itemProvincia.nombre : '') );
 
     this.fechaNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.fechaNacimiento : this.wrapperSoft.cliente.fechaNacimiento);
@@ -265,34 +265,33 @@ export class SolicitudDevolucionComponent implements OnInit {
   private cargarCatalogos() {
     this.sof.consultarAgenciasCS().subscribe((data: any) => {
       this.catAgencia = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-      this.catAgencia =this.catAgencia.filter((valor) =>valor.idUbicacionTevcol == localStorage.getItem('idTevcolAgencia')); 
-     
-    });
-    this.sof.consultarTipoClienteCS().subscribe((data: any) => {
-      let tipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-      this.catTipoCliente = new Array<any>();
-      this.catTipoCliente.push({ codigo: "HER", nombre: "HEREDERO" });
-      this.catTipoCliente.push(tipoCliente.find(x => x.codigo == 'SAP'));
-      this.catTipoCliente.push(tipoCliente.find(x => x.codigo == 'DEU'));
-      console.log(' cat tipo cliente =>', this.catTipoCliente);
-    });
-    this.sof.consultarPaisCS().subscribe((data: any) => {
-      this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-    });
-    this.sof.consultarEducacionCS().subscribe((data: any) => {
-      this.catEducacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-    });
-    this.sof.consultarEstadosCivilesCS().subscribe((data: any) => {
-      this.catEstadoCivil = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-    });
-    this.sof.consultarGeneroCS().subscribe((data: any) => {
-      this.catGenero = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-    });
-    this.sof.consultarDivicionPoliticaCS().subscribe((data: any) => {
-      if (!data.existeError) {
-        this.catDivision = !data.existeError ? data.catalogo : { nombre: 'Error al cargar catalogo' };
-      }
-    });
+});
+      this.sof.consultarPaisCS().subscribe((data: any) => {
+        this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+        this.sof.consultarEducacionCS().subscribe((data: any) => {
+          this.catEducacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+          this.sof.consultarEstadosCivilesCS().subscribe((data: any) => {
+            this.catEstadoCivil = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+            this.sof.consultarGeneroCS().subscribe((data: any) => {
+              this.catGenero = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+              this.sof.consultarDivicionPoliticaCS().subscribe((data: any) => {
+                if (!data.existeError) {
+                  this.catDivision = !data.existeError ? data.catalogo : { nombre: 'Error al cargar catalogo' };
+                  this.sof.consultarTipoClienteCS().subscribe((data: any) => {
+                    let tipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                    this.catTipoCliente = new Array<any>();
+                    this.catTipoCliente.push({ codigo: "HER", nombre: "HEREDERO" });
+                    this.catTipoCliente.push(tipoCliente.find(x => x.codigo == 'SAP'));
+                    this.catTipoCliente.push(tipoCliente.find(x => x.codigo == 'DEU'));
+                    this.inicioFlujo();
+                  });
+                }
+              });
+            });
+          });
+        });
+      });
+    
   }
   forAgenciaCustodia(e) {
     let agenciaCustodia = e.idAgenciaCustodia;
