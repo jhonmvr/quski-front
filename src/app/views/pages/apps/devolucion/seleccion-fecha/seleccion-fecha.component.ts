@@ -31,7 +31,7 @@ export class SeleccionFechaComponent implements OnInit {
   dataSource : MatTableDataSource<any> = new MatTableDataSource<any>();
   displayedColumns = ['accion','codigo','codigoOperacion', 'identificacion','nombreCliente',
   'agenciaSolicitud','fundaMadre' ,'fundaActual', 'ciudadTevcol', 'agenciaEntrega', 'nombreAsesor', 'fechaSolicitud',
-  'fechaAprobacion','fechaArriboAgencia','estadoUbicacion','estadoProceso','bloqueo'];
+  'fechaAprobacion','fechaArriboAgencia','estadoProceso','estadoUbicacion','bloqueo'];
   @ViewChild(MatPaginator, { static: true }) 
   paginator: MatPaginator;
   totalResults: number;

@@ -265,6 +265,10 @@ export class SolicitudDevolucionComponent implements OnInit {
   private cargarCatalogos() {
     this.sof.consultarAgenciasCS().subscribe((data: any) => {
       this.catAgencia = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      if(this.catAgencia instanceof Array){
+        this.catAgencia = this.catAgencia.filter(p=>p.idUbicacionTevcol == localStorage.getItem('idTevcolAgencia'));
+      }
+    });
       this.sof.consultarPaisCS().subscribe((data: any) => {
         this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
         this.sof.consultarEducacionCS().subscribe((data: any) => {
@@ -290,7 +294,6 @@ export class SolicitudDevolucionComponent implements OnInit {
           });
         });
       });
-    });
   }
   forAgenciaCustodia(e) {
     let agenciaCustodia = e.idAgenciaCustodia;

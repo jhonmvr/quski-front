@@ -21,6 +21,8 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./verificacion-firma.component.scss']
 })
 export class VerificacionFirmaComponent implements OnInit {
+
+  varHabilitante = {referencia:"",proceso:""}
   public formCreditoNuevo: FormGroup = new FormGroup({});
   public numeroOperacion = new FormControl('');
   public estadoProceso = new FormControl('');
@@ -222,6 +224,8 @@ export class VerificacionFirmaComponent implements OnInit {
       this.dataSourceDetalle = new MatTableDataSource<any>(objetoCredito);
     }
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
+    this.varHabilitante.proceso='SOLICITUD';
+    this.varHabilitante.referencia=this.item;
   }
   private cargarItem(catalogo, cod, index) {
     if (index && catalogo) {

@@ -21,6 +21,8 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./aprobacion-cancelacion.component.scss']
 })
 export class AprobacionCancelacionComponent implements OnInit {
+
+  varHabilitante = {referencia:"",proceso:""}
   public formCreditoNuevo: FormGroup = new FormGroup({});
   public numeroOperacion = new FormControl('');
   public procesoDev = new FormControl('');
@@ -180,6 +182,9 @@ export class AprobacionCancelacionComponent implements OnInit {
     this.fechaArribo.setValue(this.wrapperDevolucion.devolucion.fechaArribo ? this.wrapperDevolucion.devolucion.fechaArribo : 'No Aplica')
     this.fechaRecepcionAgencia.setValue(this.wrapperDevolucion.devolucion.fechaEfectiva ? this.wrapperDevolucion.devolucion.fechaEfectiva : 'No Aplica')
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
+
+    this.varHabilitante.proceso='SOLICITUD,ENTREGA,TERMINACIONCONTRATO';
+    this.varHabilitante.referencia=this.item;
   }
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {

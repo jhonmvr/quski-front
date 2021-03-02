@@ -20,6 +20,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./entrega-recepcion.component.scss']
 })
 export class EntregaRecepcionComponent implements OnInit {
+  varHabilitante = 'ENTREGA';
   public titulo: any;
   public formCreditoNuevo: FormGroup = new FormGroup({});
   public numeroOperacion = new FormControl('');
@@ -110,6 +111,9 @@ export class EntregaRecepcionComponent implements OnInit {
           this.cre.traerCreditoVigente(this.wrapperDevolucion.devolucion.codigoOperacion).subscribe((data: any) => {
             if (data.entidad) {
               this.wrapperSoft = data.entidad;
+              if(this.wrapperSoft.credito.esMigrado){
+                this.varHabilitante ='TERMINACIONCONTRATO,ENTREGA';
+              }
               this.cargarCampos();
             } else {
               this.salirDeGestion("Error al intentar cargar el credito.");
