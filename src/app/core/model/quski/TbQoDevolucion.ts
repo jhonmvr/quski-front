@@ -14,6 +14,7 @@ export class TbQoDevolucion {
     codigoOperacion: string;
     observacionCancelacion: string;
     nivelEducacion: string;
+    ciudadEntrega: string;
     estadoCivil: string;
     separacionBienes: string;
     estado: string;

@@ -145,10 +145,11 @@ export class TablaTasacionComponent implements OnInit {
     let x = this.catAgencia.find(x => x.id == agenciaCustodia);
     if(agenciaCustodia && this.catAgencia && x){
       let idTecCol = x.idUbicacionTevcol;
-      let m = this.catDivision.find(x => x.id == agenciaCustodia);
+      let m = this.catDivision.find(x => x.id == idTecCol);
       if(idTecCol && m){
         return m.nombre;
-
+      }else{
+        return 'Error Catalogo' ;
       }
     }else{
       return 'Error Catalogo' ;

@@ -296,18 +296,40 @@ export class SolicitudDevolucionComponent implements OnInit {
       });
   }
   forAgenciaCustodia(e) {
-    let agenciaCustodia = e.idAgenciaCustodia;
-    let x = this.catAgencia.find(x => x.id == agenciaCustodia);
-    if (agenciaCustodia && this.catAgencia && x) {
+    let x = this.catAgencia.find(x => x.id == e);
+    console.log(' catAgencia TC => ', x);
+    if (e && this.catAgencia && x) {
       let idTecCol = x.idUbicacionTevcol;
-      let m = this.catDivision.find(x => x.id == agenciaCustodia);
+      let m = this.catDivision.find(x => x.id == idTecCol);
+      console.log(' catDivision TC => ', m);
       if (idTecCol && m) {
+        console.log(' m.nombre TC => ', m.nombre);
         return m.nombre;
+      }else{
+        return 'No se encuentra ciudad.' ;
       }
     } else {
       return 'Error Catalogo';
     }
   }
+  forCiudadEntrega(e) {
+    let x = this.catAgencia.find(x => x.id == e);
+    if (e && this.catAgencia && x) {
+      let idResidencia = x.idResidencia;
+      let m = this.catDivision.find(x => x.id == idResidencia);
+      console.log(' catDivision => ', m);
+      if (idResidencia && m) {
+        console.log(' m.nombre => ', m.nombre);
+        return m.nombre;
+      }else{
+        return 'No se encuentra ciudad.' ;
+      }
+    } else {
+      return 'Error Catalogo';
+    }
+  }
+  idResidencia
+
   private calcular() {
     this.totalPesoB = 0;
     this.totalValorA = 0;
@@ -394,10 +416,11 @@ export class SolicitudDevolucionComponent implements OnInit {
         wrapper.observaciones = this.observaciones.value;
         wrapper.agenciaEntrega = this.agenciaEntrega.value.nombre;
         wrapper.agenciaEntregaId = this.agenciaEntrega.value.id;
+        wrapper.ciudadEntrega = this.forCiudadEntrega(this.agenciaEntrega.value.id);
         wrapper.codigoOperacionMadre = this.wrapperSoft.credito.numeroOperacionMadre ? this.wrapperSoft.credito.numeroOperacionMadre : null;
         wrapper.fundaActual = this.wrapperSoft.garantias[0].numeroFundaJoya;
         wrapper.fundaMadre = this.wrapperSoft.garantias[0].numeroFundaMadre;
-        wrapper.ciudadTevcol = this.forAgenciaCustodia(this.wrapperSoft.garantias[0]);
+        wrapper.ciudadTevcol = this.forAgenciaCustodia(this.wrapperSoft.garantias[0].idAgenciaCustodia);
         this.calcular();
         wrapper.valorAvaluo = this.totalValorA;
         wrapper.pesoBruto = this.totalPesoB;
