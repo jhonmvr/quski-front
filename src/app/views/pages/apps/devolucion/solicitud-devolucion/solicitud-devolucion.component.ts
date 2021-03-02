@@ -385,6 +385,7 @@ export class SolicitudDevolucionComponent implements OnInit {
         wrapper.genero = this.genero.value.codigo;
         wrapper.nacionalidad = this.nacionalidad.value.id;
         wrapper.lugarNacimiento = this.idLugarNacimiento;
+        wrapper.esMigrado = this.wrapperSoft.credito.esMigrado;
         wrapper.fechaNacimiento = this.fechaNacimiento.value;
         wrapper.tipoCliente = this.tipoCliente.value.codigo;
         wrapper.observaciones = this.observaciones.value;

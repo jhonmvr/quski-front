@@ -13,8 +13,9 @@ import { environment } from '../../../../../../environments/environment';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { ReturnStatement } from '@angular/compiler';
 
 @Component({
   selector: 'kt-cancelacion-solicitud-devolucion',
@@ -44,6 +45,7 @@ export class CancelacionSolicitudDevolucionComponent implements OnInit {
   public fechaSolicitud = new FormControl('');
   public fechaAprobacion = new FormControl('');
   public fechaArribo = new FormControl('');
+  public observacionCancelacion  = new FormControl('', [Validators.required]);
   public fechaRecepcionAgencia = new FormControl('');
   public item: any;
   private usuario: string;
@@ -253,6 +255,10 @@ export class CancelacionSolicitudDevolucionComponent implements OnInit {
     });
   }
   public iniciarProcesoCancelacion() {
+    if(this.observacionCancelacion.value){
+      this.sinNoticeService.setNotice('INGRESE UN MOTIVO DE LA CANCELACION. ', 'warning')
+      return;
+    }
     let mensaje = " Crear un proceso de cancelacion de devolucion para el proceso: " + this.wrapperDevolucion.devolucion.codigo;
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
       width: "800px",
@@ -261,7 +267,7 @@ export class CancelacionSolicitudDevolucionComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(r => {
       if (r) {
-        this.dev.iniciarProcesoCancelacion(this.item, this.usuario).subscribe((data: any) => {
+        this.dev.iniciarProcesoCancelacion(this.item, this.usuario, this.observacionCancelacion.value).subscribe((data: any) => {
           if (data.entidad) {
             this.sinNoticeService.setNotice("SE HA CREADO Y ENVIADO A APROBACION LA ANULACION DE LA DEVOLUCION", "success")
             this.router.navigate(['negociacion/bandeja-operaciones']);

@@ -44,6 +44,8 @@ export class AprobacionCancelacionComponent implements OnInit {
   public fechaAprobacion = new FormControl('');
   public fechaArribo = new FormControl('');
   public fechaRecepcionAgencia = new FormControl('');
+  public observacionCancelacion = new FormControl('');
+  
   public item: any;
   private usuario: string;
   private agencia: string;
@@ -94,6 +96,7 @@ export class AprobacionCancelacionComponent implements OnInit {
     this.formCreditoNuevo.addControl("valorCustodia", this.valorCustodia);
     this.formCreditoNuevo.addControl("cedulaApoderado", this.cedulaApoderado);
     this.formCreditoNuevo.addControl("nombreApoderado", this.nombreApoderado);
+    this.formCreditoNuevo.addControl("observacionCancelacion", this.observacionCancelacion);
 
     this.formCreditoNuevo.addControl("fechaSolicitud", this.fechaSolicitud);
     this.formCreditoNuevo.addControl("fechaAprobacion", this.fechaAprobacion);
@@ -158,6 +161,7 @@ export class AprobacionCancelacionComponent implements OnInit {
     this.onChangeFechaNacimiento();
     this.tipoCliente.setValue(this.wrapperDevolucion.devolucion.tipoCliente);
     this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
+    this.observacionCancelacion.setValue( this.wrapperDevolucion.devolucion.observacionCancelacion );
     this.agenciaEntrega.setValue(this.wrapperDevolucion.devolucion.agenciaEntrega);
     this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
     let objetoHeredero = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeHerederos);
