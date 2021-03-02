@@ -120,7 +120,6 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.cargarCatalogos();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem('idAgencia');
-    this.inicioFlujo();
     this.subheaderService.setTitle('FLUJO DE DEVOLUCION');
 
   }
@@ -187,7 +186,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.idLugarNacimiento = this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.lugarNacimiento : this.wrapperSoft.cliente.idLugarNacimiento;
     let itemParroquia = this.cargarItem(this.catDivision, this.idLugarNacimiento, false);
     let itemCanton = this.cargarItem(this.catDivision, itemParroquia.idPadre, false);
-    let itemProvincia = this.cargarItem(this.catDivision, itemCanton.idPadre, false);
+    let itemProvincia = itemCanton ? this.cargarItem(this.catDivision, itemCanton.idPadre, false) : null;
     this.lugarNacimiento.setValue( (itemParroquia ? itemParroquia.nombre : '' ) + (itemCanton ? ' / ' + itemCanton.nombre : '' ) + (itemProvincia ? ' / ' + itemProvincia.nombre : '') );
 
     this.fechaNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.fechaNacimiento : this.wrapperSoft.cliente.fechaNacimiento);
@@ -220,6 +219,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     }else if(!index && catalogo){
       let item = catalogo.find(x => x.id == cod);
       if (catalogo && item) {
+        console.log('Item =>', item);
         return item;
       }
     }
@@ -279,9 +279,9 @@ export class SolicitudDevolucionComponent implements OnInit {
                   this.sof.consultarTipoClienteCS().subscribe((data: any) => {
                     let tipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
                     this.catTipoCliente = new Array<any>();
-                    this.catTipoCliente.push({ codigo: "HER", nombre: "HEREDERO" });
-                    this.catTipoCliente.push(tipoCliente.find(x => x.codigo == 'SAP'));
                     this.catTipoCliente.push(tipoCliente.find(x => x.codigo == 'DEU'));
+                    this.catTipoCliente.push(tipoCliente.find(x => x.codigo == 'SAP'));
+                    this.catTipoCliente.push({ codigo: "HER", nombre: "HEREDERO" });
                     this.inicioFlujo();
                   });
                 }
