@@ -298,13 +298,10 @@ export class SolicitudDevolucionComponent implements OnInit {
   }
   forAgenciaCustodia(e) {
     let x = this.catAgencia.find(x => x.id == e);
-    console.log(' catAgencia TC => ', x);
     if (e && this.catAgencia && x) {
       let idTecCol = x.idUbicacionTevcol;
       let m = this.catDivision.find(x => x.id == idTecCol);
-      console.log(' catDivision TC => ', m);
       if (idTecCol && m) {
-        console.log(' m.nombre TC => ', m.nombre);
         return m.nombre;
       }else{
         return 'No se encuentra ciudad.' ;
