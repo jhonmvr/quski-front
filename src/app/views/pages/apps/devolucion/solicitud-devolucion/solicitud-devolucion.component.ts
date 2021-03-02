@@ -188,6 +188,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     let itemCanton = this.cargarItem(this.catDivision, itemParroquia.idPadre, false);
     let itemProvincia = itemCanton ? this.cargarItem(this.catDivision, itemCanton.idPadre, false) : null;
     this.lugarNacimiento.setValue( (itemParroquia ? itemParroquia.nombre : '' ) + (itemCanton ? ' / ' + itemCanton.nombre : '' ) + (itemProvincia ? ' / ' + itemProvincia.nombre : '') );
+    this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo == 'DEU'));
 
     this.fechaNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.fechaNacimiento : this.wrapperSoft.cliente.fechaNacimiento);
     if (this.wrapperDevolucion) {
@@ -219,7 +220,6 @@ export class SolicitudDevolucionComponent implements OnInit {
     }else if(!index && catalogo){
       let item = catalogo.find(x => x.id == cod);
       if (catalogo && item) {
-        console.log('Item =>', item);
         return item;
       }
     }

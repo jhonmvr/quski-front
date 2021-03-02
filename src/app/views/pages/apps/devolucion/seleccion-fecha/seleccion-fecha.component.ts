@@ -135,18 +135,23 @@ export class SeleccionFechaComponent implements OnInit {
     })
   }
   setEstadoGarantias(dataList){
-    dataList.forEach(element => {
-      this.sof.garantiasByOperacionMadre(element.codigoOperacionMadre?element.codigoOperacionMadre:element.codigoOperacion).subscribe(data=>{
-        if(data && data.garantias && data.garantias[0]){
-          element.bloqueo = 'no hay descripcion del bloqueo';
-          element.estadoProceso = data.garantias[0].codigoEstadoProceso;
-          element.estadoUbicacion = data.garantias[0].codigoEstadoUbicacion;
-        }
-      });
+    let listOperaciones = dataList.map(p=>{return p.codigoOperacion});
+    this.sof.resumenOperacion(listOperaciones).subscribe(data=>{
 
-     
-
+      if(data && data.operaciones){
+        dataList.forEach(lista => {
+          data.operaciones.forEach(estados => {
+            if(lista.codigoOperacion == estados.numeroOperacion){
+              lista.bloqueo = estados.datosBloqueo?estados.datosBloqueo.descripcion:'NINGUNO';
+              lista.estadoProceso = estados.codigoEstadoProcesoGarantia;
+              lista.estadoUbicacion = estados.codigoEstadoUbicacionGrantia;
+            }
+          });
+        });
+        return dataList;
+      }
     });
+   
   }
    /**
    * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
@@ -197,7 +202,7 @@ export class SeleccionFechaComponent implements OnInit {
       if(r){
         const dialogRef = this.dialog.open(AddFechaComponent, {
           height: 'auto',
-          width: '700px',
+          width: '700px'
         });
         dialogRef.afterClosed().subscribe((resultado) => {
           if (resultado) {

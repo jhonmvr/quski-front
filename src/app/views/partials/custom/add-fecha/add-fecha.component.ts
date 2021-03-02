@@ -12,6 +12,7 @@ import { DevolucionService } from '../../../../core/services/quski/devolucion.se
 })
 export class AddFechaComponent implements OnInit {
 
+  min = new Date();
   idDevolucionesSubject:BehaviorSubject<any>=new BehaviorSubject<any>("");
   fechaUtil: diferenciaEnDias
 

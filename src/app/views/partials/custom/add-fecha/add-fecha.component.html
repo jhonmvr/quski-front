@@ -3,7 +3,7 @@
         <div class="col-4">
             <mat-form-field class="mat-form-field-fluid">
                 <input matInput [matDatepicker]="pckFechaArribo" autocomplete="off"
-                [formControl]="fechaArribo" placeholder="Fecha ">
+                [formControl]="fechaArribo" placeholder="Fecha " [min]="min">
                 <mat-datepicker-toggle matSuffix [for]="pckFechaArribo"></mat-datepicker-toggle>
                 <mat-datepicker #pckFechaArribo></mat-datepicker>
             </mat-form-field>      
@@ -12,7 +12,7 @@
     <div class="row justify-content-center">
         <div class="col-2">
             <button mat-raised-button (click)="registrarFecha(true)" color="primary"> Registrar </button>
-        </div>
+        </div> 
         <div class="col-2">
             <button mat-raised-button (click)="salir()" color="warn"> Cancelar </button>
         </div>
