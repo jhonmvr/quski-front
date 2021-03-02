@@ -37,6 +37,7 @@ export class SolicitudDevolucionComponent implements OnInit {
   public catTipoCliente: Array<any>;
   private catDivision: Array<any>;
   public catAgencia: Array<any>;
+  catAgencia2
   private usuario: string;
   private agencia: string;
   private totalPesoB;
@@ -266,8 +267,9 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.sof.consultarAgenciasCS().subscribe((data: any) => {
       this.catAgencia = !data.existeError ? data.catalogo : "Error al cargar catalogo";
       if(this.catAgencia instanceof Array){
-        this.catAgencia = this.catAgencia.filter(p=>p.idUbicacionTevcol == localStorage.getItem('idTevcolAgencia'));
+        this.catAgencia2 = this.catAgencia.filter(p=>p.idUbicacionTevcol == localStorage.getItem('idTevcolAgencia'));
       }
+      console.log("cat2",this.catAgencia,this.catAgencia2)
     });
       this.sof.consultarPaisCS().subscribe((data: any) => {
         this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
