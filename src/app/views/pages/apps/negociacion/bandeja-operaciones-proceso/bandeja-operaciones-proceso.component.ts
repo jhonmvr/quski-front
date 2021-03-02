@@ -107,6 +107,8 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
           e.estadoProceso = e.estadoProceso.replace(/_/gi," ");
           e.nombreCliente = e.nombreCliente.replace(/_/gi," ");
           e.proceso = e.proceso.replace(/_/gi," ");
+          e.asesor = e.asesor && e.asesor != 'NULL' ? e.asesor : 'Sin Asesor';    
+          e.usuarioEjecutor = e.usuarioEjecutor && e.usuarioEjecutor != 'NULL' ? e.usuarioEjecutor : 'Sin Usuario';  
         });
         this.dataSource.data = operaciones;
         this.paginator.length = data.entidad.result;
