@@ -23,6 +23,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class VerificacionFirmaComponent implements OnInit {
 
   varHabilitante = {referencia:"",proceso:""}
+  procesoHablitante = 'SOLICITUD,ENTREGA';
   public formCreditoNuevo: FormGroup = new FormGroup({});
   public numeroOperacion = new FormControl('');
   public estadoProceso = new FormControl('');
@@ -111,6 +112,9 @@ export class VerificacionFirmaComponent implements OnInit {
             if (data.entidad) {
               this.wrapperSoft = data.entidad;
               this.cargarCampos();
+              if(this.wrapperSoft.credito.esMigrado){
+                this.procesoHablitante = 'SOLICITUD,TERMINACIONCONTRATO,ENTREGA';
+              }
             } else {
               this.salirDeGestion("Error al intentar cargar el credito.");
             }
@@ -223,9 +227,9 @@ export class VerificacionFirmaComponent implements OnInit {
       let objetoCredito = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeDetalleCredito);
       this.dataSourceDetalle = new MatTableDataSource<any>(objetoCredito);
     }
+    this.varHabilitante.proceso = this.procesoHablitante;
+    this.varHabilitante.referencia = this.item;
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
-    this.varHabilitante.proceso='SOLICITUD';
-    this.varHabilitante.referencia=this.item;
   }
   private cargarItem(catalogo, cod, index) {
     if (index && catalogo) {
@@ -256,16 +260,12 @@ export class VerificacionFirmaComponent implements OnInit {
         this.dev.aprobarVerificacionFirmas(this.item).subscribe((data: any) => {
           this.sinNoticeService.setNotice(" SE APROBO LA VERIFICACION DE FIRMAS.", "success");
           this.router.navigate(['aprobador/bandeja-aprobador']);
-        }, error => {
-          this.sinNoticeService.setNotice(error.error.codError.replace(/_/gi, " "), 'warning');
         });
       } else if (r && !aprobar) {
         this.dev.rechazarVerificacionFirmas(this.item).subscribe((data: any) => {
           this.sinNoticeService.setNotice("SE RECHAZO LA VERIFICACION DE FIRMAS.", "success");
           this.router.navigate(['aprobador/bandeja-aprobador']);
-        }, error => {
-          this.sinNoticeService.setNotice(error.error.codError.replace(/_/gi, " "), 'warning');
-        })
+        });
       } else {
         this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'warning');
       }
