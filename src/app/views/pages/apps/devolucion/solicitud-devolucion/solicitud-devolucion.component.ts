@@ -192,6 +192,11 @@ export class SolicitudDevolucionComponent implements OnInit {
     this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo == 'DEU'));
 
     this.fechaNacimiento.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.fechaNacimiento : this.wrapperSoft.cliente.fechaNacimiento);
+    this.objetoCredito['fechaAprobacion'] = this.wrapperSoft.credito.fechaAprobacion
+    this.objetoCredito['fechaVencimiento'] = this.wrapperSoft.credito.fechaVencimiento
+    this.objetoCredito['monto'] = this.wrapperSoft.credito.montoFinanciado
+    this.dataSourceDetalle = new MatTableDataSource<any>([this.objetoCredito]);
+    this.onChangeFechaNacimiento();
     if (this.wrapperDevolucion) {
       let objetoHeredero = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeHerederos);
       this.dataSourceHeredero = new MatTableDataSource<any>(objetoHeredero.heredero);
@@ -204,11 +209,6 @@ export class SolicitudDevolucionComponent implements OnInit {
       let objetoCredito = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeDetalleCredito);
       this.dataSourceDetalle = new MatTableDataSource<any>([objetoCredito]);
     }
-    this.objetoCredito['fechaAprobacion'] = this.wrapperSoft.credito.fechaAprobacion
-    this.objetoCredito['fechaVencimiento'] = this.wrapperSoft.credito.fechaVencimiento
-    this.objetoCredito['monto'] = this.wrapperSoft.credito.montoFinanciado
-    this.dataSourceDetalle = new MatTableDataSource<any>([this.objetoCredito]);
-    this.onChangeFechaNacimiento();
     this.desactivarCampos();
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
   }
