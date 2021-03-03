@@ -23,6 +23,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class AprobacionCancelacionComponent implements OnInit {
 
   varHabilitante = {referencia:"",proceso:""}
+  procesoHablitante;
   public formCreditoNuevo: FormGroup = new FormGroup({});
   public numeroOperacion = new FormControl('');
   public procesoDev = new FormControl('');
@@ -133,6 +134,11 @@ export class AprobacionCancelacionComponent implements OnInit {
           this.cre.traerCreditoVigente(this.wrapperDevolucion.devolucion.codigoOperacion).subscribe((data: any) => {
             if (data.entidad) {
               this.wrapperSoft = data.entidad;
+              if(this.wrapperSoft.credito.esMigrado){
+                this.procesoHablitante = 'SOLICITUD,TERMINACIONCONTRATO,ENTREGA';
+              }else{
+                this.procesoHablitante = 'SOLICITUD,ENTREGA';
+              }
               this.cargarCampos();
             } else {
               this.salirDeGestion("Error al intentar cargar el credito.");
@@ -183,8 +189,8 @@ export class AprobacionCancelacionComponent implements OnInit {
     this.fechaRecepcionAgencia.setValue(this.wrapperDevolucion.devolucion.fechaEfectiva ? this.wrapperDevolucion.devolucion.fechaEfectiva : 'No Aplica')
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
 
-    this.varHabilitante.proceso='SOLICITUD,ENTREGA,TERMINACIONCONTRATO';
-    this.varHabilitante.referencia=this.item;
+    this.varHabilitante.proceso = this.procesoHablitante;
+    this.varHabilitante.referencia = this.item;
   }
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {

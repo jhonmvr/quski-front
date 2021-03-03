@@ -128,6 +128,10 @@ export class HabilitanteComponent implements OnInit {
     //console.log("cargando tipoDocumento: " + this.tipoDocumento); */
     this.dh.setParameter();
     this.os.setParameter();
+  
+  }
+
+  ngOnInit() {
     this.procesoSubject.subscribe(()=>{
       this.validateLoadData();
     });
@@ -145,16 +149,13 @@ export class HabilitanteComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.buscar()
-  }
-
   validateLoadData(  ){
+    console.log(">>>>>>>>>>>>>>>>>>>>",this.useType , this.useType , this.proceso , this.referencia)
     if( this.useType && this.useType === this.TYPE_FORM && this.proceso && this.referencia ){
-      //console.log("====Carga informacion para  " + this.TYPE_FORM);
+      console.log("====Carga informacion para  " + this.TYPE_FORM);
       this.buscar();
     } else if( this.useType && this.useType === this.TYPE_LIST  ){
-      //console.log("====Carga informacion para  " + this.TYPE_LIST);
+      console.log("====Carga informacion para  " + this.TYPE_LIST);
       this.buscar();
     }
   }

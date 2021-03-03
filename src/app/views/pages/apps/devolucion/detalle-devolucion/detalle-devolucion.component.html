@@ -157,8 +157,13 @@
                 </div>
             </mat-step>
             <mat-step label="Documento Habilitantes">
-                <re-habilitante [proceso]="'SOLICITUD,ENTREGA,TERMINACIONCONTRATO'" [useType]="'FORM'" [referencia]="idReferencia" [estadoOperacion]="'DETALLE'">
-                </re-habilitante>
+                <div class="row">
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso= procesoHablitante ;varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}" >Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedulaCliente.value "   style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}" >Habilitante Cliente</button>
+                  </div>
+                  <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'"
+                      [referencia]="varHabilitante.referencia" >
+                          </re-habilitante> 
             </mat-step>
         </mat-vertical-stepper>
     </re-portlet-body>

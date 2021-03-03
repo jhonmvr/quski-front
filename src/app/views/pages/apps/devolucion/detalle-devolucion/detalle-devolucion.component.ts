@@ -20,6 +20,9 @@ import { Component, OnInit} from '@angular/core';
   styleUrls: ['./detalle-devolucion.component.scss']
 })
 export class DetalleDevolucionComponent implements OnInit {
+
+  varHabilitante = {referencia:"",proceso:""}
+  procesoHablitante;
   public formCreditoNuevo: FormGroup = new FormGroup({});
   public numeroOperacion = new FormControl('');
   public procesoDev = new FormControl('');
@@ -112,6 +115,11 @@ export class DetalleDevolucionComponent implements OnInit {
           this.cre.traerCreditoVigente(this.wrapperDevolucion.devolucion.codigoOperacion).subscribe((data: any) => {
             if (data.entidad) {
               this.wrapperSoft = data.entidad;
+              if(this.wrapperSoft.credito.esMigrado){
+                this.procesoHablitante = 'SOLICITUD,TERMINACIONCONTRATO,ENTREGA';
+              }else{
+                this.procesoHablitante = 'SOLICITUD,ENTREGA';
+              }
               this.cargarCampos();
             } else {
               this.salirDeGestion("Error al intentar cargar el credito.");

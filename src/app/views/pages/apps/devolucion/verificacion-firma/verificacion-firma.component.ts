@@ -23,7 +23,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class VerificacionFirmaComponent implements OnInit {
 
   varHabilitante = {referencia:"",proceso:""}
-  procesoHablitante = 'SOLICITUD,ENTREGA';
+  procesoHablitante;
   public formCreditoNuevo: FormGroup = new FormGroup({});
   public numeroOperacion = new FormControl('');
   public estadoProceso = new FormControl('');
@@ -111,10 +111,12 @@ export class VerificacionFirmaComponent implements OnInit {
           this.cre.traerCreditoVigente(this.wrapperDevolucion.devolucion.codigoOperacion).subscribe((data: any) => {
             if (data.entidad) {
               this.wrapperSoft = data.entidad;
-              this.cargarCampos();
               if(this.wrapperSoft.credito.esMigrado){
                 this.procesoHablitante = 'SOLICITUD,TERMINACIONCONTRATO,ENTREGA';
+              }else{
+                this.procesoHablitante = 'SOLICITUD,ENTREGA';
               }
+              this.cargarCampos();
             } else {
               this.salirDeGestion("Error al intentar cargar el credito.");
             }
@@ -205,8 +207,8 @@ export class VerificacionFirmaComponent implements OnInit {
     this.estadoCivil.setValue(this.cargarItem(this.catEstadoCivil, this.wrapperDevolucion.devolucion.estadoCivil, true).nombre);
     this.nacionalidad.setValue(this.cargarItem(this.catPais, this.wrapperDevolucion.devolucion.nacionalidad, false).nacionalidad);
     let itemParroquia = this.cargarItem(this.catDivision, this.wrapperDevolucion.devolucion.lugarNacimiento, false);
-    let itemCanton = this.cargarItem(this.catDivision, itemParroquia.idPadre, false);
-    let itemProvincia = this.cargarItem(this.catDivision, itemCanton.idPadre, false);
+    let itemCanton = this.cargarItem(this.catDivision, itemParroquia?itemParroquia.idPadre:'', false);
+    let itemProvincia = this.cargarItem(this.catDivision, itemCanton?itemCanton.idPadre:'', false);
     this.lugarNacimiento.setValue((itemParroquia ? itemParroquia.nombre : '') + (itemCanton ? ' / ' + itemCanton.nombre : '') + (itemProvincia ? ' / ' + itemProvincia.nombre : ''));
 
     this.onChangeFechaNacimiento();
