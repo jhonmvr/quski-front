@@ -78,7 +78,7 @@
             <mat-step label="Detalle de Crédito">
                 <div class="row">
                     <div class="col-8 offset-2">
-                        <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceDetalle">
+                        <mat-table #table *ngIf="wrapperSoft || wrapperDevolucion" class="mat-elevation-z8" [dataSource]="dataSourceDetalle">
                             <ng-container matColumnDef="fechaAprobacion">
                                 <mat-header-cell *matHeaderCellDef>Fecha de Aprobación</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{element.fechaAprobacion | rDate}}</mat-cell>
