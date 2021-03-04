@@ -39,10 +39,10 @@ export class CalculadoraService extends BaseService {
    this.params = new HttpParams();
    this.params = this.params.set('idCredito',idCredito);
    if(montoSolicitado != undefined){
-    this.params = this.params.set('montoSolicitado',montoSolicitado);
+    this.params = this.params.set('montoSolicitado',montoSolicitado.toFixed(2));
    }
    if(riesgoTotal != undefined){
-    this.params = this.params.set('riesgoTotal',riesgoTotal);
+    this.params = this.params.set('riesgoTotal',riesgoTotal.toFixed(2));
    }
    this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl,this.options).pipe(
