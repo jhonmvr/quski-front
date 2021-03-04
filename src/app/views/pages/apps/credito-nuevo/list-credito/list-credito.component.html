@@ -181,7 +181,7 @@
                             <a (click)="irDetalle(row)" matTooltip="Ver el detalle" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">remove_red_eye</mat-icon>
                             </a>
-                            <a *ngIf="row.codigoEstadoUbicacionGrantia != 'CLI'" 
+                            <a *ngIf="row.codigoEstadoUbicacionGrantia != 'CLI' && row.estado != 'CANCELADO' " 
                                 (click)="irRegistrarPago(row)" matTooltip="Registrar Pago" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">payment</mat-icon>
                             </a>
