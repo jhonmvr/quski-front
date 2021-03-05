@@ -31,6 +31,7 @@
     vertical-align: baseline;
   }
   .mat-header-cell {
+    text-align: center;
     flex-direction: column;
     justify-content: center;
     font-size: smaller;
@@ -97,3 +98,49 @@
     border-color: white;
     font-weight: 400;
   }    
+  .tableOpciones{
+    overflow: auto;
+  }
+  #table{
+    overflow: auto;
+    width: 100%;
+  }
+  .mat-column-Accion {
+    flex: 0 0 160px;
+  }
+  .mat-column-codigoBpm {
+    flex: 0 0 100px;
+  }
+  .mat-column-codigoOperacion {
+    flex: 0 0 100px;
+  }
+  .mat-column-nombreCliente {
+    flex: 0 0 100px;
+  }
+  .mat-column-cedulaCliente {
+    flex: 0 0 80px;
+  }
+  .mat-column-montoFinanciado {
+    flex: 0 0 70px;
+  }
+  .mat-column-fechaCreacion {
+    flex: 0 0 80px;
+  }
+  .mat-column-agencia {
+    flex: 0 0 85px;
+  }
+  .mat-column-estadoProceso {
+    flex: 0 0 80px;
+  }
+  .mat-column-proceso {
+    flex: 0 0 80px;
+  }
+  .mat-column-asesor {
+    flex: 0 0 100px;
+  }
+  .mat-column-usuarioEjecutor {
+    flex: 0 0 100px;
+  }
+  .mat-column-actividad {
+    flex: 0 0 100px;
+  }
