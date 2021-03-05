@@ -13,6 +13,7 @@ import { NegociacionWrapper } from '../../../../../core/model/wrapper/Negociacio
 import { TbQoCreditoNegociacion } from '../../../../../../app/core/model/quski/TbQoCreditoNegociacion';
 import { CalculadoraService } from '../../../../../../app/core/services/quski/calculadora.service';
 import { ConfirmarAccionComponent } from '../../../../../../app/views/partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 @Component({
   selector: 'kt-excepciones-riesgo',
   templateUrl: './excepciones-riesgo.component.html',
@@ -26,7 +27,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   public usuario;
   public agencia;
   public simulado: boolean;
-
+  public loadVariables = new BehaviorSubject<boolean>(false);
   public wp: NegociacionWrapper = null;
   public formDisable: FormGroup = new FormGroup({});
   public cliente = new FormControl('', []);
@@ -36,6 +37,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
   public telefonoDomicilio = new FormControl('', []);
   public telefonoMovil = new FormControl('', []);
   public email = new FormControl('', []);
+  public componenteVariable: boolean;
+  negoW: NegociacionWrapper;
   mensaje;
 
 
@@ -70,7 +73,8 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     private dialog: MatDialog,
     private neg: NegociacionService,
     private exc: ExcepcionService,
-    private cal: CalculadoraService
+    private cal: CalculadoraService,
+    private sinNotSer: ReNoticeService,
 
   ) {
     this.neg.setParameter();
@@ -160,6 +164,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       this.sinNoticeService.setNotice('COMPLETE LA SECCION CORRECTAMENTE','error'):
         this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{
           !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
+          console.log(data.entidades)
           this.simulado = data.entidades ? true : false;
           this.loadingSubject.next(false);
         });
@@ -170,12 +175,14 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       this.loadingSubject.next(true);
       this.cal.simularOferta(this.wp.credito.id, null, null).subscribe((data: any) => {
         this.loadingSubject.next(false);
+        console.log("info", data.entidad)
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
             this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado);
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
-        }
+            this.mapearVariables(data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable)
+          }
       },()=>{
         this.loadingSubject.next(false);
       });
@@ -238,5 +245,22 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       this.router.navigate(['../../aprobador/bandeja-excepciones']);
     });
   }
-
+  private mapearVariables(variables: Array<any>){
+    let variablesBase : Array<TbQoVariablesCrediticia> = new Array<TbQoVariablesCrediticia>();
+    this.loadVariables.next(true);
+    variables.forEach( e=>{
+      let variableBase : TbQoVariablesCrediticia = new TbQoVariablesCrediticia();
+      variableBase.codigo = e.codigo;
+      variableBase.nombre = e.nombre;
+      variableBase.valor  = e.valor;
+      variableBase.orden  = e.orden;
+      variablesBase.push( variableBase );
+    });
+    this.componenteVariable = false;
+    this.negoW.variables = variablesBase;
+    console.log("Las variables de bre =>", variablesBase);
+    this.sinNotSer.setNotice("LAS VARIABLES CREDITICIAS FUERON ACTUALIZADAS", 'success');
+    this.componenteVariable = true;
+    this.loadVariables.next(false);
+  }
 }
