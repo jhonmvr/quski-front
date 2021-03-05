@@ -10,6 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { WrapperBusqueda } from '../../../../../core/model/wrapper/WrapperBusqueda';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 
 export interface Agencia{
   id: number;
@@ -28,14 +29,15 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public loading;
   public usuario: string;
   public rol: string;
-
+  public esReasignar: boolean;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   public catAgencia : Array<Agencia>;
   public catProceso : Array<string>;
   public catEstadoProceso : Array<string>;
   public catActividad : Array<string>;
+  public catRolReasignacion : Array<any>;
+  public catRolAsesores : Array<any>;
   
-
 
 
 
@@ -58,6 +60,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
 
   constructor(
     private pro: ProcesoService,
+    private par: ParametroService,
     private sof: SoftbankService,
     private router: Router,
     private dialog: MatDialog,
@@ -83,17 +86,24 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     this.sof.setParameter();
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    console.log('Nombre del asesor ->', atob(localStorage.getItem(environment.userKey)));
     this.rol = localStorage.getItem( 're1001' );
-    this.cargarCatalogosOperacionesAndEnums();
+    console.log( 'Rol => ', this.rol);
     this.cargarEnumBase();
 
   }
 
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private buscarOperaciones(wrapper?: WrapperBusqueda) {
-    this.loadingSubject.next(true);
-    wrapper.asesor = this.rol == "014" || this.rol == "1" || this.rol == "8" ? this.usuario : null;
+    wrapper.asesor = null;
+    if( this.catRolAsesores ){
+      this.catRolAsesores.forEach( e=>{
+        if( this.rol == e.valor ){
+          console.log( 'Rol => ', e.valor);
+          wrapper.asesor = this.usuario; 
+          return;
+        }
+      });
+    }  
     this.pro.buscarOperaciones(wrapper).subscribe( (data: any) =>{
       if( data.entidad != null && data.entidad.operaciones != null){
         let operaciones: OperacionesProcesoWrapper[] = data.entidad.operaciones;
@@ -112,12 +122,9 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         });
         this.dataSource.data = operaciones;
         this.paginator.length = data.entidad.result;
-        this.loadingSubject.next(false);
       } else {
-        this.loadingSubject.next(false);
         this.paginator.length = 0;
         this.dataSource.data = null;
-        //console.log("Me cai en la busqueda :c");
       }
     });
   }
@@ -155,28 +162,40 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       if(!data.existeError){
         this.catAgencia = data.catalogo;
         this.buscarOperaciones( new WrapperBusqueda() );
+        this.validarReasignacion();
       } else {
         //console.log("Me cai en la Cat de agencia :c");
       }
     });
   }
+  private validarReasignacion(){
+    if( this.catRolReasignacion ){
+      this.catRolReasignacion.forEach( e=>{
+        if( e.valor == this.rol ){
+          this.esReasignar = true;
+          return;
+        }
+      });
+    }else{
+      this.esReasignar = false;
+    }
+  }
   private cargarEnumBase(){
-    this.loadingSubject.next(true);
-    this.pro.getEstadosProceso().subscribe( (dataEstado: any) =>{
-      if(dataEstado.entidades != null){
-        this.catEstadoProceso = dataEstado.entidades;
-        this.pro.getProcesos().subscribe( (dataProceso: any) =>{
-          if(dataProceso.entidades != null){
-            this.catProceso = dataProceso.entidades;
+    this.par.findByTipo('PERFIL-ASESOR').subscribe( (data: any)=>{
+      this.catRolAsesores = data.entidades ? data.entidades : null;
+      this.par.findByTipo('PERFIL-REASIG').subscribe( (data: any) =>{
+        this.catRolReasignacion = data.entidades ? data.entidades : null;
+        this.pro.getEstadosProceso().subscribe( (dataEstado: any) =>{
+          this.catEstadoProceso = dataEstado.entidades ? dataEstado.entidades : [];
+          this.pro.getProcesos().subscribe( (dataProceso: any) =>{
+            this.catProceso = dataProceso.entidades ? dataProceso.entidades : [];
             this.pro.getActividades().subscribe( (dataActividad: any) =>{
-              if(dataActividad.entidades != null){
-                this.catActividad = dataActividad.entidades;
-                this.loadingSubject.next(false);
-              }
+              this.catActividad = dataActividad.entidades ? dataActividad.entidades : [];
+              this.cargarCatalogosOperacionesAndEnums();
             });
-          }
+            });
         });
-      }
+      });
     });
   }
   public limpiarFiltros(){

@@ -32,13 +32,21 @@ export class SoftbankService extends BaseService {
 
   }
 
+
+  fechasistema( idAgencia ) {
+    const serviceUrl = this.softBaseBankUrl +'api/general/consulta/fechasistema';
+    const wrapper = { idAgencia : idAgencia } ;
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  
   /**
    * ******************************* @CLIENTES 
-   */
-  /**
-   * @author Jeroham Cadenas - Developer Twelve
-   * @description Consultar cliente Softbank
-   * @param ConsultaCliente
    */
   consultarClienteCS( consultaCliente : ConsultaCliente ) {
     const serviceUrl = this.softBaseBankUrl + this.urlRestCliente + 'consultar';

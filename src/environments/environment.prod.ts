@@ -13,6 +13,7 @@ export const environment = {
     alertSpecificKey:"002",
     auditGlobalKey:"003",
     DATE_FORMAT:'dd/MM/yyyy',
+    DATE_FORMAT_SOFTBANK:'yyyy-MM-dd',
     userKey:"RE2001",
     rolKey:"re1002",
     rolName:"re1001",

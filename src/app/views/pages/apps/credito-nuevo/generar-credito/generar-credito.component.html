@@ -50,6 +50,12 @@
             <ng-container *ngIf="this.operacionNuevo && this.operacionNuevo.credito.periodoPlazo == 'C'">
                 <mat-step label="Día de pago" [stepControl]="formFecha">  
                     <form [formGroup]="formFecha">
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="fechaSistema" readonly
+                                    placeholder="Fecha de sistema: " />
+                            </mat-form-field>
+                        </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input [min]="diasMin" [max]="diasMax"  matInput #inputFechaCuota

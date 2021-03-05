@@ -123,7 +123,7 @@ export class GestionCotizacionComponent implements OnInit {
     }
     this.cot.iniciarCotizacion(this.identificacion.value, this.usuario, this.agencia).subscribe((wrapper: any) => {
       if (wrapper.entidad) {
-        this.limpiarCotizacion();
+        this.formBusqueda.disable();
         this.wCotiz = wrapper.entidad;
         this.setearValores(false);
         this.myStepper.selectedIndex = 1;
@@ -169,7 +169,7 @@ export class GestionCotizacionComponent implements OnInit {
   }
   /********************************** @INCIO **************************************  */
   public consultaCatalogos() {
-    this.par.findByNombreTipoOrdered("", "PUB", "Y").subscribe((data: any) => {
+    this.par.findByTipo('PUB').subscribe((data: any) => {
       if (data && data.entidades) {
         this.catPublicidad = new Array<any>();
         data.entidades.forEach(element => {
@@ -179,10 +179,10 @@ export class GestionCotizacionComponent implements OnInit {
         this.catPublicidad.push("CATALOGO NO CARGADO");
       }
     });
-    this.par.findByNombreTipoOrdered('', 'DESEST', 'Y').subscribe((wrapper: any) => {
+    this.par.findByTipo('DESEST').subscribe((wrapper: any) => {
       this.catMotivoDesestimiento = wrapper && wrapper.entidades ? wrapper.entidades : {valor: 'Error de catalogo'};
     });
-    this.par.findByNombreTipoOrdered('', 'GINT', 'Y').subscribe((wrapper: any) => {
+    this.par.findByTipo('GINT').subscribe((wrapper: any) => {
       this.catGradosInteres = wrapper && wrapper.entidades ? wrapper.entidades : {valor: 'Error de catalogo'};
     });
     this.sof.consultarPaisCS().subscribe((data: any) => {
@@ -413,6 +413,8 @@ export class GestionCotizacionComponent implements OnInit {
     let cliente = this.buildCliente();
     this.neg.verPrecios(cliente).subscribe(resp=>{
       this.catTipoOro = resp.entidades;
+      this.tipoOro.setValue( this.catTipoOro ? this.catTipoOro.find( x => x.codigo == '18K') : null );
+      this.valorOro.setValue(this.catTipoOro ? this.catTipoOro.find( x => x.codigo == '18K').valorOro : null )
     })
   }
   private buildCliente(){

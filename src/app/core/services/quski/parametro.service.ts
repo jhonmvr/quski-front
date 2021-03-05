@@ -81,7 +81,7 @@ public findByNombre(nombre:string){
     this.params = new HttpParams();
     this.params=this.params.set("fecha", fecha);
     this.params=this.params.set("dias", dias);
-    this.params=this.params.set("format", environment.DATE_FORMAT);
+    this.params=this.params.set("format", environment.DATE_FORMAT_SOFTBANK);
     //console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params:this.params };
     return this.http.get<any>(this.genericResourcesUrl  +this.rest + "/addDaysToDate", this.options).pipe(

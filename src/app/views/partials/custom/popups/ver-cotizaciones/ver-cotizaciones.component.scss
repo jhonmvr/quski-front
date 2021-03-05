@@ -43,6 +43,11 @@
   .example-container > * {
     width: 100%;
   }
+  .example-table-container {
+    position: relative;
+    max-height: 400px;
+    overflow: auto;
+  }
   
   table{
     width: 100%;

@@ -1,6 +1,6 @@
   
 <re-portlet>
-    <re-portlet-header [title]="'Detalle de credito Vigente'" [class]="'kt-portlet__head--lg'">
+    <re-portlet-header [title]="titulo" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
             <a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
@@ -106,7 +106,7 @@
             </mat-step>
             <mat-step label="Detalle de credito">
                 <div class="row">
-                    <div class="col-12" *ngIf="detalle && detalle.joyas">
+                    <div class="col-12" *ngIf="detalle && detalle.joyas && detalle.credito.plazoCredito">
                         <mat-table #tableNegociacion class="garantia"	[dataSource]="dataSourceCreditoNegociacion">
                             <ng-container matColumnDef="plazo">
                                 <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
@@ -288,7 +288,7 @@
                             <mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>
                         </mat-table>
                     </div>
-                    <div class="col-4 offset-4"  *ngIf="detalle && !detalle.joyas">
+                    <div class="col-4 offset-4"  *ngIf="!detalle || !detalle.joyas || !detalle.credito.plazoCredito">
                         <strong> NO POSEE UN CREDITO SELECCIONADO </strong>
                     </div>
                 </div>
@@ -297,10 +297,10 @@
                 <div class="row">
                     <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =referencia " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}" >Habilitante Operacion</button>
                     <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedula.value "   style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}" >Habilitante Cliente</button>
-                  </div>
-                  <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'"
-                      [referencia]="varHabilitante.referencia" >
-                          </re-habilitante> 
+                </div>
+                <re-habilitante [proceso]="varHabilitante.proceso" [estadoOperacion]="'DETALLE'" [useType]="'FORM'"
+                    [referencia]="varHabilitante.referencia" >
+                </re-habilitante> 
             </mat-step>
         </mat-vertical-stepper>
     </re-portlet-body>

@@ -1202,47 +1202,47 @@ export class GestionClienteComponent implements OnInit {
                         if(this.origen == 'CED'){ this.router.navigate(['negociacion/bandeja-operaciones']);}  
                       } else {
                         this.loadingSubject.next(false);
-                        this.sinNoticeService.setNotice("NO SE PUDO REGISTRAR EL CLIENTE EN SOFTBANK", 'error');
+                        this.sinNoticeService.setNotice("NO SE PUDO REGISTRAR EL CLIENTE EN SOFTBANK", 'warning');
                       }
                     });
                   } else {
                     this.loadingSubject.next(false);
-                    this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS EN  LA SECCION DE REFERENCIAS PERSONALES", 'error');
+                    this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS EN  LA SECCION DE REFERENCIAS PERSONALES", 'warning');
                     this.stepper.selectedIndex = 8
     }
                 } else {
                   this.loadingSubject.next(false);
-                  this.sinNoticeService.setNotice("AGREGUE AL MENOS UN PATRIMONIO ACTIVO O PASIVO", 'error');
+                  this.sinNoticeService.setNotice("AGREGUE AL MENOS UN PATRIMONIO ACTIVO O PASIVO", 'warning');
                   this.stepper.selectedIndex = 6
                 }
               } else {
                 this.loadingSubject.next(false);
-                this.sinNoticeService.setNotice("AGREGUE AL MENOS UN INGRESO O UN EGRESO", 'error');
+                this.sinNoticeService.setNotice("AGREGUE AL MENOS UN INGRESO O UN EGRESO", 'warning');
                 this.stepper.selectedIndex = 5
               }
             } else {
               this.loadingSubject.next(false);
-              this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS ECONOMICOS DEL CLIENTE", 'error');
+              this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS ECONOMICOS DEL CLIENTE", 'warning');
               this.stepper.selectedIndex = 4
             }
           } else {
             this.loadingSubject.next(false);
-            this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DIRECCION LABORAL", 'error');
+            this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DIRECCION LABORAL", 'warning');
             this.stepper.selectedIndex = 3
           }
         } else {
           this.loadingSubject.next(false);
-          this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DIRECCION DE DOMICILIO", 'error');
+          this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DIRECCION DE DOMICILIO", 'warning');
           this.stepper.selectedIndex = 2
         }
       } else {
         this.loadingSubject.next(false);
-        this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS DE CONTACTO DEL CLIENTE", 'error');
+        this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS DE CONTACTO DEL CLIENTE", 'warning');
         this.stepper.selectedIndex = 1
       }
     } else {
       this.loadingSubject.next(false);
-      this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS PERSONALES DEL CLIENTE", 'error');
+      this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS PERSONALES DEL CLIENTE", 'warning');
       this.stepper.selectedIndex = 0
     }
   }

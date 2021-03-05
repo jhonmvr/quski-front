@@ -31,13 +31,11 @@ export class GenerarCreditoComponent implements OnInit {
   /** @VARIABLES_GLOBALES **/
   public operacionNuevo: OperacionNuevoWrapper;
   public item;
-  public loading;
-  private loadingSubject = new BehaviorSubject<boolean>(false);
+  fechaSoft: Date
   public loadImgJoya = new BehaviorSubject<boolean>(false);
   public loadImgFunda = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
   public operacionSoft: OperacionSoft;
-  public fechaServer;
   public existeCredito: boolean;
   private agencia: any;
   public anular: boolean;
@@ -51,7 +49,9 @@ export class GenerarCreditoComponent implements OnInit {
   /** @FORM_FECHA_PAGO **/
   public formFecha: FormGroup = new FormGroup({});
   public fechaCuota = new FormControl('', [Validators.required]);
+  public fechaSistema = new FormControl('', [Validators.required]);
   public fechaUtil: diferenciaEnDias;
+  
   /** @FORM_FUNDA **/
   public formFunda: FormGroup = new FormGroup({});
   public pesoFunda = new FormControl('', [Validators.required]);
@@ -133,6 +133,8 @@ export class GenerarCreditoComponent implements OnInit {
     this.formInformacion.addControl("estadoOperacion", this.estadoOperacion);
     this.formInformacion.addControl("cedulaCliente", this.cedulaCliente);
     this.formInformacion.addControl("nombreCompleto", this.nombreCompleto);
+    this.formInformacion.addControl("fechaSistema", this.fechaSistema);
+    
     this.formFecha.addControl("fechaCuota", this.fechaCuota);
     this.formFunda.addControl("pesoFunda", this.pesoFunda);
     this.formFunda.addControl("numeroFunda", this.numeroFunda);
@@ -163,17 +165,14 @@ export class GenerarCreditoComponent implements OnInit {
     this.pro.setParameter();
     this.sof.setParameter();
     this.par.setParameter();
-    this.loading = this.loadingSubject.asObservable();
     this.agencia = Number(localStorage.getItem( 'idAgencia' ));
     this.correoAsesor = localStorage.getItem( 'email' );
     this.obtenerCatalogosSoftbank();
-    this.setFechaSistema();
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private traerOperacion() {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.id) {
-        this.loadingSubject.next(true);
         this.item = json.params.id;
         this.cre.traerCreditoNuevo(this.item).subscribe((data: any) => {
           if (data.entidad) {
@@ -183,7 +182,6 @@ export class GenerarCreditoComponent implements OnInit {
         });
         this
       } else {
-        this.loadingSubject.next(false);
         this.salirDeGestion("Error al intentar ingresar al Credito.");
       }
     });
@@ -215,8 +213,8 @@ export class GenerarCreditoComponent implements OnInit {
       this.fechaRegularizacion.enable();
     }
   }
-  setearDiaPago(dia):Date{
-    let fecha = new Date();
+  setearDiaPago(dia: number):Date{
+    let fecha : Date = this.fechaSoft;
     fecha.setDate(dia);
     return fecha;
   }
@@ -229,6 +227,11 @@ export class GenerarCreditoComponent implements OnInit {
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     this.numeroCuenta.setValue( data.cuentas[0].cuenta);
     this.tipoCuenta.setValue( this.catCuenta.find( x => x.id == data.cuentas[0].banco) );
+    let totalPesoB :any = 0 ;
+    data.joyas.forEach(e =>{
+      totalPesoB  = (Number(totalPesoB) + Number(e.pesoBruto)).toFixed(2);
+    });
+    this.totalPesoBrutoFunda.setValue( totalPesoB  );
     this.tipoCuenta.disable();
     this.numeroCuenta.disable();
     if(data.excepciones){
@@ -258,11 +261,9 @@ export class GenerarCreditoComponent implements OnInit {
     let x = new Array()
     x.push(data.credito);
     this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(x);
-    this.loadingSubject.next(false);
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
-    this.loadingSubject.next(false);
     let pData = {
       mensaje: dataMensaje,
       titulo: dataTitulo ? dataTitulo : null
@@ -276,12 +277,6 @@ export class GenerarCreditoComponent implements OnInit {
       this.router.navigate(['negociacion/bandeja-operaciones']);
     });
   }
-  private setFechaSistema() {
-    this.cre.getSystemDate().subscribe((fechaSistema: any) => {
-      this.fechaServer = new Date(fechaSistema.entidad);
-    })
-  }
-
   private obtenerCatalogosSoftbank() { 
     this.sof.consultarTipoFundaCS().subscribe((data: any) => {
       this.catTipoFunda = !data.existeError ? data.catalogo : "Error al cargar catalogo";
@@ -300,8 +295,19 @@ export class GenerarCreditoComponent implements OnInit {
                   this.par.findByTipo('EXC-OPV-NUEV',).subscribe( (data :any) =>{
                     this.sof.consultarperiodoDiferimientoCS().subscribe(dias=>{
                       if(dias && dias.catalogo && dias.catalogo && dias.catalogo[0]){
-                        this.diasMax = this.setearDiaPago(dias.catalogo[0].diasMaximo);
-                        this.diasMin = this.setearDiaPago(dias.catalogo[0].diasMinimo);
+                        this.sof.fechasistema( this.agencia ).subscribe( ( data: any) =>{
+                          if( !data.existeError ){
+                            this.fechaSistema.setValue( data.fechaSistema  );
+                            this.par.addDaysToDate(data.fechaSistema, dias.catalogo[0].diasMaximo ).subscribe( (data:any) =>{
+                              console.log('fecha maxima =>', data.entidad);
+                              this.diasMax = data.entidad;
+                            });
+                            this.par.addDaysToDate(data.fechaSistema, dias.catalogo[0].diasMinimo ).subscribe( (data:any) =>{
+                              console.log('fecha minima =>', data.entidad);
+                              this.diasMin = data.entidad;
+                            });
+                          }
+                        });
                         console.log("setear dia pago ==>",this.diasMax,this.diasMin);
                       }else{
                         this.sinNotSer.setNotice("NO SE PUEDE LEER LOS PARAMETROS DIAS DE DIFERIMIENTO",'error');
@@ -320,7 +326,6 @@ export class GenerarCreditoComponent implements OnInit {
   }
   /** ********************************************* @OPERACION ********************* **/
   public obtenerNumeroFunda(anular?: boolean ) {
-    this.loadingSubject.next(true);
     this.operacionNuevo.credito
     this.operacionNuevo.credito.pagoDia = this.fechaCuota.value? this.fechaCuota.value : null;
     this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
@@ -335,17 +340,15 @@ export class GenerarCreditoComponent implements OnInit {
         this.anular = true;
         this.numeroFunda.setValue( data.entidad.numeroFunda ); 
       }else{ 
-        this.loadingSubject.next(false);
         this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
       }
-    },er=>{this.loadingSubject.next(false)});
+    });
   }
   public  regresar(){
     this.router.navigate(['cliente/gestion-cliente/NEG/',this.item]);
   }
   public generarCredito(anular?: boolean ) {
     if(this.formFunda.valid && this.formInstruccion.valid){
-      this.loadingSubject.next(true);      
       this.operacionNuevo.credito.pagoDia = this.fechaCuota.value != null ? this.fechaCuota.value : null;
       this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
       this.operacionNuevo.credito.numeroFunda = anular ? null : this.numeroFunda.value;
@@ -360,7 +363,6 @@ export class GenerarCreditoComponent implements OnInit {
           this.operacionSoft = data.entidad;  
           this.cargarOperacion( this.operacionSoft.credito );
         }else{ 
-          this.loadingSubject.next(false);
           this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
         }
       });
@@ -394,7 +396,6 @@ export class GenerarCreditoComponent implements OnInit {
       });
     }
     this.existeCredito = true;
-    this.loadingSubject.next(false);
   }
   public mostrarTablaDeAmortizacion(){
     if(this.operacionSoft && this.operacionSoft.cuotasAmortizacion){
@@ -486,7 +487,6 @@ export class GenerarCreditoComponent implements OnInit {
         data: mensaje
       });
       dialogRef.afterClosed().subscribe(r => {
-        this.loadingSubject.next(true);
         if(r){
           this.pro.cambiarEstadoProceso(this.operacionNuevo.credito.tbQoNegociacion.id,"NUEVO","PENDIENTE_APROBACION").subscribe( (data: any) =>{
             if(data.entidad){
@@ -494,7 +494,6 @@ export class GenerarCreditoComponent implements OnInit {
             }
           });
         }else{
-          this.loadingSubject.next(false);
           this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
         }
       });

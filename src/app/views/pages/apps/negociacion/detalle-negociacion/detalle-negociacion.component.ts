@@ -22,6 +22,7 @@ import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCred
 export class DetalleNegociacionComponent implements OnInit {
   varHabilitante = {proceso:'CLIENTE',referencia:''};
   referencia;
+  titulo
   public loading;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   public detalle: DetalleNegociacionWrapper;
@@ -93,15 +94,16 @@ export class DetalleNegociacionComponent implements OnInit {
     });
   }
   private setearValores(ap: DetalleNegociacionWrapper) {
+    this.titulo = 'DETALLE DEL PROCESO: ' + ap.credito.codigo;
     this.nombre.setValue( ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto );
     this.cedula.setValue( ap.credito.tbQoNegociacion.tbQoCliente.cedulaCliente );
     this.fechaNacimiento.setValue( ap.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento );
-    this.cargarEdad();
+    this.edad.setValue( ap.credito.tbQoNegociacion.tbQoCliente.edad );
     this.nacionalidad.setValue( ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad );
     this.publicidad.setValue( ap.credito.tbQoNegociacion.tbQoCliente.publicidad );
     this.correo.setValue( ap.credito.tbQoNegociacion.tbQoCliente.email );
     this.campania.setValue( ap.credito.tbQoNegociacion.tbQoCliente.campania );
-    this.aprobadoMupi.setValue( ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi );
+    this.aprobadoMupi.setValue( ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S' ? 'Si' : 'No' );
     !ap.telefonos ? null : ap.telefonos.forEach( e=>{
       if( e.tipoTelefono == 'CEL'){
         this.telefonoMovil.setValue( e.numero );
@@ -111,11 +113,9 @@ export class DetalleNegociacionComponent implements OnInit {
       }
     }); 
     this.dataSourceCreditoNegociacion.data.push( ap.credito? ap.credito : null );
-    this.sinNotSer.setNotice('Detalle de credito en proceso cargado', 'success');
-    this.loadingSubject.next(false);
-
-    this.varHabilitante.referencia= this.cedula.value;
-    this.varHabilitante.proceso = 'CLIENTE';
+    this.varHabilitante.referencia= this.referencia;
+    this.varHabilitante.proceso='NUEVO,FUNDA';
+    this.sinNotSer.setNotice('DETALLE DE CREDITO EN PROCESO CARGADO', 'success');
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
@@ -135,15 +135,5 @@ export class DetalleNegociacionComponent implements OnInit {
   }
   regresar(){
     this.router.navigate(['negociacion/']);
-  }
-  public cargarEdad(){
-    if(this.fechaNacimiento.valid){
-      const fechaSeleccionada = new Date(this.fechaNacimiento.value);
-      const convertFechas = new RelativeDateAdapter();
-      this.par.getDiffBetweenDateInicioActual(convertFechas.format(fechaSeleccionada, "input"), "dd/MM/yyy").subscribe((rDiff: any) => {
-        const diff: YearMonthDay = rDiff.entidad;
-        this.edad.setValue( diff.year );
-      });
-    }
   }
 }
