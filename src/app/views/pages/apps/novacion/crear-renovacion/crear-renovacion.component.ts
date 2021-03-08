@@ -52,7 +52,7 @@ export class CrearRenovacionComponent implements OnInit {
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public codigoBpm = new FormControl();
   public codigoOperacion = new FormControl();
-  public recibirPagar = new FormControl();
+  public recibirPagar;
   public proceso = new FormControl();
   public estadoProceso = new FormControl();
   public nombreCompleto = new FormControl();
@@ -60,14 +60,15 @@ export class CrearRenovacionComponent implements OnInit {
   public montoSolicitado = new FormControl();
   
   public dataSourceCreditoNegociacion = new MatTableDataSource<any>();
-  public displayedColumnsCreditoNegociacion = ['accion','plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
+  public displayedColumnsCreditoNegociacion = ['Accion','plazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
     'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
     'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
     'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
     'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
     'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
     'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
-  recibirOpagar: any;
+    
+  recibirOpagar: any = '';
   //garantias: any[];
   constructor(
     private cre: CreditoNegociacionService,
@@ -86,7 +87,6 @@ export class CrearRenovacionComponent implements OnInit {
 
     this.formOperacion.addControl("codigoBpm", this.codigoBpm);
     this.formOperacion.addControl("codigoOperacion", this.codigoOperacion);
-    this.formOperacion.addControl("recibirPagar", this.recibirPagar);
     this.formOperacion.addControl("proceso", this.proceso);
     this.formOperacion.addControl("estadoProceso", this.estadoProceso);
     this.formOperacion.addControl("nombreCompleto", this.nombreCompleto);
@@ -369,7 +369,6 @@ export class CrearRenovacionComponent implements OnInit {
     }
   }
   public simularOpciones(){
-    console.log('data =>', this.dataSourceCreditoNegociacion.data);
     if(this.montoSolicitado.value){
       if(this.dataSourceCreditoNegociacion.data.length < 1 || ( this.montoSolicitado.value > this.dataSourceCreditoNegociacion.data[0].montoFinanciado  ) ){
         this.sinNotSer.setNotice("EL MONTO SOLICITADO ES MAYOR AL MONTO FINANCIADO ACTUAL", 'error');
@@ -392,9 +391,9 @@ export class CrearRenovacionComponent implements OnInit {
       if(data.entidad){
         //console.log('Data de simulacion -->',data.entidad);
         data.entidad.simularResult.codigoError > 0 ? this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
-          : this.sinNotSer.setNotice("Seleccione una opcion de credito para continuar", 'success') ;
+          : this.sinNotSer.setNotice("SELECCIONES UNA OPCION DE CREDITO PARA CONTINUAR", 'success') ;
         this.garantiasSimuladas = [];
-        data.entidad.simularResult.xmlGarantias ? data.entidad.simularResult.xmlGarantias.garantias.garantia.forEach(e => {
+        data.entidad.simularResult.xmlGarantias.garantias.garantia ? data.entidad.simularResult.xmlGarantias.garantias.garantia.forEach(e => {
           this.garantiasSimuladas.push( e );
         }): null;
         this.dataSourceCreditoNegociacion.data = data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
@@ -436,11 +435,14 @@ export class CrearRenovacionComponent implements OnInit {
   masterToggle(event) {
     this.selection.clear()        
     this.selection.select(event) 
-    this.recibirPagar.setValue( event.valorARecibir - event.valorAPagar);
-    if(this.recibirPagar.value > 0){
-      this.recibirOpagar = 'recibir';
+    this.recibirPagar = event.valorARecibir - event.valorAPagar ;
+    console.log('Valor =>', this.selection.isSelected(event) );
+    if(this.selection.isSelected(event) && this.recibirPagar > 0){
+      this.recibirOpagar = 'primary'; 
+    }else if (this.selection.isSelected(event)  && this.recibirPagar < 0) {
+      this.recibirOpagar = 'warn';
     }else{
-      this.recibirOpagar = 'pagar';
+      this.recibirOpagar = '';
     }
   }
 

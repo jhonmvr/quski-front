@@ -114,7 +114,7 @@
                                     <mat-icon matTooltip="Ver Detalle" class="blue-icon">remove_red_eye</mat-icon>
                                 </a>
                             </ng-container>
-                            <ng-container *ngIf="esReasignar && row.estadoProceso != 'APROBADO' && row.estadoProceso != 'RECHAZADO' && row.estadoProceso != 'CANCELADO'">
+                            <ng-container *ngIf="validarReasignacion(row)">
                                 <a (click)="reasignar(row)">
                                     <mat-icon matTooltip="Reasignar Asesor" >account_circle</mat-icon>
                                 </a>

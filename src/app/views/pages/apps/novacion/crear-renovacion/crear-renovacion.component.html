@@ -55,8 +55,7 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-4 offset-5">
-                        <button mat-stroked-button color="primary" matStepperNext (click)="simularOpciones()">
-							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
+                        <button mat-raised-button color="primary" matStepperNext (click)="simularOpciones()">
 							<span color="primary">Simular Opciones</span>
 						</button>
                     </div>
@@ -64,21 +63,38 @@
 			</mat-step>
 			<mat-step label='Simular opciones de crédito'>
                 <div class="row">
+                    <div class="offset-9 col-3">
+                        <button mat-stroked-button color="{{ recibirOpagar }}">
+                            <strong>Neto a recibir: </strong> {{recibirPagar ? recibirPagar : '0' }}
+                        </button>
+                    </div>	
                     <div class="col-12">
                         <mat-table class="simulacion"  [dataSource]="dataSourceCreditoNegociacion">
-                            <ng-container matColumnDef="accion">
+                            <ng-container matColumnDef="Accion">
                                 <mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
                                 <mat-cell *matCellDef="let row">
                                     <mat-checkbox (click)="$event.stopPropagation() && masterToggle(row)"
-                                        (change)="$event ? masterToggle(row): null"
-                                        [checked]="selection.isSelected(row)"
-                                        [aria-label]="checkboxLabel(row)">
-			  				</mat-checkbox>	
+                                    (change)="$event ? masterToggle(row): null"
+                                    [checked]="selection.isSelected(row)"
+                                    [aria-label]="checkboxLabel(row)">
+                                      </mat-checkbox>	
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="plazo">
                                 <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.plazo }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> 
+                                    {{ 
+                                    element.plazo ? 
+                                    element.plazo == '60'  ? '60 Dias (Al Vcto.)' : 
+                                    element.plazo == '90'  ? '90 Dias (Al Vcto.)' : 
+                                    element.plazo == '120' ? '120 Dias (Al Vcto.)' : 
+                                    element.plazo == '6'   ? '6	Cuotas' : 
+                                    element.plazo == '9'   ? '9	Cuotas' : 
+                                    element.plazo == '12'  ? '12 Cuotas' : 
+                                    element.plazo == '18'  ? '18 Cuotas' : 
+                                    element.plazo : 'Error'
+                                    }}
+                                </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="periodoPlazo">
                                 <mat-header-cell *matHeaderCellDef>periodo Plazo</mat-header-cell>
@@ -86,47 +102,54 @@
                             </ng-container>
                             <ng-container matColumnDef="periodicidadPlazo">
                                 <mat-header-cell *matHeaderCellDef>periodicidad Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.periodicidadPlazo }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> 
+                                    {{ 
+                                        element.periodicidadPlazo ?
+                                        element.periodicidadPlazo == 'M' ? 'Meses' :
+                                        element.periodicidadPlazo == 'D' ? 'Dias' :
+                                        element.periodicidadPlazo : 'Error'
+                                    }}
+                                </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="montoFinanciado">
                                 <mat-header-cell *matHeaderCellDef>monto Financiado</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.montoFinanciado }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.montoFinanciado | currency: "USD":true:"1.2"  }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="valorARecibir">
                                 <mat-header-cell *matHeaderCellDef>valor A Recibir</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.valorARecibir }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.valorARecibir  | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="valorAPagar">
                                 <mat-header-cell *matHeaderCellDef>valor A Pagar</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.valorAPagar }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.valorAPagar | currency: "USD":true:"1.2"  }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="costoCustodia">
                                 <mat-header-cell *matHeaderCellDef>costo Custodia</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.costoCustodia }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.costoCustodia  | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="costoFideicomiso">
-                                <mat-header-cell *matHeaderCellDef>costo Fideicomiso</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.costoFideicomiso }}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef>costo Resguardo</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.costoFideicomiso | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="costoSeguro">
                                 <mat-header-cell *matHeaderCellDef>costo Seguro</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.costoSeguro }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.costoSeguro | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="costoTasacion">
                                 <mat-header-cell *matHeaderCellDef>costo Tasacion</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.costoTasacion }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.costoTasacion | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="costoTransporte">
                                 <mat-header-cell *matHeaderCellDef>costo Transporte</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.costoTransporte }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.costoTransporte | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="costoValoracion">
                                 <mat-header-cell *matHeaderCellDef>costo Valoracion</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.costoValoracion }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.costoValoracion | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="impuestoSolca">
                                 <mat-header-cell *matHeaderCellDef>impuesto Solca</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.impuestoSolca }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.impuestoSolca | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="formaPagoImpuestoSolca">
                                 <mat-header-cell *matHeaderCellDef>forma Pago Impuesto Solca</mat-header-cell>
@@ -174,39 +197,39 @@
                             </ng-container>
                             <ng-container matColumnDef="saldoInteres">
                                 <mat-header-cell *matHeaderCellDef>saldo Interes</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.saldoInteres }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.saldoInteres | currency: "USD":true:"1.2"  }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="saldoMora">
                                 <mat-header-cell *matHeaderCellDef>saldo Mora</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.saldoMora }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.saldoMora | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="gastoCobranza">
                                 <mat-header-cell *matHeaderCellDef>gasto Cobranza</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.gastoCobranza }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.gastoCobranza | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="cuota">
                                 <mat-header-cell *matHeaderCellDef>cuota</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.cuota }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.cuota | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="saldoCapitalRenov">
                                 <mat-header-cell *matHeaderCellDef>saldo Capital Renov</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.saldoCapitalRenov }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.saldoCapitalRenov | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="montoPrevioDesembolso">
                                 <mat-header-cell *matHeaderCellDef>monto Previo Desembolso </mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.montoPrevioDesembolso }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.montoPrevioDesembolso | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="totalGastosNuevaOperacion">
                                 <mat-header-cell *matHeaderCellDef>total Gastos Nueva Operacion</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.totalGastosNuevaOperacion }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.totalGastosNuevaOperacion | currency: "USD":true:"1.2"  }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="totalCostosOperacionAnterior">
                                 <mat-header-cell *matHeaderCellDef>total Costos Operacion Anterior</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.totalCostosOperacionAnterior }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.totalCostosOperacionAnterior | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="custodiaDevengada">
                                 <mat-header-cell *matHeaderCellDef>custodia Devengada</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.custodiaDevengada }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.custodiaDevengada | currency: "USD":true:"1.2" }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="formaPagoCustodiaDevengada">
                                 <mat-header-cell *matHeaderCellDef>forma Pago Custodia Devengada</mat-header-cell>
@@ -214,7 +237,13 @@
                             </ng-container>
                             <ng-container matColumnDef="tipooferta">
                                 <mat-header-cell *matHeaderCellDef>tipo oferta</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.tipooferta }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> 
+                                    {{ 
+                                        element.tipooferta ? 
+                                        element.tipooferta == 'N' ? 'Nuevo' :
+                                        element.tipooferta : 'Error'
+                                    }}
+                                </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="porcentajeflujoplaneado">
                                 <mat-header-cell *matHeaderCellDef>porcentaje flujo planeado</mat-header-cell>
@@ -234,7 +263,7 @@
                     </div>
                 </div>
                 <form [formGroup]="formOpcionesCredito">
-                    <div class="row mt-3">
+                    <div class="row mt-1">
                         <div class="col-md-2">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input [formControl]="montoSolicitado" placeholder="Monto solicitado" autocomplete="off"
@@ -242,25 +271,19 @@
                             </mat-form-field>
                         </div>
                         <div class="col-md-2">
-                            <button mat-stroked-button color="primary" (click)="simularOpciones()"  matTooltip="Recalcula las opciones con el monto solicitado" matTooltipPosition="above">
-                                <mat-icon style="font-size: 24px;" color="primary" >crop_rotate 
-                                </mat-icon>
+                            <button mat-raised-button (click)="simularOpciones()"  matTooltip="Recalcula las opciones con el monto solicitado" matTooltipPosition="above">
                                 <span color="primary">Aplicar Monto</span>
                             </button>
                         </div>
-                        <div class="offset-2 col-md-2">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input class="{{ recibirOpagar }}" matInput [formControl]="recibirPagar" placeholder="Neto a recibir"/>
-                            </mat-form-field>
-                        </div>	
-                        <div class="offset-2 col-md-2">
-                            <button mat-raised-button color="primary" matStepperNext (click)="solicitarExcepcionCobertura()">
+                        
+                        <div class="offset-6 col-md-2">
+                            <button mat-raised-button color="accent" matStepperNext (click)="solicitarExcepcionCobertura()">
                                 <span color="primary">Solicitar Cobertura </span>
                             </button>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="offset-5 col-2">
+                    <div class="row mt-3 justify-content-center">
+                        <div class="col-2">
                             <button mat-raised-button color="primary" matStepperNext (click)="actualizarCliente()">
                                 <span color="primary">Actualizar Cliente</span>
                             </button>

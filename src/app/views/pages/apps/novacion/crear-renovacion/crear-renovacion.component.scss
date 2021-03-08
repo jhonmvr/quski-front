@@ -105,11 +105,22 @@ font-weight: 400;
   max-height: 400px;
   overflow: auto;
 }
-.recibir{
-  color: white;
-  background-color: green;
+
+.disabled{
+  color: black;
+  background-color: white;
+  border-color: gray;
+  font-weight: 400;
 }
-.pagar{
-  color: white;
-  background-color: red;
+.mat-stroked-button.mat-warn{
+  color: white !important;
+  background-color: red !important;
+  border-color: white !important;
+  font-weight: 400 !important;
+}
+.mat-stroked-button.mat-primary{
+  color: white !important;
+  background-color: #00cc00 !important;
+  border-color: white !important;
+  font-weight: 400 !important;
 }

@@ -29,7 +29,6 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public loading;
   public usuario: string;
   public rol: string;
-  public esReasignar: boolean;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   public catAgencia : Array<Agencia>;
   public catProceso : Array<string>;
@@ -162,23 +161,25 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       if(!data.existeError){
         this.catAgencia = data.catalogo;
         this.buscarOperaciones( new WrapperBusqueda() );
-        this.validarReasignacion();
       } else {
         //console.log("Me cai en la Cat de agencia :c");
       }
     });
   }
-  private validarReasignacion(){
-    if( this.catRolReasignacion ){
-      this.catRolReasignacion.forEach( e=>{
-        if( e.valor == this.rol ){
-          this.esReasignar = true;
-          return;
-        }
-      });
-    }else{
-      this.esReasignar = false;
+  public validarReasignacion( element ){
+    if(element.estadoProceso != 'APROBADO' && element.estadoProceso != 'RECHAZADO' && element.estadoProceso != 'CANCELADO' && element.estadoProceso != 'CADUCADO'){
+      if( element.asesor == this.usuario ){
+        return true;
+      }
+      if( this.catRolReasignacion ){
+        this.catRolReasignacion.forEach( e=>{
+          if( e.valor == this.rol ){
+            return true;
+          }
+        });
+      }
     }
+    return false;
   }
   private cargarEnumBase(){
     this.par.findByTipo('PERFIL-ASESOR').subscribe( (data: any)=>{
