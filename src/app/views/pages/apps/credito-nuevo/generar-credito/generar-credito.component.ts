@@ -57,6 +57,8 @@ export class GenerarCreditoComponent implements OnInit {
   public pesoFunda = new FormControl('', [Validators.required]);
   public numeroFunda = new FormControl('');
   public totalPesoBrutoFunda = new FormControl('');
+  public totalPesoNeto = new FormControl('');
+  
   /** @FORM_INSTRUCCION **/
   public formInstruccion: FormGroup = new FormGroup({});
   public tipoCuenta = new FormControl('', [Validators.required]);
@@ -139,6 +141,8 @@ export class GenerarCreditoComponent implements OnInit {
     this.formFunda.addControl("pesoFunda", this.pesoFunda);
     this.formFunda.addControl("numeroFunda", this.numeroFunda);
     this.formFunda.addControl("totalPesoBrutoFunda", this.totalPesoBrutoFunda);
+    this.formFunda.addControl("totalPesoNeto", this.totalPesoNeto);
+    
     this.formInstruccion.addControl("tipoCuenta", this.tipoCuenta);
     this.formInstruccion.addControl("numeroCuenta", this.numeroCuenta);
     this.formInstruccion.addControl("firmanteOperacion", this.firmanteOperacion);
@@ -227,11 +231,7 @@ export class GenerarCreditoComponent implements OnInit {
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     this.numeroCuenta.setValue( data.cuentas[0].cuenta);
     this.tipoCuenta.setValue( this.catCuenta.find( x => x.id == data.cuentas[0].banco) );
-    let totalPesoB :any = 0 ;
-    data.joyas.forEach(e =>{
-      totalPesoB  = (Number(totalPesoB) + Number(e.pesoBruto)).toFixed(2);
-    });
-    this.totalPesoBrutoFunda.setValue( totalPesoB  );
+    
     this.tipoCuenta.disable();
     this.numeroCuenta.disable();
     if(data.excepciones){
@@ -254,6 +254,16 @@ export class GenerarCreditoComponent implements OnInit {
       this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
       this.pesoFunda.setValue( this.catTipoFunda ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) : null : null )
       this.numeroFunda.setValue( data.credito.numeroFunda ? data.credito.numeroFunda : null);
+      let totalPesoB :any = 0 ;
+      let totalPesoN :any = 0 ;
+      this.operacionNuevo.joyas.forEach(e =>{
+        totalPesoB  = (Number(totalPesoB) + Number( e.pesoBruto )).toFixed(2);
+        totalPesoN  = (Number(totalPesoN) + Number( e.pesoNeto )).toFixed(2);
+        
+      });
+      
+      this.totalPesoBrutoFunda.setValue( this.pesoFunda.value.codigo +' + '+ totalPesoB );
+      this.totalPesoNeto.setValue( totalPesoN );
     }
     if( data.credito.estadoSoftbank && data.credito.numeroOperacion){
       this.cargarOperacion( data.credito );
@@ -339,6 +349,16 @@ export class GenerarCreditoComponent implements OnInit {
       if(data.entidad){
         this.anular = true;
         this.numeroFunda.setValue( data.entidad.numeroFunda ); 
+        let totalPesoB :any = 0 ;
+        let totalPesoN :any = 0 ;
+        this.operacionNuevo.joyas.forEach(e =>{
+          totalPesoB  = (Number(totalPesoB) + Number( e.pesoBruto )).toFixed(2);
+          totalPesoN  = (Number(totalPesoN) + Number( e.pesoNeto )).toFixed(2);
+          
+        });
+        
+        this.totalPesoBrutoFunda.setValue( this.pesoFunda.value.codigo +' + '+ totalPesoB );
+        this.totalPesoNeto.setValue( totalPesoN );
       }else{ 
         this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
       }

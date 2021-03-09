@@ -73,7 +73,7 @@
                 <kt-tabla-tasacion *ngIf="this.operacionNuevo;" [data]='this.operacionNuevo.joyas' [tipo]="'T'"></kt-tabla-tasacion>
                 <form [formGroup]="formFunda">
                     <div class="row mt-3">
-                        <div class="col-md-4 ">
+                        <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Peso De la Funda: " [formControl]="pesoFunda" (selectionChange)="obtenerNumeroFunda()">
                                     <mat-option *ngFor="let element of catTipoFunda" [value]="element">
@@ -82,17 +82,21 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4 ">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="totalPesoBrutoFunda" readonly placeholder="Total de peso bruto (Gr)" />
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4 ">
+                        <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input matInput [formControl]="numeroFunda" readonly placeholder="Numero de funda" />
                             </mat-form-field>
                         </div>
-                       
+                        <div class="col-md-3 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="totalPesoBrutoFunda" readonly placeholder="Total de peso bruto (Gr)" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="totalPesoNeto" readonly placeholder="Total de peso Neto (Gr)" />
+                            </mat-form-field>
+                        </div>
                     </div>
                     <div class="row">
                         <ng-container *ngIf="anular">

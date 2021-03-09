@@ -87,16 +87,7 @@
               <div class="row">
                   <div class="col">
                     <mat-table matTableExporter  #tableNegociacion class="tableOpciones" #exporter="matTableExporter"	[dataSource]="dataSourceCreditoNegociacion ">
-                        <ng-container matColumnDef="Accion">
-                            <mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
-                            <mat-cell *matCellDef="let row">
-                                <mat-checkbox (click)="$event.stopPropagation() && masterToggle(row)"
-                                (change)="$event ? masterToggle(row): null"
-                                [checked]="selection.isSelected(row)"
-                                [aria-label]="checkboxLabel(row)">
-                                  </mat-checkbox>	
-                            </mat-cell>
-                        </ng-container>
+                        
                         <ng-container matColumnDef="plazo">
                             <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
                             <mat-cell *matCellDef="let element"> 

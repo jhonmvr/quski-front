@@ -72,7 +72,7 @@ export class PopupPagoComponent implements OnInit {
     });
     this.par.findByTipo('TIPO-PAGO-COMP').subscribe( (data: any) =>{
       this.catTipoPago = data.entidades ? data.entidades : {nombre: 'ERR', valor: 'Error al cargar catalogo'}
-      
+      this.tipoPago.setValue( this.catTipoPago.find( x => x.nombre == 'EFECTIVO') );
     });
   }
   public chanceBanco(){

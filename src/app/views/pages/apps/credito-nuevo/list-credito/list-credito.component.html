@@ -250,11 +250,11 @@
                     </ng-container>
                     <ng-container matColumnDef="coberturaInicial">
                         <mat-header-cell *matHeaderCellDef>Cobertura Inicial</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.coberturaInicial}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.coberturaInicial | percent}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="coberturaActual">
                         <mat-header-cell *matHeaderCellDef>Cobertura Actual</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.coberturaActual}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.coberturaActual | percent}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="diasMora">
                         <mat-header-cell *matHeaderCellDef>Dias de Mora</mat-header-cell>

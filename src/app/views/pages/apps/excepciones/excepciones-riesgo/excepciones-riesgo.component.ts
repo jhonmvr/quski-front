@@ -239,11 +239,23 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE EL LOS CAMPOS OBLIGATORIOS','warning');
       return;
     }
-    this.exc.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(()=>{
-      this.router.navigate(['../../aprobador/bandeja-excepciones']);
-    },()=>{
-      this.router.navigate(['../../aprobador/bandeja-excepciones']);
+    let mensaje = aprueba == 'SI' ? 'Aprobar la excepcion de riesgo para: ' + this.wp.credito.codigo+'?' :
+    'Negar la excepcion de riesgo para: ' + this.wp.credito.codigo+'?'; 
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
     });
+    dialogRef.afterClosed().subscribe(r => {
+      if(r){
+        this.exc.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(()=>{
+          this.router.navigate(['../../aprobador/bandeja-excepciones']);
+        },()=>{
+          this.router.navigate(['../../aprobador/bandeja-excepciones']);
+        });
+      }
+    });
+    
   }
   private mapearVariables(variables: Array<any>){
     let variablesBase : Array<TbQoVariablesCrediticia> = new Array<TbQoVariablesCrediticia>();
