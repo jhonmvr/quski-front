@@ -35,7 +35,7 @@ export class RegistrarPagoComponent implements OnInit {
   private agencia;
   catTipoPagoProceso: Array<any>;
   public dataSourceComprobante = new MatTableDataSource<any>();
-  public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','descargarComprobante'];
+  public displayedColumnsComprobante = ['accion','intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','tipoPago','descargarComprobante'];
   public formRegistrarPago: FormGroup = new FormGroup({});
   public nombreCliente = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cedula = new FormControl('', [Validators.required, Validators.maxLength(13)]);

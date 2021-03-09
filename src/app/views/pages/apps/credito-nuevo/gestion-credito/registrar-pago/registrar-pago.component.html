@@ -86,6 +86,10 @@
 						<mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
 						<mat-cell *matCellDef="let element"> {{ element.valorDepositado | currency: "USD":true:"1.2" }} </mat-cell>
                     </ng-container>
+                    <ng-container matColumnDef="tipoPago">
+						<mat-header-cell *matHeaderCellDef>Tipo Pago</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{ element.tipoPago }} </mat-cell>
+                    </ng-container>
                     <ng-container matColumnDef="descargarComprobante">
 						<mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
 						<mat-cell *matCellDef="let row">
@@ -118,10 +122,6 @@
                                     {{element.nombre }}
                                 </mat-option>
                             </mat-select>
-                        </mat-form-field>
-                        <mat-form-field class="mat-form-field-fluid">
-
-                            <input matInput [formControl]="valorPreCancelado" placeholder="Valor de PreCancelacion"/>
                         </mat-form-field>
                       </div>
                     <div class="col-md-10">

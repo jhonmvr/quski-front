@@ -99,10 +99,10 @@ import { ReNoticeService } from '../re-notice.service';
       )
     );
   }
-  public enviarRespuesta( id, isRegistro, isAprobar, nombreAprobador, correoAprobador) {
+  public enviarRespuesta( id, isRegistro, isAprobar, nombreAprobador, correoAprobador, valorAprobador) {
     this.options = { headers: this.headers, params: this.params };
     const serviceUrl =  this.appResourcesUrl + 'registrarPagoRestController/enviarRespuesta';
-      this.params = new HttpParams().set('id', id ).set('isRegistro', isRegistro ).set('isAprobar', isAprobar ).set('nombreAprobador', nombreAprobador ).set('correoAprobador', correoAprobador )
+      this.params = new HttpParams().set('id', id ).set('isRegistro', isRegistro ).set('isAprobar', isAprobar ).set('nombreAprobador', nombreAprobador ).set('correoAprobador', correoAprobador ).set('valorAprobador', valorAprobador )
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

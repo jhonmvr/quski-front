@@ -113,7 +113,8 @@ export class AprobarBloqueoFondosComponent implements OnInit {
       });
     dialogRef.afterClosed().subscribe(r => {
       if(r){
-        this.reg.enviarRespuesta(this.cliente.id, false, aprobar, this.usuario, this.correoUsuario).subscribe((data: any) => {
+        let valor 
+        this.reg.enviarRespuesta(this.cliente.id, false, aprobar, this.usuario, this.correoUsuario, valor).subscribe((data: any) => {
           if(data.entidad.estadoProceso){
             if(aprobar && data.entidad.estadoProceso == "APROBADO"){
               this.sinNoticeService.setNotice("PROCESO DE BLOQUEO DE FONDOS APROBADO CORRECTAMENTE", 'success');

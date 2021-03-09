@@ -25,7 +25,7 @@ export class AprobarPagosComponent implements OnInit {
   public correoUsuario: string;
   public cliente: TbQoClientePago;
   public dataSourceComprobante = new MatTableDataSource<any>();
-  public displayedColumnsComprobante = ['intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','descargarComprobante'];
+  public displayedColumnsComprobante = ['intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','tipoPago','descargarComprobante'];
   public displayedColumnsRubro = ['rubro','numeroCuota', 'proyectado', 'calculado', 'estado'];
   public dataSourceRubro = new MatTableDataSource<any>();
   
@@ -36,6 +36,8 @@ export class AprobarPagosComponent implements OnInit {
   public cuentaMupi = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public tipoCredito = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public valorPreCancelado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
+  public tipoPagoProceso = new FormControl('', [Validators.required, Validators.maxLength(13)]);
+  public valorDepositadoAprobador = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public valorDepositado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public observacion = new FormControl('', [Validators.maxLength(150)]);
  
@@ -58,6 +60,7 @@ export class AprobarPagosComponent implements OnInit {
     this.formAprobarPago.addControl("cuentaMupi", this.cuentaMupi);
     this.formAprobarPago.addControl("tipoCredito", this.tipoCredito);
     this.formAprobarPago.addControl("valorPreCancelado", this.valorPreCancelado);
+    this.formAprobarPago.addControl("tipoPagoProceso", this.tipoPagoProceso);
     this.formAprobarPago.addControl("valorDepositado", this.valorDepositado);
     this.formAprobarPago.addControl("observacion", this.observacion);
   }
@@ -89,6 +92,7 @@ export class AprobarPagosComponent implements OnInit {
             }
             this.tipoCredito.setValue(this.cliente.tipoCredito);
             this.valorPreCancelado.setValue(this.cliente.valorPrecancelado);
+            this.tipoPagoProceso.setValue(this.cliente.tipoPagoProceso);
             this.valorDepositado.setValue(this.cliente.valorDepositado);
             this.observacion.setValue(this.cliente.observacion);
             this.subheaderService.setTitle( "Proceso: " + this.cliente.codigo );
@@ -128,7 +132,8 @@ export class AprobarPagosComponent implements OnInit {
       });
     dialogRef.afterClosed().subscribe(r => {
       if(r){
-        this.reg.enviarRespuesta(this.cliente.id, true, aprobar, this.usuario, this.correoUsuario).subscribe((data: any) => {
+        let valor = this.valorDepositadoAprobador.value &&  this.valorDepositadoAprobador.value > 0 ? this.valorDepositadoAprobador.value : null;
+        this.reg.enviarRespuesta(this.cliente.id, true, aprobar, this.usuario, this.correoUsuario, valor).subscribe((data: any) => {
           if(data.entidad.estadoProceso){
             if(aprobar && data.entidad.estadoProceso == "APROBADO"){
               this.sinNoticeService.setNotice("PROCESO DE PAGO APROBADO CORRECTAMENTE", 'success');

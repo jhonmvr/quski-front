@@ -10,6 +10,7 @@ export class TbQoClientePago{
 	tipoCredito : String;
 	valorPrecancelado : number;
 	valorDepositado : number;
+	tipoPagoProceso: String;
 	observacion : String;
 	estado: String;
 	tipo: String;
