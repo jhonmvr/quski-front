@@ -69,7 +69,6 @@ export class AprobarPagosComponent implements OnInit {
     this.reg.setParameter();
     this.sof.setParameter();
     this.cargarCatalogos();
-    this.consultaInicial();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.correoUsuario = localStorage.getItem( 'email' );
     this.formAprobarPago.disable();
@@ -86,15 +85,16 @@ export class AprobarPagosComponent implements OnInit {
             this.cedula.setValue(this.cliente.cedula);
             this.consultaRubrosCS(this.cliente.codigoOperacion);
             this.codigoOperacion.setValue(this.cliente.codigoOperacion);
-            let banco = this.catBanco.find(x => x.id == this.cliente.codigoCuentaMupi);
-            if(banco){
-              this.cuentaMupi.setValue( banco.nombre );
-            }
+            
             this.tipoCredito.setValue(this.cliente.tipoCredito);
             this.valorPreCancelado.setValue(this.cliente.valorPrecancelado);
             this.tipoPagoProceso.setValue(this.cliente.tipoPagoProceso);
             this.valorDepositado.setValue(this.cliente.valorDepositado);
             this.observacion.setValue(this.cliente.observacion);
+            let banco = this.catBanco.find(x => x.id == this.cliente.codigoCuentaMupi);
+            if(banco){
+              this.cuentaMupi.setValue( banco.nombre );
+            }
             this.subheaderService.setTitle( "Proceso: " + this.cliente.codigo );
           }
         }, error => {
@@ -108,6 +108,7 @@ export class AprobarPagosComponent implements OnInit {
   private cargarCatalogos(){
     this.sof.consultarBancosCS().subscribe( data =>{
       this.catBanco = data.catalogo ? data.catalogo :  {nombre: 'No se cargo el catalogo. Error', id: 0};
+      this.consultaInicial();
     });
   }
   private consultaRubrosCS(numeroOperacion) {
