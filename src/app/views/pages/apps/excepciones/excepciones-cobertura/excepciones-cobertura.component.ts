@@ -24,8 +24,6 @@ import 'hammerjs';
   styleUrls: ['./excepciones-cobertura.component.scss']
 })
 export class ExcepcionesCoberturaComponent implements OnInit {
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  public loading;
   public observacion: string;
   public excepcion: TbQoExcepcion;
   public usuario;
@@ -96,7 +94,6 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.exc.setParameter();
     this.cal.setParameter();
     this.wp = null;
-    this.loading = this.loadingSubject.asObservable();
     this.busquedaNegociacion();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     console.log('El aprobador? =====>',this.usuario);
@@ -118,7 +115,6 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.valorAvaluo.disable();
   }
   private busquedaNegociacion(){
-    this.loadingSubject.next(true);
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
         let excepcionRol = JSON.parse(atob(data.params.id));
@@ -129,14 +125,12 @@ export class ExcepcionesCoberturaComponent implements OnInit {
             //console.log('Hola x2?')
             this.wp.credito && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' && this.excepcion ?  
             this.cargarCampos(this.wp) : this.sinNoticeService.setNotice('ERROR CARGANDO EXCEPCION','error');
-            this.loadingSubject.next(false);
           }else{
-            this.loadingSubject.next(false);
             this.sinNoticeService.setNotice('ERROR CARGANDO NEGOCIACION','error');
           }
         });
       }
-    }, error =>{this.loadingSubject.next(false)});
+    });
   }
   public regresar(){
     this.router.navigate(['aprobador/bandeja-excepciones']);
@@ -156,34 +150,28 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     this.camposAdicinales( wp );
     this.observacionAsesor.setValue( this.excepcion.observacionAsesor );
     this.usuarioAsesor.setValue( this.excepcion.idAsesor );
-    this.loadingSubject.next(false);
   }
   public simular(){ 
-    this.loadingSubject.next(true);
     this.par.findByNombre('COBERTURA_MINIMA').subscribe( (data: any) =>{
       if(data.entidad){
-        if(this.cobertura.valid && this.observacionAprobador.valid  && this.cobertura.value >= Number(data.entidad.valor) ){
+        if(!this.cobertura.valid || this.cobertura.value < Number(data.entidad.valor) ){
+          this.sinNoticeService.setNotice('VALOR DE COBERTURA INVALIDO. ESCOJA UN PORCENTAJE MAYOR A: '+ data.entidad.valor, 'warning');
+          return;
+        }
+        if(this.observacionAprobador.valid){
           this.wp.proceso.proceso == "RENOVACION" ? 
           this.cal.simularOfertaExcepcionadaRenovacion(this.wp.credito.id, this.cobertura.value).subscribe( (data: any) =>{
             !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
             this.simulado = data.entidades ? true : false;
-            this.loadingSubject.next(false);
-          },err=>{
-            this.loadingSubject.next(false);
-          }):this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{
+          }): this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{
             !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
             this.simulado = data.entidades ? true : false;
-            this.loadingSubject.next(false);
-            },err=>{
-              this.loadingSubject.next(false);
             });
         }else{
-          this.sinNoticeService.setNotice('COMPLETE LA SECCION CORRECTAMENTE','error');
-          this.loadingSubject.next(false);
+          this.sinNoticeService.setNotice('INGRESE UNA OBSERVACION PARA SIMULAR.','warning');
         }
       }else{
         this.sinNoticeService.setNotice('ERROR CARGANDO PARAMETRO DE COBERTURA MINIMA','error');
-        this.loadingSubject.next(false);
 
       }
     });
@@ -191,29 +179,22 @@ export class ExcepcionesCoberturaComponent implements OnInit {
   }
   public calcularOpciones() {
     if (this.wp && this.wp.joyas && this.wp.joyas.length > 0) {
-      this.loadingSubject.next(true);
       this.wp.proceso.proceso == "RENOVACION" ? 
         this.cal.simularOfertaRenovacionExcepcion(this.wp.credito.id, 0).subscribe( data =>{
-          this.loadingSubject.next(false);
           if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
             && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
             && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
               this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado.toFixed(2));
               this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
           }
-        },err=>{
-          this.loadingSubject.next(false);
         }):
       this.cal.simularOferta(this.wp.credito.id, null, null).subscribe((data: any) => {
-        this.loadingSubject.next(false);
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
             this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado.toFixed(2));
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
         }
-      },err=>{
-        this.loadingSubject.next(false);
       });
     } else {
       this.sinNoticeService.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
@@ -240,7 +221,12 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         if(r){
           this.exc.negarExcepcion(this.excepcion.id, this.observacionAprobador.value, this.usuario, this.wp.proceso.proceso).subscribe( (data: any) =>{
-            if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error al negar la excepcion','error')}
+            if(data.entidad){ 
+              this.sinNoticeService.setNotice('EXCEPCION DE COBERTURA NEGADA','success');
+              this.router.navigate(['aprobador/bandeja-excepciones']);  
+            } else{ 
+              this.sinNoticeService.setNotice('Error al negar la excepcion','error')
+            }
           });
         }
       });
@@ -258,7 +244,12 @@ export class ExcepcionesCoberturaComponent implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         if(r){
           this.exc.aprobarCobertura(this.excepcion.id, this.observacionAprobador.value, this.usuario, this.cobertura.value, this.wp.proceso.proceso).subscribe( (data: any) =>{
-            if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error  al aprobar la excepcion','error')}
+            if(data.entidad){ 
+              this.sinNoticeService.setNotice('EXCEPCION DE COBERTURA APROBADA','success');
+              this.router.navigate(['aprobador/bandeja-excepciones']);  
+            } else{ 
+              this.sinNoticeService.setNotice('Error  al aprobar la excepcion','error')
+            }
           });
         }
       });

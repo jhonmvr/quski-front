@@ -216,24 +216,6 @@ export class ExcepcionesRiesgoComponent implements OnInit {
       });
     }else{ this.sinNoticeService.setNotice('COMPLETE EL CAMPO DE OBSERVACION','error') }
   }
-  public aprobar(){ 
-    if(this.observacionAprobador.valid && this.cobertura.valid){
-      //console.log('ME FUI A APROBAR')
-      let mensaje = 'Aprobar la excepcion de cobertura para: ' + this.wp.credito.codigo+'?'; 
-      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-        width: "800px",
-        height: "auto",
-        data: mensaje
-      });
-      dialogRef.afterClosed().subscribe(r => {
-        if(r){
-          this.exc.aprobarCobertura(this.excepcion.id, this.observacionAprobador.value, this.usuario,this.cobertura.value,this.wp.proceso.proceso).subscribe( (data: any) =>{
-            if(data.entidad){ this.router.navigate(['aprobador/bandeja-excepciones']);  } else{ this.sinNoticeService.setNotice('Error  al aprobar la excepcion','error')}
-          });
-        }
-      });
-    }else{ this.sinNoticeService.setNotice('COMPLETE EL CAMPO DE OBSERVACION','error') }
-  }
   aprobarExcepcion(aprueba){
     if(this.observacionAprobador.invalid){
       this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE EL LOS CAMPOS OBLIGATORIOS','warning');
@@ -249,10 +231,13 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     dialogRef.afterClosed().subscribe(r => {
       if(r){
         this.exc.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(()=>{
+          if(aprueba){
+            this.sinNoticeService.setNotice('EXCEPCION DE RIESGO APROBADA','success');
+          }else{
+            this.sinNoticeService.setNotice('EXCEPCION DE RIESGO NEGADA','success');
+          }
           this.router.navigate(['../../aprobador/bandeja-excepciones']);
-        },()=>{
-          this.router.navigate(['../../aprobador/bandeja-excepciones']);
-        });
+        })
       }
     });
     

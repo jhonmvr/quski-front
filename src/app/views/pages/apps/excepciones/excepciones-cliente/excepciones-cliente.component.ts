@@ -79,7 +79,6 @@ export class ExcepcionesClienteComponent implements OnInit {
   // FORM DATOS CONTACTO
   public formDatosContacto: FormGroup = new FormGroup({});
   public telefonoDomicilio = new FormControl('', []);
-  public telefonoAdicional = new FormControl('', []);
   public telefonoMovil = new FormControl('', []);
   public telefonoOficina = new FormControl('', []);
   public correo = new FormControl('', []);
@@ -145,7 +144,6 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.formDatosCliente.addControl("ultimaFechaDeActualizacionDeCliente", this.ultimaFechaDeActualizacionDeCliente);
     //FORM DATOS CONTACTO
     this.formDatosContacto.addControl("telefonoDomicilio", this.telefonoDomicilio);
-    this.formDatosContacto.addControl("telefonoAdicional", this.telefonoAdicional);
     this.formDatosContacto.addControl("telefonoMovil", this.telefonoMovil);
     this.formDatosContacto.addControl("telefonoOficina", this.telefonoOficina);
     this.formDatosContacto.addControl("correo", this.correo);
@@ -217,6 +215,7 @@ export class ExcepcionesClienteComponent implements OnInit {
             this.excepcion = data.entidad.excepciones.find(e => e.id == excepcionRol.id ); 
             this.usuarioAsesor.setValue( this.excepcion.idAsesor );
             this.entidadCliente = data.entidad.credito.tbQoNegociacion.tbQoCliente;
+            
             this.riesgos = data.entidad.riesgos;
             this.entidadNegociacion = data.entidad.credito.tbQoNegociacion;
             this.nombresCompletos.setValue(this.entidadCliente.nombreCompleto);
@@ -379,8 +378,12 @@ export class ExcepcionesClienteComponent implements OnInit {
       this.loadingSubject.next(true);
       if(r){
         this.exs.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(p=>{
+          if(aprueba){
+            this.sinNoticeService.setNotice('EXCEPCION DE CLIENTE APROBADA','success');
+          }else{
+            this.sinNoticeService.setNotice('EXCEPCION DE CLIENTE NEGADA','success');
+          }
           this.router.navigate(['../../aprobador/bandeja-excepciones']);
-          this.sinNoticeService.setNotice('EXCEPCION DE CLIENTE APROBADA','success');
         },error=>{
           this.sinNoticeService.setNotice('ERROR AL ENVIAR RESPUESTA','error');
           this.router.navigate(['../../aprobador/bandeja-excepciones']);
