@@ -85,7 +85,6 @@ export class AprobarPagosComponent implements OnInit {
             this.cedula.setValue(this.cliente.cedula);
             this.consultaRubrosCS(this.cliente.codigoOperacion);
             this.codigoOperacion.setValue(this.cliente.codigoOperacion);
-            
             this.tipoCredito.setValue(this.cliente.tipoCredito);
             this.valorPreCancelado.setValue(this.cliente.valorPrecancelado);
             this.tipoPagoProceso.setValue(this.cliente.tipoPagoProceso);

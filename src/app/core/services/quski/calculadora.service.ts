@@ -34,7 +34,7 @@ export class CalculadoraService extends BaseService {
       )
     );
   }  
-  public simularOferta(idCredito, montoSolicitado, riesgoTotal ) {
+  public simularOferta(idCredito, montoSolicitado: number, riesgoTotal ) {
     const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOferta';
    this.params = new HttpParams();
    this.params = this.params.set('idCredito',idCredito);

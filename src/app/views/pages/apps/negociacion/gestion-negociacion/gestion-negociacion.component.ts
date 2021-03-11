@@ -503,16 +503,6 @@ export class GestionNegociacionComponent implements OnInit {
     });
   }
   /** ********************************************* @POPUP ********************* **/
-  public notificarSobreExcepciones(list :TbQoExcepcion[]){
-    const dialogRef = this.dialog.open(ListaExcepcionesComponent, {
-      width: "700px",
-      height: "auto",
-      data: list
-    });
-    dialogRef.afterClosed().subscribe(r =>{
-      //console.log("LLEGUE HASTA AQUI JEJE");
-    });
-  }
   public abrirSalirGestion(data: any) {
     const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
       width: "800px",
@@ -593,7 +583,6 @@ export class GestionNegociacionComponent implements OnInit {
     const errorMin = 'No cumple la edad minima';
     const errorMax = 'No cumple la edad maxima';
     const input = this.formDatosCliente.get('edad');
-    // console.log('El required // El min // El max // El valor', input.hasError('required'), input.hasError('min'), input.hasError('max'), input.value );
     return input.hasError('required') ? errorRequerido :  input.hasError('max') ? errorMax : input.hasError('min') ? errorMin : '';
   }
   public getErrorMessage(pfield: string) { 
@@ -724,15 +713,11 @@ export class GestionNegociacionComponent implements OnInit {
     this.cedula.disable();
   }
   public cargarEdad(){
-    console.log('cargarEdad');
     if(this.fechaDeNacimiento.valid){
-      console.log('Fecha de nacimeiento valida');
       const fechaSeleccionada = new Date(this.fechaDeNacimiento.value);
       const convertFechas = new RelativeDateAdapter();
-      console.log('Fecha ===>', fechaSeleccionada);
       this.par.getDiffBetweenDateInicioActual(convertFechas.format(fechaSeleccionada, "input"), "dd/MM/yyy").subscribe((rDiff: any) => {
         const diff: YearMonthDay = rDiff.entidad;
-        console.log('La edad? ===>', diff.year);
         this.edad.setValue( diff.year );
       });
     }
@@ -799,7 +784,6 @@ export class GestionNegociacionComponent implements OnInit {
         joya.id = this.elementJoya;
         this.elementJoya = null;
       }
-      console.log('Mi joya a guardar ===>', joya);
       this.neg.agregarJoya(joya).subscribe((data: any) => {
         this.negoW.joyas = data.entidades;
         this.sinNotSer.setNotice('SE GUARDO LA JOYA TASADA', 'success');
@@ -809,7 +793,6 @@ export class GestionNegociacionComponent implements OnInit {
       });
   }
   editar(element: TbQoTasacion) {
-    console.log('Mi elemento ===>', element);
     this.loadTasacion.next(true);
     let cliente = this.buildCliente();
     this.neg.verPrecios(cliente).subscribe(resp=>{
@@ -862,18 +845,22 @@ export class GestionNegociacionComponent implements OnInit {
       }
       this.loadOpciones.next(true);
       this.cal.simularOferta(this.negoW.credito.id,montoSolicitado,this.riesgoTotal).subscribe((data: any) => {
+        console.log("LLEGUE HASTA AQUI 1");
         if(data.entidad.simularResult.codigoError == 3 ){
-          this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
+        console.log("LLEGUE HASTA AQUI 2");
+        this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
           this.loadOpciones.next(false);
           this.abrirPopupExcepciones( new DataInjectExcepciones(false,true,false) );
           this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
         } else if(data.entidad.simularResult.codigoError == 1 ){
+          console.log("LLEGUE HASTA AQUI 5");
           this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
           this.loadOpciones.next(false);
           this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
         } else if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
+            console.log("LLEGUE HASTA AQUI 4");
             this.loadOpciones.next(false);
             this.selection = new SelectionModel<any>(true, []);
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
@@ -882,7 +869,6 @@ export class GestionNegociacionComponent implements OnInit {
           this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
         }
         this.myStepper.selectedIndex = 5;
-      },err=>{
       });
     } 
   }
@@ -899,7 +885,6 @@ export class GestionNegociacionComponent implements OnInit {
     });
     this.componenteVariable = false;
     this.negoW.variables = variablesBase;
-    console.log("Las variables de bre =>", variablesBase);
     this.sinNotSer.setNotice("LAS VARIABLES CREDITICIAS FUERON ACTUALIZADAS", 'success');
     this.componenteVariable = true;
     this.loadVariables.next(false);
@@ -983,14 +968,11 @@ export class GestionNegociacionComponent implements OnInit {
       this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response=>{
         this.router.navigate(['cliente/gestion-cliente/NEG/',this.negoW.credito.tbQoNegociacion.id]);    
       }, error =>{
-        console.log('eeorr', error.error.msgError);
       this.sinNotSer.setNotice(error.error.msgError,'error');
       });
     }
   }
-  validarDirectiva(element){
-    console.log("===>>mi directiva",element);
-  }
+
   regresar(){
     this.router.navigate(['negociacion/']);
   }
