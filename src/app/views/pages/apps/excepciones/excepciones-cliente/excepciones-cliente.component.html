@@ -1,8 +1,7 @@
-  
 <re-portlet>
     <re-portlet-header [title]="'Excepción Cliente'" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
-            <a [routerLink]="['../../']" matTooltip="Regresar al listado"
+            <a (click)="regresar()" matTooltip="Regresar a gestion cliente"
                 style="font-size: 12px; vertical-align: middle;">
                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
                     arrow_back</mat-icon>
@@ -31,7 +30,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <mat-form-field>
+                            <mat-form-field class="mat-form-field-fluid">
                                 <input matInput [formControl]="nombreProceso" placeholder="Proceso" />
                             </mat-form-field>
                         </div>
@@ -43,126 +42,90 @@
                 <div class="kt-form">
                     <form [formGroup]="formDatosCliente">
                         <div class="row">
-                            <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="tipoIdentificacion" placeholder="Tipo de identificacion"
-                                        matInput />
+                            <div class="col-md-3">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input [formControl]="primerNombre" placeholder="Primer Nombre" matInput />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input [formControl]="segundoNombre" placeholder="Segundo Nombre" matInput />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input [formControl]="apellidoPaterno" placeholder="Apellido Paterno" matInput />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input [formControl]="apellidoMaterno" placeholder="Apellido Materno" matInput />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
-                                <mat-form-field>
+                                <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="identificacionC" placeholder="RUC / C.I / Pasaporte"
                                         matInput />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="aprobadoWebMupi" placeholder="Aprobado Web Mupi" matInput />
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="primerNombre" placeholder="Primer Nombre" matInput />
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="segundoNombre" placeholder="Segundo Nombre" matInput />
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="separacionDeBienes" placeholder="Separacion de Bienes"
-                                        matInput />
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="apellidoPaterno" placeholder="Apellido Paterno" matInput />
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="apellidoMaterno" placeholder="Apellido Materno" matInput />
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="cargaFamiliar" placeholder="Cargas Familiares" matInput />
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <mat-form-field>
+                                <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="genero" placeholder="Genero" matInput />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
-                                <mat-form-field>
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input [formControl]="edad" placeholder="Edad" matInput />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input [formControl]="aprobadoWebMupi" placeholder="Aprobado Web Mupi" matInput />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input [formControl]="cargaFamiliar" placeholder="Cargas Familiares" matInput />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="estadoCivil" placeholder="Estado Civil" matInput />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
-                                <mat-form-field>
+                                <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="lugarDeNacimiento" placeholder="Lugar De Nacimiento"
                                         matInput />
                                 </mat-form-field>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-4">
                                 <mat-form-field class="mat-form-field-fluid">
-                                    <mat-label>Fecha de nacimiento</mat-label>
-                                    <input matInput #inputFechaNacimiento [matDatepicker]="pickerFechaNacimiento"
-                                        [formControl]="fechaDeNacimiento" required="true" />
-                                    <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento">
-                                    </mat-datepicker-toggle>
-                                    <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
+                                    <input placeholder="Fecha de nacimiento" matInput [value]="ultimaFechaDeActualizacionDeCliente.value | rDate"
+                                        [formControl]="fechaDeNacimiento" />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
-                                <mat-form-field>
+                                <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="nacionalidad" placeholder="Nacionalidad" matInput />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="edad" placeholder="Edad" matInput />
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <mat-form-field>
+                                <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="nivelDeEducacion" placeholder="Nivel De Educacion" matInput />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
-                                <mat-form-field>
+                                <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="actividadEconomica" placeholder="Actividad Economica"
                                         matInput />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
                                 <mat-form-field class="mat-form-field-fluid">
-                                    <mat-label>Última fecha de actualización de cliente</mat-label>
-                                    <input matInput #inputFechaNacimientos [matDatepicker]="pickerFechaNacimientos"
+                                    <input placeholder="Última fecha de actualización de cliente" matInput [value]="ultimaFechaDeActualizacionDeCliente.value | rDate"
                                         [formControl]="ultimaFechaDeActualizacionDeCliente" />
-                                    <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimientos">
-                                    </mat-datepicker-toggle>
-                                    <mat-datepicker #pickerFechaNacimientos></mat-datepicker>
                                 </mat-form-field>
-
                             </div>
                         </div>
                     </form>
@@ -174,27 +137,18 @@
                     <form [formGroup]="formDatosContacto">
                         <div class="row">
                             <div class="col-md-4">
-                                <mat-form-field>
+                                <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="telefonoDomicilio" placeholder="Telefono Domicilio:"
                                         matInput />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
-                                <mat-form-field>
+                                <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="telefonoMovil" placeholder="Telefono Movil:" matInput />
                                 </mat-form-field>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-4">
-                                <mat-form-field>
-                                    <input [formControl]="telefonoOficina" placeholder="Telefono de Oficina/Otros:"
-                                        matInput />
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field>
+                                <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="correo" placeholder="Correo Electronico:" matInput />
                                 </mat-form-field>
                             </div>
@@ -207,9 +161,7 @@
                 <div class="row mt-2">
                     <div class="col-md-8">
                         <ng-container *ngIf="dataPopup">
-                            <kt-tabla-variables-crediticias [dataPopup]='dataPopup'>
-
-                            </kt-tabla-variables-crediticias>
+                            <kt-tabla-variables-crediticias [dataPopup]='dataPopup'></kt-tabla-variables-crediticias>
                         </ng-container>
                     </div>
                 </div>
@@ -218,8 +170,8 @@
                 <ng-template matStepLabel>Riesgo Acumulado </ng-template>
                 <div class="row mt-2">
                     <div class="col">
-                        <kt-tabla-riesgo-acumulado *ngIf="riesgos;" [base]='riesgos'></kt-tabla-riesgo-acumulado>
-                        <div class="row"  *ngIf="!riesgos;">
+                        <kt-tabla-riesgo-acumulado *ngIf="wr && wr.riesgos;" [base]='wr.riesgos'></kt-tabla-riesgo-acumulado>
+                        <div class="row" *ngIf=" !wr ||  !wr.riesgos">
                             <strong> EL CLIENTE NO TIENE RIESGO</strong>
                         </div>
                     </div>
@@ -239,7 +191,7 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-4">
-                                <mat-form-field  class="mat-form-field-fluid">
+                                <mat-form-field class="mat-form-field-fluid">
                                     <input matInput [formControl]="usuarioAsesor" placeholder="Usuario Asesor: " />
                                 </mat-form-field>
                             </div>
@@ -249,14 +201,15 @@
                                 <mat-form-field class="mat-form-field-fluid">
                                     <mat-label>Observacion Del Asesor: </mat-label>
                                     <textarea class="form-control border" rows="5"
-                                    placeholder="Observacion Del Asesor: " [formControl]="observacionAsesor" [value]="observacionAsesor.value" matInput> </textarea>
+                                        placeholder="Observacion Del Asesor: " [formControl]="observacionAsesor"
+                                        [value]="observacionAsesor.value" matInput> </textarea>
                                 </mat-form-field>
                             </div>
                             <div class="col-8">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <mat-label>Observacion Del Aprobador: </mat-label>
                                     <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
-                                    placeholder="Observacion Del Aprobador: " matInput></textarea>
+                                        placeholder="Observacion Del Aprobador: " matInput></textarea>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -264,13 +217,15 @@
                             <div class="col-md-2">
                             </div>
                             <div class="col-md-3">
-                                <button mat-button mat-raised-button color="primary" (click)="aprobarExcepcion('SI')">Aprobar Excepcion</button>
+                                <button mat-button mat-raised-button color="primary"
+                                    (click)="aprobarExcepcion('SI')">Aprobar Excepcion</button>
                             </div>
                             <div class="col-md-2">
 
                             </div>
                             <div class="col-md-3">
-                                <button mat-button mat-raised-button color="warn" (click)="aprobarExcepcion('NO')">Negar Excepcion</button>
+                                <button mat-button mat-raised-button color="warn" (click)="aprobarExcepcion('NO')">Negar
+                                    Excepcion</button>
                             </div>
                         </div>
                     </form>

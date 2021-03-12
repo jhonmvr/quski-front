@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource, MatDialog } from '@angular/material';
-import { BehaviorSubject } from 'rxjs';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
-import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
-import { environment } from '../../../../../../environments/environment';
-import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
-import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
-import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
+import { ConfirmarAccionComponent } from '../../../../../../app/views/partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { TbQoCreditoNegociacion } from '../../../../../../app/core/model/quski/TbQoCreditoNegociacion';
 import { CalculadoraService } from '../../../../../../app/core/services/quski/calculadora.service';
-import { ConfirmarAccionComponent } from '../../../../../../app/views/partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
+import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
+import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
+import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
+import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
+import { environment } from '../../../../../../environments/environment';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatTableDataSource, MatDialog } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'kt-excepciones-riesgo',
   templateUrl: './excepciones-riesgo.component.html',
