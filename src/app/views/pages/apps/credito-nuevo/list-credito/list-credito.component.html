@@ -2,8 +2,10 @@
     <re-portlet-header [title]="'BANDEJA DE ADMINISTRACIÓN DE OPERACIONES '" [class]="'kt-portlet__head--lg'">
 
         <ng-container ktPortletTools>
-            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
-                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
+            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar"
+                style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear
+                </mat-icon>
                 <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
             </a>
 
@@ -88,15 +90,16 @@
                 </div>
                 <div class="col-md-4 ">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input matInput [matDatepicker]="pckFechaVencimientoDesde" formControlName="fechaVencimientoDesde"
-                            placeholder="Fecha vencimiento desde: ">
+                        <input matInput [matDatepicker]="pckFechaVencimientoDesde"
+                            formControlName="fechaVencimientoDesde" placeholder="Fecha vencimiento desde: ">
                         <mat-datepicker-toggle matSuffix [for]="pckFechaVencimientoDesde"></mat-datepicker-toggle>
                         <mat-datepicker #pckFechaVencimientoDesde></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-md-4 ">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input placeholder="Fecha Vencimiento hasta: " matInput [matDatepicker]="picker" formControlName="fechaVencimientoHasta" >
+                        <input placeholder="Fecha Vencimiento hasta: " matInput [matDatepicker]="picker"
+                            formControlName="fechaVencimientoHasta">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
@@ -143,7 +146,8 @@
                 </div>
                 <div class="col-md-4">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input matInput  (keypress)="numberOnly($event)" [formControl]="cedulaCliente" placeholder="CI" autocomplete="off">
+                        <input matInput (keypress)="numberOnly($event)" [formControl]="cedulaCliente" placeholder="CI"
+                            autocomplete="off">
                     </mat-form-field>
                 </div>
             </div>
@@ -155,9 +159,12 @@
                     </button>
                 </div>
                 <div class="col-3 offset-1">
-                    <a (click)="irNegociacion()" matTooltip="Nuevo Credito" style="font-size: 12px; vertical-align: middle;">
-                        <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">post_add</mat-icon>
-                        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Nuevo Credito </span>
+                    <a (click)="irNegociacion()" matTooltip="Nuevo Credito"
+                        style="font-size: 12px; vertical-align: middle;">
+                        <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">post_add
+                        </mat-icon>
+                        <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Nuevo Credito
+                        </span>
                     </a>
                 </div>
             </div>
@@ -170,20 +177,31 @@
                     <ng-container matColumnDef="accion">
                         <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
                         <mat-cell *matCellDef="let row">
-                            <a *ngIf="row.tipoCredito == 'Vencimiento' || ( row.tipoCredito == 'Cuotas' && row.retanqueo)" 
-                                (click)="irNovar(row)" matTooltip="Novar el credito" style="font-size: 12px; vertical-align: middle;">
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">autorenew</mat-icon>
-                            </a>
-                            <a *ngIf="row.codigoEstadoProcesoGarantia == 'UTI' && (row.codigoEstadoUbicacionGrantia == 'AGE' || row.codigoEstadoUbicacionGrantia == 'CUS')" 
-                            (click)="irDevolucion(row)" matTooltip="Devolucion" style="font-size: 12px; vertical-align: middle;">
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">get_app</mat-icon>
-                            </a>
-                            <a (click)="irDetalle(row)" matTooltip="Ver el detalle" style="font-size: 12px; vertical-align: middle;">
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">remove_red_eye</mat-icon>
-                            </a>
-                            <a *ngIf="row.codigoEstadoUbicacionGrantia != 'CLI' && row.estado != 'CANCELADO' " 
-                                (click)="irRegistrarPago(row)" matTooltip="Registrar Pago" style="font-size: 12px; vertical-align: middle;">
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">payment</mat-icon>
+                            <div *ngIf="!row.estaNovado">
+                                <a *ngIf="row.tipoCredito == 'Vencimiento' || ( row.tipoCredito == 'Cuotas' && row.retanqueo)"
+                                    (click)="irNovar(row)" matTooltip="Novar el credito"
+                                    style="font-size: 12px; vertical-align: middle;">
+                                    <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">
+                                        autorenew</mat-icon>
+                                </a>
+                                <a *ngIf="row.codigoEstadoProcesoGarantia == 'UTI' && (row.codigoEstadoUbicacionGrantia == 'AGE' || row.codigoEstadoUbicacionGrantia == 'CUS')"
+                                    (click)="irDevolucion(row)" matTooltip="Devolucion"
+                                    style="font-size: 12px; vertical-align: middle;">
+                                    <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">
+                                        get_app</mat-icon>
+                                </a>
+
+                                <a *ngIf="row.codigoEstadoUbicacionGrantia != 'CLI' && row.estado != 'CANCELADO' "
+                                    (click)="irRegistrarPago(row)" matTooltip="Registrar Pago"
+                                    style="font-size: 12px; vertical-align: middle;">
+                                    <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">
+                                        payment</mat-icon>
+                                </a>
+                            </div>
+                            <a (click)="irDetalle(row)" matTooltip="Ver el detalle"
+                                style="font-size: 12px; vertical-align: middle;">
+                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">
+                                    remove_red_eye</mat-icon>
                             </a>
                         </mat-cell>
                     </ng-container>
@@ -199,7 +217,7 @@
                         <mat-header-cell *matHeaderCellDef>Numero Operacion Madre</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.numeroOperacionMadre}} </mat-cell>
                     </ng-container>
-        
+
                     <ng-container matColumnDef="numeroOperacion">
                         <mat-header-cell *matHeaderCellDef>Numero Operacion</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.numeroOperacion}} </mat-cell>
@@ -218,7 +236,8 @@
                     </ng-container>
                     <ng-container matColumnDef="montoFinanciado">
                         <mat-header-cell *matHeaderCellDef>Monto Financiado</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.montoFinanciado | currency: "USD":true:"1.2"}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.montoFinanciado | currency: "USD":true:"1.2"}}
+                        </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="saldo">
                         <mat-header-cell *matHeaderCellDef>Saldo</mat-header-cell>
@@ -276,7 +295,7 @@
                         <mat-header-cell *matHeaderCellDef>Numero Cuotas</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.numeroCuotas}} </mat-cell>
                     </ng-container>
-        
+
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                 </mat-table>

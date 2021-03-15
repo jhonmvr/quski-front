@@ -1,3 +1,4 @@
+<h3>Impuestos Comisiones</h3>
 <table mat-table id="pago" [dataSource]="dataSource">
   
     <ng-container matColumnDef="Nombre">
@@ -15,3 +16,12 @@
     <tr mat-header-row *matHeaderRowDef="['Nombre','FormaPago','Valor']"></tr>
     <tr mat-row *matRowDef="let row; columns: ['Nombre','FormaPago','Valor'];"></tr>
 </table>
+<br>
+<div class="row">
+    <mat-form-field>
+        <input matInput placeholder="Total Costos Credito Anterior" value="{{totalCreditoAnterior | rNumber}}" disabled>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Total Costos Credito Nuevo" value="{{totalCreditoNuevo | rNumber}}" disabled>
+    </mat-form-field>
+</div>
