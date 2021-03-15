@@ -508,7 +508,7 @@ export class GenerarCreditoComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.pro.cambiarEstadoProceso(this.operacionNuevo.credito.tbQoNegociacion.id,"NUEVO","PENDIENTE_APROBACION").subscribe( (data: any) =>{
+          this.cre.solicitarAprobacionNuevo(this.operacionNuevo.credito.tbQoNegociacion.id).subscribe( (data: any) =>{
             if(data.entidad){
               this.router.navigate(['negociacion/bandeja-operaciones']);
             }

@@ -2,7 +2,7 @@
     <ng-container *ngFor="let item of displayedColumns" matColumnDef="{{item}}">
         <th mat-header-cell *matHeaderCellDef> {{item}} </th>
         <div *ngIf="item!='Ver Detalle'">
-            <td mat-cell *matCellDef="let element"> {{ element[item]}} </td>
+            <td mat-cell *matCellDef="let element"> {{ element[item]  | rNumber}} </td>
         </div>
         <div *ngIf="item=='Ver Detalle'">
             <td mat-cell *matCellDef="let element">

@@ -46,6 +46,11 @@
                 <div class="row">
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="numeroOperacionMupi" placeholder="Numero Operacion Mupi" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="numeroOperacion" placeholder="Numero Operacion" />
                         </mat-form-field>
                     </div>
@@ -142,6 +147,7 @@
                             placeholder="Descripcion de bloqueo: " matInput></textarea>
                     </div>
                 </div>
+                <kt-impuestos-com-table [data]="datoImpCom" ></kt-impuestos-com-table>
             </mat-step>
             <mat-step label="Tabla de amortizacion">
                 <kt-tabla-custom [data]="dataSourceRubro.data" [nombreRubro]="'rubro'" [numeroCuota]="'numeroCuota'" [numeroOperacion]="numeroOperacion.value"></kt-tabla-custom>

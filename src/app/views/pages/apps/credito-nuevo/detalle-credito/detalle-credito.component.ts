@@ -28,6 +28,7 @@ export class DetalleCreditoComponent implements OnInit {
   public telefonoMovil = new FormControl();
   public telefonoCasa = new FormControl();
   public numeroOperacion = new FormControl();
+  numeroOperacionMupi = new FormControl();
   public fechaAprobacion = new FormControl();
   public fechaVencimiento = new FormControl();
   public montoFinanciado = new FormControl();
@@ -49,7 +50,7 @@ export class DetalleCreditoComponent implements OnInit {
 
   public displayedColumnsRubro = ['rubro','numeroCuota', 'proyectado', 'calculado', 'estado'];
   public dataSourceRubro = new MatTableDataSource<any>();
-
+  public datoImpCom;
   constructor(
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
@@ -68,6 +69,7 @@ export class DetalleCreditoComponent implements OnInit {
     this.formInformacion.addControl("telefonoMovil", this.telefonoMovil);
     this.formInformacion.addControl("telefonoCasa", this.telefonoCasa);
     this.formInformacion.addControl("numeroOperacion", this.numeroOperacion);
+    this.formInformacion.addControl("numeroOperacionMupi", this.numeroOperacionMupi);
     this.formInformacion.addControl("fechaAprobacion", this.fechaAprobacion);
     this.formInformacion.addControl("fechaVencimiento", this.fechaVencimiento);
     this.formInformacion.addControl("montoFinanciado", this.montoFinanciado);
@@ -128,6 +130,7 @@ export class DetalleCreditoComponent implements OnInit {
     this.telefonoMovil.setValue( this.telefonoMovil.value ? this.telefonoMovil.value : 'No aplica');
     this.telefonoCasa.setValue( this.telefonoCasa.value ? this.telefonoCasa.value : 'No aplica');
     this.numeroOperacion.setValue( this.wrapper.credito.numeroOperacion );
+    this.numeroOperacionMupi.setValue( this.wrapper.credito.numeroOperacionMupi );
     this.fechaAprobacion.setValue( this.wrapper.credito.fechaAprobacion );
     this.fechaVencimiento.setValue( this.wrapper.credito.fechaVencimiento );
     this.montoFinanciado.setValue( this.wrapper.credito.montoFinanciado );
@@ -147,6 +150,11 @@ export class DetalleCreditoComponent implements OnInit {
     this.estadoProceso.setValue( this.wrapper.credito.codigoEstadoProcesoGarantia );
     this.descripcionBloqueo.setValue( this.wrapper.credito.datosBloqueo ? this.wrapper.credito.datosBloqueo : 'No presenta bloqueos');
     this.dataSourceRubro.data = this.wrapper.rubros;
+    this.sof.impComByOperacion(this.wrapper.credito.numeroOperacion).subscribe(p=>{
+      if(p.listaImpCom){
+        this.datoImpCom = p.listaImpCom;
+      }
+    })
     this.sinNotSer.setNotice('CREDITO CARGADO CORRECTAMENTE','success');
     this.loadingSubject.next(false);
     this.varHabilitante.proceso='CLIENTE';
