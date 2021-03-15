@@ -1,0 +1,28 @@
+.mat-header-cell,
+.mat-footer-cell,
+.mat-cell {
+    min-width: 80px;
+    box-sizing: border-box;
+}
+.mat-header-cell {
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    font-size: smaller;
+}
+.mat-cell {
+    text-align: center;
+    justify-content: center;
+    font-size: smaller;
+}
+.mat-footer-cell {
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+    font-size: smaller;
+}
+.amortizacion {
+    width: 100%;
+    max-height: 400px;
+    overflow: auto;
+}
