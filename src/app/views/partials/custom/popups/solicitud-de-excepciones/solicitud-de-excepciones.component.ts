@@ -18,8 +18,6 @@ import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion
   styleUrls: ['./solicitud-de-excepciones.component.scss']
 })
 export class SolicitudDeExcepcionesComponent implements OnInit {
-  public loadingSubject = new BehaviorSubject<boolean>(false);
-  public loading;
   public usuario;
   public titulo: string;
   public mensaje: string;
@@ -48,7 +46,6 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
   ngOnInit() {
     this.exc.setParameter();
     this.par.setParameter();
-    this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.buscarCatalogosTipoExcepcion();
     this.inicioDeFlujo(this.dataExcepciones);
@@ -90,21 +87,17 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
   }
   private buscarCatalogosTipoExcepcion() {
     this.par.findByTipo("TIP-EXC").subscribe( (data: any) =>{
-      this.loadingSubject.next(true);
       if(data.entidades){
         this.catTiposExcepciones = data.entidades;
-        console.log('array de catalogo ===>', this.catTiposExcepciones);
         
         this.seleccionarTipo();
       } else{
         this.sinNotSer.setNotice('ERROR EN BASE PARA TRAER LA LISTA DE CATALOGOS','error');
       }
-      this.loadingSubject.next(false)
     });
   }
   enviarSolicitud(){
     if(this.formExcepciones.valid){
-      this.loadingSubject.next(true);
       const excepcion: TbQoExcepcion = new TbQoExcepcion();
       excepcion.idAsesor = this.usuario;
       excepcion.tipoExcepcion = this.tipoExcep;
@@ -135,7 +128,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
       this.tipoExcep = null;
     }
   }
-  private salir(result: TbQoExcepcion) {
+  public salir(result: TbQoExcepcion) {
     this.dialogRef.close(result);
   }
   public abrirSubBotonesM() {

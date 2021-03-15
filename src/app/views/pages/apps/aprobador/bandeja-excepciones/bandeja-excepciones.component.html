@@ -46,30 +46,26 @@
                     <mat-icon matTooltip="Ver Excepción">edit</mat-icon>
                   </a>
                 </mat-cell>
-                <td align="left" mat-footer-cell *matFooterCellDef>&#8212;</td>
               </ng-container>
               <ng-container matColumnDef="tipoExcepcion">
-                <mat-cell *matCellDef="let element"> {{element.tipoExcepcion}} </mat-cell>
                 <mat-header-cell *matHeaderCellDef>Tipo Excepción</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.tipoExcepcion ? 
+                  element.tipoExcepcion == 'EXCEPCION_COBERTURA' ? 'Excepcion de Cobertura' :
+                  element.tipoExcepcion == 'EXCEPCION_RIESGO' ? 'Excepcion de Riesgo' :
+                  element.tipoExcepcion == 'EXCEPCION_CLIENTE' ? 'Excepcion de Cliente' :
+                  element.tipoExcepcion : 'Excepcion no definida'
+                 }} </mat-cell>
 
               </ng-container>
               <ng-container matColumnDef="nombreCliente">
-
-                <mat-cell *matCellDef="let element"> {{element.nombreCompleto}} </mat-cell>
                 <mat-header-cell *matHeaderCellDef>Nombre del Cliente</mat-header-cell>
-                <td align="left" mat-footer-cell *matFooterCellDef>&#8212;</td>
+                <mat-cell *matCellDef="let element"> {{ element.nombreCompleto | titlecase }} </mat-cell>
 
               </ng-container>
               <ng-container matColumnDef="identificacion">
-
-                <mat-cell *matCellDef="let element"> {{element.identificacion}} </mat-cell>
                 <mat-header-cell *matHeaderCellDef>Identificación</mat-header-cell>
-                <td align="left" mat-footer-cell *matFooterCellDef>&#8212;</td>
-
+                <mat-cell *matCellDef="let element"> {{element.identificacion}} </mat-cell>
               </ng-container>
-
-
-
               <mat-header-row *matHeaderRowDef="displayedColumnsExcepciones"></mat-header-row>
               <mat-row *matRowDef="let row; columns: displayedColumnsExcepciones;"></mat-row>
 

@@ -1,18 +1,15 @@
 import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { DetalleNegociacionWrapper } from '../../../../../core/model/wrapper/DetalleNegociacionWrapper';
+import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
-import { CatalogosWrapper } from '../../../../../core/model/wrapper/CatalogosWrapper';
-import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { SubheaderService } from '../../../../../core/_base/layout';
+import { MatDialog, MatTableDataSource } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-import { MatDialog, MatTableDataSource } from '@angular/material';
-import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 
 @Component({
   selector: 'kt-detalle-negociacion',
@@ -23,10 +20,8 @@ export class DetalleNegociacionComponent implements OnInit {
   varHabilitante = {proceso:'CLIENTE',referencia:''};
   referencia;
   titulo
-  public loading;
-  public loadingSubject = new BehaviorSubject<boolean>(false);
   public detalle: DetalleNegociacionWrapper;
-  public catalogos: CatalogosWrapper;
+  public catPais: Array<any>;
   public formDisable: FormGroup = new FormGroup({});
   public nombre = new FormControl('',[])
   public cedula = new FormControl('',[])
@@ -46,12 +41,14 @@ export class DetalleNegociacionComponent implements OnInit {
     private cre: CreditoNegociacionService,
     private sinNotSer: ReNoticeService,
     private par: ParametroService,
+    private sof: SoftbankService,
     private dialog: MatDialog,
     private subheaderService: SubheaderService,
     private router: Router
   ) {
     this.par.setParameter();
     this.cre.setParameter();
+    this.sof.setParameter();
     this.formDisable.addControl('nombre', this.nombre);
     this.formDisable.addControl('cedula', this.cedula);
     this.formDisable.addControl('fechaNacimiento', this.fechaNacimiento);
@@ -68,16 +65,15 @@ export class DetalleNegociacionComponent implements OnInit {
   ngOnInit() {
     this.par.setParameter();
     this.cre.setParameter();    
+    this.sof.setParameter();
     this.formDisable.disable();
-    this.loading = this.loadingSubject.asObservable();
-    this.subheaderService.setTitle('Gestion credito');
-    this.traerCreditoNegociacion();
+    this.subheaderService.setTitle('GESTION CREDITO');
+    this.traerCatalogos();
   }
   private traerCreditoNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
         this.referencia = data.params.id
-        this.loadingSubject.next(true);
         this.cre.traerCreditoNegociacion(data.params.id).subscribe((data: any) => {
           //console.log('Credito --> ', data.entidad);
           if (!data.entidad.existeError) {
@@ -93,13 +89,19 @@ export class DetalleNegociacionComponent implements OnInit {
       }
     });
   }
+  private traerCatalogos() {
+    this.sof.consultarPaisCS().subscribe((data: any) => {
+      this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+      this.traerCreditoNegociacion();
+    });
+  }
   private setearValores(ap: DetalleNegociacionWrapper) {
     this.titulo = 'DETALLE DEL PROCESO: ' + ap.credito.codigo;
     this.nombre.setValue( ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto );
     this.cedula.setValue( ap.credito.tbQoNegociacion.tbQoCliente.cedulaCliente );
     this.fechaNacimiento.setValue( ap.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento );
     this.edad.setValue( ap.credito.tbQoNegociacion.tbQoCliente.edad );
-    this.nacionalidad.setValue( ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad );
+    this.nacionalidad.setValue(this.cargarItem(this.catPais,  ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nacionalidad );
     this.publicidad.setValue( ap.credito.tbQoNegociacion.tbQoCliente.publicidad );
     this.correo.setValue( ap.credito.tbQoNegociacion.tbQoCliente.email );
     this.campania.setValue( ap.credito.tbQoNegociacion.tbQoCliente.campania );
@@ -118,8 +120,15 @@ export class DetalleNegociacionComponent implements OnInit {
     this.sinNotSer.setNotice('DETALLE DE CREDITO EN PROCESO CARGADO', 'success');
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
+  private cargarItem(catalogo, id) {
+    if(catalogo){
+      let item = catalogo.find(x => x.id == id);
+      if (catalogo && item) {
+        return item;
+      }
+    }
+  }
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
-    this.loadingSubject.next(false);
       let pData = {
         mensaje: dataMensaje,
         titulo: dataTitulo ? dataTitulo : null

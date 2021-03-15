@@ -1,13 +1,13 @@
-import { ExcepcionRolWrapper } from './../../../../../core/model/wrapper/ExcepcionRolWrapper';
-import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ExcepcionRolService } from '../../../../../core/services/quski/excepcionRol.service';
-import { environment } from '../../../../../../environments/environment';
-import { BehaviorSubject } from 'rxjs';
 import { TbQoExcepcionRol } from '../../../../../core/model/quski/TbQoExcepcionRol';
-import { MatTableDataSource } from '@angular/material';
-import { Router } from '@angular/router';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { environment } from '../../../../../../environments/environment';
+import { SubheaderService } from '../../../../../core/_base/layout';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'kt-bandeja-excepciones',
@@ -18,9 +18,6 @@ export class BandejaExcepcionesComponent implements OnInit {
   //FILTRO DE BUSQUEDA
   public formBusqueda: FormGroup = new FormGroup({});
   public identificacion = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
-  // STANDARD VARIABLES
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  public loading;
   usuario: string;
   //VARIABLES DE LA TABLA
   displayedColumnsExcepciones = ['accion', 'tipoExcepcion', 'nombreCliente','identificacion'];
@@ -28,6 +25,7 @@ export class BandejaExcepcionesComponent implements OnInit {
   private agregar = new Array<TbQoExcepcionRol>();
 
   constructor(
+    private subheaderService: SubheaderService,
     private exr: ExcepcionRolService,
     private router: Router,
     private sinNoticeService: ReNoticeService,
@@ -42,7 +40,7 @@ export class BandejaExcepcionesComponent implements OnInit {
     console.log('valor del usuario==> ', this.usuario);
     this.busquedaExcepciones(this.usuario);
     this.dataSourceExcepcionRol = null;
-    this.loading = this.loadingSubject.asObservable();
+    this.subheaderService.setTitle("BANDEJA DE EXCEPCIONES");
   }
   /**
    * @description Método que realiza la búsqueda de la excepcion por medio del rol que se recupera en en OnInit
@@ -53,19 +51,15 @@ export class BandejaExcepcionesComponent implements OnInit {
    * @memberof BandejaExcepcionesComponent
    */
   private busquedaExcepciones(rol: string) {
-    this.loadingSubject.next(true);
     this.exr.findByRolAndIdentificacion(rol, null).subscribe((data: any) => {
       if (data && data.list) {
         this.dataSourceExcepcionRol = data.list;
         //console.log('DATASOURCE==> ', JSON.stringify(this.dataSourceExcepcionRol));
       }
-      this.loadingSubject.next(false);
-
     });
   }
   public find() {
     this.dataSourceExcepcionRol = null;
-    this.loadingSubject.next(true);
     this.exr.findByRolAndIdentificacion(this.usuario, this.identificacion.value).subscribe((data: any) => {
       let listRecuperados = new Array<TbQoExcepcionRol>();
       this.agregar = new Array<TbQoExcepcionRol>();
@@ -85,7 +79,6 @@ export class BandejaExcepcionesComponent implements OnInit {
         this.sinNoticeService.setNotice('NO EXISTE ESA CEDULA', 'error');
       }
       this.dataSourceExcepcionRol = new MatTableDataSource(this.agregar);
-      this.loadingSubject.next(false);
     });
 
   }
@@ -100,15 +93,11 @@ export class BandejaExcepcionesComponent implements OnInit {
   }
 
   public verExcepcion(element) {
-    this.loadingSubject.next(true);
     if (element.tipoExcepcion == 'EXCEPCION_CLIENTE') {
-      //console.log('ingresa a EXCEPCION_CLIENTE====> ', btoa(JSON.stringify(element)) );
       this.router.navigate(['./excepciones/excepcion-cliente/', btoa(JSON.stringify(element))])
     } else if (element.tipoExcepcion == 'EXCEPCION_RIESGO') {
-      //console.log('ingresa a EXCEPCION_RIESGO');
       this.router.navigate(['./excepciones/excepcion-riesgo/', btoa(JSON.stringify(element))]);
     } else if (element.tipoExcepcion == 'EXCEPCION_COBERTURA') {
-      //console.log('ingresa a EXCEPCION_COBERTURA');
       this.router.navigate(['./excepciones/excepcion-cobertura/', btoa(JSON.stringify(element))])
     }
 

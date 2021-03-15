@@ -538,7 +538,9 @@
 						<div class="col-md-2">
 							<mat-form-field class="mat-form-field-fluid">
 								<input [formControl]="montoSolicitado" placeholder="Monto solicitado" autocomplete="off"
-									matInput numeric numericType="number" (keypress)="numberOnly($event)">
+									matInput numeric numericType="number">
+									<mat-error>{{ getErrorMessage('monto')  }}</mat-error>
+
 							</mat-form-field>
 						</div>
 						<div class="col-md-2">

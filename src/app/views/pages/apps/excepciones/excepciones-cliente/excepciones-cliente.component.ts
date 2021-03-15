@@ -3,21 +3,16 @@ import { SubheaderService } from '../../../../../core/_base/layout/services/subh
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
-import { TrackingService } from '../../../../../core/services/quski/tracking.service';
-import { EstadoExcepcionEnum } from './../../../../../core/enum/EstadoExcepcionEnum';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
-import { TbQoNegociacion } from '../../../../../core/model/quski/TbQoNegociacion';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
-import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
-import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { BehaviorSubject } from 'rxjs';
 
 
 
@@ -27,30 +22,21 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./excepciones-cliente.component.scss']
 })
 export class ExcepcionesClienteComponent implements OnInit {
-  //[x: string]: any;
-  // ENTIDADES
-  wrapper: NegociacionWrapper;
-  private entidadCliente: TbQoCliente = null;
-  private procesoEntidad: TbQoProceso;
-  private entidadNegociacion: TbQoNegociacion = null;
-  private entidadExcepcion: TbQoExcepcion = null;
+  public wr: NegociacionWrapper;
+  public excepcion: TbQoExcepcion;
 
+
+  public catActividadEconomica: Array<any>;
+  public catPais: Array<any>;
+  public catEducacion: Array<any>;
+  public catGenero: Array<any>;
+  public catEstadoCivil: Array<any>;
+  public catTipoTelefono: Array<any>;
+  public catDivision: Array<any>;
 
   // STANDARD VARIABLES
   public dataPopup: DataPopup;
-  //public dataPopupRiesgo: DataPopup;
-  private idNegociacion: number;
-  private cedulaCliente: string;
-  private idCliente: number;
-  private loadingSubject = new BehaviorSubject<boolean>(false);
   public mensaje: any;
-  public listExepcion = new Array<TbQoExcepcion>();
-  public loading;
-
-  riesgos;
-
-  // VARIABLES DE TRACKING
-  public horaInicioExcepcion: Date;
 
   public formDatosOperacion: FormGroup = new FormGroup({});
   public nombresCompletos = new FormControl('', []);
@@ -58,12 +44,10 @@ export class ExcepcionesClienteComponent implements OnInit {
   public nombreProceso = new FormControl('', []);
   // FORM DATOS CLIENTE
   public formDatosCliente: FormGroup = new FormGroup({});
-  public tipoIdentificacion = new FormControl('', []);
   public identificacionC = new FormControl('', []);
   public aprobadoWebMupi = new FormControl('', []);
   public primerNombre = new FormControl('', []);
   public segundoNombre = new FormControl('', []);
-  public separacionDeBienes = new FormControl('', []);
   public apellidoPaterno = new FormControl('', []);
   public apellidoMaterno = new FormControl('', []);
   public cargaFamiliar = new FormControl('', []);
@@ -79,33 +63,25 @@ export class ExcepcionesClienteComponent implements OnInit {
   // FORM DATOS CONTACTO
   public formDatosContacto: FormGroup = new FormGroup({});
   public telefonoDomicilio = new FormControl('', []);
-  public telefonoAdicional = new FormControl('', []);
   public telefonoMovil = new FormControl('', []);
-  public telefonoOficina = new FormControl('', []);
   public correo = new FormControl('', []);
   // FORM DATOS NEGOCIACION
   public formDatosNegociacion: FormGroup = new FormGroup({});
   public tipoProcesoNegociacion = new FormControl('', []);
-  public estadoNegociacion = new FormControl('', []);
-  public fechaDeCreacionNegociacion = new FormControl('', []);
   public ultimaFechaDeActualizacionNegociacion = new FormControl('', []);
 
   // FORM DATOS EXCEPCION
   public formDatosExcepcion: FormGroup = new FormGroup({});
   public observacionAsesor = new FormControl('', []);
-  public excAprobada = new FormControl('', []);
-  public excNegada = new FormControl('', []);
   public observacionAprobador = new FormControl('', [Validators.required]);
-  public radioB = new FormControl('', []);
   public usuarioAsesor = new FormControl('', []);
- 
 
-  excepcion: TbQoExcepcion;
+
 
   constructor(
     private neg: NegociacionService,
+    private sof: SoftbankService,
     private cli: ClienteService,
-    private tra: TrackingService,
     private pro: ProcesoService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -116,7 +92,7 @@ export class ExcepcionesClienteComponent implements OnInit {
   ) {
     this.neg.setParameter();
     this.cli.setParameter();
-    this.tra.setParameter();
+    this.sof.setParameter();
     this.pro.setParameter();
     this.exs.setParameter();
 
@@ -125,12 +101,10 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.formDatosOperacion.addControl("identificacion", this.identificacion);
     this.formDatosOperacion.addControl("nombreProceso", this.nombreProceso);
     //FORM DATOS CLIENTE
-    this.formDatosCliente.addControl("tipoIdentificacion", this.tipoIdentificacion);
     this.formDatosCliente.addControl("identificacionC", this.identificacionC);
     this.formDatosCliente.addControl("aprobadoWebMupi", this.aprobadoWebMupi);
     this.formDatosCliente.addControl("primerNombre", this.primerNombre);
     this.formDatosCliente.addControl("segundoNombre", this.segundoNombre);
-    this.formDatosCliente.addControl("separacionDeBienes", this.separacionDeBienes);
     this.formDatosCliente.addControl("apellidoPaterno", this.apellidoPaterno);
     this.formDatosCliente.addControl("apellidoMaterno", this.apellidoMaterno);
     this.formDatosCliente.addControl("cargaFamiliar", this.cargaFamiliar);
@@ -145,19 +119,14 @@ export class ExcepcionesClienteComponent implements OnInit {
     this.formDatosCliente.addControl("ultimaFechaDeActualizacionDeCliente", this.ultimaFechaDeActualizacionDeCliente);
     //FORM DATOS CONTACTO
     this.formDatosContacto.addControl("telefonoDomicilio", this.telefonoDomicilio);
-    this.formDatosContacto.addControl("telefonoAdicional", this.telefonoAdicional);
     this.formDatosContacto.addControl("telefonoMovil", this.telefonoMovil);
-    this.formDatosContacto.addControl("telefonoOficina", this.telefonoOficina);
     this.formDatosContacto.addControl("correo", this.correo);
     //FORM DATOS NEGOCIACION
     this.formDatosNegociacion.addControl("tipoProcesoNegociacion", this.tipoProcesoNegociacion);
-    this.formDatosNegociacion.addControl("estadoNegociacion", this.estadoNegociacion);
-    this.formDatosNegociacion.addControl("fechaDeCreacionNegociacion", this.fechaDeCreacionNegociacion);
     this.formDatosNegociacion.addControl("ultimaFechaDeActualizacionNegociacion", this.ultimaFechaDeActualizacionNegociacion);
     //FORM DATOS EXCEPCION
     this.formDatosExcepcion.addControl("observacionAsesor", this.observacionAsesor);
-    this.formDatosExcepcion.addControl("excAprobada", this.excAprobada);
-    this.formDatosExcepcion.addControl("excNegada", this.excNegada);
+
     this.formDatosExcepcion.addControl("observacionAprobador", this.observacionAprobador);
     this.formDatosExcepcion.addControl("usuarioAsesor", this.usuarioAsesor);
 
@@ -173,221 +142,130 @@ export class ExcepcionesClienteComponent implements OnInit {
   ngOnInit() {
     this.neg.setParameter();
     this.cli.setParameter();
-    this.tra.setParameter();
+    this.sof.setParameter();
     this.pro.setParameter();
     this.exs.setParameter();
-    this.loading = this.loadingSubject.asObservable();
-    //TRACKING
-    //this.capturaHoraInicio('NEGOCIACION');
-    //this.clienteNegociacion();
-    this.busquedaNegociacion();
-    this.subheaderService.setTitle("Excepciones de Negociación");
-    //this.capturaDatosTraking();
-    
-  }
-  private capturaHoraInicio(etapa: string) {
-    this.tra.getSystemDate().subscribe((hora: any) => {
-      if (hora.entidad) {
-        this.horaInicioExcepcion = hora.entidad;
-      }
+    this.traerCatalogos();
 
+  }
+  private traerCatalogos() {
+    this.sof.consultarDivicionPoliticaCS().subscribe((data1: any) => {
+      this.catDivision = !data1.existeError ? data1.catalogo : { nombre: 'Error al cargar catalogo' };
+      this.sof.consultarPaisCS().subscribe((data: any) => {
+        this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+        this.sof.consultarGeneroCS().subscribe((data: any) => {
+          this.catGenero = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+          this.sof.consultarEstadosCivilesCS().subscribe((data: any) => {
+            this.catEstadoCivil = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+            this.sof.consultarTipoTelefonoCS().subscribe(tipoTel => {
+              this.catTipoTelefono = tipoTel.catalogo;
+              this.sof.consultarActividadEconomicaCS().subscribe((data: any) => {
+                this.catActividadEconomica = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                this.sof.consultarEducacionCS().subscribe( (data: any) =>{
+                  this.catEducacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                  this.busquedaNegociacion();
+                });
+              });
+            })
+          });
+        });
+      });
     });
   }
-  asignarAprobacion() {
-    //  console.log('ASIGNAR APROBACION');
-
-    if (this.radioB.value === 'APROBADO') {
-      this.radioB.setValue(EstadoExcepcionEnum.APROBADO);
-    } else if (this.radioB.value === 'NEGADO') {
-      this.radioB.setValue(EstadoExcepcionEnum.NEGADO);
-    }
-    this.entidadExcepcion.estadoExcepcion = this.radioB.value;
-    this.entidadExcepcion.observacionAprobador = this.observacionAprobador.value;
+  public regresar() {
+    this.router.navigate(['aprobador/bandeja-excepciones']);
   }
-
-  private busquedaNegociacion(){
-    //this.loadingSubject.next(true);
+  private busquedaNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
         let excepcionRol = JSON.parse(atob(data.params.id));
         this.observacionAsesor.setValue(excepcionRol.observacionAsesor);
         this.mensaje = excepcionRol.mensajeBre;
-        this.neg.traerNegociacionExistente(excepcionRol.idNegociacion).subscribe( (data: any)=>{
-          if(data.entidad){
-            this.excepcion = data.entidad.excepciones.find(e => e.id == excepcionRol.id ); 
-            this.usuarioAsesor.setValue( this.excepcion.idAsesor );
-            this.entidadCliente = data.entidad.credito.tbQoNegociacion.tbQoCliente;
-            this.riesgos = data.entidad.riesgos;
-            this.entidadNegociacion = data.entidad.credito.tbQoNegociacion;
-            this.nombresCompletos.setValue(this.entidadCliente.nombreCompleto);
-            this.idCliente = this.entidadCliente.id;
-            this.identificacion.setValue(this.entidadCliente.cedulaCliente);
-            this.procesoEntidad = data.entidad.proceso;
-            // FORM CLIENTE
-            this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
-            this.aprobadoWebMupi.setValue(this.entidadCliente.aprobacionMupi)
-            this.primerNombre.setValue(this.entidadCliente.primerNombre);
-            this.segundoNombre.setValue(this.entidadCliente.segundoNombre);
-            this.separacionDeBienes.setValue(this.entidadCliente.separacionBienes);
-            this.apellidoPaterno.setValue(this.entidadCliente.apellidoPaterno);
-            this.apellidoMaterno.setValue(this.entidadCliente.apellidoMaterno);
-            this.cargaFamiliar.setValue(this.entidadCliente.cargasFamiliares);
-            this.genero.setValue(this.entidadCliente.genero);
-            this.estadoCivil.setValue(this.entidadCliente.estadoCivil);
-            this.lugarDeNacimiento.setValue(this.entidadCliente.lugarNacimiento);
-            this.fechaDeNacimiento.setValue(new Date(this.entidadCliente.fechaNacimiento));
-            this.nacionalidad.setValue(this.entidadCliente.nacionalidad);
-            this.edad.setValue(this.entidadCliente.edad);
-            this.nivelDeEducacion.setValue(this.entidadCliente.nivelEducacion);
-            this.actividadEconomica.setValue(this.entidadCliente.actividadEconomica);
-            this.ultimaFechaDeActualizacionDeCliente.setValue(new Date(this.entidadCliente.fechaActualizacion));
-            // INPUT VARIABLES CREDITICIAS
+        this.neg.traerNegociacionExistente(excepcionRol.idNegociacion).subscribe((data: any) => {
+          this.wr = data.entidad
+          if (this.wr && this.wr.respuesta) {
+            this.subheaderService.setTitle("EXCEPCION DE CLIENTE PARA: "+ this.wr.credito.codigo);
+            this.excepcion = data.entidad.excepciones.find(e => e.id == excepcionRol.id);
+            this.usuarioAsesor.setValue(this.excepcion.idAsesor);
+            this.nombresCompletos.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
+            this.identificacion.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
+            this.identificacionC.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
+            this.aprobadoWebMupi.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S' ? 'Si' : 'No' )
+            this.primerNombre.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.primerNombre);
+            this.segundoNombre.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.segundoNombre);
+            this.apellidoPaterno.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.apellidoPaterno);
+            this.apellidoMaterno.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.apellidoMaterno);
+            this.cargaFamiliar.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.cargasFamiliares);
+            this.genero.setValue( this.catGenero.find( x => x.codigo == this.wr.credito.tbQoNegociacion.tbQoCliente.genero) ? 
+              this.catGenero.find( x => x.codigo == this.wr.credito.tbQoNegociacion.tbQoCliente.genero).nombre : 'Error de catalogo');
+            this.estadoCivil.setValue( this.catEstadoCivil.find( x=> x.codigo == this.wr.credito.tbQoNegociacion.tbQoCliente.estadoCivil) ?
+              this.catEstadoCivil.find( x=> x.codigo == this.wr.credito.tbQoNegociacion.tbQoCliente.estadoCivil).nombre : 'Error de catalogo');
+
+            let itemParroquia = this.cargarItem(this.catDivision, this.wr.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento);
+            let itemCanton = this.cargarItem(this.catDivision, itemParroquia.idPadre);
+            let itemProvincia = this.cargarItem(this.catDivision, itemCanton.idPadre);
+            this.lugarDeNacimiento.setValue( (itemParroquia ? itemParroquia.nombre : '' ) + (itemCanton ? ' / ' + itemCanton.nombre : '' ) + (itemProvincia ? ' / ' + itemProvincia.nombre : '') );
+            this.nacionalidad.setValue(this.cargarItem(this.catPais, this.wr.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nacionalidad );
+            this.fechaDeNacimiento.setValue(new Date(this.wr.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento));
+            this.edad.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.edad);
+            this.nivelDeEducacion.setValue( this.catEducacion.find( x=> x.codigo == this.wr.credito.tbQoNegociacion.tbQoCliente.nivelEducacion) ?
+              this.catEducacion.find( x=> x.codigo == this.wr.credito.tbQoNegociacion.tbQoCliente.nivelEducacion).nombre : 'Error de catalogo');
+            this.actividadEconomica.setValue(this.catActividadEconomica.find(x=> x.id == this.wr.credito.tbQoNegociacion.tbQoCliente.actividadEconomica) ?
+              this.catActividadEconomica.find(x=> x.id == this.wr.credito.tbQoNegociacion.tbQoCliente.actividadEconomica).nombre : 'Error de catalogo' );
+            this.ultimaFechaDeActualizacionDeCliente.setValue(new Date(this.wr.credito.tbQoNegociacion.tbQoCliente.fechaActualizacion));
             this.dataPopup = new DataPopup();
-            this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
+            this.dataPopup.cedula = this.wr.credito.tbQoNegociacion.tbQoCliente.cedulaCliente;
             this.dataPopup.isNegociacion = true;
-            this.dataPopup.idBusqueda = this.entidadNegociacion.id;
-            //console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
-            //INPUT RIESGO ACUMULADO
-
-            // FORM CONTACTO
-            let idtlf = 0;
-      
-            this.correo.setValue(this.entidadCliente.email);
-            //FORM DATOS NEGOCIACION
-            this.estadoNegociacion.setValue(this.procesoEntidad.estadoProceso);
-            this.nombreProceso.setValue(this.procesoEntidad.proceso);
-            this.fechaDeCreacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
-            this.ultimaFechaDeActualizacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));
-          }else{
-            this.loadingSubject.next(false);
-            this.sinNoticeService.setNotice('ERROR CARGANDO NEGOCIACION','error');
+            this.dataPopup.idBusqueda = this.wr.credito.tbQoNegociacion.id;
+            if(this.wr.telefonoMovil){
+              this.telefonoMovil.setValue( this.wr.telefonoMovil.numero );
+            }
+            if(this.wr.telefonoDomicilio ){
+              this.telefonoDomicilio.setValue( this.wr.telefonoDomicilio.numero );
+            }
+            this.correo.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.email);
+            this.nombreProceso.setValue(this.wr.proceso.proceso);
+            this.ultimaFechaDeActualizacionNegociacion.setValue(new Date(this.wr.credito.tbQoNegociacion.fechaActualizacion));
+          } else {
+            this.sinNoticeService.setNotice('ERROR CARGANDO NEGOCIACION', 'error');
           }
         });
-      }
-    }, error =>{this.loadingSubject.next(false)});
-  }
-
-
-  /******************************************** @EVENT   *********************************************************/
-
-  public submit(flujo: string) {
-  }
-  /**
-   * @description METODO QUE BUSCA EL CLIENTE MEDIANTE LA VARIABLE DE ID NEGOCIACION
-   * @description PASADA POR this.route.paramMap
-   */
-  clienteNegociacion() {
-    this.route.paramMap.subscribe((data: any) => {
-      data.params.id
-      if (data.params.id) {
-        this.excepcion = JSON.parse(atob(data.params.id));
-        this.idNegociacion = this.excepcion.tbQoNegociacion.id;
-        this.pro.findByIdReferencia(this.idNegociacion, "NUEVO").subscribe( (dataProceso: any)=>{
-          if(dataProceso.entidad != null){
-            this.procesoEntidad = dataProceso.entidad;
-            this.neg.traerNegociacionExistente(this.idNegociacion).subscribe((data: any) => {
-    
-              this.wrapper = data.entidad;
-              this.entidadNegociacion = this.wrapper.credito.tbQoNegociacion
-              this.observacionAsesor.setValue(this.excepcion.observacionAsesor);
-              
-    
-              if (data.entidad) {
-                this.cli.findClienteByIdentificacion(this.entidadNegociacion.tbQoCliente.cedulaCliente).subscribe((data: any) => {
-                  this.entidadCliente = data.entidad;
-                  this.loadingSubject.next(false);
-                  if (data) {
-                    // FORM OPERACION
-                    this.nombresCompletos.setValue(this.entidadCliente.nombreCompleto);
-                    this.idCliente = data.id;
-                    this.identificacion.setValue(this.entidadCliente.cedulaCliente);
-    
-                    // FORM CLIENTE
-                    this.identificacionC.setValue(this.entidadCliente.cedulaCliente);
-                    this.aprobadoWebMupi.setValue(this.entidadCliente.aprobacionMupi)
-                    this.primerNombre.setValue(this.entidadCliente.primerNombre);
-                    this.segundoNombre.setValue(this.entidadCliente.segundoNombre);
-                    this.separacionDeBienes.setValue(this.entidadCliente.separacionBienes);
-                    this.apellidoPaterno.setValue(this.entidadCliente.apellidoPaterno);
-                    this.apellidoMaterno.setValue(this.entidadCliente.apellidoMaterno);
-                    this.cargaFamiliar.setValue(this.entidadCliente.cargasFamiliares);
-                    this.genero.setValue(this.entidadCliente.genero);
-                    this.estadoCivil.setValue(this.entidadCliente.estadoCivil);
-                    this.lugarDeNacimiento.setValue(this.entidadCliente.lugarNacimiento);
-                    this.fechaDeNacimiento.setValue(new Date(this.entidadCliente.fechaNacimiento));
-                    this.nacionalidad.setValue(this.entidadCliente.nacionalidad);
-                    this.edad.setValue(this.entidadCliente.edad);
-                    this.nivelDeEducacion.setValue(this.entidadCliente.nivelEducacion);
-                    this.actividadEconomica.setValue(this.entidadCliente.actividadEconomica);
-                    this.ultimaFechaDeActualizacionDeCliente.setValue(new Date(this.entidadCliente.fechaActualizacion));
-                    // INPUT VARIABLES CREDITICIAS
-                    this.dataPopup = new DataPopup();
-                    this.dataPopup.cedula = this.entidadCliente.cedulaCliente;
-                    this.dataPopup.isNegociacion = true;
-                    this.dataPopup.idBusqueda = this.entidadNegociacion.id;
-                    //console.log('ID DE NEGOCIACION DATAPOPUP', this.entidadNegociacion.id);
-                    //INPUT RIESGO ACUMULADO
-    
-                    // FORM CONTACTO
-                    let idtlf = 0;
-              
-                    this.correo.setValue(this.entidadCliente.email);
-                    //FORM DATOS NEGOCIACION
-                    this.estadoNegociacion.setValue(this.procesoEntidad.estadoProceso);
-                    this.fechaDeCreacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaCreacion));
-                    this.ultimaFechaDeActualizacionNegociacion.setValue(new Date(this.entidadNegociacion.fechaActualizacion));
-                  } else {
-                    this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 1', 'error');
-                  }
-                }, error => {
-                  this.loadingSubject.next(false);
-                  if (JSON.stringify(error).indexOf("codError") > 0) {
-                    let b = error.error;
-                    this.sinNoticeService.setNotice(b.msgError, 'error');
-                  } else {
-                    this.sinNoticeService.setNotice('ERROR AL CARGAR CLIENTE 2', 'error');
-                  }
-                });
-              } else {
-                this.sinNoticeService.setNotice('ERROR AL CARGAR NEGOCIACION', 'error');
-             
-    
-              }
-            });
-          }else{
-            this.sinNoticeService.setNotice('ERROR AL CARGAR NEGOCIACION', 'error');
-          }
-        });
-      } else {
-        this.sinNoticeService.setNotice('ERROR AL CARGAR EXCEPCION', 'error');
-      
       }
     });
   }
-  aprobarExcepcion(aprueba){
-    if(this.observacionAprobador.invalid){
-      this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE EL LOS CAMPOS OBLIGATORIOS','warning');
+  private cargarItem(catalogo, id) {
+    if(catalogo){
+      let item = catalogo.find(x => x.id == id);
+      if (catalogo && item) {
+        return item;
+      }
+    }
+  }
+  /******************************************** @EVENT   *********************************************************/
+  aprobarExcepcion(aprueba) {
+    if (this.observacionAprobador.invalid) {
+      this.sinNoticeService.setNotice('COMPLETE CORRECTAMENTE EL LOS CAMPOS OBLIGATORIOS', 'warning');
       return;
     }
-    let mensaje = "Aprobar excepcion de cliente para: " + this.entidadCliente.nombreCompleto;
+    let mensaje = aprueba ? "Aprobar excepcion de cliente para: " + this.wr.credito.tbQoNegociacion.tbQoCliente.nombreCompleto :
+    "Negar excepcion de cliente para: " + this.wr.credito.tbQoNegociacion.tbQoCliente.nombreCompleto ;
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
       width: "800px",
       height: "auto",
       data: mensaje
     });
     dialogRef.afterClosed().subscribe(r => {
-      this.loadingSubject.next(true);
-      if(r){
-        this.exs.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(p=>{
-          this.router.navigate(['../../aprobador/bandeja-excepciones']);
-          this.sinNoticeService.setNotice('EXCEPCION DE CLIENTE APROBADA','success');
-        },error=>{
-          this.sinNoticeService.setNotice('ERROR AL ENVIAR RESPUESTA','error');
+      if (r) {
+        this.exs.aprobarExcepcion(this.excepcion.id, this.observacionAprobador.value, aprueba).subscribe(p => {
+          if (aprueba) {
+            this.sinNoticeService.setNotice('EXCEPCION DE CLIENTE APROBADA', 'success');
+          } else {
+            this.sinNoticeService.setNotice('EXCEPCION DE CLIENTE NEGADA', 'success');
+          }
           this.router.navigate(['../../aprobador/bandeja-excepciones']);
         });
-      }else{
-        this.loadingSubject.next(false);
-        this.sinNoticeService.setNotice('SE CANCELO LA ACCION','error');
+      } else {
+        this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'error');
       }
     });
   }

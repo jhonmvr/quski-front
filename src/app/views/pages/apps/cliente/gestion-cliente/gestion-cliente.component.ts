@@ -79,7 +79,8 @@ export class GestionClienteComponent implements OnInit {
   public catMotivoVisita: Array<any>;
   public catOcupacion: Array<any>;
   public catCargo: Array<any>;
-  catTipoTelefono;
+  public catTipoTelefono: Array<any>;
+  ;
   /** @ENUMS **/
   /** @DIVISION_POLITICA **/
   private divicionPolitica: User[];
