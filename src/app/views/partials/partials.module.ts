@@ -126,12 +126,15 @@ import { LoaderComponent } from './custom/loader/loader.component';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { TablaCustomComponent } from './custom/secciones-generales/tabla-custom/tabla-custom.component';
 import { TablePagoComponent } from './custom/secciones-generales/tabla-custom/table-pago/table-pago.component';
+import { RelativeNumberPipe } from '../../../app/core/_base/layout/pipes/number-relative.pipe';
+import { ImpuestosComTableComponent } from './custom/secciones-generales/impuestos-com-table/impuestos-com-table.component';
 
 
 
 
 @NgModule({
 	declarations: [
+		RelativeNumberPipe,
 		RelativeDatePipe,
 		MensajeExcepcionComponent,
 		ScrollTopComponent,
@@ -203,10 +206,12 @@ import { TablePagoComponent } from './custom/secciones-generales/tabla-custom/ta
 		PopupPagoComponent,
 		SubirComprobanteComponent,
 		TablaCustomComponent,
-		TablePagoComponent
+		TablePagoComponent,
+		ImpuestosComTableComponent
 
 	],
 	exports: [
+		ImpuestosComTableComponent,
 		TablaCustomComponent,
 		WidgetModule,
 		PortletModule,

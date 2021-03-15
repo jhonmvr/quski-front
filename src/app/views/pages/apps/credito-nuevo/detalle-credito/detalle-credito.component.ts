@@ -49,7 +49,7 @@ export class DetalleCreditoComponent implements OnInit {
 
   public displayedColumnsRubro = ['rubro','numeroCuota', 'proyectado', 'calculado', 'estado'];
   public dataSourceRubro = new MatTableDataSource<any>();
-
+  public datoImpCom;
   constructor(
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
@@ -147,6 +147,11 @@ export class DetalleCreditoComponent implements OnInit {
     this.estadoProceso.setValue( this.wrapper.credito.codigoEstadoProcesoGarantia );
     this.descripcionBloqueo.setValue( this.wrapper.credito.datosBloqueo ? this.wrapper.credito.datosBloqueo : 'No presenta bloqueos');
     this.dataSourceRubro.data = this.wrapper.rubros;
+    this.sof.impComByOperacion(this.wrapper.credito.numeroOperacion).subscribe(p=>{
+      if(p.listaImpCom){
+        this.datoImpCom = p.listaImpCom;
+      }
+    })
     this.sinNotSer.setNotice('CREDITO CARGADO CORRECTAMENTE','success');
     this.loadingSubject.next(false);
     this.varHabilitante.proceso='CLIENTE';

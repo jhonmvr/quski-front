@@ -142,6 +142,7 @@
                             placeholder="Descripcion de bloqueo: " matInput></textarea>
                     </div>
                 </div>
+                <kt-impuestos-com-table [data]="datoImpCom" ></kt-impuestos-com-table>
             </mat-step>
             <mat-step label="Tabla de amortizacion">
                 <kt-tabla-custom [data]="dataSourceRubro.data" [nombreRubro]="'rubro'" [numeroCuota]="'numeroCuota'" [numeroOperacion]="numeroOperacion.value"></kt-tabla-custom>
