@@ -397,7 +397,7 @@ export class HabilitanteComponent implements OnInit {
 
   loadArchivoCliente(element) {
     let envioModel={
-      proceso:this.proceso,
+      proceso:element.proceso,
       estadoOperacion:this.estadoOperacion,
       referencia:this.referencia,
       tipoDocumento:element.idTipoDocumento,

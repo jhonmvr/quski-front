@@ -87,6 +87,8 @@ export class GenerarCreditoComponent implements OnInit {
   private fundaFoto = {idRol:"1",proceso:"FUNDA",estadoOperacion:"",tipoDocumento:"7"}
   public srcJoya : string;
   public srcFunda: string;
+  fotoJoya;
+  fotoFunda;
   public excepcionOperativa = new FormControl('');
   public fechaRegularizacion = new FormControl('');
   /** @CATALOGOS **/
@@ -248,10 +250,11 @@ export class GenerarCreditoComponent implements OnInit {
       this.excepcionOperativa.setValue( data.credito.excepcionOperativa ? this.catExcepcionOperativa.find(x => x.valor == data.credito.excepcionOperativa) : this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') );
       this.habilitarExcepcionOperativa();
     }
+    this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.tbQoNegociacion.id.toString());
+    this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.tbQoNegociacion.id.toString());
     if( data.credito.numeroFunda){
       this.fechaCuota.setValue(data.credito.pagoDia ? new Date(data.credito.pagoDia) : null);
-      this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.id.toString());
-      this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.id.toString());
+      
       this.pesoFunda.setValue( this.catTipoFunda ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) : null : null )
       this.numeroFunda.setValue( data.credito.numeroFunda ? data.credito.numeroFunda : null);
       let totalPesoB :any = 0 ;
@@ -433,20 +436,21 @@ export class GenerarCreditoComponent implements OnInit {
   public cargarFotoJoya() {
     this.srcJoya = null;
     this.loadImgJoya.next(true);
-    this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.item, this.joyaFoto.tipoDocumento);
+    this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.item, this.joyaFoto.tipoDocumento,this.fotoJoya?this.fotoJoya.id:null);
   }
   public cargarFotoFunda() {
     this.srcFunda = null;
     this.loadImgFunda.next(true);
-    this.loadArchivoCliente(this.fundaFoto.proceso, this.fundaFoto.estadoOperacion, this.item, this.fundaFoto.tipoDocumento);
+    this.loadArchivoCliente(this.fundaFoto.proceso, this.fundaFoto.estadoOperacion, this.item, this.fundaFoto.tipoDocumento,this.fotoFunda?this.fotoFunda.id:null);
   }
-  private loadArchivoCliente(procesoS: string, estadoOperacionS: string, referenciaS: string, idTipoDocumentoS: string) {
+  private loadArchivoCliente(procesoS: string, estadoOperacionS: string, referenciaS: string, idTipoDocumentoS: string, idDocumentohabilitante) {
+  console.log("numero de referencia del docuemnto",referenciaS,idDocumentohabilitante);
     let envioModel : DialogDataHabilitante = {
       proceso: procesoS,
       estadoOperacion: estadoOperacionS,
       referencia: referenciaS,
       tipoDocumento: idTipoDocumentoS,
-      documentoHabilitante: null
+      documentoHabilitante: idDocumentohabilitante
     };
     if (envioModel.referencia) {
       const dialogRef = this.dialog.open(HabilitanteDialogComponent, {
@@ -474,14 +478,14 @@ export class GenerarCreditoComponent implements OnInit {
 
   }
   private cargarFotoHabilitante(tipoDocumento, proceso, referencia) {
+    console.log("cargar documentos fotos",tipoDocumento, proceso, referencia);
     this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).subscribe((data: any) => {
       if(data.entidad){
-        if(data.entidad.tbQoTipoDocumento.tipoDocumento == "FOTO JOYAS"){
-          this.operacionNuevo.credito.uriImagenSinFunda = data.entidad.objectId;
+        if(tipoDocumento =='6'){
+          this.fotoJoya = data.entidad;
         }
-        const algo = 'algo';
-        if(data.entidad.tbQoTipoDocumento.tipoDocumento == "FOTO FUNDA"){
-          this.operacionNuevo.credito.uriImagenConFunda = data.entidad.objectId;
+        if(tipoDocumento =='7'){
+          this.fotoFunda = data.entidad;
         }
         this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).subscribe((dataDos: any) => {
           let file = JSON.parse( atob( dataDos.entidad ) );
@@ -509,7 +513,7 @@ export class GenerarCreditoComponent implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         if(r){
           this.cre.solicitarAprobacionNuevo(this.operacionNuevo.credito.tbQoNegociacion.id).subscribe( (data: any) =>{
-            if(data.entidad){
+            if(data){
               this.router.navigate(['negociacion/bandeja-operaciones']);
             }
           });

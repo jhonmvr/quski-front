@@ -87,11 +87,11 @@ export class CreditoNegociacionService extends BaseService {
     );
   }  
   public solicitarAprobacionNuevo( idNegociacion) {
-    let serviceUrl = this.appResourcesUrl + this.urlRest + "crearOperacionNuevo" ;
+    let serviceUrl = this.appResourcesUrl + this.urlRest + "solicitarAprobacionNuevo" ;
     this.params = new HttpParams().set('correoAsesor', localStorage.getItem('email'));
     this.params = this.params.set('idNegociacion',idNegociacion);
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options).pipe(
+    return this.http.post(serviceUrl,null, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
