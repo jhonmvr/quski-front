@@ -54,7 +54,8 @@ export class ArchivoUploadDialogComponent implements OnInit {
               relatedId: 0,
               relatedIdStr: relatedstr,
               typeAction: this.data.idTipoArchivo,
-              fileBase64:  (<string>(reader.result)).split(',')[1]
+              fileBase64:  (<string>(reader.result)).split(',')[1],
+              objectId:''
           }; 
          
       };
