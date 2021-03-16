@@ -1,9 +1,7 @@
-  
 <re-portlet>
     <re-portlet-header [title]="'Detalle de credito Vigente'" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
-            <a (click)="regresar()" matTooltip="Regresar al listado"
-                style="font-size: 12px; vertical-align: middle;">
+            <a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
                     arrow_back</mat-icon>
                 <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
@@ -56,12 +54,14 @@
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaAprobacion" placeholder="Fecha Aprobacion" [value] ="fechaAprobacion.value  | rDate" />
+                            <input matInput [formControl]="fechaAprobacion" placeholder="Fecha Aprobacion"
+                                [value]="fechaAprobacion.value  | rDate" />
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaVencimiento" placeholder="Fecha Vencimiento"  [value] ="fechaVencimiento.value | rDate" />
+                            <input matInput [formControl]="fechaVencimiento" placeholder="Fecha Vencimiento"
+                                [value]="fechaVencimiento.value | rDate" />
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -147,17 +147,58 @@
                             placeholder="Descripcion de bloqueo: " matInput></textarea>
                     </div>
                 </div>
-                <kt-impuestos-com-table [data]="datoImpCom" ></kt-impuestos-com-table>
+                <kt-impuestos-com-table [data]="datoImpCom"></kt-impuestos-com-table>
             </mat-step>
             <mat-step label="Tabla de amortizacion">
-                <kt-tabla-custom [data]="dataSourceRubro.data" [nombreRubro]="'rubro'" [numeroCuota]="'numeroCuota'" [numeroOperacion]="numeroOperacion.value"></kt-tabla-custom>
-              
-                
+                <kt-tabla-custom [data]="dataSourceRubro.data" [nombreRubro]="'rubro'" [numeroCuota]="'numeroCuota'"
+                    [numeroOperacion]="numeroOperacion.value"></kt-tabla-custom>
+
+
             </mat-step>
             <mat-step label="Garantias">
-                <kt-tabla-tasacion *ngIf="this.wrapper && this.wrapper.garantias;" [data]='this.wrapper.garantias' [tipo]="'G'"></kt-tabla-tasacion>
+                <kt-tabla-tasacion *ngIf="this.wrapper && this.wrapper.garantias;" [data]='this.wrapper.garantias'
+                    [tipo]="'G'"></kt-tabla-tasacion>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col">
+                                <mat-progress-bar *ngIf="loadImgJoya.asObservable() | async" mode="indeterminate">
+                                </mat-progress-bar>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="srcJoya">
+                            <div class="row mt-2">
+                                <div class="col-md-8 offset-md-2">
+                                    <mat-card>
+                                        <img mat-card-image src="{{'data:image/png;base64,' + this.srcJoya}}"
+                                            class="img-responsive">
+                                    </mat-card>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col">
+                                <mat-progress-bar *ngIf="loadImgFunda.asObservable() | async" mode="indeterminate">
+                                </mat-progress-bar>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="srcFunda">
+                            <div class="row  mt-2">
+                                <div class="col-md-8 offset-md-2">
+                                    <mat-card>
+                                        <img mat-card-image src="{{'data:image/png;base64,' + this.srcFunda}}"
+                                            class="img-responsive">
+                                    </mat-card>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                    </div>
+                </div>
             </mat-step>
-           <!--  <mat-step label="Habilitantes">
+            <!--  <mat-step label="Habilitantes">
                 <div class="row">
                     <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =numeroOperacion.value " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}" >Habilitante Operacion</button>
                     <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedula.value "   style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}" >Habilitante Cliente</button>

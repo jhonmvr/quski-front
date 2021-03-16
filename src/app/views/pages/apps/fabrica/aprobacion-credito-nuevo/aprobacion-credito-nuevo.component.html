@@ -431,6 +431,33 @@
                 </mat-form-field>
               </div>
             </div>
+            <div class="row mt-3">
+              <div class="col-md-6">
+                  <ng-container *ngIf="srcJoya">
+                      <div class="row mt-2">
+                          <div class="col-md-8 offset-md-2">
+                              <mat-card>
+                                  <img mat-card-image src="{{'data:image/png;base64,' + this.srcJoya}}"
+                                      class="img-responsive">
+                              </mat-card>
+                          </div>
+                      </div>
+                  </ng-container>
+              </div>
+              <div class="col-md-6">
+                  <ng-container *ngIf="srcFunda">
+                      <div class="row  mt-2">
+                          <div class="col-md-8 offset-md-2">
+                              <mat-card>
+                                  <img mat-card-image src="{{'data:image/png;base64,' + this.srcFunda}}"
+                                      class="img-responsive">
+                              </mat-card>
+                          </div>
+                      </div>
+                  </ng-container>
+
+              </div>
+          </div>
           </mat-tab>
           <mat-tab label="Variables crediticias">
             <div class="row mt-1 mb-1">

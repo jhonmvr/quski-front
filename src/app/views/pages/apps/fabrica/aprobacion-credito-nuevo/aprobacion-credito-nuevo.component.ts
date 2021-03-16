@@ -21,6 +21,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { utils } from 'protractor';
 import { RETURN } from 'mat-table-exporter';
+import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
+import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
+import { switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 
 
@@ -33,6 +37,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
   // VARIABLES PUBLICAS  
   public loading;
   public usuario: string;
+  srcFunda;
+  srcJoya;
   public agencia: any;
   public fechaActual: string;
   public item;
@@ -168,6 +174,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
     private pro: ProcesoService,
+    private doc: DocumentoHabilitanteService,
+    private obj: ObjectStorageService,
     private par: ParametroService,
     private sinNotSer: ReNoticeService,
     private route: ActivatedRoute,
@@ -178,6 +186,8 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.cre.setParameter();
     this.sof.setParameter();
     this.pro.setParameter();
+    this.doc.setParameter();
+    this.obj.setParameter();
     this.formDisable.addControl( "codigoBpm", this.codigoBpm );
     this.formDisable.addControl( "proceso", this.proceso );
     this.formDisable.addControl( "nombresCompletoCliente", this.nombresCompletoCliente );
@@ -443,7 +453,12 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     this.cuota.setValue( ap.credito.cuota );
     this.totalInteres.setValue(  ap.credito.saldoInteres );
 
-
+    this.cargarFotoHabilitante('6','FUNDA',ap.credito.tbQoNegociacion.id ).subscribe(data=>{
+      this.srcJoya = data;
+    });
+    this.cargarFotoHabilitante('7','FUNDA',ap.credito.tbQoNegociacion.id ).subscribe(data=>{
+      this.srcFunda = data;
+    });
     this.loadingSubject.next(false);
   }
   public enviarRespuesta( aprobar ){
@@ -497,5 +512,16 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
 
   public regresar(){
     this.router.navigate(['aprobador']);  
+  }
+
+
+  private cargarFotoHabilitante(tipoDocumento, proceso, referencia):Observable<String> {
+    console.log("cargar documentos fotos",tipoDocumento, proceso, referencia);
+    return this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).pipe(switchMap(data=> 
+         this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).pipe(switchMap((dataDos: any) => {
+          let file = JSON.parse( atob( dataDos.entidad ) );
+          return of(file.fileBase64);
+        }))
+    ));
   }
 }

@@ -7,7 +7,11 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { DocumentoHabilitanteService } from '../../../../../../app/core/services/quski/documento-habilitante.service';
+import { environment } from '../../../../../../environments/environment';
+import { ObjectStorageService } from '../../../../../../app/core/services/object-storage.service';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'kt-detalle-credito',
@@ -20,7 +24,10 @@ export class DetalleCreditoComponent implements OnInit {
   public  loading;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public  wrapper: any; 
-
+  loadImgJoya = new BehaviorSubject<Boolean>(false);
+  loadImgFunda= new BehaviorSubject<Boolean>(false);
+  srcJoya;
+  srcFunda;
   public formInformacion: FormGroup = new FormGroup({});
   public nombre = new FormControl();
   public cedula = new FormControl();
@@ -54,6 +61,8 @@ export class DetalleCreditoComponent implements OnInit {
   constructor(
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
+    private doc: DocumentoHabilitanteService,
+    private obj: ObjectStorageService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private subheaderService: SubheaderService,
@@ -62,6 +71,8 @@ export class DetalleCreditoComponent implements OnInit {
   ) { 
     this.cre.setParameter();
     this.sof.setParameter();
+    this.doc.setParameter();
+    this.obj.setParameter();
 
     this.formInformacion.addControl("nombre", this.nombre);
     this.formInformacion.addControl("cedula", this.cedula);
@@ -98,6 +109,8 @@ export class DetalleCreditoComponent implements OnInit {
     this.formInformacion.disable();
     this.loading = this.loadingSubject.asObservable();
     this.subheaderService.setTitle('Detalle de credito');
+    this.loadImgJoya.next(true);
+    this.loadImgFunda.next(true);
     this.traerCredito();
   }
   private traerCredito(){
@@ -159,6 +172,17 @@ export class DetalleCreditoComponent implements OnInit {
     this.loadingSubject.next(false);
     this.varHabilitante.proceso='CLIENTE';
     this.varHabilitante.referencia =this.cedula.value 
+
+    this.cargarFotoHabilitante(this.wrapper.credito.uriImagenGarantiaConFunda).subscribe(p=>
+      {
+        this.loadImgFunda.next(false);
+        this.srcFunda = p;
+      });
+    this.cargarFotoHabilitante(this.wrapper.credito.uriImagenGarantiaSinFunda).subscribe(p=>
+      {
+        this.loadImgJoya.next(false);
+        this.srcJoya =  p;
+      });
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
@@ -179,4 +203,12 @@ export class DetalleCreditoComponent implements OnInit {
   regresar(){
     this.router.navigate(['credito-nuevo/']);
   }
+
+  private cargarFotoHabilitante(objectId){
+       return this.obj.getObjectById(objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).pipe( switchMap((dataDos: any) => {
+          let file = JSON.parse( atob( dataDos.entidad ) );
+          return of(file.fileBase64);
+        }));
+  }
+   
 }
