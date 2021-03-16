@@ -19,6 +19,7 @@ export interface DataUpload {
   relatedId: number;
   typeAction: string;
   relatedIdStr: string;
+  objectId: string;
 }
 export interface DialogData {
   idTipoDocumento: string;
@@ -81,16 +82,11 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
 
 
   loadArchivoCliente(element) {
-
-    //console.log('===>>ingreso: ', this.nombresCompletos.value);
     let d = {
       idTipoDocumento: 1,
       identificacionCliente: this.identificacion.value,
       data: this.data,
     };
-    /* if (
-      this.nombresCompletos.value 
-    ) {  */
     const dialogRef = this.dialog.open(CargarFotoDialogComponent, {
       width: '500px',
       height: 'auto',
@@ -104,44 +100,12 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
         this.validar = 'ACT';
         this.enableConsultar.next(true);
         this.enableLoadArchivo.next(false);
-        this.sinNoticeService.setNotice(
-          'ARCHIVO CARGADO CORRECTAMENTE',
-          'success'
-        );
-        //this.validateContratoByHabilitante('false');
+        this.sinNoticeService.setNotice('ARCHIVO CARGADO CORRECTAMENTE','success');
       }
-      //this.submit();
 
     });
-    /* } else {
-      //console.log("===>>errorrrr al cierre: ");
-      this.sinNoticeService.setNotice(
-        "ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO",
-        "error"
-      );
-    } */
   }
-  /* loadArchivoCliente(element) {
- 
-      const dialogRef = this.dialog.open(CargarFotoDialogComponent, {
-        width: 'auto',
-        height: 'auto',
-        //data: any
-      });
-
-      dialogRef.afterClosed().subscribe((r) => {
-        //console.log("===>>ertorno al cierre: " + JSON.stringify( r ) );
-        if (r) {
-          this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE", 'success');
-          //this.validateContratoByHabilitante();
-        }
-        //this.submit();
-      });
-    } else {
-      //console.log("===>>errorrrr al cierre: "  );
-      this.sinNoticeService.setNotice("ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO", 'error');
-    } 
-  } */
+  
 
   salir() {
     this.dialogRef.close();
@@ -161,140 +125,26 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
 
   }
 
-  onFileChange(event) {
-    //console.log('===>contraro relate idContrato: ' + JSON.stringify(this.data));
-
-    let relatedstr = '';
-    let process = '';
-    if (this.data !== '') {
-      relatedstr = this.data;
-      process = 'CLIENTE';
-
-      let reader = new FileReader();
-      if (event.target.files && event.target.files.length > 0) {
-        let file = event.target.files[0];
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          this.uploadSubject.next(true);
-          /*  this.dataUpload = {
-             name: file.name,
-             type: file.type,
-             process: process,
-             relatedId: 0,
-             relatedIdStr: relatedstr,
-             typeAction: this.data.idTipoDocumento,
-             fileBase64: reader.result.split(",")[1]
-           }; */
-        };
-      } else {
-        this.uploadSubject.next(false);
-      }
-    }
-  }
-
-
-
   descargarPlantillaHabilitante(row) {
 
-    //console.log('<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>', this.nombresCompletos.value, this.data);
     if (this.nombresCompletos.value != '') {
 
       this.dh.downloadAutorizacionPlantilla(1, 'PDF', this.nombresCompletos.value, this.identificacion.value).subscribe(
         (data: any) => {
-          ////console.log("descargarNotificacion datos xx " + data.entidad);
-          ////console.log("descargarNotificacion datos " + JSON.stringify(data));
           if (data) {
-            //this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
-            ////console.log("datos de salida",data);
             saveAs( data, 'Carta solicitud Autorizacion Buro' + '.pdf');
             this.enableLoadArchivo.next(true);
             this.enableConsultar.next(false);
             this.enableDownload.next(false);
           } else {
-            this.sinNoticeService.setNotice(
-              'NO SE ENCONTRO REGISTRO PARA DESCARGA',
-              'error'
-            );
+            this.sinNoticeService.setNotice('NO SE ENCONTRO REGISTRO PARA DESCARGA','error');
           }
         });
     } else
       this.sinNoticeService.setNotice('INGRESA LOS NOMBRES COMPLETOS  ', 'error');
   }
 
-
-  public subirArchivoHabilitante() {
-    //console.log('===> subirArchivoHabilitantecontraro relate id: ' +JSON.stringify(this.data));
-    this.enableLoadArchivo.next(false);
-    this.enableConsultar.next(true);
-    this.sinNoticeService.setNotice('SE SUBIO EXITOSAMENTE ', 'success');
-    this.validar = 'ACT';
-
-
-    /* this.upload
-      .uploadFile(
-        this.upload.apiUrlResources +
-          "uploadRestController/loadFileHabilitante",
-        this.dataUpload
-      )
-      .subscribe(
-        (data: any) => {
-          //this.sinNoticeService.setNotice("ARCHIVO SUBIDO CORRECTAMENTE", 'success');
-          this.dialogRef.close(data.relatedIdStr);
-        },
-        error => {
-          //console.log("error llegado " + JSON.stringify(error.error));
-          if (JSON.stringify(error.error).indexOf("codError") > 0) {
-            //let b = JSON.parse( error._body );
-            let b = error.error;
-            // this.alert={id: 2,type: "danger",message: "ERROR EN LA CARGA DE ARCHIVO " + b.msgError};
-            //this.sinNoticeService.setNotice("ERROR EN LA CARGA DE ARCHIVO " + b.msgError, 'error');
-          } else {
-            //console.log("error no java " + error);
-            // this.alert={id: 2,type: "danger",message: "ERROR EN LA CARGA DE ARCHIVO " };
-            //this.sinNoticeService.setNotice("ERROR EN LA CARGA DE ARCHIVO", 'error');
-          }
-        }
-      ); */
-  }
-  /*  //console.log(
-      "<<<<<<<<<<<<<<<< id>>>>>>>>>>>>>>>>",
-      this.codigoContratoLocal
-    );
-    //console.log("descargarArchivoHabilitante");
-    //console.log("entra a submit var json " + row.id);
-    this.dh
-      .downloadHabilitante(
-        row.id
-        ,
-        this.codigoContrato,
-        this.joya,
-        this.abono,
-        this.idVentaLote
-      )
-      .subscribe(
-        (data: any) => {
-          //console.log("descargarNotificacion datos xx " + data);
-          //console.log("descargarNotificacion datos " + JSON.stringify(data));
-          if (data) {
-            this.sinNoticeService.setNotice("ARCHIVO DESCARGADO", "success");
-            saveAs(data, row.descripcion + ".pdf");
-          } else {
-            this.sinNoticeService.setNotice(
-              "NO SE ENCONTRO REGISTRO PARA DESCARGA",
-              "error"
-            );
-          }
-        },
-        error => {
-          //console.log("================>error: " + JSON.stringify(error));
-          this.sinNoticeService.setNotice(
-            "ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO",
-            "error"
-          );
-        }
-      );
-
-    ////console.log("descargarNotificacion"); */
+  
 }
 
 
