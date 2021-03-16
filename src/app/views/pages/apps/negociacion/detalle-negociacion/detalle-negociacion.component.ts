@@ -75,7 +75,6 @@ export class DetalleNegociacionComponent implements OnInit {
       if (data.params.id) {
         this.referencia = data.params.id
         this.cre.traerCreditoNegociacion(data.params.id).subscribe((data: any) => {
-          //console.log('Credito --> ', data.entidad);
           if (!data.entidad.existeError) {
             this.detalle = data.entidad;
             
