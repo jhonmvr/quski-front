@@ -96,7 +96,6 @@ export class EntregaRecepcionComponent implements OnInit {
     this.sof.setParameter();
     this.par.setParameter();
     this.cargarCatalogos();
-    this.inicioFlujo();
     this.subheaderService.setTitle('FLUJO DE DEVOLUCION');
   }
   private decodeObjetoDatos(entrada) {
@@ -211,32 +210,31 @@ export class EntregaRecepcionComponent implements OnInit {
     }
   }
   private cargarCatalogos() {
-    this.sof.consultarAgenciasCS().subscribe((data: any) => {
-      this.catAgencia = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-    });
     this.sof.consultarTipoClienteCS().subscribe((data: any) => {
       let tipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
       this.catTipoCliente = new Array<any>();
       this.catTipoCliente.push({ codigo: "HER", nombre: "HEREDERO" });
       this.catTipoCliente.push(tipoCliente.find(x => x.codigo == 'SAP'));
       this.catTipoCliente.push(tipoCliente.find(x => x.codigo == 'DEU'));
-    });
-    this.sof.consultarPaisCS().subscribe((data: any) => {
-      this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-    });
-    this.sof.consultarEducacionCS().subscribe((data: any) => {
-      this.catEducacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-    });
-    this.sof.consultarEstadosCivilesCS().subscribe((data: any) => {
-      this.catEstadoCivil = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-    });
-    this.sof.consultarGeneroCS().subscribe((data: any) => {
-      this.catGenero = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-    });
-    this.sof.consultarDivicionPoliticaCS().subscribe((data: any) => {
-      if (!data.existeError) {
-        this.catDivision = !data.existeError ? data.catalogo : { nombre: 'Error al cargar catalogo' };
-      }
+      this.sof.consultarAgenciasCS().subscribe((data: any) => {
+        this.catAgencia = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+        this.sof.consultarPaisCS().subscribe((data: any) => {
+          this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+          this.sof.consultarEducacionCS().subscribe((data: any) => {
+            this.catEducacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+            this.sof.consultarEstadosCivilesCS().subscribe((data: any) => {
+              this.catEstadoCivil = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+              this.sof.consultarGeneroCS().subscribe((data: any) => {
+                this.catGenero = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                this.sof.consultarDivicionPoliticaCS().subscribe((data: any) => {
+                  this.catDivision = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                  this.inicioFlujo();
+                });
+              });
+            });
+          });
+        });
+      });
     });
   }
   public guardar() {
