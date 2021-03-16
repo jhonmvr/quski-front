@@ -31,12 +31,6 @@ export class HabilitanteDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogDataHabilitante,
     private upload: ReFileUploadService, private os:ObjectStorageService
   ) {
-/*     //console.log( "===>cargando dialog habilitante: " + JSON.stringify(this.data));
-    //console.log("===>contraro relate referencia: " + this.data.referencia);
-    //console.log("===>contraro relate tipoDocumento: " + this.data.tipoDocumento);
-    //console.log("===>contraro relate proceso: " + this.data.proceso);
-    //console.log("===>contraro relate estadoOperacion: " +this.data.estadoOperacion);
-    //console.log("===>contraro relate idhabilitante: " +this.data.documentoHabilitante); */
     this.upload.setParameter();
     this.os.setParameter();
   }
@@ -90,16 +84,8 @@ export class HabilitanteDialogComponent implements OnInit {
         this.upload.uploadFile(this.upload.appResourcesUrl +"uploadRestController/loadFileHabilitanteSimplified",this.dataUpload).subscribe((data: any) => {
           this.dialogRef.close(data.relatedIdStr);
           this.uploadSubject.next(false);
-        },error => {
-          this.uploadSubject.next(false);
-          if (JSON.stringify(error.error).indexOf("codError") > 0) {
-            let b = error.error;
-          }
         });
       }
-    },error => {
-      this.uploadSubject.next(false);
-      this.sinNoticeService.setNotice("NO SE PUDO GUARDAR EL ARCHIVO.", 'error');
     });
   }
 }
