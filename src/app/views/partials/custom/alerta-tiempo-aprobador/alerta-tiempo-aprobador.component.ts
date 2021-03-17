@@ -19,17 +19,17 @@ export class AlertaTiempoAprobadorComponent implements OnInit {
       
   }
   ngOnInit() {
-    let mensaje = "EL TIEMPO DE APROBACION A SUPERADO EL TIEMPO ESTABLESIDO";
-  const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
-    width: "800px",
-    height: "auto",
-    data: {mensaje:mensaje, titulo:'ALERTA TIEMPO TRANSCURRIDO'}
-  });
-  dialogRef.afterClosed().subscribe(r => {
-    if(r){
-      console.log("==========>>>> cierror pop ");
-    }else{
-     
-    }
-  });}
+    this.sharedService.alertaAprobador.subscribe(p=>{
+      console.log(" los datos que quiero cargar ", p )
+      if(p){
+        let mensaje = "EL TIEMPO DE APROBACION A SUPERADO EL TIEMPO ESTABLESIDO";
+        const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+          width: "800px",
+          height: "auto",
+          data: {mensaje:mensaje, titulo:'APROBACION PENDIENTE'}
+        });
+      }
+    });
+   
+}
 }

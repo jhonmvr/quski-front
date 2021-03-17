@@ -5,6 +5,6 @@ export interface AlertaAprobadorWrapper {
     codigSoftbank: string;
     proceso: string;
     aprobador: string;
-    tiempoInicio: Date
-    tiempoTranscurrido: Date
+    tiempoInicio: any
+    tiempoTranscurrido: any
 }
