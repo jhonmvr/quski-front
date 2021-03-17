@@ -20,7 +20,6 @@ export class AlertaTiempoAprobadorComponent implements OnInit {
   }
   ngOnInit() {
     this.sharedService.alertaAprobador.subscribe(p=>{
-      console.log(" los datos que quiero cargar ", p )
       if(p){
         this.dialog.closeAll();
         let mensaje = "EL TIEMPO DE APROBACION A SUPERADO EL TIEMPO ESTABLESIDO";

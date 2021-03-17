@@ -29,25 +29,26 @@ export class DashboardComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		setInterval(() => { 
-			console.log("entra al setInterval==========>>");
-		
-			let keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
-			let tiempoAprobador =atob(localStorage.getItem('localRE017')).replace(keyUnencrypt,'');
-			let tiempoSupervisor =atob(localStorage.getItem('localRE018')).replace(keyUnencrypt,'');
-			let roles = atob(localStorage.getItem('localRE019')).replace(keyUnencrypt,'');
-			if(roles.split(',').find(p=> p == localStorage.getItem('re1002'))){
-				let x :AlertaAprobadorWrapper = {
-					codigoBpm: 'string',
-					codigSoftbank: 'string',
-					proceso: 'string',
-					aprobador: 'string',
-					tiempoInicio: new Date,
-					tiempoTranscurrido: new Date
+		let keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
+		let tiempoAprobador =atob(localStorage.getItem('localRE017')).replace(keyUnencrypt,'');
+		//let tiempoSupervisor =atob(localStorage.getItem('localRE018')).replace(keyUnencrypt,'');
+		if(tiempoAprobador){
+			setInterval(() => { 
+				let roles = atob(localStorage.getItem('localRE019')).replace(keyUnencrypt,'');
+				if(roles.split(',').find(p=> p == localStorage.getItem('re1002'))){
+					let x :AlertaAprobadorWrapper = {
+						codigoBpm: 'string',
+						codigSoftbank: 'string',
+						proceso: 'string',
+						aprobador: 'string',
+						tiempoInicio: new Date,
+						tiempoTranscurrido: new Date
+					}
+					this.sharedService.cargarDatos(x);
 				}
-				this.sharedService.cargarDatos(x);
-			}
-		 },10000);
+			 },Number(tiempoAprobador)*1000 * 60);
+		}
+		
 	}
 
 }
