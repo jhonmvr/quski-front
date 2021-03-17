@@ -147,6 +147,13 @@
                             placeholder="Descripcion de bloqueo: " matInput></textarea>
                     </div>
                 </div>
+                <div class="row mt-3 mb-3 justify-content-center">
+                    <div class="col-2">
+                        <button mat-raised-button (click)="mostrarVentanaPrecancelacion()">
+                            <span>Simular PreCancelacion</span>
+                        </button>
+                    </div>
+                </div>
                 <kt-impuestos-com-table [data]="datoImpCom"></kt-impuestos-com-table>
             </mat-step>
             <mat-step label="Tabla de amortizacion">

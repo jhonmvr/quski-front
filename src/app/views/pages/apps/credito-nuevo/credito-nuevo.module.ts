@@ -61,6 +61,7 @@ import { DetalleCreditoComponent } from './detalle-credito/detalle-credito.compo
 import { ModuleGuard } from '../../../../../app/core/auth';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { MatTableExporterModule } from 'mat-table-exporter';
+import { VentanaPrecancelacionComponent } from '../../../partials/custom/popups/ventana-precancelacion/ventana-precancelacion.component';
 
 
 
@@ -183,6 +184,7 @@ providers: [
 exports:[],
 entryComponents: [
 	UploadFileComponent,
+	VentanaPrecancelacionComponent
 ]
 })
 

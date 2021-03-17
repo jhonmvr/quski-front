@@ -77,7 +77,6 @@ export class DetalleNegociacionComponent implements OnInit {
         this.cre.traerCreditoNegociacion(data.params.id).subscribe((data: any) => {
           if (!data.entidad.existeError) {
             this.detalle = data.entidad;
-            
             this.setearValores( this.detalle );
           }else{
             this.salirDeGestion("Error al intentar cargar el credito: "+ data.entidad.mensaje);
@@ -88,6 +87,7 @@ export class DetalleNegociacionComponent implements OnInit {
       }
     });
   }
+
   private traerCatalogos() {
     this.sof.consultarPaisCS().subscribe((data: any) => {
       this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";

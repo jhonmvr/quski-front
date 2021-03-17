@@ -128,6 +128,7 @@ import { TablaCustomComponent } from './custom/secciones-generales/tabla-custom/
 import { TablePagoComponent } from './custom/secciones-generales/tabla-custom/table-pago/table-pago.component';
 import { RelativeNumberPipe } from '../../../app/core/_base/layout/pipes/number-relative.pipe';
 import { ImpuestosComTableComponent } from './custom/secciones-generales/impuestos-com-table/impuestos-com-table.component';
+import { VentanaPrecancelacionComponent } from './custom/popups/ventana-precancelacion/ventana-precancelacion.component';
 
 
 
@@ -207,7 +208,8 @@ import { ImpuestosComTableComponent } from './custom/secciones-generales/impuest
 		SubirComprobanteComponent,
 		TablaCustomComponent,
 		TablePagoComponent,
-		ImpuestosComTableComponent
+		ImpuestosComTableComponent,
+		VentanaPrecancelacionComponent
 
 	],
 	exports: [
@@ -267,7 +269,8 @@ import { ImpuestosComTableComponent } from './custom/secciones-generales/impuest
 		HabilitanteDialogComponent,
 		ErrorCargaInicialComponent,
 		DetallesComponent,
-		SolicitudDeExcepcionesComponent
+		SolicitudDeExcepcionesComponent,
+		VentanaPrecancelacionComponent
 
 	],
 	imports: [

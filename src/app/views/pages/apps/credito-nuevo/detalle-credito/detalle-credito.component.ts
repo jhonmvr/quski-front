@@ -1,3 +1,4 @@
+import { VentanaPrecancelacionComponent } from '../../../../partials/custom/popups/ventana-precancelacion/ventana-precancelacion.component';
 import { ErrorCargaInicialComponent } from '../../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
@@ -20,9 +21,6 @@ import { switchMap, tap } from 'rxjs/operators';
 })
 export class DetalleCreditoComponent implements OnInit {
   varHabilitante= {proceso:'',referencia:''};
-
-  public  loading;
-  private loadingSubject = new BehaviorSubject<boolean>(false);
   public  wrapper: any; 
   loadImgJoya = new BehaviorSubject<Boolean>(false);
   loadImgFunda= new BehaviorSubject<Boolean>(false);
@@ -58,6 +56,8 @@ export class DetalleCreditoComponent implements OnInit {
   public displayedColumnsRubro = ['rubro','numeroCuota', 'proyectado', 'calculado', 'estado'];
   public dataSourceRubro = new MatTableDataSource<any>();
   public datoImpCom;
+  ItemNumeroOperacion: any;
+  operacionSoft: any;
   constructor(
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
@@ -107,7 +107,6 @@ export class DetalleCreditoComponent implements OnInit {
     this.cre.setParameter();
     this.sof.setParameter();
     this.formInformacion.disable();
-    this.loading = this.loadingSubject.asObservable();
     this.subheaderService.setTitle('Detalle de credito');
     this.loadImgJoya.next(true);
     this.loadImgFunda.next(true);
@@ -116,7 +115,7 @@ export class DetalleCreditoComponent implements OnInit {
   private traerCredito(){
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.numeroOperacion) {
-        this.loadingSubject.next(true);
+        this.ItemNumeroOperacion = json.params.numeroOperacion;
         this.cre.traerCreditoVigente(json.params.numeroOperacion).subscribe((data: any) => {
           if (data.entidad) {
             this.wrapper = data.entidad;
@@ -127,6 +126,17 @@ export class DetalleCreditoComponent implements OnInit {
         });
       }
     });
+  }
+  public mostrarVentanaPrecancelacion(){
+    if(this.ItemNumeroOperacion){
+      const dialogRef = this.dialog.open(VentanaPrecancelacionComponent, {
+        width: "800px",
+        height: "auto",
+        data: this.ItemNumeroOperacion
+      });
+    }else{
+      this.sinNotSer.setNotice('ERROR AL INTENTAR SIMULAR', 'error');
+    }
   }
   private cargarCampos(){
     this.nombre.setValue( this.wrapper.cliente.nombreCompleto );
@@ -169,7 +179,6 @@ export class DetalleCreditoComponent implements OnInit {
       }
     })
     this.sinNotSer.setNotice('CREDITO CARGADO CORRECTAMENTE','success');
-    this.loadingSubject.next(false);
     this.varHabilitante.proceso='CLIENTE';
     this.varHabilitante.referencia =this.cedula.value 
 
@@ -186,7 +195,6 @@ export class DetalleCreditoComponent implements OnInit {
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
-    this.loadingSubject.next(false);
     let pData = {
       mensaje: dataMensaje,
       titulo: dataTitulo ? dataTitulo : null

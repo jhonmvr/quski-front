@@ -1,0 +1,55 @@
+<mat-card>
+    <div class="row">
+        <div class="col-6">
+            <mat-card-title>Simulacion de Precancelacion</mat-card-title>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="fechaSimulacion" placeholder="Fecha De Simulacion" />
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-2">
+            <button mat-raised-button (click)="simular()">Simular</button>
+        </div>
+        <div class="col-md-2">
+            <button mat-raised-button mat-dialog-close color="warn"> Salir </button>
+        </div>
+    </div>
+    <div class="row mt-5" *ngIf="capital.value">
+        <div class="col-4">
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="capital" placeholder="Capital" />
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="capitalCastigado" placeholder="Capital Castigado" />
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="interes" placeholder="Interes" />
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="mora" placeholder="Mora" />
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="otros" placeholder="Otros" />
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="valorTotal" placeholder="Valor Total" />
+            </mat-form-field>
+        </div>
+    </div>
+
+</mat-card>
