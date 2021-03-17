@@ -1,6 +1,6 @@
+import { SharedService } from '../../../../core/services/shared.service';
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'kt-alerta-tiempo-aprobador',
@@ -8,20 +8,12 @@ import { SharedService } from 'src/app/core/services/shared.service';
   styleUrls: ['./alerta-tiempo-aprobador.component.scss']
 })
 export class AlertaTiempoAprobadorComponent implements OnInit {
-  isLoading: Subject<boolean> ;
+  isLoading: Subject<boolean>;
   flat;
   
   constructor(private sharedService: SharedService) {
     this.isLoading =this.sharedService.isLoading;
     this.flat = this.isLoading.asObservable();
   }
-
-  ngOnInit() {
-    this.consultaDeTiempo(); 
-  }
-  consultaDeTiempo(){
-    
-  }
-
-
+  ngOnInit() {}
 }
