@@ -143,6 +143,34 @@ export class ProcesoService extends BaseService {
       )
     );
   }
+  /**
+  * @author Jeroham Cadenas
+  */
+  public listAlertaDeProcesos() {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'listAlertaDeProcesos';
+    this.params = new HttpParams();
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  /**
+  * @author Jeroham Cadenas
+  */
+  public listAlertaDeProcesosAprobador(aprobador: string) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'listAlertaDeProcesosAprobador';
+    this.params = new HttpParams().set('aprobador', aprobador);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
     /**
    * @author Jeroham Cadenas
    */

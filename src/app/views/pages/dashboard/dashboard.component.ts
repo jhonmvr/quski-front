@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 // Lodash
 import { shuffle } from 'lodash';
+import { ProcesoService } from '../../../../app/core/services/quski/proceso.service';
 import { AlertaAprobadorWrapper } from '../../../../app/core/interfaces/AlertaAprobadorWrapper';
 import { SharedService } from '../../../../app/core/services/shared.service';
 import { environment } from '../../../../environments/environment';
@@ -25,26 +26,23 @@ export class DashboardComponent implements OnInit {
 	widget4_3: Widget4Data;
 	widget4_4: Widget4Data;
 
-	constructor(private layoutConfigService: LayoutConfigService, private sharedService: SharedService) {
+	constructor(private layoutConfigService: LayoutConfigService, private sharedService: SharedService, private pro: ProcesoService) {
 	}
 
 	ngOnInit(): void {
 		let keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
-		let tiempoAprobador =atob(localStorage.getItem('localRE017')).replace(keyUnencrypt,'');
+		let tiempoAprobador = atob(localStorage.getItem('localRE017')).replace(keyUnencrypt,'');
 		//let tiempoSupervisor =atob(localStorage.getItem('localRE018')).replace(keyUnencrypt,'');
 		if(tiempoAprobador){
 			setInterval(() => { 
 				let roles = atob(localStorage.getItem('localRE019')).replace(keyUnencrypt,'');
 				if(roles.split(',').find(p=> p == localStorage.getItem('re1002'))){
-					let x :AlertaAprobadorWrapper = {
-						codigoBpm: 'string',
-						codigSoftbank: 'string',
-						proceso: 'string',
-						aprobador: 'string',
-						tiempoInicio: new Date,
-						tiempoTranscurrido: new Date
-					}
-					this.sharedService.cargarDatos(x);
+					this.pro.listAlertaDeProcesosAprobador( atob(localStorage.getItem(environment.userKey)) ).subscribe( (data: any) =>{
+						if(data.entidades && data.entidades.length){
+							let x :Array<AlertaAprobadorWrapper> = data.entidades
+							this.sharedService.cargarDatos(x);
+						}
+					})
 				}
 			 },Number(tiempoAprobador)*1000 * 60);
 		}

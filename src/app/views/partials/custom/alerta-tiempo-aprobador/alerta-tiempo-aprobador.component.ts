@@ -19,10 +19,11 @@ export class AlertaTiempoAprobadorComponent implements OnInit {
       
   }
   ngOnInit() {
-    this.sharedService.alertaAprobador.subscribe(p=>{
+    this.sharedService.alertaAprobador.subscribe( p => {
       if(p){
         this.dialog.closeAll();
-        let mensaje = "EL TIEMPO DE APROBACION A SUPERADO EL TIEMPO ESTABLESIDO";
+        console.log('Data cambiante => ', p);
+        let mensaje = "EL TIEMPO DE APROBACION A SUPERADO EL TIEMPO ESTABLESIDO PARA "+ p.length + " PROCESOS PENDIENTES.";
         const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
           width: "800px",
           height: "auto",
