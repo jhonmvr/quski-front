@@ -7,7 +7,12 @@
     <div class="row justify-content-center">
         <div class="col-6">
             <mat-form-field class="mat-form-field-fluid">
-                <input matInput [formControl]="fechaSimulacion" placeholder="Fecha De Simulacion" />
+                <mat-label>Fecha de nacimiento</mat-label>
+                <input matInput #inputFechaNacimiento
+                    [matDatepicker]="pickerFechaNacimiento" [formControl]="fechaSimulacion" 
+                    required="true" />
+                <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
+                <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
             </mat-form-field>
         </div>
     </div>
@@ -23,7 +28,7 @@
         <div class="col-4">
             <mat-form-field class="mat-form-field-fluid">
                 <input matInput [formControl]="capital" placeholder="Capital" />
-            </mat-form-field>
+            </mat-form-field> 
         </div>
         <div class="col-4">
             <mat-form-field class="mat-form-field-fluid">

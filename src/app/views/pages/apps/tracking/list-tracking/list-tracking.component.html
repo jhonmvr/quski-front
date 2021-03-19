@@ -12,20 +12,20 @@
             <div class="col-md-4">
                 <mat-select
                   placeholder="Proceso"
-                  [formControl]="proceso" (selectionChange)="SelectActividad($event.value)">
+                  [formControl]="proceso">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let proceso of procesos" [value]="proceso"  >
-                    {{ proceso}}
+                  <mat-option *ngFor="let element of catProceso" [value]="element"  >
+                    {{ element }}
                   </mat-option>
                 </mat-select>
             </div>
             <div class="col-md-4">
                 <mat-select
                   placeholder="Actividad"
-                  [formControl]="actividad"(selectionChange)="SelectSeccion($event.value)">
+                  [formControl]="actividad">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let actividad of listActividad" [value]="actividad">
-                    {{ actividad }}
+                  <mat-option *ngFor="let element of catActividad" [value]="element">
+                    {{ element }}
                   </mat-option>
                 </mat-select>
             </div>
@@ -34,8 +34,8 @@
                   placeholder="Seccion"
                   [formControl]="seccion">
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let seccion of listSeccion" [value]="seccion">
-                    {{ seccion }}
+                  <mat-option *ngFor="let element of catSeccion" [value]="element">
+                    {{ element }}
                   </mat-option>
                 </mat-select>
             </div>

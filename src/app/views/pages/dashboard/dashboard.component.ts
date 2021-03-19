@@ -46,7 +46,6 @@ export class DashboardComponent implements OnInit {
 				}
 			 },Number(tiempoAprobador)*1000 * 60);
 		}
-		
 	}
 
 }

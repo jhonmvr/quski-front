@@ -46,14 +46,19 @@ export class VentanaPrecancelacionComponent implements OnInit {
     if(!this.fechaSimulacion.valid){
       this.sinNotSer.setNotice('INGRESE UNA FECHA VALIDA', 'warning');
     }
-    let wrapper: SimulacionPrecancelacion = { 
+    let x: Date = this.fechaSimulacion.value;
+    let mont = x.getMonth() > Number(9) ? x.getMonth() : "0" + x.getMonth();
+    let date = x.getDate() > Number(9) ? x.getDate() : "0" + x.getDate();
+    let y: string = x.getFullYear() + "-" + mont + '-' + date;
+    console.log(' Fecha de simulacion =>', y);
+    let w: SimulacionPrecancelacion = { 
       numeroPrestamo: this.numeroOperacion,
-      fechaPrecancelacion: this.fechaSimulacion.value
+      fechaPrecancelacion: y
     }
-    this.sof.simularPrecancelacionCS( wrapper ).subscribe( ( data: any) =>{
+    this.sof.simularPrecancelacionCS( w ).subscribe( ( data: any) =>{
       this.sinNotSer.setNotice('SIMULACION CARGADA.', 'success')
       if(data.existeError){
-        this.sinNotSer.setNotice('RESPUESTA SOFTBANK: '+ data.mensaje, 'warning')
+        this.sinNotSer.setNotice('RESPUESTA SOFTBANK: '+ data.mensaje, 'warning');
       }
       this.valorTotal.setValue(data.valorTotal);
       this.capital.setValue(data.capital);

@@ -89,9 +89,14 @@
                             <input matInput [formControl]="tablaAmortizacion" placeholder="Tabla Amortizacion" />
                         </mat-form-field>
                     </div>
-                    <div class="col-4">
+                    <div class="col-4" *ngIf="tipoCredito.value == 'Vencimiento'">
                         <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="plazo" placeholder="Plazo" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4" *ngIf="tipoCredito.value == 'Cuotas'">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="numeroCuotas" placeholder="Numero Cuotas" />
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -106,12 +111,12 @@
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="coberturaActual" placeholder="Cobertura Actual" />
+                            <input matInput [formControl]="coberturaActual" placeholder="Cobertura Actual" [value]="coberturaActual.value | percent" />
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="coberturaInicial" placeholder="Cobertura Inicial" />
+                            <input matInput [formControl]="coberturaInicial" placeholder="Cobertura Inicial" [value]="coberturaInicial.value | percent"  />
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -135,11 +140,7 @@
                             <input matInput [formControl]="esMigrado" placeholder="Es Migrado" />
                         </mat-form-field>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="numeroCuotas" placeholder="Numero Cuotas" />
-                        </mat-form-field>
-                    </div>
+
                 </div>
                 <div class="row mt-3">
                     <div class="col-8 offset-2">
