@@ -19,13 +19,14 @@ export class ListTrackingComponent implements OnInit {
   catActividad: Array<any>;
 
   cargardatos = new BehaviorSubject<boolean>(false);
-  displayedColumns = ['proceso', 'actividad', 'seccion', 'codigoBpm', 'codigoOperacionSoftbank', 'usuario', 'fechaCreacion', 'fechaActualizacion', 'tiempoTotal', 'fecha'];
+  displayedColumns = [ 'codigoBpm','codigoOperacionSoftbank','proceso','actividad','seccion', 'usuario', 'fechaCreacion', 'fechaActualizacion', 'tiempoTotal', 'fecha'];
   /**Obligatorio paginacion */
   p = new Page();
   dataSource: MatTableDataSource<TbQoTracking> = new MatTableDataSource<TbQoTracking>();
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
   totalResults: number;
+  totalTiempo: number;
   total: number;
   pageSize = 5;
   currentPage;
@@ -49,6 +50,15 @@ export class ListTrackingComponent implements OnInit {
     public dialog: MatDialog
   ) {
     this.tra.setParameter();
+
+    this.formCliente.addControl("proceso", this.proceso);
+    this.formCliente.addControl("actividad", this.actividad);
+    this.formCliente.addControl("seccion", this.seccion);
+    this.formCliente.addControl("codigoBPM", this.codigoBPM);
+    this.formCliente.addControl("codigoSoftbank", this.codigoSoftbank);
+    this.formCliente.addControl("usuario", this.usuario);
+    this.formCliente.addControl("fechaDesde", this.fechaDesde);
+    this.formCliente.addControl("fechaHasta", this.fechaHasta);
   }
 
   ngOnInit() {
@@ -94,6 +104,7 @@ export class ListTrackingComponent implements OnInit {
   }
   public buscar() {
     this.cargardatos.next(true);
+    this.totalTiempo = 0;
     let trackingWrapper = new TrakingWrapper();
     if (this.proceso.value)
       trackingWrapper.proceso = this.proceso.value.replace(/ /gi,"_");
@@ -114,17 +125,20 @@ export class ListTrackingComponent implements OnInit {
 
     this.tra.busquedaTracking(this.p, trackingWrapper).subscribe((data: any) => {
       if (data.list != null) {
+        
         this.dataSource = new MatTableDataSource<TbQoTracking>(data.list);
         this.dataSource.data.forEach(e => {
           e.proceso = e.proceso.replace(/_/gi, " ");
           e.actividad = e.actividad.replace(/_/gi, " ");
           e.seccion = e.seccion.replace(/_/gi, " ");
+          this.totalTiempo = this.totalTiempo + e.tiempoTranscurrido;
         })
         this.totalResults = data.totalResults;
         this.dataSource.paginator = this.paginator;
         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
         this.cargardatos.next(false);
       } else {
+        this.cargardatos.next(false);
         this.initiateTablePaginator();
         this.sinNoticeService.setNotice("NO SE ENCONTRARON REGISTROS", 'info');
       }
@@ -137,9 +151,17 @@ export class ListTrackingComponent implements OnInit {
         this.catProceso = data.entidad.procesos;
         this.catSeccion = data.entidad.secciones;
         this.catActividad = data.entidad.actividades;
-
       }
     });
+  }
+  public limpiarFiltros(){
+    Object.keys(this.formCliente.controls).forEach((name) => {
+      const control = this.formCliente.controls[name];
+      control.reset();
+      control.setErrors(null);
+      control.setValue(null);
+    });
+    this.buscar();
   }
 
   /*  
