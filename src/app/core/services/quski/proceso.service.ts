@@ -144,9 +144,9 @@ export class ProcesoService extends BaseService {
     /**
    * @author Jeroham Cadenas
    */
-  public cambiarEstadoProceso(idReferencia: number, proceso: string, newEstado: string) {
+  public cambiarEstadoProceso(idReferencia: number, proceso: string, newEstado: string, usuario: string) {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'cambiarEstadoProceso';
-    this.params = new HttpParams().set('idReferencia', idReferencia.toString()).set('proceso', proceso).set('newEstado', newEstado);
+    this.params = new HttpParams().set('idReferencia', idReferencia.toString()).set('proceso', proceso).set('newEstado', newEstado).set('usuario', usuario);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
