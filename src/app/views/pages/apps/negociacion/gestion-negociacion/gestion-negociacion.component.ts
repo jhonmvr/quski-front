@@ -559,7 +559,7 @@ export class GestionNegociacionComponent implements OnInit {
         this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
       } else {
         if (data.isCobertura) {
-          this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'error');
+          this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
         } else {
           this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', 'NEGOCIACION CANCELADA');
         }

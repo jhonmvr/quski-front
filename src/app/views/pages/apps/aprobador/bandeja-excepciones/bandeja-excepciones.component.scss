@@ -92,67 +92,8 @@ mat-dialog-content{
     justify-content: start;
   }
   
-  
-  .mat-column-Activo {
-    flex: 0 0 150px;
-    justify-content: start;
-  }
-  
-  
-  .mat-column-Avaluo {
-    flex: 0 0 100px;
-    justify-content: start;
-  }
-  
-  .mat-column-Pasivo {
-    flex: 0 0 150px;
-    justify-content: start;
-  }
-  .mat-column-Ifis {
-    flex: 0 0 150px;
-    justify-content: start;
-  }
-  .mat-column-Infocorp {
-    flex: 0 0 150px;
-    justify-content: start;
-  }
-  
   table {
     width: 100%;
-  }
-  
-  .example-card {
-    max-width: 400px;
-  }
-  
-  .example-header-image {
-    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-    background-size: cover;
-  }
-  
-  .mat-column-primerNombre {
-    flex: 0 0 200px;
-    justify-content: start;
-  }
-  
-  .mat-column-Parentesco {
-    flex: 0 0 100px;
-    justify-content: start;
-  }
-  .mat-column-Direccion {
-    flex: 0 0 100px;
-    justify-content: start;
-  }
-  
-  
-  .mat-column-TelefonoMovil {
-    flex: 0 0 100px;
-    justify-content: start;
-  }
-    
-  .mat-column-TelefonoFijo {
-    flex: 0 0 100px;
-    justify-content: start;
   }
   
   .white-icon {
@@ -221,3 +162,21 @@ mat-dialog-content{
     color: green;
   }
   
+  .mat-header-cell {
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    font-size: smaller;
+    
+  }
+  
+  .mat-cell {
+    text-align: center;
+    justify-content:center;
+    font-size: smaller;
+  }
+  .mat-footer-cell{
+    text-align: center;
+    justify-content:center;
+    font-size: smaller;
+  }
