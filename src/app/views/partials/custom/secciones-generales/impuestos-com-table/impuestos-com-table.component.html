@@ -19,6 +19,17 @@
 <br>
 <div class="row">
     <mat-form-field>
+        <input matInput placeholder="Valor a recibir" value="{{valorARecibir | rNumber}}" disabled>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Valor a pagar" value="{{valorAPagar | rNumber}}" disabled>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Valor neto" value="{{valorNeto | rNumber}}" disabled>
+    </mat-form-field>
+</div>
+<div class="row">
+    <mat-form-field>
         <input matInput placeholder="Total Costos Credito Anterior" value="{{totalCreditoAnterior | rNumber}}" disabled>
     </mat-form-field>
     <mat-form-field>

@@ -9,20 +9,13 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ImpuestosComTableComponent implements OnInit {
   dataSource= new MatTableDataSource<any>();
-  listImpCom =
-  ["CostoCustodia",
-  "CostoFideicomiso",
-  "CostoSeguro",
-  "CostoTasacion",
-  "CostoTransporte",
-  "CostoValoracion",
-  "SaldoInteres",
-  "SaldoMora",
-  "GastoCobranza"];
   totalCreditoAnterior = 0;
   totalCreditoNuevo = 0;
-  dataObservable = new BehaviorSubject<Array<any>>(null);
-  @Input() set data( list :  Array<any>){
+  valorARecibir;
+  valorAPagar;
+  valorNeto;
+  dataObservable = new BehaviorSubject<any>(null);
+  @Input() set data( list :  any){
     this.dataObservable.next( list );
   }
   constructor() { 
@@ -32,14 +25,21 @@ export class ImpuestosComTableComponent implements OnInit {
   ngOnInit() {
     this.dataObservable.subscribe(p=>{
       if(p){
-
-        this.dataSource = new MatTableDataSource<any>(p);
-        if(p instanceof Array && p.length>0){
-          p.forEach(p=>{
-            if(this.listImpCom.find(x=>x==p.codigo)){
-              this.totalCreditoNuevo = this.totalCreditoNuevo + p.valor;
+        this.valorARecibir = p.valorRecibir;
+        this.valorAPagar = p.valorPagar;
+        this.valorNeto = p.valorNeto;
+        if(p.listaImpCom){
+          let x :Array<any> =p.listaImpCom; 
+          let y =  x.sort((a,c)=>a.orden-c.orden);
+          console.log("ordenado", y , x);
+          this.dataSource = new MatTableDataSource<any>(y);
+        }
+        if(p.listaImpCom instanceof Array && p.listaImpCom.length>0){
+          p.listaImpCom.forEach(x=>{
+            if(x.esCreditoAnterior){
+              this.totalCreditoAnterior = this.totalCreditoAnterior + x.valor;
             }else{
-              this.totalCreditoAnterior = this.totalCreditoAnterior + p.valor;
+              this.totalCreditoNuevo = this.totalCreditoNuevo + x.valor;
             }
            
           })

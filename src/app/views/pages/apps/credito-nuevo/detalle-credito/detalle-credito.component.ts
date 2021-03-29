@@ -13,6 +13,7 @@ import { DocumentoHabilitanteService } from '../../../../../../app/core/services
 import { environment } from '../../../../../../environments/environment';
 import { ObjectStorageService } from '../../../../../../app/core/services/object-storage.service';
 import { switchMap, tap } from 'rxjs/operators';
+import { TablaAmortizacionComponent } from '../../../../../../app/views/partials/custom/popups/tabla-amortizacion/tabla-amortizacion.component';
 
 @Component({
   selector: 'kt-detalle-credito',
@@ -174,8 +175,8 @@ export class DetalleCreditoComponent implements OnInit {
     this.descripcionBloqueo.setValue( this.wrapper.credito.datosBloqueo ? this.wrapper.credito.datosBloqueo : 'No presenta bloqueos');
     this.dataSourceRubro.data = this.wrapper.rubros;
     this.sof.impComByOperacion(this.wrapper.credito.numeroOperacion).subscribe(p=>{
-      if(p.listaImpCom){
-        this.datoImpCom = p.listaImpCom;
+      if(p){
+        this.datoImpCom = p;
       }
     })
     this.sinNotSer.setNotice('CREDITO CARGADO CORRECTAMENTE','success');
@@ -218,5 +219,14 @@ export class DetalleCreditoComponent implements OnInit {
           return of(file.fileBase64);
         }));
   }
-   
+  public mostrarTablaDeAmortizacion(){
+    this.sof.consultaTablaAmortizacionOperacionAprobadaCS(this.numeroOperacion.value).subscribe(p=>{
+      const dialogRef = this.dialog.open(TablaAmortizacionComponent, {
+        width: "800px",
+        height: "auto",
+        data: p.cuotas
+      })
+    });
+      
+  }
 }

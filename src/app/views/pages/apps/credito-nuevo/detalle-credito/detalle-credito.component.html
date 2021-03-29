@@ -158,6 +158,11 @@
                 <kt-impuestos-com-table [data]="datoImpCom"></kt-impuestos-com-table>
             </mat-step>
             <mat-step label="Tabla de amortizacion">
+                <div class="row mb-5"  >
+                    <div  class="offset-md-5 col-md-5" >
+                        <button mat-button (click)=" mostrarTablaDeAmortizacion()"> Tabla de amortizacion </button>
+                    </div>
+                </div>
                 <kt-tabla-custom [data]="dataSourceRubro.data" [nombreRubro]="'rubro'" [numeroCuota]="'numeroCuota'"
                     [numeroOperacion]="numeroOperacion.value"></kt-tabla-custom>
 
