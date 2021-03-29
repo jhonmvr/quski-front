@@ -184,11 +184,9 @@ export class BloquearCreditoComponent implements OnInit {
             this.sinNoticeService.setNotice("ERROR NO IDENTIFICADO", 'error');
           }
     
-        }, error => {
-          this.sinNoticeService.setNotice(error.error.msgError, 'error');
         });
       }else{
-        this.sinNoticeService.setNotice('SE CANCELO LA ACCION','error');
+        this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');
       }
     });
   }

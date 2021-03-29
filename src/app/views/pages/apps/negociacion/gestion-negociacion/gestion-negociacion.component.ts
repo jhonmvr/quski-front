@@ -420,7 +420,7 @@ export class GestionNegociacionComponent implements OnInit {
       if (respuesta) {
         this.iniciarNegociacionEquifax(cedula);
       } else {
-        this.sinNotSer.setNotice('CONSULTA EQUIFAX CANCELADA', 'error');
+        this.sinNotSer.setNotice('CONSULTA EQUIFAX CANCELADA', 'warning');
         this.limpiarCamposBusqueda();
       }
     });
@@ -559,7 +559,7 @@ export class GestionNegociacionComponent implements OnInit {
         this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
       } else {
         if (data.isCobertura) {
-          this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'error');
+          this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
         } else {
           this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', 'NEGOCIACION CANCELADA');
         }
@@ -888,7 +888,7 @@ export class GestionNegociacionComponent implements OnInit {
           this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
           this.mapearVariables(data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable)
         } else {
-          this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
+          this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'warning');
         }
         this.myStepper.selectedIndex = 5;
       });
@@ -1000,12 +1000,12 @@ export class GestionNegociacionComponent implements OnInit {
   }
   verPrecio() {
     if (this.formDatosCliente.invalid) {
-      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'error');
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'warning');
       this.myStepper.selectedIndex = 1;
       return;
     }
     if (!this.fechaDeNacimiento.value || this.edad.value < 18 || this.edad.value > 75) {
-      this.sinNotSer.setNotice("INGRESE UNA FECHA VALIDA QUE CORRESPONDA A UNA EDAD VALIDA", 'error');
+      this.sinNotSer.setNotice("INGRESE UNA FECHA VALIDA QUE CORRESPONDA A UNA EDAD VALIDA", 'warning');
       this.myStepper.selectedIndex = 1;
       return;
     }

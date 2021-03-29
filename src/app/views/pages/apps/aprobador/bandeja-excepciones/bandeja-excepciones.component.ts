@@ -1,10 +1,12 @@
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { ExcepcionRolService } from '../../../../../core/services/quski/excepcionRol.service';
 import { TbQoExcepcionRol } from '../../../../../core/model/quski/TbQoExcepcionRol';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../environments/environment';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material';
+import { MatDialog, MatTableDataSource } from '@angular/material';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -20,13 +22,15 @@ export class BandejaExcepcionesComponent implements OnInit {
   public identificacion = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   usuario: string;
   //VARIABLES DE LA TABLA
-  displayedColumnsExcepciones = ['accion', 'tipoExcepcion', 'nombreCliente','identificacion'];
+  displayedColumnsExcepciones = ['accion', 'tipoExcepcion', 'nombreCliente','identificacion','observacionAsesor'];
   dataSourceExcepcionRol = new MatTableDataSource<TbQoExcepcionRol>();
   private agregar = new Array<TbQoExcepcionRol>();
 
   constructor(
     private subheaderService: SubheaderService,
     private exr: ExcepcionRolService,
+    private pro: ProcesoService,
+    private dialog: MatDialog,
     private router: Router,
     private sinNoticeService: ReNoticeService,
   ) {
@@ -57,6 +61,15 @@ export class BandejaExcepcionesComponent implements OnInit {
         //console.log('DATASOURCE==> ', JSON.stringify(this.dataSourceExcepcionRol));
       }
     });
+  }
+  public limpiarFiltros(){
+    Object.keys(this.formBusqueda.controls).forEach((name) => {
+      const control = this.formBusqueda.controls[name];
+      control.reset();
+      control.setErrors(null);
+      control.setValue(null);
+    });
+    this.busquedaExcepciones(this.usuario);
   }
   public find() {
     this.dataSourceExcepcionRol = null;
@@ -91,17 +104,38 @@ export class BandejaExcepcionesComponent implements OnInit {
     }
 
   }
+  public abrirSolicitud(row ){
+    let mensaje = 'Tomar y gestionar la excepcion como: '+this.usuario;
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        width: "800px",
+        height: "auto",
+        data: mensaje
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        if(r){
+          if(row.id != null){
+            this.pro.asignarAprobadorExcepcion( row.idNegociacion, this.usuario).subscribe( (data: any) =>{
+              if(data.entidad){
+                if (row.tipoExcepcion == 'EXCEPCION_CLIENTE') {
+                  this.sinNoticeService.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+                  this.router.navigate(['./excepciones/excepcion-cliente/', btoa(JSON.stringify(row))])
+                } else if (row.tipoExcepcion == 'EXCEPCION_RIESGO') {
+                  this.sinNoticeService.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+                  this.router.navigate(['./excepciones/excepcion-riesgo/', btoa(JSON.stringify(row))]);
+                } else if (row.tipoExcepcion == 'EXCEPCION_COBERTURA') {
+                  this.sinNoticeService.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+                  this.router.navigate(['./excepciones/excepcion-cobertura/', btoa(JSON.stringify(row))])
+                }
+              }
+            });
+          } else{
+            this.sinNoticeService.setNotice('ERROR DE BASE, CONTACTE SOPORTE','error');
+          }
+        }else{
+          this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');
+        }
 
-  public verExcepcion(element) {
-    if (element.tipoExcepcion == 'EXCEPCION_CLIENTE') {
-      this.router.navigate(['./excepciones/excepcion-cliente/', btoa(JSON.stringify(element))])
-    } else if (element.tipoExcepcion == 'EXCEPCION_RIESGO') {
-      this.router.navigate(['./excepciones/excepcion-riesgo/', btoa(JSON.stringify(element))]);
-    } else if (element.tipoExcepcion == 'EXCEPCION_COBERTURA') {
-      this.router.navigate(['./excepciones/excepcion-cobertura/', btoa(JSON.stringify(element))])
-    }
-
-
+      });
   }
 
 

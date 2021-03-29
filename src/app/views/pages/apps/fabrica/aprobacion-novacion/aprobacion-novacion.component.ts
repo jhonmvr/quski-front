@@ -508,7 +508,7 @@ export class AprobacionNovacionComponent implements OnInit {
           let wrapper: OperacionAprobar = new OperacionAprobar(this.crediW.credito.numeroOperacion, datos);
           this.sof.operacionAprobarCS(wrapper).subscribe((data: any) => {
             if (!data.existeError) {
-              this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id, "RENOVACION", "APROBADO").subscribe((data: any) => {
+              this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id, "RENOVACION", "APROBADO", this.usuario).subscribe((data: any) => {
                 if (data.entidad) {
                   this.cre.devolverAprobar(this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe((data: any) => {
                     this.loadingSubject.next(false);
@@ -553,7 +553,7 @@ export class AprobacionNovacionComponent implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         this.loadingSubject.next(true);
         if (r) {
-          this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id, "RENOVACION", "DEVUELTO").subscribe((data: any) => {
+          this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id, "RENOVACION", "DEVUELTO", this.crediW.credito.tbQoNegociacion.asesor).subscribe((data: any) => {
             if (data.entidad) {
               this.cre.devolverAprobar(this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe((data: any) => {
                 this.loadingSubject.next(false);

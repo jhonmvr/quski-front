@@ -172,7 +172,7 @@ export class NovacionHabilitanteComponent implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         this.loadingSubject.next(true);
         if(r){
-          this.pro.cambiarEstadoProceso(this.credit.credito.tbQoNegociacion.id,"RENOVACION","PENDIENTE_APROBACION").subscribe( (data: any) =>{
+          this.cre.solicitarAprobacionRenovacion( this.credit.credito.tbQoNegociacion.id ).subscribe( (data: any) =>{
             if(data.entidad){
               this.sinNotSer.setNotice('CREDITO ENVIADO A APROBACION FABRICA','success');
               this.router.navigate(['negociacion/bandeja-operaciones']);

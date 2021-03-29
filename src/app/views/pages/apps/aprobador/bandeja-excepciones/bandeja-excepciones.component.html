@@ -1,81 +1,70 @@
-  
-
 <re-portlet>
-  <re-portlet-header [title]="'Bandeja Principal Aprobador'" [class]="'kt-portlet__head--lg'">
+  <re-portlet-header [title]="" [class]="'kt-portlet__head--lg'">
     <ng-container class="d-flex justify-content-around" ktPortletTools>
-      <a href="javascript:void(0);" matTooltip="Guardar" style="font-size: 12px; vertical-align: middle;">
-        <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">save</mat-icon>
-        <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Guardar</span>
+      <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar"
+        style="font-size: 12px; vertical-align: middle;">
+        <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
+        <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
       </a>
     </ng-container>
 
 
   </re-portlet-header>
   <re-portlet-body>
-    <!-- start::FILTERS & GROUP ACTIONS -->
-
     <div class="kt-form">
-      <mat-vertical-stepper>
-        <mat-step [stepControl]="formBusqueda">
-          <ng-template matStepLabel>Listado de Excepciones Pendientes</ng-template>
-          <form [formGroup]="formBusqueda">
-            <div class="row -12">
-              <div class="col-2">
-                <mat-form-field class="mat-form-field-fluid">
-                  <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required matInput
-                    [required]="true" numericType="number" (keypress)="numberOnly($event)" />
-                </mat-form-field>
-              </div>
-              <div class="col">
-                <button mat-button matTooltip="Buscar" (click)="traerExcepciones()">
-                  <mat-icon style="font-size: 24px;" class="orange-icon" matTooltipPosition="above">search</mat-icon>
-                  <span class="orange-icon">Buscar</span>
-                </button>
-              </div>
-            </div>
-            <div class="row mt-2">
-
-            </div>
-          </form>
-          <div class="mat-table__wrapper">
-            <mat-table class="mat-elevation-z8" [dataSource]="dataSourceExcepcionRol">
-              <ng-container matColumnDef="accion">
-                <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
-                <mat-cell *matCellDef="let element">
-                  <a (click)="verExcepcion(element)">
-                    <mat-icon matTooltip="Ver Excepción">edit</mat-icon>
-                  </a>
-                </mat-cell>
-              </ng-container>
-              <ng-container matColumnDef="tipoExcepcion">
-                <mat-header-cell *matHeaderCellDef>Tipo Excepción</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.tipoExcepcion ? 
-                  element.tipoExcepcion == 'EXCEPCION_COBERTURA' ? 'Excepcion de Cobertura' :
-                  element.tipoExcepcion == 'EXCEPCION_RIESGO' ? 'Excepcion de Riesgo' :
-                  element.tipoExcepcion == 'EXCEPCION_CLIENTE' ? 'Excepcion de Cliente' :
-                  element.tipoExcepcion : 'Excepcion no definida'
-                 }} </mat-cell>
-
-              </ng-container>
-              <ng-container matColumnDef="nombreCliente">
-                <mat-header-cell *matHeaderCellDef>Nombre del Cliente</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.nombreCompleto | titlecase }} </mat-cell>
-
-              </ng-container>
-              <ng-container matColumnDef="identificacion">
-                <mat-header-cell *matHeaderCellDef>Identificación</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.identificacion}} </mat-cell>
-              </ng-container>
-              <mat-header-row *matHeaderRowDef="displayedColumnsExcepciones"></mat-header-row>
-              <mat-row *matRowDef="let row; columns: displayedColumnsExcepciones;"></mat-row>
-
-            </mat-table>
+      <form [formGroup]="formBusqueda">
+        <div class="row justify-content-center">
+          <div class="col-3">
+            <mat-form-field class="mat-form-field-fluid">
+              <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required matInput
+                [required]="true" numericType="number" (keypress)="numberOnly($event)" />
+            </mat-form-field>
           </div>
-
-        </mat-step>
-
-
-      </mat-vertical-stepper>
+        </div>
+        <div class="row mb-5 justify-content-center">
+          <div class="col-1">
+            <button mat-raised-button matTooltip="Buscar" (click)="traerExcepciones()">
+              <mat-icon style="font-size: 24px;" class="orange-icon" matTooltipPosition="above">search</mat-icon>
+              <span class="orange-icon">Buscar</span>
+            </button>
+          </div>
+        </div>
+      </form>
+      <mat-table class="mat-elevation-z8" [dataSource]="dataSourceExcepcionRol">
+        <ng-container matColumnDef="accion">
+          <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <ng-container>
+              <button mat-raised-button color="basic" (click)="abrirSolicitud(element)">
+                <span> Tomar </span>
+              </button>
+            </ng-container>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="tipoExcepcion">
+          <mat-header-cell *matHeaderCellDef>Tipo Excepción</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.tipoExcepcion ?
+            element.tipoExcepcion == 'EXCEPCION_COBERTURA' ? 'Excepcion de Cobertura' :
+            element.tipoExcepcion == 'EXCEPCION_RIESGO' ? 'Excepcion de Riesgo' :
+            element.tipoExcepcion == 'EXCEPCION_CLIENTE' ? 'Excepcion de Cliente' :
+            element.tipoExcepcion : 'Excepcion no definida'
+            }} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="nombreCliente">
+          <mat-header-cell *matHeaderCellDef>Nombre del Cliente</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.nombreCompleto | titlecase }} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="identificacion">
+          <mat-header-cell *matHeaderCellDef>Identificación</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.identificacion}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="observacionAsesor">
+          <mat-header-cell *matHeaderCellDef>Observacion del asesor</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.observacionAsesor |titlecase}} </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumnsExcepciones"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsExcepciones;"></mat-row>
+      </mat-table>
     </div>
     <!-- END FILTERS -->
   </re-portlet-body>

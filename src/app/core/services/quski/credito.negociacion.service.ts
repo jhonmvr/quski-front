@@ -98,6 +98,17 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }  
+  public solicitarAprobacionRenovacion( idNegociacion) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest + "solicitarAprobacionRenovacion" ;
+    this.params = this.params.set('idNegociacion',idNegociacion);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }  
   public crearOperacionRenovacion( data: TbQoCreditoNegociacion) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "crearOperacionRenovacion" ;
     this.options = { headers: this.headers };
