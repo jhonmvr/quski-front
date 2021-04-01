@@ -28,43 +28,24 @@ export const environment = {
     /** @SOFTBANK @DESARROLLO @JHON **/
     //app_p : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9nZW5lcmljLXJlbGF0aXZlLXJlc3QvcmVzb3VyY2VzL3JlbGF0aXZlL2dldFJlbGF0aXZl',
     /** @SOFTBANK @DESARROLLO @JEROHAM **/
-    app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU',
+    //app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU',
     /** @AUTENTICACION **/
-    seg_a :"aHR0cDovLzE4Ni42OS4xNjcuMjY6MTk5MS9hcGkvc2VndXJpZGFkL2xvZ2lu",
+    //seg_a :"aHR0cDovLzE4Ni42OS4xNjcuMjY6MTk5MS9hcGkvc2VndXJpZGFkL2xvZ2lu",
     /** @SEGURIDAD_RESOURCES **/
-    seg_r :"aHR0cDovLzE4Ni42OS4xNjcuMjY6MTk5MS9hcGkvc2VndXJpZGFkLw",
+    //seg_r :"aHR0cDovLzE4Ni42OS4xNjcuMjY6MTk5MS9hcGkvc2VndXJpZGFkLw",
     //agente supervisor
-    abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
+    //abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
     
       //SOFTBANK PRUEBAS
-    //app_p : 'aHR0cDovLzEwLjM3LjEwLjE4MDo4NDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU',
+    app_p : 'aHR0cDovLzEwLjM3LjEwLjE4MDo4NDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU',
     //agente supervisor
-    //abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
+    abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
     //autenticacion 
-    //seg_a :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC9sb2dpbgo=",
+    seg_a :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC9sb2dpbgo=",
     //seguridad-resources
-    //seg_r :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC8="
+    seg_r :"aHR0cDovLzEwLjM3LjEwLjU4OjgwOTQvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC8="
 
-    //DESARROLLO
-    //parametros
-    //app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL2dlbmVyaWMtcmVsYXRpdmUtcmVzdC9yZXNvdXJjZXMvcmVsYXRpdmUvZ2V0UmVsYXRpdmU=',
-    //agente supervisor
-    //abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
-    //autenticacion 
-    //seg_a :"aHR0cDovLzIwMS4xODMuMjM4LjczOjE5OTEvYXBpL3NlZ3VyaWRhZC9sb2dpbg==",
-    //seguridad-resources
-    //seg_r :"aHR0cDovLzIwMS4xODMuMjM4LjczOjE5OTEvYXBpL3NlZ3VyaWRhZC8="
-    //pruebas
-    //cpu : 'aHR0cDovLzE4Ni40LjE5OS4xNzY6MTg0ODAvbWlkYXMtb3JvLXJlc3QvcmVzb3VyY2VzL3JlbGF0aXZlL2dldFJlbGF0aXZl',
-    //abu : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL21pZGFzLW9yby1yZXN0L3Jlc291cmNlcy9hZ2VudGVSZXN0Q29udHJvbGxlci9hZ2VudGVPclN1cGVydmlzb3JCeVVzZXJuYW1l',
-    //asau :"aHR0cDovLzE4Ni40LjE5OS4xNzY6MTg0ODAvY29yZS1zZWN1cml0eS13ZWIvcmVzb3VyY2VzL2F1dGVudGljYWNpb24vc3MwMDE=",
-    //asar :"aHR0cDovL2xvY2FsaG9zdDo4MDgwL2NvcmUtc2VjdXJpdHktd2ViL3Jlc291cmNlcy8="
-   
-    //preproduccion
-    //cpu : 'aHR0cDovLzE4Ni40LjE5OS4xNzY6MTg0ODAvbWlkYXMtb3JvLXJlc3QvcmVzb3VyY2VzL3JlbGF0aXZlL2dldFJlbGF0aXZl',
-    //abu : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL21pZGFzLW9yby1yZXN0L3Jlc291cmNlcy9hZ2VudGVSZXN0Q29udHJvbGxlci9hZ2VudGVPclN1cGVydmlzb3JCeVVzZXJuYW1l',
-    //asau :"aHR0cDovLzE4Ni40LjE5OS4xNzY6MTg0ODAvY29yZS1zZWN1cml0eS13ZWIvcmVzb3VyY2VzL2F1dGVudGljYWNpb24vc3MwMDE=",
-    //asar :"aHR0cDovL2xvY2FsaG9zdDo4MDgwL2NvcmUtc2VjdXJpdHktd2ViL3Jlc291cmNlcy8="
+
 };
 
 /*
