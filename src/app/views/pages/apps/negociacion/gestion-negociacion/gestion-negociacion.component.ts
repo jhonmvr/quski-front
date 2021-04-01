@@ -819,12 +819,12 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     let cliente = this.buildCliente();
     this.neg.verPrecios(cliente).subscribe(resp => {
       this.catTipoOro = resp.entidades;
-      this.tipoOro.setValue(this.catTipoOro ? this.catTipoOro.find(t => t.nombre == element.tipoOro) ? this.catTipoOro.find(t => t.nombre == element.tipoOro) : "No definido" : 'No definido');
+      this.tipoOro.setValue(this.catTipoOro ? this.catTipoOro.find(t => t.codigo == element.tipoOro) ? this.catTipoOro.find(t => t.codigo == element.tipoOro) : '' : '');
+      this.tipoJoya.setValue(this.catTipoJoya ? this.catTipoJoya.find(t => t.codigo == element.tipoJoya) ? this.catTipoJoya.find(t => t.codigo == element.tipoJoya) : '' : '');
+      this.estado.setValue(this.catEstadoJoya ? this.catEstadoJoya.find(t => t.codigo == element.estadoJoya) ? this.catEstadoJoya.find(t => t.codigo == element.estadoJoya) : '' : '');
       this.pesoNeto.setValue(element.pesoNeto);
       this.pesoBruto.setValue(element.pesoBruto);
       this.numeroPiezas.setValue(element.numeroPiezas);
-      this.tipoJoya.setValue(this.catTipoJoya ? this.catTipoJoya.find(t => t.nombre == element.tipoJoya) ? this.catTipoJoya.find(t => t.nombre == element.tipoJoya) : "No definido" : 'No definido');
-      this.estado.setValue(this.catEstadoJoya ? this.catEstadoJoya.find(t => t.nombre == element.estadoJoya) ? this.catEstadoJoya.find(t => t.nombre == element.estadoJoya) : "No definido" : 'No definido');
       this.descuentoSuelda.setValue(element.descuentoSuelda);
       this.valorOro.setValue(element.valorOro);
       this.tienePiedras.setValue(element.tienePiedras ? 'S' : 'N');

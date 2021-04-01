@@ -188,6 +188,7 @@ export class TablaTasacionComponent implements OnInit {
   }
   /** ********************************************* @ACCIONES ********************* **/
   public editar(entidad: TbQoTasacion) {
+    console.log( entidad );
     this.rowEdit.emit(entidad);
   }
   public eliminar(entidad: TbQoTasacion) {
