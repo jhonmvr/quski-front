@@ -19,7 +19,7 @@ import { EstadoExcepcionEnum } from './../../../../../core/enum/EstadoExcepcionE
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { environment } from '../../../../../../../src/environments/environment';
-import { MatDialog, MatTableDataSource, MatStepper } from '@angular/material';
+import { MatDialog, MatTableDataSource, MatStepper, MatVerticalStepper } from '@angular/material';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
@@ -29,6 +29,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
+import { TrackingService } from '../../../../../../../src/app/core/services/quski/tracking.service';
 
 
 @Component({
@@ -36,7 +38,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
   templateUrl: './gestion-negociacion.component.html',
   styleUrls: ['./gestion-negociacion.component.scss']
 })
-export class GestionNegociacionComponent implements OnInit {
+export class GestionNegociacionComponent extends TrackingUtil implements OnInit {
   // VARIABLES PUBLICAS
   selection = new SelectionModel<any>(true, []);
   public loadingTasacion;
@@ -131,10 +133,12 @@ export class GestionNegociacionComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService,
-    private subheaderService: SubheaderService
+    private subheaderService: SubheaderService,
+    private tra: TrackingService
   ) {
 
 
+    super();
     this.sof.setParameter();
     this.par.setParameter();
     this.cal.setParameter();
@@ -171,6 +175,7 @@ export class GestionNegociacionComponent implements OnInit {
 
     this.formOpcionesCredito.addControl("montoSolicitado", this.montoSolicitado);
   }
+
 
   ngOnInit() {
     this.sof.setParameter();
@@ -1045,6 +1050,9 @@ export class GestionNegociacionComponent implements OnInit {
     }
 
   }
+
+ 
+
 }
 export class Pais {
   id;

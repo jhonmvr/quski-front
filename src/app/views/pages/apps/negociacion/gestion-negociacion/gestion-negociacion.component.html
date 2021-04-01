@@ -14,9 +14,9 @@
 		</ng-container>
 	</re-portlet-header>
 	<re-portlet-body>
-		<mat-vertical-stepper [linear]="false" #stepper>
+		<mat-vertical-stepper [linear]="false" #stepper (animationDone)="guardarTraking('NUEVO', this.negoW?this.negoW.credito?this.negoW.credito.codigo:'':'', ['Busqueda de Cliente','Datos Cliente','Variables Crediticias','Riesgo Acumulado','Tasación','Detalle Opciones de crédito'] , stepper.selectedIndex, 'NEGOCIACION', this.negoW?this.negoW.credito?this.negoW.credito.numeroOperacion:'':'')">
 			<!--   ****************************** PRIMERA PARTE DE NEGOCIACION ***************************   -->
-			<mat-step [stepControl]="formBusqueda">
+			<mat-step [stepControl]="formBusqueda" >
 				<ng-template matStepLabel>Busqueda de Cliente</ng-template>
 				<form [formGroup]="formBusqueda">
 					<div class="row">
@@ -43,7 +43,7 @@
 					</div>
 				</form>
 			</mat-step>
-			<mat-step [stepControl]="formDatosCliente">
+			<mat-step [stepControl]="formDatosCliente"  >
 				<ng-template matStepLabel>Datos Cliente</ng-template>
 				<form [formGroup]="formDatosCliente">
 					<div class="row">
