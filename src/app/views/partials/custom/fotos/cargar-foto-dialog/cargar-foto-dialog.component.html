@@ -3,12 +3,12 @@
   <mat-dialog-content class="mat-dialog-content">
     <h1 _ngcontent-pmm-5>Cargar Documento</h1>
     <div class="col">
-      <input type="file" class="inputfile" id="fileUpload" (change)="onFileChange($event, element)" #fileInput
+      <input type="file" class="inputfile" id="fileUpload" (change)="onFileChange($event)" #fileInput
         value="Escoja" />
     </div>
     <div class="row justify-content-center">
       <div class="col-md-3 col-md-offset-3">
-        <button type="button" (click)="subirArchivoHabilitante(element)" class="blue-icon">
+        <button type="button" (click)="subirArchivoHabilitante()" class="blue-icon">
           <mat-icon matTooltipPosition="above" matTooltip="Subir Archivo" class="blue-icon">
             cloud_upload</mat-icon>
           <span class="blue-icon">Subir Archivo</span>
