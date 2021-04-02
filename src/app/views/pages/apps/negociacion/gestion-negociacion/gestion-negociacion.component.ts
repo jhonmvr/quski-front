@@ -539,7 +539,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       motivoDevolucion: this.catMotivoDevolucion ?
         this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto) ?
           this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto).nombre : 'No definido' : 'No definido',
-      aprobador: this.negoW.proceso.usuario,
+      aprobador: this.negoW.credito.tbQoNegociacion.aprobador,
       codigoBpm: this.negoW.credito.codigo
     }
     const dialogRef = this.dialog.open(DevolucionCreditoComponent, {
@@ -993,6 +993,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     }
     if (confirm("ESTA SEGURO DE GENERAR LA SOLICITUD DE CREDITO?")) {
       this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response => {
+        console.log( )
         this.router.navigate(['cliente/gestion-cliente/NEG/', this.negoW.credito.tbQoNegociacion.id]);
       }, error => {
         this.sinNotSer.setNotice(error.error.msgError, 'error');

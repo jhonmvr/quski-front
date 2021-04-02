@@ -3,6 +3,7 @@ import { ParametroService } from '../../../../../core/services/quski/parametro.s
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, Inject, OnInit } from '@angular/core';
 export interface DataUpload {
@@ -34,7 +35,7 @@ export class PopupPagoComponent implements OnInit {
   public formOperacion: FormGroup = new FormGroup({});
   public intitucionFinanciera = new FormControl('', [Validators.required]);
   public numeroDeposito = new FormControl('', [Validators.required]);
-  public valorDepositado = new FormControl('', [Validators.required]);
+  public valorDepositado = new FormControl('', [Validators.required, ValidateDecimal, Validators.max(100) ]);
   public tipoPago = new FormControl('', [Validators.required]);
   public cuenta = new FormControl('', [Validators.required]);
   public fechaPago = new FormControl('', [Validators.required]);
@@ -113,7 +114,7 @@ export class PopupPagoComponent implements OnInit {
     if(this.formOperacion.valid){
       let wrapperRegistro: WrapperRegistro = {
         comprobante:this.file ? this.file : null,
-        intitucionFinanciera: this.intitucionFinanciera.value,
+        intitucionFinanciera: this.intitucionFinanciera.value ? this.intitucionFinanciera.value.codigo : '',
         numeroDeposito: this.numeroDeposito.value,
         valorDepositado: this.valorDepositado.value,
         cuenta: this.cuenta.value,

@@ -213,8 +213,6 @@ export class NovacionHabilitanteComponent implements OnInit {
             }else{
               this.sinNotSer.setNotice('ERROR CREACION EL CREDITO EN SOFTBANK', 'error');
             }
-          }, error =>{
-            this.sinNotSer.setNotice('ERROR EN LA CREACION DE LA OPERACION: Probablemente por la tabla de amoritzacion', 'error');
           });
         }else{
         this.sinNotSer.setNotice('ERRROR AL GUARDAR LOS COMPROBANTES','error');
