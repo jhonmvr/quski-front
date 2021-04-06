@@ -15,7 +15,11 @@
     </re-portlet-header>
 
     <re-portlet-body>
-        <mat-vertical-stepper [linear]="true" #stepper>
+        <mat-vertical-stepper [linear]="true" #stepper (animationDone)="guardarTraking('NUEVO',
+        operacionNuevo ? operacionNuevo.credito ? operacionNuevo.credito.codigo : null : null, 
+        ['Información Operación','Día de pago','Asignacion de Funda','Datos Instruccion Operativa','Datos del Credito nuevo','Documento Habilitantes'], 
+        stepper.selectedIndex, 'GENERAR CREDITO',
+        operacionNuevo ? operacionNuevo.credito ? operacionNuevo.credito.numeroOperacion : null : null )">
             <mat-step label="Información Operación" [stepControl]="formInformacion"> 
                 <form [formGroup]="formInformacion">
                     <div class="row">
@@ -46,7 +50,6 @@
                     </div>
                 </form>
             </mat-step>
-
             <ng-container *ngIf="this.operacionNuevo && this.operacionNuevo.credito.periodoPlazo == 'C'">
                 <mat-step label="Día de pago" [stepControl]="formFecha">  
                     <form [formGroup]="formFecha">
@@ -68,7 +71,6 @@
                     </form>
                 </mat-step>
             </ng-container>
-
             <mat-step label="Asignacion de Funda" [stepControl]="formFunda">
                 <kt-tabla-tasacion *ngIf="this.operacionNuevo;" [data]='this.operacionNuevo.joyas' [tipo]="'T'"></kt-tabla-tasacion>
                 <form [formGroup]="formFunda">
@@ -152,7 +154,6 @@
                     </div>
                 </form>
             </mat-step>
-
             <mat-step label="Datos Instruccion Operativa" [stepControl]="formInstruccion">
                 <form [formGroup]="formInstruccion">
                     <div class="row">
@@ -463,7 +464,6 @@
 
                 </form>
             </mat-step>
-
             <mat-step label="Documento Habilitantes">
                 <ng-container *ngIf="existeCredito">
                     <re-habilitante [proceso]="'NUEVO'" [useType]="'FORM'" [referencia]="item" >

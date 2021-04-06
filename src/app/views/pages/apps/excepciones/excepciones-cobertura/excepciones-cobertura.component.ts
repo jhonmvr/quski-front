@@ -6,6 +6,7 @@ import { CalculadoraService } from '../../../../../core/services/quski/calculado
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
@@ -23,7 +24,7 @@ import 'hammerjs';
   templateUrl: './excepciones-cobertura.component.html',
   styleUrls: ['./excepciones-cobertura.component.scss']
 })
-export class ExcepcionesCoberturaComponent implements OnInit {
+export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnInit {
   public observacion: string;
   public excepcion: TbQoExcepcion;
   public usuario;
@@ -73,6 +74,7 @@ export class ExcepcionesCoberturaComponent implements OnInit {
     private cal: CalculadoraService
 
   ) {
+    super();
     this.neg.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();

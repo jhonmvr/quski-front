@@ -12,12 +12,14 @@ import { ParametroService } from '../../../../../core/services/quski/parametro.s
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -34,7 +36,7 @@ export interface User {
   templateUrl: './gestion-cliente.component.html',
   styleUrls: ['./gestion-cliente.component.scss']
 })
-export class GestionClienteComponent implements OnInit {
+export class GestionClienteComponent extends TrackingUtil implements OnInit {
   /** @STANDAR_VARIABLES **/
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loadBusqueda  = new BehaviorSubject<boolean>(false);
@@ -43,7 +45,7 @@ export class GestionClienteComponent implements OnInit {
   usuario
   agencia
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
-  private origen: string;
+  public origen: string;
   private item: any;
   public totalActivo: number = 0;
   public totalPasivo: number = 0;
@@ -185,6 +187,7 @@ export class GestionClienteComponent implements OnInit {
     private router: Router,
     private subheaderService: SubheaderService,
   ) {
+    super();
     this.css.setParameter();
     this.cli.setParameter();
     this.sp.setParameter();

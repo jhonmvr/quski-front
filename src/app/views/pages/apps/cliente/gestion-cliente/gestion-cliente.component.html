@@ -13,7 +13,9 @@
   </re-portlet-header>
   <re-portlet-body>
 
-    <mat-vertical-stepper [linear]="false" #stepper>
+    <mat-vertical-stepper [linear]="false" #stepper (animationDone)="guardarTraking(origen == 'NEG' ? 'NUEVO' : origen == 'NOV' ? 'RENOVACION': null,
+       '', ['Datos Personales','Datos de contacto','Dirección Domicilio','Dirección Laboral','Datos Económico','Ingresos / Egresos','Patrimonio','Cuentas Bancarias','Referencias Personales'], 
+       stepper.selectedIndex, 'GESTION CLIENTE','')">
       <mat-step label="Datos Personales" [stepControl]="formCliente">
         <form [formGroup]="formCliente">
           <div class="row">
@@ -172,8 +174,6 @@
           </div>
         </form>
       </mat-step>
-
-      <!-- DATOS DE CONTACTO -->
       <mat-step label="Datos de contacto" >
         <form [formGroup]="formDatosContacto">
           <div class="row">
@@ -234,8 +234,6 @@
           </div>
         </form>
       </mat-step>
-
-      <!--Direccion Domicilio -->
       <mat-step label="Dirección Domicilio" [stepControl]="formDatosDireccionDomicilio">
         <form [formGroup]="formDatosDireccionDomicilio">
           <div class="form-group row">
@@ -319,8 +317,6 @@
           </div>
         </form>
       </mat-step>
-
-      <!-- Direccion laboral -->
       <mat-step label="Dirección Laboral"  [stepControl]="formDatosDireccionLaboral">
         <form [formGroup]="formDatosDireccionLaboral">
           <div class="form-group row">
@@ -407,9 +403,7 @@
           </div>
         </form>
       </mat-step>
-
-      <!-- Datos Economico -->
-      <mat-step label="Datos Económico " [stepControl]="formDatosEconomicos">
+      <mat-step label="Datos Económico" [stepControl]="formDatosEconomicos">
         <form [formGroup]="formDatosEconomicos">
           <div class="form-group row">
             <div class="col-md-4">
@@ -502,8 +496,6 @@
           </div>
         </form>
       </mat-step>
-
-      <!-- Ingresos Egresos -->
       <mat-step label="Ingresos / Egresos" [stepControl]="  ">
        
             <form [formGroup]="formDatosIngreso">
@@ -526,8 +518,6 @@
           
             </form>
       </mat-step> 
-      
-      <!-- Patrimonio -->
       <mat-step label="Patrimonio">
             <form [formGroup]="formDatosPatrimonioActivos">
               <div class="form-group row">
@@ -574,7 +564,6 @@
           </div>
         </div> 
       </mat-step>
-      <!-- Referencias personales -->
       <mat-step label="Referencias Personales" [stepControl]="formDatosReferenciasPersonales">
         <form [formGroup]="formDatosReferenciasPersonales">
           <div class="form-group row">

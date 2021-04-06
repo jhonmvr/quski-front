@@ -11,8 +11,12 @@
     </re-portlet-header>
 
     <re-portlet-body>
-        <mat-vertical-stepper>
-            <mat-step label="Informacion de operacion">
+        <mat-vertical-stepper #stepper (animationDone)="guardarTraking(wp ? wp.proceso ? wp.proceso.proceso : null : null,
+        wp ? wp.credito ? wp.credito.codigo : null : null, 
+        ['Información Operación','Datos Contacto Cliente','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Excepción'], 
+        stepper.selectedIndex, 'EXCEPCION COBERTURA',
+        wp ? wp.credito ? wp.credito.numeroOperacion : null : null )">
+            <mat-step label="Información Operación">
                 <div class="row">
                     <div class="col-md-6">
                         <mat-form-field  class="mat-form-field-fluid">

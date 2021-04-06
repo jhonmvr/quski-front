@@ -11,9 +11,13 @@
     </re-portlet-header>
 
     <re-portlet-body>
-        <mat-vertical-stepper>
+        <mat-vertical-stepper #stepper (animationDone)="guardarTraking(wr ? wr.proceso ? wr.proceso.proceso : null : null,
+        wr ? wr.credito ? wr.credito.codigo : null : null, 
+        ['Información Operación','Datos Del Cliente','Datos De contacto Del Cliente','Variables crediticias','Riesgo Acumulado','Excepción'], 
+        stepper.selectedIndex, 'EXCEPCION CLIENTE',
+        wr ? wr.credito ? wr.credito.numeroOperacion : null : null )">
             <mat-step>
-                <ng-template matStepLabel>Datos de Operación</ng-template>
+                <ng-template matStepLabel>Información Operación</ng-template>
                 <form [formGroup]="formDatosOperacion">
                     <div class="row justify-content-center">
                         <div class="col-md-6">

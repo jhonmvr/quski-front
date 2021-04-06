@@ -11,7 +11,11 @@
   </re-portlet-header>
 
   <re-portlet-body>
-    <mat-vertical-stepper>
+    <mat-vertical-stepper  #stepper  (animationDone)="guardarTraking('NUEVO',
+    crediW ? crediW.credito ? crediW.credito.codigo : null : null, 
+    ['Información Operación','Datos Del Cliente','Datos De Negociación','Datos de crédito nuevo','Habilitantes','Resultado de la operación'], 
+    stepper.selectedIndex, 'APROBACION CREDITO NUEVO',
+    crediW ? crediW.credito ? crediW.credito.numeroOperacion : null : null )"> 
       <mat-step label="Información Operación">
         <div class="row">
           <div class="col-4">
@@ -31,7 +35,6 @@
           </div>
         </div>
       </mat-step>
-
       <mat-step label="Datos Del Cliente">
         <mat-tab-group mat-align-tabs="start">
 
@@ -410,7 +413,6 @@
           </mat-tab>
         </mat-tab-group>
       </mat-step>
-
       <mat-step label="Datos De Negociación">
         <mat-tab-group mat-align-tabs="start">
           <mat-tab label="Tasacion">
@@ -646,7 +648,6 @@
           </div>
         </div>
       </mat-step>
-
       <mat-step label="Habilitantes">
         <div class="row">
           <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}" >Habilitante Operacion</button>
@@ -656,7 +657,6 @@
             [referencia]="varHabilitante.referencia" >
                 </re-habilitante> 
       </mat-step>
-
       <mat-step label="Resultado de la operación">
         <form [formGroup]="formResultadoOperacion">
           <div class="row">
@@ -695,7 +695,6 @@
           </div>
         </form>
       </mat-step>
-
     </mat-vertical-stepper>
   </re-portlet-body>
   <re-portlet-footer></re-portlet-footer>

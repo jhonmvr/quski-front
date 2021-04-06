@@ -5,6 +5,7 @@ import { DevolucionService } from '../../../../../core/services/quski/devolucion
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
@@ -21,7 +22,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   templateUrl: './aprobacion-solicitud.component.html',
   styleUrls: ['./aprobacion-solicitud.component.scss']
 })
-export class AprobacionSolicitudComponent implements OnInit {
+export class AprobacionSolicitudComponent extends TrackingUtil implements OnInit {
   varHabilitante = {referencia:"",proceso:""}
   public item: any;
   public titulo: any;
@@ -75,6 +76,7 @@ export class AprobacionSolicitudComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private dev: DevolucionService) {
+    super();
     this.cre.setParameter();
     this.sof.setParameter();
     this.dev.setParameter();

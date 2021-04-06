@@ -5,6 +5,7 @@ import { DevolucionService } from '../../../../../core/services/quski/devolucion
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
@@ -19,7 +20,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './entrega-recepcion.component.html',
   styleUrls: ['./entrega-recepcion.component.scss']
 })
-export class EntregaRecepcionComponent implements OnInit {
+export class EntregaRecepcionComponent extends TrackingUtil implements OnInit {
   varHabilitante = 'ENTREGA';
   public titulo: any;
   public formCreditoNuevo: FormGroup = new FormGroup({});
@@ -68,6 +69,7 @@ export class EntregaRecepcionComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private dev: DevolucionService) {
+    super();
     this.cre.setParameter();
     this.par.setParameter();
     this.dev.setParameter();

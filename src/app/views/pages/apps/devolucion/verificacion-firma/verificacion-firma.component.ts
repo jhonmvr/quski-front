@@ -5,6 +5,7 @@ import { DevolucionService } from '../../../../../core/services/quski/devolucion
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
@@ -20,7 +21,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   templateUrl: './verificacion-firma.component.html',
   styleUrls: ['./verificacion-firma.component.scss']
 })
-export class VerificacionFirmaComponent implements OnInit {
+export class VerificacionFirmaComponent  extends TrackingUtil implements OnInit {
 
   varHabilitante = {referencia:"",proceso:""}
   procesoHablitante;
@@ -71,26 +72,27 @@ export class VerificacionFirmaComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private dev: DevolucionService) {
-    this.cre.setParameter();
-    this.sof.setParameter();
-    this.dev.setParameter();
-    this.formCreditoNuevo.addControl("numeroOperacion", this.numeroOperacion);
-    this.formCreditoNuevo.addControl("estadoProceso", this.estadoProceso);
-    this.formCreditoNuevo.addControl("cedulaCliente", this.cedulaCliente);
-    this.formCreditoNuevo.addControl("nombresCompletos", this.nombresCompletos);
-    this.formCreditoNuevo.addControl("nivelEducacion", this.nivelEducacion);
-    this.formCreditoNuevo.addControl("genero", this.genero);
-    this.formCreditoNuevo.addControl("estadoCivil", this.estadoCivil);
-    this.formCreditoNuevo.addControl("fechaNacimiento", this.fechaNacimiento);
-    this.formCreditoNuevo.addControl("nacionalidad", this.nacionalidad);
-    this.formCreditoNuevo.addControl("lugarNacimiento", this.lugarNacimiento);
-    this.formCreditoNuevo.addControl("edad", this.edad);
-    this.formCreditoNuevo.addControl("tipoCliente", this.tipoCliente);
-    this.formCreditoNuevo.addControl("observaciones", this.observaciones);
-    this.formCreditoNuevo.addControl("agenciaEntrega", this.agenciaEntrega);
-    this.formCreditoNuevo.addControl("valorCustodia", this.valorCustodia);
-    this.formCreditoNuevo.addControl("cedulaApoderado", this.cedulaApoderado);
-    this.formCreditoNuevo.addControl("nombreApoderado", this.nombreApoderado);
+      super();
+      this.cre.setParameter();
+      this.sof.setParameter();
+      this.dev.setParameter();
+      this.formCreditoNuevo.addControl("numeroOperacion", this.numeroOperacion);
+      this.formCreditoNuevo.addControl("estadoProceso", this.estadoProceso);
+      this.formCreditoNuevo.addControl("cedulaCliente", this.cedulaCliente);
+      this.formCreditoNuevo.addControl("nombresCompletos", this.nombresCompletos);
+      this.formCreditoNuevo.addControl("nivelEducacion", this.nivelEducacion);
+      this.formCreditoNuevo.addControl("genero", this.genero);
+      this.formCreditoNuevo.addControl("estadoCivil", this.estadoCivil);
+      this.formCreditoNuevo.addControl("fechaNacimiento", this.fechaNacimiento);
+      this.formCreditoNuevo.addControl("nacionalidad", this.nacionalidad);
+      this.formCreditoNuevo.addControl("lugarNacimiento", this.lugarNacimiento);
+      this.formCreditoNuevo.addControl("edad", this.edad);
+      this.formCreditoNuevo.addControl("tipoCliente", this.tipoCliente);
+      this.formCreditoNuevo.addControl("observaciones", this.observaciones);
+      this.formCreditoNuevo.addControl("agenciaEntrega", this.agenciaEntrega);
+      this.formCreditoNuevo.addControl("valorCustodia", this.valorCustodia);
+      this.formCreditoNuevo.addControl("cedulaApoderado", this.cedulaApoderado);
+      this.formCreditoNuevo.addControl("nombreApoderado", this.nombreApoderado);
   }
 
   ngOnInit() {

@@ -5,6 +5,7 @@ import { DevolucionService } from '../../../../../core/services/quski/devolucion
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
@@ -20,7 +21,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   templateUrl: './aprobacion-cancelacion.component.html',
   styleUrls: ['./aprobacion-cancelacion.component.scss']
 })
-export class AprobacionCancelacionComponent implements OnInit {
+export class AprobacionCancelacionComponent extends TrackingUtil implements OnInit {
 
   varHabilitante = {referencia:"",proceso:""}
   procesoHablitante;
@@ -79,6 +80,7 @@ export class AprobacionCancelacionComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
+    super();
     this.cre.setParameter();
     this.sof.setParameter();
     this.dev.setParameter();

@@ -6,6 +6,7 @@ import { ExcepcionService } from '../../../../../core/services/quski/excepcion.s
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
@@ -21,7 +22,7 @@ import { MatDialog } from '@angular/material';
   templateUrl: './excepciones-cliente.component.html',
   styleUrls: ['./excepciones-cliente.component.scss']
 })
-export class ExcepcionesClienteComponent implements OnInit {
+export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit {
   public wr: NegociacionWrapper;
   public excepcion: TbQoExcepcion;
 
@@ -90,6 +91,7 @@ export class ExcepcionesClienteComponent implements OnInit {
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService
   ) {
+    super();
     this.neg.setParameter();
     this.cli.setParameter();
     this.sof.setParameter();

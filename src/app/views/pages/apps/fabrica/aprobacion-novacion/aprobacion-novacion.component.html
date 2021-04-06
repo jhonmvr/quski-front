@@ -18,7 +18,11 @@
     </re-portlet-header>
 
     <re-portlet-body>
-        <mat-vertical-stepper>
+        <mat-vertical-stepper #stepper  (animationDone)="guardarTraking('NUEVO',
+        crediW ? crediW.credito ? crediW.credito.codigo : null : null, 
+        ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de Operacion Anterior','Resultado de la operación'], 
+        stepper.selectedIndex, 'APROBACION CREDITO RENOVACION',
+        crediW ? crediW.credito ? crediW.credito.numeroOperacion : null : null )">
             <mat-step label="Información Operación">
                 <div class="row">
                     <div class="col-4">
@@ -61,7 +65,6 @@
                     </div>
                 </div>
             </mat-step>
-
             <mat-step label="Datos Del Cliente">
                 <mat-tab-group mat-align-tabs="start">
                     <mat-tab label="Datos Personales del Cliente">
@@ -465,7 +468,6 @@
                     </mat-tab>
                 </mat-tab-group>
             </mat-step>
-
             <mat-step label="Datos De Negociación">
                 <mat-tab-group mat-align-tabs="start">
                     <mat-tab label="Tasacion">
@@ -883,7 +885,6 @@
                     </div>
                 </form>
             </mat-step>
-
         </mat-vertical-stepper>
     </re-portlet-body>
     <re-portlet-footer></re-portlet-footer>

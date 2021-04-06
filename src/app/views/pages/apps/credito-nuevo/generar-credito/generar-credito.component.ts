@@ -11,6 +11,7 @@ import { ObjectStorageService } from '../../../../../core/services/object-storag
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { OperacionSoft } from '../../../../../core/model/softbank/OperacionSoft';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
@@ -27,7 +28,7 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./generar-credito.component.scss'],
 })
 
-export class GenerarCreditoComponent implements OnInit {
+export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   /** @VARIABLES_GLOBALES **/
   public operacionNuevo: OperacionNuevoWrapper;
   public item;
@@ -125,6 +126,7 @@ export class GenerarCreditoComponent implements OnInit {
     private os:ObjectStorageService,
     private sinNotSer: ReNoticeService,
   ) {
+    super();
     this.cre.setParameter();
     this.doc.setParameter();
     this.obj.setParameter();

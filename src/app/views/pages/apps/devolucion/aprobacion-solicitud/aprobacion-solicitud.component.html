@@ -10,8 +10,12 @@
         </ng-container>
     </re-portlet-header>
     <re-portlet-body>
-        <mat-vertical-stepper #stepper>
-            <mat-step label="Información de la operación">
+        <mat-vertical-stepper #stepper (animationDone)="guardarTraking(wrapperDevolucion ? wrapperDevolucion.proceso ? wrapperDevolucion.proceso.proceso : null : null,
+        wrapperDevolucion ? wrapperDevolucion.devolucion ? wrapperDevolucion.devolucion.codigo : null : null, 
+        ['Información Operación','Datos Personales del cliente','Detalle de Crédito','Detalle de Garantía','Gestion Devolución','Documento Habilitantes'], 
+        stepper.selectedIndex, 'APROBACION SOLICITUD DEVOLUCION',
+        wrapperDevolucion ? wrapperDevolucion.devolucion ? wrapperDevolucion.devolucion.codigoOperacion : null : null )">
+            <mat-step label="Información operación">
                 <div class="row">
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">

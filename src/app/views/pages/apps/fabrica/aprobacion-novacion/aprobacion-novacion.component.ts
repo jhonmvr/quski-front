@@ -7,6 +7,7 @@ import { OperacionAprobar } from '../../../../../core/model/softbank/OperacioApr
 import { CatalogosWrapper } from '../../../../../core/model/wrapper/CatalogosWrapper';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { DatosRegistro } from '../../../../../core/model/softbank/DatosRegistro';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
@@ -25,7 +26,7 @@ import { saveAs } from 'file-saver';
   templateUrl: './aprobacion-novacion.component.html',
   styleUrls: ['./aprobacion-novacion.component.scss']
 })
-export class AprobacionNovacionComponent implements OnInit {
+export class AprobacionNovacionComponent extends TrackingUtil implements OnInit {
   /** @VARIABLES_GLOBALES */
   public loadingSubject = new BehaviorSubject<boolean>(false);
   public loading;
@@ -186,6 +187,7 @@ export class AprobacionNovacionComponent implements OnInit {
     private subheaderService: SubheaderService
 
   ) {
+    super();
     this.cre.setParameter();
     this.sof.setParameter();
     this.pro.setParameter();

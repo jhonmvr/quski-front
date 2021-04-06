@@ -5,6 +5,7 @@ import { DevolucionService } from '../../../../../core/services/quski/devolucion
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
@@ -22,7 +23,7 @@ import { ReturnStatement } from '@angular/compiler';
   templateUrl: './cancelacion-solicitud-devolucion.component.html',
   styleUrls: ['./cancelacion-solicitud-devolucion.component.scss']
 })
-export class CancelacionSolicitudDevolucionComponent implements OnInit {
+export class CancelacionSolicitudDevolucionComponent extends TrackingUtil implements OnInit {
   public formCreditoNuevo: FormGroup = new FormGroup({});
   public numeroOperacion = new FormControl('');
   public procesoDev = new FormControl('');
@@ -77,7 +78,8 @@ export class CancelacionSolicitudDevolucionComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.cre.setParameter();
+    super();
+    this.cre.setParameter();    
     this.sof.setParameter();
     this.dev.setParameter();
     this.formCreditoNuevo.addControl("numeroOperacion",  this.numeroOperacion );

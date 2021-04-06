@@ -6,6 +6,7 @@ import { ParametroService } from '../../../../../core/services/quski/parametro.s
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoDevolucion } from '../../../../../core/model/quski/TbQoDevolucion';
@@ -23,7 +24,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './solicitud-devolucion.component.html',
   styleUrls: ['./solicitud-devolucion.component.scss']
 })
-export class SolicitudDevolucionComponent implements OnInit {
+export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnInit {
   public item: any;
   cod;
   objetoCredito = new Object();
@@ -97,6 +98,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
   ) {
+    super();
     this.cre.setParameter();
     this.sof.setParameter();
     this.dev.setParameter();

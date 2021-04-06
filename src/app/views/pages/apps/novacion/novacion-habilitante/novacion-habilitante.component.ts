@@ -7,6 +7,7 @@ import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCred
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../environments/environment.prod';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
@@ -23,7 +24,7 @@ import { saveAs } from 'file-saver';
   templateUrl: './novacion-habilitante.component.html',
   styleUrls: ['./novacion-habilitante.component.scss']
 })
-export class NovacionHabilitanteComponent implements OnInit {
+export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit {
   public loading;
   public usuario: string;
    //dia de pago
@@ -72,6 +73,7 @@ export class NovacionHabilitanteComponent implements OnInit {
     private subheaderService: SubheaderService,
 
   ) { 
+    super();
     this.cre.setParameter();
     this.reg.setParameter();
     this.sof.setParameter();

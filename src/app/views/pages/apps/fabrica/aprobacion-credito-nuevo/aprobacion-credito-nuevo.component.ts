@@ -1,16 +1,16 @@
 import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { TbQoIngresoEgresoCliente } from '../../../../../core/model/quski/TbQoIngresoEgresoCliente';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
+import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
 import { AprobacionWrapper } from '../../../../../core/model/wrapper/AprobacionWrapper';
 import { CatalogosWrapper } from './../../../../../core/model/wrapper/CatalogosWrapper';
 import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { ProcesoService } from './../../../../../core/services/quski/proceso.service';
-import { OperacionAprobar } from '../../../../../core/model/softbank/OperacioAprobar';
-import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { DatosRegistro } from '../../../../../core/model/softbank/DatosRegistro';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
@@ -19,10 +19,6 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { utils } from 'protractor';
-import { RETURN } from 'mat-table-exporter';
-import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
-import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
 import { switchMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
@@ -33,7 +29,7 @@ import { Observable, of } from 'rxjs';
   templateUrl: './aprobacion-credito-nuevo.component.html',
   styleUrls: ['./aprobacion-credito-nuevo.component.scss']
 })
-export class AprobacionCreditoNuevoComponent implements OnInit {
+export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements OnInit {
   // VARIABLES PUBLICAS  
   public loading;
   public usuario: string;
@@ -183,6 +179,7 @@ export class AprobacionCreditoNuevoComponent implements OnInit {
     private dialog: MatDialog,
     private subheaderService: SubheaderService
   ) {
+    super();
     this.cre.setParameter();
     this.sof.setParameter();
     this.pro.setParameter();

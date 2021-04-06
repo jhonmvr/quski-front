@@ -10,6 +10,7 @@ import { ParametroService } from '../../../../../core/services/quski/parametro.s
 import { TbQoDetalleCredito } from '../../../../../core/model/quski/TbQoDetalleCredito';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
 import { TbQoCotizador } from '../../../../../core/model/quski/TbQoCotizador';
@@ -30,7 +31,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./gestion-cotizacion.component.scss']
 })
 
-export class GestionCotizacionComponent implements OnInit {
+export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
   /** @GLOBAL **/
   public bloquearBusqueda: boolean;
   private usuario: string;
@@ -84,6 +85,7 @@ export class GestionCotizacionComponent implements OnInit {
     private sinNoticeService: ReNoticeService,
     private dialog: MatDialog
   ) {
+    super();
     this.sof.setParameter();
     this.cot.setParameter();
     this.par.setParameter();

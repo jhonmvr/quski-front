@@ -8,6 +8,7 @@ import { CalculadoraService } from '../../../../../core/services/quski/calculado
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { environment } from '../../../../../../../src/environments/environment.prod';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
@@ -18,7 +19,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
 import { SelectionModel } from '@angular/cdk/collections';
 export interface cliente {
   identificacion: string;
@@ -29,7 +29,7 @@ export interface cliente {
   templateUrl: './crear-renovacion.component.html',
   styleUrls: ['./crear-renovacion.component.scss']
 })
-export class CrearRenovacionComponent implements OnInit {
+export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public loading;
   public usuario: string;
   agencia: string;
@@ -81,6 +81,7 @@ export class CrearRenovacionComponent implements OnInit {
     private sinNotSer: ReNoticeService,
     private subheaderService: SubheaderService
   ) { 
+    super();
     this.cre.setParameter();
     this.sof.setParameter();
     this.cal.setParameter();

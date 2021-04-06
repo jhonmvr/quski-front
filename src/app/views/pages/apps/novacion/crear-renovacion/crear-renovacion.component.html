@@ -10,8 +10,12 @@
 		</ng-container>
 	</re-portlet-header>
 	<re-portlet-body>
-		<mat-vertical-stepper #stepper>
-			<mat-step label='Informacion de operacion'>
+		<mat-vertical-stepper #stepper (animationDone)="guardarTraking('RENOVACION',
+        credit ? credit.credito ? credit.credito.codigo : null : null, 
+        ['Información Operación','Detalle de garantias','Simular opciones de crédito'], 
+        stepper.selectedIndex, 'CREAR RENOVACION',
+        credit ? credit.credito ? credit.credito.numeroOperacion : null : null )">
+			<mat-step label='Información Operación'>
 				<form [formGroup]="formOperacion">
 					<div class="row">
                         <div class="col-md-4">

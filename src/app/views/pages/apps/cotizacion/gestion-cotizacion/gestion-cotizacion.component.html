@@ -11,7 +11,11 @@
 
 
   <re-portlet-body>
-    <mat-vertical-stepper #stepper>
+    <mat-vertical-stepper #stepper #stepper (animationDone)="guardarTraking('COTIZACION',
+    wCotiz ? wCotiz.cotizacion ? wCotiz.cotizacion.codigoCotizacion : null : null, 
+    ['Busqueda del Cliente','Datos Cliente','Variables crediticias','Riesgo Acumulado','Precio Oro','Opciones de Crédito'], 
+    stepper.selectedIndex, 'GESTION COTIZACION',
+    null)">
       <mat-step [stepControl]="formBusqueda">
         <ng-template matStepLabel>Busqueda del Cliente</ng-template>
         <form [formGroup]="formBusqueda">
@@ -214,7 +218,6 @@
 					</div>
 				</div>
       </mat-step>
-
       <mat-step [stepControl]="formOpciones" label="Opciones de Crédito">
         <mat-table matTableExporter  #tableNegociacion class="tableOpciones" #exporter="matTableExporter"	[dataSource]="dataSource">
               <ng-container matColumnDef="plazo">

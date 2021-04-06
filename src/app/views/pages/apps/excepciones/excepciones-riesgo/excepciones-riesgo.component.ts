@@ -6,6 +6,7 @@ import { SubheaderService } from '../../../../../core/_base/layout/services/subh
 import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { environment } from '../../../../../../environments/environment';
@@ -19,7 +20,7 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './excepciones-riesgo.component.html',
   styleUrls: ['./excepciones-riesgo.component.scss']
 })
-export class ExcepcionesRiesgoComponent implements OnInit {
+export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading;
   public observacion: string;
@@ -77,6 +78,7 @@ export class ExcepcionesRiesgoComponent implements OnInit {
     private sinNotSer: ReNoticeService,
 
   ) {
+    super();
     this.neg.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
