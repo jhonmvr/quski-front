@@ -362,7 +362,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
           
         });
         
-        this.totalPesoBrutoFunda.setValue( this.pesoFunda.value.codigo +' + '+ totalPesoB );
+        this.totalPesoBrutoFunda.setValue( this.pesoFunda.value.codigo + totalPesoB );
         this.totalPesoNeto.setValue( totalPesoN );
       }else{ 
         this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
