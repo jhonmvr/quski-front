@@ -9,7 +9,7 @@ export class TrackingUtil{
    
   }
   
-  guardarTraking(proceso:string, codigoBPM:string, listaSeccion:[] , indexSeccion, actividad:string, codigoOperacion:string){
+  guardarTraking(proceso:string, codigoBPM:string, listaSeccion:any , indexSeccion, actividad:string, codigoOperacion:string){
     let t = new TbQoTracking();
     t.seccion = listaSeccion[indexSeccion];
     t.codigoBpm = codigoBPM;

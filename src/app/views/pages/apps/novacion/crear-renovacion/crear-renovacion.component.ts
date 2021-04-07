@@ -152,7 +152,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.codigoOperacion.setValue(this.credit.operacionAnterior.credito.numeroOperacion);
     this.nombreCompleto.setValue(this.credit.operacionAnterior.cliente.nombreCompleto);
     this.cedulaCliente.setValue(this.credit.operacionAnterior.cliente.identificacion);
-    this.numeroOperacion = this.credit.operacionAnterior.credito.numeroOperacion;
+    this.numeroOperacion = this.credit.operacionAnterior.credito.numeroOperacionMadre;
     this.codigoBpm.setValue( this.credit.credito ? this.credit.credito.codigo : 'Sin asignar')
     this.proceso.setValue(   this.credit.proceso ? this.credit.proceso.proceso : 'Sin asignar');
     this.estadoProceso.setValue(this.credit.proceso ? this.credit.proceso.estadoProceso : 'Sin asignar');
