@@ -353,6 +353,11 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.codigoBpm.setValue(ap.credito.codigo);
     this.proceso.setValue(ap.proceso.proceso);
     this.nombresCompletoCliente.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
+    /** @TRACKING */
+    this.guardarTraking('RENOVACION', ap ? ap.credito ? ap.credito.codigo : null : null, 
+    ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de Operacion Anterior','Resultado de la operación'], 
+    0, 'APROBACION CREDITO RENOVACION', ap ? ap.credito ? ap.credito.numeroOperacion : null : null );
+
     /** @DATOS_CLIENTE */
     this.identificacion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.aprobacionMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S' ? 'SI' : 'NO');

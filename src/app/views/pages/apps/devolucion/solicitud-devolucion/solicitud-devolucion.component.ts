@@ -175,7 +175,12 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
     this.validacion(this.wrapperSoft.credito.numeroOperacion);
     !this.wrapperSoft.garantias || this.wrapperSoft.garantias.length < 1 ? this.salirDeGestion('No existen joyas relacionadas a este credito.', 'Faltan Joyas.') : null;
 
-    this.numeroOperacion.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : this.wrapperSoft.credito.numeroOperacion);
+    this.guardarTraking(this.wrapperDevolucion ? this.wrapperDevolucion.proceso ? this.wrapperDevolucion.proceso.proceso : null : null,
+      this.wrapperDevolucion ? this.wrapperDevolucion.devolucion ? this.wrapperDevolucion.devolucion.codigo : null : null, 
+      ['Información Operación','Datos Personales del cliente','Detalle de Crédito','Detalle de Garantía','Gestion Devolución','Documento Habilitantes'], 
+      0, 'SOLICITUD DE DEVOLUCION',this.wrapperDevolucion ? this.wrapperDevolucion.devolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : null : null )
+    
+      this.numeroOperacion.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : this.wrapperSoft.credito.numeroOperacion);
     this.estadoProceso.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi, " ",) : 'PROCESO NO INICIADO');
     this.nombresCompletos.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.nombreCliente : this.wrapperSoft.cliente.nombreCompleto);
     this.cedulaCliente.setValue(this.wrapperDevolucion ? this.wrapperDevolucion.devolucion.cedulaCliente : this.wrapperSoft.cliente.identificacion);

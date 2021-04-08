@@ -132,6 +132,11 @@ export class AprobacionSolicitudComponent extends TrackingUtil implements OnInit
     console.log('Wrapper SOFTBANK => ', this.wrapperSoft);
     console.log('Wrapper PROCESO => ', this.wrapperDevolucion);
     this.titulo = "APROBACION DE SOLICITUD DE DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo;
+    this.guardarTraking(this.wrapperDevolucion ? this.wrapperDevolucion.proceso ? this.wrapperDevolucion.proceso.proceso : null : null,
+      this.wrapperDevolucion ? this.wrapperDevolucion.devolucion ? this.wrapperDevolucion.devolucion.codigo : null : null, 
+      ['Información Operación','Datos Personales del cliente','Detalle de Crédito','Detalle de Garantía','Gestion Devolución','Documento Habilitantes'], 
+      0, 'APROBACION SOLICITUD DEVOLUCION',
+      this.wrapperDevolucion ? this.wrapperDevolucion.devolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : null : null )
     this.formCreditoNuevo.disable();
     this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);
     this.proceso.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi, " "));

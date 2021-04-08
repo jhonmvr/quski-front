@@ -161,6 +161,11 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.codigoBpm.setValue( this.credit.credito ? this.credit.credito.codigo : 'Sin asignar')
     this.proceso.setValue(   this.credit.proceso ? this.credit.proceso.proceso : 'Sin asignar');
     this.estadoProceso.setValue(this.credit.proceso ? this.credit.proceso.estadoProceso : 'Sin asignar');
+    this.guardarTraking('RENOVACION',
+      this.credit ? this.credit.credito ? this.credit.credito.codigo : null : null, 
+        ['Información Operación','Detalle de garantias','Simular opciones de crédito'], 
+        0, 'CREAR RENOVACION',
+        this.credit ? this.credit.credito ? this.credit.credito.numeroOperacion : null : null )
     this.formOperacion.disable();
     if(this.credit.credito){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();

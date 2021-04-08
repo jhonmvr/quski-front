@@ -194,9 +194,13 @@ export class VerificacionFirmaComponent  extends TrackingUtil implements OnInit 
     });
   }
   private cargarCampos() {
-    console.log('Wrapper SOFTBANK => ', this.wrapperSoft);
-    console.log('Wrapper PROCESO => ', this.wrapperDevolucion);
     this.titulo = "VERIFICACION DE FIRMAS DE DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo;
+
+    this.guardarTraking(this.wrapperDevolucion ? this.wrapperDevolucion.proceso ? this.wrapperDevolucion.proceso.proceso : null : null,
+      this.wrapperDevolucion ? this.wrapperDevolucion.devolucion ? this.wrapperDevolucion.devolucion.codigo : null : null, 
+      ['Información Operación','Datos Personales del cliente','Detalle de Crédito','Detalle de Garantía','Gestion Devolución','Documento Habilitantes'], 
+      0, 'VERIFICACION DE FIRMA',
+      this.wrapperDevolucion ? this.wrapperDevolucion.devolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : null : null )
     this.formCreditoNuevo.disable();
     this.idReferencia = this.wrapperDevolucion.devolucion.id
     this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);

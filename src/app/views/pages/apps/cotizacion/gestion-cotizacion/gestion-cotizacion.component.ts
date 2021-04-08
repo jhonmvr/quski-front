@@ -387,7 +387,10 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
       this.sinNoticeService.setNotice("COTIZACION -> \"" + this.wCotiz.cotizacion.codigoCotizacion + "\" Cargada correctamente.", "success");  
     }else{
       this.sinNoticeService.setNotice("SE HA INICIADO UNA NEGOCIACION -> \"" + this.wCotiz.cotizacion.codigoCotizacion + "\". ", "success");
-    }    
+    }  
+    this.guardarTraking('COTIZACION', this.wCotiz ? this.wCotiz.cotizacion ? this.wCotiz.cotizacion.codigoCotizacion : null : null, 
+    ['Busqueda del Cliente','Datos Cliente','Variables crediticias','Riesgo Acumulado','Precio Oro','Opciones de Crédito'], 
+    0, 'GESTION COTIZACION', '')  
     this.subheaderService.setTitle('CODIGO BPM: ' + this.wCotiz.cotizacion.codigoCotizacion);
     if (this.wCotiz.excepcionBre){
       this.sinNoticeService.setNotice('EL CLIENTE PRESENTA LA SIGUENTE RESTRICCION: '+ this.wCotiz.excepcionBre, 'warning');

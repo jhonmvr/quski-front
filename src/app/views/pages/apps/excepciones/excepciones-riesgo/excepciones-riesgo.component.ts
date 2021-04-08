@@ -146,6 +146,12 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
     this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success')
     this.formDisable.disable();
     this.subheaderService.setTitle('Operacion: '+this.wp.credito.codigo);
+
+    this.guardarTraking(wp ? wp.proceso ? wp.proceso.proceso : null : null,
+      wp ? wp.credito ? wp.credito.codigo : null : null, 
+      ['Información Operación','Datos Contacto Cliente','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Excepción'], 
+      0, 'EXCEPCION RIESGO', wp ? wp.credito ? wp.credito.numeroOperacion : null : null )
+
     this.cliente.setValue( wp.credito.tbQoNegociacion.tbQoCliente.nombreCompleto );
     this.cedula.setValue( wp.credito.tbQoNegociacion.tbQoCliente.cedulaCliente );
     this.fechaCreacion.setValue( wp.credito.tbQoNegociacion.fechaCreacion );

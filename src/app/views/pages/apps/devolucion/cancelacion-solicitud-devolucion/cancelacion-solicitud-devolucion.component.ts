@@ -146,6 +146,11 @@ export class CancelacionSolicitudDevolucionComponent extends TrackingUtil implem
   private cargarCampos() {
     this.formCreditoNuevo.disable();
     this.titulo = 'CANCELACION DE SOLICITUD: '+ this.wrapperDevolucion.devolucion.codigo;
+    this.guardarTraking(this.wrapperDevolucion ? this.wrapperDevolucion.proceso ? this.wrapperDevolucion.proceso.proceso : null : null,
+      this.wrapperDevolucion ? this.wrapperDevolucion.devolucion ? this.wrapperDevolucion.devolucion.codigo : null : null, 
+      ['Información Operación','Datos Personales del cliente','Detalle de Crédito','Detalle de Garantía','Gestion Devolución','Detalle de proceso','Documento Habilitantes'], 
+      0, 'SOLICITUD CANCELACION DEVOLUCION',
+      this.wrapperDevolucion ? this.wrapperDevolucion.devolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : null : null )
     this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);
     this.procesoDev.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ")  );
     this.nombresCompletos.setValue(this.wrapperDevolucion.devolucion.nombreCliente);

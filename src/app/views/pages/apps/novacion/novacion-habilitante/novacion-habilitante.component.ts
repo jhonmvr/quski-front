@@ -130,8 +130,10 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.firmanteOperacion.disable();
     this.excepcionOperativa.setValue( wr.proceso.estadoProceso == 'CREADO' || wr.proceso.estadoProceso == 'EXCEPCIONADO' ? this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') : null );
     this.habilitarExcepcionOperativa();
+    this.guardarTraking('RENOVACION', wr ? wr.credito ? wr.credito.codigo : null : null, 
+      ['Información Operación','Detalle de garantias','Simular opciones de crédito'], 
+      0, 'CREAR RENOVACION', wr ? wr.credito ? wr.credito.numeroOperacion : null : null );
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.credito.codigo + ".", "success");
-    this.loadingSubject.next(false);
   }
   public habilitarExcepcionOperativa(){
     if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
@@ -175,7 +177,6 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
         data: mensaje
       });
       dialogRef.afterClosed().subscribe(r => {
-        this.loadingSubject.next(true);
         if(r){
           this.cre.solicitarAprobacionRenovacion( this.credit.credito.tbQoNegociacion.id ).subscribe( (data: any) =>{
             if(data.entidad){
@@ -184,7 +185,6 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
             }
           });
         }else{
-          this.loadingSubject.next(false);
           this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
         }
       });  
