@@ -120,13 +120,19 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
-  public crearCreditoRenovacion( opcion, garantias, numeroOperacionMadre,asesor, idAgencia,  idNegociacion) {
+  public crearCreditoRenovacion( opcion, numeroOperacion, numeroOperacionMadre, asesor, idAgencia, garantias,  idNegociacion) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "crearCreditoRenovacion";
-    this.params = new HttpParams().set('numeroOperacionMadre', numeroOperacionMadre).set('asesor', asesor).set('idAgencia', idAgencia)
+    this.params = new HttpParams().set('numeroOperacion', numeroOperacion).set('numeroOperacionMadre', numeroOperacionMadre).set('asesor', asesor).set('idAgencia', idAgencia)
+    console.log( "Negociacion SErvice => ", idNegociacion);
     if(idNegociacion){
-      this.params.set('idNegociacion', idNegociacion);
+      this.params = this.params.set('idNegociacion', idNegociacion);
     }
-    let wrapper = { opcion: opcion, garantias: garantias}
+    let wrapper ;
+    if(garantias){
+      wrapper = { opcion: opcion, garantias: garantias}
+    }else{
+      wrapper = { opcion: opcion }
+    }
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, wrapper, this.options).pipe(
       tap( // Log the result or error

@@ -16,6 +16,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 @Component({
   selector: 'kt-aprobacion-solicitud',
@@ -75,8 +76,10 @@ export class AprobacionSolicitudComponent extends TrackingUtil implements OnInit
     private par: ParametroService,
     private route: ActivatedRoute,
     private router: Router,
-    private dev: DevolucionService) {
-    super();
+    private dev: DevolucionService,
+    public tra: TrackingService,
+    ) {
+    super(tra);
     this.cre.setParameter();
     this.sof.setParameter();
     this.dev.setParameter();

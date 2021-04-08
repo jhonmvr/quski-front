@@ -15,6 +15,7 @@ import { MatTableDataSource, MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 @Component({
   selector: 'kt-excepciones-riesgo',
   templateUrl: './excepciones-riesgo.component.html',
@@ -76,9 +77,10 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
     private exc: ExcepcionService,
     private cal: CalculadoraService,
     private sinNotSer: ReNoticeService,
+    public tra: TrackingService,
 
   ) {
-    super();
+    super(tra);
     this.neg.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();

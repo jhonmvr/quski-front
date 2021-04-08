@@ -17,6 +17,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ReturnStatement } from '@angular/compiler';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 @Component({
   selector: 'kt-cancelacion-solicitud-devolucion',
@@ -76,9 +77,10 @@ export class CancelacionSolicitudDevolucionComponent extends TrackingUtil implem
     private sinNoticeService: ReNoticeService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public tra: TrackingService,
   ) {
-    super();
+    super(tra);
     this.cre.setParameter();    
     this.sof.setParameter();
     this.dev.setParameter();

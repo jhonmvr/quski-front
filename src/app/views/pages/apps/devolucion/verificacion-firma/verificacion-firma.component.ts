@@ -15,6 +15,7 @@ import { SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 @Component({
   selector: 'kt-verificacion-firma',
@@ -71,8 +72,10 @@ export class VerificacionFirmaComponent  extends TrackingUtil implements OnInit 
     private par: ParametroService,
     private route: ActivatedRoute,
     private router: Router,
-    private dev: DevolucionService) {
-      super();
+    private dev: DevolucionService,
+    public tra: TrackingService,
+    ) {
+      super(tra);
       this.cre.setParameter();
       this.sof.setParameter();
       this.dev.setParameter();

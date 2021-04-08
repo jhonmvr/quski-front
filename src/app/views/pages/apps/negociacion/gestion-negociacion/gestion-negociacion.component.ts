@@ -30,7 +30,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
-import { TrackingService } from '../../../../../../../src/app/core/services/quski/tracking.service';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 
 @Component({
@@ -134,11 +134,9 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService,
     private subheaderService: SubheaderService,
-    private tra: TrackingService
+    public tra: TrackingService
   ) {
-
-
-    super();
+    super(tra);
     this.sof.setParameter();
     this.par.setParameter();
     this.cal.setParameter();

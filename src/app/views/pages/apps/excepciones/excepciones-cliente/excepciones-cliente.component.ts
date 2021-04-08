@@ -14,6 +14,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 
 
@@ -89,9 +90,11 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
     private exs: ExcepcionService,
     private router: Router,
     private subheaderService: SubheaderService,
-    private sinNoticeService: ReNoticeService
+    private sinNoticeService: ReNoticeService,
+    public tra: TrackingService,
+
   ) {
-    super();
+    super(tra);
     this.neg.setParameter();
     this.cli.setParameter();
     this.sof.setParameter();

@@ -23,6 +23,7 @@ import { SubheaderService } from '../../../../../core/_base/layout';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 
 @Component({
@@ -83,9 +84,10 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
     private router: Router,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public tra: TrackingService,
   ) {
-    super();
+    super(tra);
     this.sof.setParameter();
     this.cot.setParameter();
     this.par.setParameter();

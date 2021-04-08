@@ -21,6 +21,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 
 
@@ -172,14 +173,14 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     private pro: ProcesoService,
     private doc: DocumentoHabilitanteService,
     private obj: ObjectStorageService,
-    private par: ParametroService,
     private sinNotSer: ReNoticeService,
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
-    private subheaderService: SubheaderService
+    private subheaderService: SubheaderService,
+    public tra: TrackingService
   ) {
-    super();
+    super(tra);
     this.cre.setParameter();
     this.sof.setParameter();
     this.pro.setParameter();

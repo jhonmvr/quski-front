@@ -17,6 +17,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { saveAs } from 'file-saver';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 
 @Component({
@@ -71,9 +72,11 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService,
     private subheaderService: SubheaderService,
+    public tra: TrackingService
+
 
   ) { 
-    super();
+    super(tra);
     this.cre.setParameter();
     this.reg.setParameter();
     this.sof.setParameter();

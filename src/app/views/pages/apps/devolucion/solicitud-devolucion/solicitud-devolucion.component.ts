@@ -18,6 +18,7 @@ import { SubheaderService } from '../../../../../core/_base/layout';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 @Component({
   selector: 'kt-solicitud-devolucion',
@@ -97,8 +98,9 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
     public dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
+    public tra: TrackingService,
   ) {
-    super();
+    super(tra);
     this.cre.setParameter();
     this.sof.setParameter();
     this.dev.setParameter();

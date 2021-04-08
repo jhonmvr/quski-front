@@ -22,6 +22,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { saveAs } from 'file-saver';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 @Component({
   selector: 'kt-generar-credito',
   templateUrl: './generar-credito.component.html',
@@ -125,8 +126,9 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     private router: Router,
     private os:ObjectStorageService,
     private sinNotSer: ReNoticeService,
+    public tra: TrackingService,
   ) {
-    super();
+    super(tra);
     this.cre.setParameter();
     this.doc.setParameter();
     this.obj.setParameter();

@@ -115,11 +115,9 @@ export class TrackingService extends BaseService {
     );
   }
   guardarTracking(track: TbQoTracking) {
-    const serviceUrl =
-      this.appResourcesUrl + 'trackingRestController/persistEntity';
-    const wrapper = { entidad: track };
+    const serviceUrl = this.appResourcesUrl + 'trackingRestController/registrar';
     this.options = { headers: this.headers };
-    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+    return this.http.post(serviceUrl, track, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }

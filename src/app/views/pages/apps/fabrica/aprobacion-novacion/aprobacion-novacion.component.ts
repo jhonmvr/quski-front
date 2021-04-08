@@ -19,6 +19,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 
 @Component({
@@ -184,10 +185,11 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
-    private subheaderService: SubheaderService
+    private subheaderService: SubheaderService,
+    public tra: TrackingService
 
   ) {
-    super();
+    super(tra);
     this.cre.setParameter();
     this.sof.setParameter();
     this.pro.setParameter();

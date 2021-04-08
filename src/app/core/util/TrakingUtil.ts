@@ -5,8 +5,10 @@ import { TrackingService } from '../services/quski/tracking.service';
 export class TrackingUtil{
   
   
-  constructor(){
-   
+  constructor(
+    public tra: TrackingService
+  ){
+   this.tra.setParameter();
   }
   
   guardarTraking(proceso:string, codigoBPM:string, listaSeccion:any , indexSeccion, actividad:string, codigoOperacion:string){
@@ -19,6 +21,9 @@ export class TrackingUtil{
     t.nombreAsesor = localStorage.getItem('nombre');
     t.actividad = actividad;
     console.log("guardar Traking ", t);
+    this.tra.guardarTracking(t).subscribe( (data: any)=>{
+      console.log( data );
+    });
   }
   
 }

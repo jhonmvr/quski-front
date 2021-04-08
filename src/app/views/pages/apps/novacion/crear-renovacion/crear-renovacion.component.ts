@@ -20,6 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -69,7 +70,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
     
   recibirOpagar: any = '';
-  //garantias: any[];
+  numeroOperacionMadre: any;
+  idNego: any;
   constructor(
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
@@ -79,9 +81,10 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService,
-    private subheaderService: SubheaderService
+    private subheaderService: SubheaderService,
+    public tra: TrackingService
   ) { 
-    super();
+    super(tra);
     this.cre.setParameter();
     this.sof.setParameter();
     this.cal.setParameter();
@@ -116,6 +119,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
           this.loadingSubject.next(true);
           this.cre.buscarRenovacionByIdNegociacion(json.params.item).subscribe((data: any) => {
             this.credit = data.entidad;
+            this.idNego = json.params.item;
             //console.log("datos ->", this.credit);
             if (this.credit ) {
               this.cargarCampos();
@@ -152,7 +156,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.codigoOperacion.setValue(this.credit.operacionAnterior.credito.numeroOperacion);
     this.nombreCompleto.setValue(this.credit.operacionAnterior.cliente.nombreCompleto);
     this.cedulaCliente.setValue(this.credit.operacionAnterior.cliente.identificacion);
-    this.numeroOperacion = this.credit.operacionAnterior.credito.numeroOperacionMadre;
+    this.numeroOperacion = this.credit.operacionAnterior.credito.numeroOperacion;
+    this.numeroOperacionMadre = this.credit.operacionAnterior.credito.numeroOperacionMadre;
     this.codigoBpm.setValue( this.credit.credito ? this.credit.credito.codigo : 'Sin asignar')
     this.proceso.setValue(   this.credit.proceso ? this.credit.proceso.proceso : 'Sin asignar');
     this.estadoProceso.setValue(this.credit.proceso ? this.credit.proceso.estadoProceso : 'Sin asignar');
@@ -284,7 +289,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionRiesgo(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion(  this.selection.selected, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.selection.selected,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(false,true,false) );
@@ -296,7 +301,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionCliente(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion(  this.selection.selected, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.selection.selected,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false) );
@@ -309,7 +314,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public solicitarExcepcionCobertura(){
     if(this.selection.selected.length > 0){
       if(!this.credit.proceso){
-        this.cre.crearCreditoRenovacion(  this.selection.selected, this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia,null).subscribe( data =>{
+        this.cre.crearCreditoRenovacion(  this.selection.selected,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
           if(data.entidad){
             this.credit = data.entidad;
             this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
@@ -354,7 +359,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         this.loadingSubject.next(true);
         if(r){
-          this.cre.crearCreditoRenovacion( this.selection.selected[0], this.garantiasSimuladas, this.numeroOperacion,this.usuario, this.agencia, this.credit.proceso? this.credit.proceso.idReferencia : null ).subscribe( data =>{
+          this.cre.crearCreditoRenovacion( this.selection.selected[0], this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia, this.garantiasSimuladas, this.idNego ).subscribe( data =>{
             if(data.entidad){
               this.credit = data.entidad;
               this.router.navigate(['cliente/gestion-cliente/NOV/',this.credit.proceso.idReferencia]);

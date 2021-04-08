@@ -25,6 +25,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { map, startWith } from 'rxjs/operators';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 export interface User {
   nombre: string;
@@ -186,8 +187,9 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private subheaderService: SubheaderService,
+    public tra: TrackingService,
   ) {
-    super();
+    super(tra);
     this.css.setParameter();
     this.cli.setParameter();
     this.sp.setParameter();
@@ -275,6 +277,9 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       if (r) {
         if (this.origen == 'NEG') {
           this.router.navigate(['negociacion/gestion-negociacion/NEG/', this.item]);
+        }
+        if (this.origen == 'NOV') {
+          this.router.navigate(['novacion/crear-novacion/NOV/', this.item]);
         }
       }
     });

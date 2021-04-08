@@ -16,6 +16,7 @@ import { SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 @Component({
   selector: 'kt-aprobacion-cancelacion',
   templateUrl: './aprobacion-cancelacion.component.html',
@@ -78,9 +79,11 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
     private sinNoticeService: ReNoticeService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public tra: TrackingService,
+
   ) {
-    super();
+    super(tra);
     this.cre.setParameter();
     this.sof.setParameter();
     this.dev.setParameter();

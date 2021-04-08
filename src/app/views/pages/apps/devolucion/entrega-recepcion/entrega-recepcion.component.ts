@@ -15,6 +15,7 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 @Component({
   selector: 'kt-entrega-recepcion',
   templateUrl: './entrega-recepcion.component.html',
@@ -68,8 +69,10 @@ export class EntregaRecepcionComponent extends TrackingUtil implements OnInit {
     private par: ParametroService,
     private route: ActivatedRoute,
     private router: Router,
-    private dev: DevolucionService) {
-    super();
+    private dev: DevolucionService,
+    public tra: TrackingService,
+    ) {
+    super(tra);
     this.cre.setParameter();
     this.par.setParameter();
     this.dev.setParameter();

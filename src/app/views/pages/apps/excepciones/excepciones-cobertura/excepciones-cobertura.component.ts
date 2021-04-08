@@ -17,6 +17,7 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import 'hammerjs';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 
 @Component({
@@ -71,10 +72,10 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     private neg: NegociacionService,
     private exc: ExcepcionService,
     private par: ParametroService,
-    private cal: CalculadoraService
-
+    private cal: CalculadoraService,
+    public tra: TrackingService,
   ) {
-    super();
+    super(tra);
     this.neg.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
