@@ -41,7 +41,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   /** @STANDAR_VARIABLES **/
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loadBusqueda = new BehaviorSubject<boolean>(false);
-  private wrapper: ClienteCompletoWrapper;
+  public wrapper: ClienteCompletoWrapper;
   public loading;
   usuario
   agencia
@@ -402,9 +402,10 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.valorEgreso.setValue(this.wrapper.cliente.egresos);
       this.avaluoPasivo.setValue(this.wrapper.cliente.pasivos);
       this.avaluoActivo.setValue(this.wrapper.cliente.activos);
-      this.loadBusqueda.next(false);
+      this.guardarTraking(this.origen == 'NEG' ? 'NUEVO' : this.origen == 'NOV' ? 'RENOVACION': null,
+      this.wrapper ? this.wrapper.codigoBpm : null, ['Datos Personales','Datos de contacto','Dirección Domicilio','Dirección Laboral','Datos Económico','Ingresos / Egresos','Patrimonio','Cuentas Bancarias','Referencias Personales'], 
+      0, 'GESTION CLIENTE','');
     } else {
-      this.loadBusqueda.next(false);
       this.sinNoticeService.setNotice('Error cargando cliente', 'error');
     }
   }

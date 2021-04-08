@@ -278,6 +278,10 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     let x = new Array()
     x.push(data.credito);
     this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(x);
+    this.guardarTraking('NUEVO', this.operacionNuevo ? this.operacionNuevo.credito ? this.operacionNuevo.credito.codigo : null : null, 
+        ['Información Operación','Día de pago','Asignacion de Funda','Datos Instruccion Operativa','Datos del Credito nuevo','Documento Habilitantes'], 
+        0, 'GENERAR CREDITO',
+        this.operacionNuevo ? this.operacionNuevo.credito ? this.operacionNuevo.credito.numeroOperacion : null : null );
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {

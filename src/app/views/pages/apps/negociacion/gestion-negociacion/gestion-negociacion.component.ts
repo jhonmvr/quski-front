@@ -508,6 +508,10 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     } else {
       this.sinNotSer.setNotice("SE HA INICIADO UNA NEGOCIACION -> \"" + wrapper.credito.codigo + "\". ", "success");
     }
+    this.guardarTraking('NUEVO', 
+    this.negoW?this.negoW.credito?this.negoW.credito.codigo:'':'', 
+    ['Busqueda de Cliente','Datos Cliente','Variables Crediticias','Riesgo Acumulado','Tasación','Detalle Opciones de crédito'], 
+    0, 'NEGOCIACION', this.negoW?this.negoW.credito?this.negoW.credito.numeroOperacion:'':'')
   }
   public abrirPopupVerCotizacion(identificacion: string) {
     const dialogRefGuardar = this.dialog.open(VerCotizacionesComponent, {

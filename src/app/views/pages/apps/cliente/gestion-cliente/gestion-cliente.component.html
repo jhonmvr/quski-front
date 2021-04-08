@@ -14,7 +14,7 @@
   <re-portlet-body>
 
     <mat-vertical-stepper [linear]="false" #stepper (animationDone)="guardarTraking(origen == 'NEG' ? 'NUEVO' : origen == 'NOV' ? 'RENOVACION': null,
-       '', ['Datos Personales','Datos de contacto','Dirección Domicilio','Dirección Laboral','Datos Económico','Ingresos / Egresos','Patrimonio','Cuentas Bancarias','Referencias Personales'], 
+       wrapper ? wrapper.codigoBpm : null, ['Datos Personales','Datos de contacto','Dirección Domicilio','Dirección Laboral','Datos Económico','Ingresos / Egresos','Patrimonio','Cuentas Bancarias','Referencias Personales'], 
        stepper.selectedIndex, 'GESTION CLIENTE','')">
       <mat-step label="Datos Personales" [stepControl]="formCliente">
         <form [formGroup]="formCliente">

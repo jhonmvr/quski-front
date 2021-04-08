@@ -7,6 +7,7 @@ import { TbReferencia } from '../quski/TbReferencia';
 
 export class ClienteCompletoWrapper{
     cliente: TbQoCliente;
+    codigoBpm: string;
     direcciones : Array<TbQoDireccionCliente> ;
     referencias : Array<TbReferencia> ;
     telefonos : Array<TbQoTelefonoCliente> ;
