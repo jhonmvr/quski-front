@@ -222,8 +222,6 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
         }else{
         this.sinNotSer.setNotice('ERRROR AL GUARDAR LOS COMPROBANTES','error');
         }
-      }, error =>{
-        this.sinNotSer.setNotice('ERROR EN EL SERVICIO' + error,'error');
       });
     }else {
       this.sinNotSer.setNotice('INGRESE AL MENOS UN COMPROBANTE DE PAGOS','warning');
