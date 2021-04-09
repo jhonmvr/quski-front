@@ -178,7 +178,9 @@
                         <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
                         <mat-cell *matCellDef="let row">
                             <div *ngIf="!row.estaNovado">
-                                <a *ngIf="row.tipoCredito == 'Vencimiento' || ( row.tipoCredito == 'Cuotas' && row.retanqueo)"
+                                <a *ngIf=" ( row.tipoCredito == 'Vencimiento' || ( row.tipoCredito == 'Cuotas' && row.retanqueo) ) 
+                                && row.codigoEstadoUbicacionGrantia !== 'CLI' 
+                                &&  row.codigoEstadoProcesoGarantia !== 'LIB' "
                                     (click)="irNovar(row)" matTooltip="Novar el credito"
                                     style="font-size: 12px; vertical-align: middle;">
                                     <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">
