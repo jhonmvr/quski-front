@@ -92,7 +92,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   // FORMULARIO TASACION
   public formTasacion: FormGroup = new FormGroup({});
   public tipoOro = new FormControl('', [Validators.required]);
-  public pesoNeto = new FormControl('', [Validators.required, ValidateDecimal, Validators.min(1)]);
+  public pesoNeto = new FormControl('', [Validators.required, ValidateDecimal, Validators.min(0.1)]);
   public pesoBruto = new FormControl('', [Validators.required, ValidateDecimal]);
   public numeroPiezas = new FormControl('', [Validators.required, Validators.max(60)]);
   public tipoJoya = new FormControl('', [Validators.required]);

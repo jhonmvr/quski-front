@@ -70,7 +70,7 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
   public tipoCliente = new FormControl('', [Validators.required]);
   public observaciones = new FormControl('', [Validators.required]);
   public agenciaEntrega = new FormControl('', [Validators.required]);
-  public valorCustodia = new FormControl('', [Validators.required]);
+  public valorCustodia = new FormControl('', []);
   public cedulaHeredero = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
   public nombreHeredero = new FormControl('', [Validators.required]);
   public cedulaApoderado = new FormControl('', [Validators.required, ValidateCedula, Validators.minLength(10), Validators.maxLength(10)]);
@@ -122,6 +122,7 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
     this.cre.setParameter();
     this.sof.setParameter();
     this.dev.setParameter();
+    this.valorCustodia.disable();
     this.cargarCatalogos();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem('idAgencia');
@@ -437,7 +438,7 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
         wrapper.valorAvaluo = this.totalValorA;
         wrapper.pesoBruto = this.totalPesoB;
         wrapper.fechaEfectiva = this.wrapperSoft.credito.fechaAprobacion;
-        wrapper.valorCustodiaAprox = this.valorCustodia.value;
+        //wrapper.valorCustodiaAprox = this.valorCustodia.value;
         wrapper.codeHerederos = this.encodeObjetos({ heredero: this.listTablaHeredero });
         wrapper.codeDetalleCredito = this.encodeObjetos([this.objetoCredito]);
         wrapper.codeDetalleGarantia = this.encodeObjetos(this.wrapperSoft.garantias);
