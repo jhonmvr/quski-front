@@ -7,22 +7,28 @@
                         {{element.nombre }}
                     </mat-option>
                 </mat-select>
+                <mat-error>{{ getErrorMessage("intitucionFinanciera") }}</mat-error>
             </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field class="mat-form-field-fluid">
                 <input matInput [formControl]="cuenta" placeholder="Cuenta" numeric numericType="number"
                 (keypress)="numberOnly($event)" />
+                <mat-error>{{ getErrorMessage("cuenta") }}</mat-error>
             </mat-form-field>
         </div>			
         <div class="col-md-3">
             <mat-form-field class="mat-form-field-fluid">
-                <input matInput [formControl]="numeroDeposito" placeholder="NumeroDeposito" numeric numericType="number"/>
+                <input matInput [formControl]="numeroDeposito" placeholder="Numero Deposito" numeric numericType="number"/>
+                <mat-error>{{ getErrorMessage("numeroDeposito") }}</mat-error>
+
             </mat-form-field>
         </div>					
         <div class="col-md-3">
             <mat-form-field class="mat-form-field-fluid">
                 <input matInput [formControl]="valorDepositado" placeholder="Valor Depositado" numeric numericType="number" />
+                <mat-error>{{ getErrorMessage("valorDepositado") }}</mat-error>
+
             </mat-form-field>
         </div>		
         <div class="col-md-3 offset-3">
@@ -30,6 +36,7 @@
                 <input matInput [matDatepicker]="picker6" [formControl]="fechaPago" placeholder="Fecha Pago">
                 <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
                 <mat-datepicker #picker6></mat-datepicker>
+                <mat-error>{{ getErrorMessage("fechaPago") }}</mat-error>
             </mat-form-field>
         </div>	
         <div class="col-md-3 offset-3">

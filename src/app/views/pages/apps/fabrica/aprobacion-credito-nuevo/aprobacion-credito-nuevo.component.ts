@@ -4,6 +4,7 @@ import { CreditoNegociacionService } from '../../../../../core/services/quski/cr
 import { TbQoIngresoEgresoCliente } from '../../../../../core/model/quski/TbQoIngresoEgresoCliente';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
+
 import { AprobacionWrapper } from '../../../../../core/model/wrapper/AprobacionWrapper';
 import { CatalogosWrapper } from './../../../../../core/model/wrapper/CatalogosWrapper';
 import { SoftbankService } from './../../../../../core/services/quski/softbank.service';

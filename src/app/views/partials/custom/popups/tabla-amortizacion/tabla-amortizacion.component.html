@@ -14,27 +14,27 @@
             </ng-container>
             <ng-container matColumnDef="saldoCapital">
                 <mat-header-cell *matHeaderCellDef> Saldo Capital </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.saldoCapital | currency: "USD":true:"1.2"}} </mat-cell>
+                <mat-cell *matCellDef="let element"> {{ element.saldoCapital | currency : true :"1.2"}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="capital">
                 <mat-header-cell *matHeaderCellDef> Capital </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.capital | currency: "USD":true:"1.2" }} </mat-cell>
+                <mat-cell *matCellDef="let element"> {{ element.capital | currency : true :"1.2" }} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="interes">
                 <mat-header-cell *matHeaderCellDef> Interes </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.interes | currency: "USD":true:"1.2" }} </mat-cell>
+                <mat-cell *matCellDef="let element"> {{ element.interes | currency : true :"1.2" }} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="seguro">
                 <mat-header-cell *matHeaderCellDef> Seguro </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.seguro | currency: "USD":true:"1.2" }} </mat-cell>
+                <mat-cell *matCellDef="let element"> {{ element.seguro | currency : true :"1.2" }} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="otros">
                 <mat-header-cell *matHeaderCellDef> Otros </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.otros | currency: "USD":true:"1.2" }} </mat-cell>
+                <mat-cell *matCellDef="let element"> {{ element.otros | currency : true :"1.2" }} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="total">
                 <mat-header-cell *matHeaderCellDef> Total </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.total | currency: "USD":true:"1.2" }} </mat-cell>
+                <mat-cell *matCellDef="let element"> {{ element.total | currency : true :"1.2" }} </mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

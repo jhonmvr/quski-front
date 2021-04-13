@@ -319,7 +319,7 @@
                   </ng-container>
                   <ng-container matColumnDef="Avaluo">
                     <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }} </mat-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.avaluo | currency : true :"1.2" }} </mat-cell>
                   </ng-container>
                   <mat-header-row *matHeaderRowDef="displayedColumnsActivo"></mat-header-row>
                   <mat-row *matRowDef="let row; columns: displayedColumnsActivo"></mat-row>
@@ -335,7 +335,7 @@
 
                   <ng-container matColumnDef="Avaluo">
                     <mat-header-cell *matHeaderCellDef> Avaluo </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{ element.avaluo | currency: "USD":true:"1.2" }}</mat-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.avaluo | currency : true :"1.2" }}</mat-cell>
                   </ng-container>
                   <mat-header-row *matHeaderRowDef="displayedColumnsPasivo"></mat-header-row>
                   <mat-row *matRowDef="let row; columns: displayedColumnsPasivo"></mat-row>
@@ -363,7 +363,7 @@
                   </ng-container>
                   <ng-container matColumnDef="Valor">
                     <mat-header-cell *matHeaderCellDef> Valor </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{ element.valor | currency: "USD":true:"1.2" }}</mat-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.valor | currency : true :"1.2" }}</mat-cell>
                   </ng-container>
                   <mat-header-row *matHeaderRowDef="displayedColumnsII"></mat-header-row>
                   <mat-row *matRowDef="let row; columns: displayedColumnsII"></mat-row>

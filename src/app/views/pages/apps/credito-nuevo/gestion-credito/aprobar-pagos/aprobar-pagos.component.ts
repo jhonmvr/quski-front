@@ -80,6 +80,9 @@ export class AprobarPagosComponent implements OnInit {
         this.reg.clientePagoByIdCliente(data.params.id).subscribe((data: any) => {
           if(data.entidades){
             this.dataSourceComprobante.data = data.entidades;
+            this.dataSourceComprobante.data.forEach( e=>{
+              e.institucionFinanciera = this.catBanco ? this.catBanco.find( x => x.id == e.institucionFinanciera ) ? this.catBanco.find( x => x.id == e.institucionFinanciera ) : { nombre: 'Error Catalogo' } : { nombre: 'Error Catalogo' };
+            });
             this.cliente = data.entidades[0].tbQoClientePago;
             this.nombreCliente.setValue(this.cliente.nombreCliente);
             this.cedula.setValue(this.cliente.cedula);

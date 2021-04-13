@@ -35,7 +35,7 @@ export class PopupPagoComponent implements OnInit {
   public formOperacion: FormGroup = new FormGroup({});
   public intitucionFinanciera = new FormControl('', [Validators.required]);
   public numeroDeposito = new FormControl('', [Validators.required]);
-  public valorDepositado = new FormControl('', [Validators.required, ValidateDecimal, Validators.max(100) ]);
+  public valorDepositado = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13) ]);
   public tipoPago = new FormControl('', [Validators.required]);
   public cuenta = new FormControl('', [Validators.required]);
   public fechaPago = new FormControl('', [Validators.required]);
@@ -76,9 +76,6 @@ export class PopupPagoComponent implements OnInit {
       this.tipoPago.setValue( this.catTipoPago.find( x => x.nombre == 'EFECTIVO') );
     });
   }
-  public chanceBanco(){
-    
-  }
   public cancelar(){
     this.dialogRefGuardar.close(false);
   }
@@ -110,11 +107,36 @@ export class PopupPagoComponent implements OnInit {
       });
     }
   }
+  public getErrorMessage(pfield: string) {
+    const errorRequerido = 'Ingrese valores';
+    const errorLogitudExedida = 'La longitud sobrepasa el limite';
+    const errorDecimal = 'Ingrese decimales';
+
+    if (pfield && pfield === 'valorDepositado') {
+
+      const input = this.formOperacion.get("valorDepositado");
+      console.log('Erro de valor => ', input.errors);
+      return input.hasError("required") ? errorRequerido : input.hasError("invalido") ? errorDecimal : input.hasError("maxlength") ? errorLogitudExedida : "";
+    }if (pfield && pfield === 'intitucionFinanciera') {
+      const input = this.formOperacion.get("intitucionFinanciera");
+      return input.hasError("required") ? errorRequerido : "";
+    }if (pfield && pfield === 'numeroDeposito') {
+      const input = this.formOperacion.get("numeroDeposito");
+      return input.hasError("required") ? errorRequerido : "";
+    }if (pfield && pfield === 'cuenta') {
+      const input = this.formOperacion.get("cuenta");
+      return input.hasError("required") ? errorRequerido : "";
+    }if (pfield && pfield === 'fechaPago') {
+      const input = this.formOperacion.get("fechaPago");
+      return input.hasError("required") ? errorRequerido : "";
+    }
+  }
   public aceptar(){
     if(this.formOperacion.valid){
+      console.log('Institucion? =>' , this.intitucionFinanciera.value);
       let wrapperRegistro: WrapperRegistro = {
         comprobante:this.file ? this.file : null,
-        intitucionFinanciera: this.intitucionFinanciera.value ? this.intitucionFinanciera.value.codigo : '',
+        intitucionFinanciera: this.intitucionFinanciera.value ? this.intitucionFinanciera.value : '',
         numeroDeposito: this.numeroDeposito.value,
         valorDepositado: this.valorDepositado.value,
         cuenta: this.cuenta.value,
@@ -122,7 +144,6 @@ export class PopupPagoComponent implements OnInit {
         tipoPago: this.tipoPago.value.valor
       };
       this.dialogRefGuardar.close(wrapperRegistro);
-      console.log('Regresando de Subir Comprobante ----> ' + wrapperRegistro);
     }else{
       this.sinNoticeService.setNotice('COMPLETE EL FORMULARIO','error');
     }

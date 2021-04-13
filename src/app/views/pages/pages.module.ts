@@ -1,5 +1,5 @@
 // Angular
-import { NgModule } from '@angular/core';
+import { InjectionToken, LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -20,7 +20,7 @@ import { AprobadorModule } from './apps/aprobador/aprobador.module';
 import { NovacionModule } from './apps/novacion/novacion.module';
 
 
-
+const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>('USD');
 const RELATIVE_DATE_FORMATS = {
 	parse: {
 		dateInput: { month: 'short', year: 'numeric', day: 'numeric' }
@@ -54,7 +54,9 @@ const RELATIVE_DATE_FORMATS = {
 		AprobadorModule,
 		NovacionModule
 	],
-	providers: []
+	providers: [
+		{provide: DEFAULT_CURRENCY_CODE, useValue: 'USD '},
+	]
 })
 export class PagesModule {
 }

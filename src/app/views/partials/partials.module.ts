@@ -2,7 +2,7 @@
 
 // Angular
 import { RouterModule } from '@angular/router';
-import { NgModule } from '@angular/core';
+import { InjectionToken, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -133,6 +133,7 @@ import { AlertaTiempoAprobadorComponent } from './custom/alerta-tiempo-aprobador
 
 
 
+const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>('USD');
 
 @NgModule({
 	declarations: [
@@ -322,6 +323,7 @@ import { AlertaTiempoAprobadorComponent } from './custom/alerta-tiempo-aprobador
 		WebcamModule
 	],
 	providers: [
+		{provide: DEFAULT_CURRENCY_CODE, useValue: 'USD '},
 		{ provide: MatDialogRef, useValue: {} },
 		{ provide: MAT_DIALOG_DATA, useValue: [] },
 	],

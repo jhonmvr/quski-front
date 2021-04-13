@@ -1,7 +1,9 @@
-import { NgModule } from '@angular/core';
+import { InjectionToken, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FabricaComponent } from './fabrica.component';
 import { Routes, RouterModule } from '@angular/router';
+import {LOCALE_ID} from '@angular/core';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Translate Module
 import { TranslateModule } from '@ngx-translate/core';
@@ -50,7 +52,7 @@ import { MatTableExporterModule } from 'mat-table-exporter';
 
 
 
-
+const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>('USD');
 const routes: Routes = [
   {
     path: '',
@@ -117,7 +119,7 @@ const routes: Routes = [
   ],
   providers: [
     ModuleGuard,
-    
+    {provide: DEFAULT_CURRENCY_CODE, useValue: 'USD '},
     {provide: DateAdapter, useClass: PickDateAdapter},
     {provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS},
     { provide: MatDialogRef, useValue: {} },

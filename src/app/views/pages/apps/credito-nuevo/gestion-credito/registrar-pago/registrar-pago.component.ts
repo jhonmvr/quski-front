@@ -82,7 +82,6 @@ export class RegistrarPagoComponent implements OnInit {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.item) {
         let row = JSON.parse(atob(data.params.item));
-        console.log('Mi row =>', row);
         this.cli.consultarCuentaMupi( row.identificacion ).subscribe( (dta: any) =>{
           if(dta.entidad){
             this.datosMupi = dta.entidad;
@@ -123,7 +122,6 @@ export class RegistrarPagoComponent implements OnInit {
           this.valorPreCancelado.setValue( data.valorTotal );
         }
       });
-      console.log('Formateada =>', wrapper.fechaPrecancelacion);
     });
   }
   public agregarComprobante(){
@@ -200,7 +198,6 @@ export class RegistrarPagoComponent implements OnInit {
           };
           list.push( item );
         });
-        console.log('Items => ', list);
         let wrapper = {
           pagos: list,
           asesor: this.usuario,
@@ -215,8 +212,8 @@ export class RegistrarPagoComponent implements OnInit {
           idBanco: this.datosMupi.institucionFinanciera,
           tipoPagoProceso: this.tipoPagoProceso.value.valor
         }
+        console.log('wrapper => ', wrapper);
         this.reg.iniciarProcesoRegistrarPago( wrapper ).subscribe( (data: any) =>{
-          console.log('Data.Entidad => ', data.entidad);
           if(data.entidad && data.entidad.proceso && data.entidad.proceso.estadoProceso == "PENDIENTE_APROBACION"){
             this.sinNoticeService.setNotice("PROCESO CREADO BAJO EL CODIGO BPM: "+data.entidad.cliente.codigo+".", 'success');
             this.router.navigate(['negociacion/bandeja-operaciones']);

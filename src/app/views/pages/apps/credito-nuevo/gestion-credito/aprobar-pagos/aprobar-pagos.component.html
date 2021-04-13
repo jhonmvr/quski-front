@@ -41,7 +41,7 @@
                 <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante" >
 					<ng-container matColumnDef="intitucionFinanciera">
 						<mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.institucionFinanciera }} </mat-cell>
+						<mat-cell *matCellDef="let element"> {{ element.institucionFinanciera.nombre }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="cuenta">
 						<mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
@@ -57,7 +57,7 @@
                     </ng-container>
                     <ng-container matColumnDef="valorDepositado">
 						<mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.valorPagado | currency: "USD":true:"1.2" }} </mat-cell>
+						<mat-cell *matCellDef="let element"> {{ element.valorPagado | currency : true :"1.2" }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="tipoPago">
 						<mat-header-cell *matHeaderCellDef>Tipo Pago</mat-header-cell>
