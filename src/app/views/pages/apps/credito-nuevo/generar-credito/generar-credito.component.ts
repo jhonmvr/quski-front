@@ -407,7 +407,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.estadoOperacionSoft.setValue( data.estadoSoftbank );
     this.plazo.setValue( data.plazoCredito );
     this.montoFinanciado.setValue( data.montoFinanciado );
-    this.totalInteres.setValue( data.totalCostoNuevaOperacion );
+    this.totalInteres.setValue( data.totalInteresVencimiento );
     this.cuotas.setValue( data.valorCuota );
     this.pagarCliente.setValue( data.aPagarCliente );
     this.recibirCliente.setValue( data.aRecibirCliente );

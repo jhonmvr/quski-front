@@ -10,22 +10,23 @@ import { RelacionDependenciaEnum } from '../../../../../core/enum/RelacionDepend
 import { TbQoTelefonoCliente } from '../../../../../core/model/quski/TbQoTelefonoCliente';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { RelativeDateAdapter } from '../../../../../core/util/relative.dateadapter';
 import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../../src/environments/environment';
 import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
+import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
+import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
-import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Component, OnInit, ViewChild } from '@angular/core';
 import { map, startWith } from 'rxjs/operators';
-import { TrackingService } from '../../../../../core/services/quski/tracking.service';
+
 
 export interface User {
   nombre: string;
@@ -142,14 +143,14 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   public cargo = new FormControl('', [Validators.required]);
   public formDatosEconomicos: FormGroup = new FormGroup({});
   public relacionDependencia = new FormControl('');
-  public valorIngreso = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.max(5000)]);
+  public valorIngreso = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13), Validators.max(5000) ]);
   public formDatosIngreso: FormGroup = new FormGroup({});
-  public valorEgreso = new FormControl('', [Validators.required, Validators.maxLength(10)]);
+  public valorEgreso = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13) ]);
   public formDatosEgreso: FormGroup = new FormGroup({});
-  public avaluoActivo = new FormControl('', [Validators.required, Validators.maxLength(10)]);
+  public avaluoActivo = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13) ]);
   public formDatosPatrimonioActivos: FormGroup = new FormGroup({});
   public activo = new FormControl('', [Validators.maxLength(10)]);
-  public avaluoPasivo = new FormControl('', [Validators.required, Validators.maxLength(10)]);
+  public avaluoPasivo = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13) ]);
   public formDatosPatrimonioPasivos: FormGroup = new FormGroup({});
   public pasivo = new FormControl('', [Validators.maxLength(10)]);
 
@@ -398,10 +399,10 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
         this.esAhorro.setValue(this.wrapper.cuentas[0].esAhorros ? 'SI' : 'NO');
       }
       this.dataSourceReferencia = new MatTableDataSource<any>(this.wrapper.referencias);
-      this.valorIngreso.setValue(this.wrapper.cliente.ingresos);
-      this.valorEgreso.setValue(this.wrapper.cliente.egresos);
-      this.avaluoPasivo.setValue(this.wrapper.cliente.pasivos);
-      this.avaluoActivo.setValue(this.wrapper.cliente.activos);
+      this.valorIngreso.setValue(this.wrapper.cliente.ingresos.toFixed(2));
+      this.valorEgreso.setValue(this.wrapper.cliente.egresos.toFixed(2));
+      this.avaluoPasivo.setValue(this.wrapper.cliente.pasivos.toFixed(2));
+      this.avaluoActivo.setValue(this.wrapper.cliente.activos.toFixed(2));
       this.guardarTraking(this.origen == 'NEG' ? 'NUEVO' : this.origen == 'NOV' ? 'RENOVACION': null,
       this.wrapper ? this.wrapper.codigoBpm : null, ['Datos Personales','Datos de contacto','Dirección Domicilio','Dirección Laboral','Datos Económico','Ingresos / Egresos','Patrimonio','Cuentas Bancarias','Referencias Personales'], 
       0, 'GESTION CLIENTE','');
@@ -558,6 +559,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     const invalidIdentification = 'La identificacion no es valida';
     const errorLogitudExedida = 'La longitud sobrepasa el limite';
     const errorInsuficiente = 'La longitud es insuficiente';
+    const errorDecimal = 'Ingrese valores decimales: 0.00';
 
     if (pfield && pfield === "identificacion") {
       const input = this.formCliente.get("identificacion");
@@ -574,41 +576,52 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
                 : "";
     }
 
-    //Validaciones de ingreso-egreso avaluoActivo
-    if (pfield && pfield == "avaluoActivo") {
+     if (pfield && pfield == "avaluoActivo") {
       const input = this.avaluoActivo;
       return input.hasError("required")
         ? errorRequerido
         : input.hasError("pattern")
           ? errorNumero
-          : input.hasError("invalid-identification")
-            ? invalidIdentification
+          : input.hasError("invalido") 
+            ? errorDecimal 
             : input.hasError("maxlength")
               ? errorLogitudExedida
-              : input.hasError("minlength")
-                ? errorInsuficiente
-                : "";
-    }
-    if (pfield && pfield == "avaluoPasivo") {
+              : "";
+    }if (pfield && pfield == "avaluoPasivo") {
       const input = this.avaluoPasivo;
       return input.hasError("required")
         ? errorRequerido
         : input.hasError("pattern")
           ? errorNumero
-          : input.hasError("invalid-identification")
-            ? invalidIdentification
+          : input.hasError("invalido") 
+            ? errorDecimal 
             : input.hasError("maxlength")
               ? errorLogitudExedida
-              : input.hasError("minlength")
-                ? errorInsuficiente
-                : "";
-    } if (pfield && pfield == "valorEgreso") {
+              : "";
+    }if (pfield && pfield == "valorEgreso") {
       const input = this.valorEgreso;
       return input.hasError("required")
         ? errorRequerido
-        : input.hasError("maxlength")
-          ? errorLogitudExedida
-          : "";
+        : input.hasError("pattern")
+          ? errorNumero
+          : input.hasError("invalido") 
+            ? errorDecimal 
+            : input.hasError("maxlength")
+              ? errorLogitudExedida
+              : "";
+    }if (pfield && pfield === 'valorIngreso') {
+      const input = this.valorIngreso;
+      return input.hasError("required")
+        ? errorRequerido
+        : input.hasError("pattern")
+          ? errorNumero
+          : input.hasError("invalido") 
+            ? errorDecimal 
+            : input.hasError("maxlength")
+              ? errorLogitudExedida
+              : input.hasError('max') 
+                ? 'El ingreso total no puede ser mayor a 5000' 
+                : '';
     }
 
     //Validaciones de datos personales
@@ -616,10 +629,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       const input = this.apellidoMaterno;
       return input.hasError('required') ? errorRequerido : '';
     }
-    if (pfield && pfield === 'valorIngreso') {
-      const input = this.valorIngreso;
-      return input.hasError('required') ? errorRequerido : input.hasError('max') ? 'El ingreso total no puede ser mayor a 5000' : '';
-    }
+
     if (pfield && pfield === 'apellidoPaterno') {
       const input = this.apellidoPaterno;
       return input.hasError('required') ? errorRequerido : '';
