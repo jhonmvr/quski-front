@@ -53,6 +53,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public codigoBpm = new FormControl();
   public codigoOperacion = new FormControl();
+  public codigoOperacionMadre = new FormControl();
   public recibirPagar;
   public proceso = new FormControl();
   public estadoProceso = new FormControl();
@@ -91,6 +92,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
 
     this.formOperacion.addControl("codigoBpm", this.codigoBpm);
     this.formOperacion.addControl("codigoOperacion", this.codigoOperacion);
+    this.formOperacion.addControl("codigoOperacionMadre", this.codigoOperacionMadre);
     this.formOperacion.addControl("proceso", this.proceso);
     this.formOperacion.addControl("estadoProceso", this.estadoProceso);
     this.formOperacion.addControl("nombreCompleto", this.nombreCompleto);
@@ -154,6 +156,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   private cargarCampos() {
     this.codigoOperacion.setValue(this.credit.operacionAnterior.credito.numeroOperacion);
+    this.codigoOperacionMadre.setValue(this.credit.operacionAnterior.credito.numeroOperacionMadre);
     this.nombreCompleto.setValue(this.credit.operacionAnterior.cliente.nombreCompleto);
     this.cedulaCliente.setValue(this.credit.operacionAnterior.cliente.identificacion);
     this.numeroOperacion = this.credit.operacionAnterior.credito.numeroOperacion;

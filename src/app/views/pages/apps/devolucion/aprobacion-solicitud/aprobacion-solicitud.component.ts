@@ -281,9 +281,7 @@ export class AprobacionSolicitudComponent extends TrackingUtil implements OnInit
               this.sinNoticeService.setNotice("ERROR AL APROBAR O NEGAR EL PROCESO", 'error');
             }
           }
-        }, error => {
-          this.sinNoticeService.setNotice(error.error.codError.replace(/_/gi, " "), 'warning');
-        })
+        });
       } else {
         this.sinNoticeService.setNotice("SE CANCELO LA ACCION", 'warning');
       }

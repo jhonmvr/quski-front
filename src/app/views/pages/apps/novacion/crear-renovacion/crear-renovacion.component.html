@@ -22,7 +22,17 @@
                             <mat-form-field class="mat-form-field-fluid">
                                 <input matInput [formControl]="codigoOperacion" placeholder="Codigo Operacion"/>
 							</mat-form-field>
-                        </div>					
+                        </div>		
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="codigoOperacionMadre" placeholder="Codigo Operacion Madre"/>
+							</mat-form-field>
+                        </div>			
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="codigoBpm" placeholder="codigo BPM"/>
+                            </mat-form-field>
+                        </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input matInput [formControl]="nombreCompleto" placeholder="Nombre Completo"/>
@@ -31,11 +41,6 @@
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input matInput [formControl]="cedulaCliente" placeholder="Cedula Cliente"/>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="codigoBpm" placeholder="codigo BPM"/>
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
