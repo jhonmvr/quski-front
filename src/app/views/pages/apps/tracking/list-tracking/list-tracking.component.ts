@@ -66,7 +66,7 @@ export class ListTrackingComponent implements OnInit {
 
     this.traerEnums();
     this.initiateTablePaginator();
-    this.buscar();
+    this.buscarBoton();
   }
   filtrar(event: Event) {
     const filtro = (event.target as HTMLInputElement).value;
@@ -99,7 +99,11 @@ export class ListTrackingComponent implements OnInit {
   * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
   */
   paged() {
-    this.p = this.getPaginacion(this.sort.active, this.sort.direction, 'N', this.paginator.pageIndex);
+    this.p = this.getPaginacion('id', this.sort.direction, 'Y', this.paginator.pageIndex);
+    this.buscar();
+  }
+  buscarBoton(){
+    this.p = this.getPaginacion('id', this.sort.direction, 'Y', 0);
     this.buscar();
   }
   public buscar() {

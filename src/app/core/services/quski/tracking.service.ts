@@ -8,7 +8,6 @@ import { Page } from '../../model/page';
 
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
-import { ReNoticeService } from '../re-notice.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -39,10 +38,10 @@ export class TrackingService extends BaseService {
     );
   }
   busquedaTracking( p: Page, trackingWrapper: any) {
-    this.setParameter();
+    this.setSearchParams(p);
     const serviceUrl = this.appResourcesUrl + 'trackingRestController/busqueda';
     let wrapper = trackingWrapper;
-    this.options = { headers: this.headers };
+    this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, trackingWrapper,this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
