@@ -91,7 +91,7 @@
           </ng-container>
           <ng-container matColumnDef="valorDepositado">
             <mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.valorDepositado | currency : true :"1.2" }} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{ element.valorDepositado | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
           </ng-container>
           <ng-container matColumnDef="descargarComprobante">
             <mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>

@@ -52,8 +52,8 @@
     </ng-container>
     <ng-container matColumnDef="saldo">
         <mat-header-cell *matHeaderCellDef class="text-align"> Saldo </mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.saldo | currency : true :"1.2" }} </mat-cell>
-        <mat-footer-cell *matFooterCellDef> {{ saldoTotal | currency : true :"1.2" }} </mat-footer-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.saldo | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{ saldoTotal | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
 
     </ng-container>
     <ng-container matColumnDef="primeraCuotaVigente">

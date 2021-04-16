@@ -94,7 +94,7 @@
                             </ng-container>
                             <ng-container matColumnDef="monto">
                                 <mat-header-cell *matHeaderCellDef>Monto</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.monto | currency : true :"1.2" }}
+                                <mat-cell *matCellDef="let element"> {{element.monto | currency:'CAD':'symbol-narrow':'1.2-2'}}
                                 </mat-cell>
                             </ng-container>
                             <mat-header-row *matHeaderRowDef="displayedColumnsDetalle"></mat-header-row>

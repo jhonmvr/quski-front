@@ -456,7 +456,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.valorDesembolso.setValue( ap.credito.aRecibirCliente );
     this.montoFinanciado.setValue(  ap.credito.montoFinanciado );
     this.cuota.setValue( ap.credito.cuota );
-    this.totalInteres.setValue(  ap.credito.saldoInteres );
+    this.totalInteres.setValue(  ap.credito.totalInteresVencimiento );
 
     this.cargarFotoHabilitante('6','FUNDA',ap.credito.tbQoNegociacion.id ).subscribe(data=>{
       this.srcJoya = data;

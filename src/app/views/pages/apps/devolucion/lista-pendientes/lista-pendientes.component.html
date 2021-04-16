@@ -81,7 +81,7 @@
                     </ng-container>
                     <ng-container matColumnDef="valorAvaluo">
                         <mat-header-cell *matHeaderCellDef>Valor Avalúo</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.valorAvaluao | currency : true :"1.2" }}  </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.valorAvaluao | currency:'CAD':'symbol-narrow':'1.2-2'}}  </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="pesoBruto">
                         <mat-header-cell *matHeaderCellDef>Peso Bruto</mat-header-cell>

@@ -269,7 +269,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
         
       });
       
-      this.totalPesoBrutoFunda.setValue( this.pesoFunda.value.codigo +' + '+ totalPesoB );
+      this.totalPesoBrutoFunda.setValue( Number(this.pesoFunda.value.codigo) + Number(totalPesoB) );
       this.totalPesoNeto.setValue( totalPesoN );
     }
     if( data.credito.estadoSoftbank && data.credito.numeroOperacion){

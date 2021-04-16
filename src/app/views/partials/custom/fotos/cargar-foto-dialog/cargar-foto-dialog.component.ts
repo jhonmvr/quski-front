@@ -34,14 +34,17 @@ export class CargarFotoDialogComponent implements OnInit {
   constructor(private sinNoticeService: ReNoticeService, public dialogRef: MatDialogRef<CargarFotoDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,private os:ObjectStorageService,
     private upload: ReFileUploadService) {
+      this.os.setParameter();
     //console.log( "===>cargando dialog habilitante: " + JSON.stringify(this.data));
   }
 
   ngOnInit() {
+    this.os.setParameter();
     this.uploading = this.uploadSubject.asObservable();
   }
 
   onNoClick(): void {
+    
     this.dialogRef.close();
   }
 

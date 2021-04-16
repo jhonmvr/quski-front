@@ -238,12 +238,12 @@
                     </ng-container>
                     <ng-container matColumnDef="montoFinanciado">
                         <mat-header-cell *matHeaderCellDef>Monto Financiado</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.montoFinanciado | currency : true :"1.2"}}
+                        <mat-cell *matCellDef="let element">{{element.montoFinanciado | currency:'CAD':'symbol-narrow':'1.2-2'}}
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="saldo">
                         <mat-header-cell *matHeaderCellDef>Saldo</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.saldo | currency : true :"1.2"}} </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.saldo | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="estado">
                         <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
