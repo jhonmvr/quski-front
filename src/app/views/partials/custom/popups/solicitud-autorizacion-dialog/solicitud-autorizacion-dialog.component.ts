@@ -126,13 +126,12 @@ export class SolicitudAutorizacionDialogComponent implements OnInit {
   }
 
   descargarPlantillaHabilitante(row) {
-
     if (this.nombresCompletos.value != '') {
-
       this.dh.downloadAutorizacionPlantilla(1, 'PDF', this.nombresCompletos.value, this.identificacion.value).subscribe(
         (data: any) => {
-          if (data) {
-            saveAs( data, 'Carta solicitud Autorizacion Buro' + '.pdf');
+          if (data && data.documentoHabilitanteByte) {
+            saveAs(this.dh.dataURItoBlob(data.documentoHabilitanteByte),  'Carta solicitud Autorizacion Buro' + '.pdf');   
+            // saveAs( data.documentoHabilitanteByte, 'Carta solicitud Autorizacion Buro' + '.pdf');
             this.enableLoadArchivo.next(true);
             this.enableConsultar.next(false);
             this.enableDownload.next(false);

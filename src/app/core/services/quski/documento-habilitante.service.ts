@@ -252,15 +252,8 @@ export class DocumentoHabilitanteService extends BaseService {
    * @param idNegociacion 
    * @param format 
    */
-  downloadAutorizacionPlantilla(
-    id,
-    format: string,
-    nombreCliente: string,
-    identificacionCliente: string
-
-  ) {
-    const serviceUrl =
-      this.appResourcesUrl + "tipoDocumentoRestController/getPlantilla";
+  downloadAutorizacionPlantilla(id,format: string,nombreCliente: string,identificacionCliente: string) {
+    const serviceUrl = this.appResourcesUrl + "tipoDocumentoRestController/getPlantilla";
     this.params = new HttpParams();
     if (id && id != "") {
       this.params = this.params.set("id", id);
@@ -274,14 +267,7 @@ export class DocumentoHabilitanteService extends BaseService {
     if (identificacionCliente && identificacionCliente != "") {
       this.params = this.params.set("identificacionCliente", identificacionCliente);
     }
-    this.options = {
-      headers: this.headers,
-      params: this.params,
-      responseType: 'blob' as 'json'
-    };
-    //console.log(      "downloadHabilitantePlantilla options " + JSON.stringify(this.options)   );
-    //console.log(      "downloadHabilitantePlantilla parametros " + JSON.stringify(this.params));
-    //return this.http.get(serviceUrl, { params: this.params, responseType: 'blob' as 'json' });
+    this.options = {headers: this.headers,params: this.params};
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
