@@ -193,39 +193,35 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
   }
   public crearOperacion(){
-    if(this.dataSourceComprobante.data.length > 0){
-      let wraper = { pagos: this.dataSourceComprobante.data, asesor: this.usuario, idCredito: this.credit.credito.id};  
-      this.reg.crearRegistrarComprobanteRenovacion(wraper).subscribe( (data: any)=>{
-        if(data.entidades){
-          this.credit.credito.numeroCuenta = this.numeroCuenta.value;
-          this.credit.credito.pagoDia = this.diaFijoPago.value;
-          this.credit.credito.firmanteOperacion = this.firmanteOperacion.value.codigo;
-          this.credit.credito.tipoCliente = this.tipoCliente.value.codigo;
-          if( this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA'){
-            this.credit.credito.identificacionApoderado = this.identificacionApoderado.value;
-            this.credit.credito.nombreCompletoApoderado = this.nombreApoderado.value;
-            this.credit.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value;
-          }
-          if(this.tipoCliente.value.codigo == 'SCD' || this.tipoCliente.value.codigo == 'CYA'){
-            this.credit.credito.identificacionCodeudor = this.identificacionCodeudor.value;
-            this.credit.credito.nombreCompletoCodeudor = this.nombreCodeudor.value;
-          }
-          this.credit.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
-          this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
-          this.cre.crearOperacionRenovacion( this.credit.credito).subscribe( (data: any) =>{
-            if(data.entidad){
-              this.aprobar = true;
-            }else{
-              this.sinNotSer.setNotice('ERROR CREACION EL CREDITO EN SOFTBANK', 'error');
-            }
-          });
-        }else{
-        this.sinNotSer.setNotice('ERRROR AL GUARDAR LOS COMPROBANTES','error');
+    let wraper = { pagos: this.dataSourceComprobante.data.length > 0 ? this.dataSourceComprobante.data : null, asesor: this.usuario, idCredito: this.credit.credito.id};  
+    this.reg.crearRegistrarComprobanteRenovacion(wraper).subscribe( (data: any)=>{
+      if(data.entidades){
+        this.credit.credito.numeroCuenta = this.numeroCuenta.value;
+        this.credit.credito.pagoDia = this.diaFijoPago.value;
+        this.credit.credito.firmanteOperacion = this.firmanteOperacion.value.codigo;
+        this.credit.credito.tipoCliente = this.tipoCliente.value.codigo;
+        if( this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA'){
+          this.credit.credito.identificacionApoderado = this.identificacionApoderado.value;
+          this.credit.credito.nombreCompletoApoderado = this.nombreApoderado.value;
+          this.credit.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value;
         }
-      });
-    }else {
-      this.sinNotSer.setNotice('INGRESE AL MENOS UN COMPROBANTE DE PAGOS','warning');
-    }
+        if(this.tipoCliente.value.codigo == 'SCD' || this.tipoCliente.value.codigo == 'CYA'){
+          this.credit.credito.identificacionCodeudor = this.identificacionCodeudor.value;
+          this.credit.credito.nombreCompletoCodeudor = this.nombreCodeudor.value;
+        }
+        this.credit.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
+        this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
+        this.cre.crearOperacionRenovacion( this.credit.credito).subscribe( (data: any) =>{
+          if(data.entidad){
+            this.aprobar = true;
+          }else{
+            this.sinNotSer.setNotice('ERROR CREACION EL CREDITO EN SOFTBANK', 'error');
+          }
+        });
+      }else{
+      this.sinNotSer.setNotice('ERRROR AL GUARDAR LOS COMPROBANTES','error');
+      }
+    });
   }
   public eliminarComprobante(row){
     const index = this.dataSourceComprobante.data.indexOf(row);

@@ -44,10 +44,6 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   selection = new SelectionModel<any>(true, []);
   private garantiasSimuladas: any[];
 
-  /** @CATALOGOS */
-  public catTipoOro: Array<any>;
-  public catTipoJoya: Array<any>;
-  public catEstadoJoya: Array<any>;
   /** @FORMULARIOS */
   public formOperacion: FormGroup = new FormGroup({});
   public formOpcionesCredito: FormGroup = new FormGroup({});
@@ -104,7 +100,6 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.cre.setParameter();
     this.sof.setParameter();
     this.cal.setParameter();
-    this.cargarCatalogos();
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
@@ -274,13 +269,11 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     }
     
   }
-  public validarCliente(){
+  public validarCliente( dataOpcion ){
     this.par.findByNombre('EDAD_MAXIMA').subscribe( (data: any) =>{
       if(data.entidad){
-        console.log('Edad  maxima? ===>', data.entidad.valor);
         let valor = data.entidad.valor;
         this.par.getDiffBetweenDateInicioActual(this.credit.operacionAnterior.cliente.fechaNacimiento, 'yyyy-MM-dd').subscribe( (data: any) =>{
-          console.log('Mi data de calcular edad ===>', data);
           if(data.entidad.year > valor && this.validCliente){
             this.credit.excepciones ? this.credit.excepciones.forEach(e =>{
               if(e.tipoExcepcion != 'EXCEPCION_CLIENTE'){
@@ -290,6 +283,9 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
                 this.solicitarExcepcionCliente();
               }
             }): this.solicitarExcepcionCliente();
+          }else{
+            this.dataSourceCreditoNegociacion.data = dataOpcion;
+            this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO PARA CONTINUAR", 'success') ;
           }
         });
       }
@@ -297,7 +293,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionRiesgo(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion( this.selection.selected,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(false,true,false) );
@@ -309,7 +305,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionCliente(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion( this.selection.selected,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false) );
@@ -320,19 +316,15 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     }
   }
   public solicitarExcepcionCobertura(){
-    if(this.selection.selected.length > 0){
-      if(!this.credit.proceso){
-        this.cre.crearCreditoRenovacion(  this.selection.selected,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
-          if(data.entidad){
-            this.credit = data.entidad;
-            this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
-          }
-        });
-      }else{
-        this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
-      }
+    if(!this.credit.proceso){
+      this.cre.crearCreditoRenovacion(  this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
+        if(data.entidad){
+          this.credit = data.entidad;
+          this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
+        }
+      });
     }else{
-      this.sinNotSer.setNotice('SELECCIONE AL MENOS UNA OPCION PARA SOLICITAR LA EXCEPCION', 'error');
+      this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
     }
   }
   public abrirPopupExcepciones(data: DataInjectExcepciones) {
@@ -379,7 +371,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         }
       });
     }else{
-      this.sinNotSer.setNotice('Seleccione una opcion valida', 'error');
+      this.sinNotSer.setNotice('SELECCIONE UNA OPCION VALIDA', 'warning');
     }
   }
   public simularOpciones(){
@@ -389,7 +381,6 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         return;
       }
     }
-    this.loadingSubject.next(true);
     let cliente = {} as cliente;
     cliente.identificacion = this.credit.operacionAnterior.cliente.identificacion;
     let fecha = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
@@ -403,31 +394,21 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     let monto = this.montoSolicitado.value ? this.montoSolicitado.value : null;
     this.cal.simularOfertaRenovacion(this.riesgoTotal, cobertura ,this.agencia, monto, wrapper).subscribe( (data: any) =>{
       if(data.entidad){
-        //console.log('Data de simulacion -->',data.entidad);
-        data.entidad.simularResult.codigoError > 0 ? this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
-          : this.sinNotSer.setNotice("SELECCIONES UNA OPCION DE CREDITO PARA CONTINUAR", 'success') ;
-        this.garantiasSimuladas = [];
-        data.entidad.simularResult.xmlGarantias.garantias.garantia ? data.entidad.simularResult.xmlGarantias.garantias.garantia.forEach(e => {
-          this.garantiasSimuladas.push( e );
-        }): null;
-        this.dataSourceCreditoNegociacion.data = data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
-        this.validarCliente();
-        this.loadingSubject.next(false);
+        if(data.entidad.simularResult.codigoError > 0){
+          this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
+          return;
+        }
+        if( data.entidad.simularResult.xmlGarantias.garantias.garantia ){
+          this.garantiasSimuladas = [];
+          data.entidad.simularResult.xmlGarantias.garantias.garantia.forEach(e => {
+            this.garantiasSimuladas.push( e );
+          });
+        }
+        this.validarCliente( data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion );
       }
     });
   }
-  /** @FUNCIONALIDAD */
-  private cargarCatalogos(){
-    this.sof.consultarTipoJoyaCS().subscribe( data =>{
-      this.catTipoJoya = data.catalogo ? data.catalogo : ['No se cargo el catalogo. Error'];
-    });
-    this.sof.consultarEstadoJoyaCS().subscribe( data =>{
-      this.catEstadoJoya = data.catalogo ? data.catalogo :  ['No se cargo el catalogo. Error'];
-    });
-    this.sof.consultarTipoOroCS().subscribe( data =>{
-      this.catTipoOro = data.catalogo ? data.catalogo :  ['No se cargo el catalogo. Error'];
-    });
-  }
+
   public regresar(){
     this.router.navigate(['credito-nuevo/lista-credito']);
   }
@@ -442,7 +423,10 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       data: data
     });
     dialogRef.afterClosed().subscribe(r => {
-      this.router.navigate(['negociacion/bandeja-operaciones']);
+      if(titulo && titulo == 'EXCEPCION SOLICITADA'){
+        this.router.navigate(['negociacion/bandeja-operaciones']);
+      }
+      this.router.navigate(['credito-nuevo/lista-credito']);
     });
   }
 
