@@ -160,9 +160,9 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   public esAhorro = new FormControl('', []);
 
   public formDatosReferenciasPersonales: FormGroup = new FormGroup({});
-  public telefonoFijoR = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
+  public telefonoFijoR = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
   public estadoR = new FormControl('', [Validators.required]);
-  public telefonoMovilR = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+  public telefonoMovilR = new FormControl('', [Validators.minLength(10), Validators.maxLength(10)]);
   public apellidosRef = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public nombresRef = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public parentescoR = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -1118,14 +1118,28 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.estadoR.setValue(element.estado);
   }
   validarReferencias() {
-    console.log('validacion ===> ', this.dataSourceReferencia.data.find(x => !x.apellidos || !x.nombres || !x.telefonoFijo || !x.telefonoMovil || !x.parentesco) ? true : false);
-    return this.dataSourceReferencia.data.find(x => !x.apellidos || !x.nombres || !x.telefonoFijo || !x.telefonoMovil || !x.parentesco) ? true : false;
+    console.log('validacion ===> ', this.dataSourceReferencia.data.find(x => !x.apellidos || !x.nombres || !x.parentesco || ( !x.telefonoFijo && !x.telefonoMovil ) ) ? true : false);
+    return this.dataSourceReferencia.data.find(x => !x.apellidos || !x.nombres || !x.parentesco || ( !x.telefonoFijo && !x.telefonoMovil ) ) ? true : false;
   }
   validarReferencia(x) {
-    if (!x.apellidos || !x.nombres || !x.telefonoFijo || !x.telefonoMovil || !x.parentesco) {
+    if (!x.apellidos || !x.nombres || !x.parentesco || ( !x.telefonoFijo && !x.telefonoMovil )) {
       return { 'background-color': '#ffa000', 'color': 'aliceblue !important' };
     }
     return { 'background-color': '#ffffff00' };
+  }
+  private validarReferenciasActivas(){
+    if(  this.dataSourceReferencia.data.length < 2 ){
+      return true;
+    }
+    let count = 0;
+    this.dataSourceReferencia.data.forEach(element => {
+      if( element.estado == 'ACT' ){
+        count++
+      }
+    });
+    if(count < 2){
+      return true;
+    }
   }
   public guardar() {
     if (!this.formCliente.valid) {
@@ -1178,8 +1192,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.stepper.selectedIndex = 8
       return;
     }
-    if (this.dataSourceReferencia.data.length < 2) {
-      this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS EN  LA SECCION DE REFERENCIAS PERSONALES", 'warning');
+    if ( this.validarReferenciasActivas() ) {
+      this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS ACTIVAS EN LA SECCION DE REFERENCIAS PERSONALES", 'warning');
       this.stepper.selectedIndex = 8
       return;
     }
@@ -1273,9 +1287,10 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     });
     this.dataSourceReferencia.data.forEach(e => {
       e.tbQoCliente = this.wrapper.cliente;
+      e.telefonoFijo = e.telefonoFijo ? e.telefonoFijo : null;
+      e.telefonoMovil = e.telefonoMovil ? e.telefonoMovil : null;
     });
     this.wrapper.referencias = this.dataSourceReferencia.data;
-    //console.log(' Lo que guardo -> ', this.wrapper);
     this.cli.registrarCliente(this.wrapper).subscribe((data: any) => {
       if (data.entidad && data.entidad.isCore) {
         this.loadingSubject.next(false);

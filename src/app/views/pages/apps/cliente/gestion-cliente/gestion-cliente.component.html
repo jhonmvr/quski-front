@@ -594,14 +594,14 @@
             </div>
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input placeholder="Teléfono Movil:" [formControl]="telefonoMovilR" required  autocomplete="off" matInput numeric numericType="number"
+                <input placeholder="Teléfono Movil:" [formControl]="telefonoMovilR"  autocomplete="off" matInput numeric numericType="number"
                 (keypress)="numberOnly($event)" />
                 <mat-error>{{ getErrorMessage("telefonoMovilR") }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
-                <input placeholder="Teléfono Fijo:" [formControl]="telefonoFijoR" required  autocomplete="off" matInput numeric numericType="number"
+                <input placeholder="Teléfono Fijo:" [formControl]="telefonoFijoR"  autocomplete="off" matInput numeric numericType="number"
                 (keypress)="numberOnly($event)" />
                 <mat-error>{{ getErrorMessage("telefonoFijoR") }}</mat-error>
               </mat-form-field>
