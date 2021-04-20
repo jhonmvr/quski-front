@@ -1205,6 +1205,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.wrapper.cliente.cargasFamiliares = this.cargaFamiliar ? Number(this.cargaFamiliar.value) : null;
     this.wrapper.cliente.cedulaCliente = this.identificacion.value;
     this.wrapper.cliente.edad = this.edad.value;
+    this.wrapper.cliente.nombreCompleto = null;
     this.wrapper.cliente.email = this.email.value;
     this.wrapper.cliente.estadoCivil = this.estadoCivil.value ? this.estadoCivil.value.codigo : null;
     this.wrapper.cliente.fechaNacimiento = this.fechaNacimiento.value;

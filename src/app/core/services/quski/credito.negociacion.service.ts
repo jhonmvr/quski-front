@@ -109,10 +109,10 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }  
-  public crearOperacionRenovacion( data: TbQoCreditoNegociacion) {
+  public crearOperacionRenovacion( credito: TbQoCreditoNegociacion, pagos : any[], asesor: string) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "crearOperacionRenovacion" ;
     this.options = { headers: this.headers };
-    let entidad = { entidad: data }
+    let entidad = { credito: credito, pagos:pagos, asesor: asesor  }
     return this.http.post(serviceUrl, entidad, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,

@@ -111,11 +111,8 @@ export class PopupPagoComponent implements OnInit {
     const errorRequerido = 'Ingrese valores';
     const errorLogitudExedida = 'La longitud sobrepasa el limite';
     const errorDecimal = 'Ingrese valores decimales: 0.00';
-
     if (pfield && pfield === 'valorDepositado') {
-
       const input = this.formOperacion.get("valorDepositado");
-      console.log('Error de valor => ', input.errors);
       return input.hasError("required") ? errorRequerido : input.hasError("invalido") ? errorDecimal : input.hasError("maxlength") ? errorLogitudExedida : "";
     }if (pfield && pfield === 'intitucionFinanciera') {
       const input = this.formOperacion.get("intitucionFinanciera");

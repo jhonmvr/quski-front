@@ -63,7 +63,6 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
 
   constructor(
     private cre: CreditoNegociacionService,
-    private reg: RegistrarPagoService,
     private par: ParametroService,
     private sof: SoftbankService,
     private pro: ProcesoService,
@@ -78,7 +77,6 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   ) { 
     super(tra);
     this.cre.setParameter();
-    this.reg.setParameter();
     this.sof.setParameter();
     this.pro.setParameter();
 
@@ -91,7 +89,6 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
 
   ngOnInit() {
     this.cre.setParameter();
-    this.reg.setParameter();
     this.sof.setParameter();
     this.pro.setParameter();
     this.cargarCatalogos();
@@ -144,7 +141,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
   }
   public regresar(){
-    this.router.navigate(['negociacion/bandeja-operaciones']);
+    this.router.navigate(['cliente/gestion-cliente/NOV/',this.idNegociacion]);
   }
   public agregarComprobante(){
     this.loadComprobante.next(true);
@@ -185,41 +182,49 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
             }
           });
         }else{
-          this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
+          this.sinNotSer.setNotice('SE CANCELO LA ACCION','warning');
         }
       });  
     }else{
-      this.sinNotSer.setNotice('Complete los campos correctamente','error');
+      this.sinNotSer.setNotice('Complete los campos correctamente','warning');
     }
   }
   public crearOperacion(){
-    let wraper = { pagos: this.dataSourceComprobante.data.length > 0 ? this.dataSourceComprobante.data : null, asesor: this.usuario, idCredito: this.credit.credito.id};  
-    this.reg.crearRegistrarComprobanteRenovacion(wraper).subscribe( (data: any)=>{
-      if(data.entidades){
-        this.credit.credito.numeroCuenta = this.numeroCuenta.value;
-        this.credit.credito.pagoDia = this.diaFijoPago.value;
-        this.credit.credito.firmanteOperacion = this.firmanteOperacion.value.codigo;
-        this.credit.credito.tipoCliente = this.tipoCliente.value.codigo;
-        if( this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA'){
-          this.credit.credito.identificacionApoderado = this.identificacionApoderado.value;
-          this.credit.credito.nombreCompletoApoderado = this.nombreApoderado.value;
-          this.credit.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value;
-        }
-        if(this.tipoCliente.value.codigo == 'SCD' || this.tipoCliente.value.codigo == 'CYA'){
-          this.credit.credito.identificacionCodeudor = this.identificacionCodeudor.value;
-          this.credit.credito.nombreCompletoCodeudor = this.nombreCodeudor.value;
-        }
-        this.credit.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
-        this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
-        this.cre.crearOperacionRenovacion( this.credit.credito).subscribe( (data: any) =>{
-          if(data.entidad){
-            this.aprobar = true;
-          }else{
-            this.sinNotSer.setNotice('ERROR CREACION EL CREDITO EN SOFTBANK', 'error');
-          }
-        });
+    this.credit.credito.numeroCuenta = this.numeroCuenta.value;
+    this.credit.credito.pagoDia = this.diaFijoPago.value;
+    this.credit.credito.firmanteOperacion = this.firmanteOperacion.value.codigo;
+    this.credit.credito.tipoCliente = this.tipoCliente.value.codigo;
+    if( this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA'){
+      this.credit.credito.identificacionApoderado = this.identificacionApoderado.value;
+      this.credit.credito.nombreCompletoApoderado = this.nombreApoderado.value;
+      this.credit.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value;
+    }
+    if(this.tipoCliente.value.codigo == 'SCD' || this.tipoCliente.value.codigo == 'CYA'){
+      this.credit.credito.identificacionCodeudor = this.identificacionCodeudor.value;
+      this.credit.credito.nombreCompletoCodeudor = this.nombreCodeudor.value;
+    }
+    this.credit.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
+    this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
+    let list = new Array<any>( );
+    if(this.dataSourceComprobante.data.length > 0){
+      this.dataSourceComprobante.data.forEach( e=>{
+        let item: { comprobante, cuenta, fechaPago, intitucionFinanciera, numeroDeposito, valorDepositado, tipoPago} = {
+          comprobante: e.comprobante,
+          cuenta: e.cuenta,
+          fechaPago: e.fechaPago,
+          intitucionFinanciera: e.intitucionFinanciera.id,
+          numeroDeposito: e.numeroDeposito,
+          valorDepositado: e.valorDepositado,
+          tipoPago: e.tipoPago
+        };
+        list.push( item );
+      });
+    }
+    this.cre.crearOperacionRenovacion(this.credit.credito, list , this.usuario).subscribe( (data: any) =>{
+      if(data.entidad){
+        this.aprobar = true;
       }else{
-      this.sinNotSer.setNotice('ERRROR AL GUARDAR LOS COMPROBANTES','error');
+        this.sinNotSer.setNotice('ERROR CREACION EL CREDITO EN SOFTBANK', 'error');
       }
     });
   }

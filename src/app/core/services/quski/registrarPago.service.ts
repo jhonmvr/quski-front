@@ -30,16 +30,19 @@ import { ReNoticeService } from '../re-notice.service';
       )
     );
   }
+  /*   
   public crearRegistrarComprobanteRenovacion(registro) {
     const serviceUrl = this.appResourcesUrl + 'registrarPagoRestController/crearRegistrarComprobanteRenovacion';
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, registro, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
-        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+        error => {  }
       )
     );
-  }
+  } 
+  */
+
   public iniciarProcesoRegistrarPago(registro) {
     const serviceUrl = this.appResourcesUrl + 'registrarPagoRestController/iniciarProcesoRegistrarPago';
     this.options = { headers: this.headers };
