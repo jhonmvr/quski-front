@@ -87,7 +87,6 @@ export class AuthEffects {
     @Effect()
     init$: Observable<Action> = defer(() => {        
         const userToken = localStorage.getItem(environment.authTokenKey);
-        //console.log("==>init$ " + userToken);
         let observableResult = of({type: 'NO_ACTION'});
         if (userToken) {
             observableResult = of(new Login({  authToken: userToken }));

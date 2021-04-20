@@ -93,16 +93,13 @@ export class AuthService {
     }
 
     getUserByToken(): Observable<User> {
-        //console.log( "=====>getUserByToken " );
         const userToken = localStorage.getItem(environment.authTokenKey);
-        //console.log( "=====>getUserByToken userToken " + userToken );
         if (!userToken) {
             return of(null);
         }
 
         return this.getAllUsers().pipe(
             map((result: User[]) => {
-                //console.log( "=====>getAllUsers userToken " + userToken );
                 if (result.length <= 0) {
                     return null;
                 }

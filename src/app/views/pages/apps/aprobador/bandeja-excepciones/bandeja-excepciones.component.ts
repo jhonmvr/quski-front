@@ -41,7 +41,6 @@ export class BandejaExcepcionesComponent implements OnInit {
   ngOnInit() {
     this.exr.setParameter();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    console.log('valor del usuario==> ', this.usuario);
     this.busquedaExcepciones(this.usuario);
     this.dataSourceExcepcionRol = null;
     this.subheaderService.setTitle("BANDEJA DE EXCEPCIONES");
@@ -58,7 +57,6 @@ export class BandejaExcepcionesComponent implements OnInit {
     this.exr.findByRolAndIdentificacion(rol, null).subscribe((data: any) => {
       if (data && data.list) {
         this.dataSourceExcepcionRol = data.list;
-        //console.log('DATASOURCE==> ', JSON.stringify(this.dataSourceExcepcionRol));
       }
     });
   }
@@ -77,7 +75,6 @@ export class BandejaExcepcionesComponent implements OnInit {
       let listRecuperados = new Array<TbQoExcepcionRol>();
       this.agregar = new Array<TbQoExcepcionRol>();
       listRecuperados = data.list;
-      //console.log('LISTRECUPERADOS==> ', listRecuperados);
       if (listRecuperados) {
         this.dataSourceExcepcionRol = null;
         for (let index = 0; index < listRecuperados.length; index++) {

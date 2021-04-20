@@ -110,6 +110,13 @@
 				</form>
             </mat-step>
             <mat-step label='Comprobante De Pago'>
+                <div class="row mt-2 mb-2">
+                    <div class="col-2">
+                        <button class="mat-elevation-z4" mat-raised-button (click)="agregarComprobante()">
+							<span >Agregar Comprobante</span>
+						</button>
+                    </div>
+                </div>
                 <div class="row">
 					<div class="col">
 						<mat-progress-bar *ngIf="loadComprobante.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
@@ -156,22 +163,15 @@
 					<mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
 					<mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
                 </mat-table>
-                <div class="row mt-2">
-                    <div class="col-2 offset-5">
-                        <button mat-stroked-button color="primary" (click)="agregarComprobante()">
-							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
-							<span color="primary">Agregar Comprobante</span>
-						</button>
+                <div class="row mt-2 mb-2">
+                    <div class="col-md-2 offset-md-5">
+                        <button class="mat-elevation-z4"  mat-raised-button color="primary" (click)="crearOperacion()">Crear Operacion</button>
                     </div>
                 </div>
             </mat-step>
             <mat-step label='Documentos Legales'>
-				<re-habilitante [proceso]="'CREDITONUEVO'" [useType]="'LIST'" [tipoDocumento]="'5'" [referencia]="" [rol]="'7'"> </re-habilitante>
-                <div class="row" *ngIf="!aprobar">
-                    <div class="col-md-5 offset-md-5">
-                        <button  mat-raised-button color="accent" (click)="crearOperacion()">Crear Operacion</button>
-                    </div>
-                </div>
+                <!-- <re-habilitante [proceso]="'NUEVO'" [useType]="'FORM'" [referencia]="item" ></re-habilitante> -->
+				<re-habilitante [proceso]="'NOVACION'" [useType]="'FORM'" [referencia]="item"></re-habilitante>
                 <div class="row" *ngIf="aprobar">
                     <div class="col-md-5 offset-md-5">
                         <button  mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>

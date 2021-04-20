@@ -52,7 +52,6 @@ export class ExcepcionRolService extends BaseService {
 
   public persistEntity(data: TbQoExcepcionRol) {
     let serviceUrl = this.appResourcesUrl + this.restC + 'persistEntity';
-    //console.log('VALOR DE LA DIRECCION', serviceUrl, 'VALOR DE LA EXCEPCION ===>  ', data);
     let wrapper = { entidad: data };
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, wrapper, this.options).pipe(

@@ -53,7 +53,6 @@ export class IntegracionService extends BaseService {
    * @param consulta ConsultaOferta
    */
   public getInformacionOferta(consulta: ConsultaOferta) {
-    //console.log("INGRESA AL SERVICIO LA FECHA ES ----> " + consulta.fechaNacimiento)
     const pipe = new DatePipe('en-US');
     // let fdf = null;
     // let fdff = new Date(consulta.fechaNacimiento);

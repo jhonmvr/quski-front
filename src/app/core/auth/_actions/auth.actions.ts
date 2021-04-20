@@ -12,7 +12,6 @@ export enum AuthActionTypes {
 export class Login implements Action {
     readonly type = AuthActionTypes.Login;
     constructor(public payload: { authToken: string }) {
-        //console.log("===> puerco payload: " + JSON.stringify( payload ));
      }
 }
 

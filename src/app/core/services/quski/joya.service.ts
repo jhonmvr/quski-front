@@ -62,7 +62,6 @@ export class JoyaService extends BaseService {
 
     ////console.log("==> parametros obtenidos " +  this.params.toString() );
     this.options = { headers: this.headers, params: this.params };
-    //console.log("options>>>" + JSON.stringify(this.options));
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,

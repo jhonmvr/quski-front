@@ -26,9 +26,7 @@ export interface Agencia{
 })
 export class BandejaAprobadorComponent implements OnInit {
   /** ** @VARIABLES ** */
-  public loading;
   public usuario: string;
-  public loadingSubject = new BehaviorSubject<boolean>(false);
   public catAgencia : Array<Agencia>;
   public catProceso : Array<string>;
   
@@ -61,16 +59,13 @@ export class BandejaAprobadorComponent implements OnInit {
   ngOnInit() {
     this.pro.setParameter();
     this.sof.setParameter();
-    this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.cargarCatalogos();
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private buscarOperaciones(wrapper?: BusquedaAprobadorWrapper) {
-    this.loadingSubject.next(true);
     this.pro.buscarOperacionesAprobador(wrapper).subscribe( (data: any) =>{
       if( data.entidad  && data.entidad.operaciones){
-        //console.log("Holis, soy la data -> ", data.entidad.operaciones);
         let operaciones: OperacionesAprobadorWrapper[] = data.entidad.operaciones;
         operaciones.forEach(e=>{
           e.nombreAgencia = !e.idAgencia || e.idAgencia == 0 ? 'Sin Agencia' : this.catAgencia.find(a => a.id == e.idAgencia) ? this.catAgencia.find(a => a.id == e.idAgencia).nombre : 'Sin Agencia' ;  
@@ -82,12 +77,9 @@ export class BandejaAprobadorComponent implements OnInit {
         });
         this.dataSource.data = operaciones;
         this.paginator.length = data.entidad.result;
-        this.loadingSubject.next(false);
       } else {
-        this.loadingSubject.next(false);
         this.paginator.length = 0;
         this.dataSource.data = null;
-        //console.log("Me cai en la busqueda :c");
       }
     });
   }
@@ -115,7 +107,6 @@ export class BandejaAprobadorComponent implements OnInit {
     }
   }
   private cargarCatalogos(){
-    this.loadingSubject.next(true);
     this.sof.consultarAgenciasCS().subscribe( (data: any) =>{
       if(!data.existeError){
         this.catAgencia = data.catalogo;
@@ -124,15 +115,11 @@ export class BandejaAprobadorComponent implements OnInit {
             this.catProceso = data.entidades;
             this.buscarOperaciones( new BusquedaAprobadorWrapper() );
           } else{
-            this.loadingSubject.next(false);
             this.proceso.disable();
-            //console.log("Me cai buscando Los estados de procesos :c ");
           }
         });
       } else {
-        this.loadingSubject.next(false);
         this.agencia.disable();
-        //console.log("Me cai en la Cat de agencia :c");
       }
     });
   }
@@ -153,7 +140,6 @@ export class BandejaAprobadorComponent implements OnInit {
     return true;
   }
   public paged() {
-    console.log( 'El tamano 7u7 ==>',this.paginator.pageSize);
     this.buscar(this.paginator.pageSize, this.paginator.pageIndex);
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BOTONES ** */
@@ -170,18 +156,14 @@ export class BandejaAprobadorComponent implements OnInit {
         w.codigo = this.codigo.value;
         w.codigo = w.codigo.toUpperCase();
         this.codigo.setValue(w.codigo);
-        //console.log("codigo --> ",w.codigo);
       }
       if(this.cedula.value != "" && this.cedula.value != null){
-        //console.log("cedula --> ", this.cedula.value);
         w.cedula = this.cedula.value;
       }
       if(this.agencia.value != "" && this.agencia.value != null){
-        //console.log("agencia --> ", this.agencia.value.id);
         w.idAgencia = this.agencia.value.id;
       }
       if(this.proceso.value != ""  && this.proceso.value != null){
-        //console.log("proceso --> ", this.proceso.value);
         w.proceso = this.proceso.value.replace(/ /gi,"_",);
       }
       this.buscarOperaciones( w );

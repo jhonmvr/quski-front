@@ -30,7 +30,6 @@ export class MenuHorizontalService {
 	 */
 	loadMenu() {
 		// get menu list
-		//console.log("==================> load menu  ");
 		this.authRelative.athorizate(environment.aplicacion).subscribe(menues=>{
 			
 				let localMenu={header: {
@@ -42,13 +41,11 @@ export class MenuHorizontalService {
 					items: menues
 				}
 			};
-			//console.log("==================> loadesd menu " + JSON.stringify( localMenu ));
 			const menuItems: any[] = objectPath.get(localMenu, 'header.items');
 			
 			this.menuList$.next(menuItems);
 		});
 		//const menuItems: any[] = objectPath.get(this.menuConfigService.getMenus(), 'header.items');
-		//console.log("==================> load menu " + JSON.stringify( menuItems ));
 		//this.menuList$.next(menuItems);
 	}
 }

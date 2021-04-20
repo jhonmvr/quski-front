@@ -54,9 +54,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   public catFirmanteOperacion;
   public catTipoCliente;
   public catExcepcionOperativa: Array<any>;
-  idNegociacion: any;
   credit: {credito: TbQoCreditoNegociacion, cuentas: any};
   aprobar: boolean;
+  item: any;
 
   
   
@@ -100,9 +100,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.idNegociacion) {
         this.loadingSubject.next(true);
-        this.idNegociacion = json.params.idNegociacion;
+        this.item = json.params.idNegociacion;
         this.loadingSubject.next(true);
-        this.cre.buscarRenovacionByIdNegociacion(json.params.idNegociacion).subscribe((data: any) => {
+        this.cre.buscarRenovacionByIdNegociacion(this.item).subscribe((data: any) => {
           this.credit = data.entidad;
           if (this.credit ) {
             this.cargarCampos( this.credit  );
@@ -141,7 +141,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
   }
   public regresar(){
-    this.router.navigate(['cliente/gestion-cliente/NOV/',this.idNegociacion]);
+    this.router.navigate(['cliente/gestion-cliente/NOV/',this.item]);
   }
   public agregarComprobante(){
     this.loadComprobante.next(true);

@@ -20,9 +20,8 @@ export class TrackingUtil{
     t.usuarioCreacion = localStorage.getItem('reUser');
     t.nombreAsesor = localStorage.getItem('nombre');
     t.actividad = actividad;
-    console.log("guardar Traking ", t);
     this.tra.guardarTracking(t).subscribe( (data: any)=>{
-      console.log( data );
+      return true;
     });
   }
   
