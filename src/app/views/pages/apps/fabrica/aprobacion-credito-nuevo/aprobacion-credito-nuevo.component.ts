@@ -123,6 +123,9 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
   public plazo = new FormControl('', []);
   public tipoOferta = new FormControl('', []);
   public costoCustodia = new FormControl('', []);
+  public formaPagoFideicomiso = new FormControl('', []);
+  public costoFideicomiso = new FormControl('', []);
+
   public formaPagoCustodia = new FormControl('', []);
   public costoTransporte = new FormControl('', []);
   public formaPagoTransporte = new FormControl('', []);
@@ -246,6 +249,8 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.formDisable.addControl( "tipoOferta", this.tipoOferta );
     this.formDisable.addControl( "costoCustodia", this.costoCustodia );
     this.formDisable.addControl( "formaPagoCustodia", this.formaPagoCustodia );
+    this.formDisable.addControl( "formaPagoFideicomiso", this.formaPagoFideicomiso );
+    this.formDisable.addControl( "costoFideicomiso", this.costoFideicomiso );
     this.formDisable.addControl( "costoTransporte", this.costoTransporte );
     this.formDisable.addControl( "formaPagoTransporte", this.formaPagoTransporte );
     this.formDisable.addControl( "costoValoracion", this.costoValoracion );
@@ -423,6 +428,8 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.tipoOferta.setValue( ap.credito.tipoOferta == "N" ? 'NUEVO' : ap.credito.tipoOferta);
     this.costoCustodia.setValue( ap.credito.costoCustodia);
     this.formaPagoCustodia.setValue( ap.credito.formaPagoCustodia);
+    this.formaPagoFideicomiso.setValue( ap.credito.formaPagoFideicomiso);
+    this.costoFideicomiso.setValue( ap.credito.costoFideicomiso);
     this.costoTransporte.setValue( ap.credito.costoTransporte);
     this.formaPagoTransporte.setValue( ap.credito.formaPagoTransporte);
     this.costoValoracion.setValue( ap.credito.costoValoracion);
