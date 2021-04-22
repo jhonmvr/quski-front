@@ -26,12 +26,12 @@ import { TrackingService } from '../../../../../core/services/quski/tracking.ser
   styleUrls: ['./novacion-habilitante.component.scss']
 })
 export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit {
-  public loading;
   public usuario: string;
    //dia de pago
    diasMax;
    diasMin;
-  public loadingSubject = new BehaviorSubject<boolean>(false);
+   private correoAsesor: any;
+   private nombreAsesor: any;
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
   public formOperacion: FormGroup = new FormGroup({});
   public tipoDeCuenta = new FormControl('', [Validators.required]);
@@ -92,16 +92,17 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.sof.setParameter();
     this.pro.setParameter();
     this.cargarCatalogos();
-    this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.correoAsesor = localStorage.getItem( 'email' );
+    this.nombreAsesor = localStorage.getItem( 'nombre' );
     this.inicioDeFlujo();
   }
   private inicioDeFlujo() {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.idNegociacion) {
-        this.loadingSubject.next(true);
+        
         this.item = json.params.idNegociacion;
-        this.loadingSubject.next(true);
+        
         this.cre.buscarRenovacionByIdNegociacion(this.item).subscribe((data: any) => {
           this.credit = data.entidad;
           if (this.credit ) {
@@ -175,7 +176,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.cre.solicitarAprobacionRenovacion( this.credit.credito.tbQoNegociacion.id ).subscribe( (data: any) =>{
+          this.cre.solicitarAprobacionRenovacion( this.credit.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor ).subscribe( (data: any) =>{
             if(data.entidad){
               this.sinNotSer.setNotice('CREDITO ENVIADO A APROBACION FABRICA','success');
               this.router.navigate(['negociacion/bandeja-operaciones']);

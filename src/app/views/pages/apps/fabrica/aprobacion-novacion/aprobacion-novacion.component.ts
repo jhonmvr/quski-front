@@ -29,8 +29,6 @@ import { TrackingService } from '../../../../../core/services/quski/tracking.ser
 })
 export class AprobacionNovacionComponent extends TrackingUtil implements OnInit {
   /** @VARIABLES_GLOBALES */
-  public loadingSubject = new BehaviorSubject<boolean>(false);
-  public loading;
   public usuario: string;
   public agencia: any;
   public fechaActual: string;
@@ -312,7 +310,6 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.sof.setParameter();
     this.pro.setParameter();
     this.subheaderService.setTitle('Aprobación De Credito');
-    this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem( 'idAgencia' );
     this.formDisable.disable();
@@ -333,13 +330,11 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   private traerCreditoNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.idNegociacion) {
-        this.loadingSubject.next(true);
         this.cre.traerCreditonovacionPorAprobar(data.params.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
             this.crediW = data.entidad;
             this.setearValores(this.crediW);
           } else {
-            this.loadingSubject.next(false);
             this.sinNotSer.setNotice('ERROR AL CARGAR CREDITO: ' + data.entidad.mensaje, 'error');
           }
         });
@@ -500,88 +495,56 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.antCustodiaVencida.setValue( "No tengo.");
     this.antValorPrecancelacion.setValue( "No tengo.");
 
-    this.loadingSubject.next(false);
+    
   }
-  public aprobar() {
-    if (this.observacionAprobador.value && this.codigoCash.value) {
-      let mensaje = "Aprobar el credito: " + this.crediW.credito.codigo + ".";
-      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-        width: "800px",
-        height: "auto",
-        data: mensaje
-      });
-      dialogRef.afterClosed().subscribe(r => {
-        this.loadingSubject.next(true);
-        if (r) {
-          let datos = new DatosRegistro(this.fechaActual, this.usuario, this.agencia);
-          let wrapper: OperacionAprobar = new OperacionAprobar(this.crediW.credito.numeroOperacion, datos);
-          this.sof.operacionAprobarCS(wrapper).subscribe((data: any) => {
-            if (!data.existeError) {
-              this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id, "RENOVACION", "APROBADO", this.usuario).subscribe((data: any) => {
-                if (data.entidad) {
-                  this.cre.devolverAprobar(this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe((data: any) => {
-                    this.loadingSubject.next(false);
-                    if (data.entidad) {
-                      //console.log('El nuevo estado -> ',data.entidad.estadoProceso);
-                      this.router.navigate(['aprobador']);
-                    } else {
-                      this.sinNotSer.setNotice('Error actualizando el credito', 'error');
-                    }
-                  });
-                } else {
-                  this.loadingSubject.next(false);
-                  this.sinNotSer.setNotice('ERROR INTERNO', 'error');
-                }
-              });
-            } else {
-              this.loadingSubject.next(false);
-              this.sinNotSer.setNotice('ERROR EN SOFTBANK', 'error');
-            }
-          }, error => {
-            this.loadingSubject.next(false);
-            this.sinNotSer.setNotice('ERROR EN SOFTBANK', 'error');
-          });
 
-        } else {
-          this.loadingSubject.next(false);
-          this.sinNotSer.setNotice('SE CANCELO LA ACCION', 'error');
-        }
-      });
-    } else {
-      this.sinNotSer.setNotice('COMPLETE LOS CAMPOS DE RESULTADO DE OPERACION CORRECTAMENTE', 'error');
+  public enviarRespuesta( aprobar ){
+    if( !this.observacionAprobador.value ){
+      this.sinNotSer.setNotice('INGRESE LA OBSERVACION DEL APROBADOR','warning');
+      return;
     }
-  }
-  public devolver() {
-    if (this.observacionAprobador.value && this.motivoDevolucion.value) {
-      let mensaje = "Devolver a la negociacion el credito: " + this.crediW.credito.codigo + ".";
-      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-        width: "800px",
-        height: "auto",
-        data: mensaje
-      });
-      dialogRef.afterClosed().subscribe(r => {
-        this.loadingSubject.next(true);
-        if (r) {
-          this.pro.cambiarEstadoProceso(this.crediW.credito.tbQoNegociacion.id, "RENOVACION", "DEVUELTO", this.crediW.credito.tbQoNegociacion.asesor).subscribe((data: any) => {
-            if (data.entidad) {
-              this.cre.devolverAprobar(this.crediW.credito.id, this.codigoCash.value, this.observacionAprobador.value, this.motivoDevolucion.value.codigo).subscribe((data: any) => {
-                this.loadingSubject.next(false);
-                if (data.entidad) {
-                  //console.log('El nuevo estado -> ',data.entidad.estadoProceso);
-                  this.router.navigate(['aprobador']);
-                } else {
-                  this.sinNotSer.setNotice('Error actualizando el credito', 'error');
-                }
-              });
+    if( aprobar && !this.codigoCash.value ){
+        this.sinNotSer.setNotice('INGRESE EL CODIGO CASH','warning');
+        return;
+    }
+    if( !aprobar && !this.motivoDevolucion.value ){
+      this.sinNotSer.setNotice('INGRESE EL MOTIVO DE DEVOLUCION','warning');
+      return;
+    }
+    let mensaje = aprobar ? "Aprobar el credito: " + this.crediW.credito.codigo + "." : "Devolver a la negociacion el credito: " + this.crediW.credito.codigo + ".";
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if(r){
+        //"RENOVACION", "DEVUELTO", 
+        //"RENOVACION", "APROBADO", 
+        this.cre.aprobarNovacion(
+          this.crediW.credito.id, 
+          this.observacionAprobador.value, 
+          aprobar? this.codigoCash.value: null, 
+          this.agencia, this.usuario, 
+          aprobar? null: this.motivoDevolucion.value.codigo,
+          aprobar ).subscribe( (data: any) =>{
+            if(!data.entidad){
+              this.sinNotSer.setNotice('ERROR ENVIANDO LA RESPUESTA: ' + data.entidad, 'error');
             }
+            if(aprobar && data.entidad && data.entidad.estadoProceso == 'APROBADO'){
+              this.sinNotSer.setNotice(this.crediW.credito.codigo + ' FUE APROBADO.', 'success');
+              this.router.navigate(['aprobador']);
+            }
+            if(!aprobar && data.entidad && data.entidad.estadoProceso == 'DEVUELTO'){
+              this.sinNotSer.setNotice(this.crediW.credito.codigo + ' FUE DEVUELTO AL ASESOR.', 'success');
+              this.router.navigate(['aprobador']);
+            }
+
+
           });
-        } else {
-          this.loadingSubject.next(false);
-          this.sinNotSer.setNotice('SE CANCELO LA ACCION', 'error');
-        }
-      });
-    } else {
-      this.sinNotSer.setNotice('COMPLETE LOS CAMPOS DE RESULTADO DE OPERACION CORRECTAMENTE', 'error');
-    }
+      }else{
+          this.sinNotSer.setNotice('SE CANCELO LA ACCION','warning');
+      }
+    });
   }
 }

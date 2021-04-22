@@ -42,6 +42,8 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   private agencia: any;
   public anular: boolean;
   private correoAsesor: any;
+  private nombreAsesor: any;
+
   /** @FORM_INFORMACION **/
   public formInformacion: FormGroup = new FormGroup({});
   public codigoOperacion = new FormControl('', [Validators.required]);
@@ -177,6 +179,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.par.setParameter();
     this.agencia = Number(localStorage.getItem( 'idAgencia' ));
     this.correoAsesor = localStorage.getItem( 'email' );
+    this.nombreAsesor = localStorage.getItem( 'nombre' );
     this.obtenerCatalogosSoftbank();
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
@@ -520,13 +523,13 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.cre.solicitarAprobacionNuevo(this.operacionNuevo.credito.tbQoNegociacion.id).subscribe( (data: any) =>{
+          this.cre.solicitarAprobacionNuevo(this.operacionNuevo.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor).subscribe( (data: any) =>{
             if(data){
               this.router.navigate(['negociacion/bandeja-operaciones']);
             }
           });
         }else{
-          this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
+          this.sinNotSer.setNotice('SE CANCELO LA ACCION','warning');
         }
       });
     }
