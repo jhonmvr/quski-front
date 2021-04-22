@@ -8,6 +8,7 @@ import { Page } from '../../model/page';
 
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
+import { TrakingWrapper } from 'src/app/views/pages/apps/tracking/list-tracking/list-tracking.component';
 @Injectable({
   providedIn: 'root'
 })
@@ -37,12 +38,40 @@ export class TrackingService extends BaseService {
       )
     );
   }
-  busquedaTracking( p: Page, trackingWrapper: any) {
-    this.setSearchParams(p);
-    const serviceUrl = this.appResourcesUrl + 'trackingRestController/busqueda';
-    let wrapper = trackingWrapper;
+  busquedaTracking( page: Page, wppr: TrakingWrapper) {
+    this.params = new HttpParams()
+    .set('page', (page.pageNumber == null ? "" : page.pageNumber.toString()))
+    .set('pageSize', (page.pageSize == null ? "" : page.pageSize.toString()))
+    .set('sortFields', (page.sortFields == null ? "" : page.sortFields))
+    .set('sortDirections', (page.sortDirections == null ? "" : page.sortDirections))
+    .set('isPaginated', (page.isPaginated == null ? "" : page.isPaginated))
+    if(wppr.proceso != null){
+      this.params = this.params.set('proceso', wppr.proceso)
+    }
+    if(wppr.actividad != null){
+      this.params = this.params.set('actividad', wppr.actividad)
+    }
+    if(wppr.seccion != null){
+      this.params = this.params.set('seccion', wppr.seccion)
+    }
+    if(wppr.codigoBpm != null){
+      this.params = this.params.set('codigoBpm', wppr.codigoBpm)
+    }
+    if(wppr.codigoOperacionSoftbank != null){
+      this.params = this.params.set('codigoOperacionSoftbank', wppr.codigoOperacionSoftbank)
+    }
+    if(wppr.usuarioCreacion != null){
+      this.params = this.params.set('usuarioCreacion', wppr.usuarioCreacion)
+    }
+    if(wppr.fechaDesde != null){
+      this.params = this.params.set('fechaDesde', wppr.fechaDesde)
+    }
+    if(wppr.fechaHasta != null){
+      this.params = this.params.set('fechaHasta', wppr.fechaHasta)
+    }
+    const serviceUrl = this.appResourcesUrl + 'trackingRestController/busquedaTracking';
     this.options = { headers: this.headers, params: this.params };
-    return this.http.post(serviceUrl, trackingWrapper,this.options).pipe(
+    return this.http.get(serviceUrl,this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }

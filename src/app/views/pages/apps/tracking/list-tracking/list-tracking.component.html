@@ -12,59 +12,47 @@
     </re-portlet-header>
     <re-portlet-body>
         <div class="row" >
-            <div class="col-md-3">
-                <mat-select
-                  placeholder="Proceso"
-                  [formControl]="proceso">
-                  <mat-option>--</mat-option>
-                  <mat-option *ngFor="let element of catProceso" [value]="element"  >
-                    {{ element }}
-                  </mat-option>
-                </mat-select>
-            </div>
-            <div class="col-md-3">
-                <mat-select
-                  placeholder="Actividad"
-                  [formControl]="actividad">
-                  <mat-option>--</mat-option>
-                  <mat-option *ngFor="let element of catActividad" [value]="element">
-                    {{ element }}
-                  </mat-option>
-                </mat-select>
-            </div>
-            <div class="col-md-3">
-                <mat-select
-                  placeholder="Seccion"
-                  [formControl]="seccion">
-                  <mat-option>--</mat-option>
-                  <mat-option *ngFor="let element of catSeccion" [value]="element">
-                    {{ element }}
-                  </mat-option>
-                </mat-select>
-            </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
-                    <input matInput [formControl]="usuario"placeholder="Usuario">
+                    <mat-select  placeholder="Proceso" [formControl]="proceso">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let element of catProceso" [value]="element"  >{{ element }}</mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
-                    <input matInput [formControl]="codigoBPM"placeholder="CodigoBPM">
+                    <input matInput [formControl]="actividad" placeholder="Actividad">
                 </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
-                    <input matInput [formControl]="codigoSoftbank"placeholder="Codigo Operacion Softbank">
+                    <input matInput [formControl]="seccion" placeholder="Seccion">
                 </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                    <input matInput [formControl]="codigoBPM" placeholder="CodigoBPM">
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                    <input matInput [formControl]="codigoSoftbank" placeholder="Codigo Operacion Softbank">
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
+                    <input matInput [formControl]="usuario" placeholder="Usuario">
+                </mat-form-field>
+            </div>
+            <div class="offset-2 col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
                     <input matInput [matDatepicker]="fechadesde" [formControl]="fechaDesde "placeholder="Fecha Desde">
                     <mat-datepicker-toggle matSuffix [for]="fechadesde"></mat-datepicker-toggle>
                     <mat-datepicker #fechadesde></mat-datepicker>
                 </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
                     <input matInput [matDatepicker]="fechahasta" [formControl]="fechaHasta"placeholder="Fecha Hasta">
                     <mat-datepicker-toggle matSuffix [for]="fechahasta"></mat-datepicker-toggle>
@@ -73,7 +61,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-2">
+            <div class="offset-1 col-3">
                 <button mat-raised-button (click)="buscarBoton()">
                     <span>Buscar</span>
                 </button>
@@ -100,9 +88,7 @@
                     <ng-container matColumnDef="seccion">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Seccion</mat-header-cell>
                         <mat-cell class="mat-form-field-fluid"*matCellDef="let element">{{element.seccion | titlecase }} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> 
-                            <input type="text" matInput (keyup)="filtrar($event)" placeholder="Filtrar"> 
-                        </mat-footer-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
     
                     <ng-container matColumnDef="codigoBpm">
@@ -143,8 +129,8 @@
     
                     <ng-container matColumnDef="tiempoTotal">
                         <mat-header-cell *matHeaderCellDef>Total Tiempo</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.tiempoTranscurrido? (element.tiempoTranscurrido |date:"HH:MM:ss"):'' }} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{totalTiempo? (totalTiempo |date:"HH:MM:ss"):''}}</mat-footer-cell>
+                        <mat-cell *matCellDef="let element">  {{ calcularTiempo( element.tiempoTranscurrido ) }} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> {{ calcularTiempo( totalTiempo )  }}</mat-footer-cell>
                     </ng-container>
     
                     <ng-container matColumnDef="fecha">
