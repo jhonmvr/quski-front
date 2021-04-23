@@ -172,11 +172,9 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         return true;
       }
       if( this.catRolReasignacion ){
-        this.catRolReasignacion.forEach( e=>{
-          if( e.valor == this.rol ){
-            return true;
-          }
-        });
+        if( this.catRolReasignacion.find( x => x.valor == this.rol ) ){
+          return true;
+        }
       }
     }
     return false;

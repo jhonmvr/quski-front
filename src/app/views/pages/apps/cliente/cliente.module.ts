@@ -12,6 +12,7 @@ import { ModuleGuard } from '../../../../core/auth';
 // Material
 import {
 	MatInputModule,
+	MatTreeModule,
 	MatPaginatorModule,
 	MatProgressSpinnerModule,
 	MatSortModule,
@@ -93,6 +94,7 @@ const routes: Routes = [
     	RouterModule.forChild(routes),
     	MatDialogModule,
     	CommonModule,
+		MatTreeModule,
     	NgxPermissionsModule.forChild(),
 		RouterModule.forChild(routes),
 		FormsModule,

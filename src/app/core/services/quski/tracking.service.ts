@@ -8,7 +8,7 @@ import { Page } from '../../model/page';
 
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
-import { TrakingWrapper } from 'src/app/views/pages/apps/tracking/list-tracking/list-tracking.component';
+import { TrakingWrapper } from '../../../views/pages/apps/tracking/list-tracking/list-tracking.component';
 @Injectable({
   providedIn: 'root'
 })
