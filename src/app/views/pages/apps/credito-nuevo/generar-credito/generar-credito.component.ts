@@ -105,6 +105,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   public catEstadoJoya: Array<any>;
   public catExcepcionOperativa: Array<any>;
 
+  observacionAsesor = new FormControl('',[Validators.maxLength(1000)]);
 
   //dia de pago
   diasMax;
@@ -371,7 +372,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
           
         });
         
-        this.totalPesoBrutoFunda.setValue( this.pesoFunda.value.codigo + totalPesoB );
+        this.totalPesoBrutoFunda.setValue( Number(this.pesoFunda.value.codigo) + Number(totalPesoB) );
         this.totalPesoNeto.setValue( totalPesoN );
       }else{ 
         this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
@@ -523,7 +524,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.cre.solicitarAprobacionNuevo(this.operacionNuevo.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor).subscribe( (data: any) =>{
+          this.cre.solicitarAprobacionNuevo(this.operacionNuevo.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor, this.observacionAsesor.value).subscribe( (data: any) =>{
             if(data){
               this.router.navigate(['negociacion/bandeja-operaciones']);
             }

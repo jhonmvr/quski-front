@@ -101,13 +101,16 @@
 .mat-column-referencia {
   flex: 0 0 150px;
 }
+.mat-column-numeroMupi {
+  flex: 0 0 150px;
+}
 .mat-column-numeroOperacion {
   flex: 0 0 150px;
 }
-.mat-column-codigoCarteraQuski {
+.mat-column-tipoOperacion {
   flex: 0 0 150px;
 }
-.mat-column-tipoOperacion {
+.mat-column-plazo {
   flex: 0 0 150px;
 }
 .mat-column-fechaEfectiva {
@@ -116,22 +119,40 @@
 .mat-column-fechaVencimiento {
   flex: 0 0 150px;
 }
-.mat-column-valorAlDia {
+.mat-column-coberturaInicial {
+  flex: 0 0 150px;
+}
+.mat-column-coberturaActual {
   flex: 0 0 150px;
 }
 .mat-column-diasMoraActual {
   flex: 0 0 150px;
 }
+.mat-column-bloqueo {
+  flex: 0 0 150px;
+}
+.mat-column-montoFinanciado {
+  flex: 0 0 150px;
+}
 .mat-column-saldo {
   flex: 0 0 150px;
 }
-.mat-column-primeraCuotaVigente {
+.mat-column-interes {
   flex: 0 0 150px;
 }
-.mat-column-estadoPrimeraCuotaVigente {
+.mat-column-mora {
   flex: 0 0 150px;
 }
-.mat-column-estadoOperacion {
+.mat-column-cobranzas {
+  flex: 0 0 150px;
+}
+.mat-column-custodiaVencida {
+  flex: 0 0 150px;
+}
+.mat-column-valorPagar {
+  flex: 0 0 150px;
+}
+.mat-column-deudaTotal {
   flex: 0 0 150px;
 }
 .mat-footer-cell{

@@ -156,7 +156,7 @@ export class TablaTasacionComponent implements OnInit {
     }
   }
   forDescuentoPesoPiedra(e){
-    return e.descuentoPiedras ? e.descuentoPiedras : e.descuentoPesoPiedra ? e.desdescuentoPesoPiedra : 0;
+    return e.descuentoPiedras ? e.descuentoPiedras : e.descuentoPesoPiedra ? e.descuentoPesoPiedra : 0;
   }
   forDescuentoSuelda(e){
     return e.descuentoSuelda  ? e.descuentoSuelda  : e.descuentoSuelda;
@@ -176,7 +176,7 @@ export class TablaTasacionComponent implements OnInit {
     if (this.dataSourceTasacion.data) {
       this.dataSourceTasacion.data.forEach(element => {
         this.totalPesoN  = (Number(this.totalPesoN) + Number(element.pesoNeto)).toFixed(2);
-        this.totalDescgr = (Number(this.totalDescgr) + Number(element.descuentoPiedras ? element.descuentoPiedras : element.descuentoPesoPiedra ? element.desdescuentoPesoPiedra : 0 )).toFixed(2);
+        this.totalDescgr = (Number(this.totalDescgr) + Number(element.descuentoPiedras ? element.descuentoPiedras : element.descuentoPesoPiedra ? element.descuentoPesoPiedra : 0 )).toFixed(2);
         this.totalPesoB  = (Number(this.totalPesoB) + Number(element.pesoBruto)).toFixed(2);
         this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
         this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);

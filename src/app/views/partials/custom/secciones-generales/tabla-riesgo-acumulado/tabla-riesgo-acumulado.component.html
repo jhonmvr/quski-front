@@ -1,20 +1,19 @@
 <mat-table matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSourceRiesgoAcumulado"
     #exporter="matTableExporter">
     <ng-container matColumnDef="referencia">
-        <mat-header-cell *matHeaderCellDef class="text-align">Referencia Mupi</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="text-align">Codigo BPM</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.referencia}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> Saldo Total:  </mat-footer-cell>
 
     </ng-container>
-    <ng-container matColumnDef="numeroOperacion">
-        <mat-header-cell *matHeaderCellDef class="text-align">Número Operación</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.numeroOperacion}} </mat-cell>
+    <ng-container matColumnDef="numeroMupi">
+        <mat-header-cell *matHeaderCellDef class="text-align">Numero Mupi</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.numeroOperacionMupi}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
-    </ng-container>
-    <ng-container matColumnDef="codigoCarteraQuski">
-        <mat-header-cell *matHeaderCellDef class="text-align">Código Cartera Quski</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.codigoCarteraQuski}} </mat-cell>
+    </ng-container><ng-container matColumnDef="numeroOperacion">
+        <mat-header-cell *matHeaderCellDef class="text-align">Número Operación</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.numeroOperacion}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
@@ -24,54 +23,96 @@
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
+    <ng-container matColumnDef="plazo">
+        <mat-header-cell *matHeaderCellDef class="text-align">Plazo</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.plazo}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
+    </ng-container>
     <ng-container matColumnDef="fechaEfectiva">
-        <mat-header-cell *matHeaderCellDef class="text-align"> Fecha Efectiva</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaEfectiva | date:'yyyy-MM-dd'}}
+        <mat-header-cell *matHeaderCellDef class="text-align">Fecha Aprobacion</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaEfectiva | rDate}}
         </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
     <ng-container matColumnDef="fechaVencimiento">
         <mat-header-cell *matHeaderCellDef class="text-align">Fecha Vencimiento</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaVencimiento | date:'yyyy-MM-dd'}}
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.fechaVencimiento | rDate}}
         </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
-    <ng-container matColumnDef="valorAlDia">
-        <mat-header-cell *matHeaderCellDef class="text-align">Valor Al Día </mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorAlDia}} </mat-cell>
+    <ng-container matColumnDef="coberturaInicial">
+        <mat-header-cell *matHeaderCellDef class="text-align">Cobertura inicial</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.coberturaInicial  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
+    </ng-container>
+    <ng-container matColumnDef="coberturaActual">
+        <mat-header-cell *matHeaderCellDef class="text-align">Cobertura actual</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.coberturaActual  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
     <ng-container matColumnDef="diasMoraActual">
-        <mat-header-cell *matHeaderCellDef class="text-align">Días Mora Actual</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="text-align"> Días Mora Actual </mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.diasMoraActual}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
+    <ng-container matColumnDef="bloqueo">
+        <mat-header-cell *matHeaderCellDef class="text-align">Bloqueo</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> - </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
+    </ng-container>
+    <ng-container matColumnDef="montoFinanciado">
+        <mat-header-cell *matHeaderCellDef class="text-align">Monto de credito</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.montoFinanciado | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
+    </ng-container>
     <ng-container matColumnDef="saldo">
-        <mat-header-cell *matHeaderCellDef class="text-align"> Saldo </mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.saldo | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
-        <mat-footer-cell *matFooterCellDef> {{ saldoTotal | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
+        <mat-header-cell *matHeaderCellDef class="text-align">Saldo</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.saldo  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{saldoTotal | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-footer-cell>
 
     </ng-container>
-    <ng-container matColumnDef="primeraCuotaVigente">
-        <mat-header-cell *matHeaderCellDef class="text-align">Primera Cuota Vigente</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.primeraCuotaVigente}} </mat-cell>
+    <ng-container matColumnDef="interes">
+        <mat-header-cell *matHeaderCellDef class="text-align">Interes</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.interesMora  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
-    <ng-container matColumnDef="estadoPrimeraCuotaVigente">
-        <mat-header-cell *matHeaderCellDef class="text-align">Estado Primera Cuota Vigente</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.estadoPrimeraCuotaVigente}} </mat-cell>
+    <ng-container matColumnDef="mora">
+        <mat-header-cell *matHeaderCellDef class="text-align">Mora</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.interesMora  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
-    <ng-container matColumnDef="estadoOperacion">
-        <mat-header-cell *matHeaderCellDef class="text-align"> Estado Operación</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.estadoOperacion}} </mat-cell>
+    <ng-container matColumnDef="cobranzas">
+        <mat-header-cell *matHeaderCellDef class="text-align">Cobranzas</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> - </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
+    </ng-container>
+    <ng-container matColumnDef="custodiaVencida">
+        <mat-header-cell *matHeaderCellDef class="text-align">Custodia vencida</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> - </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+
+    </ng-container>
+    <ng-container matColumnDef="valorPagar">
+        <mat-header-cell *matHeaderCellDef class="text-align">Valor a pagar</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorAlDiaMasCuotaActual  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{valorPagar | currency:'CAD':'symbol-narrow':'1.2-2' }} </mat-footer-cell>
+
+    </ng-container>
+    <ng-container matColumnDef="deudaTotal">
+        <mat-header-cell *matHeaderCellDef class="text-align">Total deuda</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorCancelaPrestamo  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{deudaTotal  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
 
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumnsRiesgoAcumulado"></mat-header-row>
