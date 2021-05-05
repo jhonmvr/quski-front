@@ -844,15 +844,9 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.loadTasacion.next(true);
     this.tas.eliminarJoya(element.id).subscribe((data: any) => {
       if (data.entidad) {
-        let listJoyas: TbQoTasacion[] = new Array<TbQoTasacion>();
-        listJoyas = this.negoW.joyas;
-        const index = listJoyas.indexOf(element);
-        listJoyas.splice(index, 1);
-        const dataC = listJoyas;
-        this.negoW.joyas = dataC;
-        if (this.negoW.joyas.length < 1) {
-          this.negoW.joyas = null;
-        }
+        this.tas.getTasacionByIdCredito(null,this.negoW.credito.id).subscribe(tas=>{
+          this.negoW.joyas = tas.list;
+        })
       } else {
         this.sinNotSer.setNotice('ERROR DESCONOCIDO', 'error');
       }
@@ -862,15 +856,20 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   /** ********************************************** @OPCIONES ***************************************/
   public calcularOpciones(montoSolicitado: number) {
     if (this.negoW.joyas.length > 0) {
-      if (this.dataSourceCreditoNegociacion.data && montoSolicitado) {
-        console.log("LLEGUE HASTA AQUI 1", montoSolicitado > this.dataSourceCreditoNegociacion.data[0].montoFinanciado);
-        console.log("LLEGUE HASTA AQUI 2", this.formOpcionesCredito.valid);
-        if (montoSolicitado > this.dataSourceCreditoNegociacion.data[0].montoFinanciado) {
-          this.sinNotSer.setNotice("EL MONTO SOLICITADO ES MAYOR AL MONTO FINANCIADO ACTUAL.", 'warning');
+      if(montoSolicitado){
+        if(!confirm("SI CAMBIA MONTO SOLICITADO SE PERDERA LAS EXCEPCIONES ACTIVAS")){
+
           return;
         }
+      }
+      if (this.dataSourceCreditoNegociacion.data && montoSolicitado) {
+      
+        /* if (montoSolicitado > this.dataSourceCreditoNegociacion.data[0].montoFinanciado) {
+          this.sinNotSer.setNotice("EL MONTO SOLICITADO ES MAYOR AL MONTO FINANCIADO ACTUAL.", 'warning');
+          return;
+        } */
         if (!this.formOpcionesCredito.valid) {
-          this.sinNotSer.setNotice("VALOR DECIMAL NO VALIDO.", 'warning');
+          this.sinNotSer.setNotice("MONTO SOLICITADO NO VALIDO.", 'warning');
           return;
         }
       }
@@ -893,6 +892,11 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
           this.selection = new SelectionModel<any>(true, []);
           this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
           this.mapearVariables(data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable)
+          this.tas.getTasacionByIdCredito(null,this.negoW.credito.id).subscribe(tasa=>{
+            if(tasa && tasa.list){
+              this.negoW.joyas = tasa.list;
+            }
+          })
         } else {
           this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'warning');
         }

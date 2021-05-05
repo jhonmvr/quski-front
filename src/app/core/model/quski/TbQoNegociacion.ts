@@ -8,6 +8,7 @@ export class TbQoNegociacion {
     fechaCreacion: Date;
     asesor: string
     aprobador: string
+    observacionAsesor: string
 
     tbQoCliente: TbQoCliente
     constructor(idCliente?: number) {

@@ -13,7 +13,7 @@
     <mat-footer-cell *matFooterCellDef> Total: </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="Total" sticky>
-    <mat-header-cell *matHeaderCellDef>Totales</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef> </mat-header-cell>
     <mat-cell *matCellDef="let element"> * </mat-cell>
     <mat-footer-cell *matFooterCellDef> Total: </mat-footer-cell>
   </ng-container>
@@ -34,13 +34,13 @@
   </ng-container>
   <ng-container matColumnDef="PesoBruto">
     <mat-header-cell *matHeaderCellDef>Peso bruto</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.pesoBruto }}<strong> gr</strong></mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalPesoB }} <strong> gr</strong></mat-footer-cell>
+    <mat-cell *matCellDef="let element"> {{ element.pesoBruto }}</mat-cell>
+    <mat-footer-cell *matFooterCellDef> {{ totalPesoB }} </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="DescuentoPesoPiedra">
     <mat-header-cell *matHeaderCellDef>Descuento piedra</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ forDescuentoPesoPiedra(element) }}<strong> gr</strong></mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalDescgr }} <strong> gr</strong></mat-footer-cell>
+    <mat-cell *matCellDef="let element"> {{ forDescuentoPesoPiedra(element) }}</mat-cell>
+    <mat-footer-cell *matFooterCellDef> {{ totalDescgr }} </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="DescuentoSuelda">
     <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
@@ -49,8 +49,8 @@
   </ng-container>
   <ng-container matColumnDef="PesoNeto">
     <mat-header-cell *matHeaderCellDef>Peso neto</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.pesoNeto }}<strong> gr</strong> </mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalPesoN }} <strong> gr</strong> </mat-footer-cell>
+    <mat-cell *matCellDef="let element"> {{ element.pesoNeto }} </mat-cell>
+    <mat-footer-cell *matFooterCellDef> {{ totalPesoN }}  </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="valorOro">
     <mat-header-cell *matHeaderCellDef>Valor Oro</mat-header-cell>

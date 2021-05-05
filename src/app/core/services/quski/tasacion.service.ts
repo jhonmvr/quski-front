@@ -20,17 +20,21 @@ export class TasacionService extends BaseService {
 
 
   public getTasacionByIdCredito(p: Page, id) {
-    this.params = new HttpParams()
-      .set('page', p.pageNumber.toString())
-      .set('pageSize', p.pageSize.toString());
+    this.params = new HttpParams();
 
-    if (p.sortFields && p.sortFields !== '') {
+    if (p && p.pageNumber && p.pageNumber != null) {
+      this.params = this.params.set('page', p.pageNumber.toString());
+    }
+    if (p && p.pageSize && p.pageSize != null) {
+      this.params = this.params.set('pageSize',p.pageSize.toString());
+    }
+    if (p && p.sortFields && p.sortFields !== '') {
       this.params = this.params.set('sortFields', p.sortFields);
     }
-    if (p.sortDirections && p.sortDirections !== '') {
+    if (p && p.sortDirections && p.sortDirections !== '') {
       this.params = this.params.set('sortDirections', p.sortDirections);
     }
-    if (p.isPaginated && p.isPaginated !== '') {
+    if (p && p.isPaginated && p.isPaginated !== '') {
       this.params = this.params.set('isPaginated', p.isPaginated);
     }
 

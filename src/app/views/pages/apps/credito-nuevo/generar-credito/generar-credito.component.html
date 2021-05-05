@@ -91,7 +91,7 @@
                         </div>
                         <div class="col-md-3 ">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="totalPesoBrutoFunda" readonly placeholder="Total de peso bruto (Gr)" />
+                                <input matInput [formControl]="totalPesoBrutoFunda" readonly placeholder="Peso Bruto + Funda  (Gr)" />
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
@@ -468,6 +468,13 @@
                 <ng-container *ngIf="existeCredito">
                     <re-habilitante [proceso]="'NUEVO'" [useType]="'FORM'" [referencia]="item" >
                 </re-habilitante> 
+                <div class="row">
+                    <mat-form-field class="col-md-12">
+                        <textarea class="form-control border" [formControl]="observacionAsesor" rows="5"
+                        placeholder="Observacion asesor " matInput></textarea>
+                        <mat-error *ngIf="observacionAsesor.hasError('maxlength')"><strong>maximo de caracteres</strong></mat-error>
+                    </mat-form-field>
+                </div>
                     <div class="row">
                         <div class="col-md-5 offset-md-5">
                             <button  mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
