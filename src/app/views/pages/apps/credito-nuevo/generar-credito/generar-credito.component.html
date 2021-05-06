@@ -61,7 +61,7 @@
                         </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [min]="diasMin" [max]="diasMax"  matInput #inputFechaCuota
+                                <input [matDatepickerFilter]="onlyOdds" [min]="diasMin" [max]="diasMax"  matInput #inputFechaCuota 
                                     [matDatepicker]="pickerFechaCuota" placeholder="Fecha de la Cuota"
                                     [formControl]="fechaCuota"/>
                                 <mat-datepicker-toggle matSuffix [for]="pickerFechaCuota"></mat-datepicker-toggle>

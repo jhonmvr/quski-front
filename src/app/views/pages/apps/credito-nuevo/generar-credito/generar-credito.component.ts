@@ -536,5 +536,10 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     }
   }
 
-  
+
+  //validacion de los dias 25 - 30 
+  onlyOdds = (d: Date): boolean => {
+    const date = d.getDate(); 
+    return date<25;
+  }
 }
