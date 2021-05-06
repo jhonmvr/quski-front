@@ -44,24 +44,8 @@
             </mat-step>
             <mat-step label="Habilitantes">
                 <div class="row mt-1 mb-1 ">
-                    <div class=" offset-md-1 col-5">
-                        <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceHabilitante"
-                            style="max-width: 760px;">
-                            <ng-container matColumnDef="descripcion">
-                                <mat-header-cell *matHeaderCellDef> Descripcion </mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.descripcion | titlecase }} </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="archivo">
-                                <mat-header-cell *matHeaderCellDef> Archivo cargado </mat-header-cell>
-                                <mat-cell *matCellDef="let element">
-                                    <button mat-raised-button color="primary" (click)="descargar()">
-                                        <span class="white-icon">Descargar</span>
-                                    </button>
-                                </mat-cell>
-                            </ng-container>
-                            <mat-header-row *matHeaderRowDef="displayedColumnsHabilitante"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumnsHabilitante"></mat-row>
-                        </mat-table>
+                    <div class="col-12">
+                        <re-habilitante [proceso]="'NOVACION'" [useType]="'FORM'" [referencia]="crediW ? crediW.credito ? crediW.credito.tbQoNegociacion.id: null :null"></re-habilitante>
                     </div>
                 </div>
             </mat-step>
@@ -178,12 +162,6 @@
                             <div class="col-md-4">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="telefonoMovil" placeholder="Telefono Movil:" matInput />
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="telefonoOficina" placeholder="Telefono de Oficina/Otros:"
-                                        matInput />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
@@ -456,6 +434,10 @@
                                         <mat-header-cell *matHeaderCellDef>Teléfono Fijo</mat-header-cell>
                                         <mat-cell *matCellDef="let element">{{ element.telefonoFijo }}</mat-cell>
                                     </ng-container>
+                                    <ng-container matColumnDef="estado">
+                                        <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+                                        <mat-cell *matCellDef="let element">{{ element.estado == 'ACT' ? 'Activo' : 'Inactivo'  }}</mat-cell>
+                                    </ng-container>
 
                                     <mat-header-row *matHeaderRowDef="displayedColumnsReferencia"></mat-header-row>
                                     <mat-row *matRowDef="let row; columns: displayedColumnsReferencia"></mat-row>
@@ -469,19 +451,14 @@
                 <mat-tab-group mat-align-tabs="start">
                     <mat-tab label="Tasacion">
                         <div class="row mt-1 mb-1">
-                            <div class="col-md-10 offset-md-1">
-                                <kt-tabla-tasacion *ngIf="this.crediW;" [data]='this.crediW.joyas' [tipo]="'T'"></kt-tabla-tasacion>
+                            <div class="col" *ngIf="crediW && crediW.creditoAnterior && crediW.creditoAnterior.garantias">
+                                <kt-tabla-tasacion [data]="crediW.creditoAnterior.garantias" [tipo]="'G'"></kt-tabla-tasacion>
                             </div>
                         </div>
                         <div class="row">
                             <div class="offset-md-3 col-md-3">
                                 <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="numeroFunda" placeholder="Número Funda:" matInput />
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-3">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="tipoFunda" placeholder="Peso de la Funda:" matInput />
+                                    <input [formControl]="numeroFunda" placeholder="Número Funda Madre:" matInput />
                                 </mat-form-field>
                             </div>
                         </div>
@@ -489,16 +466,16 @@
                     <mat-tab label="Variables crediticias">
                         <div class="row mt-1 mb-1">
                             <div class="col-md-6 offset-md-3">
-                                <kt-tabla-variables-crediticias *ngIf="this.crediW;" [base]='this.crediW.variables'>
+                                <kt-tabla-variables-crediticias *ngIf="crediW;" [base]='crediW.variables'>
                                 </kt-tabla-variables-crediticias>
                             </div>
                         </div>
                     </mat-tab>
                     <mat-tab label="Riesgo acumulado">
                         <div class="row mt-1 mb-1">
-                            <div class="col-md-6 offset-md-3">
-                                <ng-container *ngIf="this.crediW && this.crediW.riesgos; else elseTemplate">
-                                    <kt-tabla-riesgo-acumulado [base]="this.crediW.riesgos"></kt-tabla-riesgo-acumulado>
+                            <div class="col-md-12">
+                                <ng-container *ngIf="crediW && crediW.riesgos; else elseTemplate">
+                                    <kt-tabla-riesgo-acumulado [base]="crediW.riesgos"></kt-tabla-riesgo-acumulado>
                                 </ng-container>
                                 <ng-template #elseTemplate>
                                     <strong> NO POSEE RIESGO ACUMULADO </strong>
@@ -510,18 +487,12 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <mat-form-field class="mat-form-field-fluid">
-                                    <input matInput [formControl]="tipoCuenta" placeholder="Tipo de Cuenta:" />
+                                    <input matInput [formControl]="tipoCuenta" placeholder="Es ahorro ?:" />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="numeroCuenta" placeholder="Número de Cuenta:" matInput />
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="firmaRegularizada" placeholder="Firma Regularizada :"
-                                        matInput />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-4">
@@ -543,181 +514,174 @@
                     </mat-tab>
                     <mat-tab label="Datos operacion nueva">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="plazo" placeholder="Plazo:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="tipoOferta" placeholder="Tipo Oferta:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="costoCustodia" placeholder="Costo Custodia:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="formaPagoCustodia" placeholder="Forma de Pago Custodia:"
                                         matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="costoTransporte" placeholder="Costo Transporte:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="formaPagoTransporte" placeholder="Forma de Pago Transporte:"
                                         matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="costoValoracion" placeholder="Costo Valoración:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="formaPagoValoracion" placeholder="Forma de Pago Valoración:"
                                         matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="costoTasacion" placeholder="Costo Tasación:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="formaPagoTasacion" placeholder="Forma de Pago Tasación:"
                                         matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="costoResguardo" placeholder="Costo Resguardo:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="formaPagoResguardo" placeholder="Forma de Pago Resguardo:"
                                         matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="costoSeguro" placeholder="Costo Seguro:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="formaPagoSeguro" placeholder="Forma de Pago Seguro:"
                                         matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="solca" placeholder="Solca:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="formaPagoSolca" placeholder="Forma de Pago Solca:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="aPagarCliente" placeholder="A Pagar Cliente:" matInput />
                                 </mat-form-field>
                             </div>
-
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="aRecibirCliente" placeholder="A Recibir Cliente:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="totalCostoNuevaOperacion"
                                         placeholder="Total Costo Nueva Operacion:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="tipoCartera" placeholder="Tipo de Cartera:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="tablaAmortizacion" placeholder="Tabla Amortizacion"
-                                        matInput />
+                                    <input [formControl]="tablaAmortizacion" placeholder="Tabla Amortizacion" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="numeroOperacion" placeholder="Número de la operación:"
-                                        matInput />
+                                    <input [formControl]="numeroOperacion" placeholder="Número de la operación:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="descripcionProducto" placeholder="Descripción del Producto:"
-                                        matInput />
+                                    <input [formControl]="descripcionProducto" placeholder="Descripción del Producto:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="estadoOperacion" placeholder="Estado de la Operación:"
-                                        matInput />
+                                    <input [formControl]="estadoOperacion" placeholder="Estado de la Operación:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4 col-md-offset-3">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="fechaVencimiento" placeholder="Fecha de vencimiento:" matInput [value]="fechaVencimiento.value | rDate" />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="fechaEfectiva" placeholder="Fecha Efectiva:" matInput [value]="fechaEfectiva | rDate" />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="valorDesembolso" placeholder="Valor Desembolso:" matInput />
+                                    <input [formControl]="montoPrevioDesembolso" placeholder="Monto Previo Desembolso:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="montoFinanciado" placeholder="Monto Financiado:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="cuota" placeholder="Cuota:" matInput />
                                 </mat-form-field>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <mat-form-field class="mat-form-field-fluid">
                                     <input [formControl]="totalInteres" placeholder="Total Interés:" matInput />
                                 </mat-form-field>
                             </div>
-
                         </div>
                     </mat-tab>
                     <mat-tab label="Comprobante de pagos">
-                        <mat-table *ngIf="dataSourceComprobante.data" class="garantia"
-                            [dataSource]="dataSourceComprobante">
+                        <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante" >
                             <ng-container matColumnDef="intitucionFinanciera">
                                 <mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.intitucionFinanciera }} </mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.institucionFinanciera ? element.institucionFinanciera.nombre: 'Error de catalogo' }} </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="cuenta">
                                 <mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.cuenta }} </mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.cuentas }} </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="fechaPago">
                                 <mat-header-cell *matHeaderCellDef>Fecha Pago</mat-header-cell>
@@ -729,16 +693,20 @@
                             </ng-container>
                             <ng-container matColumnDef="valorDepositado">
                                 <mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.valorDepositado }} </mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.valorPagado | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
                             </ng-container>
-                            <ng-container matColumnDef="descargarComprobante">
+                            <ng-container matColumnDef="tipoPago">
+                                <mat-header-cell *matHeaderCellDef>Tipo Pago</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.tipoPago }} </mat-cell>
+                            </ng-container>
+                            <!-- <ng-container matColumnDef="descargarComprobante">
                                 <mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
                                 <mat-cell *matCellDef="let row">
-                                    <a (click)="descargarComprobante(row)">
+                                    <a *ngIf="row.idComprobante" (click)="descargarComprobante(row)">
                                         <mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
                                     </a>
-                                </mat-cell>
-                            </ng-container>
+                                </mat-cell>					
+                            </ng-container> -->
                             <mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
                             <mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
                         </mat-table>

@@ -20,6 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
+import { TbQoRegistrarPago } from 'src/app/core/model/quski/TbQoRegistrarPago';
 
 
 @Component({
@@ -47,8 +48,6 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public codigoBpm = new FormControl('', []);
   public proceso = new FormControl('', []);
   public nombresCompletoCliente = new FormControl('', []);
-  public displayedColumnsHabilitante = ['descripcion', 'archivo'];
-  public dataSourceHabilitante = new MatTableDataSource<any>();
   /** @DATOS_PERSONALES */
   public identificacion = new FormControl('', []);
   public aprobacionMupi = new FormControl('', []);
@@ -70,7 +69,6 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public fechaUltimaActualizazion = new FormControl('', []);
   public telefonoDomicilio = new FormControl('', []);
   public telefonoMovil = new FormControl('', []);
-  public telefonoOficina = new FormControl('', []);
   public correo = new FormControl('', []);
   public direccionLegalDomicilio = new FormControl('', []);
   public direccionCorreoDomicilio = new FormControl('', []);
@@ -106,15 +104,12 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public dataSourcePatrimonioPasivo: MatTableDataSource<TbQoPatrimonio>;
   public displayedColumnsII = ['Is', 'Valor'];
   public dataSourceIngresoEgreso: MatTableDataSource<TbQoIngresoEgresoCliente>;
-  public displayedColumnsReferencia = ['N', 'nombresRef', 'apellidosRef', 'Parentesco', 'Direccion', 'TelefonoMovil', 'TelefonoFijo'];
+  public displayedColumnsReferencia = ['N', 'nombresRef', 'apellidosRef', 'Parentesco', 'Direccion', 'TelefonoMovil', 'TelefonoFijo','estado'];
   public dataSourceReferencia = new MatTableDataSource<TbReferencia>();
   /** @INSTRUCCION_OPERATIVA */
-  public tipoProceso = new FormControl('', []);
   public numeroFunda = new FormControl('', []);
-  public tipoFunda = new FormControl('', []);
   public tipoCuenta = new FormControl('', []);
   public numeroCuenta = new FormControl('', []);
-  public firmaRegularizada = new FormControl('', []);
   public diaPagoFijo = new FormControl('', []);
   public firmadaOperacion = new FormControl('', []);
   public tipoCliente = new FormControl('', []);
@@ -138,8 +133,8 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public aPagarCliente = new FormControl('', []);
   public aRecibirCliente = new FormControl('', []);
   public totalCostoNuevaOperacion = new FormControl('', []);
-  public dataSourceComprobante = new MatTableDataSource<any>();
-  public displayedColumnsComprobante = ['intitucionFinanciera', 'cuenta', 'fechaPago', 'numeroDeDeposito', 'valorDepositado', 'descargarComprobante'];
+  public dataSourceComprobante = new MatTableDataSource<TbQoRegistrarPago>();
+  public displayedColumnsComprobante = ['intitucionFinanciera', 'cuenta', 'fechaPago', 'numeroDeDeposito', 'valorDepositado'];
   public tipoCartera = new FormControl('', []);
   public tablaAmortizacion = new FormControl('', []);
   public numeroOperacion = new FormControl('', []);
@@ -147,7 +142,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public estadoOperacion = new FormControl('', []);
   public fechaVencimiento = new FormControl('', []);
   public fechaEfectiva = new FormControl('', []);
-  public valorDesembolso = new FormControl('', []);
+  public montoPrevioDesembolso = new FormControl('', []);
   public montoFinanciado = new FormControl('', []);
   public cuota = new FormControl('', []);
   public totalInteres = new FormControl('', []);
@@ -175,6 +170,8 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public motivoDevolucion = new FormControl('', []);
   public codigoCash = new FormControl('', []);
   public observacionAprobador = new FormControl('', [Validators.required]);
+  catTipoCliente: Array<any>;
+  catBanco: Array<any>;
   constructor(
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
@@ -214,7 +211,6 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.formDisable.addControl("fechaUltimaActualizazion", this.fechaUltimaActualizazion);
     this.formDisable.addControl("telefonoDomicilio", this.telefonoDomicilio);
     this.formDisable.addControl("telefonoMovil", this.telefonoMovil);
-    this.formDisable.addControl("telefonoOficina", this.telefonoOficina);
     this.formDisable.addControl("correo", this.correo);
     this.formDisable.addControl("direccionLegalDomicilio", this.direccionLegalDomicilio);
     this.formDisable.addControl("direccionCorreoDomicilio", this.direccionCorreoDomicilio);
@@ -244,9 +240,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.formDisable.addControl("ocupacion", this.ocupacion);
     this.formDisable.addControl("cargo", this.cargo);
     this.formDisable.addControl("relacionDependencia", this.relacionDependencia);
-    this.formDisable.addControl("tipoProceso", this.tipoProceso);
     this.formDisable.addControl("numeroFunda", this.numeroFunda);
-    this.formDisable.addControl("tipoFunda", this.tipoFunda);
     this.formDisable.addControl("plazo", this.plazo);
     this.formDisable.addControl("tipoOferta", this.tipoOferta);
     this.formDisable.addControl("costoCustodia", this.costoCustodia);
@@ -268,7 +262,6 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.formDisable.addControl("totalCostoNuevaOperacion", this.totalCostoNuevaOperacion);
     this.formDisable.addControl("tipoCuenta", this.tipoCuenta);
     this.formDisable.addControl("numeroCuenta", this.numeroCuenta);
-    this.formDisable.addControl("firmaRegularizada", this.firmaRegularizada);
     this.formDisable.addControl("diaPagoFijo", this.diaPagoFijo);
     this.formDisable.addControl("firmadaOperacion", this.firmadaOperacion);
     this.formDisable.addControl("tipoCliente", this.tipoCliente);
@@ -279,7 +272,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.formDisable.addControl("estadoOperacion", this.estadoOperacion);
     this.formDisable.addControl("fechaVencimiento", this.fechaVencimiento);
     this.formDisable.addControl("fechaEfectiva", this.fechaEfectiva);
-    this.formDisable.addControl("valorDesembolso", this.valorDesembolso);
+    this.formDisable.addControl("montoPrevioDesembolso", this.montoPrevioDesembolso);
     this.formDisable.addControl("montoFinanciado", this.montoFinanciado);
     this.formDisable.addControl("cuota", this.cuota);
     this.formDisable.addControl("totalInteres", this.totalInteres);
@@ -324,7 +317,13 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   private traerCatalogos() {
     this.sof.traerCatalogos().subscribe((data: any) => {
       data.entidad ? this.catalogos = data.entidad : this.sinNotSer.setNotice('ERROR AL CARGAR CATALOGOS', 'error');
-      this.traerCreditoNegociacion();
+      this.sof.consultarTipoClienteCS().subscribe( (data: any) =>{
+        this.catTipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+        this.sof.consultarBancosCS().subscribe( (data: any) =>{
+        this.catBanco = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+        this.traerCreditoNegociacion();
+        });
+      });
     });
   }
   private traerCreditoNegociacion() {
@@ -334,6 +333,9 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
           if (data.entidad) {
             this.crediW = data.entidad;
             this.setearValores(this.crediW);
+            if (data.entidad.existeError) {
+              this.sinNotSer.setNotice('FALTAN DATOS EN EL CREDITO: '+ data.entidad.mensaje + ". Devolver al asesor para su revision.", 'warning');
+            }
           } else {
             this.sinNotSer.setNotice('ERROR AL CARGAR CREDITO: ' + data.entidad.mensaje, 'error');
           }
@@ -375,14 +377,13 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.fechaUltimaActualizazion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaActualizacion);
     this.correo.setValue(ap.credito.tbQoNegociacion.tbQoCliente.email);
     !ap.telefonos ? null : ap.telefonos.forEach(e => {
-      if (e.tipoTelefono == "M") {
+      if (e.tipoTelefono == "CEL") {
         this.telefonoMovil.setValue(e.numero);
       }
-      if (e.tipoTelefono == "F") {
+      if (e.tipoTelefono == "DOM") {
         this.telefonoDomicilio.setValue(e.numero);
       }
       if (e.tipoTelefono == "CEL") {
-        this.telefonoOficina.setValue(e.numero);
       }
     });
     !ap.direcciones ? null : ap.direcciones.forEach(e => {
@@ -429,10 +430,21 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.dataSourceIngresoEgreso.data.push(new TbQoIngresoEgresoCliente(ap.credito.tbQoNegociacion.tbQoCliente.ingresos, true));
     this.dataSourceIngresoEgreso.data.push(new TbQoIngresoEgresoCliente(ap.credito.tbQoNegociacion.tbQoCliente.egresos, false));
     this.dataSourceReferencia.data = ap.referencias;
-    this.numeroFunda.setValue(ap.credito.numeroFunda);
-    this.tipoFunda.setValue(ap.credito.codigoTipoFunda);
+    this.dataSourceReferencia.data.forEach( e=>{
+      e.parentesco = this.catalogos ? 
+        this.catalogos.catTipoReferencia ?
+          this.catalogos.catTipoReferencia.find(x => x.codigo == e.parentesco) ? 
+            this.catalogos.catTipoReferencia.find( x => x.codigo == e.parentesco ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+    });
+    this.numeroFunda.setValue(ap.creditoAnterior.garantias[0].numeroFundaMadre);
+    
+    /** @DATOS_INSTRUCCION_OPERATIVA */
+    this.tipoCuenta.setValue( ap.cuenta.esAhorros ? 'Si' : 'No' );
+    this.numeroCuenta.setValue( ap.cuenta.cuenta );
+    this.diaPagoFijo.setValue(ap.credito.pagoDia ? ap.credito.pagoDia : "No aplica");
+    this.firmadaOperacion.setValue(ap.credito.firmanteOperacion);
+    this.tipoCliente.setValue( this.catTipoCliente.find( x => x.codigo == ap.credito.tipoCliente).nombre );
 
-    this.tipoProceso.setValue(ap.proceso.proceso);
     /** @DATOS_CREDITO_NUEVO */
     this.plazo.setValue(ap.credito.plazoCredito);
     this.tipoOferta.setValue(ap.credito.tipoOferta == "N" ? 'NUEVO' : ap.credito.tipoOferta);
@@ -444,8 +456,8 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.formaPagoValoracion.setValue(ap.credito.formaPagoValoracion);
     this.costoTasacion.setValue(ap.credito.costoTasacion);
     this.formaPagoTasacion.setValue(ap.credito.formaPagoTasador);
-    this.costoResguardo.setValue(ap.credito);
-    this.formaPagoResguardo.setValue(ap.credito);
+    this.costoResguardo.setValue(ap.credito.costoFideicomiso);
+    this.formaPagoResguardo.setValue(ap.credito.formaPagoFideicomiso);
     this.costoSeguro.setValue(ap.credito.costoSeguro);
     this.formaPagoSeguro.setValue(ap.credito.formaPagoSeguro);
     this.solca.setValue(ap.credito.impuestoSolca);
@@ -454,13 +466,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.aRecibirCliente.setValue(ap.credito.aRecibirCliente);
     this.totalCostoNuevaOperacion.setValue(ap.credito.totalCostoNuevaOperacion);
 
-    /** @DATOS_INSTRUCCION_OPERATIVA */
-    //this.tipoCuenta.setValue( ap.cuenta.banco );
-    //this.numeroCuenta.setValue( ap.cuenta.cuenta );
-    this.firmaRegularizada.setValue("No tengo");
-    this.diaPagoFijo.setValue(ap.credito.pagoDia);
-    this.firmadaOperacion.setValue(ap.credito.firmanteOperacion);
-    this.tipoCliente.setValue("DEUDOR");
+
 
     /** @OPERACION_NUEVA */
     this.tipoCartera.setValue(ap.credito.tipoCarteraQuski);
@@ -470,12 +476,16 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.estadoOperacion.setValue(ap.credito.estadoSoftbank);
     this.fechaVencimiento.setValue(ap.credito.fechaVencimiento);
     this.fechaEfectiva.setValue(ap.credito.fechaEfectiva);
-    this.valorDesembolso.setValue(ap.credito.montoDesembolso);
+    this.montoPrevioDesembolso.setValue(ap.credito.montoPrevioDesembolso);
     this.montoFinanciado.setValue(ap.credito.montoFinanciado);
     this.cuota.setValue(ap.credito.cuota);
     this.totalInteres.setValue(ap.credito.saldoInteres);
-    /** @OPERACION_ANTERIOR */
 
+    this.dataSourceComprobante.data = ap.pagos;
+    this.dataSourceComprobante.data.forEach( e =>{
+      e.institucionFinanciera = this.catBanco.find( x => x.id == e.institucionFinanciera);
+    });
+    /** @OPERACION_ANTERIOR */
     this.antNumeroOperacion.setValue( ap.creditoAnterior.credito.numeroOperacion );
     this.antReferenciaMupi.setValue( "No tengo.");
     this.antOperacionMadre.setValue( ap.creditoAnterior.credito.numeroOperacionMadre ? ap.creditoAnterior.credito.numeroOperacionMadre : 'No aplica' );

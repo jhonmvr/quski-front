@@ -20,7 +20,6 @@ export class AprobacionWrapper {
     excepciones: Array<TbQoExcepcion>;
     variables: Array<TbQoVariablesCrediticia>;
     riesgos: Array<TbQoRiesgoAcumulado>;
-    joyas: Array<TbQoTasacion>;
     cuenta: TbQoCuentaBancariaCliente;
 	pagos: Array<TbQoRegistrarPago>;
 	creditoAnterior: any;

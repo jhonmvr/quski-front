@@ -5,7 +5,7 @@ export class TbQoRegistrarPago {
 
     id: number; 
 	TbQoClientePago: TbQoClientePago; 
-	institucionFinanciera: String; 
+	institucionFinanciera: any; 
 	cuentas: String; 
 	fechaPago: String; 
 	numeroDeposito: String; 
