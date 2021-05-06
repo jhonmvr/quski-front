@@ -53,9 +53,9 @@
     <mat-footer-cell *matFooterCellDef> {{ totalPesoN }}  </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="valorOro">
-    <mat-header-cell *matHeaderCellDef>Valor Oro</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef>Precio Oro</mat-header-cell>
     <mat-cell *matCellDef="let element"> {{ element.valorOro | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalValorO | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
+    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="ValorAvaluo">
     <mat-header-cell *matHeaderCellDef>Valor aval&#250;o</mat-header-cell>

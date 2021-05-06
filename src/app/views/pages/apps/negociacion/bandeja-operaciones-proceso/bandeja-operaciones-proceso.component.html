@@ -1,77 +1,84 @@
- 
-
 <re-portlet>
-	<re-portlet-header [title]="'BANDEJA DE OPERACIONES EN PROCESO'" [class]="'kt-portlet__head--lg'">
-		<ng-container ktPortletTools>
-			
-		</ng-container>
-	</re-portlet-header>
-	<re-portlet-body>
+    <re-portlet-header [title]="'BANDEJA DE OPERACIONES EN PROCESO'" [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTools>
+
+        </ng-container>
+    </re-portlet-header>
+    <re-portlet-body>
         <div class="row">
             <div class="col-12">
                 <form [formGroup]="formFiltro">
                     <div class="row">
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="nombreCompleto" placeholder="Cliente" autocomplete="on" matInput />
+                                <input [formControl]="nombreCompleto" placeholder="Cliente" autocomplete="on"
+                                    matInput />
                                 <mat-error>{{ getErrorMessage("nombreCompleto") }}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" matInput numeric numericType="number"
-                                    (keypress)="numberOnly($event)" />
+                                <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" matInput
+                                    numeric numericType="number" (keypress)="numberOnly($event)" />
                                 <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="codigoBpm" placeholder="Codigo Bpm" autocomplete="off" matInput/>
+                                <input [formControl]="codigoBpm" placeholder="Codigo Bpm" autocomplete="off" matInput />
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="codigoSoft" placeholder="Codigo Soft" autocomplete="off" matInput/>
+                                <input [formControl]="codigoSoft" placeholder="Codigo Soft" autocomplete="off"
+                                    matInput />
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Proceso" [formControl]="proceso">
-                                    <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}</mat-option>
+                                    <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}
+                                    </mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Estado" [formControl]="estado">
-                                    <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}</mat-option>
+                                    <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}
+                                    </mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Actividad" [formControl]="actividad">
-                                    <mat-option *ngFor="let element of catActividad" [value]="element">{{ element }}</mat-option>
+                                    <mat-option *ngFor="let element of catActividad" [value]="element">{{ element }}
+                                    </mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
                         <div class="offset-2 col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Fecha Creacion Desde: </mat-label>
-                                <input matInput #inputFechaCreacionDesde [matDatepicker]="pickerFechaCreacionDesde" [formControl]="fechaCreacionDesde"/>
-                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionDesde"></mat-datepicker-toggle>
+                                <input matInput #inputFechaCreacionDesde [matDatepicker]="pickerFechaCreacionDesde"
+                                    [formControl]="fechaCreacionDesde" />
+                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionDesde">
+                                </mat-datepicker-toggle>
                                 <mat-datepicker #pickerFechaCreacionDesde></mat-datepicker>
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Fecha Creacion Hasta: </mat-label>
-                                <input matInput #inputFechaCreacionHasta [matDatepicker]="pickerFechaCreacionHasta" [formControl]="fechaCreacionHasta"/>
-                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionHasta"></mat-datepicker-toggle>
+                                <input matInput #inputFechaCreacionHasta [matDatepicker]="pickerFechaCreacionHasta"
+                                    [formControl]="fechaCreacionHasta" />
+                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionHasta">
+                                </mat-datepicker-toggle>
                                 <mat-datepicker #pickerFechaCreacionHasta></mat-datepicker>
                             </mat-form-field>
                         </div>
-                       <!--  <div class="col-md-4 offset-4">
+                        <!--  <div class="col-md-4 offset-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Agencia" [formControl]="agencia">
                                     <mat-option *ngFor="let element of catAgencia" [value]="element">{{ element.nombre }}</mat-option>
@@ -81,62 +88,85 @@
                     </div>
                     <div class="row">
                         <div class="col-3">
-                            <a href="javascript:void(0);" (click)="irNegociacion()" matTooltip="Nueva Negociacion" style="font-size: 12px; vertical-align: middle;">
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">post_add</mat-icon>
-                                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Nueva Negociacion</span>
+                            <a href="javascript:void(0);" (click)="irNegociacion()" matTooltip="Nueva Negociacion"
+                                style="font-size: 12px; vertical-align: middle;">
+                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">post_add
+                                </mat-icon>
+                                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Nueva
+                                    Negociacion</span>
                             </a>
                         </div>
                         <div class="col-4 offset-1">
                             <button mat-raised-button color="basic" (click)="buscar(null,null)">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>
-                                <span >Buscar Operacion</span>
+                                <span>Buscar Operacion</span>
                             </button>
-                            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
-                                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
+                            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar"
+                                style="font-size: 12px; vertical-align: middle;">
+                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">
+                                    layers_clear</mat-icon>
+                                <span style="position: relative; top: -10px; margin-left: 5px;"
+                                    class="orange-icon">Limpiar</span>
                             </a>
                         </div>
                     </div>
                 </form>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-1 offset-11">
+                <button mat-raised-button
+                    (click)="exporter.exportTable('xlsx', {fileName:'proceso', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
+            </div>
+        </div>
+        <div class="row">
+            
             <div class="col-12 mt-3">
-                <mat-table  #table class="mat-elevation-z8 tableOpciones" [dataSource]="dataSource">
+                <mat-table matTableExporter #table class="mat-elevation-z8 tableOpciones" [dataSource]="dataSource"
+                    #exporter="matTableExporter">
                     <ng-container matColumnDef="Accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
                         <mat-cell *matCellDef="let row">
-                            <ng-container *ngIf="(row.estadoProceso == 'CREADO' || row.estadoProceso == 'EXCEPCIONADO' || row.estadoProceso == 'DEVUELTO'  || row.estadoProceso == 'ARRIBADO') && row.asesor == usuario">
+                            <ng-container
+                                *ngIf="(row.estadoProceso == 'CREADO' || row.estadoProceso == 'EXCEPCIONADO' || row.estadoProceso == 'DEVUELTO'  || row.estadoProceso == 'ARRIBADO') && row.asesor == usuario">
                                 <a (click)="verOperacion(row)">
                                     <mat-icon matTooltip="Ver Operacion">edit</mat-icon>
                                 </a>
                             </ng-container>
-                            <ng-container *ngIf="row.proceso != 'CANCELACION DEVOLUCION' && row.proceso != 'PAGO' && row.proceso != 'RENOVACION'">
+                            <ng-container
+                                *ngIf="row.proceso != 'CANCELACION DEVOLUCION' && row.proceso != 'PAGO' && row.proceso != 'RENOVACION'">
                                 <a (click)="verDetalle(row)">
                                     <mat-icon matTooltip="Ver Detalle" class="blue-icon">remove_red_eye</mat-icon>
                                 </a>
                             </ng-container>
                             <ng-container *ngIf="validarReasignacion(row)">
                                 <a (click)="reasignar(row)">
-                                    <mat-icon matTooltip="Reasignar Asesor" >account_circle</mat-icon>
+                                    <mat-icon matTooltip="Reasignar Asesor">account_circle</mat-icon>
                                 </a>
                             </ng-container>
-                            <ng-container *ngIf="row.proceso == 'DEVOLUCION' && row.estadoProceso != 'APROBADO' && row.estadoProceso != 'RECHAZADO' && row.estadoProceso != 'CANCELADO' && row.asesor == usuario">
-                                <a (click)="cancelarDevolucion(row)"matTooltip="Cancelar Devolucion" style="font-size: 12px; vertical-align: middle;">
-                                    <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">highlight_off</mat-icon>
+                            <ng-container
+                                *ngIf="row.proceso == 'DEVOLUCION' && row.estadoProceso != 'APROBADO' && row.estadoProceso != 'RECHAZADO' && row.estadoProceso != 'CANCELADO' && row.asesor == usuario">
+                                <a (click)="cancelarDevolucion(row)" matTooltip="Cancelar Devolucion"
+                                    style="font-size: 12px; vertical-align: middle;">
+                                    <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">
+                                        highlight_off</mat-icon>
                                 </a>
                             </ng-container>
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="codigoBpm">
-                        <mat-header-cell *matHeaderCellDef ><strong>Codigo Bpm</strong></mat-header-cell>
-                        <mat-cell *matCellDef="let element"><strong> {{ element.codigoBpm | uppercase  }}</strong></mat-cell>
+                        <mat-header-cell *matHeaderCellDef><strong>Codigo Bpm</strong></mat-header-cell>
+                        <mat-cell *matCellDef="let element"><strong> {{ element.codigoBpm | uppercase }}</strong>
+                        </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="codigoOperacion">
-                        <mat-header-cell *matHeaderCellDef >Codigo Operacion</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.codigoOperacion | titlecase  }}</mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Codigo Operacion</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.codigoOperacion | titlecase }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="nombreCliente">
                         <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
-                        <mat-cell *matCellDef="let element" class="text"> {{ element.nombreCliente | titlecase  }}</mat-cell>
+                        <mat-cell *matCellDef="let element" class="text"> {{ element.nombreCliente | titlecase }}
+                        </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="cedulaCliente">
                         <mat-header-cell *matHeaderCellDef>Cedula Cliente</mat-header-cell>
@@ -156,11 +186,12 @@
                     </ng-container>
                     <ng-container matColumnDef="estadoProceso">
                         <mat-header-cell *matHeaderCellDef><strong>Estado Proceso</strong></mat-header-cell>
-                        <mat-cell *matCellDef="let element"><strong>{{ element.estadoProceso | titlecase }}</strong></mat-cell>
+                        <mat-cell *matCellDef="let element"><strong>{{ element.estadoProceso | titlecase }}</strong>
+                        </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="proceso">
                         <mat-header-cell *matHeaderCellDef>Proceso</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.proceso | titlecase  }}</mat-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.proceso | titlecase }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="asesor">
                         <mat-header-cell *matHeaderCellDef>Asesor</mat-header-cell>
@@ -177,9 +208,10 @@
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
                 </mat-table>
-                <mat-paginator #paginator  [pageSizeOptions]="[5, 10, 20]" (page)="paged()"></mat-paginator>
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" (page)="paged()"></mat-paginator>
             </div>
+
         </div>
-	</re-portlet-body>
-	<re-portlet-footer></re-portlet-footer>
+    </re-portlet-body>
+    <re-portlet-footer></re-portlet-footer>
 </re-portlet>
