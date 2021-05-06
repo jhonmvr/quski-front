@@ -20,7 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
-import { TbQoRegistrarPago } from 'src/app/core/model/quski/TbQoRegistrarPago';
+import { TbQoRegistrarPago } from '../../../../../core/model/quski/TbQoRegistrarPago';
 
 
 @Component({
