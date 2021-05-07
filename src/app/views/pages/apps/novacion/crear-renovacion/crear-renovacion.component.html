@@ -20,12 +20,17 @@
 					<div class="row">
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="codigoOperacion" placeholder="Codigo Operacion"/>
+                                <input matInput [formControl]="codigoOperacion" placeholder="Numero Operacion Actual"/>
 							</mat-form-field>
                         </div>		
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="codigoOperacionMadre" placeholder="Codigo Operacion Madre"/>
+                                <input matInput [formControl]="codigoOperacionAnterior" placeholder="Numero Operacion Anterior"/>
+							</mat-form-field>
+                        </div>		
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="codigoOperacionMadre" placeholder="Numero Operacion Madre"/>
 							</mat-form-field>
                         </div>			
                         <div class="col-md-4">
@@ -33,6 +38,16 @@
                                 <input matInput [formControl]="codigoBpm" placeholder="codigo BPM"/>
                             </mat-form-field>
                         </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="proceso" placeholder="Proceso"/>
+                            </mat-form-field>
+                        </div>		
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="estadoProceso" placeholder="Estado Proceso"/>
+                            </mat-form-field>
+                        </div>			
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input matInput [formControl]="nombreCompleto" placeholder="Nombre Completo"/>
@@ -43,16 +58,6 @@
                                 <input matInput [formControl]="cedulaCliente" placeholder="Cedula Cliente"/>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="proceso" placeholder="Proceso"/>
-							</mat-form-field>
-                        </div>		
-                        <div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="estadoProceso" placeholder="Estado Proceso"/>
-							</mat-form-field>
-                        </div>			
 					</div>
 				</form>
 			</mat-step>

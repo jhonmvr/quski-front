@@ -10,6 +10,7 @@ export class TbQoCreditoNegociacion {
     codigo: string;
     estado: string;
     estadoSoftbank: string;
+    numeroOperacionAnterior: any;
     codigoCash: string;
     codigoDevuelto: string;
     descripcionDevuelto: string;

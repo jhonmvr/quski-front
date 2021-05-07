@@ -49,6 +49,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public codigoBpm = new FormControl();
   public codigoOperacion = new FormControl();
+  public codigoOperacionAnterior = new FormControl();
   public codigoOperacionMadre = new FormControl();
   public recibirPagar;
   public proceso = new FormControl();
@@ -89,6 +90,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.formOperacion.addControl("codigoBpm", this.codigoBpm);
     this.formOperacion.addControl("codigoOperacion", this.codigoOperacion);
     this.formOperacion.addControl("codigoOperacionMadre", this.codigoOperacionMadre);
+    this.formOperacion.addControl("codigoOperacionAnterior", this.codigoOperacionAnterior);
     this.formOperacion.addControl("proceso", this.proceso);
     this.formOperacion.addControl("estadoProceso", this.estadoProceso);
     this.formOperacion.addControl("nombreCompleto", this.nombreCompleto);
@@ -150,12 +152,13 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     return true;
   }
   private cargarCampos() {
-    this.codigoOperacion.setValue(this.credit.operacionAnterior.credito.numeroOperacion);
+    this.codigoOperacion.setValue(this.credit.credito ? this.credit.credito.numeroOperacion ? this.credit.credito.numeroOperacion : 'Sin asignar' : 'Sin asignar' );
     this.codigoOperacionMadre.setValue(this.credit.operacionAnterior.credito.numeroOperacionMadre);
     this.nombreCompleto.setValue(this.credit.operacionAnterior.cliente.nombreCompleto);
     this.cedulaCliente.setValue(this.credit.operacionAnterior.cliente.identificacion);
     this.numeroOperacion = this.credit.operacionAnterior.credito.numeroOperacion;
     this.numeroOperacionMadre = this.credit.operacionAnterior.credito.numeroOperacionMadre;
+    this.codigoOperacionAnterior.setValue(this.credit.operacionAnterior.credito.numeroOperacion );
     this.codigoBpm.setValue( this.credit.credito ? this.credit.credito.codigo : 'Sin asignar')
     this.proceso.setValue(   this.credit.proceso ? this.credit.proceso.proceso : 'Sin asignar');
     this.estadoProceso.setValue(this.credit.proceso ? this.credit.proceso.estadoProceso : 'Sin asignar');
