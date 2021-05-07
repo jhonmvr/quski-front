@@ -33,6 +33,7 @@ export interface cliente {
 export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public loading;
   public usuario: string;
+  variablesInternas;
   agencia: string;
   private validCliente = true;
   private riesgoTotal: number;
@@ -296,7 +297,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionRiesgo(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(false,true,false) );
@@ -308,7 +309,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionCliente(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false) );
@@ -320,7 +321,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionCobertura(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion(  this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego).subscribe( data =>{
+      this.cre.crearCreditoRenovacion(  this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
@@ -362,7 +363,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         this.loadingSubject.next(true);
         if(r){
-          this.cre.crearCreditoRenovacion( this.selection.selected[0], this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia, this.garantiasSimuladas, this.idNego ).subscribe( data =>{
+          this.cre.crearCreditoRenovacion( this.selection.selected[0], this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia, this.garantiasSimuladas, this.idNego, this.variablesInternas ).subscribe( data =>{
             if(data.entidad){
               this.credit = data.entidad;
               this.router.navigate(['cliente/gestion-cliente/NOV/',this.credit.proceso.idReferencia]);
@@ -402,10 +403,12 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
           return;
         }
         if( data.entidad.simularResult.xmlGarantias.garantias.garantia ){
-          this.garantiasSimuladas = [];
-          data.entidad.simularResult.xmlGarantias.garantias.garantia.forEach(e => {
-            this.garantiasSimuladas.push( e );
-          });
+          this.garantiasSimuladas = data.entidad.simularResult.xmlGarantias.garantias.garantia;
+          console.log("estas son las garantias ", this.garantiasSimuladas );
+        }
+        if(data.entidad && data.entidad.simularResult && data.entidad.simularResult.xmlVariablesInternas  && data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable ){
+          this.variablesInternas = data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable;
+          console.log("estas son las variabes", this.variablesInternas)
         }
         this.validarCliente( data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion );
       }
