@@ -65,7 +65,7 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
   public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
   public correoElectronico = new FormControl('', [Validators.required, Validators.email]);
-  public campania = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public campania = new FormControl('');
   public aprobacionMupi = new FormControl('', [Validators.required]);
   public tipoOro = new FormControl('', [Validators.required]);
   public pesoNetoEstimado = new FormControl('', [Validators.required]);

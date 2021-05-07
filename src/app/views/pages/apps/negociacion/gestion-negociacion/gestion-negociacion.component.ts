@@ -87,7 +87,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
   public email = new FormControl('', [Validators.required, Validators.email]);
-  public campania = new FormControl('', [Validators.required]);
+  public campania = new FormControl('');
   public aprobacionMupi = new FormControl('', [Validators.required]);
   // FORMULARIO TASACION
   public formTasacion: FormGroup = new FormGroup({});

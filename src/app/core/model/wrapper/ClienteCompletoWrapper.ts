@@ -14,6 +14,7 @@ export class ClienteCompletoWrapper{
     datosTrabajos : Array<TbQoDatoTrabajoCliente>;
     cuentas : Array<TbQoCuentaBancariaCliente> ;
     isSoftbank: boolean;
+    totalAvaluo: any;
     constructor( ){
 
     }

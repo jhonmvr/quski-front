@@ -25,6 +25,7 @@ export class AprobacionWrapper {
 	creditoAnterior: any;
     existeError: boolean;
     mensaje: string;
+    joyas:any;
     
     constructor() {
 

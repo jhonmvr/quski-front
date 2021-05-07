@@ -63,7 +63,7 @@
     </ng-container>
     <ng-container matColumnDef="bloqueo">
         <mat-header-cell *matHeaderCellDef class="text-align">Bloqueo</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> - </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align">{{element.bloqueo}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
@@ -87,19 +87,19 @@
     </ng-container>
     <ng-container matColumnDef="mora">
         <mat-header-cell *matHeaderCellDef class="text-align">Mora</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.interesMora  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.mora  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
     <ng-container matColumnDef="cobranzas">
         <mat-header-cell *matHeaderCellDef class="text-align">Cobranzas</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> - </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.gastosCobranza}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
     <ng-container matColumnDef="custodiaVencida">
         <mat-header-cell *matHeaderCellDef class="text-align">Custodia vencida</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> - </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.custodia}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
