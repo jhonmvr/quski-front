@@ -91,10 +91,15 @@
                                     {{ 
                                     element.plazo ? 
                                     element.plazo == '60'  ? '60 Dias (Al Vcto.)' : 
+                                    element.plazo == '31'  ? '31 Dias (Al Vcto.)' : 
                                     element.plazo == '90'  ? '90 Dias (Al Vcto.)' : 
                                     element.plazo == '120' ? '120 Dias (Al Vcto.)' : 
                                     element.plazo == '6'   ? '6	Cuotas' : 
-                                    element.plazo == '9'   ? '9	Cuotas' : 
+                                    element.plazo == '4'   ? '4	Cuotas' : 
+                                    element.plazo == '7'   ? '7	Cuotas' : 
+                                    element.plazo == '11'  ? '11 Cuotas' : 
+                                    element.plazo == '13'  ? '13 Cuotas' : 
+                                    element.plazo == '9'   ? '9	Cuotas'  : 
                                     element.plazo == '12'  ? '12 Cuotas' : 
                                     element.plazo == '18'  ? '18 Cuotas' : 
                                     element.plazo : 'Error'
@@ -111,6 +116,7 @@
                                     {{ 
                                         element.periodicidadPlazo ?
                                         element.periodicidadPlazo == 'M' ? 'Meses' :
+                                        element.periodicidadPlazo == 'D' ? 'Dias' :
                                         element.periodicidadPlazo : 'Error'
                                     }}
                                 </mat-cell>

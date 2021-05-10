@@ -465,7 +465,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   masterToggle(event) {
     this.selection.clear()        
     this.selection.select(event) 
-    this.recibirPagar = event.valorARecibir - event.valorAPagar ;
+    this.recibirPagar = (event.valorARecibir - event.valorAPagar).toFixed(2) ;
     console.log('Valor =>', this.selection.isSelected(event) );
     if(this.selection.isSelected(event) && this.recibirPagar > 0){
       this.recibirOpagar = 'primary'; 
