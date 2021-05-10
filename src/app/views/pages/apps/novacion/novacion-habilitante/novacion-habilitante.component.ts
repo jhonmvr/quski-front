@@ -126,12 +126,13 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.numeroCuenta.disable();
     this.firmanteOperacion.setValue( this.catFirmanteOperacion ? this.catFirmanteOperacion[0] ? this.catFirmanteOperacion[0] :{nombre: 'Error cargando catalogo'} :{nombre: 'Error cargando catalogo'} )
     this.firmanteOperacion.disable();
-    this.excepcionOperativa.setValue( wr.proceso.estadoProceso == 'CREADO' || wr.proceso.estadoProceso == 'EXCEPCIONADO' ? this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') : null );
+    this.excepcionOperativa.setValue(wr.credito.excepcionOperativa ? this.catExcepcionOperativa.find(x => x.valor == wr.credito.excepcionOperativa) : this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') );
     this.habilitarExcepcionOperativa();
     this.guardarTraking('RENOVACION', wr ? wr.credito ? wr.credito.codigo : null : null, 
       ['Información Operación','Detalle de garantias','Simular opciones de crédito'], 
       0, 'CREAR RENOVACION', wr ? wr.credito ? wr.credito.numeroOperacion : null : null );
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.credito.codigo + ".", "success");
+    this.dataSourceComprobante = new MatTableDataSource<any>(wr.pagos);
   }
   public habilitarExcepcionOperativa(){
     if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
@@ -315,5 +316,11 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       this.formOperacion.addControl("identificacionCodeudor", this.identificacionCodeudor);
       this.formOperacion.addControl("nombreCodeudor", this.nombreCodeudor);
     }
+  }
+
+   //validacion de los dias 25 - 30 
+   onlyOdds = (d: Date): boolean => {
+    const date = d.getDate(); 
+    return date<25;
   }
 }
