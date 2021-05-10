@@ -430,13 +430,15 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.dataSourceIngresoEgreso.data.push(new TbQoIngresoEgresoCliente(ap.credito.tbQoNegociacion.tbQoCliente.ingresos, true));
     this.dataSourceIngresoEgreso.data.push(new TbQoIngresoEgresoCliente(ap.credito.tbQoNegociacion.tbQoCliente.egresos, false));
     this.dataSourceReferencia.data = ap.referencias;
-    if(this.dataSourceReferencia.data)
-    this.dataSourceReferencia.data.forEach( e=>{
-      e.parentesco = this.catalogos ? 
-        this.catalogos.catTipoReferencia ?
-          this.catalogos.catTipoReferencia.find(x => x.codigo == e.parentesco) ? 
-            this.catalogos.catTipoReferencia.find( x => x.codigo == e.parentesco ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
-    });
+    if(this.dataSourceReferencia.data){
+      this.dataSourceReferencia.data.forEach( e=>{
+        e.parentesco = this.catalogos ? 
+          this.catalogos.catTipoReferencia ?
+            this.catalogos.catTipoReferencia.find(x => x.codigo == e.parentesco) ? 
+              this.catalogos.catTipoReferencia.find( x => x.codigo == e.parentesco ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+      });
+    }
+    
     this.numeroFunda.setValue(ap.creditoAnterior.garantias[0].numeroFundaMadre);
     
     /** @DATOS_INSTRUCCION_OPERATIVA */

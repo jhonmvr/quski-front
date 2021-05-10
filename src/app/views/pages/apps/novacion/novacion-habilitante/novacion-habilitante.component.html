@@ -133,7 +133,7 @@
 					</ng-container>
 					<ng-container matColumnDef="intitucionFinanciera">
 						<mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.intitucionFinanciera.nombre }} </mat-cell>
+						<mat-cell *matCellDef="let element"> {{ element.intitucionFinanciera?element.intitucionFinanciera.nombre:'' }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="cuenta">
 						<mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
