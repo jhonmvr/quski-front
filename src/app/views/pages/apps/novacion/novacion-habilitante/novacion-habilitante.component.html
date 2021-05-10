@@ -42,7 +42,7 @@
                         </div>
                         <div class="col-md-4" *ngIf="this.credit && this.credit.credito.periodoPlazo == 'C'">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [min]="diasMin" [max]="diasMax"  matInput #inputFechaCuota
+                                <input [matDatepickerFilter]="onlyOdds"  [min]="diasMin" [max]="diasMax"  matInput #inputFechaCuota
                                     [matDatepicker]="pickerFechaCuota" [formControl]="diaFijoPago" placeholder="Dia Fijo Pago">
                                 <mat-datepicker-toggle matSuffix [for]="pickerFechaCuota"></mat-datepicker-toggle>
                                 <mat-datepicker #pickerFechaCuota></mat-datepicker>

@@ -430,6 +430,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.dataSourceIngresoEgreso.data.push(new TbQoIngresoEgresoCliente(ap.credito.tbQoNegociacion.tbQoCliente.ingresos, true));
     this.dataSourceIngresoEgreso.data.push(new TbQoIngresoEgresoCliente(ap.credito.tbQoNegociacion.tbQoCliente.egresos, false));
     this.dataSourceReferencia.data = ap.referencias;
+    if(this.dataSourceReferencia.data)
     this.dataSourceReferencia.data.forEach( e=>{
       e.parentesco = this.catalogos ? 
         this.catalogos.catTipoReferencia ?
