@@ -128,11 +128,16 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.firmanteOperacion.disable();
     this.excepcionOperativa.setValue(wr.credito.excepcionOperativa ? this.catExcepcionOperativa.find(x => x.valor == wr.credito.excepcionOperativa) : this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') );
     this.habilitarExcepcionOperativa();
+    wr.pagos ? this.dataSourceComprobante = new MatTableDataSource<any>(wr.pagos) : null;
+    if( this.dataSourceComprobante.data ){
+      this.dataSourceComprobante.data.forEach( e =>{
+        e.intitucionFinanciera = this.catCuenta ? this.catCuenta.find(x => x.id == e.intitucionFinanciera) ? this.catCuenta.find(x => x.id == e.intitucionFinanciera) : {nombre: 'Error cargando catalogo'}: {nombre: 'Error cargando catalogo'};
+      });
+    }
     this.guardarTraking('RENOVACION', wr ? wr.credito ? wr.credito.codigo : null : null, 
       ['Información Operación','Detalle de garantias','Simular opciones de crédito'], 
       0, 'CREAR RENOVACION', wr ? wr.credito ? wr.credito.numeroOperacion : null : null );
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.credito.codigo + ".", "success");
-    this.dataSourceComprobante = new MatTableDataSource<any>(wr.pagos);
   }
   public habilitarExcepcionOperativa(){
     if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
@@ -225,6 +230,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.cre.crearOperacionRenovacion(this.credit.credito, list , this.usuario).subscribe( (data: any) =>{
       if(data.entidad){
         this.aprobar = true;
+        this.myStepper.selectedIndex = 2;
       }else{
         this.sinNotSer.setNotice('ERROR CREACION EL CREDITO EN SOFTBANK', 'error');
       }

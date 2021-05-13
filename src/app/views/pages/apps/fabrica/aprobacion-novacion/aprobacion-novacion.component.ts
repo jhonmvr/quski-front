@@ -21,7 +21,12 @@ import { Component, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoRegistrarPago } from '../../../../../core/model/quski/TbQoRegistrarPago';
+import { Observable } from 'rxjs';
 
+export interface CatalogoWrapper {
+  nombre: string;
+  id: string;
+}
 
 @Component({
   selector: 'kt-aprobacion-novacion',
@@ -44,6 +49,9 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public totalValorC: number;
   public totalValorO: number;
 
+
+  private divicionPolitica: CatalogoWrapper[];
+  
   /** @OPERACION */
   public codigoBpm = new FormControl('', []);
   public proceso = new FormControl('', []);
@@ -321,7 +329,17 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
         this.catTipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
         this.sof.consultarBancosCS().subscribe( (data: any) =>{
         this.catBanco = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-        this.traerCreditoNegociacion();
+          const localizacion = this.catalogos.catDivicionPolitica;
+          let bprovinces = localizacion.filter(e => e.tipoDivision == 'PROVINCIA');
+          let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
+          let bParroqui = localizacion.filter(e => e.tipoDivision == 'PARROQUIA');
+          let ubicacion: CatalogoWrapper[] = bParroqui.map(parro => {
+            const cant = bCantons.find(c => c.id == parro.idPadre) || {};
+            const pro = bprovinces.find(p => p.id == cant.idPadre) || {};
+            return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, id: parro.id };
+          });
+          this.divicionPolitica = ubicacion;
+          this.traerCreditoNegociacion();
         });
       });
     });
@@ -365,15 +383,18 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.apellidoMaterno.setValue(ap.credito.tbQoNegociacion.tbQoCliente.apellidoMaterno);
     this.separacionDeBienes.setValue(ap.credito.tbQoNegociacion.tbQoCliente.separacionBienes ? ap.credito.tbQoNegociacion.tbQoCliente.separacionBienes : 'NO APLICA');
     this.genero.setValue(this.catalogos.catSexo.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.genero).nombre);
-    this.estadoCivil.setValue(this.catalogos.catEstadoCivil.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.estadoCivil).nombre);
+    this.estadoCivil.setValue(this.catalogos.catEstadoCivil.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.estadoCivil) ? 
+    this.catalogos.catEstadoCivil.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.estadoCivil).nombre: 'Error de catalogo');
     this.cargaFamiliar.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cargasFamiliares);
-    this.nacionalidad.setValue(this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nombre);
-    this.lugarDeNacimiento.setValue(this.catalogos.catDivicionPolitica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento).nombre);
+    this.nacionalidad.setValue(this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad) ? 
+    this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nombre : 'Error de catalogo');
+    this.lugarDeNacimiento.setValue(this.divicionPolitica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento).nombre);
     this.edad.setValue(ap.credito.tbQoNegociacion.tbQoCliente.edad);
     this.fechaActual = ap.credito.fechaCreacion.toString();
     this.fechaNacimiento.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento);
     this.nivelEducacion.setValue(this.catalogos.catEducacion.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.nivelEducacion).nombre);
-    this.actividadEconomica.setValue(this.catalogos.catActividadEconomica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.actividadEconomica).nombre);
+    this.actividadEconomica.setValue(this.catalogos.catActividadEconomica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.actividadEconomica) ? 
+      this.catalogos.catActividadEconomica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.actividadEconomica).nombre : 'Error de catalogo');
     this.fechaUltimaActualizazion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaActualizacion);
     this.correo.setValue(ap.credito.tbQoNegociacion.tbQoCliente.email);
     !ap.telefonos ? null : ap.telefonos.forEach(e => {
@@ -388,7 +409,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     });
     !ap.direcciones ? null : ap.direcciones.forEach(e => {
       if (e.tipoDireccion == "OFI") {
-        this.ubicacionLaboral.setValue(this.catalogos.catDivicionPolitica.find(x => x.id == e.divisionPolitica).nombre);
+        this.ubicacionLaboral.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre);
         this.tipoViviendaLaboral.setValue(this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda).nombre);
         this.callePrincipalLaboral.setValue(e.callePrincipal.toUpperCase());
         this.barrioLaboral.setValue(e.barrio ? e.barrio.toUpperCase() : null);
@@ -400,7 +421,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
         this.direccionCorreoLaboral.setValue(e.direccionEnvioCorrespondencia);
       }
       if (e.tipoDireccion == "DOM") {
-        this.ubicacion.setValue(this.catalogos.catDivicionPolitica.find(x => x.id == e.divisionPolitica).nombre);
+        this.ubicacion.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre);
         this.tipoVivienda.setValue(this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda).nombre);
         this.callePrincipal.setValue(e.callePrincipal);
         this.numeracion.setValue(e.numeracion);
@@ -416,11 +437,16 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
       this.origenIngresos.setValue(this.catalogos.catOrigenIngreso.find(x => x.codigo == e.origenIngreso).nombre);
       this.relacionDependencia.setValue(e.esRelacionDependencia ? "SI" : "NO");
       this.nombreEmpresa.setValue(e.nombreEmpresa);
-      this.cargo.setValue(this.catalogos.catCargo.find(x => x.codigo == e.cargo).nombre);
-      this.ocupacion.setValue(this.catalogos.catOcupacion.find(x => x.codigo == e.ocupacion).nombre);
-      this.actividadEconomicaMupi.setValue(this.catalogos.catActividadEconomicaMupi.find(x => x.codigo == e.actividadEconomicaMupi).nombre);
-      this.actividadEconomicaEmpresa.setValue(this.catalogos.catActividadEconomica.find(x => x.id.toString() == e.actividadEconomica).nombre);
-      this.profesion.setValue(this.catalogos.catProfesion.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.profesion).nombre);
+      this.cargo.setValue(this.catalogos.catCargo.find(x => x.codigo == e.cargo) ? 
+      this.catalogos.catCargo.find(x => x.codigo == e.cargo).nombre : 'Error de catalogo');
+      this.ocupacion.setValue(this.catalogos.catOcupacion.find(x => x.codigo == e.ocupacion) ?
+      this.catalogos.catOcupacion.find(x => x.codigo == e.ocupacion) .nombre : 'Error de catalogo');
+      this.actividadEconomicaMupi.setValue(this.catalogos.catActividadEconomicaMupi.find(x => x.codigo == e.actividadEconomicaMupi) ? 
+      this.catalogos.catActividadEconomicaMupi.find(x => x.codigo == e.actividadEconomicaMupi).nombre : 'Error de catalogo');
+      this.actividadEconomicaEmpresa.setValue(this.catalogos.catActividadEconomica.find(x => x.id.toString() == e.actividadEconomica) ? 
+      this.catalogos.catActividadEconomica.find(x => x.id.toString() == e.actividadEconomica).nombre : 'Error de catalogo');
+      this.profesion.setValue(this.catalogos.catProfesion.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.profesion) ? 
+      this.catalogos.catProfesion.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.profesion).nombre : 'Error de catalogo');
     });
     this.dataSourcePatrimonioActivo = new MatTableDataSource<TbQoPatrimonio>();
     this.dataSourcePatrimonioPasivo = new MatTableDataSource<TbQoPatrimonio>();

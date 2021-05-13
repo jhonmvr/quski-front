@@ -21,6 +21,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
+import { DevolucionCreditoComponent } from '../../../../partials/custom/popups/devolucion-credito/devolucion-credito.component';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -44,6 +45,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public fechaUtil: diferenciaEnDias;
   selection = new SelectionModel<any>(true, []);
   private garantiasSimuladas: any[];
+  private catMotivoDevolucion: Array<any>;
 
   /** @FORMULARIOS */
   public formOperacion: FormGroup = new FormGroup({});
@@ -103,11 +105,17 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.cre.setParameter();
     this.sof.setParameter();
     this.cal.setParameter();
+    this.cargarCatalogos();
     this.subheaderService.setTitle('Negociación');
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem( 'idAgencia' );
     this.inicioDeFlujo();
+  }
+  private cargarCatalogos(){
+    this.sof.consultarMotivoDevolucionAprobacionCS().subscribe((data: any) => {
+      this.catMotivoDevolucion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+    });
   }
   /** @CREDITO */
   private inicioDeFlujo() {
@@ -122,6 +130,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
             this.idNego = json.params.item;
             //console.log("datos ->", this.credit);
             if (this.credit ) {
+              this.credit.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : null;
               this.cargarCampos();
             }else{
               this.abrirSalirGestion("Error al intentar cargar el credito.");
@@ -151,6 +160,22 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       return false;
     }
     return true;
+  }
+  public popupDevolucion() {
+    let entryData = {
+      titulo: 'Algo',
+      mensajeAprobador: this.credit.credito.descripcionDevuelto,
+      motivoDevolucion: this.catMotivoDevolucion ?
+        this.catMotivoDevolucion.find(m => m.codigo == this.credit.credito.codigoDevuelto) ?
+          this.catMotivoDevolucion.find(m => m.codigo == this.credit.credito.codigoDevuelto).nombre : 'No definido' : 'No definido',
+      aprobador: this.credit.credito.tbQoNegociacion.aprobador,
+      codigoBpm: this.credit.credito.codigo
+    }
+    const dialogRef = this.dialog.open(DevolucionCreditoComponent, {
+      width: "800px",
+      height: "auto",
+      data: entryData
+    });
   }
   private cargarCampos() {
     this.codigoOperacion.setValue(this.credit.credito ? this.credit.credito.numeroOperacion ? this.credit.credito.numeroOperacion : 'Sin asignar' : 'Sin asignar' );
@@ -217,6 +242,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.validarProceso();
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + this.credit.operacionAnterior.credito.numeroOperacion + ".", "success");
   }
+
   public validarProceso(){
     if(this.credit.proceso){
       if(this.credit.proceso.proceso != 'RENOVACION'){
@@ -439,7 +465,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   masterToggle(event) {
     this.selection.clear()        
     this.selection.select(event) 
-    this.recibirPagar = event.valorARecibir - event.valorAPagar ;
+    this.recibirPagar = (event.valorARecibir - event.valorAPagar).toFixed(2) ;
     console.log('Valor =>', this.selection.isSelected(event) );
     if(this.selection.isSelected(event) && this.recibirPagar > 0){
       this.recibirOpagar = 'primary'; 

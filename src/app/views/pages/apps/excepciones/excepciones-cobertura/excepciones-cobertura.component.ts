@@ -42,7 +42,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   public telefonoMovil = new FormControl('', []);
   public email = new FormControl('', []);
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
-  displayedColumnsCreditoNegociacion = ['plazo', 'periodoPlazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
+  displayedColumnsCreditoNegociacion = ['plazo','periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
   'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
   'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
   'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
@@ -189,10 +189,10 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   public calcularOpciones() {
     if (this.wp && this.wp.joyas && this.wp.joyas.length > 0) {
       this.wp.proceso.proceso == "RENOVACION" ? 
-        this.cal.simularOfertaRenovacionExcepcion(this.wp.credito.id, 0).subscribe( data =>{
+        this.cal.simularOfertaRenovacionExcepcion(this.wp.credito.id, this.wp.credito.cobertura ? this.wp.credito.cobertura : 0).subscribe( data =>{
           if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
-            && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
-            && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
+            && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion
+            && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion.length > 1) {
               this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado.toFixed(2));
               this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
           }

@@ -14,6 +14,7 @@ export class TablaTasacionComponent implements OnInit {
   public displayedColumnsTasacion = ['Total', 'NumeroPiezas', 'TipoOro','PesoBruto','PesoNeto', 'valorOro', 'ValorAvaluo', 'ValorRealizacion', 'valorComercial', 'DescuentoSuelda', 'TipoJoya', 'EstadoJoya', 'Descripcion', 'tienePiedras','DescuentoPesoPiedra', 'detallePiedras',];
   totalPesoN: any;
   totalDescgr: any;
+  totalDescSuelda: any;
   totalPesoB: any;
   totalValorR: number;
   totalValorA: number;
@@ -167,6 +168,7 @@ export class TablaTasacionComponent implements OnInit {
   private calcular() {
     this.totalPesoN = 0;
     this.totalDescgr = 0;
+    this.totalDescSuelda = 0;
     this.totalPesoB = 0;
     this.totalValorR = 0;
     this.totalValorA = 0;
@@ -179,6 +181,7 @@ export class TablaTasacionComponent implements OnInit {
         this.totalDescgr = (Number(this.totalDescgr) + Number(element.descuentoPiedras ? element.descuentoPiedras : element.descuentoPesoPiedra ? element.descuentoPesoPiedra : 0 )).toFixed(2);
         this.totalPesoB  = (Number(this.totalPesoB) + Number(element.pesoBruto)).toFixed(2);
         this.totalValorR = Number(this.totalValorR) + Number(element.valorRealizacion);
+        this.totalDescSuelda = Number(this.totalDescSuelda) + Number(element.descuentoSuelda);
         this.totalValorA = Number(this.totalValorA) + Number(element.valorAvaluo);
         this.totalValorC = Number(this.totalValorC) + Number(element.valorComercial);
         this.totalValorO = Number(this.totalValorO) + Number(element.valorOro);
