@@ -45,7 +45,7 @@
   <ng-container matColumnDef="DescuentoSuelda">
     <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
     <mat-cell *matCellDef="let element"> {{ forDescuentoSuelda(element) }}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    <mat-footer-cell *matFooterCellDef> {{ totalDescSuelda }} </mat-footer-cell>
   </ng-container>
   <ng-container matColumnDef="PesoNeto">
     <mat-header-cell *matHeaderCellDef>Peso neto</mat-header-cell>
