@@ -148,13 +148,9 @@
             <div class="col-md-4">
               <form class="example-form">
                 <mat-form-field class="mat-form-field-fluid">
-                  <input placeholder="Lugar de Nacimiento:" type="text" matInput required [formControl]="lugarNacimiento" [matAutocomplete]="auto4">
-                  <mat-autocomplete #auto4="matAutocomplete" [displayWith]="displayFn">
-                    <mat-option *ngFor="let name of catFiltradoLugarNacimiento | async" [value]="name">
-                      {{name.nombre}}
-                    </mat-option>
-                  </mat-autocomplete>
-                  <mat-error>{{ getErrorMessage("lugarNacimiento") }}</mat-error> -->
+                  <input placeholder="Lugar de Nacimiento:" type="text" matInput [formControl]="lugarNacimiento" disabled>
+                  <button mat-button matSuffix mat-icon-button (click)="abrirPopUpLugar('N')"><mat-icon>list</mat-icon></button>
+                  <mat-error>{{ getErrorMessage("lugarNacimiento") }}</mat-error> 
                 </mat-form-field>
               </form>
             </div>

@@ -26,6 +26,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { PopUpNacimientoComponent } from './pop-up-nacimiento/pop-up-nacimiento.component';
 
 
 export interface User {
@@ -100,6 +101,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   public apellidoPaterno = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public fechaNacimiento = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public lugarNacimiento = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  selectLugarNacimiento;
   public nivelEducacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cargaFamiliar = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public canalContacto = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -313,9 +315,10 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.estadoCivil.setValue(this.catEstadoCivil.find(x => x.codigo == this.wrapper.cliente.estadoCivil));
       this.cargaFamiliar.setValue(this.wrapper.cliente.cargasFamiliares);
       if (this.wrapper.cliente.lugarNacimiento) {
-        this.catFiltradoLugarNacimiento.subscribe((data: any) => {
+        this.selectLugarNacimiento = this.wrapper.cliente.lugarNacimiento;
+        /* this.catFiltradoLugarNacimiento.subscribe((data: any) => {
           this.lugarNacimiento.setValue(data.find(x => x.id == this.wrapper.cliente.lugarNacimiento));
-        });
+        }); */
       }
       this.edad.setValue(this.wrapper.cliente.edad);
       this.canalContacto.setValue(this.catMotivoVisita.find(x => x.codigo == this.wrapper.cliente.canalContacto));
@@ -1147,7 +1150,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.stepper.selectedIndex = 0
       return;
     }
-    if (!this.lugarNacimiento.value || !this.lugarNacimiento.value.id) {
+    if (!this.lugarNacimiento.value || !this.selectLugarNacimiento) {
       this.sinNoticeService.setNotice("VALOR EN EL CAMPO DE LUGAR DE NACIMIENTO NO VALIDO.", 'warning');
       this.stepper.selectedIndex = 0
       return;
@@ -1210,7 +1213,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.wrapper.cliente.estadoCivil = this.estadoCivil.value ? this.estadoCivil.value.codigo : null;
     this.wrapper.cliente.fechaNacimiento = this.fechaNacimiento.value;
     this.wrapper.cliente.genero = this.genero.value ? this.genero.value.codigo : null;
-    this.wrapper.cliente.lugarNacimiento = this.lugarNacimiento.value.id;
+    this.wrapper.cliente.lugarNacimiento = this.selectLugarNacimiento;
     this.wrapper.cliente.nacionalidad = this.nacionalidad.value ? this.nacionalidad.value.id : null;
     this.wrapper.cliente.nivelEducacion = this.nivelEducacion.value ? this.nivelEducacion.value.codigo : null;
     this.wrapper.cliente.profesion = this.profesion.value ? this.profesion.value.codigo : null;
@@ -1356,5 +1359,19 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.telefonoFijo.setValue(element.numero);
   }
 
+  abrirPopUpLugar(v){
+    const dialogRef = this.dialog.open(PopUpNacimientoComponent, {
+      width: "800px",
+      height: "400px",
+      data: v
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      console.log("respuesta r",r)
+      if(r){
+        this.lugarNacimiento.setValue(r.control.value);
+        this.selectLugarNacimiento = r.nodo.id;
+      }
+    });
+  }
 
 }

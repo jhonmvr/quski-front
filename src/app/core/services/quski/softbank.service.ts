@@ -820,9 +820,11 @@ export class SoftbankService extends BaseService {
    * @author Jeroham Cadenas - Developer Twelve
    * @description Catalogos Diviciones politicas con relaciones
    */
-  consultarDivicionPoliticaConsolidadaCS() {
-    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "divisionpoliticaconsolidado" ;
-    let wrapper =  "";
+  consultarDivicionPoliticabyIdPais(idPais) {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "divisionpolitica" ;
+    let wrapper =  {
+      "idpais":idPais
+    };
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl,wrapper,this.options).pipe(
       tap( // Log the result or error
