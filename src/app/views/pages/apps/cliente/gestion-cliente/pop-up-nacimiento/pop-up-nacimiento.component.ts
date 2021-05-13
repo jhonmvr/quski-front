@@ -55,12 +55,17 @@ export class PopUpNacimientoComponent implements OnInit {
     this.css.consultarPaisCS().subscribe(p => {
       this.catPais = p.catalogo
     });
+    console.log("abirndo popUP",this.data)
+    if(this.data !=='N'){
+      console.log("abirndo popUP",this.data)
+      this.buscarDivisionPolitica(52);
+    }
 
   }
 
   buscarDivisionPolitica(v) {
-    if (v.value) {
-      this.css.consultarDivicionPoliticabyIdPais(v.value.id).subscribe(p => {
+    if (v) {
+      this.css.consultarDivicionPoliticabyIdPais(v).subscribe(p => {
        this.catalogo = p.catalogo
         this.dataSource.data = this.generarArbol(p.catalogo);
       });

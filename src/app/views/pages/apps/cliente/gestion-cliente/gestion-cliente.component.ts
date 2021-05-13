@@ -88,7 +88,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   ;
   /** @ENUMS **/
   /** @DIVISION_POLITICA **/
-  private divicionPolitica: User[];
+  private divicionPolitica;
   public catFiltradoLugarNacimiento: Observable<User[]>;
   public catFiltradoUbicacionDomicilio: Observable<User[]>;
   public catFiltradoUbicacionLaboral: Observable<User[]>;
@@ -102,6 +102,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   public fechaNacimiento = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public lugarNacimiento = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   selectLugarNacimiento;
+  selectUbicacion;
+  selectUbicacionO;
   public nivelEducacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cargaFamiliar = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public canalContacto = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -316,10 +318,13 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.cargaFamiliar.setValue(this.wrapper.cliente.cargasFamiliares);
       if (this.wrapper.cliente.lugarNacimiento) {
         this.selectLugarNacimiento = this.wrapper.cliente.lugarNacimiento;
+        this.lugarNacimiento.setValue(this.divicionPolitica.find(x => x.id == this.wrapper.cliente.lugarNacimiento) ?
+        this.divicionPolitica.find(x => x.id == this.wrapper.cliente.lugarNacimiento).nombre : 'Error de catalogo');
         /* this.catFiltradoLugarNacimiento.subscribe((data: any) => {
           this.lugarNacimiento.setValue(data.find(x => x.id == this.wrapper.cliente.lugarNacimiento));
         }); */
       }
+      this.lugarNacimiento.disable();
       this.edad.setValue(this.wrapper.cliente.edad);
       this.canalContacto.setValue(this.catMotivoVisita.find(x => x.codigo == this.wrapper.cliente.canalContacto));
       let countFijo: number = 0;
@@ -327,7 +332,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       let countMovil: number = 0;
       if (this.wrapper.telefonos) {
         this.dataSourceTelefonosCliente = new MatTableDataSource<any>(this.wrapper.telefonos);
-      }
+      } 
       let countOfi: number = 0;
       let countDom: number = 0;
       !this.wrapper.datosTrabajos ? null : this.wrapper.datosTrabajos.forEach(t => {
@@ -359,9 +364,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       });
       !this.wrapper.direcciones ? null : this.wrapper.direcciones.forEach(e => {
         if (e.tipoDireccion == "OFI" && e.estado == 'ACT' && countOfi < 1) {
-          this.catFiltradoUbicacionLaboral.subscribe((data: any) => {
-            this.ubicacionO.setValue(data.find(x => x.id == e.divisionPolitica));
-          });
+          this.ubicacionO.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica) ?
+          this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre : 'Error de catalogo');
           this.tipoViviendaO.setValue(this.catTipoVivienda.find(x => x.codigo == e.tipoVivienda));
           this.callePrincipalO.setValue(e.callePrincipal.toUpperCase());
           this.barrioO.setValue(e.barrio ? e.barrio.toUpperCase() : null);
@@ -373,9 +377,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
           this.direccionCorreoLaboral.setValue(e.direccionEnvioCorrespondencia);
           countOfi++;
         } else if (e.tipoDireccion == "DOM" && e.estado == 'ACT' && countDom < 1) {
-          this.catFiltradoUbicacionDomicilio.subscribe((data: any) => {
-            this.ubicacion.setValue(data.find(x => x.id == e.divisionPolitica));
-          });
+          this.ubicacion.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica) ?
+          this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre : 'Error de catalogo');
           this.tipoVivienda.setValue(this.catTipoVivienda.find(x => x.codigo == e.tipoVivienda));
           this.callePrincipal.setValue(e.callePrincipal);
           this.numeracion.setValue(e.numeracion);
@@ -391,6 +394,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
           e.barrio = 'No Espeficicado';
         }
       });
+      this.ubicacionO.disable();
+      this.ubicacion.disable();
       !this.wrapper.cuentas ? null : this.wrapper.cuentas.forEach(e => {
         e.estado = 'INA';
       });
@@ -493,9 +498,9 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
                                       return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, id: parro.id };
                                     });
                                     this.divicionPolitica = ubicacion;
-                                    this.catFiltradoLugarNacimiento = this.lugarNacimiento.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
-                                    this.catFiltradoUbicacionDomicilio = this.ubicacion.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
-                                    this.catFiltradoUbicacionLaboral = this.ubicacionO.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
+                                    //this.catFiltradoLugarNacimiento = this.lugarNacimiento.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
+                                    //this.catFiltradoUbicacionDomicilio = this.ubicacion.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
+                                    //this.catFiltradoUbicacionLaboral = this.ubicacionO.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
                                     this.css.consultarEducacionCS().subscribe((data: any) => {
                                       this.catEducacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
                                       this.css.consultarOrigenIngresoCS().subscribe((data: any) => {
@@ -1265,7 +1270,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.wrapper.direcciones[1].estado = 'ACT';
     this.wrapper.direcciones.forEach(e => {
       if (e.tipoDireccion == "OFI" && e.estado == 'ACT') {
-        e.divisionPolitica = this.ubicacionO.value.id;
+        e.divisionPolitica = this.selectUbicacionO;
         e.direccionEnvioCorrespondencia = this.direccionCorreoLaboral.value;
         e.direccionLegal = this.direccionLegalLaboral.value;
         e.barrio = this.barrioO.value ? this.barrioO.value.toUpperCase() : 'No Espeficicado';
@@ -1277,7 +1282,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
         e.tipoVivienda = this.tipoViviendaO.value ? this.tipoViviendaO.value.codigo : 'No Espeficicado';
       }
       if (e.tipoDireccion == "DOM" && e.estado == 'ACT') {
-        e.divisionPolitica = this.ubicacion.value.id;
+        e.divisionPolitica = this.selectUbicacion;
         e.direccionEnvioCorrespondencia = this.direccionCorreoDomicilio.value;
         e.direccionLegal = this.direccionLegalDomicilio.value;
         e.barrio = this.barrio.value ? this.barrio.value.toUpperCase() : 'No Espeficicado';
@@ -1368,8 +1373,17 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     dialogRef.afterClosed().subscribe(r => {
       console.log("respuesta r",r)
       if(r){
-        this.lugarNacimiento.setValue(r.control.value);
-        this.selectLugarNacimiento = r.nodo.id;
+        if(v=='N'){
+          this.lugarNacimiento.setValue(r.control.value);
+          this.selectLugarNacimiento = r.nodo.id;
+        } else if(v=='O'){
+          this.ubicacionO.setValue(r.control.value);
+          this.selectUbicacion = r.nodo.id;
+        } else if(v=='U'){
+          this.ubicacion.setValue(r.control.value);
+          this.selectUbicacionO = r.nodo.id;
+        }
+        
       }
     });
   }

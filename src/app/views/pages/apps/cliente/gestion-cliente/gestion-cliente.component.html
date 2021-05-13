@@ -263,14 +263,8 @@
             <div class="col-md-4">
               <form class="example-form">
                 <mat-form-field class="mat-form-field-fluid">
-                  <input matInput type="text" placeholder="Parroquia / Canton / Provincia :" [matAutocomplete]="auto2"
-                    [formControl]="ubicacion">
-                  <!--(selectionChange)="crearUbicacionDomicilio()"-->
-                  <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">
-                    <mat-option *ngFor="let Dd of catFiltradoUbicacionDomicilio | async" [value]="Dd">
-                      {{Dd.nombre}}
-                    </mat-option>
-                  </mat-autocomplete>
+                  <input matInput type="text" placeholder="Parroquia / Canton / Provincia :" [formControl]="ubicacion">
+                  <button mat-button matSuffix mat-icon-button (click)="abrirPopUpLugar('U')"><mat-icon>list</mat-icon></button>
                   <mat-error>{{ getErrorMessage("Parroquia / Canton / Provincia") }}</mat-error>
                 </mat-form-field>
               </form>
@@ -350,16 +344,10 @@
             <div class="col-md-4">
 
               <mat-form-field class="mat-form-field-fluid">
-                <input matInput type="text" placeholder="Parroquia / Canton / Provincia :" [matAutocomplete]="auto1"
-                  required [formControl]="ubicacionO">
-                <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">
-                  <mat-option *ngFor="let asd of catFiltradoUbicacionLaboral | async" [value]="asd">
-                    {{asd.nombre}}
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-              <mat-error>{{ getErrorMessage("Parroquia / Canton / Provincia") }}</mat-error>
-
+                <input matInput type="text" placeholder="Parroquia / Canton / Provincia :" [formControl]="ubicacionO">
+                <button mat-button matSuffix mat-icon-button (click)="abrirPopUpLugar('O')"><mat-icon>list</mat-icon></button>            
+                <mat-error>{{ getErrorMessage("Parroquia / Canton / Provincia") }}</mat-error>
+             </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field class="mat-form-field-fluid">
