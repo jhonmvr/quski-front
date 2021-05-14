@@ -350,7 +350,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
           this.abrirPopupExcepciones(new DataInjectExcepciones(true));
           return;
-        } else   if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
+        } else   if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 1) {
+          this.clienteBloqueado = true;
           const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
             width: "800px",
             height: "auto",

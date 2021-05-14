@@ -366,6 +366,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
         if (e.tipoDireccion == "OFI" && e.estado == 'ACT' && countOfi < 1) {
           this.ubicacionO.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica) ?
           this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre : 'Error de catalogo');
+          this.selectUbicacionO =  e.divisionPolitica;
           this.tipoViviendaO.setValue(this.catTipoVivienda.find(x => x.codigo == e.tipoVivienda));
           this.callePrincipalO.setValue(e.callePrincipal.toUpperCase());
           this.barrioO.setValue(e.barrio ? e.barrio.toUpperCase() : null);
@@ -377,6 +378,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
           this.direccionCorreoLaboral.setValue(e.direccionEnvioCorrespondencia);
           countOfi++;
         } else if (e.tipoDireccion == "DOM" && e.estado == 'ACT' && countDom < 1) {
+          this.selectUbicacion =  e.divisionPolitica;
           this.ubicacion.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica) ?
           this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre : 'Error de catalogo');
           this.tipoVivienda.setValue(this.catTipoVivienda.find(x => x.codigo == e.tipoVivienda));
