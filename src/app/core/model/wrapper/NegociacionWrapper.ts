@@ -17,6 +17,7 @@ export class NegociacionWrapper{
     proceso: TbQoProceso
 
     excepcionBre: string;
+    codigoExcepcionBre;
     respuesta : boolean;
     constructor(){
       

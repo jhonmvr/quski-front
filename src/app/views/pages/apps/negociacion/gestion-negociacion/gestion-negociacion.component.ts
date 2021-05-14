@@ -111,7 +111,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public montoSolicitado = new FormControl('', [Validators.required, ValidateDecimal, Validators.min(0.01)]);
 
   public tbQoCliente;
-
+  clienteBloqueado = false;
   telefonoMovil;
   telefonoFijo;
   private elementJoya;
@@ -347,9 +347,19 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         this.loadBusqueda.next(false);
         this.negoW = wrapper.entidad;
         this.myStepper.selectedIndex = 1;
-        if (this.negoW.excepcionBre) {
+        if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
           this.abrirPopupExcepciones(new DataInjectExcepciones(true));
           return;
+        } else   if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {
+              mensaje: this.negoW.excepcionBre
+              , titulo: 'CODIGO DE ERROR BRE: ' +this.negoW.codigoExcepcionBre
+            }
+          });
+         
         }
         this.cargarValores(this.negoW, false);
       } else {
@@ -363,9 +373,19 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         this.limpiarNegociacion();
         this.negoW = wrapper.entidad;
         this.myStepper.selectedIndex = 1;
-        if (this.negoW.excepcionBre) {
+        if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
           this.abrirPopupExcepciones(new DataInjectExcepciones(true));
           return;
+        } else   if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
+          const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+            width: "800px",
+            height: "auto",
+            data: {
+              mensaje: this.negoW.excepcionBre
+              , titulo: 'CODIGO DE ERROR BRE: ' +this.negoW.codigoExcepcionBre
+            }
+          });
+         
         }
         this.cargarValores(this.negoW, false);
       } else {
@@ -992,6 +1012,10 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     return numSelected === numRows;
   }
   guardarCredito() {
+    if(this.clienteBloqueado){
+      this.sinNotSer.setNotice(this.negoW.excepcionBre, 'error');
+      return;
+    }
     if (this.selection.selected.length == 0) {
       this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO", 'warning');
       return;

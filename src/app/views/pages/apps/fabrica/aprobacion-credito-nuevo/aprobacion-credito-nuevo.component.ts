@@ -470,7 +470,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.formaPagoSolca.setValue( ap.credito.formaPagoImpuestoSolca);
     this.aPagarCliente.setValue( ap.credito.aPagarCliente);
     this.aRecibirCliente.setValue( ap.credito.aRecibirCliente);
-    this.totalCostoNuevaOperacion.setValue( ap.credito.totalCostoNuevaOperacion);
+    this.totalCostoNuevaOperacion.setValue( ap.credito.totalGastosNuevaOperacion);
     this.observacionAsesor.setValue(ap.credito.tbQoNegociacion.observacionAsesor);
     /** @DATOS_INSTRUCCION_OPERATIVA */
     this.tipoCuenta.setValue( ap.cuenta.banco ? this.catalogos ? this.catalogos.catBanco ? this.catalogos.catBanco.find( x => x.id == ap.cuenta.banco ) ? this.catalogos.catBanco.find( x => x.id == ap.cuenta.banco ).nombre : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo' );
