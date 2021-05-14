@@ -1,33 +1,25 @@
-<div class="header">
-
-    <div *ngIf="data=='N'">
-        <h2 mat-dialog-title>
-            SELECCIONE EL LUGAR DE NACIMIENTO
-        </h2>
+<mat-card>
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <mat-card-title *ngIf="data=='N'"> SELECCIONE EL LUGAR DE NACIMIENTO </mat-card-title>
+            <mat-card-title *ngIf="data=='O'"> SELECCIONE UBICACION </mat-card-title>
+            <mat-card-title *ngIf="data=='U'"> SELECCIONE UBICACION </mat-card-title>
+        </div>
     </div>
-    <div *ngIf="data=='O'">
-        <h2 mat-dialog-title>
-            SELECCIONE UBICACION
-        </h2>
-    </div>
-    <div *ngIf="data=='U'">
-        <h2 mat-dialog-title>
-            SELECCIONE UBICACION
-        </h2>
-    </div>
-    <mat-dialog-content class="mat-typography">
-
-        <div class="row">
-            <div class="col-md-6" *ngIf="data=='N'">
-                <mat-select placeholder="Selecciona un Pais" [formControl]="pais"
-                    (selectionChange)="buscarDivisionPolitica($event.value.id)">
-                    <mat-option *ngFor="let item of catPais" [value]="item">
-                        {{item.nombre}}
-                    </mat-option>
-                </mat-select>
+    <mat-dialog-content class="mat-typography m-1">
+        <div class="row justify-content-center">
+            <div class="col-md-4" *ngIf="data=='N'">
+                <mat-form-field class="mat-form-field-fluid">
+                    <mat-select placeholder="Selecciona un Pais" [formControl]="pais"
+                        (selectionChange)="buscarDivisionPolitica($event.value.id)">
+                        <mat-option *ngFor="let item of catPais" [value]="item">
+                            {{item.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
-            <div class="col-md-6">
-                <mat-form-field>
+            <div class="col-md-4">
+                <mat-form-field class="mat-form-field-fluid">
                     <input matInput placeholder="Buscar" [formControl]="inputBuscar"
                         (keyup)="filtrar(inputBuscar.value)">
                 </mat-form-field>
@@ -39,8 +31,8 @@
                     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
                         <button mat-icon-button disabled></button>
                         <!-- <mat-checkbox class="checklist-leaf-node"
-                                        [checked]="checkFlat(node)"
-                                        (change)="todoLeafItemSelectionToggle(node)"></mat-checkbox> -->
+                                    [checked]="checkFlat(node)"
+                                    (change)="todoLeafItemSelectionToggle(node)"></mat-checkbox> -->
 
 
                         <button mat-button color="accent" (click)="selectCiudad(node)">
@@ -54,12 +46,12 @@
                     </mat-tree-node>
 
                     <!-- <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
-                          <button mat-icon-button disabled></button>
-                          <mat-form-field>
-                            <input matInput #itemValue placeholder="New item...">
-                          </mat-form-field>
-                          <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
-                        </mat-tree-node> -->
+                        <button mat-icon-button disabled></button>
+                        <mat-form-field>
+                        <input matInput #itemValue placeholder="New item...">
+                        </mat-form-field>
+                        <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
+                    </mat-tree-node> -->
 
                     <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
                         <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
@@ -68,8 +60,8 @@
                             </mat-icon>
                         </button>
                         <!-- <mat-checkbox [checked]="descendantsAllSelected(node)" 
-                                        [indeterminate]="descendantsPartiallySelected(node)"
-                                        (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox> -->
+                                    [indeterminate]="descendantsPartiallySelected(node)"
+                                    (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox> -->
                         {{node.nombre}}
                         <!-- <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button> -->
                     </mat-tree-node>
@@ -77,19 +69,15 @@
             </div>
         </div>
     </mat-dialog-content>
-    <mat-dialog-actions>
-        <div class="row">
-            <div class="col-md-10">
-
-                <mat-form-field>
-                    <input matInput placeholder="Ciudad" [formControl]="ciudadSlected">
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="row" align="end">
-
-            <button mat-button (click)="cerrar('Cancelar')">Cancelar</button>
-            <button mat-button (click)="cerrar('Aceptar')" cdkFocusInitial>Aceptar</button>
-        </div>
+    <mat-dialog-actions align="center">
+        <input matInput placeholder="Ciudad" [formControl]="ciudadSlected">  
     </mat-dialog-actions>
-</div>
+    <div class="row justify-content-center">
+        <div class="col-2">
+            <button mat-raised-button (click)="cerrar('Aceptar')" color="primary" cdkFocusInitial> Aceptar </button>
+        </div>
+        <div class="col-2">
+            <button mat-raised-button (click)="cerrar('Cancelar')" color="warn"> Cancelar </button>
+        </div>
+    </div> 
+</mat-card>

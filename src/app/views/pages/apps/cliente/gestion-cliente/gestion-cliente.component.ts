@@ -1366,8 +1366,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
 
   abrirPopUpLugar(v){
     const dialogRef = this.dialog.open(PopUpNacimientoComponent, {
-      width: "800px",
-      height: "400px",
+      width: "810px",
+      height: "auto",
       data: v
     });
     dialogRef.afterClosed().subscribe(r => {
