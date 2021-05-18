@@ -83,7 +83,7 @@
                         </button>
                     </div>	
                     <div class="col-12">
-                        <mat-table class="simulacion"  [dataSource]="dataSourceCreditoNegociacion">
+                        <mat-table class="simulacion" matTableExporter [dataSource]="dataSourceCreditoNegociacion" #exporter="matTableExporter">
                             <ng-container matColumnDef="Accion">
                                 <mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
                                 <mat-cell *matCellDef="let row">
@@ -228,7 +228,7 @@
                             </ng-container>
                             <ng-container matColumnDef="cuota">
                                 <mat-header-cell *matHeaderCellDef>Cuota</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.Cuota | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.cuota | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="saldoCapitalRenov">
                                 <mat-header-cell *matHeaderCellDef>Saldo Capital Renov</mat-header-cell>
@@ -281,6 +281,11 @@
                         </mat-table>
                     </div>
                 </div>
+                <div class="row mt-4">
+                    <div class="col-1 offset-10">
+                      <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'bre', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
+                    </div>
+                </div>
                 <form [formGroup]="formOpcionesCredito">
                     <div class="row mt-1">
                         <div class="col-md-2">
@@ -304,7 +309,7 @@
                     <div class="row mt-3 justify-content-center">
                         <div class="col-2">
                             <button mat-raised-button color="primary" matStepperNext (click)="actualizarCliente()">
-                                <span color="primary">Actualizar Cliente</span>
+                                <span color="primary">INSTANCIAR PROCESO</span>
                             </button>
                         </div>
                     </div>

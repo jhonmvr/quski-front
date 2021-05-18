@@ -200,17 +200,17 @@ export class ListCreditoComponent implements OnInit {
       w.identificacion = this.cedulaCliente.value ? this.cedulaCliente.value : null;
       w.plazo = this.plazo.value ? this.plazo.value : null;
       w.fechaInicioSolicitud = this.fechaCreacionDesde.value ? this.fechaCreacionDesde.value.getFullYear()+'-'+
-              ('00' + (this.fechaCreacionDesde.value.getMonth()+1)).slice(-2)+'-'+ this.fechaCreacionDesde.value.getDate(): null;
+              ('00' + (this.fechaCreacionDesde.value.getMonth()+1)).slice(-2)+'-'+ ('00' +this.fechaCreacionDesde.value.getDate()).slice(-2): null;
       w.fechaFinSolicitud = this.fechaCreacionHasta.value ? this.fechaCreacionHasta.value.getFullYear()+'-'+
-              ('00' + (this.fechaCreacionHasta.value.getMonth()+1)).slice(-2)+'-'+this.fechaCreacionHasta.value.getDate() : null;
+              ('00' + (this.fechaCreacionHasta.value.getMonth()+1)).slice(-2)+'-'+('00' +this.fechaCreacionHasta.value.getDate()).slice(-2) : null;
       w.fechaInicioAprobacion = this.fechaAprobacionDesde.value ? this.fechaAprobacionDesde.value.getFullYear()+'-'+
-              ('00' + (this.fechaAprobacionDesde.value.getMonth()+1)).slice(-2)+'-'+this.fechaAprobacionDesde.value.getDate() : null;
+              ('00' + (this.fechaAprobacionDesde.value.getMonth()+1)).slice(-2)+'-'+ ('00' + this.fechaAprobacionDesde.value.getDate()).slice(-2) : null;
       w.fechaFinAprobacion = this.fechaAprobacionHasta.value ? this.fechaAprobacionHasta.value.getFullYear()+'-'+
-              ('00' + (this.fechaAprobacionHasta.value.getMonth()+1)).slice(-2)+'-'+this.fechaAprobacionHasta.value.getDate() : null;
+              ('00' + (this.fechaAprobacionHasta.value.getMonth()+1)).slice(-2)+'-'+('00' +this.fechaAprobacionHasta.value.getDate()).slice(-2) : null;
       w.fechaInicioVencimiento = this.fechaVencimientoDesde.value ? this.fechaVencimientoDesde.value.getFullYear()+'-'+
-              ('00' + (this.fechaVencimientoDesde.value.getMonth()+1)).slice(-2)+'-'+this.fechaVencimientoDesde.value.getDate() : null;
+              ('00' + (this.fechaVencimientoDesde.value.getMonth()+1)).slice(-2)+'-'+('00' +this.fechaVencimientoDesde.value.getDate() ).slice(-2): null;
       w.fechaFinVencimiento = this.fechaVencimientoHasta.value ? this.fechaVencimientoHasta.value.getFullYear()+'-'+
-              ('00' + (this.fechaVencimientoHasta.value.getMonth()+1)).slice(-2)+'-'+this.fechaVencimientoHasta.value.getDate() : null;
+              ('00' + (this.fechaVencimientoHasta.value.getMonth()+1)).slice(-2)+'-'+('00' +this.fechaVencimientoHasta.value.getDate()).slice(-2) : null;
       w.codigoEstadoOperacion = this.estado.value ? this.estado.value.codigo : null;
       w.nombreCliente = this.nombreCliente.value ? this.nombreCliente.value : null;
       w.esCuotas = this.tipoCredito.value ? this.tipoCredito.value.valor : null;

@@ -225,6 +225,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       this.fechaRegularizacion.setValue(null);
     }else{
       this.fechaRegularizacion.enable();
+      this.fechaRegularizacion = new FormControl('',[Validators.required]);
     }
   }
   setearDiaPago(dia: number):Date{
@@ -273,7 +274,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
         
       });
       
-      this.totalPesoBrutoFunda.setValue( Number(this.pesoFunda.value.codigo) + Number(totalPesoB) );
+      this.totalPesoBrutoFunda.setValue( (this.pesoFunda.value?Number(this.pesoFunda.value.codigo):0 + Number(totalPesoB) ).toFixed(2) );
       this.totalPesoNeto.setValue( totalPesoN );
     }
     if( data.credito.estadoSoftbank && data.credito.numeroOperacion){
@@ -393,6 +394,10 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value;
       this.operacionNuevo.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
       this.operacionNuevo.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
+      if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor !== 'SIN EXCEPCION' && this.fechaRegularizacion.invalid){
+        this.sinNotSer.setNotice('Seleccione la fecha de regularizacion', 'error');
+        return;
+      }
       this.cre.crearOperacionNuevo( this.operacionNuevo.credito, this.correoAsesor ).subscribe( (data: any) =>{
         if(data.entidad){
           this.operacionSoft = data.entidad;  
