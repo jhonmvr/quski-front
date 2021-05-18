@@ -74,10 +74,9 @@ export class CreditoNegociacionService extends BaseService {
    * @author Jeroham Cadenas
    * @param data EnviarOperacion (Interface)
    */
-  public crearOperacionNuevo( data: TbQoCreditoNegociacion, correoAsesor: string) {
+  public crearOperacionNuevo( data: TbQoCreditoNegociacion ) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "crearOperacionNuevo" ;
-    this.params = new HttpParams().set('correoAsesor', correoAsesor);
-    this.options = { headers: this.headers, params: this.params };
+    this.options = { headers: this.headers };
     let entidad = { entidad: data }
     return this.http.post(serviceUrl, entidad, this.options).pipe(
       tap( // Log the result or error
