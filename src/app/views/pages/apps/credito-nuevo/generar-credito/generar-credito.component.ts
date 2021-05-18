@@ -395,7 +395,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       this.operacionNuevo.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
       this.operacionNuevo.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
       if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor !== 'SIN EXCEPCION' && this.fechaRegularizacion.invalid){
-        this.sinNotSer.setNotice('Seleccione la fecha de regularizacion', 'error');
+        this.sinNotSer.setNotice('SELECCIONES UNA FECHA DE REGULARIZACION', 'warning');
         return;
       }
       this.cre.crearOperacionNuevo( this.operacionNuevo.credito ).subscribe( (data: any) =>{
