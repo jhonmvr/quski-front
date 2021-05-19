@@ -125,6 +125,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public plazo = new FormControl('', []);
   public tipoOferta = new FormControl('', []);
   public costoCustodia = new FormControl('', []);
+  public recibirPagar = new FormControl('', []);
   public formaPagoCustodia = new FormControl('', []);
   public costoTransporte = new FormControl('', []);
   public formaPagoTransporte = new FormControl('', []);
@@ -260,6 +261,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.formDisable.addControl("costoTasacion", this.costoTasacion);
     this.formDisable.addControl("formaPagoTasacion", this.formaPagoTasacion);
     this.formDisable.addControl("costoResguardo", this.costoResguardo);
+    this.formDisable.addControl("recibirPagar", this.recibirPagar);
     this.formDisable.addControl("formaPagoResguardo", this.formaPagoResguardo);
     this.formDisable.addControl("costoSeguro", this.costoSeguro);
     this.formDisable.addControl("formaPagoSeguro", this.formaPagoSeguro);
@@ -468,12 +470,12 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.numeroFunda.setValue(ap.creditoAnterior.garantias[0].numeroFundaMadre);
     
     /** @DATOS_INSTRUCCION_OPERATIVA */
-    this.tipoCuenta.setValue( ap.cuenta.esAhorros ? 'Si' : 'No' );
-    this.numeroCuenta.setValue( ap.cuenta.cuenta );
+    this.tipoCuenta.setValue( ap.cuenta ? ap.cuenta.esAhorros ? 'Si' : 'No' : 'Error de datos' );
+    this.numeroCuenta.setValue( ap.cuenta ? ap.cuenta.cuenta : 'Error de datos' );
     this.diaPagoFijo.setValue(ap.credito.pagoDia ? ap.credito.pagoDia : "No aplica");
     this.firmadaOperacion.setValue(ap.credito.firmanteOperacion);
-    this.tipoCliente.setValue( this.catTipoCliente.find( x => x.codigo == ap.credito.tipoCliente).nombre );
-
+    this.tipoCliente.setValue( this.catTipoCliente.find( x => x.codigo == ap.credito.tipoCliente) ? 
+    this.catTipoCliente.find( x => x.codigo == ap.credito.tipoCliente).nombre : 'Error de datos' );
     /** @DATOS_CREDITO_NUEVO */
     this.plazo.setValue(ap.credito.plazoCredito);
     this.tipoOferta.setValue(ap.credito.tipoOferta == "N" ? 'NUEVO' : ap.credito.tipoOferta);
@@ -493,6 +495,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.formaPagoSolca.setValue(ap.credito.formaPagoImpuestoSolca);
     this.aPagarCliente.setValue(ap.credito.aPagarCliente);
     this.aRecibirCliente.setValue(ap.credito.aRecibirCliente);
+    this.recibirPagar.setValue( ( ap.credito.aRecibirCliente - ap.credito.aPagarCliente ).toFixed(2) );
     this.totalCostoNuevaOperacion.setValue(ap.credito.totalCostoNuevaOperacion);
 
 
@@ -511,9 +514,9 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.totalInteres.setValue(ap.credito.saldoInteres);
 
     this.dataSourceComprobante.data = ap.pagos;
-    this.dataSourceComprobante.data.forEach( e =>{
+    this.dataSourceComprobante.data ? this.dataSourceComprobante.data.forEach( e =>{
       e.institucionFinanciera = this.catBanco.find( x => x.id == e.institucionFinanciera);
-    });
+    }) : null;
     /** @OPERACION_ANTERIOR */
     this.antNumeroOperacion.setValue( ap.creditoAnterior.credito.numeroOperacion );
     this.antReferenciaMupi.setValue( "No tengo.");

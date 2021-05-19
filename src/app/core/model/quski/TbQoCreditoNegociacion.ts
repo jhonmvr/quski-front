@@ -25,7 +25,6 @@ export class TbQoCreditoNegociacion {
     totalCostoNuevaOperacion: number ;
     numeroFunda: string;
     descripcionProducto: string;
-    montoDiferido: number;
     montoPreaprobado: number;
     montoSolicitado: number;
     plazoCredito: number;
