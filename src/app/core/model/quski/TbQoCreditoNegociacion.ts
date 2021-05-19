@@ -70,7 +70,6 @@ export class TbQoCreditoNegociacion {
     formaPagoValoracion: string;
     gastoCobranza: number;
     impuestoSolca: number;
-    montoDesembolso: number;
     montoPrevioDesembolso: number;
     netoAlCliente: number;
     periodicidadPlazo: string;

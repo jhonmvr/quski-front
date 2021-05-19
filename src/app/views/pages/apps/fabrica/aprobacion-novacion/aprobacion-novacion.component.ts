@@ -496,9 +496,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.aPagarCliente.setValue(ap.credito.aPagarCliente);
     this.aRecibirCliente.setValue(ap.credito.aRecibirCliente);
     this.recibirPagar.setValue( ( ap.credito.aRecibirCliente - ap.credito.aPagarCliente ).toFixed(2) );
-    this.totalCostoNuevaOperacion.setValue(ap.credito.totalCostoNuevaOperacion);
-
-
+    this.totalCostoNuevaOperacion.setValue(ap.credito.totalGastosNuevaOperacion);
 
     /** @OPERACION_NUEVA */
     this.tipoCartera.setValue(ap.credito.tipoCarteraQuski);
