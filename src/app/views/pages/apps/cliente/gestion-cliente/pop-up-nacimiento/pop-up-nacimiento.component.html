@@ -10,8 +10,7 @@
         <div class="row justify-content-center">
             <div class="col-md-4" *ngIf="data=='N'">
                 <mat-form-field class="mat-form-field-fluid">
-                    <mat-select placeholder="Selecciona un Pais" [formControl]="pais"
-                        (selectionChange)="buscarDivisionPolitica($event.value.id)">
+                    <mat-select placeholder="Selecciona un Pais" [formControl]="pais" (selectionChange)="buscarDivisionPolitica($event.value.id,true)">
                         <mat-option *ngFor="let item of catPais" [value]="item">
                             {{item.nombre}}
                         </mat-option>
@@ -20,8 +19,7 @@
             </div>
             <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
-                    <input matInput placeholder="Buscar" [formControl]="inputBuscar"
-                        (keyup)="filtrar(inputBuscar.value)">
+                    <input matInput placeholder="Buscar" [formControl]="inputBuscar" (keyup)="filtrar(inputBuscar.value)">
                 </mat-form-field>
             </div>
         </div>
@@ -70,7 +68,7 @@
         </div>
     </mat-dialog-content>
     <mat-dialog-actions align="center">
-        <input matInput placeholder="Ciudad" [formControl]="ciudadSlected">  
+        <input matInput placeholder="Ciudad" [formControl]="ciudadSlected">
     </mat-dialog-actions>
     <div class="row justify-content-center">
         <div class="col-2">
@@ -79,5 +77,5 @@
         <div class="col-2">
             <button mat-raised-button (click)="cerrar('Cancelar')" color="warn"> Cancelar </button>
         </div>
-    </div> 
+    </div>
 </mat-card>

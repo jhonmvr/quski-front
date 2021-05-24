@@ -273,8 +273,15 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
         totalPesoN  = (Number(totalPesoN) + Number( e.pesoNeto )).toFixed(2);
         
       });
+
+     try{
+      const x = Number(this.pesoFunda.value.codigo)+ Number(totalPesoB) ;
       
-      this.totalPesoBrutoFunda.setValue( (this.pesoFunda.value?Number(this.pesoFunda.value.codigo):0 + Number(totalPesoB) ).toFixed(2) );
+      this.totalPesoBrutoFunda.setValue( x.toFixed(2) );
+     }catch{
+       console.log("error en la suma de funda y peso bruto");
+
+     }
       this.totalPesoNeto.setValue( totalPesoN );
     }
     if( data.credito.estadoSoftbank && data.credito.numeroOperacion){
@@ -324,13 +331,13 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
                         this.sof.fechasistema( this.agencia ).subscribe( ( data: any) =>{
                           if( !data.existeError ){
                             this.fechaSistema.setValue( data.fechaSistema  );
-                            this.par.addDaysToDate(data.fechaSistema, dias.catalogo[0].diasMaximo ).subscribe( (data:any) =>{
+                            this.par.addDaysToDate(data.fechaSistema, dias.catalogo[0].diasMaximo+1 ).subscribe( (data:any) =>{
                               console.log('fecha maxima =>', data.entidad);
-                              this.diasMax = data.entidad;
+                              this.diasMax = new Date(data.entidad);
                             });
-                            this.par.addDaysToDate(data.fechaSistema, dias.catalogo[0].diasMinimo ).subscribe( (data:any) =>{
+                            this.par.addDaysToDate(data.fechaSistema, dias.catalogo[0].diasMinimo+1 ).subscribe( (data:any) =>{
                               console.log('fecha minima =>', data.entidad);
-                              this.diasMin = data.entidad;
+                              this.diasMin = new Date(data.entidad);
                             });
                           }
                         });
