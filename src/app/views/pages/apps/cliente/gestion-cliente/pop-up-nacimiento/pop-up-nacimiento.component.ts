@@ -41,7 +41,7 @@ export class PopUpNacimientoComponent implements OnInit {
   ciudadSlected = new FormControl('', [Validators.required]);
   selected;
   inputBuscar  = new FormControl('', [Validators.required]);
-  constructor(@Inject(MAT_DIALOG_DATA) public data: string,
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
   private sinNoticeService: ReNoticeService, private css: SoftbankService,public dialogRefGuardar: MatDialogRef<any>,) {
     /**inicializar elementos del arbol uno */
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
@@ -55,14 +55,14 @@ export class PopUpNacimientoComponent implements OnInit {
     this.css.consultarPaisCS().subscribe(p => {
       this.catPais = p.catalogo
     });
-    console.log("abirndo popUP",this.data)
-    if(this.data !=='N'){
+    //console.log("abirndo popUP",this.data)
+    if(this.data.esLugarNacimiento !=='N'){
       this.buscarDivisionPolitica(52,false);
     }
-    if(this.data =='N'){
-      this.buscarDivisionPolitica(null,true);
+    if(this.data.esLugarNacimiento == 'N'){
+      this.buscarDivisionPolitica(this.data.nacionalidad,true);
     }
-
+    
   }
 
   buscarDivisionPolitica(v,n) {

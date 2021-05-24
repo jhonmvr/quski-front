@@ -1367,10 +1367,15 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   }
 
   abrirPopUpLugar(v){
+    if( this.nacionalidad.invalid || !this.nacionalidad.value.id){
+      this.sinNoticeService.setNotice("PRIMERO SELECCIONE EL LUGAR DE NACIMIENTO",'warning');
+      return;
+    }
+    let x = {esLugarNacimiento:v, nacionalidad: this.nacionalidad.value.id}
     const dialogRef = this.dialog.open(PopUpNacimientoComponent, {
       width: "810px",
       height: "auto",
-      data: v
+      data: x
     });
     dialogRef.afterClosed().subscribe(r => {
       console.log("respuesta r",r)
