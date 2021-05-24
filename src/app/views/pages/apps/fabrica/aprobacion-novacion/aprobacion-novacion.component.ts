@@ -327,23 +327,31 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   private traerCatalogos() {
     this.sof.traerCatalogos().subscribe((data: any) => {
       data.entidad ? this.catalogos = data.entidad : this.sinNotSer.setNotice('ERROR AL CARGAR CATALOGOS', 'error');
+      const localizacion = this.catalogos.catDivicionPolitica;
+      let bprovinces = localizacion.filter(e => e.tipoDivision == 'PROVINCIA');
+      let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
+      let bParroqui = localizacion.filter(e => e.tipoDivision == 'PARROQUIA');
+      let ubicacion: CatalogoWrapper[] = bParroqui.map(parro => {
+        const cant = bCantons.find(c => c.id == parro.idPadre) || {};
+        const pro = bprovinces.find(p => p.id == cant.idPadre) || {};
+        return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, id: parro.id };
+      });
+      this.divicionPolitica = ubicacion;
+
       this.sof.consultarTipoClienteCS().subscribe( (data: any) =>{
         this.catTipoCliente = !data.existeError ? data.catalogo : "Error al cargar catalogo";
         this.sof.consultarBancosCS().subscribe( (data: any) =>{
         this.catBanco = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-          const localizacion = this.catalogos.catDivicionPolitica;
-          let bprovinces = localizacion.filter(e => e.tipoDivision == 'PROVINCIA');
-          let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
-          let bParroqui = localizacion.filter(e => e.tipoDivision == 'PARROQUIA');
-          let ubicacion: CatalogoWrapper[] = bParroqui.map(parro => {
-            const cant = bCantons.find(c => c.id == parro.idPadre) || {};
-            const pro = bprovinces.find(p => p.id == cant.idPadre) || {};
-            return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, id: parro.id };
-          });
-          this.divicionPolitica = ubicacion;
+          
           this.traerCreditoNegociacion();
         });
       });
+    });
+  }
+  private consultarLugarDeNacimiento( idPais, idLugar ){
+    this.sof.consultarDivicionPoliticabyIdPais(idPais, true).subscribe( ( data:any ) =>{
+      this.lugarDeNacimiento.setValue(data.catalogo.find(x => x.id == idLugar ) ? 
+      data.catalogo.find(x => x.id == idLugar ).nombre : 'Error de catalogo' );
     });
   }
   private traerCreditoNegociacion() {
@@ -376,6 +384,10 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     0, 'APROBACION CREDITO RENOVACION', ap ? ap.credito ? ap.credito.numeroOperacion : null : null );
 
     /** @DATOS_CLIENTE */
+    this.nacionalidad.setValue(this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad) ? 
+    this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nombre : 'Error de catalogo');
+    this.consultarLugarDeNacimiento( this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad) ? 
+    this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).id : 0, ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento );
     this.identificacion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.aprobacionMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S' ? 'SI' : 'NO');
     this.nombresCompletos.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
@@ -388,9 +400,6 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.estadoCivil.setValue(this.catalogos.catEstadoCivil.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.estadoCivil) ? 
     this.catalogos.catEstadoCivil.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.estadoCivil).nombre: 'Error de catalogo');
     this.cargaFamiliar.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cargasFamiliares);
-    this.nacionalidad.setValue(this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad) ? 
-    this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nombre : 'Error de catalogo');
-    this.lugarDeNacimiento.setValue(this.divicionPolitica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento).nombre);
     this.edad.setValue(ap.credito.tbQoNegociacion.tbQoCliente.edad);
     this.fechaActual = ap.credito.fechaCreacion.toString();
     this.fechaNacimiento.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento);

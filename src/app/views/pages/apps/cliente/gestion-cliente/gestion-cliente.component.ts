@@ -317,12 +317,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.estadoCivil.setValue(this.catEstadoCivil.find(x => x.codigo == this.wrapper.cliente.estadoCivil));
       this.cargaFamiliar.setValue(this.wrapper.cliente.cargasFamiliares);
       if (this.wrapper.cliente.lugarNacimiento) {
-        this.selectLugarNacimiento = this.wrapper.cliente.lugarNacimiento;
-        this.lugarNacimiento.setValue(this.divicionPolitica.find(x => x.id == this.wrapper.cliente.lugarNacimiento) ?
-        this.divicionPolitica.find(x => x.id == this.wrapper.cliente.lugarNacimiento).nombre : 'Error de catalogo');
-        /* this.catFiltradoLugarNacimiento.subscribe((data: any) => {
-          this.lugarNacimiento.setValue(data.find(x => x.id == this.wrapper.cliente.lugarNacimiento));
-        }); */
+        this.consultarLugarDeNacimiento( this.catPais.find(x => x.id == this.wrapper.cliente.nacionalidad) ? 
+        this.catPais.find(x => x.id == this.wrapper.cliente.nacionalidad).id : 0,  this.wrapper.cliente.lugarNacimiento);
       }
       this.lugarNacimiento.disable();
       this.edad.setValue(this.wrapper.cliente.edad);
@@ -528,6 +524,25 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
           });
         });
       }
+    });
+  }
+  private consultarLugarDeNacimiento( idPais, idLugar ){
+    this.css.consultarDivicionPoliticabyIdPais(idPais, true).subscribe( ( data:any ) =>{
+      let x = data.catalogo.find(x => x.id == idLugar )
+      if( x ){
+        this.lugarNacimiento.setValue( x.nombre ) ;
+        this.selectLugarNacimiento = this.wrapper.cliente.lugarNacimiento;
+        return;
+      }
+      this.selectLugarNacimiento = null;
+      this.lugarNacimiento.setValue( 'ERROR DE CATALOGO' ) ;
+
+
+/*       this.lugarNacimiento.setValue(this.divicionPolitica.find(x => x.id == this.wrapper.cliente.lugarNacimiento) ?
+      this.divicionPolitica.find(x => x.id == this.wrapper.cliente.lugarNacimiento).nombre : 'Error de catalogo'); */
+      /* this.catFiltradoLugarNacimiento.subscribe((data: any) => {
+        this.lugarNacimiento.setValue(data.find(x => x.id == this.wrapper.cliente.lugarNacimiento));
+      }); */
     });
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @FUNCIONALIDAD ** */
