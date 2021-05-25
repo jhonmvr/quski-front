@@ -1,5 +1,3 @@
-  
-
 <re-portlet>
     <re-portlet-header style="position: relative;" [title]="'Listado Tracking'" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
@@ -11,12 +9,12 @@
 
     </re-portlet-header>
     <re-portlet-body>
-        <div class="row" >
+        <div class="row">
             <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
-                    <mat-select  placeholder="Proceso" [formControl]="proceso">
+                    <mat-select placeholder="Proceso" [formControl]="proceso">
                         <mat-option>--</mat-option>
-                        <mat-option *ngFor="let element of catProceso" [value]="element"  >{{ element }}</mat-option>
+                        <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -47,14 +45,14 @@
             </div>
             <div class="offset-2 col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
-                    <input matInput [matDatepicker]="fechadesde" [formControl]="fechaDesde "placeholder="Fecha Desde">
+                    <input matInput [matDatepicker]="fechadesde" [formControl]="fechaDesde " placeholder="Fecha Desde">
                     <mat-datepicker-toggle matSuffix [for]="fechadesde"></mat-datepicker-toggle>
                     <mat-datepicker #fechadesde></mat-datepicker>
                 </mat-form-field>
             </div>
             <div class="col-md-4">
                 <mat-form-field class="mat-form-field-fluid">
-                    <input matInput [matDatepicker]="fechahasta" [formControl]="fechaHasta"placeholder="Fecha Hasta">
+                    <input matInput [matDatepicker]="fechahasta" [formControl]="fechaHasta" placeholder="Fecha Hasta">
                     <mat-datepicker-toggle matSuffix [for]="fechahasta"></mat-datepicker-toggle>
                     <mat-datepicker #fechahasta></mat-datepicker>
                 </mat-form-field>
@@ -68,85 +66,88 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 mt-3">
+            <div class="col-12 mt-3 table-container">
                 <mat-progress-bar mode="indeterminate" *ngIf="cargardatos.asObservable() | async"></mat-progress-bar>
-                <mat-table #table class="mat-elevation-z8 " matSort #sort1="matSort" [dataSource]='dataSource'
-                    matSortDirection="asc" matSortDisableClear>
-                
+                <mat-table #table matTableExporter class="mat-elevation-z8 " matSort #sort1="matSort" [dataSource]='dataSource' matSortDirection="asc" matSortDisableClear #exporter="matTableExporter">
+
                     <ng-container matColumnDef="proceso">
                         <mat-header-cell *matHeaderCellDef>Proceso</mat-header-cell>
-                        <mat-cell class="mat-form-field-fluid"*matCellDef="let element"> {{element.proceso | titlecase }}</mat-cell>
+                        <mat-cell class="mat-form-field-fluid" *matCellDef="let element"> {{element.proceso | titlecase }}</mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
-    
+
                     <ng-container matColumnDef="actividad">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Actividad</mat-header-cell>
-                        <mat-cell class="mat-form-field-fluid"*matCellDef="let element "> {{element.actividad | titlecase}}</mat-cell>
+                        <mat-cell class="mat-form-field-fluid" *matCellDef="let element "> {{element.actividad | titlecase}}</mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
-    
+
                     <ng-container matColumnDef="seccion">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Seccion</mat-header-cell>
-                        <mat-cell class="mat-form-field-fluid"*matCellDef="let element">{{element.seccion | titlecase }} </mat-cell>
+                        <mat-cell class="mat-form-field-fluid" *matCellDef="let element">{{element.seccion | titlecase }} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
-    
+
                     <ng-container matColumnDef="codigoBpm">
                         <mat-header-cell *matHeaderCellDef>Codigo BPM</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.codigoBpm }}</mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
-    
+
                     <ng-container matColumnDef="codigoOperacionSoftbank">
                         <mat-header-cell *matHeaderCellDef>Codigo Operacion Softbank</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.codigoOperacionSoftbank ? element.codigoOperacionSoftbank : 'No Aplica' | titlecase }}</mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
-    
+
                     <ng-container matColumnDef="fechaAsignacion">
                         <mat-header-cell *matHeaderCellDef>Fecha Asignacion</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.fechaAsignacion | rDate}} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
-    
+
                     <ng-container matColumnDef="usuario">
                         <mat-header-cell *matHeaderCellDef>Usuario</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.usuarioCreacion | titlecase }} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
-    
+
                     <ng-container matColumnDef="fechaCreacion">
                         <mat-header-cell *matHeaderCellDef>Hora Inicio</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.fechaInicio | date:"HH:MM:ss"}} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
-    
+
                     <ng-container matColumnDef="fechaActualizacion">
                         <mat-header-cell *matHeaderCellDef>Hora Fin</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.fechaFin  | date:"HH:MM:ss"}} </mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.fechaFin | date:"HH:MM:ss"}} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> Total </mat-footer-cell>
                     </ng-container>
-    
+
                     <ng-container matColumnDef="tiempoTotal">
                         <mat-header-cell *matHeaderCellDef>Total Tiempo</mat-header-cell>
-                        <mat-cell *matCellDef="let element">  {{ calcularTiempo( element.tiempoTranscurrido ) }} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ calcularTiempo( totalTiempo )  }}</mat-footer-cell>
+                        <mat-cell *matCellDef="let element"> {{ calcularTiempo( element.tiempoTranscurrido ) }} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> {{ calcularTiempo( totalTiempo ) }}</mat-footer-cell>
                     </ng-container>
-    
+
                     <ng-container matColumnDef="fecha">
                         <mat-header-cell *matHeaderCellDef>Fecha Creacion </mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.fechaInicio | rDate}} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
-    
+
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                     <mat-footer-row *matFooterRowDef="displayedColumns"></mat-footer-row>
                 </mat-table>
-                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
-                    [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[20, 50, 200]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
                 </mat-paginator>
-    
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-1 offset-11">
+                <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'traking', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
             </div>
         </div>
         <!--end MAT TABLE

@@ -172,9 +172,17 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
-  public aprobarNuevo(idCredito: number, descripcion: string, cash: string, agencia: number, usuario: string, codigoMotivo: string, aprobar: boolean) {
+  public aprobarNuevo(idCredito: number, descripcion: string, cash: string, agencia: number,
+     usuario: string, codigoMotivo: string, aprobar: boolean) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'aprobarNuevo';
-    this.params = new HttpParams().set('idCredito',idCredito.toString()).set('descripcion',descripcion).set('cash',cash).set('agencia',agencia.toString()).set('usuario',usuario).set('codigoMotivo',codigoMotivo).set('aprobar', aprobar ? 'true':'false');
+    this.params = new HttpParams();
+    this.params = this.params.set('idCredito',idCredito.toString());
+    this.params = this.params.set('descripcion',descripcion);
+    this.params = this.params.set('cash',cash);
+    this.params = this.params.set('agencia',agencia.toString());
+    this.params = this.params.set('usuario',usuario);
+    this.params = this.params.set('codigoMotivo',codigoMotivo);
+    this.params = this.params.set('aprobar', aprobar ? 'true':'false');
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -183,9 +191,20 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
-  public aprobarNovacion(idCredito: number, descripcion: string, cash: string, agencia: number, usuario: string, codigoMotivo: string, aprobar: boolean) {
+
+  public aprobarNovacion(valorCash: number, idCredito: number, descripcion: string, cash: string, agencia: number, usuario: string, codigoMotivo: string, aprobar: boolean) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'aprobarNovacion';
-    this.params = new HttpParams().set('idCredito',idCredito.toString()).set('descripcion',descripcion).set('cash',cash).set('agencia',agencia.toString()).set('usuario',usuario).set('codigoMotivo',codigoMotivo).set('aprobar', aprobar ? 'true':'false');
+    this.params = new HttpParams();
+    if(valorCash){
+      this.params = new HttpParams().set('valorCash',valorCash.toString());
+    }
+    this.params = new HttpParams().set('idCredito',idCredito.toString());
+    this.params = new HttpParams().set('descripcion',descripcion);
+    this.params = new HttpParams().set('cash',cash);
+    this.params = new HttpParams().set('agencia',agencia.toString());
+    this.params = new HttpParams().set('usuario',usuario);
+    this.params = new HttpParams().set('codigoMotivo',codigoMotivo);
+    this.params = new HttpParams().set('aprobar', aprobar ? 'true':'false');
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

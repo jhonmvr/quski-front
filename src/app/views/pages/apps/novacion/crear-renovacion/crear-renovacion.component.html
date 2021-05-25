@@ -1,118 +1,112 @@
-  
 <re-portlet>
-	<re-portlet-header [title]="'Renovar Credito'" [class]="'kt-portlet__head--lg'">
-		<ng-container ktPortletTools>
-			<a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
-					arrow_back</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
-			</a>
-		</ng-container>
-	</re-portlet-header>
-	<re-portlet-body>
-		<mat-vertical-stepper #stepper (animationDone)="guardarTraking('RENOVACION',
-        credit ? credit.credito ? credit.credito.codigo : null : null, 
-        ['Información Operación','Detalle de garantias','Simular opciones de crédito'], 
+    <re-portlet-header [title]="'Renovar Credito'" [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTools>
+            <a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+                    arrow_back</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+            </a>
+        </ng-container>
+    </re-portlet-header>
+    <re-portlet-body>
+        <mat-vertical-stepper #stepper (animationDone)="guardarTraking('RENOVACION',
+        credit ? credit.operacionAnterior ? credit.operacionAnterior.codigo : null : null, 
+        ['Información Operación','Variables Crediticias','Detalle de garantias','Simular opciones de crédito'], 
         stepper.selectedIndex, 'CREAR RENOVACION',
-        credit ? credit.credito ? credit.credito.numeroOperacion : null : null )">
-			<mat-step label='Información Operación'>
-				<form [formGroup]="formOperacion">
-					<div class="row">
+        credit ? credit.operacionAnterior ? credit.operacionAnterior.numeroOperacion : null : null )">
+            <mat-step label='Información Operación'>
+                <form [formGroup]="formOperacion">
+                    <div class="row">
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="codigoOperacion" placeholder="Numero Operacion Actual"/>
-							</mat-form-field>
-                        </div>		
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="codigoOperacionAnterior" placeholder="Numero Operacion Anterior"/>
-							</mat-form-field>
-                        </div>		
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="codigoOperacionMadre" placeholder="Numero Operacion Madre"/>
-							</mat-form-field>
-                        </div>			
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="codigoBpm" placeholder="codigo BPM"/>
+                                <input matInput [formControl]="codigoOperacion" placeholder="Numero Operacion Actual" />
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="proceso" placeholder="Proceso"/>
-                            </mat-form-field>
-                        </div>		
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="estadoProceso" placeholder="Estado Proceso"/>
-                            </mat-form-field>
-                        </div>			
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="nombreCompleto" placeholder="Nombre Completo"/>
+                                <input matInput [formControl]="codigoOperacionAnterior" placeholder="Numero Operacion Anterior" />
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="cedulaCliente" placeholder="Cedula Cliente"/>
+                                <input matInput [formControl]="codigoOperacionMadre" placeholder="Numero Operacion Madre" />
                             </mat-form-field>
                         </div>
-					</div>
-				</form>
-			</mat-step>
-			<mat-step label='Detalle de garantias'> 
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="codigoBpm" placeholder="codigo BPM" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="proceso" placeholder="Proceso" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="estadoProceso" placeholder="Estado Proceso" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="nombreCompleto" placeholder="Nombre Completo" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="cedulaCliente" placeholder="Cedula Cliente" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Variables Crediticias</ng-template>
+                <ng-container *ngIf="this.variablesInternas">
+                    <kt-tabla-variables-crediticias [base]="this.variablesInternas"></kt-tabla-variables-crediticias>
+                </ng-container>
+                <div class="row " *ngIf="!this.variablesInternas">
+                    <div class="col-4 offset-4">
+                        <strong> ERROR AL CARGAR VARIABLES </strong>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label='Detalle de garantias'>
                 <div class="row">
                     <div class="col" *ngIf="credit && credit.operacionAnterior && credit.operacionAnterior.garantias">
                         <kt-tabla-tasacion [data]="credit.operacionAnterior.garantias" [tipo]="'G'"></kt-tabla-tasacion>
                     </div>
                 </div>
-                <div class="row mt-2">
+                <!--  <div class="row mt-2">
                     <div class="col-4 offset-5">
                         <button mat-raised-button color="primary" matStepperNext (click)="simularOpciones()">
 							<span color="primary">Simular Opciones</span>
 						</button>
                     </div>
-                </div>
-			</mat-step>
-			<mat-step label='Simular opciones de crédito'>
+                </div> -->
+            </mat-step>
+            <mat-step label='Simular opciones de crédito'>
                 <div class="row">
                     <div class="offset-9 col-3">
                         <button mat-stroked-button color="{{ recibirOpagar }}">
                             <strong>Neto a recibir: </strong> {{ recibirPagar ? recibirPagar : '0' }}
                         </button>
-                    </div>	
+                    </div>
                     <div class="col-12">
                         <mat-table class="simulacion" matTableExporter [dataSource]="dataSourceCreditoNegociacion" #exporter="matTableExporter">
                             <ng-container matColumnDef="Accion">
                                 <mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
                                 <mat-cell *matCellDef="let row">
-                                    <mat-checkbox (click)="$event.stopPropagation() && masterToggle(row)"
-                                    (change)="$event ? masterToggle(row): null"
-                                    [checked]="selection.isSelected(row)"
-                                    [aria-label]="checkboxLabel(row)">
-                                      </mat-checkbox>	
+                                    <mat-checkbox (click)="$event.stopPropagation() && masterToggle(row)" (change)="$event ? masterToggle(row): null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                                    </mat-checkbox>
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="plazo">
                                 <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> 
-                                    {{ 
-                                    element.plazo ? 
-                                    element.plazo == '60'  ? '60 Dias (Al Vcto.)' : 
-                                    element.plazo == '31'  ? '31 Dias (Al Vcto.)' : 
-                                    element.plazo == '90'  ? '90 Dias (Al Vcto.)' : 
-                                    element.plazo == '120' ? '120 Dias (Al Vcto.)' : 
-                                    element.plazo == '6'   ? '6	Cuotas' : 
-                                    element.plazo == '4'   ? '4	Cuotas' : 
-                                    element.plazo == '7'   ? '7	Cuotas' : 
-                                    element.plazo == '11'  ? '11 Cuotas' : 
-                                    element.plazo == '13'  ? '13 Cuotas' : 
-                                    element.plazo == '9'   ? '9	Cuotas'  : 
-                                    element.plazo == '12'  ? '12 Cuotas' : 
-                                    element.plazo == '18'  ? '18 Cuotas' : 
-                                    element.plazo : 'Error'
-                                    }}
+                                <mat-cell *matCellDef="let element">
+                                    {{ element.plazo ? element.plazo == '60' ? '60 Dias (Al Vcto.)' : element.plazo == '31' ? '31 Dias (Al Vcto.)' : element.plazo == '90' ? '90 Dias (Al Vcto.)' : element.plazo == '120' ? '120 Dias (Al Vcto.)' : element.plazo == '6' ? '6 Cuotas' : element.plazo
+                                    == '4' ? '4 Cuotas' : element.plazo == '7' ? '7 Cuotas' : element.plazo == '11' ? '11 Cuotas' : element.plazo == '13' ? '13 Cuotas' : element.plazo == '9' ? '9 Cuotas' : element.plazo == '12' ? '12 Cuotas' : element.plazo
+                                    == '18' ? '18 Cuotas' : element.plazo : 'Error' }}
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="periodoPlazo">
@@ -121,13 +115,8 @@
                             </ng-container>
                             <ng-container matColumnDef="periodicidadPlazo">
                                 <mat-header-cell *matHeaderCellDef>periodicidad Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> 
-                                    {{ 
-                                        element.periodicidadPlazo ?
-                                        element.periodicidadPlazo == 'M' ? 'Meses' :
-                                        element.periodicidadPlazo == 'D' ? 'Dias' :
-                                        element.periodicidadPlazo : 'Error'
-                                    }}
+                                <mat-cell *matCellDef="let element">
+                                    {{ element.periodicidadPlazo ? element.periodicidadPlazo == 'M' ? 'Meses' : element.periodicidadPlazo == 'D' ? 'Dias' : element.periodicidadPlazo : 'Error' }}
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="montoFinanciado">
@@ -136,7 +125,7 @@
                             </ng-container>
                             <ng-container matColumnDef="valorARecibir">
                                 <mat-header-cell *matHeaderCellDef>Valor A Recibir</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.valorARecibir  | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.valorARecibir | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="valorAPagar">
                                 <mat-header-cell *matHeaderCellDef>Valor A Pagar</mat-header-cell>
@@ -144,7 +133,7 @@
                             </ng-container>
                             <ng-container matColumnDef="costoCustodia">
                                 <mat-header-cell *matHeaderCellDef>Costo Custodia</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.costoCustodia  | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.costoCustodia | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="costoFideicomiso">
                                 <mat-header-cell *matHeaderCellDef>Costo Resguardo</mat-header-cell>
@@ -203,7 +192,7 @@
                                 <mat-cell *matCellDef="let element"> {{ element.formaPagoSeguro }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="formaPagoTasador">
-                                <mat-header-cell *matHeaderCellDef>Forma Pago Tasador</mat-header-cell>
+                                <mat-header-cell *matHeaderCellDef>Forma Pago Tasación</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.formaPagoTasador }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="formaPagoTransporte">
@@ -239,11 +228,11 @@
                                 <mat-cell *matCellDef="let element"> {{ element.montoPrevioDesembolso | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="totalGastosNuevaOperacion">
-                                <mat-header-cell *matHeaderCellDef>Total Gastos Nueva Operacion</mat-header-cell>
+                                <mat-header-cell *matHeaderCellDef>Total Servicios Nueva Operacion</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.totalGastosNuevaOperacion | currency:'CAD':'symbol-narrow':'1.2-2' }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="totalCostosOperacionAnterior">
-                                <mat-header-cell *matHeaderCellDef>Total Costos Operacion Anterior</mat-header-cell>
+                                <mat-header-cell *matHeaderCellDef>Total Valores Operacion Anterior</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.totalCostosOperacionAnterior | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="custodiaDevengada">
@@ -256,12 +245,8 @@
                             </ng-container>
                             <ng-container matColumnDef="tipooferta">
                                 <mat-header-cell *matHeaderCellDef>Tipo oferta</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> 
-                                    {{ 
-                                        element.tipooferta ? 
-                                        element.tipooferta == 'N' ? 'Nuevo' :
-                                        element.tipooferta : 'Error'
-                                    }}
+                                <mat-cell *matCellDef="let element">
+                                    {{ element.tipooferta ? element.tipooferta == 'N' ? 'Nuevo' : element.tipooferta : 'Error' }}
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="porcentajeflujoplaneado">
@@ -283,23 +268,22 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col-1 offset-10">
-                      <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'bre', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
+                        <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'bre', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
                     </div>
                 </div>
                 <form [formGroup]="formOpcionesCredito">
                     <div class="row mt-1">
                         <div class="col-md-2">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="montoSolicitado" placeholder="Monto solicitado" autocomplete="off"
-                                    matInput numeric numericType="number" (keypress)="numberOnly($event)">
+                                <input [formControl]="montoSolicitado" placeholder="Monto solicitado" autocomplete="off" matInput numeric numericType="number" (keypress)="numberOnly($event)">
                             </mat-form-field>
                         </div>
                         <div class="col-md-2">
-                            <button mat-raised-button (click)="simularOpciones()"  matTooltip="Recalcula las opciones con el Monto solicitado" matTooltipPosition="above">
+                            <button mat-raised-button (click)="simularOpciones()" matTooltip="Recalcula las opciones con el Monto solicitado" matTooltipPosition="above">
                                 <span color="primary">Aplicar Monto</span>
                             </button>
                         </div>
-                        
+
                         <div class="offset-6 col-md-2">
                             <button mat-raised-button color="accent" matStepperNext (click)="solicitarExcepcionCobertura()">
                                 <span color="primary">Solicitar Cobertura </span>
@@ -314,9 +298,9 @@
                         </div>
                     </div>
                 </form>
-			</mat-step>
-		</mat-vertical-stepper>
+            </mat-step>
+        </mat-vertical-stepper>
 
-	</re-portlet-body>
-	<re-portlet-footer></re-portlet-footer>
+    </re-portlet-body>
+    <re-portlet-footer></re-portlet-footer>
 </re-portlet>

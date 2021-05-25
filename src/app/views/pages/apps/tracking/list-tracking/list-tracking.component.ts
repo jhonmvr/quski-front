@@ -61,7 +61,7 @@ export class ListTrackingComponent implements OnInit {
     this.tra.setParameter();
     this.traerEnums();
     this.initiateTablePaginator();
-    this.buscarBoton();
+    //this.buscarBoton();
   }
   /**
    * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
@@ -81,6 +81,8 @@ export class ListTrackingComponent implements OnInit {
     p.pageNumber = pagina;
     p.pageSize = this.paginator.pageSize;
     p.isPaginated = paginado;
+    p.sortDirections = 'asc';
+    p.sortFields = 'id';
     return p;
   }
   /**

@@ -24,6 +24,7 @@ export class DetalleCreditoComponent implements OnInit {
   varHabilitante= {proceso:'',referencia:''};
   public  wrapper: any; 
   loadImgJoya = new BehaviorSubject<Boolean>(false);
+  validateRenovacion = new BehaviorSubject<Boolean>(false);
   loadImgFunda= new BehaviorSubject<Boolean>(false);
   srcJoya;
   srcFunda;
@@ -120,6 +121,14 @@ export class DetalleCreditoComponent implements OnInit {
         this.cre.traerCreditoVigente(json.params.numeroOperacion).subscribe((data: any) => {
           if (data.entidad) {
             this.wrapper = data.entidad;
+            
+            if( ( this.wrapper.credito.tipoCredito == 'Vencimiento' || ( this.wrapper.credito.tipoCredito == 'Cuotas' && this.wrapper.credito.retanqueo) ) 
+             && this.wrapper.credito.codigoEstadoUbicacionGrantia !== 'CLI' 
+             &&  this.wrapper.credito.codigoEstadoProcesoGarantia !== 'LIB' 
+             && this.wrapper.credito.estaNovado  == "false"){
+               this.validateRenovacion.next(true);
+            }
+
             this.cargarCampos();
           }else{
             this.salirDeGestion("Error al intentar cargar el credito.");
@@ -229,4 +238,9 @@ export class DetalleCreditoComponent implements OnInit {
     });
       
   }
+
+  public irNovar(row: any){
+    this.router.navigate(['novacion/crear-novacion/CRE', row.numeroOperacion]);    
+  }
+
 }

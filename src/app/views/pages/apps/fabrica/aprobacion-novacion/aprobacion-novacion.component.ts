@@ -22,6 +22,7 @@ import { saveAs } from 'file-saver';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TbQoRegistrarPago } from '../../../../../core/model/quski/TbQoRegistrarPago';
 import { Observable } from 'rxjs';
+import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 
 export interface CatalogoWrapper {
   nombre: string;
@@ -49,6 +50,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public totalValorC: number;
   public totalValorO: number;
   public catDivisionPoliticaByPais: Array<any>;
+  public catMotivoDevolucionAprobacion: Array<any>;
 
 
   private divicionPolitica: CatalogoWrapper[];
@@ -178,7 +180,9 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   /** @RESULTADO_OPERACION */
   public formResultadoOperacion: FormGroup = new FormGroup({});
   public motivoDevolucion = new FormControl('', []);
-  public codigoCash = new FormControl('', []);
+  public codigoCash = new FormControl('', [Validators.required]);
+  public aprobacion = new FormControl('', [Validators.required]);
+  public valorCash = new FormControl('', [Validators.required,ValidateDecimal]);
   public observacionAprobador = new FormControl('', [Validators.required]);
   catTipoCliente: Array<any>;
   catBanco: Array<any>;
@@ -330,6 +334,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.sof.traerCatalogos().subscribe((data: any) => {
       data.entidad ? this.catalogos = data.entidad : this.sinNotSer.setNotice('ERROR AL CARGAR CATALOGOS', 'error');
       const localizacion = this.catalogos.catDivicionPolitica;
+      this.catMotivoDevolucionAprobacion = this.catalogos.catMotivoDevolucionAprobacion;
       let bprovinces = localizacion.filter(e => e.tipoDivision == 'PROVINCIA');
       let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
       let bParroqui = localizacion.filter(e => e.tipoDivision == 'PARROQUIA');
@@ -577,20 +582,24 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     
   }
 
-  public enviarRespuesta( aprobar ){
+  public enviarRespuesta(){
+    if( this.aprobacion.invalid ){
+      this.sinNotSer.setNotice('ESCOJA UNA OPCION','info');
+      return;
+    }
     if( !this.observacionAprobador.value ){
       this.sinNotSer.setNotice('INGRESE LA OBSERVACION DEL APROBADOR','warning');
       return;
     }
-    if( aprobar && !this.codigoCash.value ){
-        this.sinNotSer.setNotice('INGRESE EL CODIGO CASH','warning');
+    if( this.codigoCash.valid && this.valorCash.invalid ){
+        this.sinNotSer.setNotice('INGRESE EL VALOR CASH','warning');
         return;
     }
-    if( !aprobar && !this.motivoDevolucion.value ){
+    if( this.aprobacion.value == 'false' && !this.motivoDevolucion.value ){
       this.sinNotSer.setNotice('INGRESE EL MOTIVO DE DEVOLUCION','warning');
       return;
     }
-    let mensaje = aprobar ? "Aprobar el credito: " + this.crediW.credito.codigo + "." : "Devolver a la negociacion el credito: " + this.crediW.credito.codigo + ".";
+    let mensaje = this.aprobacion.value == 'true' ? "Aprobar el credito: " + this.crediW.credito.codigo + "." : "Devolver a la negociacion el credito: " + this.crediW.credito.codigo + ".";
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
       width: "800px",
       height: "auto",
@@ -598,23 +607,23 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     });
     dialogRef.afterClosed().subscribe(r => {
       if(r){
-        //"RENOVACION", "DEVUELTO", 
-        //"RENOVACION", "APROBADO", 
         this.cre.aprobarNovacion(
+          this.valorCash.value,
           this.crediW.credito.id, 
           this.observacionAprobador.value, 
-          aprobar? this.codigoCash.value: null, 
-          this.agencia, this.usuario, 
-          aprobar? null: this.motivoDevolucion.value.codigo,
-          aprobar ).subscribe( (data: any) =>{
+          this.aprobacion.value == ' true' ? this.codigoCash.value: null,
+          this.agencia,
+          this.usuario,
+          this.aprobacion.value == ' true' ? null: this.motivoDevolucion.value.codigo,
+          this.aprobacion.value == ' true'  ).subscribe( (data: any) =>{
             if(!data.entidad){
               this.sinNotSer.setNotice('ERROR ENVIANDO LA RESPUESTA: ' + data.entidad, 'error');
             }
-            if(aprobar && data.entidad && data.entidad.estadoProceso == 'APROBADO'){
+            if(this.aprobacion.value == ' true'  && data.entidad && data.entidad.estadoProceso == 'APROBADO'){
               this.sinNotSer.setNotice(this.crediW.credito.codigo + ' FUE APROBADO.', 'success');
               this.router.navigate(['aprobador']);
             }
-            if(!aprobar && data.entidad && data.entidad.estadoProceso == 'DEVUELTO'){
+            if(this.aprobacion.value == ' false'  && data.entidad && data.entidad.estadoProceso == 'DEVUELTO'){
               this.sinNotSer.setNotice(this.crediW.credito.codigo + ' FUE DEVUELTO AL ASESOR.', 'success');
               this.router.navigate(['aprobador']);
             }
@@ -626,4 +635,5 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
       }
     });
   }
+
 }

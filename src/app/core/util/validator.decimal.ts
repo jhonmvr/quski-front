@@ -1,6 +1,10 @@
 import { AbstractControl } from "@angular/forms";
 
-
+/**
+ * CONTROL PARA DOS DECIMALES NO OBLIGATORIOS
+ * @param control 
+ * @returns  return { 'invalido': true };
+ */
 export function ValidateDecimal(control: AbstractControl) {
     if (control.value == ""){
         return null;

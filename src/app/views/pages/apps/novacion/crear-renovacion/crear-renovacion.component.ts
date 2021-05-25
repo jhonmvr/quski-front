@@ -22,6 +22,7 @@ import { BehaviorSubject } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { DevolucionCreditoComponent } from '../../../../partials/custom/popups/devolucion-credito/devolucion-credito.component';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -62,13 +63,16 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public montoSolicitado = new FormControl();
   
   public dataSourceCreditoNegociacion = new MatTableDataSource<any>();
-  public displayedColumnsCreditoNegociacion = ['Accion','plazo', 'periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
-    'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
-    'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
-    'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
-    'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
-    'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
-    'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
+  public displayedColumnsCreditoNegociacion = ['Accion','plazo', 'periodicidadPlazo', 'montoFinanciado', 'cuota', 'valorARecibir', 'valorAPagar',
+  'totalCostosOperacionAnterior','totalGastosNuevaOperacion', 'costoCustodia', 'costoTasacion', 'costoFideicomiso', 'costoSeguro', 'impuestoSolca',
+  'saldoCapitalRenov', 'saldoInteres', 'saldoMora', 'gastoCobranza', 'custodiaDevengada', 'porcentajeflujoplaneado','formaPagoCustodia','formaPagoTasador', 
+  'formaPagoFideicomiso', 'formaPagoSeguro',  'formaPagoImpuestoSolca', 'formaPagoGastoCobranza'];
+  /*'costoTransporte', 'costoValoracion', 
+   'formaPagoCapital',  'formaPagoInteres', 'formaPagoMora',
+     'formaPagoTransporte', 'formaPagoValoracion', 
+      'montoPrevioDesembolso', 
+     'formaPagoCustodiaDevengada', 'tipooferta', 
+    'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido' */
     
   recibirOpagar: any = '';
   numeroOperacionMadre: any;
@@ -194,6 +198,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         0, 'CREAR RENOVACION',
         this.credit ? this.credit.credito ? this.credit.credito.numeroOperacion : null : null )
     this.formOperacion.disable();
+    this.simularOpciones();
     if(this.credit.credito){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
       let calculadora: any = {
