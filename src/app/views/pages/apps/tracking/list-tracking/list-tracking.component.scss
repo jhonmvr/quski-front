@@ -1,90 +1,115 @@
-.mat-button .mat-button-wrapper > *,
-.mat-fab .mat-button-wrapper > *,
-.mat-flat-button .mat-button-wrapper > *,
-.mat-icon-button .mat-button-wrapper > *,
-.mat-mini-fab .mat-button-wrapper > *,
-.mat-raised-button .mat-button-wrapper > *,
-.mat-stroked-button .mat-button-wrapper > * {
-  vertical-align: baseline;
+.mat-button .mat-button-wrapper>*,
+.mat-fab .mat-button-wrapper>*,
+.mat-flat-button .mat-button-wrapper>*,
+.mat-icon-button .mat-button-wrapper>*,
+.mat-mini-fab .mat-button-wrapper>*,
+.mat-raised-button .mat-button-wrapper>*,
+.mat-stroked-button .mat-button-wrapper>* {
+    vertical-align: baseline;
 }
 
 .mat-button,
 .mat-flat-button,
 .mat-icon-button,
 .mat-stroked-button {
-  min-width: 28px; //da espacio al data table
-  height: fit-content !important; //quita fondo cuando sobrepone
+    min-width: 28px; //da espacio al data table
+    height: fit-content !important; //quita fondo cuando sobrepone
 }
-table{
-  width: 100%;
+
+table {
+    width: 100%;
+}
+
+.table-container {
+    position: relative;
+    max-height: 400px;
+    overflow: auto;
 }
 
 .white-icon {
-  color: white;
+    color: white;
 }
+
+
 /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+
 .white-icon svg {
     fill: white;
 }
 
 .blue-icon {
-  color:#3399ff;
+    color: #3399ff;
 }
+
+
 /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+
 .blue-icon svg {
     fill: #3399ff;
 }
+
 .orange-icon {
-  color:#ff9900;
+    color: #ff9900;
 }
-  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+
+
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+
 .orange-icon svg {
-  fill: #ff9900;
+    fill: #ff9900;
 }
+
 .textArea {
-  color: black;
-  background-color: white;
-  border-color: silver;
-  font-weight: 400;
+    color: black;
+    background-color: white;
+    border-color: silver;
+    font-weight: 400;
 }
 
 .warning {
-  color: white;
-  background-color: #cc8b00;
-  border-color: white;
-  font-weight: 400;
+    color: white;
+    background-color: #cc8b00;
+    border-color: white;
+    font-weight: 400;
 }
 
 .error-snackbar {
-  color: white;
-  background-color: red;
-  border-color: white;
-  font-weight: 400;
-}      
-.text-align {   
-  justify-content: center;
-  font-size: smaller;
+    color: white;
+    background-color: red;
+    border-color: white;
+    font-weight: 400;
 }
-.mat-header-cell, .mat-footer-cell, .mat-cell {
-  min-width: 80px;
-  box-sizing: border-box;
+
+.text-align {
+    justify-content: center;
+    font-size: smaller;
 }
-.mat-header-cell {
-  flex-direction: column;
-  text-align: center;
-  font-weight: bold !important;
-  justify-content: center;
-  justify-items: center;
-  font-size: smaller;
-}
+
+.mat-header-cell,
+.mat-footer-cell,
 .mat-cell {
-  text-align: center;
-  justify-content:center;
-  font-size: smaller;
+    min-width: 80px;
+    box-sizing: border-box;
 }
-.mat-footer-cell{
-  font-weight: bold;
-  text-align: center;
-  justify-content:center;
-  font-size: smaller;
+
+.mat-header-cell {
+    flex-direction: column;
+    text-align: center;
+    font-weight: bold !important;
+    justify-content: center;
+    justify-items: center;
+    font-size: smaller;
+}
+
+.mat-cell {
+    text-align: center;
+    justify-content: center;
+    font-size: smaller;
+}
+
+.mat-footer-cell {
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+    font-size: smaller;
 }

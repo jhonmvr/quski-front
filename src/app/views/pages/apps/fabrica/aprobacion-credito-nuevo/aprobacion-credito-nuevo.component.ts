@@ -343,12 +343,6 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
       }
     });
   }
-  private consultarLugarDeNacimiento( idPais, idLugar ){
-    this.sof.consultarDivicionPoliticabyIdPais(idPais, true).subscribe( ( data:any ) =>{
-      this.lugarDeNacimiento.setValue(data.catalogo.find(x => x.id == idLugar ) ? 
-      data.catalogo.find(x => x.id == idLugar ).nombre : 'Error de catalogo' );
-    });
-  }
   private setearValores(ap: AprobacionWrapper) {
     /** @OPERACION */
     this.codigoBpm.setValue(ap.credito.codigo);
@@ -361,10 +355,6 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     0, 'APROBACION CREDITO NUEVO',
     ap ? ap.credito ? ap.credito.numeroOperacion : null : null )
     /** @DATOS_CLIENTE */
-    this.nacionalidad.setValue(this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad) ? 
-    this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nombre : 'Error de catalogo');
-    this.consultarLugarDeNacimiento( this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad) ? 
-    this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).id : 0, ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento );
     this.identificacion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.aprobacionMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S'? 'SI': 'NO' );
     this.nombresCompletos.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
@@ -376,6 +366,8 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.genero.setValue( this.catalogos.catSexo.find( c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.genero).nombre );
     this.estadoCivil.setValue( this.catalogos.catEstadoCivil.find( c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.estadoCivil).nombre );
     this.cargaFamiliar.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cargasFamiliares);
+    this.nacionalidad.setValue( this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nombre);
+    this.lugarDeNacimiento.setValue(this.divicionPolitica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento).nombre );
     this.edad.setValue(ap.credito.tbQoNegociacion.tbQoCliente.edad);
     this.fechaActual = ap.credito.fechaCreacion.toString();
     this.fechaNacimiento.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento);

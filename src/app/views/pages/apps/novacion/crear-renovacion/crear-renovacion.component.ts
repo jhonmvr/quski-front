@@ -22,6 +22,7 @@ import { BehaviorSubject } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { DevolucionCreditoComponent } from '../../../../partials/custom/popups/devolucion-credito/devolucion-credito.component';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -194,6 +195,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         0, 'CREAR RENOVACION',
         this.credit ? this.credit.credito ? this.credit.credito.numeroOperacion : null : null )
     this.formOperacion.disable();
+    this.simularOpciones();
     if(this.credit.credito){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
       let calculadora: any = {
