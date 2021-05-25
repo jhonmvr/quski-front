@@ -47,6 +47,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
   public loadingSubject = new BehaviorSubject<boolean>(false);
   public crediW: AprobacionWrapper;
   public catalogos: CatalogosWrapper;
+  public catDivisionPoliticaByPais: Array<any>;
   catMotivoDevolucionAprobacion: any;
 
   /** @OPERACION */
@@ -308,16 +309,18 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
         this.catalogos = data.entidad;
         this.catMotivoDevolucionAprobacion = this.catalogos.catMotivoDevolucionAprobacion;
         const localizacion = this.catalogos.catDivicionPolitica;
-          let bprovinces = localizacion.filter(e => e.tipoDivision == 'PROVINCIA');
-          let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
-          let bParroqui = localizacion.filter(e => e.tipoDivision == 'PARROQUIA');
-          let ubicacion: CatalogoWrapper[] = bParroqui.map(parro => {
-            const cant = bCantons.find(c => c.id == parro.idPadre) || {};
-            const pro = bprovinces.find(p => p.id == cant.idPadre) || {};
-            return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, id: parro.id };
-          });
-          this.divicionPolitica = ubicacion;
-        this.setearValores(this.crediW);     
+        let bprovinces = localizacion.filter(e => e.tipoDivision == 'PROVINCIA');
+        let bCantons = localizacion.filter(e => e.tipoDivision == 'CANTON');
+        let bParroqui = localizacion.filter(e => e.tipoDivision == 'PARROQUIA');
+        this.divicionPolitica = bParroqui.map(parro => {
+          const cant = bCantons.find(c => c.id == parro.idPadre) || {};
+          const pro = bprovinces.find(p => p.id == cant.idPadre) || {};
+          return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, id: parro.id };
+        });
+        this.sof.consultarDivicionPoliticabyIdPais(this.crediW.credito.tbQoNegociacion.tbQoCliente.nacionalidad, true).subscribe((data: any) => {
+          this.catDivisionPoliticaByPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+          this.setearValores(this.crediW);
+        });
        }else{
         this.loadingSubject.next(false);
         this.sinNotSer.setNotice('ERROR AL CARGAR CATALOGOS', 'error');
@@ -343,11 +346,40 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
       }
     });
   }
-  private consultarLugarDeNacimiento( idPais, idLugar ){
-    this.sof.consultarDivicionPoliticabyIdPais(idPais, true).subscribe( ( data:any ) =>{
-      this.lugarDeNacimiento.setValue(data.catalogo.find(x => x.id == idLugar ) ? 
-      data.catalogo.find(x => x.id == idLugar ).nombre : 'Error de catalogo' );
-    });
+  nombreCiudadSelect(nodo) {
+    if (this.lugarDeNacimiento.value) {
+      this.lugarDeNacimiento.setValue(this.lugarDeNacimiento.value + '/' + nodo.nombre);
+    } else {
+      let pais = (this.catalogos.catPais.find(x => x.id == this.crediW.credito.tbQoNegociacion.tbQoCliente.nacionalidad) ? this.catalogos.catPais.find(x => x.id == this.crediW.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nombre : '') + '/';
+      this.lugarDeNacimiento.setValue(pais + nodo.nombre);
+    }
+    if (nodo.hijo && nodo.hijo.length > 0) {
+      this.nombreCiudadSelect(nodo.hijo[0]);
+    }
+  }
+  findTreeByNode(node) {
+    const x = this.catDivisionPoliticaByPais.find(p => p.id == node.idPadre);
+    if (x) {
+      let element = {
+        id: x.id,
+        idPadre: x.idPadre,
+        nombre: x.nombre,
+        codigo: x.codigo,
+        tipoDivision: x.tipoDivision,
+        hijo: [node]
+      }
+      return this.findTreeByNode(element)
+    } else {
+      return node;
+    }
+  }
+  private consultarLugarDeNacimiento(idLugar) {
+    let lugar = this.catDivisionPoliticaByPais.find(x => x.id == idLugar);
+    if(idLugar && lugar){
+      let tree = this.findTreeByNode( lugar );
+      this.nombreCiudadSelect( tree );
+      return;
+    }
   }
   private setearValores(ap: AprobacionWrapper) {
     /** @OPERACION */
@@ -363,8 +395,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     /** @DATOS_CLIENTE */
     this.nacionalidad.setValue(this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad) ? 
     this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nombre : 'Error de catalogo');
-    this.consultarLugarDeNacimiento( this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad) ? 
-    this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).id : 0, ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento );
+    this.consultarLugarDeNacimiento( ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento );
     this.identificacion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.aprobacionMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S'? 'SI': 'NO' );
     this.nombresCompletos.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);

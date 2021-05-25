@@ -89,7 +89,11 @@ export class PopUpNacimientoComponent implements OnInit {
     if(this.ciudadSlected.value){
       this.ciudadSlected.setValue(this.ciudadSlected.value+'/'+nodo.nombre);
     }else{
-      this.ciudadSlected.setValue(nodo.nombre);
+      let pais = '';
+      if(this.data.esLugarNacimiento =='N') {
+        pais =( this.catPais.find( x => x.id == this.data.nacionalidad ) ? this.catPais.find( x => x.id == this.data.nacionalidad ).nombre : '') + '/';
+      }
+      this.ciudadSlected.setValue( pais + nodo.nombre );
     }
     if(nodo.hijo &&nodo.hijo.length>0){
       this.nombreCiudadSelect(nodo.hijo[0]);
