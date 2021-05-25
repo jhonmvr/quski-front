@@ -192,7 +192,7 @@
                                 <mat-cell *matCellDef="let element"> {{ element.formaPagoSeguro }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="formaPagoTasador">
-                                <mat-header-cell *matHeaderCellDef>Forma Pago Tasador</mat-header-cell>
+                                <mat-header-cell *matHeaderCellDef>Forma Pago Tasación</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.formaPagoTasador }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="formaPagoTransporte">
@@ -228,11 +228,11 @@
                                 <mat-cell *matCellDef="let element"> {{ element.montoPrevioDesembolso | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="totalGastosNuevaOperacion">
-                                <mat-header-cell *matHeaderCellDef>Total Gastos Nueva Operacion</mat-header-cell>
+                                <mat-header-cell *matHeaderCellDef>Total Servicios Nueva Operacion</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.totalGastosNuevaOperacion | currency:'CAD':'symbol-narrow':'1.2-2' }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="totalCostosOperacionAnterior">
-                                <mat-header-cell *matHeaderCellDef>Total Costos Operacion Anterior</mat-header-cell>
+                                <mat-header-cell *matHeaderCellDef>Total Valores Operacion Anterior</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.totalCostosOperacionAnterior | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="custodiaDevengada">

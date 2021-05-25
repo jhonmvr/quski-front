@@ -178,9 +178,9 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   /** @RESULTADO_OPERACION */
   public formResultadoOperacion: FormGroup = new FormGroup({});
   public motivoDevolucion = new FormControl('', []);
-  public codigoCash = new FormControl('', []);
+  public codigoCash = new FormControl('', [Validators.required]);
   public aprobacion = new FormControl('', [Validators.required]);
-  public valorCash = new FormControl('', [ValidateDecimal]);
+  public valorCash = new FormControl('', [Validators.required,ValidateDecimal]);
   public observacionAprobador = new FormControl('', [Validators.required]);
   catTipoCliente: Array<any>;
   catBanco: Array<any>;
@@ -560,7 +560,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
       this.sinNotSer.setNotice('INGRESE LA OBSERVACION DEL APROBADOR','warning');
       return;
     }
-    if( this.codigoCash.value && !this.valorCash.value ){
+    if( this.codigoCash.valid && this.valorCash.invalid ){
         this.sinNotSer.setNotice('INGRESE EL VALOR CASH','warning');
         return;
     }
