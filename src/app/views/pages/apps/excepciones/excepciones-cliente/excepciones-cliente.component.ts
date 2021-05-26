@@ -1,9 +1,10 @@
 import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
-import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { ClienteService } from '../../../../../core/services/quski/cliente.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
@@ -14,7 +15,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 
 
@@ -81,7 +81,7 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
 
 
   constructor(
-    private neg: NegociacionService,
+    private cre: CreditoNegociacionService,    
     private sof: SoftbankService,
     private cli: ClienteService,
     private pro: ProcesoService,
@@ -95,7 +95,7 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
 
   ) {
     super(tra);
-    this.neg.setParameter();
+    this.cre.setParameter();
     this.cli.setParameter();
     this.sof.setParameter();
     this.pro.setParameter();
@@ -145,7 +145,7 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
   }
 
   ngOnInit() {
-    this.neg.setParameter();
+    this.cre.setParameter();
     this.cli.setParameter();
     this.sof.setParameter();
     this.pro.setParameter();
@@ -186,7 +186,7 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
         let excepcionRol = JSON.parse(atob(data.params.id));
         this.observacionAsesor.setValue(excepcionRol.observacionAsesor);
         this.mensaje = excepcionRol.mensajeBre;
-        this.neg.traerNegociacionExistente(excepcionRol.idNegociacion).subscribe((data: any) => {
+        this.cre.traerCreditoNegociacion(excepcionRol.idNegociacion).subscribe((data: any) => {
           this.wr = data.entidad
           if (this.wr && this.wr.respuesta) {
             this.subheaderService.setTitle("EXCEPCION DE CLIENTE PARA: "+ this.wr.credito.codigo);

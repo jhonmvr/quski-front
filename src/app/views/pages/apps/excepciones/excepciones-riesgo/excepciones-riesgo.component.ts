@@ -1,9 +1,9 @@
 import { ConfirmarAccionComponent } from '../../../../../../app/views/partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { TbQoCreditoNegociacion } from '../../../../../../app/core/model/quski/TbQoCreditoNegociacion';
 import { CalculadoraService } from '../../../../../../app/core/services/quski/calculadora.service';
 import { TbQoVariablesCrediticia } from '../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
-import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
@@ -73,7 +73,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
     private dialog: MatDialog,
-    private neg: NegociacionService,
+    private cre: CreditoNegociacionService,
     private exc: ExcepcionService,
     private cal: CalculadoraService,
     private sinNotSer: ReNoticeService,
@@ -81,7 +81,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
 
   ) {
     super(tra);
-    this.neg.setParameter();
+    this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
     this.formDisable.addControl('cliente', this.cliente);
@@ -97,7 +97,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
   }
 
   ngOnInit() {
-    this.neg.setParameter();
+    this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
     this.wp = null;
@@ -123,7 +123,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
       if (data.params.id) {
         let excepcionRol = JSON.parse(atob(data.params.id));
         this.mensaje = excepcionRol.mensajeBre;
-        this.neg.traerNegociacionExistente(excepcionRol.idNegociacion).subscribe( (data: any)=>{
+        this.cre.traerCreditoNegociacion(excepcionRol.idNegociacion).subscribe( (data: any)=>{
           if(data.entidad){
             this.wp = data.entidad;
             this.excepcion = this.wp.excepciones.find(e => e.id == excepcionRol.id ); 

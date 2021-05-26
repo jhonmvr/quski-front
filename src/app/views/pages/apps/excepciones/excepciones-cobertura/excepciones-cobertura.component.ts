@@ -1,11 +1,12 @@
 import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCreditoNegociacion';
 import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
-import { NegociacionService } from '../../../../../core/services/quski/negociacion.service';
 import { CalculadoraService } from '../../../../../core/services/quski/calculadora.service';
 import { NegociacionWrapper } from '../../../../../core/model/wrapper/NegociacionWrapper';
 import { ExcepcionService } from '../../../../../core/services/quski/excepcion.service';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../../src/environments/environment';
@@ -15,9 +16,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import 'hammerjs';
-import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 
 @Component({
@@ -69,14 +68,14 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
     private dialog: MatDialog,
-    private neg: NegociacionService,
+    private cre: CreditoNegociacionService,
     private exc: ExcepcionService,
     private par: ParametroService,
     private cal: CalculadoraService,
     public tra: TrackingService,
   ) {
     super(tra);
-    this.neg.setParameter();
+    this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
     this.formDisable.addControl('cliente', this.cliente);
@@ -93,7 +92,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   }
 
   ngOnInit() {
-    this.neg.setParameter();
+    this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
     this.wp = null;
@@ -121,7 +120,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
         let excepcionRol = JSON.parse(atob(data.params.id));
-        this.neg.traerNegociacionExistente(excepcionRol.idNegociacion).subscribe( (data: any)=>{
+        this.cre.traerCreditoNegociacion(excepcionRol.idNegociacion).subscribe( (data: any)=>{
           if(data.entidad){
             this.wp = data.entidad;
             this.excepcion = this.wp.excepciones.find(e => e.id == excepcionRol.id ); 

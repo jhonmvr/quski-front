@@ -29,6 +29,9 @@ export class TbQoRiesgoAcumulado {
     fechaCreacion :  string                 // "2020-01-07",
     idSoftbank:  number                     // 1234
     tbQoCliente :  TbQoCliente
+
+
+    
     constructor() { 
         this.tbQoCliente = new TbQoCliente();
     }
