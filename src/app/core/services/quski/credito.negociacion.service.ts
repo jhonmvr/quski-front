@@ -198,12 +198,16 @@ export class CreditoNegociacionService extends BaseService {
     if(valorCash){
       this.params = this.params.set('valorCash',valorCash.toString());
     }
+    if(cash){
+      this.params = this.params.set('cash',cash);
+    }
+    if(codigoMotivo){
+      this.params = this.params.set('codigoMotivo',codigoMotivo);
+    }
     this.params = this.params.set('idCredito',idCredito.toString());
     this.params = this.params.set('descripcion',descripcion);
-    this.params = this.params.set('cash',cash);
     this.params = this.params.set('agencia',agencia.toString());
     this.params = this.params.set('usuario',usuario);
-    this.params = this.params.set('codigoMotivo',codigoMotivo);
     this.params = this.params.set('aprobar', aprobar );
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(

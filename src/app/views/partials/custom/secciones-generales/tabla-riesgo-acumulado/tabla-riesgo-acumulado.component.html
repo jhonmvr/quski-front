@@ -1,9 +1,8 @@
-<mat-table matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSourceRiesgoAcumulado"
-    #exporter="matTableExporter">
+<mat-table matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSourceRiesgoAcumulado" #exporter="matTableExporter">
     <ng-container matColumnDef="referencia">
         <mat-header-cell *matHeaderCellDef class="text-align">Codigo BPM</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.referencia}} </mat-cell>
-        <mat-footer-cell *matFooterCellDef> Saldo Total:  </mat-footer-cell>
+        <mat-footer-cell *matFooterCellDef> Saldo Total: </mat-footer-cell>
 
     </ng-container>
     <ng-container matColumnDef="numeroMupi">
@@ -11,7 +10,8 @@
         <mat-cell *matCellDef="let element" class="text-align"> {{element.numeroOperacionMupi}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
-    </ng-container><ng-container matColumnDef="numeroOperacion">
+    </ng-container>
+    <ng-container matColumnDef="numeroOperacion">
         <mat-header-cell *matHeaderCellDef class="text-align">Número Operación</mat-header-cell>
         <mat-cell *matCellDef="let element" class="text-align"> {{element.numeroOperacion}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
@@ -45,13 +45,13 @@
     </ng-container>
     <ng-container matColumnDef="coberturaInicial">
         <mat-header-cell *matHeaderCellDef class="text-align">Cobertura inicial</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.coberturaInicial  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.coberturaInicial | percent}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
     <ng-container matColumnDef="coberturaActual">
         <mat-header-cell *matHeaderCellDef class="text-align">Cobertura actual</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.coberturaActual  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.coberturaActual | percent}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
@@ -75,19 +75,19 @@
     </ng-container>
     <ng-container matColumnDef="saldo">
         <mat-header-cell *matHeaderCellDef class="text-align">Saldo</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.saldo  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.saldo | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> {{saldoTotal | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-footer-cell>
 
     </ng-container>
     <ng-container matColumnDef="interes">
         <mat-header-cell *matHeaderCellDef class="text-align">Interes</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.interesMora  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.interesMora | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
     <ng-container matColumnDef="mora">
         <mat-header-cell *matHeaderCellDef class="text-align">Mora</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.mora  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.mora | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
 
     </ng-container>
@@ -105,14 +105,14 @@
     </ng-container>
     <ng-container matColumnDef="valorPagar">
         <mat-header-cell *matHeaderCellDef class="text-align">Valor a pagar</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorAlDiaMasCuotaActual  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorAlDiaMasCuotaActual | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> {{valorPagar | currency:'CAD':'symbol-narrow':'1.2-2' }} </mat-footer-cell>
 
     </ng-container>
     <ng-container matColumnDef="deudaTotal">
         <mat-header-cell *matHeaderCellDef class="text-align">Total deuda</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorCancelaPrestamo  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
-        <mat-footer-cell *matFooterCellDef> {{deudaTotal  | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorCancelaPrestamo | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{deudaTotal | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
 
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumnsRiesgoAcumulado"></mat-header-row>
@@ -122,7 +122,6 @@
 </mat-table>
 <div class="row">
     <div class="col-1 offset-11">
-        <button mat-raised-button
-            (click)="exporter.exportTable('xlsx', {fileName:'riesgo', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
+        <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'riesgo', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
     </div>
 </div>
