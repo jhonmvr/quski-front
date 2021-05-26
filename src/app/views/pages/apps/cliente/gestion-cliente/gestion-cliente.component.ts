@@ -73,6 +73,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   public catActividadEconomicaMupi: Array<any>;
   public catPais: Array<any>;
   public catEducacion: Array<any>;
+  public catDivisionPoliticaByPais: Array<any>;
   public catGenero: Array<any>;
   public catEstadoCivil: Array<any>;
   public catSectorVivienda: Array<any>;
@@ -147,14 +148,14 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   public cargo = new FormControl('', [Validators.required]);
   public formDatosEconomicos: FormGroup = new FormGroup({});
   public relacionDependencia = new FormControl('');
-  public valorIngreso = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13), Validators.max(5000) ]);
+  public valorIngreso = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13), Validators.max(5000)]);
   public formDatosIngreso: FormGroup = new FormGroup({});
-  public valorEgreso = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13) ]);
+  public valorEgreso = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13)]);
   public formDatosEgreso: FormGroup = new FormGroup({});
-  public avaluoActivo = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13) ]);
+  public avaluoActivo = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13)]);
   public formDatosPatrimonioActivos: FormGroup = new FormGroup({});
   public activo = new FormControl('', [Validators.maxLength(10)]);
-  public avaluoPasivo = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13) ]);
+  public avaluoPasivo = new FormControl('', [Validators.required, ValidateDecimal, Validators.maxLength(13)]);
   public formDatosPatrimonioPasivos: FormGroup = new FormGroup({});
   public pasivo = new FormControl('', [Validators.maxLength(10)]);
 
@@ -177,9 +178,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   ///datos de contacto cliente
   dataSourceTelefonosCliente = new MatTableDataSource<any>();
   tipoTelefonoCliente = new FormControl('', [Validators.required]);
-  public telefonoMovil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public email = new FormControl('', [Validators.email, Validators.maxLength(100), Validators.required]);
-  public telefonoOtro = new FormControl('', [Validators.required]);
   public telefonoFijo = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
   teleId;
 
@@ -215,8 +214,6 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.formCliente.addControl("actividadEconomica  ", this.actividadEconomica);
     this.formCliente.addControl("canalContacto  ", this.canalContacto);
     this.formDatosContacto.addControl("telefonoFijo  ", this.telefonoFijo);
-    this.formDatosContacto.addControl("telefonoMovil  ", this.telefonoMovil);
-    this.formDatosContacto.addControl("telefonoOtro  ", this.telefonoOtro);
     this.formDatosContacto.addControl("email  ", this.email);
     this.formDatosDireccionDomicilio.addControl("ubicacion   ", this.ubicacion);
     this.formDatosDireccionDomicilio.addControl("tipoVivienda    ", this.tipoVivienda);
@@ -316,10 +313,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.genero.setValue(this.catGenero.find(x => x.codigo == this.wrapper.cliente.genero));
       this.estadoCivil.setValue(this.catEstadoCivil.find(x => x.codigo == this.wrapper.cliente.estadoCivil));
       this.cargaFamiliar.setValue(this.wrapper.cliente.cargasFamiliares);
-      if (this.wrapper.cliente.lugarNacimiento) {
-        this.consultarLugarDeNacimiento( this.catPais.find(x => x.id == this.wrapper.cliente.nacionalidad) ? 
-        this.catPais.find(x => x.id == this.wrapper.cliente.nacionalidad).id : 0,  this.wrapper.cliente.lugarNacimiento);
-      }
+      this.consultarLugarDeNacimiento( this.wrapper.cliente.lugarNacimiento ? this.wrapper.cliente.lugarNacimiento : null );
       this.lugarNacimiento.disable();
       this.edad.setValue(this.wrapper.cliente.edad);
       this.canalContacto.setValue(this.catMotivoVisita.find(x => x.codigo == this.wrapper.cliente.canalContacto));
@@ -328,7 +322,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       let countMovil: number = 0;
       if (this.wrapper.telefonos) {
         this.dataSourceTelefonosCliente = new MatTableDataSource<any>(this.wrapper.telefonos);
-      } 
+      }
       let countOfi: number = 0;
       let countDom: number = 0;
       !this.wrapper.datosTrabajos ? null : this.wrapper.datosTrabajos.forEach(t => {
@@ -361,8 +355,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       !this.wrapper.direcciones ? null : this.wrapper.direcciones.forEach(e => {
         if (e.tipoDireccion == "OFI" && e.estado == 'ACT' && countOfi < 1) {
           this.ubicacionO.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica) ?
-          this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre : 'Error de catalogo');
-          this.selectUbicacionO =  e.divisionPolitica;
+            this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre : 'Error de catalogo');
+          this.selectUbicacionO = e.divisionPolitica;
           this.tipoViviendaO.setValue(this.catTipoVivienda.find(x => x.codigo == e.tipoVivienda));
           this.callePrincipalO.setValue(e.callePrincipal.toUpperCase());
           this.barrioO.setValue(e.barrio ? e.barrio.toUpperCase() : null);
@@ -374,9 +368,9 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
           this.direccionCorreoLaboral.setValue(e.direccionEnvioCorrespondencia);
           countOfi++;
         } else if (e.tipoDireccion == "DOM" && e.estado == 'ACT' && countDom < 1) {
-          this.selectUbicacion =  e.divisionPolitica;
+          this.selectUbicacion = e.divisionPolitica;
           this.ubicacion.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica) ?
-          this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre : 'Error de catalogo');
+            this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre : 'Error de catalogo');
           this.tipoVivienda.setValue(this.catTipoVivienda.find(x => x.codigo == e.tipoVivienda));
           this.callePrincipal.setValue(e.callePrincipal);
           this.numeracion.setValue(e.numeracion);
@@ -409,9 +403,9 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.valorEgreso.setValue(this.wrapper.cliente.egresos.toFixed(2));
       this.avaluoPasivo.setValue(this.wrapper.cliente.pasivos.toFixed(2));
       this.avaluoActivo.setValue(this.wrapper.totalAvaluo.toFixed(2));
-      this.guardarTraking(this.origen == 'NEG' ? 'NUEVO' : this.origen == 'NOV' ? 'RENOVACION': null,
-      this.wrapper ? this.wrapper.codigoBpm : null, ['Datos Personales','Datos de contacto','Dirección Domicilio','Dirección Laboral','Datos Económico','Ingresos / Egresos','Patrimonio','Cuentas Bancarias','Referencias Personales'], 
-      0, 'GESTION CLIENTE','');
+      this.guardarTraking(this.origen == 'NEG' ? 'NUEVO' : this.origen == 'NOV' ? 'RENOVACION' : null,
+        this.wrapper ? this.wrapper.codigoBpm : null, ['Datos Personales', 'Datos de contacto', 'Dirección Domicilio', 'Dirección Laboral', 'Datos Económico', 'Ingresos / Egresos', 'Patrimonio', 'Cuentas Bancarias', 'Referencias Personales'],
+        0, 'GESTION CLIENTE', '');
     } else {
       this.sinNoticeService.setNotice('Error cargando cliente', 'error');
     }
@@ -496,14 +490,14 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
                                       return { nombre: parro.nombre + " / " + cant.nombre + " / " + pro.nombre, id: parro.id };
                                     });
                                     this.divicionPolitica = ubicacion;
-                                    //this.catFiltradoLugarNacimiento = this.lugarNacimiento.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
-                                    //this.catFiltradoUbicacionDomicilio = this.ubicacion.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
-                                    //this.catFiltradoUbicacionLaboral = this.ubicacionO.valueChanges.pipe(startWith(''), map(value => typeof value === 'string' ? value : name), map(nombre => nombre ? this._filter(nombre) : ubicacion));
                                     this.css.consultarEducacionCS().subscribe((data: any) => {
                                       this.catEducacion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
                                       this.css.consultarOrigenIngresoCS().subscribe((data: any) => {
                                         this.catOrigenIngreso = !data.existeError ? data.catalogo : "Error al cargar catalogo";
-                                        this.cargarCampos();
+                                        this.css.consultarDivicionPoliticabyIdPais(this.wrapper.cliente.nacionalidad, true).subscribe((data: any) => {
+                                          this.catDivisionPoliticaByPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+                                          this.cargarCampos();
+                                        });
                                       });
                                     });
                                   } else {
@@ -526,24 +520,45 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       }
     });
   }
-  private consultarLugarDeNacimiento( idPais, idLugar ){
-    this.css.consultarDivicionPoliticabyIdPais(idPais, true).subscribe( ( data:any ) =>{
-      let x = data.catalogo.find(x => x.id == idLugar )
-      if( x ){
-        this.lugarNacimiento.setValue( x.nombre ) ;
-        this.selectLugarNacimiento = this.wrapper.cliente.lugarNacimiento;
-        return;
+  nombreCiudadSelect(nodo) {
+    if (this.lugarNacimiento.value) {
+      this.lugarNacimiento.setValue(this.lugarNacimiento.value + '/' + nodo.nombre);
+    } else {
+      let pais = (this.catPais.find(x => x.id == this.wrapper.cliente.nacionalidad) ? this.catPais.find(x => x.id == this.wrapper.cliente.nacionalidad).nombre : '') + '/';
+      this.lugarNacimiento.setValue(pais + nodo.nombre);
+    }
+    if (nodo.hijo && nodo.hijo.length > 0) {
+      this.nombreCiudadSelect(nodo.hijo[0]);
+    }
+  }
+  findTreeByNode(node) {
+    const x = this.catDivisionPoliticaByPais.find(p => p.id == node.idPadre);
+    if (x) {
+      let element = {
+        id: x.id,
+        idPadre: x.idPadre,
+        nombre: x.nombre,
+        codigo: x.codigo,
+        tipoDivision: x.tipoDivision,
+        hijo: [node]
       }
-      this.selectLugarNacimiento = null;
-      this.lugarNacimiento.setValue( 'ERROR DE CATALOGO' ) ;
+      return this.findTreeByNode(element)
+    } else {
+      return node;
+    }
+  }
+  private consultarLugarDeNacimiento(idLugar) {
+    let lugar = this.catDivisionPoliticaByPais.find(x => x.id == idLugar);
+    if( idLugar && lugar ){
+      let tree = this.findTreeByNode( lugar );
+      this.nombreCiudadSelect( tree );
+      this.selectLugarNacimiento = this.wrapper.cliente.lugarNacimiento;
+      return;
+    }
+    this.selectLugarNacimiento = null;
+    this.lugarNacimiento.setValue( 'Error de catalogo' );
 
 
-/*       this.lugarNacimiento.setValue(this.divicionPolitica.find(x => x.id == this.wrapper.cliente.lugarNacimiento) ?
-      this.divicionPolitica.find(x => x.id == this.wrapper.cliente.lugarNacimiento).nombre : 'Error de catalogo'); */
-      /* this.catFiltradoLugarNacimiento.subscribe((data: any) => {
-        this.lugarNacimiento.setValue(data.find(x => x.id == this.wrapper.cliente.lugarNacimiento));
-      }); */
-    });
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @FUNCIONALIDAD ** */
   public numberOnly(event): boolean {
@@ -601,51 +616,51 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
                 : "";
     }
 
-     if (pfield && pfield == "avaluoActivo") {
+    if (pfield && pfield == "avaluoActivo") {
       const input = this.avaluoActivo;
       return input.hasError("required")
         ? errorRequerido
         : input.hasError("pattern")
           ? errorNumero
-          : input.hasError("invalido") 
-            ? errorDecimal 
+          : input.hasError("invalido")
+            ? errorDecimal
             : input.hasError("maxlength")
               ? errorLogitudExedida
               : "";
-    }if (pfield && pfield == "avaluoPasivo") {
+    } if (pfield && pfield == "avaluoPasivo") {
       const input = this.avaluoPasivo;
       return input.hasError("required")
         ? errorRequerido
         : input.hasError("pattern")
           ? errorNumero
-          : input.hasError("invalido") 
-            ? errorDecimal 
+          : input.hasError("invalido")
+            ? errorDecimal
             : input.hasError("maxlength")
               ? errorLogitudExedida
               : "";
-    }if (pfield && pfield == "valorEgreso") {
+    } if (pfield && pfield == "valorEgreso") {
       const input = this.valorEgreso;
       return input.hasError("required")
         ? errorRequerido
         : input.hasError("pattern")
           ? errorNumero
-          : input.hasError("invalido") 
-            ? errorDecimal 
+          : input.hasError("invalido")
+            ? errorDecimal
             : input.hasError("maxlength")
               ? errorLogitudExedida
               : "";
-    }if (pfield && pfield === 'valorIngreso') {
+    } if (pfield && pfield === 'valorIngreso') {
       const input = this.valorIngreso;
       return input.hasError("required")
         ? errorRequerido
         : input.hasError("pattern")
           ? errorNumero
-          : input.hasError("invalido") 
-            ? errorDecimal 
+          : input.hasError("invalido")
+            ? errorDecimal
             : input.hasError("maxlength")
               ? errorLogitudExedida
-              : input.hasError('max') 
-                ? 'El ingreso total no puede ser mayor a 5000' 
+              : input.hasError('max')
+                ? 'El ingreso total no puede ser mayor a 5000'
                 : '';
     }
 
@@ -741,28 +756,6 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
             : input.hasError('minlength')
               ? errorInsuficiente
               : '';
-    }
-    if (pfield && pfield === 'telefonoMovil') {
-      const input = this.telefonoMovil;
-      return input.hasError('required')
-        ? errorRequerido
-        : input.hasError('pattern')
-          ? errorNumero
-          : input.hasError('maxlength')
-            ? errorLogitudExedida
-            : input.hasError('minlength')
-              ? errorInsuficiente
-              : '';
-    }
-    if (pfield && pfield === 'telefonoOtro') {
-      const input = this.telefonoOtro;
-      return input.hasError('pattern')
-        ? errorNumero
-        : input.hasError('maxlength')
-          ? errorLogitudExedida
-          : input.hasError('minlength')
-            ? errorInsuficiente
-            : '';
     }
     //Validacion driccion domicilio
 
@@ -1143,26 +1136,26 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.estadoR.setValue(element.estado);
   }
   validarReferencias() {
-    console.log('validacion ===> ', this.dataSourceReferencia.data.find(x => !x.apellidos || !x.nombres || !x.parentesco || ( !x.telefonoFijo && !x.telefonoMovil ) ) ? true : false);
-    return this.dataSourceReferencia.data.find(x => !x.apellidos || !x.nombres || !x.parentesco || ( !x.telefonoFijo && !x.telefonoMovil ) ) ? true : false;
+    console.log('validacion ===> ', this.dataSourceReferencia.data.find(x => !x.apellidos || !x.nombres || !x.parentesco || (!x.telefonoFijo && !x.telefonoMovil)) ? true : false);
+    return this.dataSourceReferencia.data.find(x => !x.apellidos || !x.nombres || !x.parentesco || (!x.telefonoFijo && !x.telefonoMovil)) ? true : false;
   }
   validarReferencia(x) {
-    if (!x.apellidos || !x.nombres || !x.parentesco || ( !x.telefonoFijo && !x.telefonoMovil )) {
+    if (!x.apellidos || !x.nombres || !x.parentesco || (!x.telefonoFijo && !x.telefonoMovil)) {
       return { 'background-color': '#ffa000', 'color': 'aliceblue !important' };
     }
     return { 'background-color': '#ffffff00' };
   }
-  private validarReferenciasActivas(){
-    if(  this.dataSourceReferencia.data.length < 2 ){
+  private validarReferenciasActivas() {
+    if (this.dataSourceReferencia.data.length < 2) {
       return true;
     }
     let count = 0;
     this.dataSourceReferencia.data.forEach(element => {
-      if( element.estado == 'ACT' ){
+      if (element.estado == 'ACT') {
         count++
       }
     });
-    if(count < 2){
+    if (count < 2) {
       return true;
     }
   }
@@ -1179,6 +1172,11 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     }
     if (this.dataSourceTelefonosCliente.data.length < 1) {
       this.sinNoticeService.setNotice("LLENE CORRECTAMENTE LA SECCION DE DATOS DE CONTACTO DEL CLIENTE", 'warning');
+      this.stepper.selectedIndex = 1
+      return;
+    }
+    if (!this.email.value || !this.email.valid) {
+      this.sinNoticeService.setNotice("VALOR EN EL CAMPO DE EMAIL NO VALIDO.", 'warning');
       this.stepper.selectedIndex = 1
       return;
     }
@@ -1217,7 +1215,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.stepper.selectedIndex = 8
       return;
     }
-    if ( this.validarReferenciasActivas() ) {
+    if (this.validarReferenciasActivas()) {
       this.sinNoticeService.setNotice("AGREGUE AL MENOS 2 REFERENCIAS ACTIVAS EN LA SECCION DE REFERENCIAS PERSONALES", 'warning');
       this.stepper.selectedIndex = 8
       return;
@@ -1381,31 +1379,31 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.telefonoFijo.setValue(element.numero);
   }
 
-  abrirPopUpLugar(v){
-    if( this.nacionalidad.invalid || !this.nacionalidad.value.id){
-      this.sinNoticeService.setNotice("PRIMERO SELECCIONE EL LUGAR DE NACIMIENTO",'warning');
+  abrirPopUpLugar(v) {
+    if (this.nacionalidad.invalid || !this.nacionalidad.value.id) {
+      this.sinNoticeService.setNotice("PRIMERO SELECCIONE EL LUGAR DE NACIMIENTO", 'warning');
       return;
     }
-    let x = {esLugarNacimiento:v, nacionalidad: this.nacionalidad.value.id}
+    let x = { esLugarNacimiento: v, nacionalidad: this.nacionalidad.value.id }
     const dialogRef = this.dialog.open(PopUpNacimientoComponent, {
       width: "810px",
       height: "auto",
       data: x
     });
     dialogRef.afterClosed().subscribe(r => {
-      console.log("respuesta r",r)
-      if(r){
-        if(v=='N'){
+      console.log("respuesta r", r)
+      if (r) {
+        if (v == 'N') {
           this.lugarNacimiento.setValue(r.control.value);
           this.selectLugarNacimiento = r.nodo.id;
-        } else if(v=='O'){
+        } else if (v == 'O') {
           this.ubicacionO.setValue(r.control.value);
           this.selectUbicacion = r.nodo.id;
-        } else if(v=='U'){
+        } else if (v == 'U') {
           this.ubicacion.setValue(r.control.value);
           this.selectUbicacionO = r.nodo.id;
         }
-        
+
       }
     });
   }

@@ -133,13 +133,6 @@
                                 <input matInput placeholder="Edad:" [formControl]="edad" readonly/>
                             </mat-form-field>
                         </div>
-                        <!--             <div class="col-md-4">
-              <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl" class="example-tree">
-                <mat-tree-node> parent node </mat-tree-node>
-                <mat-tree-node> -- child node1 </mat-tree-node>
-                <mat-tree-node> -- child node2 </mat-tree-node>
-              </mat-tree>
-            </div> -->
                         <div class="col-md-4">
                             <form class="example-form">
                                 <mat-form-field class="mat-form-field-fluid">
@@ -198,7 +191,7 @@
                         </div>
                         <div class="col-md-6">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input placeholder="Télefono:" required [formControl]="telefonoFijo" autocomplete="off" matInput numeric numericType="number" (keypress)="numberOnly($event)">
+                                <input placeholder="Télefono:" [formControl]="telefonoFijo" autocomplete="off" matInput numeric numericType="number" (keypress)="numberOnly($event)">
                                 <mat-error>{{ getErrorMessage("telefonoFijo") }}</mat-error>
                             </mat-form-field>
                         </div>
