@@ -16,7 +16,7 @@ import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
 import { TbQoCotizador } from '../../../../../core/model/quski/TbQoCotizador';
 import { TbQoTasacion } from '../../../../../core/model/quski/TbQoTasacion';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
-import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
+import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 import { environment } from '../../../../../../environments/environment';
 import { ValidateCedula } from '../../../../../core/util/validate.util';
 import { SubheaderService } from '../../../../../core/_base/layout';

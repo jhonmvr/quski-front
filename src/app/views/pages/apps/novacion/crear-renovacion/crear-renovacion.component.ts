@@ -41,7 +41,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   private riesgoTotal: number;
   public loadingSubject = new BehaviorSubject<boolean>(false);
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
-  public credit: { operacionAnterior: any, proceso: TbQoProceso, credito: TbQoCreditoNegociacion, excepciones: TbQoExcepcion[]}
+  public credit: { operacionAnterior: any, proceso: TbQoProceso, credito: TbQoCreditoNegociacion, excepciones: TbQoExcepcion[], variables:any, tasacion:any }
   private numeroOperacion;
   public fechaUtil: diferenciaEnDias;
   selection = new SelectionModel<any>(true, []);
@@ -134,6 +134,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
             this.idNego = json.params.item;
             //console.log("datos ->", this.credit);
             if (this.credit ) {
+              this.variablesInternas = this.credit.variables;
+              this.garantiasSimuladas = this.setGarantias(this.credit.tasacion);
               this.credit.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : null;
               this.cargarCampos();
             }else{
@@ -144,6 +146,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
           this.loadingSubject.next(true);
           this.cre.buscarRenovacionByNumeroOperacionMadre(json.params.item).subscribe((data: any) => {
             this.credit = data.entidad;
+            this.simularOpciones();
             //console.log("datos ->", this.credit);
             if (this.credit ) {
               this.cargarCampos();
@@ -157,6 +160,36 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         
       } 
     });
+  }
+
+  setGarantias(garantias){
+    
+    if(garantias){
+      let x = new Array();
+      garantias.forEach(element => {
+        let g = {
+          descripcion: element.descripcion,
+          descuentoPesoPiedras: element.descuentoPesoPiedra,
+          descuentoSuelda: element.descuentoSuelda,
+          detallePiedras: element.detallePiedras,
+          estadoJoya: element.estadoJoya,
+          numeroPiezas: element.numeroPiezas,
+          pesoGr: element.pesoBruto,
+          pesoNeto: element.pesoNeto,
+          tienePiedras: element.tienePiedras?'S':'N',
+          tipoJoya: element.tipoJoya,
+          tipoOroKilataje: element.tipoOro,
+          valorAplicable: element.valorComercial,
+          valorAvaluo: element.valorAvaluo,
+          valorOro: element.valorOro,
+          valorRealizacion: element.valorRealizacion
+        };
+        x.push(g);
+      });
+      return x;
+      
+    }
+
   }
   public numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -198,7 +231,6 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         0, 'CREAR RENOVACION',
         this.credit ? this.credit.credito ? this.credit.credito.numeroOperacion : null : null )
     this.formOperacion.disable();
-    this.simularOpciones();
     if(this.credit.credito){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
       let calculadora: any = {
@@ -328,7 +360,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionRiesgo(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion,
+         this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(false,true,false) );
@@ -340,7 +373,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionCliente(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
+      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion,
+         this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false) );
@@ -352,7 +386,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionCobertura(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion(  this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
+      this.cre.crearCreditoRenovacion(  this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion,
+         this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
           this.abrirPopupExcepciones(new DataInjectExcepciones(false,false,true) );
@@ -394,7 +429,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         this.loadingSubject.next(true);
         if(r){
-          this.cre.crearCreditoRenovacion( this.selection.selected[0], this.numeroOperacion, this.numeroOperacionMadre, this.usuario, this.agencia, this.garantiasSimuladas, this.idNego, this.variablesInternas ).subscribe( data =>{
+          this.cre.crearCreditoRenovacion( this.selection.selected[0], this.numeroOperacion, this.numeroOperacionMadre, 
+            this.usuario, this.agencia, this.garantiasSimuladas, this.idNego, this.variablesInternas ).subscribe( data =>{
             if(data.entidad){
               this.credit = data.entidad;
               this.router.navigate(['cliente/gestion-cliente/NOV/',this.credit.proceso.idReferencia]);
@@ -449,7 +485,6 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
                   garantia.valorComercial = garantiaS.valorAplicable;
                   garantia.valorOro = garantiaS.valorOro;
                   garantia.valorRealizacion = garantiaS.valorRealizacion;
-                  console.log("===>",garantia);
               }
             });
             

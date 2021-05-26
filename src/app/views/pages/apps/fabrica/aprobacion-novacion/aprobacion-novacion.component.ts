@@ -615,19 +615,19 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
           this.agencia,
           this.usuario,
           this.aprobacion.value == ' true' ? null: this.motivoDevolucion.value.codigo,
-          this.aprobacion.value == ' true'  ).subscribe( (data: any) =>{
+          this.aprobacion.value).subscribe( (data: any) =>{
             if(!data.entidad){
               this.sinNotSer.setNotice('ERROR ENVIANDO LA RESPUESTA: ' + data.entidad, 'error');
             }
-            if(this.aprobacion.value == ' true'  && data.entidad && data.entidad.estadoProceso == 'APROBADO'){
+            if(data.entidad && data.entidad.estadoProceso == 'APROBADO'){
               this.sinNotSer.setNotice(this.crediW.credito.codigo + ' FUE APROBADO.', 'success');
-              this.router.navigate(['aprobador']);
+              
             }
-            if(this.aprobacion.value == ' false'  && data.entidad && data.entidad.estadoProceso == 'DEVUELTO'){
+            if(data.entidad && data.entidad.estadoProceso == 'DEVUELTO'){
               this.sinNotSer.setNotice(this.crediW.credito.codigo + ' FUE DEVUELTO AL ASESOR.', 'success');
-              this.router.navigate(['aprobador']);
+              
             }
-
+            this.router.navigate(['aprobador']);
 
           });
       }else{

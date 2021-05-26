@@ -20,7 +20,7 @@ import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
 import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
-import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
+import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';

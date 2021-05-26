@@ -3,9 +3,9 @@ import { ParametroService } from '../../../../../core/services/quski/parametro.s
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ValidateDecimal } from '../../../../../core/util/validateDecimal';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, Inject, OnInit } from '@angular/core';
+import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 export interface DataUpload {
   name: string;
   type: string;

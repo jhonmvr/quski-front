@@ -47,7 +47,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   public dataSourceComprobante = new MatTableDataSource<any>();
   public excepcionOperativa = new FormControl('');
   public fechaRegularizacion = new FormControl('');
-  public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','descargarComprobante'];
+  public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado'];
   public loadComprobante  = new BehaviorSubject<boolean>(false);
   public catCuenta;
   public catfirmadaOperacion: {nombre, codigo}[];
