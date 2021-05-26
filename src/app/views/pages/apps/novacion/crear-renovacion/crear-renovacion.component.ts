@@ -435,11 +435,31 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         }
         if( data.entidad.simularResult.xmlGarantias.garantias.garantia ){
           this.garantiasSimuladas = data.entidad.simularResult.xmlGarantias.garantias.garantia;
-          console.log("estas son las garantias ", this.garantiasSimuladas );
+          this.credit.operacionAnterior.garantias.forEach(garantia => {
+            this.garantiasSimuladas.forEach(garantiaS=>{
+              if(garantia.descuentoPiedras==garantiaS.descuentoPesoPiedras
+                && garantia.descuentoSuelda==garantiaS.descuentoSuelda
+                && garantia.codigoEstadoJoya==garantiaS.estadoJoya
+                && garantia.pesoBruto==garantiaS.pesoGr
+                && garantia.pesoNeto==garantiaS.pesoNeto
+                && garantia.tienePiedras==(garantiaS.tienePiedras == 'N'?false:true )
+                && garantia.codigoTipoJoya==garantiaS.tipoJoya
+                && garantia.codigoTipoOro==garantiaS.tipoOroKilataje){
+                  garantia.valorAvaluo = garantiaS.valorAvaluo;
+                  garantia.valorComercial = garantiaS.valorAplicable;
+                  garantia.valorOro = garantiaS.valorOro;
+                  garantia.valorRealizacion = garantiaS.valorRealizacion;
+                  console.log("===>",garantia);
+              }
+            });
+            
+          });
+          
+          //console.log("estas son las garantias ", this.garantiasSimuladas );
         }
         if(data.entidad && data.entidad.simularResult && data.entidad.simularResult.xmlVariablesInternas  && data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable ){
           this.variablesInternas = data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable;
-          console.log("estas son las variabes", this.variablesInternas)
+          //console.log("estas son las variabes", this.variablesInternas)
         }
         this.validarCliente( data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion );
       }
