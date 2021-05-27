@@ -185,7 +185,7 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
         this.mensaje = excepcionRol.mensajeBre;
         this.cre.traerCreditoNegociacion(excepcionRol.idNegociacion).subscribe((data: any) => {
           this.wr = data.entidad
-          if (this.wr && !this.wr.existeError) {
+          if (this.wr) {
             this.subheaderService.setTitle("EXCEPCION DE CLIENTE PARA: "+ this.wr.credito.codigo);
 
             this.guardarTraking(this.wr ? this.wr.proceso ? this.wr.proceso.proceso : null : null,
