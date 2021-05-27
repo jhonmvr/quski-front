@@ -1248,24 +1248,24 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.wrapper.datosTrabajos ? this.wrapper.datosTrabajos.forEach(t => {
       if (t.esprincipal && t.estado == 'ACT') {
         t.nombreEmpresa = this.nombreEmpresa.value;
-        t.cargo = this.cargo.value.codigo;
+        t.cargo = this.cargo.value?this.cargo.value.codigo:null;
         t.actividadEconomica = this.actividadEconomicaEmpresa.value ? this.actividadEconomicaEmpresa.value.id : null;
         t.actividadEconomicaMupi = this.actividadEconomicaMupi.value ? this.actividadEconomicaMupi.value.codigo : null;
         t.ocupacion = this.ocupacion.value ? this.ocupacion.value.codigo : null;
         t.esRelacionDependencia = this.relacionDependencia.value == 'SI' ? true : false;
-        t.origenIngreso = this.origenIngresos.value.codigo;
+        t.origenIngreso = this.origenIngresos.value?this.origenIngresos.value.codigo:null;
         t.tbQoCliente = this.wrapper.cliente;
       }
     }) : null;
     if (!this.wrapper.datosTrabajos) {
       let trabajo = new TbQoDatoTrabajoCliente();
       trabajo.nombreEmpresa = this.nombreEmpresa.value;
-      trabajo.cargo = this.cargo.value.codigo;
+      trabajo.cargo = this.cargo.value?this.cargo.value.codigo:null;
       trabajo.actividadEconomica = this.actividadEconomicaEmpresa.value ? this.actividadEconomicaEmpresa.value.id : null;
       trabajo.actividadEconomicaMupi = this.actividadEconomicaMupi.value ? this.actividadEconomicaMupi.value.codigo : null;
       trabajo.ocupacion = this.ocupacion.value ? this.ocupacion.value.codigo : null;
       trabajo.esRelacionDependencia = this.relacionDependencia.value == 'SI' ? true : false;
-      trabajo.origenIngreso = this.origenIngresos.value.codigo;
+      trabajo.origenIngreso = this.origenIngresos.value?this.origenIngresos.value.codigo:null;
       trabajo.tbQoCliente = this.wrapper.cliente;
       trabajo.estado = 'ACT';
       trabajo.esprincipal = true;
