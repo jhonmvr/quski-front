@@ -137,27 +137,37 @@
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>Datos De contacto Del Cliente</ng-template>
-                <div class=" kt-form">
-                    <form [formGroup]="formDatosContacto">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="telefonoDomicilio" placeholder="Telefono Domicilio:"
-                                        matInput />
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="telefonoMovil" placeholder="Telefono Movil:" matInput />
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <input [formControl]="correo" placeholder="Correo Electronico:" matInput />
-                                </mat-form-field>
-                            </div>
+                <form [formGroup]="formDatosContacto">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input [formControl]="correo" placeholder="Correo Electronico:" matInput />
+                            </mat-form-field>
                         </div>
-                    </form>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col">
+                        <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceTelefonosCliente">
+                            <ng-container matColumnDef="codigoTipoTelefono">
+                                <mat-header-cell *matHeaderCellDef> Tipo teléfono  </mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{ element.tipoTelefono }}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="numero">
+                                <mat-header-cell *matHeaderCellDef> Número </mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{ element.numero }}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="activo">
+                                <mat-header-cell *matHeaderCellDef> Activo </mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{ element.estado=='ACT'?'SI':'NO' }}
+                                </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="['codigoTipoTelefono','numero','activo']"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: ['codigoTipoTelefono','numero','activo']"></mat-row>
+                        </mat-table>
+                    </div>
                 </div>
             </mat-step>
             <mat-step>

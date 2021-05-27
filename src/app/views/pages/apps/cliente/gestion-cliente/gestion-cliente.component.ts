@@ -317,9 +317,6 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.lugarNacimiento.disable();
       this.edad.setValue(this.wrapper.cliente.edad);
       this.canalContacto.setValue(this.catMotivoVisita.find(x => x.codigo == this.wrapper.cliente.canalContacto));
-      let countFijo: number = 0;
-      let countOtro: number = 0;
-      let countMovil: number = 0;
       if (this.wrapper.telefonos) {
         this.dataSourceTelefonosCliente = new MatTableDataSource<any>(this.wrapper.telefonos);
       }
