@@ -177,7 +177,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
 
   ///datos de contacto cliente
   dataSourceTelefonosCliente = new MatTableDataSource<any>();
-  tipoTelefonoCliente = new FormControl('', [Validators.required]);
+  tipoTelefonoCliente = new FormControl('', []);
   public email = new FormControl('', [Validators.email, Validators.maxLength(100), Validators.required]);
   public telefonoFijo = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
   teleId;
