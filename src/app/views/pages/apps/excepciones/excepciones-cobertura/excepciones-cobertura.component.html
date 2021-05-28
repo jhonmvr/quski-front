@@ -1,12 +1,11 @@
-  
 <re-portlet>
     <re-portlet-header [title]="'Excepción De Cobertura'" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
             <a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
-					arrow_back</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
-			</a>
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+                    arrow_back</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+            </a>
         </ng-container>
     </re-portlet-header>
 
@@ -19,43 +18,58 @@
             <mat-step label="Información Operación">
                 <div class="row">
                     <div class="col-md-6">
-                        <mat-form-field  class="mat-form-field-fluid">
+                        <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="cliente" placeholder="Cliente: " />
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
-                        <mat-form-field  class="mat-form-field-fluid">
+                        <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="cedula" placeholder="Cedula: " />
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
-                        <mat-form-field  class="mat-form-field-fluid">
+                        <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="proceso" placeholder="Proceso: " />
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
-                        <mat-form-field  class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion: " [value]="fechaCreacion.value | rDate"/>
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion: "
+                                [value]="fechaCreacion.value | rDate" />
                         </mat-form-field>
                     </div>
                 </div>
             </mat-step>
             <mat-step label="Datos Contacto Cliente">
                 <div class="row">
-                    <div class="col-md-6">
-                        <mat-form-field  class="mat-form-field-fluid">
-                            <input matInput [formControl]="telefonoMovil" placeholder="Teléfono Móvil " />
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input [formControl]="email" placeholder="Correo Electronico:" matInput />
                         </mat-form-field>
                     </div>
-                    <div class="col-md-6">
-                        <mat-form-field  class="mat-form-field-fluid">
-                            <input matInput [formControl]="telefonoDomicilio" placeholder="Teléfono Domicilio " />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-6">
-                        <mat-form-field  class="mat-form-field-fluid">
-                            <input matInput [formControl]="email" placeholder="Correo Eléctronico " />
-                        </mat-form-field>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceTelefonosCliente">
+                            <ng-container matColumnDef="codigoTipoTelefono">
+                                <mat-header-cell *matHeaderCellDef> Tipo teléfono </mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{ element.tipoTelefono }}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="numero">
+                                <mat-header-cell *matHeaderCellDef> Número </mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{ element.numero }}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="activo">
+                                <mat-header-cell *matHeaderCellDef> Activo </mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{ element.estado=='ACT'?'SI':'NO' }}
+                                </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="['codigoTipoTelefono','numero','activo']">
+                            </mat-header-row>
+                            <mat-row *matRowDef="let row; columns: ['codigoTipoTelefono','numero','activo']"></mat-row>
+                        </mat-table>
                     </div>
                 </div>
             </mat-step>
@@ -70,15 +84,17 @@
             <mat-step label="Riesgo Acumulado">
                 <div class="row mt-2">
                     <div class="col">
-                        <kt-tabla-riesgo-acumulado *ngIf="wp && wp.riesgos;" [base]='wp.riesgos'></kt-tabla-riesgo-acumulado>
-                        <div class="row"  *ngIf="!wp || !wp.riesgos;">
+                        <kt-tabla-riesgo-acumulado *ngIf="wp && wp.riesgos;" [base]='wp.riesgos'>
+                        </kt-tabla-riesgo-acumulado>
+                        <div class="row" *ngIf="!wp || !wp.riesgos;">
                             <strong> EL CLIENTE NO TIENE RIESGO</strong>
                         </div>
                     </div>
                 </div>
             </mat-step>
             <mat-step label="Tasacion">
-                <kt-tabla-tasacion *ngIf="this.wp && this.wp.joyas;" [data]='this.wp.joyas' [tipo]="'T'"></kt-tabla-tasacion>
+                <kt-tabla-tasacion *ngIf="this.wp && this.wp.joyas;" [data]='this.wp.joyas' [tipo]="'T'">
+                </kt-tabla-tasacion>
             </mat-step>
             <mat-step label="Opciones de Crédito">
                 <div class="row">
@@ -87,21 +103,21 @@
                             [dataSource]="dataSourceCreditoNegociacion">
                             <ng-container matColumnDef="plazo">
                                 <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> 
-                                    {{ 
-                                    element.plazo ? 
-                                    element.plazo == '60'  ? '60 Dias (Al Vcto.)' : 
-                                    element.plazo == '31'  ? '31 Dias (Al Vcto.)' : 
-                                    element.plazo == '90'  ? '90 Dias (Al Vcto.)' : 
-                                    element.plazo == '120' ? '120 Dias (Al Vcto.)' : 
-                                    element.plazo == '6'   ? '6	Cuotas' : 
-                                    element.plazo == '4'   ? '4	Cuotas' : 
-                                    element.plazo == '7'   ? '7	Cuotas' : 
-                                    element.plazo == '11'  ? '11 Cuotas' : 
-                                    element.plazo == '13'  ? '13 Cuotas' : 
-                                    element.plazo == '9'   ? '9	Cuotas'  : 
-                                    element.plazo == '12'  ? '12 Cuotas' : 
-                                    element.plazo == '18'  ? '18 Cuotas' : 
+                                <mat-cell *matCellDef="let element">
+                                    {{
+                                    element.plazo ?
+                                    element.plazo == '60' ? '60 Dias (Al Vcto.)' :
+                                    element.plazo == '31' ? '31 Dias (Al Vcto.)' :
+                                    element.plazo == '90' ? '90 Dias (Al Vcto.)' :
+                                    element.plazo == '120' ? '120 Dias (Al Vcto.)' :
+                                    element.plazo == '6' ? '6 Cuotas' :
+                                    element.plazo == '4' ? '4 Cuotas' :
+                                    element.plazo == '7' ? '7 Cuotas' :
+                                    element.plazo == '11' ? '11 Cuotas' :
+                                    element.plazo == '13' ? '13 Cuotas' :
+                                    element.plazo == '9' ? '9 Cuotas' :
+                                    element.plazo == '12' ? '12 Cuotas' :
+                                    element.plazo == '18' ? '18 Cuotas' :
                                     element.plazo : 'Error'
                                     }}
                                 </mat-cell>
@@ -112,12 +128,12 @@
                             </ng-container>
                             <ng-container matColumnDef="periodicidadPlazo">
                                 <mat-header-cell *matHeaderCellDef>periodicidad Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> 
-                                    {{ 
-                                        element.periodicidadPlazo ?
-                                        element.periodicidadPlazo == 'M' ? 'Meses' :
-                                        element.periodicidadPlazo == 'D' ? 'Dias' :
-                                        element.periodicidadPlazo : 'Error'
+                                <mat-cell *matCellDef="let element">
+                                    {{
+                                    element.periodicidadPlazo ?
+                                    element.periodicidadPlazo == 'M' ? 'Meses' :
+                                    element.periodicidadPlazo == 'D' ? 'Dias' :
+                                    element.periodicidadPlazo : 'Error'
                                     }}
                                 </mat-cell>
                             </ng-container>
@@ -235,7 +251,8 @@
                             </ng-container>
                             <ng-container matColumnDef="totalCostosOperacionAnterior">
                                 <mat-header-cell *matHeaderCellDef>Total Costos Operacion Anterior</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.totalCostosOperacionAnterior }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.totalCostosOperacionAnterior }}
+                                </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="custodiaDevengada">
                                 <mat-header-cell *matHeaderCellDef>Custodia Devengada</mat-header-cell>
@@ -258,8 +275,10 @@
                                 <mat-cell *matCellDef="let element"> {{element.dividendoflujoplaneado}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="dividendosprorrateoserviciosdiferido">
-                                <mat-header-cell *matHeaderCellDef>Dividendos prorrateo servicios diferido</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.dividendosprorrateoserviciosdiferido }}</mat-cell>
+                                <mat-header-cell *matHeaderCellDef>Dividendos prorrateo servicios diferido
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.dividendosprorrateoserviciosdiferido }}
+                                </mat-cell>
                             </ng-container>
                             <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
                             <mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>
@@ -271,7 +290,7 @@
                 <form [formGroup]="formDatosExcepcion">
                     <div class="row">
                         <div class="col-4">
-                            <mat-form-field  class="mat-form-field-fluid">
+                            <mat-form-field class="mat-form-field-fluid">
                                 <input matInput [formControl]="usuarioAsesor" placeholder="Usuario Asesor: " />
                             </mat-form-field>
                         </div>
@@ -280,22 +299,23 @@
                         <div class="col-8">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Observacion Del Asesor: </mat-label>
-                                <textarea class="form-control border" rows="5"
-                                placeholder="Observacion Del Asesor: " [formControl]="observacionAsesor" matInput> {{ observacion }} </textarea>
+                                <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: "
+                                    [formControl]="observacionAsesor" matInput> {{ observacion }} </textarea>
                             </mat-form-field>
                         </div>
                         <div class="col-8">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Observacion Del Aprobador: </mat-label>
                                 <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
-                                placeholder="Observacion Del Aprobador: " matInput></textarea>
+                                    placeholder="Observacion Del Aprobador: " matInput></textarea>
                             </mat-form-field>
                         </div>
                     </div>
                     <div class="row mt-5">
                         <div class="col-4">
-                            <mat-form-field  class="mat-form-field-fluid">
-                                <input matInput [formControl]="cobertura" placeholder="Porcentaje Cobertura: " (keypress)="numberOnly($event)" />
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="cobertura" placeholder="Porcentaje Cobertura: "
+                                    (keypress)="numberOnly($event)" />
                             </mat-form-field>
                         </div>
                         <div class="col-4">
@@ -332,23 +352,25 @@
                         <div class="col-6">
                             <div class="row mt-5">
                                 <div class="col-4">
-                                    <mat-form-field  class="mat-form-field-fluid">
-                                        <input matInput [formControl]="coberturaActual" placeholder="Cobertura Actual: "/>
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input matInput [formControl]="coberturaActual"
+                                            placeholder="Cobertura Actual: " />
                                     </mat-form-field>
                                 </div>
                                 <div class="offset-1 col-4">
-                                    <mat-form-field  class="mat-form-field-fluid">
-                                        <input matInput [formControl]="montoActual" placeholder="Monto Actual: "/>
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input matInput [formControl]="montoActual" placeholder="Monto Actual: " />
                                     </mat-form-field>
                                 </div>
                                 <div class="col-4 ">
-                                    <mat-form-field  class="mat-form-field-fluid">
-                                        <input matInput [formControl]="valorComercial" placeholder="Valor Comercial: "/>
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input matInput [formControl]="valorComercial"
+                                            placeholder="Valor Comercial: " />
                                     </mat-form-field>
                                 </div>
                                 <div class="offset-1 col-4">
-                                    <mat-form-field  class="mat-form-field-fluid">
-                                        <input matInput [formControl]="valorAvaluo" placeholder="Valor Avaluo: "/>
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input matInput [formControl]="valorAvaluo" placeholder="Valor Avaluo: " />
                                     </mat-form-field>
                                 </div>
                             </div>

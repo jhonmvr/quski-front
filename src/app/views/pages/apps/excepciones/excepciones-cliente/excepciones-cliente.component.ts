@@ -14,7 +14,7 @@ import { DataPopup } from '../../../../../core/model/wrapper/dataPopup';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatTableDataSource } from '@angular/material';
 
 
 
@@ -39,6 +39,7 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
   // STANDARD VARIABLES
   public dataPopup: DataPopup;
   public mensaje: any;
+  dataSourceTelefonosCliente = new MatTableDataSource<any>();
 
   public formDatosOperacion: FormGroup = new FormGroup({});
   public nombresCompletos = new FormControl('', []);
@@ -64,8 +65,6 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
   public ultimaFechaDeActualizacionDeCliente = new FormControl('', []);
   // FORM DATOS CONTACTO
   public formDatosContacto: FormGroup = new FormGroup({});
-  public telefonoDomicilio = new FormControl('', []);
-  public telefonoMovil = new FormControl('', []);
   public correo = new FormControl('', []);
   // FORM DATOS NEGOCIACION
   public formDatosNegociacion: FormGroup = new FormGroup({});
@@ -123,8 +122,6 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
     this.formDatosCliente.addControl("actividadEconomica", this.actividadEconomica);
     this.formDatosCliente.addControl("ultimaFechaDeActualizacionDeCliente", this.ultimaFechaDeActualizacionDeCliente);
     //FORM DATOS CONTACTO
-    this.formDatosContacto.addControl("telefonoDomicilio", this.telefonoDomicilio);
-    this.formDatosContacto.addControl("telefonoMovil", this.telefonoMovil);
     this.formDatosContacto.addControl("correo", this.correo);
     //FORM DATOS NEGOCIACION
     this.formDatosNegociacion.addControl("tipoProcesoNegociacion", this.tipoProcesoNegociacion);
@@ -228,11 +225,8 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
             this.dataPopup.cedula = this.wr.credito.tbQoNegociacion.tbQoCliente.cedulaCliente;
             this.dataPopup.isNegociacion = true;
             this.dataPopup.idBusqueda = this.wr.credito.tbQoNegociacion.id;
-            if(this.wr.telefonoMovil){
-              this.telefonoMovil.setValue( this.wr.telefonoMovil.numero );
-            }
-            if(this.wr.telefonoDomicilio ){
-              this.telefonoDomicilio.setValue( this.wr.telefonoDomicilio.numero );
+            if (this.wr.telefonos) {
+              this.dataSourceTelefonosCliente = new MatTableDataSource<any>(this.wr.telefonos);
             }
             this.correo.setValue(this.wr.credito.tbQoNegociacion.tbQoCliente.email);
             this.nombreProceso.setValue(this.wr.proceso.proceso);

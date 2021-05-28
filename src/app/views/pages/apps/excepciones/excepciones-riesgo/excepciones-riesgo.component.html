@@ -48,23 +48,37 @@
               </div>
           </mat-step>
           <mat-step label="Datos Contacto Cliente">
-              <div class="row">
-                  <div class="col-md-6">
-                      <mat-form-field  class="mat-form-field-fluid">
-                          <input matInput [formControl]="telefonoMovil" placeholder="Teléfono Móvil " />
-                      </mat-form-field>
-                  </div>
-                  <div class="col-md-6">
-                      <mat-form-field  class="mat-form-field-fluid">
-                          <input matInput [formControl]="telefonoDomicilio" placeholder="Teléfono Domicilio " />
-                      </mat-form-field>
-                  </div>
-                  <div class="col-md-6">
-                      <mat-form-field  class="mat-form-field-fluid">
-                          <input matInput [formControl]="email" placeholder="Correo Eléctronico " />
-                      </mat-form-field>
-                  </div>
-              </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input [formControl]="email" placeholder="Correo Electronico:" matInput />
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceTelefonosCliente">
+                        <ng-container matColumnDef="codigoTipoTelefono">
+                            <mat-header-cell *matHeaderCellDef> Tipo teléfono </mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.tipoTelefono }}
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="numero">
+                            <mat-header-cell *matHeaderCellDef> Número </mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.numero }}
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="activo">
+                            <mat-header-cell *matHeaderCellDef> Activo </mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.estado=='ACT'?'SI':'NO' }}
+                            </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="['codigoTipoTelefono','numero','activo']">
+                        </mat-header-row>
+                        <mat-row *matRowDef="let row; columns: ['codigoTipoTelefono','numero','activo']"></mat-row>
+                    </mat-table>
+                </div>
+            </div>
           </mat-step>
           <mat-step label="Variables crediticias">
               <div class="row mt-2">

@@ -30,6 +30,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   public usuario;
   public agencia;
   public simulado: boolean;
+  dataSourceTelefonosCliente = new MatTableDataSource<any>();
 
   public wp: NegociacionWrapper = null;
   public formDisable: FormGroup = new FormGroup({});
@@ -37,8 +38,6 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   public cedula  = new FormControl('', []);
   public fechaCreacion = new FormControl('', []);
   public proceso = new FormControl('', []);
-  public telefonoDomicilio = new FormControl('', []);
-  public telefonoMovil = new FormControl('', []);
   public email = new FormControl('', []);
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
   displayedColumnsCreditoNegociacion = ['plazo','periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
@@ -82,8 +81,6 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     this.formDisable.addControl('cedula', this.cedula);
     this.formDisable.addControl('fechaCreacion', this.fechaCreacion);
     this.formDisable.addControl('proceso', this.proceso);
-    this.formDisable.addControl('telefonoDomicilio', this.telefonoDomicilio);
-    this.formDisable.addControl('telefonoMovil', this.telefonoMovil);
     this.formDisable.addControl('email', this.email);
     this.formDisable.addControl('observacionAsesor', this.observacionAsesor);
     this.formDisable.addControl('usuarioAsesor', this.usuarioAsesor);
@@ -123,10 +120,12 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
         this.cre.traerCreditoNegociacion(excepcionRol.idNegociacion).subscribe( (data: any)=>{
           if(data.entidad){
             this.wp = data.entidad;
-            this.excepcion = this.wp.excepciones.find(e => e.id == excepcionRol.id ); 
-            //console.log('Hola x2?')
-            this.wp.credito && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' && this.excepcion ?  
-            this.cargarCampos(this.wp) : this.sinNoticeService.setNotice('ERROR CARGANDO EXCEPCION','error');
+            if(this.wp.credito && this.wp.excepciones && this.wp.excepciones.find(e => e.id == excepcionRol.id ) && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ){
+              this.excepcion = this.wp.excepciones.find(e => e.id == excepcionRol.id );
+              this.cargarCampos(this.wp) 
+            }else{
+              this.sinNoticeService.setNotice('ERROR CARGANDO EXCEPCION','error');            
+            }
           }else{
             this.sinNoticeService.setNotice('ERROR CARGANDO NEGOCIACION','error');
           }
@@ -140,7 +139,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   private cargarCampos( wp: NegociacionWrapper){
     this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success')
     this.formDisable.disable();
-    this.subheaderService.setTitle('Operacion: '+this.wp.credito.codigo);
+    this.subheaderService.setTitle('Operacion: '+wp.credito.codigo);
 
     this.guardarTraking(wp ? wp.proceso ? wp.proceso.proceso : null : null,
       wp ? wp.credito ? wp.credito.codigo : null : null, 
@@ -151,8 +150,9 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     this.cedula.setValue( wp.credito.tbQoNegociacion.tbQoCliente.cedulaCliente );
     this.fechaCreacion.setValue( wp.credito.tbQoNegociacion.fechaCreacion );
     this.proceso.setValue( wp.proceso.proceso );
-    this.telefonoDomicilio.setValue( wp.telefonoDomicilio ? wp.telefonoDomicilio.numero : null );
-    this.telefonoMovil.setValue( wp.telefonoMovil ? wp.telefonoMovil.numero : null );
+    if (wp.telefonos) {
+      this.dataSourceTelefonosCliente = new MatTableDataSource<any>(wp.telefonos);
+    }
     this.email.setValue( wp.credito.tbQoNegociacion.tbQoCliente.email );
     this.calcularOpciones();
     this.camposAdicinales( wp );

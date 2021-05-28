@@ -19,6 +19,7 @@ export class NegociacionWrapper{
     excepcionBre: string;
     codigoExcepcionBre;
     respuesta : boolean;
+    existeError : boolean;
     constructor(){
       
     }
