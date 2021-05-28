@@ -1,0 +1,38 @@
+<div *ngIf="dataSource.data" class="row m-2">
+    <div class="col-12 mt-2 mb-2">
+        <span> Lista de excepciones aprobadas </span>
+    </div>
+    <div class="col-12">
+        <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource">
+
+            <ng-container matColumnDef="tipoExcepcion">
+                <mat-header-cell *matHeaderCellDef>Tipo De Excepcion</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.tipoExcepcion }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="mensajeBre">
+                <mat-header-cell *matHeaderCellDef> Mensaje BRE</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.mensajeBre }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="idAsesor">
+                <mat-header-cell *matHeaderCellDef>Usuario asesor</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.idAsesor }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="observacionAsesor">
+                <mat-header-cell *matHeaderCellDef> Observacion asesor</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.observacionAsesor }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="idAprobador">
+                <mat-header-cell *matHeaderCellDef> Usuario aprobador </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.idAprobador }} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="observacionAprobador">
+                <mat-header-cell *matHeaderCellDef> Observacion aprobador </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.observacionAprobador }} </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </mat-table>
+    </div>
+
+</div>

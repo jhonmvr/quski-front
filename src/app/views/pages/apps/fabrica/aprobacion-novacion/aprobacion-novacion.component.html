@@ -689,6 +689,9 @@
                             <mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
                         </mat-table>
                     </mat-tab>
+                    <mat-tab label="Excepciones">
+                        <kt-lista-excepciones [idNegociacion]="item"></kt-lista-excepciones>
+                    </mat-tab>
                 </mat-tab-group>
             </mat-step>
             <mat-step label="Datos de Operacion Anterior">

@@ -111,7 +111,7 @@ import { RiesgoAcumuladoComponent } from './custom/popups/riesgo-acumulado/riesg
 import { TablaOfertaCreditoComponent } from './custom/secciones-generales/tabla-oferta-credito/tabla-oferta-credito.component';
 import { MensajeEdadComponent } from './custom/popups/mensaje-edad/mensaje-edad.component';
 import { SolicitudDeExcepcionesComponent } from './custom/popups/solicitud-de-excepciones/solicitud-de-excepciones.component';
-import { ListaExcepcionesComponent } from './custom/popups/lista-excepciones/lista-excepciones.component';
+import { ListaExcepcionesComponent } from './custom/secciones-generales/lista-excepciones/lista-excepciones.component';
 import { ReasignarUsuarioComponent } from './custom/popups/reasignar-usuario/reasignar-usuario.component';
 import { ConfirmarAccionComponent } from './custom/popups/confirmar-accion/confirmar-accion.component';
 
@@ -216,6 +216,7 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 
 	],
 	exports: [
+		ListaExcepcionesComponent,
 		ImpuestosComTableComponent,
 		TablaCustomComponent,
 		WidgetModule,

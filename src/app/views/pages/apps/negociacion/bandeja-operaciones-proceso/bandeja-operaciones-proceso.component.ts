@@ -293,7 +293,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public reasignar(row: OperacionesProcesoWrapper ){
     const dialogRefGuardar = this.dialog.open(ReasignarUsuarioComponent, {
       width: '500px',
-      height: 'auto',
+      maxHeight:'700px',
       data: row
     });
     dialogRefGuardar.afterClosed().subscribe((result: true) => {

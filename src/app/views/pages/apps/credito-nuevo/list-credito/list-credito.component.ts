@@ -122,10 +122,10 @@ export class ListCreditoComponent implements OnInit {
     });
     this.sof.consultarEstadoOperacionQuskiCS().subscribe( (data: any) =>{
       this.catEstado = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
-    });
+    });/* 
     this.sof.consultarAsesoresCS().subscribe( (data: any) =>{
       this.catAsesor = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
-    });
+    }); */
     this.sof.consultarEstadoProcesoCS().subscribe( (data: any) =>{
       this.catEstadoProcesoGarantia = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
     });

@@ -6,11 +6,12 @@ import { NegociacionService } from '../../../../../core/services/quski/negociaci
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { ConfirmarAccionComponent } from '../confirmar-accion/confirmar-accion.component';
+import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 
-export interface Usuario{
-  codigo:  string
-  nombre:  string 
-  correo:  string
+export interface Usuario {
+  codigo: string
+  nombre: string
+  correo: string
 }
 @Component({
   selector: 'kt-reasignar-usuario',
@@ -20,44 +21,52 @@ export interface Usuario{
 
 export class ReasignarUsuarioComponent implements OnInit {
   /** ** @VARIABLES ** */
-  private catUsuarios : Array<Usuario>;
-  public usuario : string;
+  private catUsuarios: Array<Usuario>;
+  public usuario: string;
 
   /** ** @TABLA ** */
-  displayedColumns = ['usuario','nombre','reasignar'];
+  displayedColumns = ['usuario', 'nombre', 'reasignar'];
   dataSource = new MatTableDataSource<Usuario>();
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: OperacionesProcesoWrapper,
     public sof: SoftbankService,
     public pro: ProcesoService,
+    private par: ParametroService,
     private dialog: MatDialog,
     public neg: NegociacionService,
     public dialogRefGuardar: MatDialogRef<any>,
     private sinNotSer: ReNoticeService,
-  ) { 
+  ) {
     this.sof.setParameter();
     this.pro.setParameter();
     this.neg.setParameter();
+    this.par.setParameter();
   }
 
   ngOnInit() {
     this.sof.setParameter();
     this.pro.setParameter();
     this.neg.setParameter();
+    this.par.setParameter();
     this.usuario = this.data.asesor;
     this.cargarListaAsesores();
   }
-  private cargarListaAsesores(){
-    this.sof.consultarAsesoresCS().subscribe( (data: any) =>{
-      if(!data.existeError){
-        this.catUsuarios = data.catalogo;
-        this.dataSource.data = this.catUsuarios; 
-      } else {
-        //console.log('Me cai we :c');
-      }
+  private cargarListaAsesores() {
+    this.par.findByTipo('ROL-REASIG').subscribe((data: any) => {
+      let x = data.entidades.map( p=>{
+        return p.valor
+      });
+      this.sof.consultarAsesoresCS(x).subscribe((data: any) => {
+        if (!data.existeError) {
+          this.catUsuarios = data.catalogo;
+          this.dataSource.data = this.catUsuarios;
+        } else {
+          //console.log('Me cai we :c');
+        }
+      });
     });
   }
-  public reasignar(row: Usuario){
+  public reasignar(row: Usuario) {
     const mensaje = "Reasignarle la operacion al usuario, " + row.nombre;
     const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
       width: '800px',
@@ -66,18 +75,18 @@ export class ReasignarUsuarioComponent implements OnInit {
     });
     dialogRefGuardar.afterClosed().subscribe((result: true) => {
       if (result) {
-        this.pro.reasignarOperacion( this.data.id, this.data.proceso, row.codigo ).subscribe( (data: any) =>{
-          if(data.entidad){
+        this.pro.reasignarOperacion(this.data.id, this.data.proceso, row.codigo).subscribe((data: any) => {
+          if (data.entidad) {
             //console.log('Si se pudo :) ->', data.entidad.asesor);
             this.dialogRefGuardar.close(true);
-          }else{
+          } else {
             this.sinNotSer.setNotice('ERROR REASIGNANDO ASESOR, VUELVA A INTENTAR.', 'error');
           }
         });
       }
     });
-    
+
   }
-  
+
 
 }

@@ -43,7 +43,7 @@ import { CrearRenovacionComponent } from './crear-renovacion/crear-renovacion.co
 import { NovacionComponent } from './novacion.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { ErrorCargaInicialComponent } from '../../../../views/partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
-import { ListaExcepcionesComponent } from '../../../../views/partials/custom/popups/lista-excepciones/lista-excepciones.component';
+import { ListaExcepcionesComponent } from '../../../partials/custom/secciones-generales/lista-excepciones/lista-excepciones.component';
 import { ReasignarUsuarioComponent } from '../../../../views/partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
 import { NovacionHabilitanteComponent } from './novacion-habilitante/novacion-habilitante.component';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';

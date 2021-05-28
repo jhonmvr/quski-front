@@ -51,7 +51,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public totalValorO: number;
   public catDivisionPoliticaByPais: Array<any>;
   public catMotivoDevolucionAprobacion: Array<any>;
-
+  item
 
   private divicionPolitica: CatalogoWrapper[];
   
@@ -393,6 +393,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   private traerCreditoNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.idNegociacion) {
+        this.item = data.params.idNegociacion;
         this.cre.traerCreditonovacionPorAprobar(data.params.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
             this.crediW = data.entidad;

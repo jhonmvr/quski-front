@@ -90,9 +90,9 @@ export class ExcepcionService extends BaseService {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + this.restC + 'findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion';
     this.params = new HttpParams();
-    this.params.set('idNegociacion', idNegociacion);
-    this.params.set('tipoExcepcion', tipoExcepcion);
-    this.params.set('estadoExcepcion', estadoExcepcion);
+    this.params = this.params.set('idNegociacion', idNegociacion);
+    this.params = this.params.set('tipoExcepcion', tipoExcepcion);
+    this.params = this.params.set('estadoExcepcion', estadoExcepcion);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -111,7 +111,7 @@ export class ExcepcionService extends BaseService {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + this.restC + 'findByIdCliente';
     this.params = new HttpParams();
-    this.params.set('idCliente', idCliente);
+    this.params = this.params.set('idCliente', idCliente);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -131,9 +131,11 @@ export class ExcepcionService extends BaseService {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + this.restC + 'findByTipoExcepcionAndIdNegociacion';
     this.params = new HttpParams();
-    this.params.set('tipoExcepcion', tipoExcepcion);
-    this.params.set('idNegociacion', idNegociacion);
-    this.options = { headers: this.headers, params: this.params };
+    if(tipoExcepcion){
+      this.params =this.params.set('tipoExcepcion', tipoExcepcion);
+    }
+    this.params =this.params.set('idNegociacion', idNegociacion);
+      this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
