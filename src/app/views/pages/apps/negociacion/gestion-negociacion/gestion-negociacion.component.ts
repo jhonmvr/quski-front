@@ -7,6 +7,7 @@ import { VerCotizacionesComponent } from './../../../../partials/custom/popups/v
 import { TbQoVariablesCrediticia } from './../../../../../core/model/quski/TbQoVariablesCrediticia';
 import { DataInjectExcepciones } from './../../../../../core/model/wrapper/DataInjectExcepciones';
 import { TbQoCreditoNegociacion } from './../../../../../core/model/quski/TbQoCreditoNegociacion';
+import { MatDialog, MatTableDataSource, MatStepper, MatVerticalStepper } from '@angular/material';
 import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
 import { NegociacionService } from './../../../../../core/services/quski/negociacion.service';
 import { CalculadoraService } from './../../../../../core/services/quski/calculadora.service';
@@ -15,11 +16,12 @@ import { ParametroService } from './../../../../../core/services/quski/parametro
 import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
 import { TasacionService } from './../../../../../core/services/quski/tasacion.service';
 import { RelativeDateAdapter } from './../../../../../core/util/relative.dateadapter';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { EstadoExcepcionEnum } from './../../../../../core/enum/EstadoExcepcionEnum';
 import { ReNoticeService } from './../../../../../core/services/re-notice.service';
-import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
+import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
 import { environment } from '../../../../../../../src/environments/environment';
-import { MatDialog, MatTableDataSource, MatStepper, MatVerticalStepper } from '@angular/material';
+import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { TbQoTasacion } from './../../../../../core/model/quski/TbQoTasacion';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
@@ -29,8 +31,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
-import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 
 @Component({
@@ -937,10 +937,14 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       variablesBase.push(variableBase);
     });
     this.componenteVariable = false;
-    this.negoW.variables = variablesBase;
-    this.sinNotSer.setNotice("LAS VARIABLES CREDITICIAS FUERON ACTUALIZADAS", 'success');
-    this.componenteVariable = true;
-    this.loadVariables.next(false);
+    this.neg.actualizarVariables( variablesBase, this.negoW.credito.tbQoNegociacion.id ).subscribe( (data: any) =>{
+      if( data.entidades){
+        this.negoW.variables = data.entidades;
+        this.sinNotSer.setNotice("LAS VARIABLES CREDITICIAS FUERON ACTUALIZADAS", 'success');
+        this.componenteVariable = true;
+        this.loadVariables.next(false);
+      }
+    });
   }
   updateCliente(event, control) {
     if (control.invalid || (event instanceof KeyboardEvent && event.key != 'Tab')) {
@@ -988,7 +992,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       fechaNacimiento: this.fechaDeNacimiento.value,
       nacionalidad: this.nacionalidad.value.id,
       publicidad: this.publicidad.value,
-      tbQoTelefonoClientes: new Array()
+      tbQoTelefonoClientes: new Array(),
+      email: this.email.value
     };
     if (this.telefonoMovil) {
       cliente.tbQoTelefonoClientes.push(this.telefonoMovil);

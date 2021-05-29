@@ -24,6 +24,8 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
+import { TbQoCatalogo } from 'src/app/core/model/quski/TbQoCatalogo';
+import { TbQoCliente } from 'src/app/core/model/quski/TbQoCliente';
 
 
 @Component({
@@ -41,7 +43,9 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
   private elementJoya;
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
   public wCotiz : { joyas: TbQoTasacion[], variables: TbQoVariablesCrediticia[], riesgos: TbQoRiesgoAcumulado[], opciones: TbQoDetalleCredito[], telefonoMovil: TbQoTelefonoCliente, telefonoDomicilio: TbQoTelefonoCliente, excepcionBre: string, cotizacion: TbQoCotizador}
-  
+  telefonoMovil: TbQoTelefonoCliente;
+  telefonoFijo: TbQoTelefonoCliente;
+
   /** @CATALOGOS **/ 
   public catPais: Array<any>;
   public catTipoOro: Array<any>;
@@ -374,9 +378,11 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
     this.nacionalidad.setValue(this.catPais ? this.catPais.find(p=> p.id == this.wCotiz.cotizacion.tbQoCliente.nacionalidad) : null);
     this.cargarEdad();
     if(this.wCotiz.telefonoMovil){
+      this.telefonoMovil = this.wCotiz.telefonoMovil;
       this.movil.setValue(this.wCotiz.telefonoMovil.numero);
     }
     if(this.wCotiz.telefonoDomicilio){
+      this.telefonoFijo = this.wCotiz.telefonoDomicilio;
       this.telefonoDomicilio.setValue(this.wCotiz.telefonoDomicilio.numero);
     }
     this.aprobacionMupi.setValue( cargar ? this.wCotiz.cotizacion.tbQoCliente.aprobacionMupi : '');
@@ -425,19 +431,37 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
     })
   }
   private buildCliente(){
-    if( this.telefonoDomicilio.value){
+    if (this.telefonoFijo) {
+      this.telefonoFijo.numero = this.telefonoDomicilio.value
+      this.wCotiz.telefonoDomicilio.numero = this.telefonoDomicilio.value;
+    } else if (this.telefonoDomicilio.value) {
+      this.telefonoFijo = {
+        id: null,
+        estado: null,
+        idSoftbank: null,
+        tipoTelefono: 'DOM',
+        numero: this.telefonoDomicilio.value,
+        tbQoCliente: this.wCotiz.cotizacion.tbQoCliente
+      }
       this.wCotiz.telefonoDomicilio = new TbQoTelefonoCliente();
-      this.wCotiz.telefonoDomicilio.numero = this.movil.value;
-      this.wCotiz.telefonoDomicilio.tipoTelefono = 'DOM';
-      this.wCotiz.telefonoDomicilio.tbQoCliente = this.wCotiz.cotizacion.tbQoCliente;
-    }
-    if( this.movil.value){
-      this.wCotiz.telefonoMovil = new TbQoTelefonoCliente();
-      this.wCotiz.telefonoMovil.numero = this.movil.value;
-      this.wCotiz.telefonoMovil.tipoTelefono = 'CEL';
-      this.wCotiz.telefonoMovil.tbQoCliente = this.wCotiz.cotizacion.tbQoCliente;
-    }
+      this.wCotiz.telefonoDomicilio = this.telefonoFijo;
 
+    }
+    if (this.telefonoMovil) {
+      this.telefonoMovil.numero = this.movil.value;
+      this.wCotiz.telefonoMovil.numero = this.movil.value;
+    } else if (this.movil.value) {
+      this.telefonoMovil = {
+        id: null,
+        estado: null,
+        idSoftbank: null,
+        tipoTelefono: 'CEL',
+        numero: this.movil.value,
+        tbQoCliente: this.wCotiz.cotizacion.tbQoCliente
+      }
+      this.wCotiz.telefonoMovil = new TbQoTelefonoCliente();
+      this.wCotiz.telefonoMovil = this.telefonoMovil;
+    }
     let cliente = {
       id: this.wCotiz.cotizacion.tbQoCliente.id,
       cedulaCliente: this.wCotiz.cotizacion.tbQoCliente.cedulaCliente,
@@ -448,11 +472,11 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
       publicidad:this.publicidad.value,
       tbQoTelefonoClientes: new Array()
     };
-    if(this.wCotiz.telefonoMovil){
-    cliente.tbQoTelefonoClientes.push(this.wCotiz.telefonoMovil);
+    if(this.telefonoMovil){
+      cliente.tbQoTelefonoClientes.push(this.telefonoMovil);
     }
-    if(this.wCotiz.telefonoDomicilio ){
-      cliente.tbQoTelefonoClientes.push(this.wCotiz.telefonoDomicilio );
+    if(this.telefonoFijo){
+      cliente.tbQoTelefonoClientes.push(this.telefonoFijo);
     }
     this.wCotiz.cotizacion.tbQoCliente.nombreCompleto = this.nombresCompletos.value;
     this.wCotiz.cotizacion.tbQoCliente.publicidad = this.publicidad.value;

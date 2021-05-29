@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { TbQoTasacion } from '../../model/quski/TbQoTasacion';
 import { environment } from '../../../../../src/environments/environment';
+import { TbQoVariablesCrediticia } from '../../model/quski/TbQoVariablesCrediticia';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +22,19 @@ export class NegociacionService extends BaseService {
     this.setParameter();
 
   }
-
+  public actualizarVariables(list : Array<TbQoVariablesCrediticia>, idNego: any){
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'actualizarVariables';
+    const wrapper = { entidades: list };
+    this.params = new HttpParams();
+    this.params = this.params.set('idNego',idNego);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
   public iniciarNegociacion(cedula: string, asesor: string, idAgencia: string) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'iniciarNegociacion';
     this.params = new HttpParams().set('cedula', cedula).set('asesor',asesor).set('idAgencia',idAgencia);
