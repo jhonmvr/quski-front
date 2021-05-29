@@ -275,7 +275,8 @@
                     <div class="row mt-1">
                         <div class="col-md-2">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="montoSolicitado" placeholder="Monto solicitado" autocomplete="off" matInput numeric numericType="number" (keypress)="numberOnly($event)">
+                                <input [formControl]="montoSolicitado" placeholder="Monto solicitado" autocomplete="off" matInput numeric numericType="number">
+                                <mat-error *ngIf="montoSolicitado.hasError('invalido')">formato: 0.00</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="col-md-2">

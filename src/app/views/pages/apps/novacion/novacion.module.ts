@@ -125,8 +125,8 @@ const routes: Routes = [
   	declarations: [
 		CrearRenovacionComponent,
 		NovacionComponent,
-		NovacionHabilitanteComponent,
 		NovacionHabilitanteComponent
+		
 	],
 	entryComponents: [	
 		ErrorCargaInicialComponent,

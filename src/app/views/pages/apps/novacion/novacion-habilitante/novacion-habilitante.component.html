@@ -1,25 +1,25 @@
 <re-portlet>
-	<re-portlet-header [title]="'Renovar Credito'" [class]="'kt-portlet__head--lg'">
-		<ng-container ktPortletTools>
-			<a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
-					arrow_back</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
-			</a>
-		</ng-container>
-	</re-portlet-header>
-	<re-portlet-body>
-		<mat-vertical-stepper #stepper [linear]="true" (animationDone)="guardarTraking('RENOVACION',
+    <re-portlet-header [title]="'Renovar Credito'" [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTools>
+            <a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+                    arrow_back</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+            </a>
+        </ng-container>
+    </re-portlet-header>
+    <re-portlet-body>
+        <mat-vertical-stepper #stepper [linear]="true" (animationDone)="guardarTraking('RENOVACION',
         credit ? credit.credito ? credit.credito.codigo : null : null, 
         ['Información Operación','Detalle de garantias','Simular opciones de crédito'], 
         stepper.selectedIndex, 'CREAR RENOVACION',
         credit ? credit.credito ? credit.credito.numeroOperacion : null : null )">
-			<mat-step label='Datos Instruccion Operacion' [stepControl]="formOperacion">
-				<form [formGroup]="formOperacion" >
-					<div class="row">
-						<div class="col-md-4">
+            <mat-step label='Datos Instruccion Operacion' [stepControl]="formOperacion">
+                <form [formGroup]="formOperacion">
+                    <div class="row">
+                        <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required placeholder="Tipo De Cuenta"  [formControl]="tipoDeCuenta">
+                                <mat-select required placeholder="Tipo De Cuenta" [formControl]="tipoDeCuenta">
                                     <mat-option *ngFor="let element of catCuenta" [value]="element">
                                         {{element.nombre }}
                                     </mat-option>
@@ -27,10 +27,10 @@
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="numeroCuenta" placeholder="Numero Cuenta"/>
-							</mat-form-field>
-                        </div>					
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="numeroCuenta" placeholder="Numero Cuenta" />
+                            </mat-form-field>
+                        </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select required [formControl]="firmanteOperacion" placeholder="firmante Operacion">
@@ -42,12 +42,11 @@
                         </div>
                         <div class="col-md-4" *ngIf="this.credit && this.credit.credito.periodoPlazo == 'C'">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [matDatepickerFilter]="onlyOdds"  [min]="diasMin" [max]="diasMax"  matInput #inputFechaCuota
-                                    [matDatepicker]="pickerFechaCuota" [formControl]="diaFijoPago" placeholder="Dia Fijo Pago">
+                                <input [matDatepickerFilter]="onlyOdds" [min]="diasMin" [max]="diasMax" matInput #inputFechaCuota [matDatepicker]="pickerFechaCuota" [formControl]="diaFijoPago" placeholder="Dia Fijo Pago">
                                 <mat-datepicker-toggle matSuffix [for]="pickerFechaCuota"></mat-datepicker-toggle>
                                 <mat-datepicker #pickerFechaCuota></mat-datepicker>
                             </mat-form-field>
-                        </div>			
+                        </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select required [formControl]="tipoCliente" placeholder="Tipo Cliente" (selectionChange)="cambiarCliente()">
@@ -61,39 +60,39 @@
                     <div class="row" *ngIf="tipoCliente.value && (tipoCliente.value.codigo == 'SAP' || tipoCliente.value.codigo == 'CYA')">
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="nombreApoderado" placeholder="Nombre Completo (Apoderado)"/>
+                                <input matInput [formControl]="nombreApoderado" placeholder="Nombre Completo (Apoderado)" />
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (Apoderado)"/>
-							</mat-form-field>
-                        </div>		
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (Apoderado)" />
+                            </mat-form-field>
+                        </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <input matInput [matDatepicker]="picker6" [formControl]="fechaNacimientoApoderado" placeholder="Fecha Nacimiento">
                                 <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
                                 <mat-datepicker #picker6></mat-datepicker>
                             </mat-form-field>
-                        </div>					
+                        </div>
                     </div>
                     <div class="row" *ngIf="this.tipoCliente.value && (tipoCliente.value.codigo == 'SCD' || tipoCliente.value.codigo == 'CYA')">
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="nombreCodeudor" placeholder="Nombre Completo (Codeudor)"/>
+                                <input matInput [formControl]="nombreCodeudor" placeholder="Nombre Completo (Codeudor)" />
                             </mat-form-field>
-                        </div>				
+                        </div>
                         <div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="identificacionCodeudor" placeholder="Identificacion (Codeudor)"/>
-							</mat-form-field>
-                        </div>		
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="identificacionCodeudor" placeholder="Identificacion (Codeudor)" />
+                            </mat-form-field>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-4 offset-2">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required placeholder="Tipo Excepcion"  [formControl]="excepcionOperativa" (selectionChange)="habilitarExcepcionOperativa()">
-                                    <mat-option *ngFor="let element of catExcepcionOperativa" [value]="element" >
+                                <mat-select required placeholder="Tipo Excepcion" [formControl]="excepcionOperativa" (selectionChange)="habilitarExcepcionOperativa()">
+                                    <mat-option *ngFor="let element of catExcepcionOperativa" [value]="element">
                                         {{element.valor }}
                                     </mat-option>
                                 </mat-select>
@@ -107,7 +106,7 @@
                             </mat-form-field>
                         </div>
                     </div>
-				</form>
+                </form>
             </mat-step>
             <mat-step label='Comprobante De Pago'>
                 <div class="row mt-2 mb-2">
@@ -118,68 +117,74 @@
                     </div>
                 </div>
                 <div class="row">
-					<div class="col">
-						<mat-progress-bar *ngIf="loadComprobante.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
-					</div>
-				</div>
-				<mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante" >
-					<ng-container matColumnDef="accion">
+                    <div class="col">
+                        <mat-progress-bar *ngIf="loadComprobante.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+                    </div>
+                </div>
+                <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante">
+                    <ng-container matColumnDef="accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
                         <mat-cell *matCellDef="let row">
                             <a (click)="eliminarComprobante(row)">
-								<mat-icon matTooltip="Eliminar">delete</mat-icon>
+                                <mat-icon matTooltip="Eliminar">delete</mat-icon>
                             </a>
                         </mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="intitucionFinanciera">
-						<mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.intitucionFinanciera?element.intitucionFinanciera.nombre:'' }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="intitucionFinanciera">
+                        <mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.intitucionFinanciera?element.intitucionFinanciera.nombre:'' }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="cuenta">
-						<mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.cuenta }} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.cuenta }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="fechaPago">
-						<mat-header-cell *matHeaderCellDef>Fecha Pago</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.fechaPago | rDate}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Fecha Pago</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.fechaPago | rDate}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="numeroDeDeposito">
-						<mat-header-cell *matHeaderCellDef>Numero De Deposito</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.numeroDeposito }} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Numero De Deposito</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.numeroDeposito }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="valorDepositado">
-						<mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.valorDepositado }} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.valorDepositado }} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="descargarComprobante">
-						<mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
-						<mat-cell *matCellDef="let row">
+                        <mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
+                        <mat-cell *matCellDef="let row">
                             <a *ngIf="row.comprobante" (click)="descargarComprobante(row)">
-								<mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
+                                <mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
                             </a>
-                        </mat-cell>					
+                        </mat-cell>
                     </ng-container>
 
-					<mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
-					<mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
+                    <mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
                 </mat-table>
                 <div class="row mt-2 mb-2">
                     <div class="col-md-2 offset-md-5">
-                        <button class="mat-elevation-z4"  mat-raised-button color="primary" (click)="crearOperacion()">Crear Operacion</button>
+                        <button class="mat-elevation-z4" mat-raised-button color="primary" (click)="crearOperacion()">Crear Operacion</button>
                     </div>
                 </div>
             </mat-step>
             <mat-step label='Documentos Legales'>
                 <!-- <re-habilitante [proceso]="'NUEVO'" [useType]="'FORM'" [referencia]="item" ></re-habilitante> -->
-				<re-habilitante [proceso]="'NOVACION'" [useType]="'FORM'" [referencia]="item"></re-habilitante>
+                <re-habilitante [proceso]="'NOVACION'" [useType]="'FORM'" [referencia]="item"></re-habilitante>
+                <div class="row">
+                    <mat-form-field class="col-md-12">
+                        <textarea class="form-control border" [formControl]="observacionAsesor" rows="5" placeholder="Observacion asesor " matInput></textarea>
+                        <mat-error *ngIf="observacionAsesor.hasError('maxlength')"><strong>maximo de caracteres</strong></mat-error>
+                    </mat-form-field>
+                </div>
                 <div class="row" *ngIf="aprobar">
                     <div class="col-md-5 offset-md-5">
-                        <button  mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
+                        <button mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
                     </div>
                 </div>
-			</mat-step>
-		</mat-vertical-stepper>
+            </mat-step>
+        </mat-vertical-stepper>
 
-	</re-portlet-body>
-	<re-portlet-footer></re-portlet-footer>
+    </re-portlet-body>
+    <re-portlet-footer></re-portlet-footer>
 </re-portlet>

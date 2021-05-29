@@ -8,7 +8,7 @@ export class TbQoVariablesCrediticia {
     fechaCreacion: Date;
     nombre: string;
     codigo: string;
-    orden: string;
+    orden: number;
     valor: string;
     tbQoCotizador: TbQoCotizador;
     tbQoNegociacion: TbQoNegociacion;
