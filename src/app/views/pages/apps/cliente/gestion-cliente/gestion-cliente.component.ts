@@ -396,10 +396,10 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
         this.esAhorro.setValue(this.wrapper.cuentas[0].esAhorros ? 'SI' : 'NO');
       }
       this.dataSourceReferencia = new MatTableDataSource<any>(this.wrapper.referencias);
-      this.valorIngreso.setValue(this.wrapper.cliente.ingresos.toFixed(2));
-      this.valorEgreso.setValue(this.wrapper.cliente.egresos.toFixed(2));
-      this.avaluoPasivo.setValue(this.wrapper.cliente.pasivos.toFixed(2));
-      this.avaluoActivo.setValue(this.wrapper.totalAvaluo.toFixed(2));
+      this.valorIngreso.setValue(this.wrapper.cliente.ingresos?this.wrapper.cliente.ingresos.toFixed(2):'');
+      this.valorEgreso.setValue(this.wrapper.cliente.egresos?this.wrapper.cliente.egresos.toFixed(2):'');
+      this.avaluoPasivo.setValue(this.wrapper.cliente.pasivos?this.wrapper.cliente.pasivos.toFixed(2):'');
+      this.avaluoActivo.setValue(this.wrapper.totalAvaluo?this.wrapper.totalAvaluo.toFixed(2):'');
       this.guardarTraking(this.origen == 'NEG' ? 'NUEVO' : this.origen == 'NOV' ? 'RENOVACION' : null,
         this.wrapper ? this.wrapper.codigoBpm : null, ['Datos Personales', 'Datos de contacto', 'Dirección Domicilio', 'Dirección Laboral', 'Datos Económico', 'Ingresos / Egresos', 'Patrimonio', 'Cuentas Bancarias', 'Referencias Personales'],
         0, 'GESTION CLIENTE', '');

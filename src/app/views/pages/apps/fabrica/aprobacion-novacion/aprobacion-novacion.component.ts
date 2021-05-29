@@ -52,7 +52,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public catDivisionPoliticaByPais: Array<any>;
   public catMotivoDevolucionAprobacion: Array<any>;
   item
-
+  observacionAsesor = new FormControl('', []);
   private divicionPolitica: CatalogoWrapper[];
   
   /** @OPERACION */
@@ -512,7 +512,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
       });
     }
     
-    this.numeroFunda.setValue(ap.creditoAnterior.garantias[0].numeroFundaMadre);
+    this.numeroFunda.setValue(ap.creditoAnterior?ap.creditoAnterior.garantias[0].numeroFundaMadre:null);
     
     /** @DATOS_INSTRUCCION_OPERATIVA */
     this.tipoCuenta.setValue( ap.cuenta ? ap.cuenta.esAhorros ? 'Si' : 'No' : 'Error de datos' );
@@ -542,7 +542,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.aRecibirCliente.setValue(ap.credito.aRecibirCliente);
     this.recibirPagar.setValue( ( ap.credito.aRecibirCliente - ap.credito.aPagarCliente ).toFixed(2) );
     this.totalCostoNuevaOperacion.setValue(ap.credito.totalGastosNuevaOperacion);
-
+    this.observacionAsesor.setValue(ap.credito.tbQoNegociacion.observacionAsesor);
     /** @OPERACION_NUEVA */
     this.tipoCartera.setValue(ap.credito.tipoCarteraQuski);
     this.tablaAmortizacion.setValue(ap.credito.tablaAmortizacion);
@@ -561,25 +561,26 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
       e.institucionFinanciera = this.catBanco.find( x => x.id == e.institucionFinanciera);
     }) : null;
     /** @OPERACION_ANTERIOR */
-    this.antNumeroOperacion.setValue( ap.creditoAnterior.credito.numeroOperacion );
-    this.antReferenciaMupi.setValue( "No tengo.");
-    this.antOperacionMadre.setValue( ap.creditoAnterior.credito.numeroOperacionMadre ? ap.creditoAnterior.credito.numeroOperacionMadre : 'No aplica' );
-    this.antPlazo.setValue( ap.creditoAnterior.credito.plazo );
-    this.antTipoCredito.setValue( ap.creditoAnterior.credito.tipoCredito );
-    this.antEstadoOperacion.setValue( ap.creditoAnterior.credito.codigoEstadoOperacion );
-    this.antFechaEfectiva.setValue( ap.creditoAnterior.credito.fechaAprobacion );
-    this.antFechaVecimiento.setValue( ap.creditoAnterior.credito.fechaVencimiento );
-    this.antFechaCompraCartera.setValue( "No tengo.");
-    this.antMontoFinanciado.setValue( ap.creditoAnterior.credito.montoFinanciado );
-    this.antCuota.setValue( ap.creditoAnterior.credito.numeroCuotas );
-    this.antUltimaCuotaPagada.setValue( "No tengo.");
-    this.antSaldoCapital.setValue( ap.creditoAnterior.credito.saldo );
-    this.antSaldoInteres.setValue( "No tengo.");
-    this.antSaldoMora.setValue( "No tengo.");
-    this.antGastoCobranza.setValue( "No tengo.");
-    this.antCustodiaVencida.setValue( "No tengo.");
-    this.antValorPrecancelacion.setValue( "No tengo.");
-
+    if(ap.creditoAnterior){
+      this.antNumeroOperacion.setValue( ap.creditoAnterior.credito.numeroOperacion );
+      this.antReferenciaMupi.setValue( "No tengo.");
+      this.antOperacionMadre.setValue( ap.creditoAnterior.credito.numeroOperacionMadre ? ap.creditoAnterior.credito.numeroOperacionMadre : 'No aplica' );
+      this.antPlazo.setValue( ap.creditoAnterior.credito.plazo );
+      this.antTipoCredito.setValue( ap.creditoAnterior.credito.tipoCredito );
+      this.antEstadoOperacion.setValue( ap.creditoAnterior.credito.codigoEstadoOperacion );
+      this.antFechaEfectiva.setValue( ap.creditoAnterior.credito.fechaAprobacion );
+      this.antFechaVecimiento.setValue( ap.creditoAnterior.credito.fechaVencimiento );
+      this.antFechaCompraCartera.setValue( "No tengo.");
+      this.antMontoFinanciado.setValue( ap.creditoAnterior.credito.montoFinanciado );
+      this.antCuota.setValue( ap.creditoAnterior.credito.numeroCuotas );
+      this.antUltimaCuotaPagada.setValue( "No tengo.");
+      this.antSaldoCapital.setValue( ap.creditoAnterior.credito.saldo );
+      this.antSaldoInteres.setValue( "No tengo.");
+      this.antSaldoMora.setValue( "No tengo.");
+      this.antGastoCobranza.setValue( "No tengo.");
+      this.antCustodiaVencida.setValue( "No tengo.");
+      this.antValorPrecancelacion.setValue( "No tengo.");
+    }
     
   }
 

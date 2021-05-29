@@ -23,6 +23,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { DevolucionCreditoComponent } from '../../../../partials/custom/popups/devolucion-credito/devolucion-credito.component';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -60,7 +61,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public estadoProceso = new FormControl();
   public nombreCompleto = new FormControl();
   public cedulaCliente = new FormControl();
-  public montoSolicitado = new FormControl();
+  public montoSolicitado = new FormControl('',[ValidateDecimal]);
   
   public dataSourceCreditoNegociacion = new MatTableDataSource<any>();
   public displayedColumnsCreditoNegociacion = ['Accion','plazo', 'periodicidadPlazo', 'montoFinanciado', 'cuota', 'valorARecibir', 'valorAPagar',
@@ -446,10 +447,13 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     }
   }
   public simularOpciones(){
-    if(this.montoSolicitado.value){
-      if(this.dataSourceCreditoNegociacion.data.length < 1 || ( this.montoSolicitado.value > this.dataSourceCreditoNegociacion.data[0].montoFinanciado  ) ){
+     if(this.montoSolicitado.value){
+      /* if(this.dataSourceCreditoNegociacion.data.length < 1 || ( this.montoSolicitado.value > this.dataSourceCreditoNegociacion.data[0].montoFinanciado  ) ){
         this.sinNotSer.setNotice("EL MONTO SOLICITADO ES MAYOR AL MONTO FINANCIADO ACTUAL", 'error');
         return;
+      } */
+      if(this.montoSolicitado.invalid){
+        this.sinNotSer.setNotice('INGRESE CORRECTAMENTE EL MONTO SOLICITADO','warning');
       }
     }
     let cliente = {} as cliente;

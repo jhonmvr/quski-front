@@ -1,131 +1,129 @@
-<mat-table matTableExporter id="tableTasacion" class="mat-elevation-z8" #exporter="matTableExporter"
-  [dataSource]="dataSourceTasacion">
-  <ng-container matColumnDef="Accion" sticky>
-    <mat-header-cell *matHeaderCellDef>Acci&#243;n</mat-header-cell>
-    <mat-cell *matCellDef="let element">
-      <a (click)="eliminar(element)">
-        <mat-icon matTooltip="Borrar">delete</mat-icon>
-      </a>
-      <a (click)="editar(element)">
-        <mat-icon matTooltip="Editar">edit</mat-icon>
-      </a>
-    </mat-cell>
-    <mat-footer-cell *matFooterCellDef> Total: </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="Total" sticky>
-    <mat-header-cell *matHeaderCellDef> </mat-header-cell>
-    <mat-cell *matCellDef="let element"> * </mat-cell>
-    <mat-footer-cell *matFooterCellDef> Total: </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="NumeroPiezas">
-    <mat-header-cell *matHeaderCellDef>N. de piezas</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.numeroPiezas }} </mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalNumeroJoya }}</mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="TipoOro">
-    <mat-header-cell *matHeaderCellDef> Tipo de oro </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ forTipoOro(element) | titlecase }} </mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="TipoJoya">
-    <mat-header-cell *matHeaderCellDef> Tipo de joya </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ forTipoJoya(element) | titlecase}}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="PesoBruto">
-    <mat-header-cell *matHeaderCellDef>Peso bruto</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.pesoBruto }}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalPesoB }} </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="DescuentoPesoPiedra">
-    <mat-header-cell *matHeaderCellDef>Descuento piedra</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ forDescuentoPesoPiedra(element) }}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalDescgr }} </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="DescuentoSuelda">
-    <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ forDescuentoSuelda(element) }}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalDescSuelda }} </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="PesoNeto">
-    <mat-header-cell *matHeaderCellDef>Peso neto</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.pesoNeto }} </mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalPesoN }}  </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="valorOro">
-    <mat-header-cell *matHeaderCellDef>Precio Oro</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.valorOro | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="ValorAvaluo">
-    <mat-header-cell *matHeaderCellDef>Valor aval&#250;o</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.valorAvaluo | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalValorA | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="ValorAplicable">
-    <mat-header-cell *matHeaderCellDef> Valor Aplicable</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.valorAplicable | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="ValorRealizacion">
-    <mat-header-cell *matHeaderCellDef>Valor realizaciòn</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.valorRealizacion | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalValorR | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="valorComercial">
-    <mat-header-cell *matHeaderCellDef>Valor Comercial</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.valorComercial | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> {{ totalValorC | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="tienePiedras">
-    <mat-header-cell *matHeaderCellDef> Tiene Piedras </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.tienePiedras ? 'SI' : 'NO' | titlecase}}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="detallePiedras">
-    <mat-header-cell *matHeaderCellDef>Detalle Piedras</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.detallePiedras ? element.detallePiedras : 'No aplica' | titlecase}}
-    </mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="EstadoJoya">
-    <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ forEstadoJoya(element) | titlecase }}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="Descripcion">
-    <mat-header-cell *matHeaderCellDef>Descripci&#243;n</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ forDescripcion(element) | titlecase }}</mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
-  </ng-container>
-  <ng-container matColumnDef="NumeroFundaMadre">
-    <mat-header-cell *matHeaderCellDef >Número Funda Madre</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.numeroFundaMadre}} </mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
-</ng-container>
-<ng-container matColumnDef="NumeroFundaActual">
-    <mat-header-cell *matHeaderCellDef >Número Funda Actual</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.numeroFundaJoya}} </mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
-</ng-container>
-<ng-container matColumnDef="CiudadTevcol">
-    <mat-header-cell *matHeaderCellDef >Ciudad TEVCOL</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{forAgenciaCustodia(element)}} </mat-cell>
-    <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
-</ng-container>
+<mat-table matTableExporter id="tableTasacion" class="mat-elevation-z8" #exporter="matTableExporter" [dataSource]="dataSourceTasacion">
+    <ng-container matColumnDef="Accion" sticky>
+        <mat-header-cell *matHeaderCellDef>Acci&#243;n</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <a (click)="eliminar(element)">
+                <mat-icon matTooltip="Borrar">delete</mat-icon>
+            </a>
+            <a (click)="editar(element)">
+                <mat-icon matTooltip="Editar">edit</mat-icon>
+            </a>
+        </mat-cell>
+        <mat-footer-cell *matFooterCellDef> Total: </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="Total" sticky>
+        <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+        <mat-cell *matCellDef="let element"> * </mat-cell>
+        <mat-footer-cell *matFooterCellDef> Total: </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="NumeroPiezas">
+        <mat-header-cell *matHeaderCellDef>N. de piezas</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.numeroPiezas }} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> -</mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="TipoOro">
+        <mat-header-cell *matHeaderCellDef> Tipo de oro </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ forTipoOro(element) | titlecase }} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="TipoJoya">
+        <mat-header-cell *matHeaderCellDef> Tipo de joya </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ forTipoJoya(element) | titlecase}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="PesoBruto">
+        <mat-header-cell *matHeaderCellDef>Peso bruto</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.pesoBruto }}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{ totalPesoB() }} </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="DescuentoPesoPiedra">
+        <mat-header-cell *matHeaderCellDef>Descuento piedra</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ forDescuentoPesoPiedra(element) }}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{ totalDescgr() }} </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="DescuentoSuelda">
+        <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ forDescuentoSuelda(element) }}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{ totalDescSuelda() }} </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="PesoNeto">
+        <mat-header-cell *matHeaderCellDef>Peso neto</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.pesoNeto }} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{ totalPesoN() }} </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="valorOro">
+        <mat-header-cell *matHeaderCellDef>Precio Oro</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.valorOro | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="ValorAvaluo">
+        <mat-header-cell *matHeaderCellDef>Valor aval&#250;o</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.valorAvaluo | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{ totalValorA() | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="ValorAplicable">
+        <mat-header-cell *matHeaderCellDef> Valor Aplicable</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.valorAplicable | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="ValorRealizacion">
+        <mat-header-cell *matHeaderCellDef>Valor realizaciòn</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.valorRealizacion | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{ totalValorR() | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="valorComercial">
+        <mat-header-cell *matHeaderCellDef>Valor Comercial</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.valorComercial | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{ totalValorC() | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="tienePiedras">
+        <mat-header-cell *matHeaderCellDef> Tiene Piedras </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.tienePiedras ? 'SI' : 'NO' | titlecase}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="detallePiedras">
+        <mat-header-cell *matHeaderCellDef>Detalle Piedras</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.detallePiedras ? element.detallePiedras : 'No aplica' | titlecase}}
+        </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="EstadoJoya">
+        <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ forEstadoJoya(element) | titlecase }}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="Descripcion">
+        <mat-header-cell *matHeaderCellDef>Descripci&#243;n</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ forDescripcion(element) | titlecase }}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="NumeroFundaMadre">
+        <mat-header-cell *matHeaderCellDef>Número Funda Madre</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.numeroFundaMadre}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="NumeroFundaActual">
+        <mat-header-cell *matHeaderCellDef>Número Funda Actual</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.numeroFundaJoya}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="CiudadTevcol">
+        <mat-header-cell *matHeaderCellDef>Ciudad TEVCOL</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{forAgenciaCustodia(element)}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> - </mat-footer-cell>
+    </ng-container>
 
-  <mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
-  <mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
+    <mat-header-row *matHeaderRowDef="displayedColumnsTasacion"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumnsTasacion;"></mat-row>
+    <mat-footer-row *matFooterRowDef="displayedColumnsTasacion; sticky: true"></mat-footer-row>
 </mat-table>
 <div class="row">
-  <div class="col-1 offset-11">
-    <button mat-raised-button
-      (click)="exporter.exportTable('xlsx', {fileName:'ListaDeJoyas', sheet: 'sheet_name', Props: {Author: 'jhonmvr'}})">Exportar</button>
-  </div>
+    <div class="col-1 offset-11">
+        <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'ListaDeJoyas', sheet: 'sheet_name', Props: {Author: 'jhonmvr'}})">Exportar</button>
+    </div>
 </div>
 <div class="row" *ngIf="this.error">
-  <div class="col-4 offset-4">
-    <strong> No se pudo mapear las garantias.</strong>
-  </div>
+    <div class="col-4 offset-4">
+        <strong> No se pudo mapear las garantias.</strong>
+    </div>
 </div>

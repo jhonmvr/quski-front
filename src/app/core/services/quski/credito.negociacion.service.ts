@@ -96,9 +96,12 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }  
-  public solicitarAprobacionRenovacion( idNegociacion, correoAsesor, nombreAsesor) {
+  public solicitarAprobacionRenovacion( idNegociacion, correoAsesor, nombreAsesor, observacionAsesor) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "solicitarAprobacionRenovacion" ;
-    this.params = this.params.set('idNegociacion',idNegociacion).set('correoAsesor',correoAsesor).set('nombreAsesor',nombreAsesor);
+    this.params = this.params.set('idNegociacion',idNegociacion);
+    this.params = this.params.set('correoAsesor',correoAsesor);
+    this.params = this.params.set('nombreAsesor',nombreAsesor);
+    this.params = this.params.set('observacionAsesor',observacionAsesor);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

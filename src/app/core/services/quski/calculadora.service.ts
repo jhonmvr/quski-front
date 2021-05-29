@@ -81,7 +81,7 @@ export class CalculadoraService extends BaseService {
     this.params = new HttpParams();
     this.params = this.params.set('riesgoTotal',riesgoTotal).set('coberturaExcepcionada',coberturaExcepcionada).set('codigoAgencia',codigoAgencia)
     if(montoSolicitado){
-      this.params.set('montoSolicitado',montoSolicitado);
+      this.params = this.params.set('montoSolicitado',montoSolicitado);
     }
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, wrapper, this.options).pipe(

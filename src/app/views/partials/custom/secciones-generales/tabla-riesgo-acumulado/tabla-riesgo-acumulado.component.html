@@ -105,13 +105,13 @@
     </ng-container>
     <ng-container matColumnDef="valorPagar">
         <mat-header-cell *matHeaderCellDef class="text-align">Valor a pagar</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorAlDiaMasCuotaActual | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorCancelaPrestamo | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> {{valorPagar | currency:'CAD':'symbol-narrow':'1.2-2' }} </mat-footer-cell>
 
     </ng-container>
     <ng-container matColumnDef="deudaTotal">
         <mat-header-cell *matHeaderCellDef class="text-align">Total deuda</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorCancelaPrestamo | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="text-align"> {{element.valorTotalPrestamoVencimiento | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
         <mat-footer-cell *matFooterCellDef> {{deudaTotal | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
 
     </ng-container>

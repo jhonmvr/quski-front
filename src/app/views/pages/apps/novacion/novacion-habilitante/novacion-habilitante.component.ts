@@ -47,6 +47,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   public dataSourceComprobante = new MatTableDataSource<any>();
   public excepcionOperativa = new FormControl('');
   public fechaRegularizacion = new FormControl('');
+  observacionAsesor = new FormControl('',[Validators.maxLength(1000)]);
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado'];
   public loadComprobante  = new BehaviorSubject<boolean>(false);
   public catCuenta;
@@ -173,6 +174,10 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.loadComprobante.next(false);
   }
   public solicitarAprobacion(){
+    if(this.observacionAsesor.invalid){
+      this.sinNotSer.setNotice("ERROR EN OBSERVACION ASESOR",'warning');
+      return;
+    }
     if(this.formOperacion.valid){
       let mensaje = "Solicitar la aprobacion del credito: " + this.credit.credito.codigo;
       const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
@@ -182,7 +187,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.cre.solicitarAprobacionRenovacion( this.credit.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor ).subscribe( (data: any) =>{
+          this.cre.solicitarAprobacionRenovacion( this.credit.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor,this.observacionAsesor.value ).subscribe( (data: any) =>{
             if(data.entidad){
               this.sinNotSer.setNotice('CREDITO ENVIADO A APROBACION FABRICA','success');
               this.router.navigate(['negociacion/bandeja-operaciones']);

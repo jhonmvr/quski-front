@@ -42,7 +42,10 @@ export class TablaVariablesCrediticiasComponent implements OnInit {
     this.loading = this.loadingSubject.asObservable();
     this.loadingSubject.next(true);
     this.baseSuject.subscribe( data =>{
-      this.dataSourceVariablesCrediticias.data = data;
+      if(data){
+
+        this.dataSourceVariablesCrediticias.data = data.sort((r,n)=>{return r.orden - n.orden});
+      }
       this.loadingSubject.next(false);
     }, error => {
       this.loadingSubject.next(false);

@@ -220,7 +220,7 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
               this.catEducacion.find( x=> x.codigo == this.wr.credito.tbQoNegociacion.tbQoCliente.nivelEducacion).nombre : 'Error de catalogo');
             this.actividadEconomica.setValue(this.catActividadEconomica.find(x=> x.id == this.wr.credito.tbQoNegociacion.tbQoCliente.actividadEconomica) ?
               this.catActividadEconomica.find(x=> x.id == this.wr.credito.tbQoNegociacion.tbQoCliente.actividadEconomica).nombre : 'Error de catalogo' );
-            this.ultimaFechaDeActualizacionDeCliente.setValue(new Date(this.wr.credito.tbQoNegociacion.tbQoCliente.fechaActualizacion));
+            this.ultimaFechaDeActualizacionDeCliente.setValue(new Date(this.wr.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento));
             this.dataPopup = new DataPopup();
             this.dataPopup.cedula = this.wr.credito.tbQoNegociacion.tbQoCliente.cedulaCliente;
             this.dataPopup.isNegociacion = true;
