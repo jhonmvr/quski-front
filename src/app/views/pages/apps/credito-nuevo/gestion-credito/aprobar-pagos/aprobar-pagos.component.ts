@@ -11,6 +11,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
+import { ValidateDecimal } from './../../../../../../core/util/validator.decimal';
 
 
 @Component({
@@ -37,7 +38,7 @@ export class AprobarPagosComponent implements OnInit {
   public tipoCredito = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public valorPreCancelado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public tipoPagoProceso = new FormControl('', [Validators.required, Validators.maxLength(13)]);
-  public valorDepositadoAprobador = new FormControl('', [Validators.required, Validators.maxLength(13)]);
+  public valorDepositadoAprobador = new FormControl('', [ValidateDecimal, Validators.required, Validators.maxLength(13)]);
   public valorDepositado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public observacion = new FormControl('', [Validators.maxLength(150)]);
  
@@ -125,6 +126,9 @@ export class AprobarPagosComponent implements OnInit {
     });
   }
   public enviarRespuesta(aprobar){
+    if(this.valorDepositadoAprobador.invalid){
+      this.sinNoticeService.setNotice("INGRESE EL VALOR DEPOSITADO",'error');
+    }
     let mensaje = aprobar ? 
     "Aprobar el proceso de registro de pago con el codigo: " + this.cliente.codigo:
     "Negar el proceso de registro de pago con el codigo: " + this.cliente.codigo;
@@ -135,8 +139,8 @@ export class AprobarPagosComponent implements OnInit {
       });
     dialogRef.afterClosed().subscribe(r => {
       if(r){
-        let valor = this.valorDepositadoAprobador.value &&  this.valorDepositadoAprobador.value > 0 ? this.valorDepositadoAprobador.value : null;
-        this.reg.enviarRespuesta(this.cliente.id, true, aprobar, this.usuario, this.correoUsuario, valor).subscribe((data: any) => {
+        
+        this.reg.enviarRespuesta(this.cliente.id, true, aprobar, this.usuario, this.correoUsuario, this.valorDepositadoAprobador.value).subscribe((data: any) => {
           if(data.entidad.estadoProceso){
             if(aprobar && data.entidad.estadoProceso == "APROBADO"){
               this.sinNoticeService.setNotice("PROCESO DE PAGO APROBADO CORRECTAMENTE", 'success');

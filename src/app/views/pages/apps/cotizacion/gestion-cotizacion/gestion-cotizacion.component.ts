@@ -24,9 +24,6 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
-import { TbQoCatalogo } from 'src/app/core/model/quski/TbQoCatalogo';
-import { TbQoCliente } from 'src/app/core/model/quski/TbQoCliente';
-
 
 @Component({
   selector: 'kt-gestion-cotizacion',

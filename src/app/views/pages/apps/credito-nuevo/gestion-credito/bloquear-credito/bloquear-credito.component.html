@@ -1,130 +1,128 @@
 <re-portlet>
-  <re-portlet-header [title]="'Registrar Bloqueo'" [class]="'kt-portlet__head--lg'">
-  </re-portlet-header>
-  <re-portlet-body>
-    <mat-vertical-stepper #stepper>
-      <mat-step [stepControl]="formBusqueda">
-        <ng-template matStepLabel>Busqueda del Cliente</ng-template>
-        <form [formGroup]="formBusqueda">
-          <div class="row">
-            <div class="col-md-6 ">
-              <mat-form-field class="mat-form-field-fluid">
-                <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required="true" matInput
-                  numeric numericType="number" (keypress)="numberOnly($event)" />
-                <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
-              </mat-form-field>
-            </div>
-            <div class=" offset-md-1 col-md-4">
-              <button mat-stroked-button color="primary" (click)="buscarCliente()">
+    <re-portlet-header [title]="'Registrar Bloqueo'" [class]="'kt-portlet__head--lg'">
+    </re-portlet-header>
+    <re-portlet-body>
+        <mat-vertical-stepper #stepper>
+            <mat-step [stepControl]="formBusqueda">
+                <ng-template matStepLabel>Busqueda del Cliente</ng-template>
+                <form [formGroup]="formBusqueda">
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required="true" matInput numeric numericType="number" (keypress)="numberOnly($event)" />
+                                <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class=" offset-md-1 col-md-4">
+                            <button mat-stroked-button color="primary" (click)="buscarCliente()">
                 <mat-icon style="font-size: 24px;" color="primary" matTooltipPosition="above">search
                 </mat-icon>
                 <span color="primary">Buscar cliente </span>
               </button>
-            </div>
-          </div>
-        </form>
-      </mat-step>
-      <mat-step label="Información del Cliente">
-        <div class="row">
-          <div class="col-6">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="nombreCliente" placeholder="Nombre del cliente:" matInput />
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="cedula" placeholder="Cedula:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input [formControl]="institucionFinanciera" placeholder="institucion Financiera:" matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-4">
+                        </div>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step label="Información del Cliente">
+                <div class="row">
+                    <div class="col-6">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input [formControl]="nombreCliente" placeholder="Nombre del cliente:" matInput />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input [formControl]="cedula" placeholder="Cedula:" matInput />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input [formControl]="institucionFinanciera" placeholder="institucion Financiera:" matInput />
+                        </mat-form-field>
+                    </div>
+                    <!-- <div class="col-4">
             <mat-form-field class="mat-form-field-fluid">
               <input [formControl]="codigoCuentaMupi" placeholder="Cuenta Mupi:" matInput />
             </mat-form-field>
-          </div>
-        </div>
-      </mat-step>
-      <mat-step label="Comprobante de pagos">
-        <div class="row mt-4">
-          <div class="col-2 offset-4">
-            <button mat-stroked-button color="primary" (click)="agregarComprobante()">
+          </div> -->
+                </div>
+            </mat-step>
+            <mat-step label="Comprobante de pagos">
+                <div class="row mt-4">
+                    <div class="col-2 offset-4">
+                        <button mat-stroked-button color="primary" (click)="agregarComprobante()">
               <mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
               <span color="primary">Agregar Comprobante de Pago</span>
             </button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <mat-progress-bar *ngIf="loadComprobante.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
-          </div>
-        </div>
-        <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante">
-          <ng-container matColumnDef="accion">
-            <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <a (click)="eliminarComprobante(row)">
-                <mat-icon matTooltip="Eliminar">delete</mat-icon>
-              </a>
-            </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="intitucionFinanciera">
-            <mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.intitucionFinanciera.nombre }} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="cuenta">
-            <mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.cuenta }} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="fechaPago">
-            <mat-header-cell *matHeaderCellDef>Fecha Pago</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.fechaPago | rDate}} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="numeroDeDeposito">
-            <mat-header-cell *matHeaderCellDef>Numero De Deposito</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.numeroDeposito }} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="valorDepositado">
-            <mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.valorDepositado | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="descargarComprobante">
-            <mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <a *ngIf="row.comprobante" (click)="descargarComprobante(row)">
-                <mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
-              </a>
-            </mat-cell>
-          </ng-container>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <mat-progress-bar *ngIf="loadComprobante.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+                    </div>
+                </div>
+                <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante">
+                    <ng-container matColumnDef="accion">
+                        <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <a (click)="eliminarComprobante(row)">
+                                <mat-icon matTooltip="Eliminar">delete</mat-icon>
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="intitucionFinanciera">
+                        <mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.intitucionFinanciera.nombre }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="cuenta">
+                        <mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.cuenta }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaPago">
+                        <mat-header-cell *matHeaderCellDef>Fecha Pago</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.fechaPago | rDate}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroDeDeposito">
+                        <mat-header-cell *matHeaderCellDef>Numero De Deposito</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.numeroDeposito }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorDepositado">
+                        <mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.valorDepositado | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="descargarComprobante">
+                        <mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <a *ngIf="row.comprobante" (click)="descargarComprobante(row)">
+                                <mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
+                            </a>
+                        </mat-cell>
+                    </ng-container>
 
-          <mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
-        </mat-table>
-        <div class="row mt-2">
+                    <mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
+                </mat-table>
+                <!--   <div class="row mt-2">
           <div class="offset-6 col-md-3">
             <mat-form-field class="mat-form-field-fluid">
               <input matInput [formControl]="valorDepositado" placeholder="Valor Depositado" />
             </mat-form-field>
           </div>
-        </div>
-        <div class="row mt-3">
-          <div class="col-md-10">
-            <textarea class="form-control border" [formControl]="observacion" rows="5" placeholder="Observaciones: "
-              matInput></textarea>
-          </div>
-        </div>
-        <div class="row mt-3">
-          <div class="col-2 offset-4">
-            <button mat-raised-button color="primary" (click)="enviarAprobador()">
+        </div> -->
+                <div class="row mt-3">
+                    <div class="col-md-10">
+                        <textarea class="form-control border" [formControl]="observacion" rows="5" placeholder="Observaciones: " matInput></textarea>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-2 offset-4">
+                        <button mat-raised-button color="primary" (click)="enviarAprobador()">
               <span class="white-icon">Solicitar Aprobacion</span>
             </button>
-          </div>
-        </div>
-      </mat-step>
-    </mat-vertical-stepper>
-  </re-portlet-body>
+                    </div>
+                </div>
+            </mat-step>
+        </mat-vertical-stepper>
+    </re-portlet-body>

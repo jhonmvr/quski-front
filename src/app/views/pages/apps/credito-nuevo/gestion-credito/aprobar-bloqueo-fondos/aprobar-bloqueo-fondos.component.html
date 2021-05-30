@@ -1,86 +1,86 @@
 <re-portlet>
-  <re-portlet-header [title]="'Aprobar / Rechazar Bloqueo de Fondos'" [class]="'kt-portlet__head--lg'">
-  </re-portlet-header>
-  <re-portlet-body>
-    <mat-vertical-stepper>
-      <mat-step label="Información de Cliente">
-        <div class="row">
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input matInput [formControl]="nombreCliente" placeholder="Nombre del cliente:" />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field class="mat-form-field-fluid">
-              <input matInput [formControl]="cedula" placeholder="Cédula:" />
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
+    <re-portlet-header [title]="'Aprobar / Rechazar Bloqueo de Fondos'" [class]="'kt-portlet__head--lg'">
+    </re-portlet-header>
+    <re-portlet-body>
+        <mat-vertical-stepper>
+            <mat-step label="Información de Cliente">
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="nombreCliente" placeholder="Nombre del cliente:" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="cedula" placeholder="Cédula:" />
+                        </mat-form-field>
+                    </div>
+                    <!--  <div class="col-md-4">
             <mat-form-field class="mat-form-field-fluid">
               <input matInput [formControl]="codigoCuentaMupi" placeholder="Cuenta Mupi:" />
             </mat-form-field>
-          </div>
-        </div>
-      </mat-step>
-      <mat-step label="Comprobante de Pagos">
-        <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante">
-          <ng-container matColumnDef="intitucionFinanciera">
-            <mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.institucionFinanciera.nombre }} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="cuenta">
-            <mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.cuentas }} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="fechaPago">
-            <mat-header-cell *matHeaderCellDef>Fecha Pago</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.fechaPago | rDate}} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="numeroDeDeposito">
-            <mat-header-cell *matHeaderCellDef>Numero De Deposito</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.numeroDeposito }} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="valorDepositado">
-            <mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.valorPagado | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="descargarComprobante">
-            <mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <a *ngIf="row.idComprobante" (click)="descargarComprobante(row)">
-                <mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
-              </a>
-            </mat-cell>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
-        </mat-table>
-        <div class="row mt-2">
-          <div class="offset-6 col-md-3">
+          </div> -->
+                </div>
+            </mat-step>
+            <mat-step label="Comprobante de Pagos">
+                <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante">
+                    <ng-container matColumnDef="intitucionFinanciera">
+                        <mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.institucionFinanciera.nombre }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="cuenta">
+                        <mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.cuentas }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaPago">
+                        <mat-header-cell *matHeaderCellDef>Fecha Pago</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.fechaPago | rDate}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroDeDeposito">
+                        <mat-header-cell *matHeaderCellDef>Numero De Deposito</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.numeroDeposito }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorDepositado">
+                        <mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.valorPagado | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="descargarComprobante">
+                        <mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <a *ngIf="row.idComprobante" (click)="descargarComprobante(row)">
+                                <mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
+                </mat-table>
+                <div class="row mt-2">
+                    <!-- <div class="offset-6 col-md-3">
             <mat-form-field class="mat-form-field-fluid">
               <input matInput [formControl]="valorDepositado" placeholder="Valor Depositado:" />
             </mat-form-field>
-          </div>
-        </div>
-        <div class="row">
-          <div class="offset-1 col-md-10">
-            <mat-form-field class="mat-form-field-fluid">
-              <input matInput [formControl]="observacion" type="text" rows="2">
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="row mt-3">
-          <div class="offset-md-3 col-md-2">
-            <button mat-raised-button color="primary" (click)="enviarRespuesta(true)">
+          </div> -->
+                </div>
+                <div class="row">
+                    <div class="offset-1 col-md-10">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="observacion" type="text" rows="2">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="offset-md-3 col-md-2">
+                        <button mat-raised-button color="primary" (click)="enviarRespuesta(true)">
               <span class="white-icon">Aprobar</span>
             </button>
-          </div>
-          <div class="offset-md-1 col-md-2">
-            <button mat-raised-button color="warn" (click)="enviarRespuesta(false)">
+                    </div>
+                    <div class="offset-md-1 col-md-2">
+                        <button mat-raised-button color="warn" (click)="enviarRespuesta(false)">
               <span class="white-icon">Rechazar</span>
             </button>
-          </div>
-        </div>
-      </mat-step>
-    </mat-vertical-stepper>
-  </re-portlet-body>
+                    </div>
+                </div>
+            </mat-step>
+        </mat-vertical-stepper>
+    </re-portlet-body>
