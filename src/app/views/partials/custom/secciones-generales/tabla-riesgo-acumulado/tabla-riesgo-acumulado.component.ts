@@ -91,7 +91,7 @@ export class TablaRiesgoAcumuladoComponent implements OnInit {
       this.valorPagar = 0;
       this.dataSourceRiesgoAcumulado.data.forEach( e=>{
         this.saldoTotal  = (Number(this.saldoTotal) + Number(e.saldo)).toFixed(2);
-        this.deudaTotal  = (Number(this.deudaTotal) + Number(e.valorCancelaPrestamo)).toFixed(2);
+        this.deudaTotal  = (Number(this.deudaTotal) + Number(e.valorTotalPrestamoVencimiento)).toFixed(2);
         this.valorPagar  = (Number(this.valorPagar) + Number(e.valorAlDiaMasCuotaActual)).toFixed(2);
       });
     }else{

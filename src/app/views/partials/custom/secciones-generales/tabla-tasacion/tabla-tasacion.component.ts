@@ -166,107 +166,21 @@ export class TablaTasacionComponent implements OnInit {
     return e.descripcion ? e.descripcion : e.descripcionJoya ? e.descripcionJoya : 'Sin descripcion';
   }
 
-  totalPesoN() {
-    if (!this.dataSourceTasacion.data)
-      return 0;
-    if (this.dataSourceTasacion.data.length > 1) {
-      return this.dataSourceTasacion.data.reduce((r, n) => r.pesoNeto + n.pesoNeto);
-    } else if ((this.dataSourceTasacion.data.length = 1) && this.dataSourceTasacion.data[0]) {
-      return this.dataSourceTasacion.data[0].pesoNeto;
-    } else {
-      return 0;
-    }
+ calcularPeso(){
+   let x = this.dataSourceTasacion.data.map(t=>t.descuentoPiedras).reduce((r, n) =>r+n,0);
+   let y = this.dataSourceTasacion.data.map(t=>t.descuentoPesoPiedra).reduce((r, n) =>r+n,0);
+  
+  if(x >= 0){
+    return x;
+  }else if(y >=0){
+    return y;
+  }else{
+   return 0;
   }
-  totalDescgr() {
-    if (!this.dataSourceTasacion.data)
-      return 0;
-    if (this.dataSourceTasacion.data.length > 1) {
-      this.dataSourceTasacion.data.reduce((r, n) => r.descuentoPesoPiedra + n.descuentoPesoPiedra);
-    } else if ((this.dataSourceTasacion.data.length = 1) && this.dataSourceTasacion.data[0]) {
-      return this.dataSourceTasacion.data[0].descuentoPesoPiedra;
-    } else {
-      return 0;
-    }
-  }
-  totalPesoB() {
-    if (!this.dataSourceTasacion.data)
-      return 0;
-    if (this.dataSourceTasacion.data.length > 1) {
-      this.dataSourceTasacion.data.reduce((r, n) => r.pesoBruto + n.pesoBruto);
-    } else if ((this.dataSourceTasacion.data.length = 1) && this.dataSourceTasacion.data[0]) {
-      return this.dataSourceTasacion.data[0].pesoBruto;
-    } else {
-      return 0;
-    }
-  }
-  totalValorR() {
-    if (!this.dataSourceTasacion.data)
-      return 0;
-    if (this.dataSourceTasacion.data.length > 1) {
-      this.dataSourceTasacion.data.reduce((r, n) => r.valorRealizacion + n.valorRealizacion);
-    } else if ((this.dataSourceTasacion.data.length = 1) && this.dataSourceTasacion.data[0]) {
-      return this.dataSourceTasacion.data[0].valorRealizacion;
-    } else {
-      return 0;
-    }
-
-  }
-  totalDescSuelda() {
-    if (!this.dataSourceTasacion.data)
-      return 0;
-    if (this.dataSourceTasacion.data.length > 1) {
-      this.dataSourceTasacion.data.reduce((r, n) => r.descuentoSuelda + n.descuentoSuelda);
-    } else if ((this.dataSourceTasacion.data.length = 1) && this.dataSourceTasacion.data[0]) {
-      return this.dataSourceTasacion.data[0].descuentoSuelda;
-    } else {
-      return 0;
-    }
-  }
-  totalValorA() {
-    if (!this.dataSourceTasacion.data)
-      return 0;
-    if (this.dataSourceTasacion.data.length > 1) {
-      this.dataSourceTasacion.data.reduce((r, n) => r.valorAvaluo + n.valorAvaluo);
-    } else if ((this.dataSourceTasacion.data.length = 1) && this.dataSourceTasacion.data[0]) {
-      return this.dataSourceTasacion.data[0].valorAvaluo;
-    } else {
-      return 0;
-    }
-  }
-  totalValorC() {
-    if (!this.dataSourceTasacion.data)
-      return 0;
-    if (this.dataSourceTasacion.data.length > 1) {
-      this.dataSourceTasacion.data.reduce((r, n) => r.valorComercial + n.valorComercial);
-    } else if ((this.dataSourceTasacion.data.length = 1) && this.dataSourceTasacion.data[0]) {
-      return this.dataSourceTasacion.data[0].valorComercial;
-    } else {
-      return 0;
-    }
-  }
-  totalValorO() {
-    if (!this.dataSourceTasacion.data)
-      return 0;
-    if (this.dataSourceTasacion.data.length > 1) {
-      this.dataSourceTasacion.data.reduce((r, n) => r.valorOro + n.valorOro);
-    } else if ((this.dataSourceTasacion.data.length = 1) && this.dataSourceTasacion.data[0]) {
-      return this.dataSourceTasacion.data[0].valorOro;
-    } else {
-      return 0;
-    }
-  }
-  totalNumeroJoya() {
-    if (!this.dataSourceTasacion.data)
-      return 0;
-    if (this.dataSourceTasacion.data.length > 1) {
-      this.dataSourceTasacion.data.reduce((r, n) => r.numeroPiezas + n.numeroPiezas);
-    } else if ((this.dataSourceTasacion.data.length = 1) && this.dataSourceTasacion.data[0]) {
-      return this.dataSourceTasacion.data[0].numeroPiezas;
-    } else {
-      return 0;
-    }
-  }
-
+ }
+calcularTotales(xd){
+  return this.dataSourceTasacion.data.map(t=>t[xd]).reduce((r, n) =>r+n,0);
+}
   /*  private calcular() {
      console.log("voy a calcular ",this.dataSourceTasacion.data);
      this.totalPesoN = 0;

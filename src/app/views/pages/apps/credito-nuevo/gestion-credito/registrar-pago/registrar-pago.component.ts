@@ -9,7 +9,7 @@ import { ClienteService } from '../../../../../../core/services/quski/cliente.se
 import { ReNoticeService } from '../../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../../../src/environments/environment';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatDialog, MatTableDataSource} from '@angular/material';
+import { MatDialog, MatTableDataSource } from '@angular/material';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -26,16 +26,16 @@ import { saveAs } from 'file-saver';
 })
 export class RegistrarPagoComponent implements OnInit {
   /** @TABLAS **/
-  public displayedColumnsRubro = ['rubro','numeroCuota', 'proyectado', 'calculado', 'estado'];
+  public displayedColumnsRubro = ['rubro', 'numeroCuota', 'proyectado', 'calculado', 'estado'];
   public dataSourceRubro = new MatTableDataSource<any>();
-  public loadComprobante  = new BehaviorSubject<boolean>(false);
+  public loadComprobante = new BehaviorSubject<boolean>(false);
   private datosMupi: any;
   private totalValorDepositado: any;
   private usuario;
   private agencia;
   catTipoPagoProceso: Array<any>;
   public dataSourceComprobante = new MatTableDataSource<any>();
-  public displayedColumnsComprobante = ['accion','intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado','tipoPago','descargarComprobante'];
+  public displayedColumnsComprobante = ['accion', 'intitucionFinanciera', 'cuenta', 'fechaPago', 'numeroDeDeposito', 'valorDepositado', 'tipoPago', 'descargarComprobante'];
   public formRegistrarPago: FormGroup = new FormGroup({});
   public nombreCliente = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cedula = new FormControl('', [Validators.required, Validators.maxLength(13)]);
@@ -57,16 +57,16 @@ export class RegistrarPagoComponent implements OnInit {
     private dialog: MatDialog,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
-    ) {
-      this.css.setParameter();
-      this.reg.setParameter();
-      this.formRegistrarPago.addControl("nombresCliente", this.nombreCliente);
-      this.formRegistrarPago.addControl("cedula", this.cedula);
-      this.formRegistrarPago.addControl("codigoOperacion", this.codigoOperacion);
-      this.formRegistrarPago.addControl("codigoCuentaMupi", this.codigoCuentaMupi);
-      this.formRegistrarPago.addControl("tipoCredito", this.tipoCredito);
-      this.formRegistrarPago.addControl("valorPreCancelado", this.valorPreCancelado);
-      this.formRegistrarPago.addControl("valorDepositado", this.valorDepositado);
+  ) {
+    this.css.setParameter();
+    this.reg.setParameter();
+    this.formRegistrarPago.addControl("nombresCliente", this.nombreCliente);
+    this.formRegistrarPago.addControl("cedula", this.cedula);
+    this.formRegistrarPago.addControl("codigoOperacion", this.codigoOperacion);
+    this.formRegistrarPago.addControl("codigoCuentaMupi", this.codigoCuentaMupi);
+    this.formRegistrarPago.addControl("tipoCredito", this.tipoCredito);
+    this.formRegistrarPago.addControl("valorPreCancelado", this.valorPreCancelado);
+    this.formRegistrarPago.addControl("valorDepositado", this.valorDepositado);
   }
   ngOnInit() {
     this.css.setParameter();
@@ -74,120 +74,120 @@ export class RegistrarPagoComponent implements OnInit {
     this.cargarCatalogos();
     this.iniciarBusqueda();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.agencia = localStorage.getItem( 'idAgencia' );    
+    this.agencia = localStorage.getItem('idAgencia');
     this.subheaderService.setTitle("Registrar Pago");
     this.formRegistrarPago.disable();
   }
-  private iniciarBusqueda(){
+  private iniciarBusqueda() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.item) {
         let row = JSON.parse(atob(data.params.item));
-        this.cli.consultarCuentaMupi( row.identificacion ).subscribe( (dta: any) =>{
-          if(dta.entidad){
+        this.cli.consultarCuentaMupi(row.identificacion).subscribe((dta: any) => {
+          if (dta.entidad) {
             this.datosMupi = dta.entidad;
             this.codigoCuentaMupi.setValue(dta.entidad.numeroCuenta);
-            this.cedula.setValue( row.identificacion );
-            this.codigoOperacion.setValue( row.numeroOperacion );
+            this.cedula.setValue(row.identificacion);
+            this.codigoOperacion.setValue(row.numeroOperacion);
             this.nombreCliente.setValue(row.nombreCliente);
-            this.tipoCredito.setValue( row.tipoCredito );
-            this.consultaRubros( row.numeroOperacion);
-            this.simulacionPrecancelacion( row.numeroOperacion );
+            this.tipoCredito.setValue(row.tipoCredito);
+            this.consultaRubros(row.numeroOperacion);
+            this.simulacionPrecancelacion(row.numeroOperacion);
           }
         });
       }
     });
   }
-  private consultaRubros( numero ) {
+  private consultaRubros(numero) {
     this.css.consultaRubrosCS(numero).subscribe((data: any) => {
       if (data) {
-        
+
         this.dataSourceRubro = new MatTableDataSource<any>(data.rubros);
       } else {
         this.sinNoticeService.setNotice("No me trajo datos 'consultaRubrosCS'", 'error');
       }
     });
   }
-  private simulacionPrecancelacion( numeroOperacion ){
-    this.cli.getSystemDate().subscribe( (data: any) =>{
-      let fecha  = new Date(data.entidad)
-      let meses  = (fecha.getMonth() > Number(9) ? '' : '0') + fecha.getMonth();
-      let dias   = (fecha.getDate()  > Number(9) ? '' : '0') + fecha.getDate();
-      let fechaC = fecha.getFullYear() + '-' + meses + '-' + dias;
-      let wrapper: SimulacionPrecancelacion = { 
-        numeroPrestamo: numeroOperacion, 
-        fechaPrecancelacion: fechaC
-      }
-      this.css.simularPrecancelacionCS( wrapper ).subscribe( (data: any) =>{
-        if(data){
-          this.valorPreCancelado.setValue( data.valorTotal );
+  private simulacionPrecancelacion(numeroOperacion) {
+    this.css.fechasistema(this.agencia).subscribe((data: any) => {
+      if (!data.existeError) {
+        let wrapper: SimulacionPrecancelacion = {
+          numeroPrestamo: numeroOperacion,
+          fechaPrecancelacion: data.fechaSistema
         }
-      });
+        this.css.simularPrecancelacionCS(wrapper).subscribe((data: any) => {
+          if (data) {
+            this.valorPreCancelado.setValue(data.valorTotal);
+          }
+        });
+      }
     });
+
+
   }
-  public agregarComprobante(){
+  public agregarComprobante() {
     this.loadComprobante.next(true);
     const dialogRef = this.dialog.open(PopupPagoComponent, {
       width: "800px",
       height: "auto",
-      data: { id : null, banco: this.datosMupi.institucionFinanciera, numeroCuenta: this.datosMupi.numeroCuenta }
+      data: { id: null, banco: this.datosMupi.institucionFinanciera, numeroCuenta: this.datosMupi.numeroCuenta }
     });
     dialogRef.afterClosed().subscribe(r => {
       if (r) {
-        this.sinNoticeService.setNotice('ARCHIVO CARGADO CORRECTAMENTE','success');
+        this.sinNoticeService.setNotice('ARCHIVO CARGADO CORRECTAMENTE', 'success');
         this.cargarComprobante(r);
-      }else{
+      } else {
         this.loadComprobante.next(false);
-        this.sinNoticeService.setNotice('ERROR CARGANDO ARCHIVO','error');
+        this.sinNoticeService.setNotice('ERROR CARGANDO ARCHIVO', 'error');
       }
     });
   }
   private cargarComprobante(r) {
     const data = this.dataSourceComprobante.data;
     data.push(r);
-    this.dataSourceComprobante = new MatTableDataSource<any>( data );
+    this.dataSourceComprobante = new MatTableDataSource<any>(data);
     this.calcularValor();
     this.loadComprobante.next(false);
   }
-  private calcularValor(){
+  private calcularValor() {
     this.totalValorDepositado = 0;
-    if(this.dataSourceComprobante && this.dataSourceComprobante.data && this.dataSourceComprobante.data.length > 0){
-      this.dataSourceComprobante.data.forEach( e=>{
+    if (this.dataSourceComprobante && this.dataSourceComprobante.data && this.dataSourceComprobante.data.length > 0) {
+      this.dataSourceComprobante.data.forEach(e => {
         e.valorDepositado
-        this.totalValorDepositado  = (Number(this.totalValorDepositado) + Number(e.valorDepositado)).toFixed(2);
+        this.totalValorDepositado = (Number(this.totalValorDepositado) + Number(e.valorDepositado)).toFixed(2);
       });
-      this.valorDepositado.setValue( this.totalValorDepositado );
+      this.valorDepositado.setValue(this.totalValorDepositado);
     }
   }
-  public eliminarComprobante(row){
+  public eliminarComprobante(row) {
     const index = this.dataSourceComprobante.data.indexOf(row);
     this.dataSourceComprobante.data.splice(index, 1);
     const data = this.dataSourceComprobante.data;
     this.dataSourceComprobante.data = data;
     this.calcularValor();
-  }  
-  public descargarComprobante(row){
-    saveAs(this.cli.dataURItoBlob(row.comprobante.fileBase64), row.comprobante.name);    
   }
-  public enviarAprobador(){
-    if(!this.dataSourceComprobante || !this.dataSourceComprobante.data || this.dataSourceComprobante.data.length < 1){
-      this.sinNoticeService.setNotice('INGRESE AL MENOS UN COMPROBANTE DE PAGOS','warning')
+  public descargarComprobante(row) {
+    saveAs(this.cli.dataURItoBlob(row.comprobante.fileBase64), row.comprobante.name);
+  }
+  public enviarAprobador() {
+    if (!this.dataSourceComprobante || !this.dataSourceComprobante.data || this.dataSourceComprobante.data.length < 1) {
+      this.sinNoticeService.setNotice('INGRESE AL MENOS UN COMPROBANTE DE PAGOS', 'warning')
       return;
     }
-    if(!this.observacion.value ){
-      this.sinNoticeService.setNotice('INGRESE UNA OBSERVACION PARA EL APROBADOR','warning')
+    if (!this.observacion.value) {
+      this.sinNoticeService.setNotice('INGRESE UNA OBSERVACION PARA EL APROBADOR', 'warning')
       return;
     }
-    let mensaje = "Crear un nuevo proceso de registro de pago para el cliente: " + this.nombreCliente.value+"?.";
+    let mensaje = "Crear un nuevo proceso de registro de pago para el cliente: " + this.nombreCliente.value + "?.";
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
       width: "800px",
       height: "auto",
       data: mensaje
     });
     dialogRef.afterClosed().subscribe(r => {
-      if(r){
-        let list = new Array<any>( );
-        this.dataSourceComprobante.data.forEach( e=>{
-          let item: { comprobante, cuenta, fechaPago, intitucionFinanciera, numeroDeposito, valorDepositado, tipoPago} = {
+      if (r) {
+        let list = new Array<any>();
+        this.dataSourceComprobante.data.forEach(e => {
+          let item: { comprobante, cuenta, fechaPago, intitucionFinanciera, numeroDeposito, valorDepositado, tipoPago } = {
             comprobante: e.comprobante,
             cuenta: e.cuenta,
             fechaPago: e.fechaPago,
@@ -196,15 +196,15 @@ export class RegistrarPagoComponent implements OnInit {
             valorDepositado: e.valorDepositado,
             tipoPago: e.tipoPago
           };
-          list.push( item );
+          list.push(item);
         });
         let wrapper = {
           pagos: list,
           asesor: this.usuario,
           agencia: this.agencia,
           cedula: this.cedula.value,
-          nombreCompleto:  this.nombreCliente.value,
-          tipoCredito: this.tipoCredito.value, 
+          nombreCompleto: this.nombreCliente.value,
+          tipoCredito: this.tipoCredito.value,
           numeroOperacion: this.codigoOperacion.value,
           observacion: this.observacion.value,
           valorDepositado: this.valorDepositado.value,
@@ -213,28 +213,28 @@ export class RegistrarPagoComponent implements OnInit {
           tipoPagoProceso: this.tipoPagoProceso.value.valor
         }
         console.log('wrapper => ', wrapper);
-        this.reg.iniciarProcesoRegistrarPago( wrapper ).subscribe( (data: any) =>{
-          if(data.entidad && data.entidad.proceso && data.entidad.proceso.estadoProceso == "PENDIENTE_APROBACION"){
-            this.sinNoticeService.setNotice("PROCESO CREADO BAJO EL CODIGO BPM: "+data.entidad.cliente.codigo+".", 'success');
+        this.reg.iniciarProcesoRegistrarPago(wrapper).subscribe((data: any) => {
+          if (data.entidad && data.entidad.proceso && data.entidad.proceso.estadoProceso == "PENDIENTE_APROBACION") {
+            this.sinNoticeService.setNotice("PROCESO CREADO BAJO EL CODIGO BPM: " + data.entidad.cliente.codigo + ".", 'success');
             this.router.navigate(['negociacion/bandeja-operaciones']);
-          }else{
+          } else {
             this.sinNoticeService.setNotice("ERROR NO IDENTIFICADO", 'error');
           }
-    
+
         }, error => {
           this.sinNoticeService.setNotice(error.error.msgError, 'error');
         });
-      }else{
-        this.sinNoticeService.setNotice('SE CANCELO LA ACCION','error');
+      } else {
+        this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'error');
       }
     });
   }
-  public regresar(){
+  public regresar() {
     this.router.navigate(['credito-nuevo/lista-credito']);
   }
-  public cargarCatalogos(){
-    this.par.findByTipo('TIPO-PAGO-PROCESO').subscribe( (data: any) =>{
-      this.catTipoPagoProceso = data.entidades ? data.entidades : {nombre: 'ERR', valor: 'Error al cargar catalogo'}
+  public cargarCatalogos() {
+    this.par.findByTipo('TIPO-PAGO-PROCESO').subscribe((data: any) => {
+      this.catTipoPagoProceso = data.entidades ? data.entidades : { nombre: 'ERR', valor: 'Error al cargar catalogo' }
     });
   }
 }

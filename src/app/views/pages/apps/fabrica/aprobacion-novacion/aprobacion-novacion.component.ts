@@ -41,6 +41,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public fechaActual: string;
   public catalogos: CatalogosWrapper;
   public crediW: AprobacionWrapper;
+  public creditoAnterior;
   public formDisable: FormGroup = new FormGroup({});
   public totalNumeroJoya: number;
   public totalPesoB: number;
@@ -397,6 +398,14 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
         this.cre.traerCreditonovacionPorAprobar(data.params.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
             this.crediW = data.entidad;
+            this.sof.traerCreditoIndividualSaldos(data.entidad.credito?data.entidad.credito.numeroOperacionAnterior:'').subscribe(creditoAnterior=>{
+              if(creditoAnterior.operacion){
+                this.creditoAnterior = creditoAnterior.operacion;
+              }
+              if(creditoAnterior.ExisteError){
+                this.sinNotSer.setNotice(creditoAnterior.Mensaje,'error');
+              }
+            });
             this.traerCatalogos();
             if (data.entidad.existeError) {
               this.sinNotSer.setNotice('FALTAN DATOS EN EL CREDITO: '+ data.entidad.mensaje + ". Devolver al asesor para su revision.", 'warning');
@@ -561,25 +570,25 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
       e.institucionFinanciera = this.catBanco.find( x => x.id == e.institucionFinanciera);
     }) : null;
     /** @OPERACION_ANTERIOR */
-    if(ap.creditoAnterior){
-      this.antNumeroOperacion.setValue( ap.creditoAnterior.credito.numeroOperacion );
-      this.antReferenciaMupi.setValue( "No tengo.");
-      this.antOperacionMadre.setValue( ap.creditoAnterior.credito.numeroOperacionMadre ? ap.creditoAnterior.credito.numeroOperacionMadre : 'No aplica' );
-      this.antPlazo.setValue( ap.creditoAnterior.credito.plazo );
-      this.antTipoCredito.setValue( ap.creditoAnterior.credito.tipoCredito );
-      this.antEstadoOperacion.setValue( ap.creditoAnterior.credito.codigoEstadoOperacion );
-      this.antFechaEfectiva.setValue( ap.creditoAnterior.credito.fechaAprobacion );
-      this.antFechaVecimiento.setValue( ap.creditoAnterior.credito.fechaVencimiento );
-      this.antFechaCompraCartera.setValue( "No tengo.");
-      this.antMontoFinanciado.setValue( ap.creditoAnterior.credito.montoFinanciado );
-      this.antCuota.setValue( ap.creditoAnterior.credito.numeroCuotas );
-      this.antUltimaCuotaPagada.setValue( "No tengo.");
-      this.antSaldoCapital.setValue( ap.creditoAnterior.credito.saldo );
-      this.antSaldoInteres.setValue( "No tengo.");
-      this.antSaldoMora.setValue( "No tengo.");
-      this.antGastoCobranza.setValue( "No tengo.");
-      this.antCustodiaVencida.setValue( "No tengo.");
-      this.antValorPrecancelacion.setValue( "No tengo.");
+    if(this.creditoAnterior){
+      this.antNumeroOperacion.setValue(this.creditoAnterior.numeroOperacion);
+      this.antReferenciaMupi.setValue( this.creditoAnterior.numeroOperacionMupi);
+      this.antOperacionMadre.setValue(this.creditoAnterior.numeroOperacionMadre);
+      this.antPlazo.setValue( this.creditoAnterior.plazo);
+      this.antTipoCredito.setValue( this.creditoAnterior.tipoCredito );
+      this.antEstadoOperacion.setValue(this.creditoAnterior.codigoEstadoOperacion );
+      this.antFechaEfectiva.setValue(this.creditoAnterior.fechaAprobacion );
+      this.antFechaVecimiento.setValue(this.creditoAnterior.fechaVencimiento);
+      this.antFechaCompraCartera.setValue( this.creditoAnterior.fechaVentaCartera);
+      this.antMontoFinanciado.setValue( this.creditoAnterior.montoFinanciado);
+      this.antCuota.setValue( this.creditoAnterior.numeroCuotas );
+      this.antUltimaCuotaPagada.setValue( this.creditoAnterior.ultimaCuotaPagada);
+      this.antSaldoCapital.setValue( this.creditoAnterior.capital );
+      this.antSaldoInteres.setValue( this.creditoAnterior.interes);
+      this.antSaldoMora.setValue( this.creditoAnterior.mora);
+      this.antGastoCobranza.setValue( this.creditoAnterior.gastosCobranza);
+      this.antCustodiaVencida.setValue( this.creditoAnterior.custodia);
+      this.antValorPrecancelacion.setValue( this.creditoAnterior.valorTotalPrestamoVencimiento);
     }
     
   }
