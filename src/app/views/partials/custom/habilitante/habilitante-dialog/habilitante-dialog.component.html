@@ -1,23 +1,26 @@
 <div class="row m-3">
-  <div class="col-12 center">
-    <h1 mat-dialog-title class="center" >Subir Habilitante</h1>
-  </div>
-  <div class="col-12 center">
-    <div mat-dialog-content class="center" >
-      <input type="file" class="inputfile" *ngIf="!(uploading | async)"  id="fileUpload" (change)="onFileChange($event,element); $event.preventDefault()" #fileInput value="Escoja" >
-      <button type="button"  *ngIf="uploading | async" class="btn btn-sm btn-default" (click)="subirArchivoHabilitante(element); $event.preventDefault()">
+    <div class="col-12 center">
+        <h1 mat-dialog-title class="center">Subir Habilitante</h1>
+    </div>
+    <div class="col-12 center">
+        <div mat-dialog-content class="center">
+            <input type="file" class="inputfile" *ngIf="!(uploading | async)" id="fileUpload" (change)="onFileChange($event,element); $event.preventDefault()" #fileInput value="Escoja">
+            <button type="button" *ngIf="uploading | async" class="btn btn-sm btn-default" (click)="subirArchivoHabilitante(element); $event.preventDefault()">
         <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
       </button>
+        </div>
     </div>
-  </div>
 </div>
 <div class="row mt-2">
-  <div class="col-12 center">
-    <div mat-dialog-actions  class="center" >
-        <a href="javascript:void(0);" (click)="onNoClick()" matTooltip="Cancelar" style="font-size: 12px; vertical-align: middle;">
-          <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="Cancelar">cancel</mat-icon>
-          <span style="position: relative;top: -10px;margin-left: 5px;">Cancelar</span>
-        </a>
-      </div>
+    <div class="col-12 center">
+        <div mat-dialog-actions class="center">
+            <a href="javascript:void(0);" (click)="onNoClick()" matTooltip="Cancelar" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="Cancelar">cancel</mat-icon>
+                <span style="position: relative;top: -10px;margin-left: 5px;">Cancelar</span>
+            </a>
+        </div>
     </div>
+</div>
+<div class="row">
+    <button mat-button (click)="foto()"><mat-icon>camera_enhance</mat-icon></button>
 </div>

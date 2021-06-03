@@ -471,6 +471,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
                             this.css.consultarMotivoVisita().subscribe((data: any) => {
                               this.catMotivoVisita = !data.existeError ? data.catalogo : "Error al cargar catalogo";
                               this.css.consultarCargoOcupacion().subscribe((data: any) => {
+                                const x = data.catalogo.splice(data.catalogo.findIndex(p=> p.codigo=='C1591'),1);
+                                //console.log("mi nuevo catalogo",data);
                                 this.catCargo = !data.existeError ? data.catalogo : "Error al cargar catalogo";
                                 this.css.consultarTipoTelefonoCS().subscribe(tipoTel => {
                                   this.catTipoTelefono = tipoTel.catalogo;

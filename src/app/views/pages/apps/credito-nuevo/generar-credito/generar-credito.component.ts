@@ -23,6 +23,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { saveAs } from 'file-saver';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
+import { AddFotoComponent } from '../../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 @Component({
   selector: 'kt-generar-credito',
   templateUrl: './generar-credito.component.html',
@@ -477,6 +478,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       documentoHabilitante: idDocumentohabilitante
     };
     if (envioModel.referencia) {
+      //HabilitanteDialogComponent  AddFotoComponent
       const dialogRef = this.dialog.open(HabilitanteDialogComponent, {
         width: "auto",
         height: "auto",

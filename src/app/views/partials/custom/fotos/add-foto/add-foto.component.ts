@@ -96,6 +96,6 @@ export class AddFotoComponent implements OnInit {
     this.dialogRef.close( this.data );
   }
   cancelar(){
-    this.dialogRef.close(this.data);
+    this.dialogRef.close();
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ViewChild, ElementRef, ViewChildren } from "@angular/core";
 import { ReFileUploadService } from "../../../../../core/services/re-file-upload.service";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { BehaviorSubject } from "rxjs";
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 
@@ -8,7 +8,7 @@ import { DataUpload } from "../../../../../core/interfaces/data-upload";
 import { DialogDataHabilitante } from '../../../../../core/interfaces/dialog-data-habilitante';
 import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
 import { environment } from '../../../../../../environments/environment';
-
+import { AddFotoComponent } from '../../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 
 
 @Component({
@@ -26,6 +26,7 @@ export class HabilitanteDialogComponent implements OnInit {
   fileBase64:string;
 
   constructor(
+    private dialog: MatDialog,
     private sinNoticeService: ReNoticeService,
     public dialogRef: MatDialogRef<HabilitanteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogDataHabilitante,
@@ -85,6 +86,34 @@ export class HabilitanteDialogComponent implements OnInit {
           this.dialogRef.close(data.relatedIdStr);
           this.uploadSubject.next(false);
         });
+      }
+    });
+  }
+
+
+  foto(){
+    const dialogRef = this.dialog.open(AddFotoComponent, {
+      width: "auto",
+      height: "auto",
+      data: this.data
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      console.log('r => ', r);
+      if (r) {
+        console.log("datos de la fotito",r)
+        this.dataUpload = {
+          name: Date()+'.jpg',
+          type: 'jpg',
+          process: this.data.proceso,
+          relatedId: this.data.documentoHabilitante?Number(this.data.documentoHabilitante):null,
+          relatedIdStr: this.data.referencia,
+          typeAction: this.data.tipoDocumento,
+          fileBase64:r.fileBase64,
+          objectId:""
+        };
+        this.uploadSubject.next(true);
+      }else{
+        this.uploadSubject.next(false);
       }
     });
   }
