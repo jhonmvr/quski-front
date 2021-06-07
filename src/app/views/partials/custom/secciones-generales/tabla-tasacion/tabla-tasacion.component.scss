@@ -1,173 +1,196 @@
-
-  .spiner{
+.spiner {
     display: block;
     position: fixed;
     z-index: 1031;
     top: 50%;
-    right: 50%; 
-  }
-  .material-icons {
+    right: 50%;
+}
+
+.material-icons {
     font-size: 31px !important;
     height: 31px;
     width: 34px;
     color: gray;
     text-align: center;
-  }
-  .warning-icons {
+}
+
+.warning-icons {
     font-size: 31px !important;
     height: 31px;
     width: 34px;
     color: gray;
     text-align: center;
     vertical-align: middle;
-  }
-  
-  .mat-button .mat-button-wrapper > *,
-  .mat-fab .mat-button-wrapper > *,
-  .mat-flat-button .mat-button-wrapper > *,
-  .mat-icon-button .mat-button-wrapper > *,
-  .mat-mini-fab .mat-button-wrapper > *,
-  .mat-raised-button .mat-button-wrapper > *,
-  .mat-stroked-button .mat-button-wrapper > * {
+}
+
+.mat-button .mat-button-wrapper>*,
+.mat-fab .mat-button-wrapper>*,
+.mat-flat-button .mat-button-wrapper>*,
+.mat-icon-button .mat-button-wrapper>*,
+.mat-mini-fab .mat-button-wrapper>*,
+.mat-raised-button .mat-button-wrapper>*,
+.mat-stroked-button .mat-button-wrapper>* {
     vertical-align: baseline;
-  }
-  
-  .mat-button,
-  .mat-flat-button,
-  .mat-icon-button,
-  .mat-stroked-button {
+}
+
+.mat-button,
+.mat-flat-button,
+.mat-icon-button,
+.mat-stroked-button {
     min-width: 28px; //da espacio al data table
     height: fit-content !important; //quita fondo cuando sobrepone
-  }
-  
-  table{
+}
+
+table {
     width: 100%;
-  }
-  
-  .white-icon {
+}
+
+.white-icon {
     color: white;
-  }
-  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
-  .white-icon svg {
-      fill: white;
-  }
-  
-  .blue-icon {
-    color:#3399ff;
-  }
-  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
-  .blue-icon svg {
-      fill: #3399ff;
-  }
-  .orange-icon {
-    color:#ff9900;
-  }
-    /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
-  .orange-icon svg {
+}
+
+
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+
+.white-icon svg {
+    fill: white;
+}
+
+.blue-icon {
+    color: #3399ff;
+}
+
+
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+
+.blue-icon svg {
+    fill: #3399ff;
+}
+
+.orange-icon {
+    color: #ff9900;
+}
+
+
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+
+.orange-icon svg {
     fill: #ff9900;
-  }
-  .warning {
+}
+
+.warning {
     color: white;
     background-color: #cc8b00;
     border-color: white;
     font-weight: 400;
-  }
-  .error-snackbar {
+}
+
+.error-snackbar {
     color: white;
     background-color: red;
     border-color: white;
     font-weight: 400;
-  }    
-  .mat-header-cell {
+}
+
+.mat-header-cell {
     flex-direction: column;
     justify-content: center;
     font-size: smaller;
-    
-  }
-  .mat-cell {
+}
+
+.mat-cell {
     text-align: center;
-    justify-content:center;
+    justify-content: center;
     font-size: smaller;
-  }
-  .mat-header-cell, .mat-footer-cell, .mat-cell {
+}
+
+.mat-header-cell,
+.mat-footer-cell,
+.mat-cell {
     min-width: 80px;
     box-sizing: border-box;
-  }
-#tableTasacion{
-  overflow: auto;
-  width: 100%;
 }
-.mat-footer-cell{
-  font-weight: bold;
-  text-align: center;
-  justify-content:center;
-  font-size: smaller;
+
+#tableTasacion {
+    overflow: auto;
+    width: 100%;
 }
-  .mat-column-Accion {
+
+.mat-footer-cell {
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+    font-size: smaller;
+}
+
+.mat-column-Accion {
     flex: 0 0 80px;
-  }
+}
 
-  .mat-column-NumeroPiezas {
+.mat-column-NumeroPiezas {
     flex: 0 0 50px;
-  }
+}
 
-  .mat-column-TipoOro {
+.mat-column-TipoOro {
     flex: 0 0 100px;
-  }
+}
 
-  .mat-column-TipoJoya {
+.mat-column-TipoJoya {
     flex: 0 0 100px;
-  }
+}
 
-  .mat-column-EstadoJoya {
-    flex: 0 0 100px;
-  }
+.mat-column-EstadoJoya {
+    flex: 0 0 50px;
+}
 
-  .mat-column-Descripcion {
+.mat-column-Descripcion {
     flex: 0 0 250px;
-  }
+}
 
-  .mat-column-PesoBruto {
+.mat-column-PesoBruto {
     flex: 0 0 100px;
-  }
+}
 
-  .mat-column-DescuentoPesoPiedra {
+.mat-column-DescuentoPesoPiedra {
     flex: 0 0 100px;
-  }
+}
 
-  .mat-column-DescuentoSuelda {
+.mat-column-DescuentoSuelda {
     flex: 0 0 100px;
-  }
+}
 
-  .mat-column-PesoNeto {
+.mat-column-PesoNeto {
     flex: 0 0 100px;
-  }
+}
 
-  .mat-column-precioOro {
+.mat-column-precioOro {
     flex: 0 0 100px;
-  }
+}
 
-  .mat-column-ValorAvaluo {
+.mat-column-ValorAvaluo {
     flex: 0 0 100px;
-  }
+}
 
-  .mat-column-ValorAplicable {
+.mat-column-ValorAplicable {
     flex: 0 0 100px;
-  }
+}
 
-  .mat-column-ValorRealizacion {
+.mat-column-ValorRealizacion {
     flex: 0 0 100px;
-  }
+}
 
-  .mat-column-tienePiedras {
-    flex: 0 0 100px;
-  }
+.mat-column-tienePiedras {
+    flex: 0 0 50px;
+}
 
-  .mat-column-detallePiedras {
+.mat-column-detallePiedras {
     flex: 0 0 250px;
-  }
+}
 
-  .mat-column-ValorOro {
+.mat-column-ValorOro {
     flex: 0 0 100px;
-  }
+}
 
+.mat-column-CiudadTevcol {
+    flex: 0 0 300px;
+}
