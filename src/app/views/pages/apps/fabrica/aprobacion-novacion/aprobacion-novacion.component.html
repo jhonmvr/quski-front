@@ -41,12 +41,12 @@
                 </div>
             </mat-step>
             <mat-step label="Habilitantes">
-                <div class="row mt-1 mb-1 ">
-                    <div class="col-12">
-                        <re-habilitante [proceso]="'NOVACION'" [useType]="'FORM'" [referencia]="crediW ? crediW.credito ? crediW.credito.tbQoNegociacion.id: null :null">
-                        </re-habilitante>
-                    </div>
+                <div class="row">
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='NOVACION,FUNDA';varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =identificacion.value " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
                 </div>
+                <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'" [referencia]="varHabilitante.referencia">
+                </re-habilitante>
             </mat-step>
             <mat-step label="Datos Del Cliente">
                 <mat-tab-group mat-align-tabs="start">

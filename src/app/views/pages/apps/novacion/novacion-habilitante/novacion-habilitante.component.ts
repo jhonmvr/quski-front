@@ -27,6 +27,9 @@ import { TrackingService } from '../../../../../core/services/quski/tracking.ser
 })
 export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit {
   public usuario: string;
+  ingresoNeto:number;
+  politicaIngreso:number;
+  flagSolicitud = new BehaviorSubject<boolean>(false);
    //dia de pago
    diasMax;
    diasMin;
@@ -85,6 +88,11 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.formOperacion.addControl("numeroCuenta", this.numeroCuenta);
     this.formOperacion.addControl("firmanteCuenta", this.firmanteOperacion);
     this.formOperacion.addControl("tipoCliente", this.tipoCliente);
+    this.par.findByNombre('POLITICA_INGRESOS').subscribe(data=>{
+      if(data){
+        this.politicaIngreso = data.entidad.valor;
+      }
+    });
 
   }
 
@@ -119,6 +127,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.catfirmadaOperacion = [{nombre:'Algo?', codigo:'algo'}];
     //console.log('Data para cargar: ', wr);
     this.subheaderService.setTitle('Codigo Bpm: '+ wr.credito.codigo );
+    if(wr.operacionAnterior && wr.operacionAnterior.cliente ){
+      this.ingresoNeto = Number( wr.operacionAnterior.cliente.egresos ? wr.operacionAnterior.cliente.egresos : 0 ) + Number( wr.operacionAnterior.cliente.ingresos ? wr.operacionAnterior.cliente.ingresos : 0 ) ;
+    }
     if(wr.credito.periodoPlazo == 'C'){ this.formOperacion.addControl("diaFijoPago", this.diaFijoPago); }
     this.tipoCliente.setValue (this.catTipoCliente ? this.catTipoCliente.find(x => x.codigo == 'DEU') ? this.catTipoCliente.find(x => x.codigo == 'DEU') :{nombre: 'Error cargando catalogo'}: {nombre: 'Error cargando catalogo'});
     this.tipoDeCuenta.setValue( this.catCuenta ? this.catCuenta.find(x => x.id == wr.cuentas[0].banco) ? this.catCuenta.find(x => x.id == wr.cuentas[0].banco) : {nombre: 'Error cargando catalogo'}: {nombre: 'Error cargando catalogo'});
@@ -234,7 +245,25 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
     this.cre.crearOperacionRenovacion(this.credit.credito, list , this.usuario).subscribe( (data: any) =>{
       if(data.entidad){
-        this.aprobar = true;
+        if(this.credit && this.credit.credito.periodoPlazo == 'C'){
+          console.log("total==>",data.entidad.cuotasAmortizacion && data.entidad.cuotasAmortizacion[0].total);
+          console.log("ingreso==>",(this.ingresoNeto * this.politicaIngreso));
+          if(data.entidad.cuotasAmortizacion && data.entidad.cuotasAmortizacion[0].total > (this.ingresoNeto * this.politicaIngreso)){
+            this.sinNotSer.setNotice('EL 40% DEL INGRESO NETO DEBE SER MAYOR O IGUAL AL TOTAL DE LA CUOTA DEL CREDITO', 'error');
+            this.flagSolicitud.next(false);
+          }else{
+            this.flagSolicitud.next(true);
+          }
+        }else{
+          console.log("interes==>",data.entidad.cuotasAmortizacion[0].interes);
+          console.log("ingreso==>",(this.ingresoNeto *this.politicaIngreso));
+          if(data.entidad.cuotasAmortizacion && data.entidad.cuotasAmortizacion[0].interes > (this.ingresoNeto * this.politicaIngreso)){
+            this.sinNotSer.setNotice('EL 40% DEL INGRESO NETO DEBE SER MAYOR O IGUAL AL INTERES DEL CREDITO', 'error');
+            this.flagSolicitud.next(false);
+          }else{
+            this.flagSolicitud.next(true);
+          }
+        }
         this.myStepper.selectedIndex = 2;
       }else{
         this.sinNotSer.setNotice('ERROR CREACION EL CREDITO EN SOFTBANK', 'error');

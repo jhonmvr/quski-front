@@ -34,6 +34,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   /** @VARIABLES_GLOBALES **/
   public operacionNuevo: OperacionNuevoWrapper;
   public item;
+  flagSolicitud = new BehaviorSubject<boolean>(false);
   fechaSoft: Date
   public loadImgJoya = new BehaviorSubject<boolean>(false);
   public loadImgFunda = new BehaviorSubject<boolean>(false);
@@ -44,7 +45,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   public anular: boolean;
   private correoAsesor: any;
   private nombreAsesor: any;
-
+  ingresoNeto:number;
   /** @FORM_INFORMACION **/
   public formInformacion: FormGroup = new FormGroup({});
   public codigoOperacion = new FormControl('', [Validators.required]);
@@ -107,7 +108,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   public catExcepcionOperativa: Array<any>;
 
   observacionAsesor = new FormControl('',[Validators.maxLength(1000)]);
-
+  politicaIngreso:number;
   //dia de pago
   diasMax;
   diasMin;
@@ -139,7 +140,9 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.pro.setParameter();
     this.sof.setParameter();
     this.par.setParameter();
-
+    this.par.findByNombre('POLITICA_INGRESOS').subscribe(data=>{
+      this.politicaIngreso = Number(data.entidad.valor);
+    })
     //  RELACIONANDO FORMULARIOS
     this.formInformacion.addControl("codigoOperacion", this.codigoOperacion);
     this.formInformacion.addControl("estadoOperacion", this.estadoOperacion);
@@ -243,7 +246,9 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     this.numeroCuenta.setValue( data.cuentas[0].cuenta);
     this.tipoCuenta.setValue( this.catCuenta.find( x => x.id == data.cuentas[0].banco) );
-    
+    if(data.credito.tbQoNegociacion.tbQoCliente){
+      this.ingresoNeto = Number( data.credito.tbQoNegociacion.tbQoCliente.egresos ? data.credito.tbQoNegociacion.tbQoCliente.egresos : 0 ) + Number( data.credito.tbQoNegociacion.tbQoCliente.ingresos ? data.credito.tbQoNegociacion.tbQoCliente.ingresos : 0 ) ;
+    }
     this.tipoCuenta.disable();
     this.numeroCuenta.disable();
     if(data.excepciones){
@@ -434,12 +439,35 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.stepper.selectedIndex = data.periodoPlazo != 'D' ? 4 : 3;
     this.fechaVencimiento.setValue( data.fechaVencimiento ); 
     this.fechaEfectiva.setValue( data.fechaEfectiva); 
+    if(this.operacionSoft && this.operacionSoft.cuotasAmortizacion){
+      if(this.operacionNuevo && this.operacionNuevo.credito.periodoPlazo == 'C'){
+        console.log("total==>",this.operacionSoft.cuotasAmortizacion[0].total);
+        console.log("ingreso==>",(this.ingresoNeto * this.politicaIngreso));
+        if(this.operacionSoft.cuotasAmortizacion[0].total > (this.ingresoNeto * this.politicaIngreso)){
+          this.sinNotSer.setNotice('EL 40% DEL INGRESO NETO DEBE SER MAYOR O IGUAL AL TOTAL DE LA CUOTA DEL CREDITO', 'error');
+          this.flagSolicitud.next(false);
+        }else{
+          this.flagSolicitud.next(true);
+        }
+      }else{
+        console.log("interes==>",this.operacionSoft.cuotasAmortizacion[0].interes);
+        console.log("ingreso==>",(this.ingresoNeto *this.politicaIngreso));
+        if(this.operacionSoft.cuotasAmortizacion[0].interes > (this.ingresoNeto * this.politicaIngreso)){
+          this.sinNotSer.setNotice('EL 40% DEL INGRESO NETO DEBE SER MAYOR O IGUAL AL INTERES DEL CREDITO', 'error');
+          this.flagSolicitud.next(false);
+        }else{
+          this.flagSolicitud.next(true);
+        }
+      }
+      
+    }
     if(!this.operacionSoft){
       this.cre.consultarTablaAmortizacion( data.numeroOperacion, this.agencia, atob(localStorage.getItem(environment.userKey) ))
         .subscribe( (data:any) =>{
           if(data.entidades){
             this.operacionSoft = new OperacionSoft();
             this.operacionSoft.cuotasAmortizacion = data.entidades;
+           
           }
       });
     }

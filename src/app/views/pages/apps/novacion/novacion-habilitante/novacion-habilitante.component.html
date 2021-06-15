@@ -177,7 +177,7 @@
                         <mat-error *ngIf="observacionAsesor.hasError('maxlength')"><strong>maximo de caracteres</strong></mat-error>
                     </mat-form-field>
                 </div>
-                <div class="row" *ngIf="aprobar">
+                <div class="row" *ngIf="flagSolicitud.asObservable() | async">
                     <div class="col-md-5 offset-md-5">
                         <button mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>
                     </div>

@@ -55,7 +55,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   item
   observacionAsesor = new FormControl('', []);
   private divicionPolitica: CatalogoWrapper[];
-  
+  public varHabilitante = {proceso:'',referencia:''};
   /** @OPERACION */
   public codigoBpm = new FormControl('', []);
   public proceso = new FormControl('', []);
@@ -395,6 +395,8 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.idNegociacion) {
         this.item = data.params.idNegociacion;
+        this.varHabilitante.referencia= this.item;
+        this.varHabilitante.proceso='NOVACION,FUNDA';
         this.cre.traerCreditonovacionPorAprobar(data.params.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
             this.crediW = data.entidad;

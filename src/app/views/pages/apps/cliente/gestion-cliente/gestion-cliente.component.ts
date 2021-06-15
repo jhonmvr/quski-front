@@ -867,24 +867,24 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     if (ingresoObtenido == "1" || ingresoObtenido == "2") {
       this.actividadEconomicaEmpresa.enable();
       this.actividadEconomicaEmpresa.setValue(null);
-      this.actividadEconomicaMupi.disable();
-      this.actividadEconomicaMupi.setValue(this.catActividadEconomicaMupi.find(x => x.esPorDefecto == true));
+      //this.actividadEconomicaMupi.disable();
+      //this.actividadEconomicaMupi.setValue(this.catActividadEconomicaMupi.find(x => x.esPorDefecto == true));
       this.relacionDependencia.setValue(RelacionDependenciaEnum.SI);
       this.relacionDependencia.disable();
-      this.nombreEmpresa.enable();
-      this.cargo.enable();
+      //this.nombreEmpresa.enable();
+      //this.cargo.enable();
     } else {
       this.actividadEconomicaMupi.enable();
       this.actividadEconomicaMupi.setValue(null);
-      this.actividadEconomicaEmpresa.disable();
-      this.actividadEconomicaEmpresa.setValue(this.catActividadEconomica.find(x => x.esPorDefecto == true));
+      //this.actividadEconomicaEmpresa.disable();
+      //this.actividadEconomicaEmpresa.setValue(this.catActividadEconomica.find(x => x.esPorDefecto == true));
       this.relacionDependencia.setValue(RelacionDependenciaEnum.NO);
       this.relacionDependencia.disable();
 
-      this.cargo.setValue(this.catCargo.find(x => x.codigo == 'C1403'));
-      this.cargo.disable();
-      this.nombreEmpresa.setValue("NO APLICA");
-      this.nombreEmpresa.disable();
+      //this.cargo.setValue(this.catCargo.find(x => x.codigo == 'C1403'));
+      //this.cargo.disable();
+      //this.nombreEmpresa.setValue("NO APLICA");
+      //this.nombreEmpresa.disable();
 
     }
   }
