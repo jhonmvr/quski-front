@@ -183,17 +183,16 @@ export class ListCreditoComponent implements OnInit {
     this.paginator.length = data.numeroTotalRegistros;
   }
   public paged() {
-    this.construirWrapper(this.paginator.pageIndex + 1 , this.paginator.pageSize);
+    this.construirWrapper(this.paginator.pageIndex, this.paginator.pageSize);
   }
   public construirWrapper(numeroPagina: number, tamanioPagina: number){
     if(this.formFiltro.valid){
       let w = {} as WrapperBusqueda;
-      //w.esMigrado = null;
-      w.numeroOperacionMupi = null;
-      //console.log('La pagina 1 ->' , numeroPagina);
-      w.numeroPagina = numeroPagina ? numeroPagina : 1;
+      w.numeroPagina = numeroPagina ? numeroPagina : 0;
+      this.paginator.pageIndex = w.numeroPagina;
       w.tamanioPagina = tamanioPagina ? tamanioPagina : 5;
-      //console.log('La pagina 2 ->' , w.numeroPagina);
+      this.paginator.pageSize = w.tamanioPagina         
+      w.numeroOperacionMupi = null;
       w.numeroOperacionMadre = this.codigoOperacionMadre.value ? this.codigoOperacionMadre.value : null;
       w.numeroOperacion = this.codigoOperacion.value ? this.codigoOperacion.value : null;
       w.idAgencia = this.agencia.value ? this.agencia.value.id : null;
