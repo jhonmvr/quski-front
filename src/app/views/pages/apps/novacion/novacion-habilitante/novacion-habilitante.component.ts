@@ -253,6 +253,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
             this.flagSolicitud.next(false);
           }else{
             this.flagSolicitud.next(true);
+            this.myStepper.selectedIndex = 2;
           }
         }else{
           console.log("interes==>",data.entidad.cuotasAmortizacion[0].interes);
@@ -262,9 +263,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
             this.flagSolicitud.next(false);
           }else{
             this.flagSolicitud.next(true);
+            this.myStepper.selectedIndex = 2;
           }
         }
-        this.myStepper.selectedIndex = 2;
       }else{
         this.sinNotSer.setNotice('ERROR CREACION EL CREDITO EN SOFTBANK', 'error');
       }
