@@ -61,7 +61,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   credit: {credito: TbQoCreditoNegociacion, cuentas: any};
   aprobar: boolean;
   item: any;
-
+  private agencia: any;
   
   
 
@@ -104,6 +104,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.correoAsesor = localStorage.getItem( 'email' );
     this.nombreAsesor = localStorage.getItem( 'nombre' );
+    this.agencia = Number(localStorage.getItem( 'idAgencia' ));
     this.inicioDeFlujo();
   }
   private inicioDeFlujo() {
@@ -296,8 +297,19 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     });
     this.sof.consultarperiodoDiferimientoCS().subscribe(dias=>{
       if(dias && dias.catalogo && dias.catalogo && dias.catalogo[0]){
-        this.diasMax = this.setearDiaPago(dias.catalogo[0].diasMaximo);
-        this.diasMin = this.setearDiaPago(dias.catalogo[0].diasMinimo);
+        this.sof.fechasistema( this.agencia ).subscribe( ( data: any) =>{
+          if( !data.existeError ){
+            //this.fechaSistema.setValue( data.fechaSistema  );
+            this.par.addDaysToDate(data.fechaSistema, dias.catalogo[0].diasMaximo+1 ).subscribe( (data:any) =>{
+              console.log('fecha maxima =>', data.entidad);
+              this.diasMax = new Date(data.entidad);
+            });
+            this.par.addDaysToDate(data.fechaSistema, dias.catalogo[0].diasMinimo+1 ).subscribe( (data:any) =>{
+              console.log('fecha minima =>', data.entidad);
+              this.diasMin = new Date(data.entidad);
+            });
+          }
+        });
         console.log("setear dia pago ==>",this.diasMax,this.diasMin);
       }else{
         this.sinNotSer.setNotice("NO SE PUEDE LEER LOS PARAMETROS DIAS DE DIFERIMIENTO",'error');
