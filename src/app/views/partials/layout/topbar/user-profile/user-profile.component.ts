@@ -1,7 +1,7 @@
 // Angular
 import { Component, Input, OnInit } from '@angular/core';
 // RxJS
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 // NGRX
 import { select, Store } from '@ngrx/store';
 // State
@@ -19,6 +19,7 @@ import { AutorizacionService } from '../../../../../core/services/autorizacion.s
 export class UserProfileComponent implements OnInit {
 	// Public properties
 	user$: Observable<User>;
+	datos;
 
 	@Input() avatar = true;
 	@Input() greeting = true;
@@ -44,6 +45,9 @@ export class UserProfileComponent implements OnInit {
 	 */
 	ngOnInit(): void {
 		this.user$ = this.store.pipe(select(currentUser));
+		const us = new DatosUsuario( localStorage.getItem('re1002'),localStorage.getItem('nombreAgencia'),
+		'','');
+		this.datos = us;
 	}
 
 	/**
@@ -56,4 +60,22 @@ export class UserProfileComponent implements OnInit {
 	}
 
 	
+}
+export class DatosUsuario{
+	perfil;
+	agencia;
+	centroCostos;
+	ambiente;
+	email;
+	telefono;
+	constructor(perfil,
+		agencia,
+		centroCostos,
+		ambiente){
+			this.perfil = perfil;
+			this.agencia = agencia;
+			this.centroCostos =centroCostos;
+			this.ambiente = ambiente;
+
+	}
 }

@@ -265,7 +265,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       if(row.proceso == 'NUEVO'){
         this.router.navigate(['negociacion/detalle-negociacion/', row.id]);       
       }else if(row.proceso == 'RENOVACION'){
-        
+        this.router.navigate(['negociacion/detalle-negociacion/', row.id]);      
       }else if(row.proceso == 'DEVOLUCION'){
         this.router.navigate(['devolucion/detalle-devolucion/',row.id]);
       }

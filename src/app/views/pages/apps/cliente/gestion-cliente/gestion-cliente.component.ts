@@ -86,7 +86,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   public catOcupacion: Array<any>;
   public catCargo: Array<any>;
   public catTipoTelefono: Array<any>;
-  ;
+  idSofDOM;
+  idSofOFI;
   /** @ENUMS **/
   /** @DIVISION_POLITICA **/
   private divicionPolitica;
@@ -363,6 +364,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
           this.sectorO.setValue(this.catSectorVivienda.find(x => x.codigo == e.sector));
           this.direccionLegalLaboral.setValue(e.direccionLegal);
           this.direccionCorreoLaboral.setValue(e.direccionEnvioCorrespondencia);
+          this.idSofOFI = e.idSoftbank;
           countOfi++;
         } else if (e.tipoDireccion == "DOM" && e.estado == 'ACT' && countDom < 1) {
           this.selectUbicacion = e.divisionPolitica;
@@ -377,6 +379,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
           this.barrio.setValue(e.barrio);
           this.direccionLegalDomicilio.setValue(e.direccionLegal);
           this.direccionCorreoDomicilio.setValue(e.direccionEnvioCorrespondencia);
+          this.idSofDOM = e.idSoftbank;
           countDom++;
         } else {
           e.estado = 'INA';
@@ -1294,6 +1297,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
         e.referenciaUbicacion = this.referenciaUbicacionO.value ? this.referenciaUbicacionO.value.toUpperCase() : 'No Espeficicado';
         e.sector = this.sectorO.value ? this.sectorO.value.codigo : 'No Espeficicado';
         e.tipoVivienda = this.tipoViviendaO.value ? this.tipoViviendaO.value.codigo : 'No Espeficicado';
+        e.idSoftbank = this.idSofOFI;
       }
       if (e.tipoDireccion == "DOM" && e.estado == 'ACT') {
         e.divisionPolitica = this.selectUbicacion;
@@ -1306,6 +1310,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
         e.referenciaUbicacion = this.referenciaUbicacion.value ? this.referenciaUbicacion.value.toUpperCase() : 'No Espeficicado';
         e.sector = this.sector.value ? this.sector.value.codigo : 'No Espeficicado';
         e.tipoVivienda = this.tipoVivienda.value ? this.tipoVivienda.value.codigo : 'No Espeficicado';
+        e.idSoftbank = this.idSofDOM;
       }
     });
     this.dataSourceReferencia.data.forEach(e => {

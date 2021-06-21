@@ -38,6 +38,7 @@ export class CalculadoraService extends BaseService {
     const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOferta';
    this.params = new HttpParams();
    this.params = this.params.set('idCredito',idCredito);
+   this.params = this.params.set('codigoAgencia',localStorage.getItem('codigoAgencia').slice(2, 5));
    if(montoSolicitado != undefined){
     this.params = this.params.set('montoSolicitado',montoSolicitado);
    }
@@ -79,7 +80,9 @@ export class CalculadoraService extends BaseService {
   public simularOfertaRenovacion(riesgoTotal, coberturaExcepcionada, codigoAgencia, montoSolicitado, wrapper) {
     const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOfertaRenovacion';
     this.params = new HttpParams();
-    this.params = this.params.set('riesgoTotal',riesgoTotal).set('coberturaExcepcionada',coberturaExcepcionada).set('codigoAgencia',codigoAgencia)
+    
+   this.params = this.params.set('codigoAgencia',localStorage.getItem('codigoAgencia').slice(2, 5));
+    this.params = this.params.set('riesgoTotal',riesgoTotal).set('coberturaExcepcionada',coberturaExcepcionada);
     if(montoSolicitado){
       this.params = this.params.set('montoSolicitado',montoSolicitado);
     }
@@ -94,6 +97,7 @@ export class CalculadoraService extends BaseService {
   public simularOfertaExcepcionada(idCredito: number, cobertura: number, idAgencia: number) {
     const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOfertaExcepcionada';
    this.params = new HttpParams();
+   this.params = this.params.set('codigoAgencia',localStorage.getItem('codigoAgencia').slice(2, 5));
    this.params = this.params.set('idCredito',idCredito.toString()).set('cobertura',cobertura.toString()).set('idAgencia',idAgencia.toString());
    this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(

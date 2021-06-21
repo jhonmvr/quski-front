@@ -37,8 +37,18 @@
 						<!--div  [translate]="'REGENERAL.USUARIO_TAB.PERFIL_TITULO_DESCRIPCION'"></div-->
 						{{ 'REGENERAL.USUARIO_TAB.PERFIL_TITULO' | translate }} 
 					</div>
-					<div class="kt-notification__item-time">
+					<!-- <div class="kt-notification__item-time">
 						{{ 'REGENERAL.USUARIO_TAB.PERFIL_TITULO_DESCRIPCION' | translate }} 
+					</div> -->
+					<div class="kt-notification__item-time">
+						<span>
+							Perfil: 
+						</span>{{ datos.perfil }} 
+					</div>
+					<div class="kt-notification__item-time">
+						<span>
+							Agencia: 
+						</span>{{ datos.agencia }} 
 					</div>
 				</div>
 			</a>

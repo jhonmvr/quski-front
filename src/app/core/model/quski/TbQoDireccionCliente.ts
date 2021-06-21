@@ -1,6 +1,7 @@
 import { TbQoCliente } from './TbQoCliente';
 
 export class TbQoDireccionCliente {
+    idSoftbank;
     id: string;
     barrio: string;
     callePrincipal: string;
