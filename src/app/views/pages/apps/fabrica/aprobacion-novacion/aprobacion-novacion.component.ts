@@ -528,7 +528,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     /** @DATOS_INSTRUCCION_OPERATIVA */
     this.tipoCuenta.setValue( ap.cuenta ? ap.cuenta.esAhorros ? 'Si' : 'No' : 'Error de datos' );
     this.numeroCuenta.setValue( ap.cuenta ? ap.cuenta.cuenta : 'Error de datos' );
-    this.diaPagoFijo.setValue(ap.credito.pagoDia ? ap.credito.pagoDia : "No aplica");
+    this.diaPagoFijo.setValue(ap.credito.pagoDia );
     this.firmadaOperacion.setValue(ap.credito.firmanteOperacion);
     this.tipoCliente.setValue( this.catTipoCliente.find( x => x.codigo == ap.credito.tipoCliente) ? 
     this.catTipoCliente.find( x => x.codigo == ap.credito.tipoCliente).nombre : 'Error de datos' );

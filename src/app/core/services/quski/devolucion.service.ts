@@ -163,6 +163,8 @@ export class DevolucionService extends BaseService {
   }
   public registrarArribo(idDevoluciones: Array<number>){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/registrarArribo";   
+    this.params = new HttpParams();
+    this.params = this.params.set('asesor',localStorage.getItem('reUser'))
     this.options = { headers: this.headers,  params: this.params };
     return this.http.post(serviceUrl, idDevoluciones ,this.options).pipe(
       tap( // Log the result or error

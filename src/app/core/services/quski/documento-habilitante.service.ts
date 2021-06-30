@@ -351,6 +351,7 @@ export class DocumentoHabilitanteService extends BaseService {
     this.params = this.params.set("estadoOperacion", estadoOperacion);
     this.params = this.params.set("idReferencia", idReferencia);
     this.params = this.params.set("format", format);
+    this.params = this.params.set("nombreAsesor", localStorage.getItem('nombre'));
     this.options = { headers: this.headers,  params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

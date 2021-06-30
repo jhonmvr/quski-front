@@ -371,9 +371,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
   }
 
-   //validacion de los dias 25 - 30 
+   //validacion de los dias 27 - 30 
    onlyOdds = (d: Date): boolean => {
     const date = d.getDate(); 
-    return date<25;
+    return date<27;
   }
 }

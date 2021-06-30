@@ -310,6 +310,18 @@ export class HabilitanteComponent implements OnInit {
               //console.log("================>error: " + JSON.stringify(error));
               this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
             });
+          }else if(data.objectoStorage){
+                let obj=JSON.parse( atob(data.objectoStorage) );
+                const byteCharacters = atob(obj.fileBase64);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray]);
+                saveAs(blob , obj.name);
+              
+            
           }else if (data.documentoHabilitanteByte) {            
            // let blob = new Blob([data.documentoHabilitanteByte], { type: 'application/pdf'});
            

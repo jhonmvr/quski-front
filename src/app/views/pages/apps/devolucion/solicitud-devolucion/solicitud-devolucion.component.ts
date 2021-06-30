@@ -455,8 +455,6 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
           } else {
             this.sinNoticeService.setNotice(" ERROR AL GUARDAR PROCESO. ", 'error');
           }
-        }, error => {
-          this.sinNoticeService.setNotice(error.error.codError, 'warning');
         });
       } else {
         this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'warning');
