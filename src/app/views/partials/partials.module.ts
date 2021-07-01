@@ -133,6 +133,7 @@ import { AlertaTiempoAprobadorComponent } from './custom/alerta-tiempo-aprobador
 
 
 
+
 const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>('USD');
 
 @NgModule({
@@ -212,7 +213,8 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		TablePagoComponent,
 		ImpuestosComTableComponent,
 		VentanaPrecancelacionComponent,
-		AlertaTiempoAprobadorComponent
+		AlertaTiempoAprobadorComponent,
+	
 
 	],
 	exports: [

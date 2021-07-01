@@ -21,6 +21,8 @@ export const environment = {
     mongoHabilitanteCollection:'documento-habilitante',
     appkey:"QUSKIBPM",
     agenciakey:"reAgencia",
+    idleTime:1800,
+    idleTimeOut:45,
     //DESARROLLO
     //parametros
     //app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL3F1c2tpLW9yby1yZXN0L3Jlc291cmNlcy9yZWxhdGl2ZS9nZXRSZWxhdGl2ZQ==',
