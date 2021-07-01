@@ -11,6 +11,9 @@ import { environment } from '../../../../environments/environment';
 import { LayoutConfigService, SparklineChartOptions } from '../../../core/_base/layout';
 import { Widget4Data } from '../../partials/content/widgets/widget4/widget4.component';
 
+import {Idle, DEFAULT_INTERRUPTSOURCES} from '@ng-idle/core';
+import {Keepalive} from '@ng-idle/keepalive';
+
 @Component({
 	selector: 'kt-dashboard',
 	templateUrl: './dashboard.component.html',
@@ -26,7 +29,17 @@ export class DashboardComponent implements OnInit {
 	widget4_3: Widget4Data;
 	widget4_4: Widget4Data;
 
-	constructor(private layoutConfigService: LayoutConfigService, private sharedService: SharedService, private pro: ProcesoService) {
+	idleState = 'STARTED';
+	messageState='INICIA TIMER IDLE'
+	timedOut = false;
+	lastPing?: Date = null;
+
+	constructor(private layoutConfigService: LayoutConfigService, private sharedService: SharedService, private pro: ProcesoService,
+		private idle: Idle, private keepalive: Keepalive) {
+			if(localStorage.getItem(environment.userKey)){
+				console.log("===> en dashboard component, INICIALIZA IDLE");
+				this.reset();
+			}
 	}
 
 	ngOnInit(): void {
@@ -46,6 +59,13 @@ export class DashboardComponent implements OnInit {
 				}
 			 },Number(tiempoAprobador)*1000 * 60);
 		}
+	}
+
+	reset() {
+		this.idle.watch();
+		this.idleState = 'Started.';
+		this.timedOut = false;
+    	//this.dialogRef.close();
 	}
 
 }

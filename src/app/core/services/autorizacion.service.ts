@@ -183,7 +183,7 @@ export class AutorizacionService  {
         user.occupation="ND";
         user.password=undefined;
         user.phone="0987654321";
-        user.pic="./quski-front/assets/media/users/300_25.jpg";
+        user.pic="./quski-front/assets/media/users/default.jpg";
         user.refreshToken=localStorage.getItem(environment.authTokenKey);
         user.roles=[2];
         user.socialNetworks=new SocialNetworks();
@@ -262,10 +262,10 @@ export class AutorizacionService  {
   public logout(){
     this.removeRe000();
     this.router.navigate(['/']);
-				window.location.reload(true);
-				location.replace(environment.rootKey);
-				//window.location.reload(true);
-				this.router.navigate(['/']);
+    window.location.reload(true);
+    location.replace(environment.rootKey);
+    //window.location.reload(true);
+    this.router.navigate(['/']);
   }
 
   public logoutDialog(){
