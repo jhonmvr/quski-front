@@ -62,6 +62,12 @@ export class AutorizacionService  {
     return this.http.get<any>( atob(environment.app_p) , optionsLoc);
   }
 
+  public getCatalogoRol():Observable<any>{
+    let wp = {};
+    
+    return this.http.post<BaseWrapper>( atob(environment.cat_r), wp);
+  }
+
   public getPerfil(token:string, usuario:string):Observable<Array<RolWrapper>>{
     //console.log("=========> ejecuta getperfil");
    
@@ -83,15 +89,15 @@ export class AutorizacionService  {
 		.pipe( 
 			switchMap( usuariowp=>this.getRelative( usuariowp.token )
 			.pipe(
-			//	switchMap( dataParam=>this.getPerfil( usuariowp.token,usuariowp.entidad.idUsuario )
-				//	.pipe(  
-						switchMap( dataParam=>this.userReturn( usuariowp,dataParam,null, authData )
+			switchMap( dataParam=>this.getCatalogoRol( )
+					.pipe(  
+						switchMap( catalogoRol=>this.userReturn( usuariowp,dataParam,null, authData,catalogoRol )
           ) )
-          //) ) 
+          ) ) 
           ) );
 	}
 
-  private userReturn(  dataLogin,dataParam,dataRoles:Array<RolWrapper>, credential): Observable<UsuarioAuth>{
+  private userReturn(  dataLogin,dataParam,dataRoles:Array<RolWrapper>, credential, catalogoRol): Observable<UsuarioAuth>{
         
     ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: " ) ;
     ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataLogin " + JSON.stringify(dataLogin) ) ;
@@ -131,6 +137,10 @@ export class AutorizacionService  {
           localStorage.setItem("idResidenciaAgencia",dataLogin.agencia.idResidencia); 
           localStorage.setItem("idTevcolAgencia",dataLogin.agencia.idUbicacionTevcol); 
 
+        }
+        if(catalogoRol.catalogo){
+          const x = catalogoRol.catalogo.find(p=>p.codigo == dataLogin.roles[0]);
+          localStorage.setItem("nombreRol",x.nombre);
         }
         ////console.log( "++>FLAT MAP BUSCANDO Preturn of(x);: " ) ;
      

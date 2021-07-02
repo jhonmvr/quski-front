@@ -110,7 +110,9 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
       totalValorAvaluo += e.valorAvaluo;
       totalValorComercial += e.valorComercial;
     }); 
-    this.coberturaActual.setValue( this.wp.variables.find( v => v.codigo == 'Cobertura') ? this.wp.variables.find( v => v.codigo == 'Cobertura').valor : 'No aplica');
+    if(this.wp.variables){
+      this.coberturaActual.setValue( this.wp.variables.find( v => v.codigo == 'Cobertura') ? this.wp.variables.find( v => v.codigo == 'Cobertura').valor : 'No aplica');
+    }
     this.valorComercial.setValue( totalValorComercial );
     this.valorAvaluo.setValue( totalValorAvaluo );
   }
@@ -186,7 +188,10 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
-            this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado);
+            if(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0]){
+              this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado);
+            
+            }
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
             this.mapearVariables(data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable)
           }
@@ -261,8 +266,8 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
       variablesBase.push( variableBase );
     });
     this.componenteVariable = false;
-    this.negoW.variables = variablesBase;
-    console.log("Las variables de bre =>", variablesBase);
+    //this.negoW.variables = variablesBase;
+    //console.log("Las variables de bre =>", variablesBase);
     this.sinNotSer.setNotice("LAS VARIABLES CREDITICIAS FUERON ACTUALIZADAS", 'success');
     this.componenteVariable = true;
     this.loadVariables.next(false);

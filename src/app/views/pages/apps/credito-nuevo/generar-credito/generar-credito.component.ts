@@ -247,7 +247,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.numeroCuenta.setValue( data.cuentas[0].cuenta);
     this.tipoCuenta.setValue( this.catCuenta.find( x => x.id == data.cuentas[0].banco) );
     if(data.credito.tbQoNegociacion.tbQoCliente){
-      this.ingresoNeto = Number( data.credito.tbQoNegociacion.tbQoCliente.egresos ? data.credito.tbQoNegociacion.tbQoCliente.egresos : 0 ) + Number( data.credito.tbQoNegociacion.tbQoCliente.ingresos ? data.credito.tbQoNegociacion.tbQoCliente.ingresos : 0 ) ;
+      this.ingresoNeto = Number( data.credito.tbQoNegociacion.tbQoCliente.ingresos ? data.credito.tbQoNegociacion.tbQoCliente.ingresos : 0 ) - Number( data.credito.tbQoNegociacion.tbQoCliente.egresos ? data.credito.tbQoNegociacion.tbQoCliente.egresos : 0 );
     }
     this.tipoCuenta.disable();
     this.numeroCuenta.disable();

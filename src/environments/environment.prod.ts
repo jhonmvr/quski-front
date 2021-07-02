@@ -39,6 +39,8 @@ export const environment = {
     //autenticacion 
     seg_a :"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC9sb2dpbg==",
     //seguridad-resources
-    seg_r :"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC8="
+    seg_r :"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC8=",
+    //catalogo rol
+    cat_r:"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL2NhdGFsb2dvL3JvbA=="
     
 };

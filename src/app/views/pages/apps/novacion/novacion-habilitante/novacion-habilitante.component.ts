@@ -129,7 +129,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     //console.log('Data para cargar: ', wr);
     this.subheaderService.setTitle('Codigo Bpm: '+ wr.credito.codigo );
     if(wr.operacionAnterior && wr.operacionAnterior.cliente ){
-      this.ingresoNeto = Number( wr.operacionAnterior.cliente.egresos ? wr.operacionAnterior.cliente.egresos : 0 ) + Number( wr.operacionAnterior.cliente.ingresos ? wr.operacionAnterior.cliente.ingresos : 0 ) ;
+      this.ingresoNeto = Number( wr.operacionAnterior.cliente.ingresos ? wr.operacionAnterior.cliente.ingresos : 0 ) - Number( wr.operacionAnterior.cliente.egresos ? wr.operacionAnterior.cliente.egresos : 0 );
     }
     if(wr.credito.periodoPlazo == 'C'){ this.formOperacion.addControl("diaFijoPago", this.diaFijoPago); }
     this.tipoCliente.setValue (this.catTipoCliente ? this.catTipoCliente.find(x => x.codigo == 'DEU') ? this.catTipoCliente.find(x => x.codigo == 'DEU') :{nombre: 'Error cargando catalogo'}: {nombre: 'Error cargando catalogo'});

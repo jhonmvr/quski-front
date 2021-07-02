@@ -45,8 +45,8 @@ export class UserProfileComponent implements OnInit {
 	 */
 	ngOnInit(): void {
 		this.user$ = this.store.pipe(select(currentUser));
-		const us = new DatosUsuario( localStorage.getItem('re1002'),localStorage.getItem('nombreAgencia'),
-		'','');
+		const us = new DatosUsuario( localStorage.getItem('nombreRol'),localStorage.getItem('nombreAgencia'),
+		'','',localStorage.getItem('nombre'));
 		this.datos = us;
 	}
 
@@ -62,6 +62,7 @@ export class UserProfileComponent implements OnInit {
 	
 }
 export class DatosUsuario{
+	nombre;
 	perfil;
 	agencia;
 	centroCostos;
@@ -71,11 +72,12 @@ export class DatosUsuario{
 	constructor(perfil,
 		agencia,
 		centroCostos,
-		ambiente){
+		ambiente,nombre){
 			this.perfil = perfil;
 			this.agencia = agencia;
 			this.centroCostos =centroCostos;
 			this.ambiente = ambiente;
+			this.nombre = nombre
 
 	}
 }
