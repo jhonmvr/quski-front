@@ -10,8 +10,10 @@ export class LayoutConfig {
 				'background-image': 'quski-front/assets/media/misc/bg-1.jpg',
 			},
 			logo: {
-				desktop: 'quski-front/assets/media/logos/logo-5.png',
-				sticky: 'quski-front/assets/media/logos/logo-5-sm.png',
+				//desktop: 'quski-front/assets/media/logos/logo-5.png',
+				//sticky: 'quski-front/assets/media/logos/logo-5-sm.png',
+				desktop: 'quski-front/assets/media/logos/Quiski.png',
+				sticky: 'quski-front/assets/media/logos/Quiski-sm.png',
 			},
 		},
 		// == Page Splash Screen loading

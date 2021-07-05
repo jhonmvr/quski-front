@@ -4,7 +4,7 @@ import { APP_INITIALIZER, InjectionToken, NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { GestureConfig, MatProgressSpinnerModule } from '@angular/material';
+import { GestureConfig, MatDialog, MatProgressSpinnerModule } from '@angular/material';
 import { OverlayModule } from '@angular/cdk/overlay';
 // Angular in memory
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
@@ -64,6 +64,14 @@ import { APP_BASE_HREF } from '@angular/common';
 import { LoaderInterceptor } from './core/interseptors/loader.interceptor';
 import { LOCALE_ID } from '@angular/core';
 
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'; // this includes the core NgIdleModule but includes keepalive providers for easy wireup
+
+import { MomentModule } from 'angular2-moment'; // optional, provides moment-style pipes for date formatting
+
+import {SesionCaducadaComponent} from './sesion-caducada/sesion-caducada.component'
+
+import {MatCardModule, MatIconModule, MatDialogModule} from '@angular/material'
+
 // tslint:disable-next-line:class-name
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 	wheelSpeed: 0.5,
@@ -92,7 +100,7 @@ export function hljsLanguages(): HighlightLanguage[] {
 }
 
 @NgModule({
-	declarations: [AppComponent],
+	declarations: [AppComponent,SesionCaducadaComponent],
 	imports: [
 		BrowserAnimationsModule,
 		BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -115,8 +123,13 @@ export function hljsLanguages(): HighlightLanguage[] {
 		MatProgressSpinnerModule,
 		InlineSVGModule.forRoot(),
 		ThemeModule,
+		MomentModule,
+		NgIdleKeepaliveModule.forRoot(),
+		MatCardModule, 
+		MatIconModule,
+		MatDialogModule
 	],
-	exports: [],
+	exports: [SesionCaducadaComponent],
 	providers: [
 		AuthService,
 		LayoutConfigService,
@@ -156,6 +169,7 @@ export function hljsLanguages(): HighlightLanguage[] {
 		LayoutUtilsService,
 		
 	],
+	entryComponents:[SesionCaducadaComponent],
 	bootstrap: [AppComponent]
 })
 export class AppModule {

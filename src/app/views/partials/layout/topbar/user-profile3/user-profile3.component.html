@@ -1,8 +1,8 @@
 <div ngbDropdown placement="bottom-right" *ngIf="user$ | async as _user" class="kt-header__topbar-item kt-header__topbar-item--user">
 	<div ngbDropdownToggle class="kt-header__topbar-wrapper">
-		<span class="kt-header__topbar-welcome">Hi,</span>
-		<span class="kt-header__topbar-username">{{_user.fullname}}</span>
-		<span class="kt-header__topbar-icon"><b>{{_user.fullname|firstLetter}}</b></span>
+		<span class="kt-header__topbar-welcome" style="color: #E33989;">Bienvenido,</span>
+		<span class="kt-header__topbar-username" style="color: #E33989;">{{_user.fullname}}</span>
+		<span class="kt-header__topbar-icon" style="color: #E33989;"><b>{{_user.fullname|firstLetter}}</b></span>
 	</div>
 	<div ngbDropdownMenu class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround dropdown-menu-xl">
 		<!--begin: Head -->
