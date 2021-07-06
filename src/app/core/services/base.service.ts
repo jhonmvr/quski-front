@@ -80,10 +80,19 @@ export class BaseService {
            this.appRootContextUrl = atob(localStorage.getItem( environment.prefix + 'RE005')).replace(this.keyUnencrypt, '');
            //Path al resources de la app
            this.appResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE006')).replace(this.keyUnencrypt, '');
+
+           this.appRootContextUrl = 'http://localhost:8080/quski-oro-rest/';
+           //Path al resources de la app
+           this.appResourcesUrl = 'http://localhost:8080/quski-oro-rest/resources/';
+
            //Full url al servidor de websocket generic-relative-core
            this.appWebSocketUrl = atob(localStorage.getItem( environment.prefix + 'RE007')).replace(this.keyUnencrypt, '');
            //Path contextroot generic-relative-core
            this.genericResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE008')).replace(this.keyUnencrypt, '');
+
+           this.appWebSocketUrl = 'ws://localhost:8080/generic-relative-rest/relativews/';
+           this.genericResourcesUrl = 'http://localhost:8080/generic-relative-rest/resources/';
+           
            //object storage 
            this.mongoDb = atob(localStorage.getItem( environment.prefix + 'RE009')).replace(this.keyUnencrypt, '');
            this.mongoAlertaColeccion = atob(localStorage.getItem( environment.prefix + 'RE010')).replace(this.keyUnencrypt, '');
