@@ -444,6 +444,8 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
         wrapper.codeDetalleGarantia = this.encodeObjetos(this.wrapperSoft.garantias);
         wrapper.nombreApoderado = this.nombreApoderado.value ? this.nombreApoderado.value : null;
         wrapper.cedulaApoderado = this.cedulaApoderado.value ? this.cedulaApoderado.value : null;
+        wrapper.correoCliente = this.wrapperSoft.cliente.email;
+        wrapper.correoAsesor = localStorage.getItem("email")
         this.dev.registrarSolicitudDevolucion(wrapper).subscribe((data: any) => {
           if (data.entidad) {
             console.log('data Devolucion =>', data.entidad);

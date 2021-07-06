@@ -44,6 +44,8 @@ export class TbQoDevolucion {
     pesoBruto: number;
     nombreApoderado: any;
     valorAvaluo: number;
+    correoAsesor: string;
+    correoCliente: string;
 
     constructor(){
         
