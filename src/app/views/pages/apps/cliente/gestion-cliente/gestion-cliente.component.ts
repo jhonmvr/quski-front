@@ -88,6 +88,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   public catTipoTelefono: Array<any>;
   idSofDOM;
   idSofOFI;
+  idDatosTrabajo;
+
   /** @ENUMS **/
   /** @DIVISION_POLITICA **/
   private divicionPolitica;
@@ -119,7 +121,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
 
   public formDatosContacto: FormGroup = new FormGroup({});
   public ubicacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public referenciaUbicacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public referenciaUbicacion = new FormControl('', [Validators.required, Validators.maxLength(150)]);
   public callePrincipal = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public numeracion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public barrio = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -130,7 +132,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   public direccionLegalDomicilio = new FormControl('', []);
   public direccionCorreoDomicilio = new FormControl('', []);
   public ubicacionO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public referenciaUbicacionO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public referenciaUbicacionO = new FormControl('', [Validators.required, Validators.maxLength(150)]);
   public callePrincipalO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public numeracionO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public barrioO = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -325,6 +327,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       let countDom: number = 0;
       !this.wrapper.datosTrabajos ? null : this.wrapper.datosTrabajos.forEach(t => {
         if (t.esprincipal && t.estado == 'ACT') {
+          this.idDatosTrabajo = t.idSoftbank;
           this.origenIngresos.setValue(this.catOrigenIngreso.find(x => x.codigo == t.origenIngreso));
           this.relacionDependencia.setValue(t.esRelacionDependencia ? "SI" : "NO");
           this.nombreEmpresa.setValue(t.nombreEmpresa);
@@ -788,7 +791,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     }
     if (pfield && pfield === 'referenciaUbicacion') {
       const input = this.referenciaUbicacion;
-      return input.hasError('required') ? errorRequerido : '';
+      return input.hasError('required') ? errorRequerido : input.hasError('maxlength')?'Maximo 150 caracteres': '';
     }
     if (pfield && pfield === 'sector') {
       const input = this.sector;
@@ -826,7 +829,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     }
     if (pfield && pfield === 'referenciaUbicacionO') {
       const input = this.referenciaUbicacionO;
-      return input.hasError('required') ? errorRequerido : '';
+      return input.hasError('required') ? errorRequerido : input.hasError('maxlength')?'Maximo 150 caracteres': '';
     }
     //Datos economicos clientes
     if (pfield && pfield === 'nombreEmpresa') {
@@ -1247,19 +1250,21 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.wrapper.cliente.activos = this.avaluoActivo.value;
     this.wrapper.cliente.ingresos = this.valorIngreso.value;
     this.wrapper.cliente.egresos = this.valorEgreso.value;
-    this.wrapper.datosTrabajos ? this.wrapper.datosTrabajos.forEach(t => {
-      if (t.esprincipal && t.estado == 'ACT') {
-        t.nombreEmpresa = this.nombreEmpresa.value;
-        t.cargo = this.cargo.value?this.cargo.value.codigo:null;
-        t.actividadEconomica = this.actividadEconomicaEmpresa.value ? this.actividadEconomicaEmpresa.value.id : null;
-        t.actividadEconomicaMupi = this.actividadEconomicaMupi.value ? this.actividadEconomicaMupi.value.codigo : null;
-        t.ocupacion = this.ocupacion.value ? this.ocupacion.value.codigo : null;
-        t.esRelacionDependencia = this.relacionDependencia.value == 'SI' ? true : false;
-        t.origenIngreso = this.origenIngresos.value?this.origenIngresos.value.codigo:null;
-        t.tbQoCliente = this.wrapper.cliente;
-      }
-    }) : null;
-    if (!this.wrapper.datosTrabajos) {
+    if(this.wrapper.datosTrabajos ){
+      this.wrapper.datosTrabajos.forEach(t => {
+        if (t.esprincipal && t.estado == 'ACT') {
+          t.idSoftbank = this.idDatosTrabajo;
+          t.nombreEmpresa = this.nombreEmpresa.value;
+          t.cargo = this.cargo.value?this.cargo.value.codigo:null;
+          t.actividadEconomica = this.actividadEconomicaEmpresa.value ? this.actividadEconomicaEmpresa.value.id : null;
+          t.actividadEconomicaMupi = this.actividadEconomicaMupi.value ? this.actividadEconomicaMupi.value.codigo : null;
+          t.ocupacion = this.ocupacion.value ? this.ocupacion.value.codigo : null;
+          t.esRelacionDependencia = this.relacionDependencia.value == 'SI' ? true : false;
+          t.origenIngreso = this.origenIngresos.value?this.origenIngresos.value.codigo:null;
+          t.tbQoCliente = this.wrapper.cliente;
+        }
+      });
+    }else{
       let trabajo = new TbQoDatoTrabajoCliente();
       trabajo.nombreEmpresa = this.nombreEmpresa.value;
       trabajo.cargo = this.cargo.value?this.cargo.value.codigo:null;
@@ -1274,7 +1279,6 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.wrapper.datosTrabajos = new Array<TbQoDatoTrabajoCliente>();
       this.wrapper.datosTrabajos.push(trabajo);
     }
-
     this.wrapper.telefonos = this.dataSourceTelefonosCliente.data;
     this.wrapper.direcciones = new Array<TbQoDireccionCliente>();
     this.wrapper.direcciones[0] = new TbQoDireccionCliente();

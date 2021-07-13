@@ -1,37 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
+
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "~material-design-icons/iconfont/material-icons.css";
 @import "~highlight.js/styles/googlecode.css";
-
 // hide bootstrap dropdown arrow globally
 .dropdown-toggle::after {
-	display: none !important;
+    display: none !important;
 }
 
 .mat-table__wrapper--dashboard .mat-table {
-	min-width: 600px !important;
-	width: 100% !important;
+    min-width: 600px !important;
+    width: 100% !important;
 }
 
 .position-static {
-	position: static;
+    position: static;
 }
+
 .success-snackbar.mat-snack-bar-container {
-	background: #43a047;
-	color: aliceblue;
-  }
-  .error-snackbar.mat-snack-bar-container {
-	background: #d32f2f;
-	color: aliceblue;
-  }
-  .info-snackbar.mat-snack-bar-container {
-	background: rgb(23, 105, 170);
-	color: aliceblue;
-  }
-  .warning-snackbar.mat-snack-bar-container {
-	background: #ffa000;
-	color: aliceblue;
-  }
-  .mat-simple-snackbar-action {
-	color: aliceblue !important;
-  }
+    background: #43a047;
+    color: aliceblue;
+}
+
+.error-snackbar.mat-snack-bar-container {
+    background: #d32f2f;
+    color: aliceblue;
+}
+
+.info-snackbar.mat-snack-bar-container {
+    background: rgb(23, 105, 170);
+    color: aliceblue;
+}
+
+.warning-snackbar.mat-snack-bar-container {
+    background: #ffa000;
+    color: aliceblue;
+}
+
+.mat-simple-snackbar-action {
+    color: aliceblue !important;
+}
+
+.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after,
+.mat-input-element {
+    height: 17px;
+}

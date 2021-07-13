@@ -17,6 +17,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { Component, OnInit } from '@angular/core';
 import 'hammerjs';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   public usuario;
   public agencia;
   public simulado: boolean;
+  codigoAgencia
   dataSourceTelefonosCliente = new MatTableDataSource<any>();
 
   public wp: NegociacionWrapper = null;
@@ -70,6 +72,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     private cre: CreditoNegociacionService,
     private exc: ExcepcionService,
     private par: ParametroService,
+    private sof: SoftbankService,
     private cal: CalculadoraService,
     public tra: TrackingService,
   ) {
@@ -122,6 +125,18 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
             this.wp = data.entidad;
             if(this.wp.credito && this.wp.excepciones && this.wp.excepciones.find(e => e.id == excepcionRol.id ) && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ){
               this.excepcion = this.wp.excepciones.find(e => e.id == excepcionRol.id );
+              this.sof.consultarAgenciasCS().subscribe(data=>{
+                const catalogoAgencia = data.catalogo;
+                if(catalogoAgencia){
+
+                  this.codigoAgencia = catalogoAgencia.find(p=>p.id==this.wp.credito.idAgencia );
+                  if(this.codigoAgencia){
+                    this.codigoAgencia
+                  }else{
+                    console.log("error al asignar codigo de la agencia");
+                  }
+                }
+              })
               this.cargarCampos(this.wp) 
             }else{
               this.sinNoticeService.setNotice('ERROR CARGANDO EXCEPCION','error');            
@@ -168,7 +183,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
         }
         if(this.observacionAprobador.valid){
           this.wp.proceso.proceso == "RENOVACION" ? 
-          this.cal.simularOfertaExcepcionadaRenovacion(this.wp.credito.id, this.cobertura.value).subscribe( (data: any) =>{
+          this.cal.simularOfertaExcepcionadaRenovacion(this.wp.credito.id, this.cobertura.value,this.codigoAgencia.codigo).subscribe( (data: any) =>{
             !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
             this.simulado = data.entidades ? true : false;
           }): this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{

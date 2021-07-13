@@ -2,7 +2,7 @@
     <div ngbDropdownToggle class="kt-header__topbar-wrapper">
         <div class="kt-header__topbar-user" [ngClass]="{'kt-header__topbar-icon': icon}">
             <span class="kt-header__topbar-welcome kt-hidden-mobile" *ngIf="greeting" style="color: #E33989;">Bienvenido,</span>
-            <span class="kt-header__topbar-username kt-hidden-mobile" *ngIf="greeting">{{datos.nombre}}</span>
+            <span class="kt-header__topbar-username kt-hidden-mobile" style="color: #e672a8;" *ngIf="greeting">{{datos.nombre}}</span>
             <i *ngIf="icon" class="flaticon2-user-outline-symbol" style="color: #E33989;"></i>
             <img *ngIf="avatar" alt="Pic" [attr.src]="_user.pic">
             <span *ngIf="badge" class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold">{{_user.fullname|firstLetter}}</span>

@@ -565,7 +565,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.montoPrevioDesembolso.setValue(ap.credito.montoPrevioDesembolso);
     this.montoFinanciado.setValue(ap.credito.montoFinanciado);
     this.cuota.setValue(ap.credito.cuota);
-    this.totalInteres.setValue(ap.credito.saldoInteres);
+    this.totalInteres.setValue(ap.credito.totalInteresVencimiento);
 
     this.dataSourceComprobante.data = ap.pagos;
     this.dataSourceComprobante.data ? this.dataSourceComprobante.data.forEach( e =>{

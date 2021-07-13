@@ -864,13 +864,9 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   eliminar(element: TbQoTasacion) {
     this.loadTasacion.next(true);
     this.tas.eliminarJoya(element.id).subscribe((data: any) => {
-      if (data.entidad) {
-        this.tas.getTasacionByIdCredito(null,this.negoW.credito.id).subscribe(tas=>{
-          this.negoW.joyas = tas.list;
-        })
-      } else {
-        this.sinNotSer.setNotice('ERROR DESCONOCIDO', 'error');
-      }
+      this.tas.getTasacionByIdCredito(null,this.negoW.credito.id).subscribe(tas=>{
+        this.negoW.joyas = tas.list;
+      })
       this.loadTasacion.next(false);
     });
   }

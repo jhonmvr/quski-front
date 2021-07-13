@@ -217,7 +217,7 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
       this.agenciaEntrega.setValue(this.catAgencia.find(x => x.id == this.wrapperDevolucion.devolucion.agenciaEntregaId));
       this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo == this.wrapperDevolucion.devolucion.tipoCliente));
       let objetoCredito = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeDetalleCredito);
-      this.dataSourceDetalle = new MatTableDataSource<any>([objetoCredito]);
+      this.dataSourceDetalle = new MatTableDataSource<any>(objetoCredito);
     }
     this.desactivarCampos();
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
