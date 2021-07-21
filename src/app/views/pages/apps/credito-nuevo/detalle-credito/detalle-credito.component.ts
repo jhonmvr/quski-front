@@ -240,7 +240,11 @@ export class DetalleCreditoComponent implements OnInit {
   }
 
   public irNovar(row: any){
-    this.router.navigate(['novacion/crear-novacion/CRE', row.numeroOperacion]);    
+    if(row.codigoEstadoProcesoGarantia == 'UTI' && (row.codigoEstadoUbicacionGrantia == 'AGE' || row.codigoEstadoUbicacionGrantia == 'CUS')){
+      this.router.navigate(['novacion/crear-novacion/CRE', row.numeroOperacion]);    
+    }else{
+      this.sinNotSer.setNotice('ESTADOS DE LAS GARANTIAS INCORRECTOS. CONSULTAR CON OPERACIONES', 'info') ; 
+    }
   }
 
 }

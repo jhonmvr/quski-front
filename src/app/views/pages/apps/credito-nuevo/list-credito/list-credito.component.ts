@@ -144,7 +144,12 @@ export class ListCreditoComponent implements OnInit {
     this.router.navigate(['credito-nuevo/detalle-credito/', row.numeroOperacion]);    
   }
   public irNovar(row: any){
-    this.router.navigate(['novacion/crear-novacion/CRE', row.numeroOperacion]);    
+    if(row.codigoEstadoProcesoGarantia == 'UTI' && (row.codigoEstadoUbicacionGrantia == 'AGE' || row.codigoEstadoUbicacionGrantia == 'CUS')){
+      this.router.navigate(['novacion/crear-novacion/CRE', row.numeroOperacion]);    
+    }else{
+      this.sinNotSer.setNotice('ESTADOS DE LAS GARANTIAS INCORRECTOS. CONSULTAR CON OPERACIONES', 'info') ; 
+    }
+    
   }
   irDevolucion(row:any){
     this.router.navigate(['devolucion/solicitud-devolucion/NUEV/', row.numeroOperacion ]);  

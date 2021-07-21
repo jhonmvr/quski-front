@@ -11,15 +11,13 @@
                     <div class="row">
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="nombreCompleto" placeholder="Cliente" autocomplete="on"
-                                    matInput />
+                                <input [formControl]="nombreCompleto" placeholder="Cliente" autocomplete="on" matInput />
                                 <mat-error>{{ getErrorMessage("nombreCompleto") }}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" matInput
-                                    numeric numericType="number" (keypress)="numberOnly($event)" />
+                                <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" matInput numeric numericType="number" (keypress)="numberOnly($event)" />
                                 <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
                             </mat-form-field>
                         </div>
@@ -30,11 +28,10 @@
                         </div>
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="codigoSoft" placeholder="Codigo Soft" autocomplete="off"
-                                    matInput />
+                                <input [formControl]="codigoSoft" placeholder="Codigo Soft" autocomplete="off" matInput />
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Proceso" [formControl]="proceso">
                                     <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}
@@ -42,7 +39,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Estado" [formControl]="estado">
                                     <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}
@@ -50,7 +47,15 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Asesor" [formControl]="asesor">
+                                    <mat-option value="{{ usuario }}" selected>{{ usuario }}</mat-option>
+                                    <mat-option>--</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Actividad" [formControl]="actividad">
                                     <mat-option *ngFor="let element of catActividad" [value]="element">{{ element }}
@@ -61,8 +66,7 @@
                         <div class="offset-2 col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Fecha Creacion Desde: </mat-label>
-                                <input matInput #inputFechaCreacionDesde [matDatepicker]="pickerFechaCreacionDesde"
-                                    [formControl]="fechaCreacionDesde" />
+                                <input matInput #inputFechaCreacionDesde [matDatepicker]="pickerFechaCreacionDesde" [formControl]="fechaCreacionDesde" />
                                 <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionDesde">
                                 </mat-datepicker-toggle>
                                 <mat-datepicker #pickerFechaCreacionDesde></mat-datepicker>
@@ -71,8 +75,7 @@
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Fecha Creacion Hasta: </mat-label>
-                                <input matInput #inputFechaCreacionHasta [matDatepicker]="pickerFechaCreacionHasta"
-                                    [formControl]="fechaCreacionHasta" />
+                                <input matInput #inputFechaCreacionHasta [matDatepicker]="pickerFechaCreacionHasta" [formControl]="fechaCreacionHasta" />
                                 <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionHasta">
                                 </mat-datepicker-toggle>
                                 <mat-datepicker #pickerFechaCreacionHasta></mat-datepicker>
@@ -85,11 +88,11 @@
                                 </mat-select>
                             </mat-form-field>
                         </div> -->
+
                     </div>
                     <div class="row">
                         <div class="col-3">
-                            <a href="javascript:void(0);" (click)="irNegociacion()" matTooltip="Nueva Negociacion"
-                                style="font-size: 12px; vertical-align: middle;">
+                            <a href="javascript:void(0);" (click)="irNegociacion()" matTooltip="Nueva Negociacion" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">post_add
                                 </mat-icon>
                                 <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Nueva
@@ -101,12 +104,10 @@
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>
                                 <span>Buscar Operacion</span>
                             </button>
-                            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar"
-                                style="font-size: 12px; vertical-align: middle;">
+                            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">
                                     layers_clear</mat-icon>
-                                <span style="position: relative; top: -10px; margin-left: 5px;"
-                                    class="orange-icon">Limpiar</span>
+                                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
                             </a>
                         </div>
                     </div>
@@ -115,26 +116,22 @@
         </div>
         <div class="row">
             <div class="col-1 offset-11">
-                <button mat-raised-button
-                    (click)="exporter.exportTable('xlsx', {fileName:'proceso', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
+                <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'proceso', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
             </div>
         </div>
         <div class="row">
-            
+
             <div class="col-12 mt-3">
-                <mat-table matTableExporter #table class="mat-elevation-z8 tableOpciones" [dataSource]="dataSource"
-                    #exporter="matTableExporter">
+                <mat-table matTableExporter #table class="mat-elevation-z8 tableOpciones" [dataSource]="dataSource" #exporter="matTableExporter">
                     <ng-container matColumnDef="Accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
                         <mat-cell *matCellDef="let row">
-                            <ng-container
-                                *ngIf="(row.estadoProceso == 'CREADO' || row.estadoProceso == 'EXCEPCIONADO' || row.estadoProceso == 'DEVUELTO'  || row.estadoProceso == 'ARRIBADO') && row.asesor == usuario">
+                            <ng-container *ngIf="(row.estadoProceso == 'CREADO' || row.estadoProceso == 'EXCEPCIONADO' || row.estadoProceso == 'DEVUELTO'  || row.estadoProceso == 'ARRIBADO') && row.asesor == usuario">
                                 <a (click)="verOperacion(row)">
                                     <mat-icon matTooltip="Ver Operacion">edit</mat-icon>
                                 </a>
                             </ng-container>
-                            <ng-container
-                                *ngIf="row.proceso != 'CANCELACION DEVOLUCION' && row.proceso != 'PAGO'">
+                            <ng-container *ngIf="row.proceso != 'CANCELACION DEVOLUCION' && row.proceso != 'PAGO'">
                                 <a (click)="verDetalle(row)">
                                     <mat-icon matTooltip="Ver Detalle" class="blue-icon">remove_red_eye</mat-icon>
                                 </a>
@@ -144,10 +141,8 @@
                                     <mat-icon matTooltip="Reasignar Asesor">account_circle</mat-icon>
                                 </a>
                             </ng-container>
-                            <ng-container
-                                *ngIf="row.proceso == 'DEVOLUCION' && row.estadoProceso != 'APROBADO' && row.estadoProceso != 'RECHAZADO' && row.estadoProceso != 'CANCELADO' && row.asesor == usuario">
-                                <a (click)="cancelarDevolucion(row)" matTooltip="Cancelar Devolucion"
-                                    style="font-size: 12px; vertical-align: middle;">
+                            <ng-container *ngIf="row.proceso == 'DEVOLUCION' && row.estadoProceso != 'APROBADO' && row.estadoProceso != 'RECHAZADO' && row.estadoProceso != 'CANCELADO' && row.asesor == usuario">
+                                <a (click)="cancelarDevolucion(row)" matTooltip="Cancelar Devolucion" style="font-size: 12px; vertical-align: middle;">
                                     <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">
                                         highlight_off</mat-icon>
                                 </a>

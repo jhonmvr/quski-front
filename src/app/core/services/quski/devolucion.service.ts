@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material';
 import { ReNoticeService } from '../re-notice.service';
 import { Page } from '../../model/page';
 import { RegistroFechaArribo } from '../../model/wrapper/RegistroFechaArribo';
+import { environment } from '../../../../../src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -68,7 +69,7 @@ export class DevolucionService extends BaseService {
   }
   public validarProcesoActivo(numeroOperacion){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/validarProcesoActivo";
-    this.params = this.params.set('numeroOperacion', numeroOperacion);
+    this.params = this.params.set('numeroOperacion', numeroOperacion).set('usuario', atob(localStorage.getItem(environment.userKey) ));
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl,this.options).pipe(
       tap( // Log the result or error
@@ -93,7 +94,7 @@ export class DevolucionService extends BaseService {
 
   public aprobarNegarSolicitudDevolucion(idDevolucion, aprobado){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/aprobarNegarSolicitudDevolucion";
-    this.params = this.params.set('idDevolucion', idDevolucion).set('aprobado', aprobado) 
+    this.params = this.params.set('idDevolucion', idDevolucion).set('aprobado', aprobado).set('usuario', atob(localStorage.getItem(environment.userKey) ))
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -164,7 +165,7 @@ export class DevolucionService extends BaseService {
   public registrarArribo(idDevoluciones: Array<number>){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/registrarArribo";   
     this.params = new HttpParams();
-    this.params = this.params.set('asesor',localStorage.getItem('reUser'))
+    this.params = this.params.set('usuario', atob(localStorage.getItem(environment.userKey) ))
     this.options = { headers: this.headers,  params: this.params };
     return this.http.post(serviceUrl, idDevoluciones ,this.options).pipe(
       tap( // Log the result or error
@@ -189,7 +190,7 @@ export class DevolucionService extends BaseService {
   
   public aprobarCancelacionSolicitudDevolucion(id){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/aprobarCancelacionSolicitudDevolucion";
-    this.params = this.params.set('id', id);  
+    this.params = this.params.set('id', id).set('usuario', atob(localStorage.getItem(environment.userKey) ));  
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, null, this.options).pipe(
       tap( // Log the result or error
@@ -200,7 +201,7 @@ export class DevolucionService extends BaseService {
   }
   public rechazarCancelacionSolicitudDevolucion(id){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/rechazarCancelacionSolicitudDevolucion";
-    this.params = this.params.set('id', id);  
+    this.params = this.params.set('id', id).set('usuario', atob(localStorage.getItem(environment.userKey) ));  
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, null , this.options).pipe(
       tap( // Log the result or error
@@ -219,7 +220,7 @@ existeCancelacionCancelacion(idDevolucion: any) {
 }
 
   validarAprobarCancelacionSolicitud(idDevolucion: any) {
-    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    this.params = new HttpParams().set('idDevolucion', idDevolucion).set('usuario', atob(localStorage.getItem(environment.userKey) ));
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateAprobarCancelarSolicitud";
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
@@ -227,32 +228,32 @@ existeCancelacionCancelacion(idDevolucion: any) {
 
 
   validarCancelacionSolicitud(idDevolucion: any) {
-    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    this.params = new HttpParams().set('idDevolucion', idDevolucion).set('usuario', atob(localStorage.getItem(environment.userKey) ));
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateCancelarSolicitud";
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
 
   validateSolicitarAprobacion(idDevolucion: any) {
-    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    this.params = new HttpParams().set('idDevolucion', idDevolucion).set('usuario', atob(localStorage.getItem(environment.userKey) ));
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateSolicitarAprobacion";
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
   validateAprobarRechazarSolicitud(idDevolucion: any) {
-    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    this.params = new HttpParams().set('idDevolucion', idDevolucion).set('usuario', atob(localStorage.getItem(environment.userKey) ));
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateAprobarRechazarSolicitud";
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
   validateEntregaRecepcion(idDevolucion: any) {
-    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    this.params = new HttpParams().set('idDevolucion', idDevolucion).set('usuario', atob(localStorage.getItem(environment.userKey) ));
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateEntregaRecepcion";
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
   }
   validateVerificacionFirma(idDevolucion: any) {
-    this.params = new HttpParams().set('idDevolucion', idDevolucion);
+    this.params = new HttpParams().set('idDevolucion', idDevolucion).set('usuario', atob(localStorage.getItem(environment.userKey) ));
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/validateVerificacionFirma";
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options);
@@ -264,7 +265,7 @@ existeCancelacionCancelacion(idDevolucion: any) {
 /////////
   public guardarEntregaRecepcion(id){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/guardarEntregaRecepcion";
-    this.params = this.params.set('idDevolucion', id);  
+    this.params = this.params.set('idDevolucion', id).set('usuario', atob(localStorage.getItem(environment.userKey) ));  
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, null, this.options).pipe(
       tap( // Log the result or error
@@ -276,7 +277,7 @@ existeCancelacionCancelacion(idDevolucion: any) {
 
   public aprobarVerificacionFirmas(id){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/aprobarVerificacionFirmas";
-    this.params = this.params.set('idDevolucion', id);  
+    this.params = this.params.set('idDevolucion', id).set('usuario', atob(localStorage.getItem(environment.userKey) ));  
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, null, this.options).pipe(
       tap( // Log the result or error

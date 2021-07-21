@@ -40,7 +40,7 @@ export class TablaCustomComponent implements OnInit {
         this.displayedColumns.push(c);
         this.displayedColumns.push(c + ' Estado')
       });
-      this.displayedColumns.push("Saldo Cuota");
+      this.displayedColumns.push("Total Cuota");
       let datos = new Array();
       cuotas.forEach( numeroc=>{
        
@@ -54,10 +54,10 @@ export class TablaCustomComponent implements OnInit {
               if(element[this.nombreRubro] == columna){
                 dato[columna]=( Number(element['proyectado']) - Number(element['cobrado']) );
                 dato[columna+' Estado'] = element['estado'];
-                if(dato["Saldo Cuota"]){
-                  dato["Saldo Cuota"] = dato["Saldo Cuota"] +  dato[columna]
+                if(dato["Total Cuota"]){
+                  dato["Total Cuota"] = dato["Total Cuota"] +  dato[columna]
                 }else{
-                  dato["Saldo Cuota"] =  dato[columna];
+                  dato["Total Cuota"] =  dato[columna];
                 }
                
                 //console.log("valor ==>>> ", columna, dato[columna])

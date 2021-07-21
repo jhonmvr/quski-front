@@ -210,7 +210,8 @@ export class RegistrarPagoComponent implements OnInit {
           valorDepositado: this.valorDepositado.value,
           valorPrecancelado: this.valorPreCancelado.value,
           idBanco: this.datosMupi.institucionFinanciera,
-          tipoPagoProceso: this.tipoPagoProceso.value.valor
+          tipoPagoProceso: this.tipoPagoProceso.value.valor,
+          mailAsesor:localStorage.getItem('email')
         }
         console.log('wrapper => ', wrapper);
         this.reg.iniciarProcesoRegistrarPago(wrapper).subscribe((data: any) => {

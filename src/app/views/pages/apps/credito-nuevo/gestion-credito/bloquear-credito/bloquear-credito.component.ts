@@ -173,7 +173,8 @@ export class BloquearCreditoComponent implements OnInit {
           nombreCompleto:  this.nombreCliente.value,
           observacion: this.observacion.value,
           valorDepositado: this.valorDepositado.value,
-          idBanco: this.datosMupi.institucionFinanciera
+          idBanco: this.datosMupi.institucionFinanciera,
+          mailAsesor:localStorage.getItem('email')
         }
         this.reg.iniciarProcesoRegistrarBloqueo( wrapper ).subscribe( (data: any) =>{
           console.log('Data.Entidad => ', data.entidad);

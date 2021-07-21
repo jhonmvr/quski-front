@@ -19,7 +19,7 @@
     <ng-container matColumnDef="NumeroPiezas">
         <mat-header-cell *matHeaderCellDef>N. de piezas</mat-header-cell>
         <mat-cell *matCellDef="let element"> {{ element.numeroPiezas }} </mat-cell>
-        <mat-footer-cell *matFooterCellDef> -</mat-footer-cell>
+        <mat-footer-cell *matFooterCellDef> {{ calcularTotales('numeroPiezas')| number : '1.0-0'}}</mat-footer-cell>
     </ng-container>
     <ng-container matColumnDef="TipoOro">
         <mat-header-cell *matHeaderCellDef> Tipo de oro </mat-header-cell>
@@ -43,7 +43,7 @@
     </ng-container>
     <ng-container matColumnDef="DescuentoSuelda">
         <mat-header-cell *matHeaderCellDef>Descuento suelda</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{ forDescuentoSuelda(element) }}</mat-cell>
+        <mat-cell *matCellDef="let element"> {{ forDescuentoSuelda(element) | number : '1.2-2' }}</mat-cell>
         <mat-footer-cell *matFooterCellDef> {{ calcularTotales('descuentoSuelda') | number : '1.2-2'}} </mat-footer-cell>
     </ng-container>
     <ng-container matColumnDef="PesoNeto">

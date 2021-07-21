@@ -52,6 +52,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public codigoBpm = new FormControl('');
   public codigoSoft = new FormControl('');
   public agencia = new FormControl('');
+  asesor = new FormControl('');
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   dataSource = new MatTableDataSource<OperacionesProcesoWrapper>();
@@ -78,6 +79,8 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     this.formFiltro.addControl("codigoBpm", this.codigoBpm);
     this.formFiltro.addControl("codigoSoft", this.codigoSoft);
     this.formFiltro.addControl("agencia", this.agencia);
+    
+    this.formFiltro.addControl("asesor", this.asesor);
   }
 
   ngOnInit() {
@@ -85,6 +88,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     this.sof.setParameter();
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.asesor.setValue(this.usuario);
     this.rol = localStorage.getItem( 're1001' );
     console.log( 'Rol => ', this.rol);
     this.cargarEnumBase();
@@ -93,8 +97,8 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
 
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private buscarOperaciones(wrapper?: WrapperBusqueda) {
-    wrapper.asesor = null;
-    if( this.catRolAsesores ){
+    wrapper.asesor = this.asesor.value;
+   /*  if( this.catRolAsesores ){
       this.catRolAsesores.forEach( e=>{
         if( this.rol == e.valor ){
           console.log( 'Rol => ', e.valor);
@@ -102,7 +106,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
           return;
         }
       });
-    }  
+    }   */
     this.pro.buscarOperaciones(wrapper).subscribe( (data: any) =>{
       if( data.entidad != null && data.entidad.operaciones != null){
         let operaciones: OperacionesProcesoWrapper[] = data.entidad.operaciones;
@@ -204,6 +208,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       control.setErrors(null);
       control.setValue(null);
     });
+    this.asesor.setValue(this.usuario);
     this.buscarOperaciones(new WrapperBusqueda());
   }
   public numberOnly(event): boolean {
