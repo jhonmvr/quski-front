@@ -23,6 +23,7 @@ import {
 } from '../../../../core/_base/layout';
 // HTML Class
 import { HtmlClassService } from '../../html-class.service';
+import { ReNoticeService } from '../../../../../app/core/services/re-notice.service';
 
 @Component({
 	selector: 'kt-menu-horizontal',
@@ -75,6 +76,7 @@ export class MenuHorizontalComponent implements OnInit, AfterViewInit {
 	 */
 	constructor(
 		private el: ElementRef,
+		private sinNoticeService: ReNoticeService,
 		public htmlClassService: HtmlClassService,
 		public menuHorService: MenuHorizontalService,
 		private menuConfigService: MenuConfigService,
@@ -99,6 +101,7 @@ export class MenuHorizontalComponent implements OnInit, AfterViewInit {
 	 * On init
 	 */
 	ngOnInit(): void {
+		
 		this.rootArrowEnabled = this.layoutConfigService.getConfig('header.menu.self.root-arrow');
 
 		this.currentRouteUrl = this.router.url;
@@ -108,6 +111,7 @@ export class MenuHorizontalComponent implements OnInit, AfterViewInit {
 				this.currentRouteUrl = this.router.url;
 				this.cdr.markForCheck();
 			});
+		this.sinNoticeService.setNotice('INICIO EXITOSO','info');
 	}
 
 	/**
