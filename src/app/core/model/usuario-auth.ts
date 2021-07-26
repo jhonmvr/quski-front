@@ -13,6 +13,7 @@ export class UsuarioAuth {
     pic:string= './quski-front/assets/app/media/img/users/user4.jpg';
     fullname:string;
     existLogin:boolean;
+    mensajeError: string;
     
     parametros:Parametro[];
 }

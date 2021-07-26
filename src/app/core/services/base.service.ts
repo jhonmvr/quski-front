@@ -19,7 +19,7 @@ export class BaseService {
 
   public segRootContextUrl: string;
   public segResourcesUrl: string;
-  public appRootContextUrl: string;
+  //public appRootContextUrl: string;
   public appResourcesUrl: string;
   public crmResourcesUrl: string;
   public appWebSocketUrl: string;
@@ -77,21 +77,17 @@ export class BaseService {
            //Full url par datos del servicio core-security-web
            this.menuServiceUrl = atob(localStorage.getItem( environment.prefix + 'RE004')).replace(this.keyUnencrypt, '');
            //Path al rootcontext de la app 
-           this.appRootContextUrl = atob(localStorage.getItem( environment.prefix + 'RE005')).replace(this.keyUnencrypt, '');
            //Path al resources de la app
            this.appResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE006')).replace(this.keyUnencrypt, '');
 
-           //this.appRootContextUrl = 'http://localhost:8080/quski-oro-rest/';
+           
            //Path al resources de la app
-           //this.appResourcesUrl = 'http://localhost:8080/quski-oro-rest/resources/';
 
            //Full url al servidor de websocket generic-relative-core
            this.appWebSocketUrl = atob(localStorage.getItem( environment.prefix + 'RE007')).replace(this.keyUnencrypt, '');
            //Path contextroot generic-relative-core
            this.genericResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE008')).replace(this.keyUnencrypt, '');
 
-           //this.appWebSocketUrl = 'ws://localhost:8080/generic-relative-rest/relativews/';
-           //this.genericResourcesUrl = 'http://localhost:8080/generic-relative-rest/resources/';
            
            //object storage 
            this.mongoDb = atob(localStorage.getItem( environment.prefix + 'RE009')).replace(this.keyUnencrypt, '');
@@ -114,7 +110,7 @@ export class BaseService {
     this.userRolServiceUrl = 'http://localhost:28080/core-security-web/resources/usuarioRolRestController/getEntitiesByUsuario';
     //Full url par datos del servicio core-security-web
     //Path al rootcontext de la app 
-    this.appRootContextUrl = 'http://localhost:28080/quski-oro-rest/';
+    //this.appRootContextUrl = 'http://localhost:28080/quski-oro-rest/';
     //Path al resources de la app
     this.appResourcesUrl = 'http://localhost:28080/quski-oro-rest/resources/';
     //Full url al servidor de websocket generic-relative-core

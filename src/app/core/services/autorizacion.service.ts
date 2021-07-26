@@ -31,20 +31,51 @@ export class AutorizacionService  {
   }
 
 
-  public login( authData):Observable<BaseWrapper>{
-    //console.log("=========> ejecuta login");
-   /* let wp={
-      "entidad":{
-        "idUsuario":authData.email,
-        "contrasena":authData.password
-      }
-    }*/
+  public login( authData, tokenaouth):Observable<BaseWrapper>{
+    localStorage.setItem(environment.token_type,tokenaouth.token_type );
+    localStorage.setItem(environment.access_token,tokenaouth.access_token );
     let wp = {
       "codigoUsuario":authData.email,
       "clave":authData.password
     }
     return this.http.post<BaseWrapper>( atob(environment.seg_a), wp);
   }
+
+  public getToken( ):Observable<BaseWrapper>{
+    const headersLoc= new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded' });
+    const params = new HttpParams()
+    .set("grant_type", 'password' )
+    .set("username", environment.user)
+    .set("password",environment.password);
+    let optionsLoc = {
+      headers: headersLoc,
+      params:params
+    };
+    localStorage.setItem(environment.token_type,"basic");
+    localStorage.setItem(environment.access_token,environment.apitoken);
+    
+    let wp = { }
+    return this.http.post<BaseWrapper>( atob(environment.api_t),wp, optionsLoc);
+  }
+  public getTokenApi( dataParam):Observable<BaseWrapper>{
+    const headersLoc= new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded' });
+    const params = new HttpParams()
+    .set("grant_type", 'client_credentials' );
+    let optionsLoc = {
+      headers: headersLoc,
+      params:params
+    };
+    let keyUnencrypt = atob( dataParam[environment.prefix +'RE011']);
+    //Url de acceso al rootcontext de seguridad core-security-web
+    let token = atob(dataParam[environment.prefix +  'RE020']).replace(keyUnencrypt, '');
+    localStorage.setItem(environment.token_type,'basic');
+    localStorage.setItem(environment.access_token,token);
+    
+    let wp = { }
+    return this.http.post<BaseWrapper>( atob(environment.api_t),wp, optionsLoc);
+  }
+
+ 
 
   public getRelative(token:string):Observable<any>{
     //console.log("=========> ejecuta relative");
@@ -62,7 +93,9 @@ export class AutorizacionService  {
     return this.http.get<any>( atob(environment.app_p) , optionsLoc);
   }
 
-  public getCatalogoRol():Observable<any>{
+  public getCatalogoRol(tokenApi):Observable<any>{
+    localStorage.setItem(environment.token_type,tokenApi.token_type );
+    localStorage.setItem(environment.access_token,tokenApi.access_token );
     let wp = {};
     
     return this.http.post<BaseWrapper>( atob(environment.cat_r), wp);
@@ -85,16 +118,22 @@ export class AutorizacionService  {
   }
 
   public serverLogin(authData): Observable<UsuarioAuth>{
-		return this.login( authData )
-		.pipe( 
-			switchMap( usuariowp=>this.getRelative( usuariowp.token )
+		return this.getToken()
+    .pipe(
+    	switchMap( tokenaouth=>this.login( authData,tokenaouth ) 
+      .pipe( 
+        switchMap( usuariowp=>this.getRelative( usuariowp.token )
+        .pipe( 
+          switchMap( dataParam=>this.getTokenApi(dataParam)
 			.pipe(
-			switchMap( dataParam=>this.getCatalogoRol( )
+			switchMap( tokenApi=>this.getCatalogoRol(tokenApi )
 					.pipe(  
 						switchMap( catalogoRol=>this.userReturn( usuariowp,dataParam,null, authData,catalogoRol )
           ) )
           ) ) 
-          ) );
+          ) )
+        ))
+    ));
 	}
 
   private userReturn(  dataLogin,dataParam,dataRoles:Array<RolWrapper>, credential, catalogoRol): Observable<UsuarioAuth>{
@@ -103,7 +142,12 @@ export class AutorizacionService  {
     ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataLogin " + JSON.stringify(dataLogin) ) ;
     ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataParam " + JSON.stringify(dataParam) ) ;
     ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataRoles " + JSON.stringify(dataRoles) ) ;
-    
+    let x:UsuarioAuth=new UsuarioAuth();
+    if( dataLogin && dataLogin.CodigoServicio == "400"){
+      x.mensajeError = dataLogin.Mensaje;
+      return of(x);
+    }
+
    
 
     if( dataLogin && dataLogin.roles  ){

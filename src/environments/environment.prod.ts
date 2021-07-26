@@ -23,6 +23,11 @@ export const environment = {
     agenciakey:"reAgencia",
     idleTime:1800,
     idleTimeOut:45,
+    user:"qskusr01",
+    password:"qskqsk2k",
+    apitoken:'U2tTaVR5ZlhEOFRUY0FyU3hkcmMzaE5QSkI0YTpKZ2RNRzI3MU5lZXR3ODhwRGNJZ05MMGllUjRh',
+    access_token:"access_token",
+    token_type:"token_type",
     //DESARROLLO
     //parametros
     //app_p : 'aHR0cDovL2xvY2FsaG9zdDo4MDgwL3F1c2tpLW9yby1yZXN0L3Jlc291cmNlcy9yZWxhdGl2ZS9nZXRSZWxhdGl2ZQ==',
@@ -35,14 +40,26 @@ export const environment = {
 
     //SOFTBANK
     //parametros
-    app_p : 'aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvZ2VuZXJpYy1yZWxhdGl2ZS1yZXN0L3Jlc291cmNlcy9yZWxhdGl2ZS9nZXRSZWxhdGl2ZQ==',
+    //app_p : 'aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvZ2VuZXJpYy1yZWxhdGl2ZS1yZXN0L3Jlc291cmNlcy9yZWxhdGl2ZS9nZXRSZWxhdGl2ZQ==',
     //agente supervisor
-    abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
+    //abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
     //autenticacion 
-    seg_a :"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC9sb2dpbg==",
+    //seg_a :"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC9sb2dpbg==",
     //seguridad-resources
-    seg_r :"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC8=",
+    //seg_r :"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL3NlZ3VyaWRhZC8=",
     //catalogo rol
-    cat_r:"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL2NhdGFsb2dvL3JvbA=="
-    
+    //cat_r:"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL2NhdGFsb2dvL3JvbA=="
+
+    //PRODUCCION APIGW
+ app_p : 'aHR0cHM6Ly9vcm8ucXVza2kuZWM6ODg4OC9xdXNraS1nZW5lcmljLzEuMC4wL3JlbGF0aXZlL2dldFJlbGF0aXZl',
+ //agente supervisor
+ abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
+ //autenticacion 
+ seg_a :"aHR0cHM6Ly9vcm8ucXVza2kuZWM6ODg4OC9xdXNraS1nYWYvMS4wLjAvYXBpL3NlZ3VyaWRhZC9sb2dpbg==",
+ //seguridad-resources
+ seg_r :"aHR0cHM6Ly9vcm8ucXVza2kuZWM6ODg4OC9xdXNraS1nYWYvMS4wLjAvYXBpL3NlZ3VyaWRhZC8=",
+ //catalogo rol
+ cat_r:"aHR0cHM6Ly9vcm8ucXVza2kuZWM6ODg4OC9xdXNraS1nYWYvMS4wLjAvYXBpL2NhdGFsb2dvL3JvbA==",
+ //apigw
+ api_t:"aHR0cHM6Ly9vcm8ucXVza2kuZWM6ODg4OC9vYXV0aDIvdG9rZW4="
 };

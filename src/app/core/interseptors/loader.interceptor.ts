@@ -6,6 +6,7 @@ import { SharedService } from '../services/shared.service';
 import { AuthDialogComponent } from '../../../app/views/partials/custom/auth-dialog/auth-dialog.component';
 import { ReNoticeService } from '../services/re-notice.service';
 import { MatDialog } from '@angular/material';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class LoaderInterceptor implements HttpInterceptor {
@@ -16,7 +17,7 @@ export class LoaderInterceptor implements HttpInterceptor {
     
     req = req.clone({
       setHeaders: {
-        Authorization: `relative ${localStorage.getItem('accessToken')}`
+        Authorization: `${localStorage.getItem(environment.token_type)} ${localStorage.getItem(environment.access_token)}`
       }
     });
     if (JSON.stringify(req).indexOf("listAlertaDeProcesosAprobado") < 0) {

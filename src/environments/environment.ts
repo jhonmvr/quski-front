@@ -27,6 +27,11 @@ export const environment = {
     agenciakey:"reAgencia",
     idleTime:40,
     idleTimeOut:100,
+    user:"qskusr01",
+    password:"qskqsk2k",
+    apitoken:'U2tTaVR5ZlhEOFRUY0FyU3hkcmMzaE5QSkI0YTpKZ2RNRzI3MU5lZXR3ODhwRGNJZ05MMGllUjRh',
+    access_token:"access_token",
+    token_type:"token_type",
     /** @SOFTBANK @DESARROLLO @JHON **/
     //app_p : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9nZW5lcmljLXJlbGF0aXZlLXJlc3QvcmVzb3VyY2VzL3JlbGF0aXZlL2dldFJlbGF0aXZl',
     /** @SOFTBANK @DESARROLLO @JEROHAM **/
@@ -39,17 +44,28 @@ export const environment = {
     //abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
     
       //SOFTBANK PRUEBAS
-      app_p : 'aHR0cDovL2FwcC5xdXNraS5lYzoxODQ4MC9nZW5lcmljLXJlbGF0aXZlLXJlc3QvcmVzb3VyY2VzL3JlbGF0aXZlL2dldFJlbGF0aXZl',
+      //app_p : 'aHR0cDovL2FwcC5xdXNraS5lYzoxODQ4MC9nZW5lcmljLXJlbGF0aXZlLXJlc3QvcmVzb3VyY2VzL3JlbGF0aXZlL2dldFJlbGF0aXZl',
       //agente supervisor
-      abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
+      //abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
       //autenticacion 
-      seg_a :"aHR0cDovL2FwcC5xdXNraS5lYzoxODA5NC9Tb2Z0YmFua0FQSS9hcGkvc2VndXJpZGFkL2xvZ2lu",
+      //seg_a :"aHR0cDovL2FwcC5xdXNraS5lYzoxODA5NC9Tb2Z0YmFua0FQSS9hcGkvc2VndXJpZGFkL2xvZ2lu",
       //seguridad-resources
-      seg_r :"aHR0cDovL2FwcC5xdXNraS5lYzoxODA5NC9Tb2Z0YmFua0FQSS9hcGkvc2VndXJpZGFkLw==",
+      //seg_r :"aHR0cDovL2FwcC5xdXNraS5lYzoxODA5NC9Tb2Z0YmFua0FQSS9hcGkvc2VndXJpZGFkLw==",
       //catalogo rol
-      cat_r:"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL2NhdGFsb2dvL3JvbA=="
+      //cat_r:"aHR0cHM6Ly9hcHAucXVza2kuZWM6Mjg4ODgvU29mdGJhbmtBUEkvYXBpL2NhdGFsb2dvL3JvbA=="
 
-
+ //PRODUCCION APIGW
+ app_p : 'aHR0cHM6Ly9vcm8ucXVza2kuZWM6ODg4OC9xdXNraS1nZW5lcmljLzEuMC4wL3JlbGF0aXZlL2dldFJlbGF0aXZl',
+ //agente supervisor
+ abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',
+ //autenticacion 
+ seg_a :"aHR0cHM6Ly9vcm8ucXVza2kuZWM6ODg4OC9xdXNraS1nYWYvMS4wLjAvYXBpL3NlZ3VyaWRhZC9sb2dpbg==",
+ //seguridad-resources
+ seg_r :"aHR0cHM6Ly9vcm8ucXVza2kuZWM6ODg4OC9xdXNraS1nYWYvMS4wLjAvYXBpL3NlZ3VyaWRhZC8=",
+ //catalogo rol
+ cat_r:"aHR0cHM6Ly9vcm8ucXVza2kuZWM6ODg4OC9xdXNraS1nYWYvMS4wLjAvYXBpL2NhdGFsb2dvL3JvbA==",
+ //apigw
+ api_t:"aHR0cHM6Ly9vcm8ucXVza2kuZWM6ODg4OC9vYXV0aDIvdG9rZW4="
 };
 
 /*

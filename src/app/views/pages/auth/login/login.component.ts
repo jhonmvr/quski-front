@@ -158,6 +158,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 						});
 				//console.log("ruta de main ===>>>",this.returnUrl);
 						this.router.navigateByUrl(this.returnUrl); // Main page
+					} else if(usuarioAuth){
+						this.authNoticeService.setNotice(this.translate.instant(usuarioAuth.mensajeError), 'danger');
 					} else {
 						this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
 					}
