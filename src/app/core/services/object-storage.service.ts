@@ -23,7 +23,7 @@ export class ObjectStorageService extends BaseService {
       headers: headersLoc,
       params:params
     };
-    return this.http.post( this.genericResourcesUrl+ "mongoRestController/createObjectBig", {objectEncripted:objectEncripted},optionsLoc );
+    return this.http.post( this.genericResourcesUrl+ "mongoRestController/createObjectBigZ", {objectEncripted:objectEncripted},optionsLoc );
   }
 
   getObjectById(objectId:string, databamongoDb:string,mongoColeccion:string ){ 

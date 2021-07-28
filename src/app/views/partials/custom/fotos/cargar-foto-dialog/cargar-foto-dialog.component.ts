@@ -83,7 +83,7 @@ export class CargarFotoDialogComponent implements OnInit {
 
   public subirArchivoHabilitante() {
     this.uploadSubject.next(true);
-    this.os.createObject( btoa( JSON.stringify( this.dataUpload ) ), this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe( (objectData:any)=>{
+    this.os.createObject( JSON.stringify( this.dataUpload ) , this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe( (objectData:any)=>{
       if( objectData && objectData.entidad ){
         this.dataUpload.objectId=objectData.entidad;
         this.upload.uploadFile(this.upload.appResourcesUrl +"uploadRestController/loadFileHabilitante",this.dataUpload).subscribe((data: any) => {
