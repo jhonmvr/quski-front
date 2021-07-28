@@ -148,7 +148,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.formInformacion.addControl("estadoOperacion", this.estadoOperacion);
     this.formInformacion.addControl("cedulaCliente", this.cedulaCliente);
     this.formInformacion.addControl("nombreCompleto", this.nombreCompleto);
-    this.formInformacion.addControl("fechaSistema", this.fechaSistema);
+    this.formFecha.addControl("fechaSistema", this.fechaSistema);
     
     this.formFecha.addControl("fechaCuota", this.fechaCuota);
     this.formFunda.addControl("pesoFunda", this.pesoFunda);

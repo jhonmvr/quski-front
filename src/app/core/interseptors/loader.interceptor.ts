@@ -14,7 +14,7 @@ export class LoaderInterceptor implements HttpInterceptor {
   constructor(public loaderService: SharedService, private sinNoticeService: ReNoticeService, private dialog: MatDialog) { }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    if(JSON.stringify(req).indexOf("/api/") >= 0 || JSON.stringify(req).indexOf("oauth2/token") >= 0){
+    if(JSON.stringify(req).indexOf("/api/") >= 0 || JSON.stringify(req).indexOf("/token") >= 0){
       req = req.clone({
         setHeaders: {
           Authorization: `${localStorage.getItem(environment.token_type)} ${localStorage.getItem(environment.access_token)}`
