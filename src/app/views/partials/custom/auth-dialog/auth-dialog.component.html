@@ -1,15 +1,27 @@
 <h1 mat-dialog-title>Validacion&#243;n Seguridad</h1>
 <mat-dialog-content>
+    <div class="row">
         <div class="col-md-4">
-            <span class="badge badge-danger">Su session se ha caducado, desea renovar su token. {{mensaje}}</span>   
+            <strong class="badge badge-danger">Su session se ha caducado, desea renovar su token.</strong>
         </div>
+    </div>
+    <div class="row">
+        <span class="badge badge-danger">{{mensaje}}</span>
+    </div>
+
 </mat-dialog-content>
 
 <mat-dialog-actions>
     <div class="row">
-        
+        <div class="col-md4" *ngIf="data.codigo=='REFRESH'">
+            <a href="javascript:void(0);" (click)="refreshToken()">
+                <mat-icon style="font-size: 42px; color: blueviolet;" matTooltipPosition="above" matTooltip="Cerrar">
+                    check</mat-icon>
+                <span style="position: relative;top: -10px;margin-left: 5px;">SEGUIR CONECTADO</span>
+            </a>
+        </div>
         <div class="col-md-4">
-            <mat-cell *matCellDef="let element"></mat-cell>
+
             <a href="javascript:void(0);" (click)="cerrar()">
                 <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Cerrar">
                     close</mat-icon>

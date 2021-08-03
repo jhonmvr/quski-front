@@ -73,6 +73,7 @@
                         <div class="col-md-3">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Peso De la Funda: " [formControl]="pesoFunda" (selectionChange)="obtenerNumeroFunda()">
+                                    <mat-option>--</mat-option>
                                     <mat-option *ngFor="let element of catTipoFunda" [value]="element">
                                         {{element.nombre}}
                                     </mat-option>
@@ -96,7 +97,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <ng-container *ngIf="anular">
+                        <ng-container *ngIf="numeroFunda.value">
                             <div class="offset-md-5 col-md-6 ">
                                 <button mat-raised-button (click)="obtenerNumeroFunda(true)"><span class="blue-icon"> Anular Funda </span></button>
                             </div>

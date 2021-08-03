@@ -627,7 +627,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
           this.aprobacion.value == ' true' ? this.codigoCash.value: null,
           this.agencia,
           this.usuario,
-          this.aprobacion.value == ' true' ? null: this.motivoDevolucion.value.codigo,
+          this.aprobacion.value == ' true' ? null: this.motivoDevolucion.value?this.motivoDevolucion.value.codigo:'',
           this.aprobacion.value).subscribe( (data: any) =>{
             if(!data.entidad){
               this.sinNotSer.setNotice('ERROR ENVIANDO LA RESPUESTA: ' + data.entidad, 'error');

@@ -898,7 +898,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
           this.loadOpciones.next(false);
           this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
           this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
-        } else if (data.entidad.simularResult.codigoError == 1) {
+        } else if (data.entidad.simularResult.codigoError == 2) {
           this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
           this.loadOpciones.next(false);
           this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);

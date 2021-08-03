@@ -188,6 +188,11 @@
                                 </div>
                             </div>
                         </ng-container>
+                        <ng-container *ngIf="!srcJoya">
+                            <div class="row  mt-2">
+                                <span>NO SE PUEDE LEER LA IMAGEN DE LAS GARANTIAS</span>
+                            </div>
+                        </ng-container>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
@@ -203,6 +208,11 @@
                                         <img mat-card-image src="{{'data:image/png;base64,' + this.srcFunda}}" class="img-responsive">
                                     </mat-card>
                                 </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="!srcFunda">
+                            <div class="row  mt-2">
+                                <span>NO SE PUEDE LEER LA IMAGEN DE LAS GARANTIAS</span>
                             </div>
                         </ng-container>
 

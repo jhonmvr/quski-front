@@ -21,11 +21,11 @@ import { TablaAmortizacionComponent } from '../../../../../../app/views/partials
   styleUrls: ['./detalle-credito.component.scss']
 })
 export class DetalleCreditoComponent implements OnInit {
-  varHabilitante= {proceso:'',referencia:''};
-  public  wrapper: any; 
+  varHabilitante = { proceso: '', referencia: '' };
+  public wrapper: any;
   loadImgJoya = new BehaviorSubject<Boolean>(false);
   validateRenovacion = new BehaviorSubject<Boolean>(false);
-  loadImgFunda= new BehaviorSubject<Boolean>(false);
+  loadImgFunda = new BehaviorSubject<Boolean>(false);
   srcJoya;
   srcFunda;
   public formInformacion: FormGroup = new FormGroup({});
@@ -55,7 +55,7 @@ export class DetalleCreditoComponent implements OnInit {
   public esMigrado = new FormControl();
   public numeroCuotas = new FormControl();
 
-  public displayedColumnsRubro = ['rubro','numeroCuota', 'proyectado', 'calculado', 'estado'];
+  public displayedColumnsRubro = ['rubro', 'numeroCuota', 'proyectado', 'calculado', 'estado'];
   public dataSourceRubro = new MatTableDataSource<any>();
   public datoImpCom;
   ItemNumeroOperacion: any;
@@ -70,7 +70,7 @@ export class DetalleCreditoComponent implements OnInit {
     private subheaderService: SubheaderService,
     private router: Router,
     private sinNotSer: ReNoticeService,
-  ) { 
+  ) {
     this.cre.setParameter();
     this.sof.setParameter();
     this.doc.setParameter();
@@ -98,11 +98,11 @@ export class DetalleCreditoComponent implements OnInit {
     this.formInformacion.addControl("coberturaActual", this.coberturaActual);
     this.formInformacion.addControl("coberturaInicial", this.coberturaInicial);
     this.formInformacion.addControl("diasMora", this.diasMora);
-    this.formInformacion.addControl("estadoUbicacion", this.estadoUbicacion); 
-    this.formInformacion.addControl("estadoProceso", this.estadoProceso); 
-    this.formInformacion.addControl("descripcionBloqueo", this.descripcionBloqueo); 
-    this.formInformacion.addControl("esMigrado", this.esMigrado); 
-    this.formInformacion.addControl("numeroCuotas", this.numeroCuotas); 
+    this.formInformacion.addControl("estadoUbicacion", this.estadoUbicacion);
+    this.formInformacion.addControl("estadoProceso", this.estadoProceso);
+    this.formInformacion.addControl("descripcionBloqueo", this.descripcionBloqueo);
+    this.formInformacion.addControl("esMigrado", this.esMigrado);
+    this.formInformacion.addControl("numeroCuotas", this.numeroCuotas);
   }
 
   ngOnInit() {
@@ -114,94 +114,101 @@ export class DetalleCreditoComponent implements OnInit {
     this.loadImgFunda.next(true);
     this.traerCredito();
   }
-  private traerCredito(){
+  private traerCredito() {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.numeroOperacion) {
         this.ItemNumeroOperacion = json.params.numeroOperacion;
         this.cre.traerCreditoVigente(json.params.numeroOperacion).subscribe((data: any) => {
           if (data.entidad) {
             this.wrapper = data.entidad;
-            
-            if( ( this.wrapper.credito.tipoCredito == 'Vencimiento' || ( this.wrapper.credito.tipoCredito == 'Cuotas' && this.wrapper.credito.retanqueo) ) 
-             && this.wrapper.credito.codigoEstadoUbicacionGrantia !== 'CLI' 
-             &&  this.wrapper.credito.codigoEstadoProcesoGarantia !== 'LIB' 
-             && this.wrapper.credito.estaNovado  == "false"){
-               this.validateRenovacion.next(true);
+
+            if ((this.wrapper.credito.tipoCredito == 'Vencimiento' || (this.wrapper.credito.tipoCredito == 'Cuotas' && this.wrapper.credito.retanqueo))
+              && this.wrapper.credito.codigoEstadoUbicacionGrantia !== 'CLI'
+              && this.wrapper.credito.codigoEstadoProcesoGarantia !== 'LIB'
+              && this.wrapper.credito.estaNovado == "false") {
+              this.validateRenovacion.next(true);
             }
 
             this.cargarCampos();
-          }else{
+          } else {
             this.salirDeGestion("Error al intentar cargar el credito.");
           }
         });
       }
     });
   }
-  public mostrarVentanaPrecancelacion(){
-    if(this.ItemNumeroOperacion){
+  public mostrarVentanaPrecancelacion() {
+    if (this.ItemNumeroOperacion) {
       const dialogRef = this.dialog.open(VentanaPrecancelacionComponent, {
         width: "800px",
         height: "auto",
         data: this.ItemNumeroOperacion
       });
-    }else{
+    } else {
       this.sinNotSer.setNotice('ERROR AL INTENTAR SIMULAR', 'error');
     }
   }
-  private cargarCampos(){
-    this.nombre.setValue( this.wrapper.cliente.nombreCompleto );
-    this.cedula.setValue( this.wrapper.cliente.identificacion );
-    this.email.setValue( this.wrapper.cliente.email );
+  private cargarCampos() {
+    this.nombre.setValue(this.wrapper.cliente.nombreCompleto);
+    this.cedula.setValue(this.wrapper.cliente.identificacion);
+    this.email.setValue(this.wrapper.cliente.email);
     !this.wrapper.cliente.telefonos ? null : this.wrapper.cliente.telefonos.forEach(e => {
-      if(e.codigoTipoTelefono == "CEL" && e.activo){
-        this.telefonoMovil.setValue( e.numero );
+      if (e.codigoTipoTelefono == "CEL" && e.activo) {
+        this.telefonoMovil.setValue(e.numero);
       }
-      if(e.codigoTipoTelefono == "DOM" && e.activo){
-        this.telefonoCasa.setValue( e.numero );
+      if (e.codigoTipoTelefono == "DOM" && e.activo) {
+        this.telefonoCasa.setValue(e.numero);
       }
     });
-    this.telefonoMovil.setValue( this.telefonoMovil.value ? this.telefonoMovil.value : 'No aplica');
-    this.telefonoCasa.setValue( this.telefonoCasa.value ? this.telefonoCasa.value : 'No aplica');
-    this.numeroOperacion.setValue( this.wrapper.credito.numeroOperacion );
-    this.numeroOperacionMupi.setValue( this.wrapper.credito.numeroOperacionMupi );
-    this.fechaAprobacion.setValue( this.wrapper.credito.fechaAprobacion );
-    this.fechaVencimiento.setValue( this.wrapper.credito.fechaVencimiento );
-    this.montoFinanciado.setValue( this.wrapper.credito.montoFinanciado );
-    this.asesor.setValue( this.wrapper.credito.codigoUsuarioAsesor );
-    this.estadoOperacion.setValue( this.wrapper.credito.codigoEstadoOperacion );
-    this.tipoCredito.setValue( this.wrapper.credito.tipoCredito );
-    this.tablaAmortizacion.setValue( this.wrapper.credito.codigoTipoTablaArmotizacionQuski );
-    this.impago.setValue( this.wrapper.credito.impago ? 'SI':'NO' );
-    this.retanqueo.setValue( this.wrapper.credito.retanqueo ? 'SI':'NO' );
-    this.esMigrado.setValue( this.wrapper.credito.esMigrado ? 'SI':'NO' );
-    this.coberturaActual.setValue( this.wrapper.credito.coberturaActual );
-    this.coberturaInicial.setValue( this.wrapper.credito.coberturaInicial );
-    this.numeroCuotas.setValue( this.wrapper.credito.numeroCuotas );
-    this.diasMora.setValue( this.wrapper.credito.diasMora );
-    this.plazo.setValue( this.wrapper.credito.plazo );
-    this.estadoUbicacion.setValue( this.wrapper.credito.codigoEstadoUbicacionGrantia );
-    this.estadoProceso.setValue( this.wrapper.credito.codigoEstadoProcesoGarantia );
-    this.descripcionBloqueo.setValue( this.wrapper.credito.datosBloqueo ? this.wrapper.credito.datosBloqueo : 'No presenta bloqueos');
+    this.telefonoMovil.setValue(this.telefonoMovil.value ? this.telefonoMovil.value : 'No aplica');
+    this.telefonoCasa.setValue(this.telefonoCasa.value ? this.telefonoCasa.value : 'No aplica');
+    this.numeroOperacion.setValue(this.wrapper.credito.numeroOperacion);
+    this.numeroOperacionMupi.setValue(this.wrapper.credito.numeroOperacionMupi);
+    this.fechaAprobacion.setValue(this.wrapper.credito.fechaAprobacion);
+    this.fechaVencimiento.setValue(this.wrapper.credito.fechaVencimiento);
+    this.montoFinanciado.setValue(this.wrapper.credito.montoFinanciado);
+    this.asesor.setValue(this.wrapper.credito.codigoUsuarioAsesor);
+    this.estadoOperacion.setValue(this.wrapper.credito.codigoEstadoOperacion);
+    this.tipoCredito.setValue(this.wrapper.credito.tipoCredito);
+    this.tablaAmortizacion.setValue(this.wrapper.credito.codigoTipoTablaArmotizacionQuski);
+    this.impago.setValue(this.wrapper.credito.impago ? 'SI' : 'NO');
+    this.retanqueo.setValue(this.wrapper.credito.retanqueo ? 'SI' : 'NO');
+    this.esMigrado.setValue(this.wrapper.credito.esMigrado ? 'SI' : 'NO');
+    this.coberturaActual.setValue(this.wrapper.credito.coberturaActual);
+    this.coberturaInicial.setValue(this.wrapper.credito.coberturaInicial);
+    this.numeroCuotas.setValue(this.wrapper.credito.numeroCuotas);
+    this.diasMora.setValue(this.wrapper.credito.diasMora);
+    this.plazo.setValue(this.wrapper.credito.plazo);
+    this.estadoUbicacion.setValue(this.wrapper.credito.codigoEstadoUbicacionGrantia);
+    this.estadoProceso.setValue(this.wrapper.credito.codigoEstadoProcesoGarantia);
+    this.descripcionBloqueo.setValue(this.wrapper.credito.datosBloqueo ? this.wrapper.credito.datosBloqueo : 'No presenta bloqueos');
     this.dataSourceRubro.data = this.wrapper.rubros;
-    this.sof.impComByOperacion(this.wrapper.credito.numeroOperacion).subscribe(p=>{
-      if(p){
+    this.sof.impComByOperacion(this.wrapper.credito.numeroOperacion).subscribe(p => {
+      if (p) {
         this.datoImpCom = p;
       }
     })
-    this.sinNotSer.setNotice('CREDITO CARGADO CORRECTAMENTE','success');
-    this.varHabilitante.proceso='CLIENTE';
-    this.varHabilitante.referencia =this.cedula.value 
-
-    this.cargarFotoHabilitante(this.wrapper.credito.uriImagenGarantiaConFunda).subscribe(p=>
-      {
+    this.sinNotSer.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
+    this.varHabilitante.proceso = 'CLIENTE';
+    this.varHabilitante.referencia = this.cedula.value
+    if (this.wrapper.credito.uriImagenGarantiaConFunda) {
+      this.cargarFotoHabilitante(this.wrapper.credito.uriImagenGarantiaConFunda).subscribe(p => {
         this.loadImgFunda.next(false);
         this.srcFunda = p;
       });
-    this.cargarFotoHabilitante(this.wrapper.credito.uriImagenGarantiaSinFunda).subscribe(p=>
-      {
+    }else{
+      this.loadImgFunda.next(false);
+    }
+
+    if (this.wrapper.credito.uriImagenGarantiaSinFunda) {
+      this.cargarFotoHabilitante(this.wrapper.credito.uriImagenGarantiaSinFunda).subscribe(p => {
         this.loadImgJoya.next(false);
-        this.srcJoya =  p;
+        this.srcJoya = p;
       });
+    }else{
+      this.loadImgJoya.next(false);
+    }
+
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
@@ -218,32 +225,32 @@ export class DetalleCreditoComponent implements OnInit {
       this.router.navigate(['credito-nuevo/']);
     });
   }
-  regresar(){
+  regresar() {
     this.router.navigate(['credito-nuevo/']);
   }
 
-  private cargarFotoHabilitante(objectId){
-       return this.obj.getObjectById(objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).pipe( switchMap((dataDos: any) => {
-          let file = JSON.parse( atob( dataDos.entidad ) );
-          return of(file.fileBase64);
-        }));
+  private cargarFotoHabilitante(objectId) {
+    return this.obj.getObjectById(objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).pipe(switchMap((dataDos: any) => {
+      let file = JSON.parse(atob(dataDos.entidad));
+      return of(file.fileBase64);
+    }));
   }
-  public mostrarTablaDeAmortizacion(){
-    this.sof.consultaTablaAmortizacionOperacionAprobadaCS(this.numeroOperacion.value).subscribe(p=>{
+  public mostrarTablaDeAmortizacion() {
+    this.sof.consultaTablaAmortizacionOperacionAprobadaCS(this.numeroOperacion.value).subscribe(p => {
       const dialogRef = this.dialog.open(TablaAmortizacionComponent, {
         width: "800px",
         height: "auto",
         data: p.cuotas
       })
     });
-      
+
   }
 
-  public irNovar(row: any){
-    if(row.codigoEstadoProcesoGarantia == 'UTI' && (row.codigoEstadoUbicacionGrantia == 'AGE' || row.codigoEstadoUbicacionGrantia == 'CUS')){
-      this.router.navigate(['novacion/crear-novacion/CRE', row.numeroOperacion]);    
-    }else{
-      this.sinNotSer.setNotice('ESTADOS DE LAS GARANTIAS INCORRECTOS. CONSULTAR CON OPERACIONES', 'info') ; 
+  public irNovar(row: any) {
+    if (row.codigoEstadoProcesoGarantia == 'UTI' && (row.codigoEstadoUbicacionGrantia == 'AGE' || row.codigoEstadoUbicacionGrantia == 'CUS')) {
+      this.router.navigate(['novacion/crear-novacion/CRE', row.numeroOperacion]);
+    } else {
+      this.sinNotSer.setNotice('ESTADOS DE LAS GARANTIAS INCORRECTOS. CONSULTAR CON OPERACIONES', 'info');
     }
   }
 

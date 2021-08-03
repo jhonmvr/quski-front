@@ -7,11 +7,13 @@ import { AuthDialogComponent } from '../../../app/views/partials/custom/auth-dia
 import { ReNoticeService } from '../services/re-notice.service';
 import { MatDialog } from '@angular/material';
 import { environment } from '../../../environments/environment';
+import { TrackingService } from '../services/quski/tracking.service';
 
 @Injectable()
 export class LoaderInterceptor implements HttpInterceptor {
   count = 0;
-  constructor(public loaderService: SharedService, private sinNoticeService: ReNoticeService, private dialog: MatDialog) { }
+  constructor(public loaderService: SharedService, private sinNoticeService: ReNoticeService, 
+    private dialog: MatDialog, private trs:TrackingService) { }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     if(JSON.stringify(req).indexOf("/api/") >= 0 || JSON.stringify(req).indexOf("/token") >= 0){
@@ -79,12 +81,27 @@ export class LoaderInterceptor implements HttpInterceptor {
     }
     let errorMessage = '';
     if (error.status === 401) {
+      let fecha = new Date();
+     
+  
       errorMessage = 'Error: ' + error.statusText;
-      this.dialog.open(AuthDialogComponent, {
+      const ref = this.dialog.open(AuthDialogComponent, {
         data: {
+          codigo: localStorage.getItem('date') == fecha.getFullYear() + '-' + fecha.getMonth() + '-' + fecha.getDay() ?'REFRESH':'CLOSE',
           mensaje: "Error " + error.statusText + " - " + error.message
         }
       });
+      
+      ref.afterClosed().subscribe((p:any)=>{
+        if(p.respuesta){
+          this.trs.getTokenApi().subscribe((h:any)=>{
+            localStorage.setItem(environment.token_type,h.token_type );
+            localStorage.setItem(environment.access_token,h.access_token );
+            this.sinNoticeService.setNotice('SE REINICIO EL TOKEN', 'success');
+          });
+        }
+       
+      })
     } else if (error.status === 403) {
       errorMessage = 'Error: ' + error.statusText;
       //this.securityService.resetPasswordRequired();

@@ -7,6 +7,7 @@ import { environment } from '../../../../../environments/environment';
 
 export interface DialogData {
   mensaje: string;
+  codigo:string;
 }
 
 
@@ -41,6 +42,8 @@ export class AuthDialogComponent implements OnInit {
     this.dialogRef.close();
   }
   
-
+  refreshToken(){
+    this.dialogRef.close( {respuesta:'refresh'});
+  }
 
 }

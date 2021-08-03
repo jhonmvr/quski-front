@@ -145,7 +145,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 						console.log("=en tap termino exiete login " + usuarioAuth.accessToken );
 						localStorage.setItem( environment.userKey, btoa( authData.email)  );
 						localStorage.setItem( environment.authKey, btoa( ""+ usuarioAuth.id) );
-						localStorage.setItem( environment.hashWebSocketKey,uuid.v4() )
+						localStorage.setItem( environment.hashWebSocketKey,uuid.v4() );
+						let fecha = new Date();
+						fecha.getDay()
+						localStorage.setItem( 'date',fecha.getFullYear() +'-'+fecha.getMonth()+'-'+fecha.getDay())
 						this.store.dispatch(new Login({authToken: usuarioAuth.accessToken}));
 						//let user = new User();
 						//user.fullname = usuarioAuth.fullname;

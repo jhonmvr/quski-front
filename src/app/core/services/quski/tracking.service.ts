@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 // import { Http, Headers, Response, RequestOptions, URLSearchParams, ResponseContentType } from '@angular/http';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { TbQoTracking } from '../../model/quski/TbQoTracking';
 import { Page } from '../../model/page';
 
@@ -9,6 +9,7 @@ import { Page } from '../../model/page';
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { TrakingWrapper } from '../../../views/pages/apps/tracking/list-tracking/list-tracking.component';
+import { environment } from '../../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -152,5 +153,25 @@ export class TrackingService extends BaseService {
       )
     );
   }
+
+  public getTokenApi(){
+    const headersLoc= new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded' });
+    const params = new HttpParams()
+    .set("grant_type", 'client_credentials' );
+    let optionsLoc = {
+      headers: headersLoc,
+      params:params
+    };
+    let keyUnencrypt = atob( localStorage.getItem('localRE011'));
+    //Url de acceso al rootcontext de seguridad core-security-web
+    let token = atob(localStorage.getItem('localRE020') ).replace(keyUnencrypt, '');
+    localStorage.setItem(environment.token_type,'basic');
+    localStorage.setItem(environment.access_token,token);
+    
+    let wp = { }
+    return this.http.post( atob(environment.api_t),wp, optionsLoc);
+  }
+
+ 
 
 }
