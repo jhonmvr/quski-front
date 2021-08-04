@@ -66,22 +66,22 @@ export class BandejaAprobadorComponent implements OnInit {
   private buscarOperaciones(wrapper?: BusquedaAprobadorWrapper) {
     this.pro.buscarOperacionesAprobador(wrapper).subscribe( (data: any) =>{
       if( data.entidad  && data.entidad.operaciones){
-        let operaciones: OperacionesAprobadorWrapper[] = data.entidad.operaciones;
-        operaciones.forEach(e=>{
-          e.nombreAgencia = !e.idAgencia || e.idAgencia == 0 ? 'Sin Agencia' : this.catAgencia.find(a => a.id == e.idAgencia) ? this.catAgencia.find(a => a.id == e.idAgencia).nombre : 'Sin Agencia' ;  
-          e.proceso = e.proceso.replace(/_/gi," ");
-          e.nombreCliente = e.nombreCliente.replace(/_/gi," ");
-          e.aprobador = e.aprobador ? e.aprobador.toUpperCase() == 'NULL' ? 'Libre' : e.aprobador : 'Libre';
-          e.codigoOperacion = !e.codigoOperacion || e.codigoOperacion.toUpperCase() == 'NULL' ? 'Sin Codigo' : e.codigoOperacion;
-          e.fechaSolicitud = e.fechaSolicitud;
-        });
-        this.dataSource.data = operaciones;
+       
+        this.dataSource = new MatTableDataSource<any>(data.entidad.operaciones);
         this.paginator.length = data.entidad.result;
       } else {
         this.paginator.length = 0;
         this.dataSource.data = null;
       }
     });
+  }
+
+  getNombreAgencia(idAgencia){
+    if(this.catAgencia && this.catAgencia.length >0){
+       const age = this.catAgencia.find(p=>p.id ==idAgencia);
+       return age?age.nombre:'SIN AGENCIA'
+    }
+    
   }
    /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @FUNCIONALIDAD ** */
    public getErrorMessage(pfield: string) {
@@ -172,8 +172,8 @@ export class BandejaAprobadorComponent implements OnInit {
 
     }
   }
-  public abrirSolicitud(row: OperacionesAprobadorWrapper ){
-    this.pro.validarAprobador( row.id, row.proceso.replace(/ /gi,"_",), this.usuario).subscribe( (data: any) =>{
+  public abrirSolicitud(row ){
+    this.pro.validarAprobador( row.idReferencia, row.proceso, this.usuario, row.id).subscribe( (data: any) =>{
       let mensaje;
       if(data.entidad){
         mensaje = 'Tomar y gestionar la operacion '+row.codigoBpm+'. Que actualmente esta tomada por: '+ data.entidad;
@@ -187,41 +187,41 @@ export class BandejaAprobadorComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          this.pro.asignarAprobador( row.id, row.proceso.replace(/ /gi,"_",), this.usuario).subscribe( (data: any) =>{
+          this.pro.asignarAprobador( row.idReferencia, row.proceso, this.usuario, row.id).subscribe( (data: any) =>{
             if(data.entidad){
               if(row.proceso =="NUEVO"){
                 this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.id]);    
+                this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.idReferencia]);    
               }
               if(row.proceso =="RENOVACION"){
                 this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                this.router.navigate(['fabrica/aprobacion-novacion/',row.id]);    
+                this.router.navigate(['fabrica/aprobacion-novacion/',row.idReferencia]);    
               }
-              if(row.proceso =="PAGO" && row.codigoBpm.includes('PAGO') ){
+              if(row.proceso =="PAGO" && row.codigo.includes('PAGO') ){
                 this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                this.router.navigate(['credito-nuevo/gestion-credito/aprobar-pagos/',row.id]);
+                this.router.navigate(['credito-nuevo/gestion-credito/aprobar-pagos/',row.idReferencia]);
               }
-              if(row.proceso =="PAGO" && row.codigoBpm.includes('BLOQ') ){
+              if(row.proceso =="PAGO" && row.codigo.includes('BLOQ') ){
                 this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                this.router.navigate(['credito-nuevo/gestion-credito/aprobar-bloqueo-fondos/',row.id]);  
+                this.router.navigate(['credito-nuevo/gestion-credito/aprobar-bloqueo-fondos/',row.idReferencia]);  
               }
               if(row.proceso =="DEVOLUCION"){
-                this.pro.findByIdReferencia(row.id, row.proceso).subscribe( (dat:any) =>{
+                this.pro.findByIdReferencia(row.idReferencia, row.proceso).subscribe( (dat:any) =>{
                   if(dat.entidad.estadoProceso == 'PENDIENTE_APROBACION_FIRMA'){
-                    this.router.navigate(['devolucion/verificacion-firmas/', row.id]);
+                    this.router.navigate(['devolucion/verificacion-firmas/', row.idReferencia]);
                     this.sinNotSer.setNotice("OPERACION DE VERIFICACION DE FIRMA ASIGNADA A: "+ data.entidad,"success");
                   }else{
-                    this.router.navigate(['devolucion/aprobar-solicitud-devolucion/', row.id]);
+                    this.router.navigate(['devolucion/aprobar-solicitud-devolucion/', row.idReferencia]);
                     this.sinNotSer.setNotice("OPERACION DE SOLICITUD DE DEVOLUCION ASIGNADA A: "+ data.entidad,"success");
                   }
                 });
               } 
-              if(row.proceso =="CANCELACION DEVOLUCION"){
+              if(row.proceso =="CANCELACION_DEVOLUCION"){
                 this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
                 this.router.navigate(['devolucion/aprobacion-cancelacion-solicitud/', row.id]);
               }
               
-              if(row.proceso =="VERIFICACION TELEFONICA"){
+              if(row.proceso =="VERIFICACION_TELEFONICA"){
                 this.sinNotSer.setNotice("APROBACION VERIFICACION TELEFONICA, SIN DESARROLLO",'warning');
                 this.limpiarFiltros();
                 this.router.navigate(['aprobador']);    

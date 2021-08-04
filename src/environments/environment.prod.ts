@@ -62,5 +62,5 @@ export const environment = {
  //apigw
  api_t:"aHR0cHM6Ly9wbGF0YWZvcm1hLW9yby5xdXNraS5lYzoyODg4OC90b2tlbg==",
  
- apitoken:'dVprYTFoSnNwWno1RFBPVVYyNzlQOUMwOTNVYTpoZm00eml0VGNQZWhpVW1iVXRsaUVMdFAzOWdh',
+ apitoken:'blVZekRtZmdaelYyWmdEWWZCRklMbDVaNGJ3YToxdWRYQXV2bWFfc0dpcG5yUFhLbWpSb21HR0lh',
 };

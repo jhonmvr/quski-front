@@ -116,9 +116,8 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
     this.cre.setParameter();
     this.sof.setParameter();
     this.dev.setParameter();
-    this.cargarCatalogos();
     this.subheaderService.setTitle('FLUJO DE CANCELACION DE DEVOLUCION');
-
+    this.cargarCatalogos();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem('idAgencia');
   }
@@ -199,7 +198,7 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
 
     this.varHabilitante.proceso = this.procesoHablitante;
-    this.varHabilitante.referencia = this.item;
+    this.varHabilitante.referencia = this.wrapperDevolucion.devolucion.id;
   }
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {
@@ -286,7 +285,7 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
     dialogRef.afterClosed().subscribe(r => {
       if (r) {
         if( aprobado ){
-          this.dev.aprobarCancelacionSolicitudDevolucion(this.item).subscribe((data: any) => {
+          this.dev.aprobarCancelacionSolicitudDevolucion(this.wrapperDevolucion.devolucion.id).subscribe((data: any) => {
             if (data.entidad) {
               this.sinNoticeService.setNotice("SE HA CANCELADO CORRECTAMENTE LA DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo, "success");
               this.router.navigate(['aprobador/bandeja-aprobador']);
@@ -295,7 +294,7 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
             this.sinNoticeService.setNotice(error.error.codError, 'warning')
           });
         }else{
-          this.dev.rechazarCancelacionSolicitudDevolucion(this.item).subscribe((data: any) => {
+          this.dev.rechazarCancelacionSolicitudDevolucion(this.wrapperDevolucion.devolucion.id).subscribe((data: any) => {
             if (data.entidad) {
               this.sinNoticeService.setNotice("SE HA CANCELADO CORRRECTAMENTE LA DEVOLUCION: "+ this.wrapperDevolucion.devolucion.codigo, "success")
               this.router.navigate(['aprobador/bandeja-aprobador']);

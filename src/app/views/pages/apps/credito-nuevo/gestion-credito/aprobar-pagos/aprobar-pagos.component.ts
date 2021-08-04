@@ -126,8 +126,9 @@ export class AprobarPagosComponent implements OnInit {
     });
   }
   public enviarRespuesta(aprobar){
-    if(this.valorDepositadoAprobador.invalid){
+    if(aprobar && this.valorDepositadoAprobador.invalid){
       this.sinNoticeService.setNotice("INGRESE EL VALOR DEPOSITADO",'error');
+      return;
     }
     let mensaje = aprobar ? 
     "Aprobar el proceso de registro de pago con el codigo: " + this.cliente.codigo:

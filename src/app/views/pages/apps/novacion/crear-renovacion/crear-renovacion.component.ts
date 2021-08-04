@@ -459,8 +459,10 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     let cliente = {} as cliente;
     cliente.identificacion = this.credit.operacionAnterior.cliente.identificacion;
     let fecha = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
-    let mes = (fecha.getMonth() < 10 ? fecha.getMonth() == 0 ? '12':'0'+fecha.getMonth() : fecha.getMonth())  
-    cliente.fechaNacimiento = (fecha.getDate() < 10 ? '0'+fecha.getDate() : fecha.getDate()) +'/' + mes +'/' + fecha.getFullYear(); 
+    let mes1 = fecha.getMonth() +1;
+    let mes  = ( mes1 < 10 ? mes1 == 0 ? '12':'0'+mes1 : mes1) ;
+    let dia = fecha.getDate() +1;
+    cliente.fechaNacimiento = (dia < 10 ? '0'+dia : dia) +'/' + mes +'/' + fecha.getFullYear(); 
     let wrapper : any = { cliente: null, credito: null, garantias: null}
     wrapper.cliente =  cliente;
     wrapper.credito = this.credit.operacionAnterior.credito;

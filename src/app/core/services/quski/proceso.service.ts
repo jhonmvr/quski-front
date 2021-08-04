@@ -104,9 +104,9 @@ export class ProcesoService extends BaseService {
       )
     );
   }
-  public asignarAprobador(idReferencia: number, proceso: string, aprobador: string ) {
+  public asignarAprobador(idReferencia: number, proceso: string, aprobador: string, idProceso ) {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'asignarAprobador';
-    this.params = new HttpParams().set('idReferencia', idReferencia.toString()).set('proceso', proceso).set('aprobador',aprobador);
+    this.params = new HttpParams().set('idReferencia', idReferencia.toString()).set('idProceso', idProceso.toString()).set('proceso', proceso).set('aprobador',aprobador);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -115,9 +115,9 @@ export class ProcesoService extends BaseService {
       )
     );
   }
-  public validarAprobador(idReferencia: number, proceso: string, aprobador: string ) {
+  public validarAprobador(idReferencia: number, proceso: string, aprobador: string, idProceso ) {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'validarAprobador';
-    this.params = new HttpParams().set('idReferencia', idReferencia.toString()).set('proceso', proceso).set('aprobador',aprobador);
+    this.params = new HttpParams().set('idReferencia', idReferencia.toString()).set('idProceso', idProceso.toString()).set('proceso', proceso).set('aprobador',aprobador);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

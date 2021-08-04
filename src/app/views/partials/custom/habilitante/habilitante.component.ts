@@ -413,7 +413,9 @@ export class HabilitanteComponent implements OnInit {
       estadoOperacion:this.estadoOperacion,
       referencia:this.referencia,
       tipoDocumento:element.idTipoDocumento,
-      documentoHabilitante:element.idDocumentoHabilitante
+      documentoHabilitante:element.idDocumentoHabilitante,
+      objectId : element.objectId
+
     };
 
     if (this.referencia) {

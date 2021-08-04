@@ -1,15 +1,13 @@
- 
-
 <re-portlet>
-	<re-portlet-header [title]="'BANDEJA PRINCIPAL DE ASIGNACIÓN BAJO DEMANDA'" [class]="'kt-portlet__head--lg'">
-		<ng-container ktPortletTools>
-			<a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
-			</a>
-		</ng-container>
-	</re-portlet-header>
-	<re-portlet-body>
+    <re-portlet-header [title]="'BANDEJA PRINCIPAL DE ASIGNACIÓN BAJO DEMANDA'" [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTools>
+            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
+            </a>
+        </ng-container>
+    </re-portlet-header>
+    <re-portlet-body>
         <div class="row">
             <div class="col-12">
                 <form [formGroup]="formFiltro">
@@ -22,8 +20,7 @@
                         </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="cedula" placeholder="C.I." autocomplete="off" matInput numeric numericType="number"
-                                    (keypress)="numberOnly($event)" />
+                                <input [formControl]="cedula" placeholder="C.I." autocomplete="off" matInput numeric numericType="number" (keypress)="numberOnly($event)" />
                                 <mat-error>{{ getErrorMessage("cedula") }}</mat-error>
                             </mat-form-field>
                         </div>
@@ -65,47 +62,47 @@
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="codigoBpm">
-                        <mat-header-cell *matHeaderCellDef >Codigo Bpm</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.codigoBpm | uppercase  }}</mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Codigo Bpm</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.codigo | uppercase }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="codigoOperacion">
-                        <mat-header-cell *matHeaderCellDef >Codigo Operacion</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.codigoOperacion | titlecase  }}</mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Codigo Operacion</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.operacion | uppercase }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="proceso">
-                        <mat-header-cell *matHeaderCellDef >Proceso</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.proceso | titlecase  }}</mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Proceso</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.proceso | uppercase }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="fechaSolicitud">
-                        <mat-header-cell *matHeaderCellDef >Fecha Solicitud</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.fechaSolicitud  | rDate}}</mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Fecha Solicitud</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.fechaActualizacion | rDate}}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="cedulaCliente">
-                        <mat-header-cell *matHeaderCellDef >Cedula Cliente</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef>Cedula Cliente</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ element.cedulaCliente }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="nombreCliente">
-                        <mat-header-cell *matHeaderCellDef >Nombre Cliente</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.nombreCliente | titlecase }}</mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.nombreCompleto | uppercase }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="nombreAgencia">
-                        <mat-header-cell *matHeaderCellDef >Agencia</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.nombreAgencia | titlecase  }}</mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Agencia</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ getNombreAgencia(element.idAgencia) }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="asesor">
-                        <mat-header-cell *matHeaderCellDef >Asesor</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef>Asesor</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ element.asesor | titlecase }}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="aprobador">
-                        <mat-header-cell *matHeaderCellDef >Aprobador</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.aprobador | titlecase }}</mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Aprobador</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.aprobador != 'NULL'?element.aprobador:'Libre' }}</mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
                 </mat-table>
-                <mat-paginator #paginator  [pageSizeOptions]="[5, 10, 20]" (page)="paged()"></mat-paginator>
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" (page)="paged()"></mat-paginator>
             </div>
         </div>
-	</re-portlet-body>
-	<re-portlet-footer></re-portlet-footer>
+    </re-portlet-body>
+    <re-portlet-footer></re-portlet-footer>
 </re-portlet>

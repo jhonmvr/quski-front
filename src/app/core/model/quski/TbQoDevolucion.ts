@@ -3,7 +3,7 @@ import { TbQoTasacion } from "./TbQoTasacion";
 import { TbQoCliente } from "./TbQoCliente";
 
 export class TbQoDevolucion {
-    id:number;
+    id:any;
     codigo: string;
     asesor: string;
     aprobador: string;

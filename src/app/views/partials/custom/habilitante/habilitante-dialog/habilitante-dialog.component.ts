@@ -78,26 +78,50 @@ export class HabilitanteDialogComponent implements OnInit {
 
   public subirArchivoHabilitante() {
     this.uploadSubject.next(true);
-    this.os.createObject( JSON.stringify( this.dataUpload ), this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe( (objectData:any)=>{
-      if( objectData && objectData.entidad ){
-        let archivo:DataUpload = {fileBase64:"",
-        name:this.dataUpload.name,
-        objectId:objectData.entidad,
-        process:this.dataUpload.process,
-        relatedId:this.dataUpload.relatedId,
-        relatedIdStr:this.dataUpload.relatedIdStr,
-        type:this.dataUpload.type,
-        typeAction:this.dataUpload.typeAction,
-
+    if(this.data.objectId){
+      this.os.updateObject( JSON.stringify( this.dataUpload ), this.os.mongoDb, environment.mongoHabilitanteCollection, this.data.objectId).subscribe( (objectData:any)=>{
+        if( objectData && objectData.entidad ){
+          let archivo:DataUpload = {fileBase64:"",
+          name:this.dataUpload.name,
+          objectId:objectData.entidad,
+          process:this.dataUpload.process,
+          relatedId:this.dataUpload.relatedId,
+          relatedIdStr:this.dataUpload.relatedIdStr,
+          type:this.dataUpload.type,
+          typeAction:this.dataUpload.typeAction,
+  
+          }
+          this.dataUpload.objectId=objectData.entidad;
+          this.fileBase64=null;
+          this.upload.uploadFile(this.upload.appResourcesUrl +"uploadRestController/loadFileHabilitanteSimplified",archivo).subscribe((data: any) => {
+            this.dialogRef.close(data.relatedIdStr);
+            this.uploadSubject.next(false);
+          });
         }
-        this.dataUpload.objectId=objectData.entidad;
-        this.fileBase64=null;
-        this.upload.uploadFile(this.upload.appResourcesUrl +"uploadRestController/loadFileHabilitanteSimplified",archivo).subscribe((data: any) => {
-          this.dialogRef.close(data.relatedIdStr);
-          this.uploadSubject.next(false);
-        });
-      }
-    });
+      });
+    }else{
+      this.os.createObject( JSON.stringify( this.dataUpload ), this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe( (objectData:any)=>{
+        if( objectData && objectData.entidad ){
+          let archivo:DataUpload = {fileBase64:"",
+          name:this.dataUpload.name,
+          objectId:objectData.entidad,
+          process:this.dataUpload.process,
+          relatedId:this.dataUpload.relatedId,
+          relatedIdStr:this.dataUpload.relatedIdStr,
+          type:this.dataUpload.type,
+          typeAction:this.dataUpload.typeAction,
+  
+          }
+          this.dataUpload.objectId=objectData.entidad;
+          this.fileBase64=null;
+          this.upload.uploadFile(this.upload.appResourcesUrl +"uploadRestController/loadFileHabilitanteSimplified",archivo).subscribe((data: any) => {
+            this.dialogRef.close(data.relatedIdStr);
+            this.uploadSubject.next(false);
+          });
+        }
+      });
+    }
+    
   }
 
 

@@ -26,6 +26,18 @@ export class ObjectStorageService extends BaseService {
     return this.http.post( this.genericResourcesUrl+ "mongoRestController/createObjectBigZ", {objectEncripted:objectEncripted},optionsLoc );
   }
 
+  updateObject(objectEncripted :string, databamongoDb:string,mongoColeccion:string, objectId ){ 
+    const headersLoc= new HttpHeaders({'Authorization':environment.authprefix+ localStorage.getItem(environment.authTokenKey), 
+    'Content-Type': 'application/json' });
+    const params = new HttpParams()
+    .set("databaseName",databamongoDb ).set("collectionName",mongoColeccion).set("objectId",objectId);
+    let optionsLoc = {
+      headers: headersLoc,
+      params:params
+    };
+    return this.http.post( this.genericResourcesUrl+ "mongoRestController/updateObjectBigZ", {objectEncripted:objectEncripted},optionsLoc );
+  }
+
   getObjectById(objectId:string, databamongoDb:string,mongoColeccion:string ){ 
     const headersLoc= new HttpHeaders({'Authorization':environment.authprefix+ localStorage.getItem(environment.authTokenKey), 
     'Content-Type': 'application/json' });

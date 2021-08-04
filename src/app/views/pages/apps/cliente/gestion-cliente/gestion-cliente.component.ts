@@ -598,7 +598,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     }
   }
   public getErrorMessage(pfield: string) {
-    const errorRequerido = 'Ingresar valores';
+    const errorRequerido = 'Ingresar valores / seleccione una opcion';
     const errorEmail = 'Correo Incorrecto';
     const errorNumero = 'Ingreso solo numeros';
     const invalidIdentification = 'La identificacion no es valida';

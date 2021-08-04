@@ -4,4 +4,5 @@ export interface DialogDataHabilitante {
     referencia:string;
     tipoDocumento:string;
     documentoHabilitante:string;
+    objectId: string;
   }

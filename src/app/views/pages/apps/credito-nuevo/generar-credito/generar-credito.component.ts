@@ -493,21 +493,22 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   public cargarFotoJoya() {
     this.srcJoya = null;
     this.loadImgJoya.next(true);
-    this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.item, this.joyaFoto.tipoDocumento,this.fotoJoya?this.fotoJoya.id:null);
+    this.loadArchivoCliente(this.joyaFoto.proceso, this.joyaFoto.estadoOperacion, this.item, this.joyaFoto.tipoDocumento,this.fotoJoya?this.fotoJoya.id:null, this.fotoJoya?this.fotoJoya.objectId:null);
   }
   public cargarFotoFunda() {
     this.srcFunda = null;
     this.loadImgFunda.next(true);
-    this.loadArchivoCliente(this.fundaFoto.proceso, this.fundaFoto.estadoOperacion, this.item, this.fundaFoto.tipoDocumento,this.fotoFunda?this.fotoFunda.id:null);
+    this.loadArchivoCliente(this.fundaFoto.proceso, this.fundaFoto.estadoOperacion, this.item, this.fundaFoto.tipoDocumento,this.fotoFunda?this.fotoFunda.id:null, this.fotoFunda?this.fotoFunda.objectId:null);
   }
-  private loadArchivoCliente(procesoS: string, estadoOperacionS: string, referenciaS: string, idTipoDocumentoS: string, idDocumentohabilitante) {
+  private loadArchivoCliente(procesoS: string, estadoOperacionS: string, referenciaS: string, idTipoDocumentoS: string, idDocumentohabilitante,objectId) {
   console.log("numero de referencia del docuemnto",referenciaS,idDocumentohabilitante);
     let envioModel : DialogDataHabilitante = {
       proceso: procesoS,
       estadoOperacion: estadoOperacionS,
       referencia: referenciaS,
       tipoDocumento: idTipoDocumentoS,
-      documentoHabilitante: idDocumentohabilitante
+      documentoHabilitante: idDocumentohabilitante,
+      objectId: objectId
     };
     if (envioModel.referencia) {
       //HabilitanteDialogComponent  AddFotoComponent
