@@ -223,8 +223,29 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   }
   private validarNegociacion(id) {
     this.neg.traerNegociacionExistente(id).subscribe((wrapper: any) => {
+      
       if (wrapper.entidad.respuesta) {
         this.negoW = wrapper.entidad;
+
+        if(this.negoW.proceso.estadoProceso == 'CREADO'){
+            if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
+            this.abrirPopupExcepciones(new DataInjectExcepciones(true));
+            return;
+          } else   if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 1) {
+            this.clienteBloqueado = true;
+            const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+              width: "800px",
+              height: "auto",
+              data: {
+                mensaje: this.negoW.excepcionBre
+                , titulo: 'CODIGO DE ERROR BRE: ' +this.negoW.codigoExcepcionBre
+              }
+            });
+          
+          }
+        }
+        
+
         this.negoW.proceso.proceso == 'NUEVO' ? null : this.salirDeGestion('Error al buscar proceso relacionado a la operacion');
         this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : this.validarExcepciones(this.negoW);
         this.cargarValores(this.negoW, true);

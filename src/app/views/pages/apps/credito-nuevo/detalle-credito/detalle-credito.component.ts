@@ -23,7 +23,9 @@ import { TablaAmortizacionComponent } from '../../../../../../app/views/partials
 export class DetalleCreditoComponent implements OnInit {
   varHabilitante = { proceso: '', referencia: '' };
   public wrapper: any;
+  datosBloqueo = new MatTableDataSource<any>();
   loadImgJoya = new BehaviorSubject<Boolean>(false);
+  validateBloqueo = new BehaviorSubject<Boolean>(false);
   validateRenovacion = new BehaviorSubject<Boolean>(false);
   loadImgFunda = new BehaviorSubject<Boolean>(false);
   srcJoya;
@@ -181,7 +183,8 @@ export class DetalleCreditoComponent implements OnInit {
     this.plazo.setValue(this.wrapper.credito.plazo);
     this.estadoUbicacion.setValue(this.wrapper.credito.codigoEstadoUbicacionGrantia);
     this.estadoProceso.setValue(this.wrapper.credito.codigoEstadoProcesoGarantia);
-    this.descripcionBloqueo.setValue(this.wrapper.credito.datosBloqueo ? this.wrapper.credito.datosBloqueo : 'No presenta bloqueos');
+    //this.descripcionBloqueo.setValue(this.wrapper.credito.datosBloqueo ? null : 'No presenta bloqueos');
+    this.datosBloqueo = new MatTableDataSource<any>(this.wrapper.credito.datosBloqueo);
     this.dataSourceRubro.data = this.wrapper.rubros;
     this.sof.impComByOperacion(this.wrapper.credito.numeroOperacion).subscribe(p => {
       if (p) {

@@ -92,9 +92,10 @@ export class DevolucionService extends BaseService {
   }
 
 
-  public aprobarNegarSolicitudDevolucion(idDevolucion, aprobado){
+  public aprobarNegarSolicitudDevolucion(idDevolucion, aprobado,motivo){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/aprobarNegarSolicitudDevolucion";
-    this.params = this.params.set('idDevolucion', idDevolucion).set('aprobado', aprobado).set('usuario', atob(localStorage.getItem(environment.userKey) ))
+    this.params = this.params.set('idDevolucion', idDevolucion).set('motivo', motivo)
+    .set('aprobado', aprobado).set('usuario', atob(localStorage.getItem(environment.userKey) ))
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

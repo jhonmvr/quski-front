@@ -591,13 +591,21 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.router.navigate(['aprobador']);  
   }
 
+  cambiarHabilitantes(proceso,referencia){
+    this.varHabilitante = {proceso:'',referencia:''};
+    this.varHabilitante = {
+      proceso:proceso,
+      referencia:referencia
+    };
+
+  }
 
   private cargarFotoHabilitante(tipoDocumento, proceso, referencia):Observable<String> {
     console.log("cargar documentos fotos",tipoDocumento, proceso, referencia);
     return this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).pipe(switchMap(data=> 
          this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).pipe(switchMap((dataDos: any) => {
           let file = JSON.parse( atob( dataDos.entidad ) );
-          return of(file.fileBase64);
+          return of(file?file.fileBase64:'');
         }))
     ));
   }

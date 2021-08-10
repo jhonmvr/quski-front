@@ -290,8 +290,6 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
               this.sinNoticeService.setNotice("SE HA CANCELADO CORRECTAMENTE LA DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo, "success");
               this.router.navigate(['aprobador/bandeja-aprobador']);
             }
-          }, error =>{
-            this.sinNoticeService.setNotice(error.error.codError, 'warning')
           });
         }else{
           this.dev.rechazarCancelacionSolicitudDevolucion(this.wrapperDevolucion.devolucion.id).subscribe((data: any) => {
@@ -299,8 +297,6 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
               this.sinNoticeService.setNotice("SE HA CANCELADO CORRRECTAMENTE LA DEVOLUCION: "+ this.wrapperDevolucion.devolucion.codigo, "success")
               this.router.navigate(['aprobador/bandeja-aprobador']);
             } 
-          }, error =>{
-            this.sinNoticeService.setNotice(error.error.codError, "warning")
           });
         }
       } else {

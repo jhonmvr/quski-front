@@ -1,89 +1,85 @@
-<mat-progress-bar *ngIf="buscarObservable.asObservable() | async"   mode="indeterminate" ></mat-progress-bar>
+<mat-progress-bar *ngIf="buscarObservable.asObservable() | async" mode="indeterminate"></mat-progress-bar>
 <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourcesHabilitantes">
-  <ng-container matColumnDef="N">
-    <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
-    <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>
-    <td mat-footer-cell *matFooterCellDef> - </td>
-  </ng-container>
-  <ng-container matColumnDef="descripcion">
-    <mat-header-cell *matHeaderCellDef>Descripción </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.descripcionTipoDocumento}}</mat-cell>
-  </ng-container>
-  <ng-container matColumnDef="generar">
-    <mat-header-cell *matHeaderCellDef>Generar </mat-header-cell>
-    <mat-cell  *matCellDef="let element">
-     <a href="javascript:void(0);" (click)="descargarPlantillaHabilitante(element)" *ngIf="getPermiso('DESCARGA_PLA',element.roles)">
-        <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Descarga archivo">cloud_download</mat-icon>
-        <span style="position: relative;top: -10px;margin-left: 5px;">Documentos legales</span>
-      </a>
-    </mat-cell>
-  </ng-container>
-  <ng-container matColumnDef="respaldar">
-    <mat-header-cell *matHeaderCellDef>Subir </mat-header-cell>
-    <mat-cell *matCellDef="let element">
-      <a href="javascript:void(0);" *ngIf="getPermiso('CARGA_ARC',element.roles)" (click)="loadArchivoCliente(element); $event.preventDefault()">
-          <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
-          <span style="position: relative;top: -10px;margin-left: 5px;">Carga Archivo</span>
-      </a>
-    </mat-cell>
-  </ng-container>
-  <ng-container matColumnDef="archivoCargado">
-    <mat-header-cell *matHeaderCellDef>Archivo cargado </mat-header-cell>
-    <mat-cell *matCellDef="let element"> 
-        <a href="javascript:void(0);" *ngIf="getPermiso('DESCARGA_ARC',element.roles) && element.objectId" 
-        (click)="descargarArchivoHabilitante(element)">
-            <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Descarga Digital">get_app</mat-icon> 
-            <span style="position: relative;top: -10px;margin-left: 5px;">Descarga Digital</span>
-          </a>
-    </mat-cell>
-  </ng-container>
-  <ng-container matColumnDef="archivo">
-    <mat-header-cell *matHeaderCellDef>Archivo cargado </mat-header-cell>
-    <mat-cell *matCellDef="let element"> 
-      <mat-icon *ngIf="!element.objectId">close</mat-icon>
-      <mat-icon *ngIf="element.objectId">check</mat-icon>
-    </mat-cell>
-  </ng-container>
-  <mat-header-row *matHeaderRowDef="displayedColumnDocumentos"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumnDocumentos;"></mat-row>
+    <ng-container matColumnDef="N">
+        <mat-header-cell *matHeaderCellDef> N. </mat-header-cell>
+        <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>
+        <td mat-footer-cell *matFooterCellDef> - </td>
+    </ng-container>
+    <ng-container matColumnDef="descripcion">
+        <mat-header-cell *matHeaderCellDef>Descripción </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.descripcionTipoDocumento}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="generar">
+        <mat-header-cell *matHeaderCellDef>Generar </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <a href="javascript:void(0);" (click)="descargarPlantillaHabilitante(element)" *ngIf="getPermiso('DESCARGA_PLA',element.roles)">
+                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Descarga archivo">cloud_download</mat-icon>
+                <span style="position: relative;top: -10px;margin-left: 5px;">Documentos legales</span>
+            </a>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="respaldar">
+        <mat-header-cell *matHeaderCellDef>Subir </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <a href="javascript:void(0);" *ngIf="getPermiso('CARGA_ARC',element.roles)" (click)="loadArchivoCliente(element); $event.preventDefault()">
+                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Subir Archivo">cloud_upload</mat-icon>
+                <span style="position: relative;top: -10px;margin-left: 5px;">Carga Archivo</span>
+            </a>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="archivoCargado">
+        <mat-header-cell *matHeaderCellDef>Archivo cargado </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <a href="javascript:void(0);" *ngIf="getPermiso('DESCARGA_ARC',element.roles,element)" (click)="descargarArchivoHabilitante(element)">
+                <mat-icon style="font-size: 32px" matTooltipPosition="above" matTooltip="Descarga Digital">get_app</mat-icon>
+                <span style="position: relative;top: -10px;margin-left: 5px;">Descarga Digital</span>
+            </a>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="archivo">
+        <mat-header-cell *matHeaderCellDef>Archivo cargado </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <mat-icon *ngIf="!element.objectId">close</mat-icon>
+            <mat-icon *ngIf="element.objectId">check</mat-icon>
+        </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumnDocumentos"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumnDocumentos;"></mat-row>
 
 </mat-table>
-<mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" 
-            [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
-            </mat-paginator>
+<mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+</mat-paginator>
 <div class="row">
     <div class="col-md-4">
     </div>
     <div class="col-md-2">
-        <a href="javascript:void(0);"  *ngIf="getPermiso('ACCION_UNO',acciones) && enableEnd" 
-        (click)="accionUno()" matTooltip="Termina Habilitantes" style="font-size: 12px; vertical-align: middle;">
+        <a href="javascript:void(0);" *ngIf="getPermiso('ACCION_UNO',acciones) && enableEnd" (click)="accionUno()" matTooltip="Termina Habilitantes" style="font-size: 12px; vertical-align: middle;">
             <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="">check-circle</mat-icon>
             <span style="position: relative;top: -10px;margin-left: 5px;">Termina Habilitantes</span>
         </a>
-      <!--button *ngIf="enableContrato | async" type="button" mat-button matTooltip="Cerrar" class="text-dark">
+        <!--button *ngIf="enableContrato | async" type="button" mat-button matTooltip="Cerrar" class="text-dark">
         <mat-icon>check-circle</mat-icon>
         Habilitar Contrato
       </button-->
     </div>
-    
+
     <div class="col-md-2" *ngIf="getPermiso('ACCION_DOS',acciones)">
-      <a href="javascript:void(0);"    (click)="accionDos()" matTooltip="Anular Contrato" style="font-size: 12px; vertical-align: middle;">
-       <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="">cancel</mat-icon>
-          <span style="position: relative;top: -10px;">Rechazar</span>
-      </a>
+        <a href="javascript:void(0);" (click)="accionDos()" matTooltip="Anular Contrato" style="font-size: 12px; vertical-align: middle;">
+            <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="">cancel</mat-icon>
+            <span style="position: relative;top: -10px;">Rechazar</span>
+        </a>
     </div>
 
-  
-    <div class="col-md-2"  *ngIf="getPermiso('ACCION_TRES',acciones)" >
-      <a href="javascript:void(0);"   (click)="accionTres()" matTooltip="Reverso Renovacion"
-       style="font-size: 12px; vertical-align: middle;">
-       <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="">cancel</mat-icon>
-          <span style="position: relative;top: -10px;">Rechazar</span>
-      </a>
+
+    <div class="col-md-2" *ngIf="getPermiso('ACCION_TRES',acciones)">
+        <a href="javascript:void(0);" (click)="accionTres()" matTooltip="Reverso Renovacion" style="font-size: 12px; vertical-align: middle;">
+            <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="">cancel</mat-icon>
+            <span style="position: relative;top: -10px;">Rechazar</span>
+        </a>
     </div>
-  
- 
-  </div>
+
+
+</div>
 <!--mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true"
   [length]="totalResults" [pageIndex]="currentPage" (page)="handlePage($event)">
 </mat-paginator-->

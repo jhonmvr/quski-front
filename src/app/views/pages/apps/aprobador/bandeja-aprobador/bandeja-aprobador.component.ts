@@ -33,7 +33,7 @@ export class BandejaAprobadorComponent implements OnInit {
   /** ** @FORMULARIO ** */
   public formFiltro: FormGroup = new FormGroup({});
   public cedula   = new FormControl('', [Validators.minLength(10), Validators.maxLength(10)]);
-  public codigo   = new FormControl('', [Validators.minLength(10), Validators.maxLength(11)]);
+  public codigo   = new FormControl('', [Validators.maxLength(11)]);
   public proceso  = new FormControl('');
   public agencia  = new FormControl('');
 

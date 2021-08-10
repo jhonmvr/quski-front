@@ -1,8 +1,7 @@
 <re-portlet>
     <re-portlet-header [title]="titulo" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
-            <a (click)="regresar()" matTooltip="Regresar a gestion cliente"
-                style="font-size: 12px; vertical-align: middle;">
+            <a (click)="regresar()" matTooltip="Regresar a gestion cliente" style="font-size: 12px; vertical-align: middle;">
                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
                     arrow_back</mat-icon>
                 <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
@@ -63,8 +62,7 @@
                     </div>
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de Nacimiento:"
-                                [value]="fechaNacimiento.value | rDate">
+                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de Nacimiento:" [value]="fechaNacimiento.value | rDate">
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">
@@ -103,8 +101,7 @@
                 </div>
             </mat-step>
             <mat-step label="Detalle de Garantía">
-                <kt-tabla-tasacion *ngIf="wrapperSoft && wrapperSoft.garantias;" [data]='wrapperSoft.garantias'
-                    [tipo]="'DV'"></kt-tabla-tasacion>
+                <kt-tabla-tasacion *ngIf="wrapperSoft && wrapperSoft.garantias;" [data]='wrapperSoft.garantias' [tipo]="'DV'"></kt-tabla-tasacion>
             </mat-step>
             <mat-step label="Gestion Devolución">
                 <div class="row">
@@ -126,8 +123,7 @@
                     <div class="col-8">
                         <mat-form-field class="mat-form-field-fluid">
                             <mat-label>Observacion Del Asesor: </mat-label>
-                            <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: "
-                                [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
+                            <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: " [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
                         </mat-form-field>
                     </div>
                 </div>
@@ -161,32 +157,40 @@
                 </div>
             </mat-step>
             <mat-step label="Documento Habilitantes">
-    
+
                 <div class="row">
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='SOLICITUD';varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}" >Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedulaCliente.value "   style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}" >Habilitante Cliente</button>
-                  </div>
-                  <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'"
-                      [referencia]="varHabilitante.referencia" >
-                          </re-habilitante> 
-     
-                
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='SOLICITUD';varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante
+                        Operacion</button>
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedulaCliente.value " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante
+                        Cliente</button>
+                </div>
+                <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'" [referencia]="varHabilitante.referencia">
+                </re-habilitante>
+
+                <div class="row">
+                    <div class="offset-md-2 col-md-2">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <textarea matInput [formControl]="motivo" placeholder=" Motivo aprobacion/rechazo:"></textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+
                 <div class="row mt-3">
                     <div class="offset-md-2 col-md-2">
-                      <button mat-raised-button color="primary" (click)="respuesta(true)">
-                        <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
-                        </mat-icon>
-                        <span class="white-icon">Aprobar Solicitud</span>
-                      </button>
+                        <button mat-raised-button color="primary" (click)="respuesta(true)">
+                            <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+                            </mat-icon>
+                            <span class="white-icon">Aprobar Solicitud</span>
+                        </button>
                     </div>
                     <div class="offset-md-1 col-md-2">
-                      <button mat-raised-button color="warn" (click)="respuesta(false)">
-                        <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
-                        </mat-icon>
-                        <span class="white-icon">Rechazar Solicitud</span>
-                      </button>
+                        <button mat-raised-button color="warn" (click)="respuesta(false)">
+                            <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
+                            </mat-icon>
+                            <span class="white-icon">Rechazar Solicitud</span>
+                        </button>
                     </div>
-                  </div>
+                </div>
             </mat-step>
         </mat-vertical-stepper>
     </re-portlet-body>

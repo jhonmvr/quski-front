@@ -231,8 +231,9 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         this.paginator.pageIndex = 0; 
          w = new WrapperBusqueda(this.paginator.pageSize);
       }
-      if(this.estado.value != "" && this.estado.value != null){
-        w.estado = this.estado.value.replace(/ /gi,"_",);
+      if(this.estado.value != "" && this.estado.value != null ){
+        console.log(this.estado.value)
+        w.estado = this.estado.value.map( p=> {return p.replace(/ /gi,"_",) }) ;
       }      
       if(this.codigoBpm.value){
         w.codigoBpm = this.codigoBpm.value.replace(/ /gi,"",);

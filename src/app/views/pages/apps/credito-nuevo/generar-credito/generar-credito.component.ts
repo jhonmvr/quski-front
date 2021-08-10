@@ -96,7 +96,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   fotoJoya;
   fotoFunda;
   public excepcionOperativa = new FormControl('');
-  public fechaRegularizacion = new FormControl('');
+  public fechaRegularizacion = new FormControl('',[Validators.required]);
   /** @CATALOGOS **/
   public catTipoFunda: Array<any>;
   public catFirmanteOperacion: Array<any>;
@@ -171,8 +171,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.formCredito.addControl("pagarCliente", this.pagarCliente);
     this.formCredito.addControl("riesgoTotalCliente", this.riesgoTotalCliente);
     this.formCredito.addControl("recibirCliente", this.recibirCliente);
-    this.formInstruccion.addControl("excepcionOperativa", this.excepcionOperativa);
-    this.formInstruccion.addControl("fechaRegularizacion", this.fechaRegularizacion);
+  
   }
 
   ngOnInit() {
@@ -400,7 +399,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.router.navigate(['cliente/gestion-cliente/NEG/',this.item]);
   }
   public generarCredito(anular?: boolean ) {
-    if(this.formFunda.valid && this.formInstruccion.valid){
+    if(this.formFunda.valid ){
       this.operacionNuevo.credito.pagoDia = this.fechaCuota.value != null ? this.fechaCuota.value : null;
       this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
       this.operacionNuevo.credito.numeroFunda = anular ? null : this.numeroFunda.value;

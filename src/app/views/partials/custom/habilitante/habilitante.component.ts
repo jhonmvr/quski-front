@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from "@angular/core";
 import { MatTableDataSource, MatDialog, MatPaginator } from "@angular/material";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, concat } from "rxjs";
 import { ReNoticeService } from "../../../../core/services/re-notice.service";
 import { Page } from "../../../../core/model/page";
 import { DocumentoHabilitanteService } from "../../../../core/services/quski/documento-habilitante.service";
@@ -24,6 +24,7 @@ export class HabilitanteComponent implements OnInit {
   TYPE_FORM="FORM";
   TYPE_LIST="LIST";
   buscarObservable:BehaviorSubject<boolean>=new BehaviorSubject<boolean>(true);
+  descargarCargado:BehaviorSubject<boolean>=new BehaviorSubject<boolean>(false);
   rolSubject:BehaviorSubject<string>=new BehaviorSubject<string>("");
   tipoDocumentoSubject:BehaviorSubject<string>=new BehaviorSubject<string>("");
   referenciaSubject:BehaviorSubject<string>=new BehaviorSubject<string>("");
@@ -132,25 +133,32 @@ export class HabilitanteComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.procesoSubject.subscribe(()=>{
-      this.validateLoadData();
+    const suscrip =concat(this.referenciaSubject,this.procesoSubject,this.useTypeSubject);
+    suscrip.subscribe(arg => this.validateLoadData());
+    
+    /* this.procesoSubject.subscribe(()=>{
+      
     });
     this.referenciaSubject.subscribe(()=>{
       this.validateLoadData();
     });
     this.tipoDocumentoSubject.subscribe(()=>{
       this.validateLoadData();
-    });
+    }); */
     this.estadoOperacionSubject.subscribe(()=>{
       this.validateLoadData();
-    }); 
+    }); /* 
     this.useTypeSubject.subscribe(()=>{
       this.validateLoadData();
-    });
+    }); */
   }
 
   validateLoadData(  ){
     console.log(">>>>>>>>>>>>>>>>>>>>",this.useType , this.useType , this.proceso , this.referencia)
+    console.log("this.useType",this.useType)
+    console.log("this.useType",this.proceso)
+    console.log("this.useType",this.referencia)
+    console.log( "entra a buscar ", ( this.useType && this.useType === this.TYPE_FORM && this.proceso && this.referencia ))
     if( this.useType && this.useType === this.TYPE_FORM && this.proceso && this.referencia ){
       console.log("====Carga informacion para  " + this.TYPE_FORM);
       this.buscar();
@@ -216,8 +224,8 @@ export class HabilitanteComponent implements OnInit {
     this.dh.findByRolTipoDocumentoReferenciaProcesoEstadoOperacion(localStorage.getItem(environment.rolKey),this.tipoDocumento, this.referencia,
     this.proceso,this.estadoOperacion, this.p  ).subscribe(
         (data: any) => {
-          this.buscarObservable.next(false);
-          //console.log("resultadotipos de documento " + JSON.stringify(data));
+          
+          console.log("resultadotipos de documento " ,data);
           if (data && data.list) {
             let existentes=data.list.filter(e=>e.estaCargado==true);
             if( existentes && existentes.length==data.list.length ){
@@ -227,6 +235,7 @@ export class HabilitanteComponent implements OnInit {
             }
             this.dataSourcesHabilitantes = new MatTableDataSource<HabilitanteWrapper>(data.list);
             //this.getPermisoAccion();
+            this.buscarObservable.next(false);
             this.totalResults=data.totalResults;
           } else {
             //console.log("no hay datos ");
@@ -351,30 +360,41 @@ export class HabilitanteComponent implements OnInit {
     
   }
 
+
+  descargarDocumento(element){
+    let existPermisos = element.roles;
+    if(element && existPermisos && existPermisos.length > 0 && existPermisos[0].descargaDocumento && existPermisos[0].descargaDocumento===true && element.objectId ){
+      return true;
+    }
+    return false;
+  }
+
   /*descargaPlantilla: boolean;
   cargaDocumento: boolean;
   descargaDocumento: boolean;
   cargaDocumentoAdicional: boolean;
   descargaDocumentoAdicional: boolean;*/
-  getPermiso(tipo:string, permisos:Array<TbQoRolTipoDocumento> ):boolean{
+  getPermiso(tipo:string, permisos, objectid? ):boolean{
+    this.buscarObservable.next(true);
     if( permisos && permisos.length>0 ){
       ////console.log("===> getPermiso rol " + localStorage.getItem( environment.rolKey ) + " tipo: " +  tipo + " datos "+ JSON.stringify( permisos));
       let existPermisos=permisos.filter(p=>p.idRol === Number( localStorage.getItem( environment.rolKey ) ));
       ////console.log("===> permisos filter " + JSON.stringify( existPermisos));
       if( existPermisos &&  existPermisos.length >0 ){
+        this.buscarObservable.next(false);
         if( tipo === "DESCARGA_PLA" &&  existPermisos[0].descargaPlantilla && existPermisos[0].descargaPlantilla===true  ){
           return true;
         }
         if( tipo === "CARGA_ARC" &&  existPermisos[0].cargaDocumento && existPermisos[0].cargaDocumento===true  ){
           return true;
         }
-        if( tipo === "DESCARGA_ARC" &&  existPermisos[0].descargaDocumento && existPermisos[0].descargaDocumento===true  ){
+        if( tipo === "DESCARGA_ARC" &&  existPermisos[0].descargaDocumento && existPermisos[0].descargaDocumento===true && objectid && objectid.objectId  ){
           return true;
         }
         if( tipo === "CARGA_ARC_ADC" &&  existPermisos[0].cargaDocumentoAdicional && existPermisos[0].cargaDocumentoAdicional===true  ){
           return true;
         }
-        if( tipo === "DESCARGA_ARCADC" &&  existPermisos[0].descargaDocumentoAdicional && existPermisos[0].descargaDocumentoAdicional===true  ){
+        if( tipo === "DESCARGA_ARCADC" &&  existPermisos[0].descargaDocumentoAdicional && existPermisos[0].descargaDocumentoAdicional===true ){
           return true;
         }
         if( tipo === "ACCION_UNO" &&  existPermisos[0].accionUno && existPermisos[0].accionUno===true  ){

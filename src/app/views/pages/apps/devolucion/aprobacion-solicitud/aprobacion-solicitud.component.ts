@@ -13,7 +13,7 @@ import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
@@ -45,6 +45,7 @@ export class AprobacionSolicitudComponent extends TrackingUtil implements OnInit
 
 
   //datos cliente
+  motivo = new FormControl('',[Validators.required, Validators.maxLength(500)]);
   public cedulaCliente = new FormControl('');
   public nombresCompletos = new FormControl('');
   public nivelEducacion = new FormControl('');
@@ -260,6 +261,10 @@ export class AprobacionSolicitudComponent extends TrackingUtil implements OnInit
   }
 
   public respuesta(aprobado) {
+    if(this.motivo.invalid){
+      this.sinNoticeService.setNotice("INGRESE EL MOTIVO DE APROBACION O RECHAZO");
+      return;
+    }
     let mensaje = aprobado ? 'Aprobar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo + '.' :
       'Negar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo + '.';
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
@@ -269,7 +274,7 @@ export class AprobacionSolicitudComponent extends TrackingUtil implements OnInit
     });
     dialogRef.afterClosed().subscribe(r => {
       if (r) {
-        this.dev.aprobarNegarSolicitudDevolucion(this.item, aprobado).subscribe((data: any) => {
+        this.dev.aprobarNegarSolicitudDevolucion(this.item, aprobado, this.motivo.value).subscribe((data: any) => {
           if(data.entidad){
             if (aprobado && data.entidad.proceso.estadoProceso == 'PENDIENTE_FECHA') {
               this.sinNoticeService.setNotice("SE HA APROBADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");

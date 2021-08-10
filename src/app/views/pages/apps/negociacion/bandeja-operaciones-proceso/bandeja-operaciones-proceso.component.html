@@ -31,7 +31,7 @@
                                 <input [formControl]="codigoSoft" placeholder="Codigo Soft" autocomplete="off" matInput />
                             </mat-form-field>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Proceso" [formControl]="proceso">
                                     <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}
@@ -39,15 +39,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-3">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Estado" [formControl]="estado">
-                                    <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Asesor" [formControl]="asesor">
                                     <mat-option value="{{ usuario }}" selected>{{ usuario }}</mat-option>
@@ -55,10 +47,18 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Actividad" [formControl]="actividad">
                                     <mat-option *ngFor="let element of catActividad" [value]="element">{{ element }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-8">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Estado" [formControl]="estado" multiple>
+                                    <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

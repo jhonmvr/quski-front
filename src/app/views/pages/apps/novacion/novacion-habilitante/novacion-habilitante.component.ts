@@ -49,7 +49,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   public nombreCodeudor = new FormControl('', [Validators.required]);
   public dataSourceComprobante = new MatTableDataSource<any>();
   public excepcionOperativa = new FormControl('');
-  public fechaRegularizacion = new FormControl('');
+  public fechaRegularizacion = new FormControl('',[Validators.required]);
   observacionAsesor = new FormControl('',[Validators.maxLength(1000)]);
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado'];
   public loadComprobante  = new BehaviorSubject<boolean>(false);
@@ -226,6 +226,10 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     if(this.tipoCliente.value.codigo == 'SCD' || this.tipoCliente.value.codigo == 'CYA'){
       this.credit.credito.identificacionCodeudor = this.identificacionCodeudor.value;
       this.credit.credito.nombreCompletoCodeudor = this.nombreCodeudor.value;
+    }
+    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor !== 'SIN EXCEPCION' && this.fechaRegularizacion.invalid){
+      this.sinNotSer.setNotice('SELECCIONES UNA FECHA DE REGULARIZACION', 'warning');
+      return;
     }
     this.credit.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
     this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;

@@ -624,10 +624,10 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
           this.valorCash.value,
           this.crediW.credito.id, 
           this.observacionAprobador.value, 
-          this.aprobacion.value == ' true' ? this.codigoCash.value: null,
+          this.codigoCash.value,
           this.agencia,
           this.usuario,
-          this.aprobacion.value == ' true' ? null: this.motivoDevolucion.value?this.motivoDevolucion.value.codigo:'',
+          this.motivoDevolucion.value,
           this.aprobacion.value).subscribe( (data: any) =>{
             if(!data.entidad){
               this.sinNotSer.setNotice('ERROR ENVIANDO LA RESPUESTA: ' + data.entidad, 'error');
@@ -647,6 +647,15 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
           this.sinNotSer.setNotice('SE CANCELO LA ACCION','warning');
       }
     });
+  }
+
+  cambiarHabilitantes(proceso,referencia){
+    this.varHabilitante = {proceso:'',referencia:''};
+    this.varHabilitante = {
+      proceso:proceso,
+      referencia:referencia
+    };
+
   }
 
 }

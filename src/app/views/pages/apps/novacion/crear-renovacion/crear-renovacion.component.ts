@@ -458,11 +458,15 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     }
     let cliente = {} as cliente;
     cliente.identificacion = this.credit.operacionAnterior.cliente.identificacion;
-    let fecha = new Date (this.credit.operacionAnterior.cliente.fechaNacimiento);
-    let mes1 = fecha.getMonth() +1;
-    let mes  = ( mes1 < 10 ? mes1 == 0 ? '12':'0'+mes1 : mes1) ;
-    let dia = fecha.getDate() +1;
-    cliente.fechaNacimiento = (dia < 10 ? '0'+dia : dia) +'/' + mes +'/' + fecha.getFullYear(); 
+    if(this.credit.operacionAnterior.cliente.fechaNacimiento){
+
+    }else{
+      this.sinNotSer.setNotice("ERROR AL VALIDAR LA FECHA DE NACIMIENTO")
+      return;
+    }
+    let fecha = this.credit.operacionAnterior.cliente.fechaNacimiento.split("-")
+ 
+    cliente.fechaNacimiento = fecha[2] +'/' + fecha[1] +'/' + fecha[0]; 
     let wrapper : any = { cliente: null, credito: null, garantias: null}
     wrapper.cliente =  cliente;
     wrapper.credito = this.credit.operacionAnterior.credito;

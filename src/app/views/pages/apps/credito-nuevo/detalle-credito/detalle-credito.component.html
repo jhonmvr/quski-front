@@ -146,13 +146,36 @@
 
                 </div>
                 <div class="row mt-3">
+                    <h5>Bloqueos</h5>
                     <div class="col-8 offset-2">
-                        <textarea class="form-control border" [formControl]="descripcionBloqueo" rows="5" placeholder="Descripcion de bloqueo: " matInput></textarea>
+
+                        <table mat-table #table [dataSource]="datosBloqueo">
+                            <ng-container matColumnDef="codigo">
+                                <th mat-header-cell *matHeaderCellDef> Codigo </th>
+                                <td mat-cell *matCellDef="let row"> {{row.codigoMotivoBloqueo}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="descripcion">
+                                <th mat-header-cell *matHeaderCellDef> Descripcion </th>
+                                <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="estransitorio">
+                                <th mat-header-cell *matHeaderCellDef> Es transitorio </th>
+                                <td mat-cell *matCellDef="let row"> {{row.esTransitorio?"SI":"NO"}} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="['codigo','descripcion','estransitorio']"></tr>
+                            <tr mat-row *matRowDef="let row; columns: ['codigo','descripcion','estransitorio'];"></tr>
+                        </table>
+
+
+
                     </div>
                 </div>
+                <br>
+                <br>
+
                 <div class="row mt-3 mb-3 justify-content-center">
                     <div class="col-2">
-                        <button mat-raised-button (click)="mostrarVentanaPrecancelacion()">
+                        <button mat-raised-button color="primary" (click)="mostrarVentanaPrecancelacion()">
                             <span>Simular PreCancelacion</span>
                         </button>
                     </div>
@@ -162,7 +185,7 @@
             <mat-step label="Tabla de amortizacion">
                 <div class="row mb-5">
                     <div class="offset-md-5 col-md-5">
-                        <button mat-button (click)=" mostrarTablaDeAmortizacion()"> Tabla de amortizacion </button>
+                        <button mat-raised-button color="primary" (click)=" mostrarTablaDeAmortizacion()"> Tabla de amortizacion </button>
                     </div>
                 </div>
                 <kt-tabla-custom [data]="dataSourceRubro.data" [nombreRubro]="'rubro'" [numeroCuota]="'numeroCuota'" [numeroOperacion]="numeroOperacion.value"></kt-tabla-custom>
