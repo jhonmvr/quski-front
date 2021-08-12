@@ -138,55 +138,59 @@ export class AprobacionSolicitudComponent extends TrackingUtil implements OnInit
       ['Información Operación','Datos Personales del cliente','Detalle de Crédito','Detalle de Garantía','Gestion Devolución','Documento Habilitantes'], 
       0, 'APROBACION SOLICITUD DEVOLUCION',
       this.wrapperDevolucion ? this.wrapperDevolucion.devolucion ? this.wrapperDevolucion.devolucion.codigoOperacion : null : null )
-    this.formCreditoNuevo.disable();
-    this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);
-    this.proceso.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi, " "));
-    this.nombresCompletos.setValue(this.wrapperDevolucion.devolucion.nombreCliente);
-    this.cedulaCliente.setValue(this.wrapperDevolucion.devolucion.cedulaCliente);
-    this.fechaNacimiento.setValue(this.wrapperDevolucion.devolucion.fechaNacimiento);
-
-    this.nivelEducacion.setValue( this.cargarItem(this.catEducacion, this.wrapperDevolucion.devolucion.nivelEducacion, true).nombre);
-    this.genero.setValue(this.cargarItem(this.catGenero, this.wrapperDevolucion.devolucion.genero, true).nombre);
-    this.estadoCivil.setValue(this.cargarItem(this.catEstadoCivil, this.wrapperDevolucion.devolucion.estadoCivil, true).nombre);
-    this.nacionalidad.setValue(this.cargarItem(this.catPais, this.wrapperDevolucion.devolucion.nacionalidad, false).nacionalidad);
-    let itemParroquia = this.cargarItem(this.catDivision, this.wrapperDevolucion.devolucion.lugarNacimiento, false);
-    let itemCanton = this.cargarItem(this.catDivision, itemParroquia.idPadre, false);
-    let itemProvincia = this.cargarItem(this.catDivision, itemCanton.idPadre, false);
-    this.lugarNacimiento.setValue( (itemParroquia ? itemParroquia.nombre : '' ) + (itemCanton ? ' / ' + itemCanton.nombre : '' ) + (itemProvincia ? ' / ' + itemProvincia.nombre : '') );
-
-    this.onChangeFechaNacimiento();
-    this.idReferencia = this.wrapperDevolucion.devolucion.id;
-    this.tipoCliente.setValue(this.wrapperDevolucion.devolucion.tipoCliente);
-    this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
-    this.agenciaEntrega.setValue(this.wrapperDevolucion.devolucion.agenciaEntrega);
-    this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
-    if (this.wrapperDevolucion) {
-      let objetoHeredero = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeHerederos);
-      console.log('Wrapper  => objetoHeredero', objetoHeredero.heredero);
-      this.dataSourceHeredero = new MatTableDataSource<any>(objetoHeredero.heredero);
-      this.nombreApoderado.setValue(this.wrapperDevolucion.devolucion.nombreApoderado);
-      this.cedulaApoderado.setValue(this.wrapperDevolucion.devolucion.cedulaApoderado);
+      this.formCreditoNuevo.disable();
+      this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);
+      this.proceso.setValue(this.wrapperDevolucion.proceso ? this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi, " ") : 'NO DISPONIBLE');
+      this.nombresCompletos.setValue(this.wrapperDevolucion.devolucion.nombreCliente);
+      this.cedulaCliente.setValue(this.wrapperDevolucion.devolucion.cedulaCliente);
+      this.fechaNacimiento.setValue(this.wrapperDevolucion.devolucion.fechaNacimiento);
+      
+      this.nivelEducacion.setValue( this.cargarItem(this.catEducacion, this.wrapperDevolucion.devolucion.nivelEducacion, true).nombre);
+      this.genero.setValue(this.cargarItem(this.catGenero, this.wrapperDevolucion.devolucion.genero, true).nombre);
+      this.estadoCivil.setValue(this.cargarItem(this.catEstadoCivil, this.wrapperDevolucion.devolucion.estadoCivil, true).nombre);
+      this.nacionalidad.setValue(this.cargarItem(this.catPais, this.wrapperDevolucion.devolucion.nacionalidad, false).nacionalidad);
+      let itemParroquia = this.cargarItem(this.catDivision, this.wrapperDevolucion.devolucion.lugarNacimiento, false);
+      let itemCanton = this.cargarItem(this.catDivision, itemParroquia.idPadre, false);
+      let itemProvincia = this.cargarItem(this.catDivision, itemCanton.idPadre, false);
+      this.lugarNacimiento.setValue( (itemParroquia ? itemParroquia.nombre : '' ) + (itemCanton ? ' / ' + itemCanton.nombre : '' ) + (itemProvincia ? ' / ' + itemProvincia.nombre : '') );
+      
+      this.onChangeFechaNacimiento();
+      this.idReferencia = this.wrapperDevolucion.devolucion.id;
+      this.tipoCliente.setValue(this.wrapperDevolucion.devolucion.tipoCliente);
       this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
-      this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
       this.agenciaEntrega.setValue(this.wrapperDevolucion.devolucion.agenciaEntrega);
-      this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo == this.wrapperDevolucion.devolucion.tipoCliente));
-      let objetoCredito = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeDetalleCredito);
-      this.dataSourceDetalle = new MatTableDataSource<any>(objetoCredito);
-    }
-    this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
-    this.varHabilitante.proceso='SOLICITUD';
-    this.varHabilitante.referencia=this.item;
-  }
-  private cargarItem(catalogo, cod, index) {
-    if (index && catalogo) {
-      let item = catalogo.find(x => x.codigo == cod);
-      if (catalogo && item) {
-        return item;
+      this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
+      if (this.wrapperDevolucion) {
+        let objetoHeredero = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeHerederos);
+        console.log('Wrapper  => objetoHeredero', objetoHeredero.heredero);
+        this.dataSourceHeredero = new MatTableDataSource<any>(objetoHeredero.heredero);
+        this.nombreApoderado.setValue(this.wrapperDevolucion.devolucion.nombreApoderado);
+        this.cedulaApoderado.setValue(this.wrapperDevolucion.devolucion.cedulaApoderado);
+        this.observaciones.setValue(this.wrapperDevolucion.devolucion.observaciones);
+        this.valorCustodia.setValue(this.wrapperDevolucion.devolucion.valorCustodiaAprox);
+        this.agenciaEntrega.setValue(this.wrapperDevolucion.devolucion.agenciaEntrega);
+        this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo == this.wrapperDevolucion.devolucion.tipoCliente));
+        let objetoCredito = this.decodeObjetoDatos(this.wrapperDevolucion.devolucion.codeDetalleCredito);
+        this.dataSourceDetalle = new MatTableDataSource<any>(objetoCredito);
       }
-    }else if(!index && catalogo){
-      let item = catalogo.find(x => x.id == cod);
-      if (catalogo && item) {
-        return item;
+      this.varHabilitante.proceso='SOLICITUD';
+      this.varHabilitante.referencia=this.item;
+      if(this.wrapperDevolucion && (!this.wrapperDevolucion.proceso || this.wrapperDevolucion.proceso.estadoProceso !== 'PENDIENTE_APROBACION')){
+        this.sinNoticeService.setNotice('DEVOLUCION YA FUE REVISADA, APROBADA O RECHAZADA','warning');
+      }else{
+        this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
+      }
+    }
+    private cargarItem(catalogo, cod, index) {
+      if (index && catalogo) {
+        let item = catalogo.find(x => x.codigo == cod);
+        if (catalogo && item) {
+          return item;
+        }
+      }else if(!index && catalogo){
+        let item = catalogo.find(x => x.id == cod);
+        if (catalogo && item) {
+          return item;
       }
     }
   }
