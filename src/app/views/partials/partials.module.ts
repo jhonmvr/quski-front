@@ -130,6 +130,7 @@ import { RelativeNumberPipe } from '../../../app/core/_base/layout/pipes/number-
 import { ImpuestosComTableComponent } from './custom/secciones-generales/impuestos-com-table/impuestos-com-table.component';
 import { VentanaPrecancelacionComponent } from './custom/popups/ventana-precancelacion/ventana-precancelacion.component';
 import { AlertaTiempoAprobadorComponent } from './custom/alerta-tiempo-aprobador/alerta-tiempo-aprobador.component';
+import { HistoricoObservacionComponent } from './custom/secciones-generales/historico-observacion/historico-observacion.component';
 
 
 
@@ -214,10 +215,12 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		ImpuestosComTableComponent,
 		VentanaPrecancelacionComponent,
 		AlertaTiempoAprobadorComponent,
+		HistoricoObservacionComponent,
 	
 
 	],
 	exports: [
+		HistoricoObservacionComponent,
 		ListaExcepcionesComponent,
 		ImpuestosComTableComponent,
 		TablaCustomComponent,

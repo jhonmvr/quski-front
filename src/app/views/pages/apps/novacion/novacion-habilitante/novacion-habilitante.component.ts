@@ -27,6 +27,7 @@ import { TrackingService } from '../../../../../core/services/quski/tracking.ser
 })
 export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit {
   public usuario: string;
+  dataHistoricoObservacion;
   ingresoNeto:number;
   politicaIngreso:number;
   flagSolicitud = new BehaviorSubject<boolean>(false);
@@ -107,6 +108,12 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.agencia = Number(localStorage.getItem( 'idAgencia' ));
     this.inicioDeFlujo();
   }
+
+  private findHistoricoObservacionByCredito(idCredito){
+    this.cre.findHistoricoObservacionByIdCredito(idCredito).subscribe(result=>{
+      this.dataHistoricoObservacion = result.entidades;
+    });
+  }
   private inicioDeFlujo() {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.idNegociacion) {
@@ -115,6 +122,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
         
         this.cre.buscarRenovacionByIdNegociacion(this.item).subscribe((data: any) => {
           this.credit = data.entidad;
+          if(data.entidad && data.entidad.credito && data.entidad.credito.id){
+            this.findHistoricoObservacionByCredito(data.entidad.credito.id);
+          }
           if (this.credit ) {
             this.cargarCampos( this.credit  );
           }else{

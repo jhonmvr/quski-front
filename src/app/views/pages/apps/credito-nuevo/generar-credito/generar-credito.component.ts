@@ -32,6 +32,7 @@ import { AddFotoComponent } from '../../../../../views/partials/custom/fotos/add
 
 export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   /** @VARIABLES_GLOBALES **/
+  dataHistoricoObservacion;
   public operacionNuevo: OperacionNuevoWrapper;
   public item;
   flagSolicitud = new BehaviorSubject<boolean>(false);
@@ -194,6 +195,9 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
         this.cre.traerCreditoNuevo(this.item).subscribe((data: any) => {
           if (data.entidad) {
             this.operacionNuevo = data.entidad;
+            if(data.entidad && data.entidad.credito && data.entidad.credito.id){
+              this.findHistoricoObservacionByCredito(data.entidad.credito.id);
+            }
             this.validarOperacion(this.operacionNuevo);
           }
         });
@@ -201,6 +205,12 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       } else {
         this.salirDeGestion("Error al intentar ingresar al Credito.");
       }
+    });
+  }
+
+  private findHistoricoObservacionByCredito(idCredito){
+    this.cre.findHistoricoObservacionByIdCredito(idCredito).subscribe(result=>{
+      this.dataHistoricoObservacion = result.entidades;
     });
   }
   private validarOperacion(data: OperacionNuevoWrapper) {
@@ -582,7 +592,11 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     }
   }
 
-
+  calcularTotales(xd){
+    if(this.operacionNuevo && this.operacionNuevo.joyas){
+      return this.operacionNuevo.joyas.map(t=>t[xd]).reduce((r, n) =>r+n,0);
+    }
+  }
   //validacion de los dias 25 - 30 
   onlyOdds = (d: Date): boolean => {
     const date = d.getDate(); 

@@ -97,6 +97,13 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [value]="calcularTotales('valorAvaluo')" readonly placeholder="Total Valor avalúo" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
                         <ng-container *ngIf="numeroFunda.value">
                             <div class="offset-md-5 col-md-6 ">
                                 <button mat-raised-button (click)="obtenerNumeroFunda(true)"><span class="blue-icon"> Anular Funda </span></button>
@@ -447,6 +454,11 @@
                 <ng-container *ngIf="existeCredito">
                     <re-habilitante [proceso]="'NUEVO'" [useType]="'FORM'" [referencia]="item">
                     </re-habilitante>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <kt-historico-observacion [data]="dataHistoricoObservacion"></kt-historico-observacion>
+                        </div>
+                    </div>
                     <div class="row">
                         <mat-form-field class="col-md-12">
                             <textarea class="form-control border" [formControl]="observacionAsesor" rows="5" placeholder="Observacion asesor " matInput></textarea>

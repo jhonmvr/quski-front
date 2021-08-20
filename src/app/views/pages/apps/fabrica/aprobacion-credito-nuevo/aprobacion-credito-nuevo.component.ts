@@ -37,6 +37,7 @@ export interface CatalogoWrapper {
 export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements OnInit {
   // VARIABLES PUBLICAS  
   private divicionPolitica: CatalogoWrapper[];
+  dataHistoricoObservacion;
   public usuario: string;
   srcFunda;
   srcJoya;
@@ -327,6 +328,12 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
       }
     });
   }
+
+  private findHistoricoObservacionByCredito(idCredito){
+    this.cre.findHistoricoObservacionByIdCredito(idCredito).subscribe(result=>{
+      this.dataHistoricoObservacion = result.entidades;
+    });
+  }
   private traerCreditoNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
@@ -336,6 +343,9 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
         this.loadingSubject.next(true);
         this.cre.traerCreditoNegociacionExistente(data.params.id).subscribe((data: any) => {
           this.crediW = data.entidad;
+          if(data.entidad && data.entidad.credito && data.entidad.credito.id){
+            this.findHistoricoObservacionByCredito(data.entidad.credito.id);
+          }
           this.traerCatalogos();
           if (data.entidad.existeError) {
             this.sinNotSer.setNotice('FALTAN DATOS EN EL CREDITO: '+ data.entidad.mensaje, 'warning');

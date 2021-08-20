@@ -36,6 +36,8 @@ export interface CatalogoWrapper {
 })
 export class AprobacionNovacionComponent extends TrackingUtil implements OnInit {
   /** @VARIABLES_GLOBALES */
+
+  dataHistoricoObservacion;
   public usuario: string;
   public agencia: any;
   public fechaActual: string;
@@ -391,6 +393,11 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
       return;
     }
   }
+  private findHistoricoObservacionByCredito(idCredito){
+    this.cre.findHistoricoObservacionByIdCredito(idCredito).subscribe(result=>{
+      this.dataHistoricoObservacion = result.entidades;
+    });
+  }
   private traerCreditoNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.idNegociacion) {
@@ -399,6 +406,9 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
         this.varHabilitante.proceso='NOVACION,FUNDA';
         this.cre.traerCreditonovacionPorAprobar(data.params.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
+            if(data.entidad && data.entidad.credito && data.entidad.credito.id){
+              this.findHistoricoObservacionByCredito(data.entidad.credito.id);
+            }
             this.crediW = data.entidad;
             this.sof.traerCreditoIndividualSaldos(data.entidad.credito?data.entidad.credito.numeroOperacionAnterior:'').subscribe(creditoAnterior=>{
               if(creditoAnterior.operacion){

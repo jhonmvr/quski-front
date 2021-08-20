@@ -210,6 +210,10 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
               this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado.toFixed(2));
               this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
           }
+          if(data.entidad && data.entidad.simularResult && data.entidad.simularResult.xmlVariablesInternas  && data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable ){
+            this.wp.variables = data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable;
+            //console.log("estas son las variabes", this.variablesInternas)
+          }
         }):
       this.cal.simularOferta(this.wp.credito.id, null, null).subscribe((data: any) => {
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
@@ -217,6 +221,10 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
             this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado.toFixed(2));
             this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+        }
+        if(data.entidad && data.entidad.simularResult && data.entidad.simularResult.xmlVariablesInternas  && data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable ){
+          this.wp.variables = data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable;
+          //console.log("estas son las variabes", this.variablesInternas)
         }
       });
     } else {

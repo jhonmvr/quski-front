@@ -138,6 +138,10 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
               this.variablesInternas = this.credit.variables;
               this.garantiasSimuladas = this.setGarantias(this.credit.tasacion);
               this.credit.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : null;
+              this.credit.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
+          this.credit.proceso.estadoProceso == 'PENDIENTE_APROBACION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') : 
+          this.credit.proceso.estadoProceso == 'PENDIENTE_APROBACION_DEVUELTO' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
+          this.credit.proceso.estadoProceso == 'CADUCADO' ? this.salirDeGestion('CADUCADO.') : '';
               this.cargarCampos();
             }else{
               this.abrirSalirGestion("Error al intentar cargar el credito.");
@@ -162,7 +166,10 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       } 
     });
   }
-
+  private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
+    
+    this.abrirSalirGestion(dataMensaje, dataTitulo);
+  }
   setGarantias(garantias){
     
     if(garantias){

@@ -246,8 +246,12 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         }
         
 
-        this.negoW.proceso.proceso == 'NUEVO' ? null : this.salirDeGestion('Error al buscar proceso relacionado a la operacion');
+        this.negoW.proceso.proceso == 'NUEVO' ? null : 
         this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : this.validarExcepciones(this.negoW);
+        this.negoW.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
+          this.negoW.proceso.estadoProceso == 'PENDIENTE_APROBACION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') : 
+          this.negoW.proceso.estadoProceso == 'PENDIENTE_APROBACION_DEVUELTO' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
+          this.negoW.proceso.estadoProceso == 'CADUCADO' ? this.salirDeGestion('CADUCADO.') : '';
         this.cargarValores(this.negoW, true);
       } else {
         this.salirDeGestion("La negociacion que esta buscando, no existe, fue cerrada o cancelada");
