@@ -1226,7 +1226,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       return;
     }
     this.wrapper.cliente.actividadEconomica = this.actividadEconomica.value ? this.actividadEconomica.value.id : null;
-    this.wrapper.cliente.apellidoMaterno = this.apellidoMaterno.value;
+    this.wrapper.cliente.apellidoMaterno = this.apellidoMaterno.value?this.apellidoMaterno.value:" ";
     this.wrapper.cliente.primerNombre = this.primerNombre.value;
     this.wrapper.cliente.apellidoPaterno = this.apellidoPaterno.value;
     this.wrapper.cliente.canalContacto = this.canalContacto.value.codigo;
@@ -1242,7 +1242,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.wrapper.cliente.nacionalidad = this.nacionalidad.value ? this.nacionalidad.value.id : null;
     this.wrapper.cliente.nivelEducacion = this.nivelEducacion.value ? this.nivelEducacion.value.codigo : null;
     this.wrapper.cliente.profesion = this.profesion.value ? this.profesion.value.codigo : null;
-    this.wrapper.cliente.segundoNombre = this.segundoNombre.value;
+    this.wrapper.cliente.segundoNombre = this.segundoNombre.value?this.segundoNombre.value:" ";
     this.wrapper.cliente.usuario = this.usuario;
     this.wrapper.cliente.agencia = this.agencia;
 
@@ -1406,10 +1406,10 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
           this.selectLugarNacimiento = r.nodo.id;
         } else if (v == 'O') {
           this.ubicacionO.setValue(r.control.value);
-          this.selectUbicacion = r.nodo.id;
+          this.selectUbicacionO = r.nodo.id;
         } else if (v == 'U') {
           this.ubicacion.setValue(r.control.value);
-          this.selectUbicacionO = r.nodo.id;
+          this.selectUbicacion = r.nodo.id;
         }
 
       }
