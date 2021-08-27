@@ -361,9 +361,10 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   }
   /** ********************************************* @PARTE_1 ********************* **/
   public buscarCliente() {
+    console.log("this.formBusqueda",this.formBusqueda);
     if (this.formBusqueda.invalid) {
       this.sinNotSer.setNotice('INGRESE UN NUMERO DE CEDULA VALIDO', 'warning');
-      return;
+     // return;
     }
     this.loadBusqueda.next(true);
     this.neg.iniciarNegociacion(this.identificacion.value, this.usuario, this.agencia).subscribe((wrapper: any) => {

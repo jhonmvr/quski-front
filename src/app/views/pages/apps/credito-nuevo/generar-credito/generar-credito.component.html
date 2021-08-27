@@ -99,7 +99,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [value]="calcularTotales('valorAvaluo')" readonly placeholder="Total Valor avalúo" />
+                                <input matInput [value]="calcularTotales('valorAvaluo') | number : '1.2-2'" readonly placeholder="Total Valor avalúo" />
                             </mat-form-field>
                         </div>
                     </div>
