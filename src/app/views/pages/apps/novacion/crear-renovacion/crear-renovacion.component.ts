@@ -564,4 +564,14 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     const numRows = this.dataSourceCreditoNegociacion.data.length;
     return numSelected === numRows;
   }
+
+  sombrear(row){
+    if(row.tipooferta == 'V'){
+      console.log("stilo po")
+
+      return {background: 'cornflowerblue'};
+    }
+    return null;
+    
+  }
 }
