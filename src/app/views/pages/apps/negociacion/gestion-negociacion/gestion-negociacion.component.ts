@@ -509,6 +509,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     if (wrapper.joyas != null) {
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
       let calculadora: any = {
+        codigoTabla: this.negoW.credito.tablaAmortizacion,
         costoCustodia: this.negoW.credito.costoCustodia,
         costoFideicomiso: this.negoW.credito.costoFideicomiso,
         costoSeguro: this.negoW.credito.costoSeguro,

@@ -242,6 +242,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     if(this.credit.credito){
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
       let calculadora: any = {
+        codigoTabla: this.credit.credito.tablaAmortizacion,
         costoCustodia: this.credit.credito.costoCustodia,
         costoFideicomiso: this.credit.credito.costoFideicomiso,
         costoSeguro: this.credit.credito.costoSeguro,
