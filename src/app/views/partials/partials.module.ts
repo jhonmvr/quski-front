@@ -131,6 +131,7 @@ import { ImpuestosComTableComponent } from './custom/secciones-generales/impuest
 import { VentanaPrecancelacionComponent } from './custom/popups/ventana-precancelacion/ventana-precancelacion.component';
 import { AlertaTiempoAprobadorComponent } from './custom/alerta-tiempo-aprobador/alerta-tiempo-aprobador.component';
 import { HistoricoObservacionComponent } from './custom/secciones-generales/historico-observacion/historico-observacion.component';
+import { RelativeTimePipe } from '../../../app/core/_base/layout/pipes/time-relative.pipe';
 
 
 
@@ -141,6 +142,7 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 	declarations: [
 		RelativeNumberPipe,
 		RelativeDatePipe,
+		RelativeTimePipe,
 		MensajeExcepcionComponent,
 		ScrollTopComponent,
 		NoticeComponent,
@@ -227,6 +229,7 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		WidgetModule,
 		PortletModule,
 		RelativeDatePipe,
+		RelativeTimePipe,
 		ScrollTopComponent,
 		NoticeComponent,
 		ActionNotificationComponent,

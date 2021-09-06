@@ -113,21 +113,21 @@
                     </ng-container>
 
                     <ng-container matColumnDef="fechaCreacion">
-                        <mat-header-cell *matHeaderCellDef>Hora Inicio</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.fechaInicio | date:"HH:MM:ss"}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Hora Inicio HH:mm:ss</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.fechaInicio | date:"HH:mm:ss"}} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="fechaActualizacion">
-                        <mat-header-cell *matHeaderCellDef>Hora Fin</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.fechaFin | date:"HH:MM:ss"}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef>Hora Fin HH:mm:ss</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.fechaFin | date:"HH:mm:ss"}} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> Total </mat-footer-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="tiempoTotal">
                         <mat-header-cell *matHeaderCellDef>Total Tiempo</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ calcularTiempo( element.tiempoTranscurrido ) }} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> {{ calcularTiempo( totalTiempo ) }}</mat-footer-cell>
+                        <mat-footer-cell *matFooterCellDef> {{calcularTiempo(calcularTotales('tiempoTranscurrido'))}} </mat-footer-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="fecha">

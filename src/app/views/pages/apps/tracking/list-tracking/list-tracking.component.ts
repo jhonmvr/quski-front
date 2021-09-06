@@ -7,6 +7,7 @@ import { Page } from './../../../../../core/model/page';
 import { Component, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import moment from 'moment';
 
 @Component({
   selector: 'kt-list-tracking',
@@ -156,18 +157,23 @@ export class ListTrackingComponent implements OnInit {
     });
     this.buscar();
   }
-  calcularTiempo( timeElem ){
-    // element.tiempoTranscurrido >= 3600000 ? (element.tiempoTranscurrido - 25200000 | date : 'h:mm:ss') : (element.tiempoTranscurrido | date : 'mm:ss') 
-    // totalTiempo >= 3600000 ? (totalTiempo - 25200000 | date : 'h:mm:ss') : (totalTiempo | date : 'mm:ss') 
-    if(timeElem >= 3600000 ){
-      let time : Date = new Date(timeElem - 25200000);
-      let construc = time.getHours()+":"+( time.getMinutes() >= 10 ? time.getMinutes() : "0"+time.getMinutes() )+":"+time.getSeconds();
-      return construc;
+  calcularTiempo( ms ){
+    var duration = moment.duration(ms);
+    if (duration.asHours() > 1) {
+      return Math.floor(duration.asHours()) + moment.utc(duration.asMilliseconds()).format(":mm:ss");
+    } else {
+      return moment.utc(duration.asMilliseconds()).format("mm:ss");
     }
-    let time : Date = new Date(timeElem);
-    return "00:"+( time.getMinutes() >= 10 ? time.getMinutes() : "0"+time.getMinutes() )+":"+time.getSeconds();
-
   }
+
+  calcularTotales(xd){
+    const datos = this.dataSource.data;
+    if(datos.length >0 ){
+      return datos.map(t=>t[xd]).reduce((r, n) =>r+n,0);
+    }
+  }
+ 
+
 }
   export class TrakingWrapper {
   proceso: any
