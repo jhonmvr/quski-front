@@ -1110,6 +1110,15 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
 
   }
 
+  sombrear(row){
+    if(row.tipooferta == 'V'){
+      console.log("stilo po")
+
+      return {background: 'cornflowerblue'};
+    }
+    return null;
+    
+  }
  
 
 }

@@ -1,574 +1,540 @@
-  
 <re-portlet>
-	<re-portlet-header [title]="'Negociación'" [class]="'kt-portlet__head--lg'">
-		<ng-container ktPortletTools>
-			<a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
-					arrow_back</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
-			</a>
-			<a href="javascript:void(0);" matTooltip="Guardar" (click)="guardarCredito()" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon class="blue-icon" style="font-size: 24px;" color="primary" matTooltipPosition="above">add_task</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Negociar</span>
-			</a>
-		</ng-container>
-	</re-portlet-header>
-	<re-portlet-body>
-		<mat-vertical-stepper [linear]="false" #stepper (animationDone)="guardarTraking('NUEVO', this.negoW?this.negoW.credito?this.negoW.credito.codigo:'':'', ['Busqueda de Cliente','Datos Cliente','Variables Crediticias','Riesgo Acumulado','Tasación','Detalle Opciones de crédito'] , stepper.selectedIndex, 'NEGOCIACION', this.negoW?this.negoW.credito?this.negoW.credito.numeroOperacion:'':'')">
-			<!--   ****************************** PRIMERA PARTE DE NEGOCIACION ***************************   -->
-			<mat-step [stepControl]="formBusqueda" >
-				<ng-template matStepLabel>Busqueda de Cliente</ng-template>
-				<form [formGroup]="formBusqueda">
-					<div class="row">
-						<div class="col">
-							<mat-progress-bar *ngIf="loadBusqueda.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6 ">
-							<mat-form-field class="mat-form-field-fluid">
-								<input [formControl]="identificacion" placeholder="C.I." autocomplete="off"
-									required="true" matInput numeric numericType="number"
-									(keypress)="numberOnly($event)" />
-								<mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class=" offset-md-1 col-md-4">
-							<button mat-stroked-button color="primary" (click)="buscarCliente()" [disabled]="bloquearBusqueda">
+    <re-portlet-header [title]="'Negociación'" [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTools>
+            <a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+                    arrow_back</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+            </a>
+            <a href="javascript:void(0);" matTooltip="Guardar" (click)="guardarCredito()" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon class="blue-icon" style="font-size: 24px;" color="primary" matTooltipPosition="above">add_task</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="blue-icon">Negociar</span>
+            </a>
+        </ng-container>
+    </re-portlet-header>
+    <re-portlet-body>
+        <mat-vertical-stepper [linear]="false" #stepper (animationDone)="guardarTraking('NUEVO', this.negoW?this.negoW.credito?this.negoW.credito.codigo:'':'', ['Busqueda de Cliente','Datos Cliente','Variables Crediticias','Riesgo Acumulado','Tasación','Detalle Opciones de crédito'] , stepper.selectedIndex, 'NEGOCIACION', this.negoW?this.negoW.credito?this.negoW.credito.numeroOperacion:'':'')">
+            <!--   ****************************** PRIMERA PARTE DE NEGOCIACION ***************************   -->
+            <mat-step [stepControl]="formBusqueda">
+                <ng-template matStepLabel>Busqueda de Cliente</ng-template>
+                <form [formGroup]="formBusqueda">
+                    <div class="row">
+                        <div class="col">
+                            <mat-progress-bar *ngIf="loadBusqueda.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input [formControl]="identificacion" placeholder="C.I." autocomplete="off" required="true" matInput numeric numericType="number" (keypress)="numberOnly($event)" />
+                                <mat-error>{{ getErrorMessage("identificacion") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class=" offset-md-1 col-md-4">
+                            <button mat-stroked-button color="primary" (click)="buscarCliente()" [disabled]="bloquearBusqueda">
 								<mat-icon style="font-size: 24px;" color="primary" matTooltipPosition="above">search
 								</mat-icon>
 								<span color="primary">Buscar cliente </span>
 							</button>
-						</div>
-					</div>
-				</form>
-			</mat-step>
-			<mat-step [stepControl]="formDatosCliente"  >
-				<ng-template matStepLabel>Datos Cliente</ng-template>
-				<form [formGroup]="formDatosCliente">
-					<div class="row">
-						<div class="col-md-6">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="nombresCompletos" (click)="updateCliente($event, nombresCompletos)"  (keydown)="updateCliente($event, nombresCompletos)" placeholder="Nombres Completos"
-									required="true" />
-								<mat-error>{{ getErrorMessage("nombresCompletos") }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-3">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="cedula" placeholder="Cedula:"  />
-							</mat-form-field>
-						</div>
-						<div class="col-md-3">
-							<button mat-stroked-button
-								(click)="abrirPopupVerCotizacion(negoW.credito.tbQoNegociacion.tbQoCliente.cedulaCliente)">
+                        </div>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="formDatosCliente">
+                <ng-template matStepLabel>Datos Cliente</ng-template>
+                <form [formGroup]="formDatosCliente">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="nombresCompletos" (click)="updateCliente($event, nombresCompletos)" (keydown)="updateCliente($event, nombresCompletos)" placeholder="Nombres Completos" required="true" />
+                                <mat-error>{{ getErrorMessage("nombresCompletos") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="cedula" placeholder="Cedula:" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <button mat-stroked-button (click)="abrirPopupVerCotizacion(negoW.credito.tbQoNegociacion.tbQoCliente.cedulaCliente)">
 								<mat-icon style="font-size: 32px" matTooltipPosition="above" class="blue-icon">
 									remove_red_eye
 								</mat-icon>
 								<span class="blue-icon">Ver cotizacion</span>
 							</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<mat-form-field class="mat-form-field-fluid">
-								<mat-label>Fecha de nacimiento</mat-label>
-								<input (dateChange)="cargarEdad()" matInput #inputFechaNacimiento
-									[matDatepicker]="pickerFechaNacimiento"  (click)="updateCliente($event, fechaDeNacimiento)"  (keydown)="updateCliente($event, fechaDeNacimiento)" [formControl]="fechaDeNacimiento" 
-									required="true" />
-								<mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
-								<mat-datepicker #pickerFechaNacimiento></mat-datepicker>
-								<mat-error>{{ getErrorMessageEdad() }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-6 ">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="edad" placeholder="Edad"/>
-							</mat-form-field>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6 ">
-							<mat-form-field class="example-full-width">
-								<mat-select placeholder="Nacionalidad" [formControl]="nacionalidad" (selectionChange)="updateCliente($event, publicidad)"  (keydown)="updateCliente($event, publicidad)">
-									<mat-option *ngFor="let item of catPais" [value]="item">
-										{{item.nombre}}
-									</mat-option>
-								</mat-select>
-							  </mat-form-field>
-						</div>
-						<div class="col-md-6 ">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput numeric numericType="number"  (click)="updateCliente($event, movil)"  (keydown)="updateCliente($event, movil)" [formControl]="movil" placeholder="Móvil"
-									required="true" (keypress)="numberOnly($event)" />
-								<mat-error>{{ getErrorMessage("movil") }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6 ">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="email" (click)="updateCliente($event, email)"  (keydown)="updateCliente($event, email)" placeholder="Correo Eléctronico"
-									required="true" />
-								<mat-error>{{getErrorMessage("email") }}</mat-error>
-							</mat-form-field>
-						</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-label>Fecha de nacimiento</mat-label>
+                                <input (dateChange)="cargarEdad()" matInput #inputFechaNacimiento [matDatepicker]="pickerFechaNacimiento" (click)="updateCliente($event, fechaDeNacimiento)" (keydown)="updateCliente($event, fechaDeNacimiento)" [formControl]="fechaDeNacimiento" required="true"
+                                />
+                                <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
+                                <mat-error>{{ getErrorMessageEdad() }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="edad" placeholder="Edad" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <mat-form-field class="example-full-width">
+                                <mat-select placeholder="Nacionalidad" [formControl]="nacionalidad" (selectionChange)="updateCliente($event, publicidad)" (keydown)="updateCliente($event, publicidad)">
+                                    <mat-option *ngFor="let item of catPais" [value]="item">
+                                        {{item.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput numeric numericType="number" (click)="updateCliente($event, movil)" (keydown)="updateCliente($event, movil)" [formControl]="movil" placeholder="Móvil" required="true" (keypress)="numberOnly($event)" />
+                                <mat-error>{{ getErrorMessage("movil") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="email" (click)="updateCliente($event, email)" (keydown)="updateCliente($event, email)" placeholder="Correo Eléctronico" required="true" />
+                                <mat-error>{{getErrorMessage("email") }}</mat-error>
+                            </mat-form-field>
+                        </div>
 
-						<div class="col-md-6">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput [formControl]="telefonoDomicilio" (click)="updateCliente($event, telefonoDomicilio)"  (keydown)="updateCliente($event, telefonoDomicilio)" placeholder="Teléfono Domicilio"
-									required="true" (keypress)="numberOnly($event)">
-								<mat-error>{{ getErrorMessage("telefonoDomicilio") }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<mat-form-field class="mat-form-field-fluid">
-								<mat-select placeholder="Publicidad"  (selectionChange)="updateCliente($event, publicidad)"  (keydown)="updateCliente($event, publicidad)" [formControl]="publicidad" required="true">
-									<mat-option *ngFor="let publicidad of catPublicidad" [value]="publicidad">
-										{{ publicidad }}
-									</mat-option>
-								</mat-select>
-							</mat-form-field>
-						</div>
+                        <div class="col-md-6">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="telefonoDomicilio" (click)="updateCliente($event, telefonoDomicilio)" (keydown)="updateCliente($event, telefonoDomicilio)" placeholder="Teléfono Domicilio" required="true" (keypress)="numberOnly($event)">
+                                <mat-error>{{ getErrorMessage("telefonoDomicilio") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Publicidad" (selectionChange)="updateCliente($event, publicidad)" (keydown)="updateCliente($event, publicidad)" [formControl]="publicidad" required="true">
+                                    <mat-option *ngFor="let publicidad of catPublicidad" [value]="publicidad">
+                                        {{ publicidad }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
 
-					<!-- 	<div class="col-md-6">
+                        <!-- 	<div class="col-md-6">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput  (click)="updateCliente($event, campania)"  (keydown)="updateCliente($event, campania)" [formControl]="campania" placeholder="Campaña" />
 							</mat-form-field>
 						</div> -->
-					</div>
-					<div class="row">
-						<span class="ng-tns-c22-3 ng-star-inserted">Aprobado Web MUPI</span>
-						<div class="col-md-6">
-							<mat-radio-group [formControl]="aprobacionMupi">
-								<mat-radio-button  (click)="updateCliente($event, aprobacionMupi)"  (keydown)="updateCliente($event, aprobacionMupi)"  value="S">SI</mat-radio-button>
-								<mat-radio-button  (click)="updateCliente($event, aprobacionMupi)"  (keydown)="updateCliente($event, aprobacionMupi)"  value="N">NO</mat-radio-button>
-							</mat-radio-group>
-						</div>
-						<mat-error>{{ getErrorMessage("aprobacionMupi") }}</mat-error>
-					</div>
-				</form>
-			</mat-step>
-			<mat-step>
-				<ng-template matStepLabel>Variables Crediticias</ng-template>
-				<div class="row">
-					<div class="col">
-						<mat-progress-bar *ngIf="loadVariables.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
-					</div>
-				</div>
-				<ng-container *ngIf="componenteVariable">
-					<kt-tabla-variables-crediticias [base]="negoW.variables"></kt-tabla-variables-crediticias>
-				</ng-container>
-				<div class="row "  *ngIf="!componenteVariable">
-					<div class="col-4 offset-4">
-						<strong> PRIMERO DEBES BUSCAR UN CLIENTE </strong>
-					</div>	
-				</div>
-			</mat-step>
-			<mat-step>
-				<ng-template matStepLabel>Riesgo Acumulado</ng-template>
-				<ng-container *ngIf="componenteRiesgo">
-					<kt-tabla-riesgo-acumulado [base]="negoW.riesgos"></kt-tabla-riesgo-acumulado>
-				</ng-container>
+                    </div>
+                    <div class="row">
+                        <span class="ng-tns-c22-3 ng-star-inserted">Aprobado Web MUPI</span>
+                        <div class="col-md-6">
+                            <mat-radio-group [formControl]="aprobacionMupi">
+                                <mat-radio-button (click)="updateCliente($event, aprobacionMupi)" (keydown)="updateCliente($event, aprobacionMupi)" value="S">SI</mat-radio-button>
+                                <mat-radio-button (click)="updateCliente($event, aprobacionMupi)" (keydown)="updateCliente($event, aprobacionMupi)" value="N">NO</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                        <mat-error>{{ getErrorMessage("aprobacionMupi") }}</mat-error>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Variables Crediticias</ng-template>
+                <div class="row">
+                    <div class="col">
+                        <mat-progress-bar *ngIf="loadVariables.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+                    </div>
+                </div>
+                <ng-container *ngIf="componenteVariable">
+                    <kt-tabla-variables-crediticias [base]="negoW.variables"></kt-tabla-variables-crediticias>
+                </ng-container>
+                <div class="row " *ngIf="!componenteVariable">
+                    <div class="col-4 offset-4">
+                        <strong> PRIMERO DEBES BUSCAR UN CLIENTE </strong>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Riesgo Acumulado</ng-template>
+                <ng-container *ngIf="componenteRiesgo">
+                    <kt-tabla-riesgo-acumulado [base]="negoW.riesgos"></kt-tabla-riesgo-acumulado>
+                </ng-container>
 
-				<div class="row "  *ngIf="!componenteRiesgo">
-					<div class="col-4 offset-4">
-						<strong> EL CLIENTE NO TIENE RIESGO</strong>
-					</div>	
-				</div>
-			</mat-step>
-			<!--   ****************************** SEGUNDA PARTE DE NEGOCIACION ***************************   -->
-			<mat-step [stepControl]="formTasacion">
-				<ng-template matStepLabel> Tasación </ng-template>
-				<div class="row">
-					<div class="col">
-						<mat-progress-bar *ngIf="loadTasacion.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
-					</div>
-				</div>
-				<div class="row mt-4">
-					<div class="col-4 offset-5">
-						<button mat-stroked-button color="primary" (click)="verPrecio()" matTooltip="Ver precio">
+                <div class="row " *ngIf="!componenteRiesgo">
+                    <div class="col-4 offset-4">
+                        <strong> EL CLIENTE NO TIENE RIESGO</strong>
+                    </div>
+                </div>
+            </mat-step>
+            <!--   ****************************** SEGUNDA PARTE DE NEGOCIACION ***************************   -->
+            <mat-step [stepControl]="formTasacion">
+                <ng-template matStepLabel> Tasación </ng-template>
+                <div class="row">
+                    <div class="col">
+                        <mat-progress-bar *ngIf="loadTasacion.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-4 offset-5">
+                        <button mat-stroked-button color="primary" (click)="verPrecio()" matTooltip="Ver precio">
 							<mat-icon style="font-size: 24px;" color="primary" matTooltipPosition="above">visibility</mat-icon>
 							<span color="primary">Ver  Precios</span>
 						</button>
-					</div>
-				</div>
-				<div class="row "  *ngIf="!this.catTipoOro">
-					<div class="col-4 offset-4">
-						<strong> PRESIONE 'Ver Precios' PARA CARGAR LOS OROS Y SU VALOR </strong>
-					</div>	
-				</div>
-				<form [formGroup]="formTasacion" *ngIf="this.catTipoOro">
-					<div class="row">
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<mat-select placeholder="Tipo oro:" [formControl]="tipoOro"
-									(selectionChange)="setPrecioOro()">
-									<mat-option>--</mat-option>
-									<mat-option *ngFor="let tipoOro of catTipoOro" [value]="tipoOro">
-										{{ tipoOro.nombre }}
-									</mat-option>
-								</mat-select>
-								<mat-error>{{ getErrorMessage('tipoOro')  }}</mat-error>
-							</mat-form-field>
-						</div>
-					<!-- 	<div class="col-md-4">
+                    </div>
+                </div>
+                <div class="row " *ngIf="!this.catTipoOro">
+                    <div class="col-4 offset-4">
+                        <strong> PRESIONE 'Ver Precios' PARA CARGAR LOS OROS Y SU VALOR </strong>
+                    </div>
+                </div>
+                <form [formGroup]="formTasacion" *ngIf="this.catTipoOro">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Tipo oro:" [formControl]="tipoOro" (selectionChange)="setPrecioOro()">
+                                    <mat-option>--</mat-option>
+                                    <mat-option *ngFor="let tipoOro of catTipoOro" [value]="tipoOro">
+                                        {{ tipoOro.nombre }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>{{ getErrorMessage('tipoOro') }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <!-- 	<div class="col-md-4">
 							<mat-form-field class="mat-form-field-fluid">
 								<input matInput placeholder="Precio oro:" [formControl]="valorOro" readonly>
 								<span matSuffix>$</span>
 							</mat-form-field>
 						</div> -->
-					
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput numeric numericType="number" type="text"
-									placeholder="N&#250;mero de piezas:" [formControl]="numeroPiezas" (keypress)="numberOnly($event)" >
-								<mat-error>{{ getErrorMessage('numeroPiezas')  }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<mat-select placeholder="Tipo de joya:" [formControl]="tipoJoya">
-									<mat-option>--</mat-option>
-									<mat-option *ngFor="let tipoJoya of catTipoJoya" [value]="tipoJoya">
-										{{ tipoJoya.nombre }}</mat-option>
-								</mat-select>
-								<mat-error>{{ getErrorMessage('tipoJoya')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<mat-select placeholder="Estado" [formControl]="estado">
-									<mat-option>--</mat-option>
-									<mat-option *ngFor="let estado of catEstadoJoya" [value]="estado"> {{estado.nombre}}
-									</mat-option>
-								</mat-select>
-								<mat-error>{{ getErrorMessage('estado')  }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Peso bruto:" [formControl]="pesoBruto" (keyup)="setPesoNeto()">
-								<span matSuffix>Gr</span>
-								<mat-error>{{ getErrorMessage('pesoBruto')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Descuento suelda:" [formControl]="descuentoSuelda" (keyup)="setPesoNeto()">
-								<mat-error>{{getErrorMessage('descuentoSuelda')  }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-					<div class="row">
-						
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<mat-select placeholder="Tiene priedras:" [formControl]="tienePiedras" (selectionChange)="selectTienePiedras()">
-									<mat-option value="S">SI</mat-option>
-									<mat-option value="N">NO</mat-option>
-								</mat-select>
-								<mat-error>{{ getErrorMessage('tienePiedras')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						
-						<div class="col-md-4" *ngIf="tienePiedras.value == 'S'">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput numeric numericType="number" type="text"
-									placeholder="Detalle piedras:" [formControl]="detallePiedras">
-								<mat-error>{{ getErrorMessage('detallePiedras')  }}</mat-error>
-							</mat-form-field>
-						</div>
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid" *ngIf="tienePiedras.value == 'S'">
-								<input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra" (keyup)="setPesoNeto()">
-								<span matSuffix>Gr</span>
-								<mat-error>{{ getErrorMessage('descuentoPiedra') }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<mat-form-field class="mat-form-field-fluid">
-								<input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
-								<span matSuffix>Gr</span>
-								<mat-error>{{ getErrorMessage('pesoNeto')  }}</mat-error>
-							</mat-form-field>
-						</div>
-					</div>
-		
-					<div class="row">
-						<mat-form-field class="col-md-12">
-							<textarea class="form-control border" [formControl]="descripcion" rows="5"
-							placeholder="Descripci&#243;n " matInput></textarea>
-							<mat-error>{{ getErrorMessage('descripcion')  }}</mat-error>
-						</mat-form-field>
-					</div>
-					<div class="row">
-						<div class="offset-5 col-2 mb-5">
-							<button mat-stroked-button color="primary" (click)="cargarJoya()">
+
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput numeric numericType="number" type="text" placeholder="N&#250;mero de piezas:" [formControl]="numeroPiezas" (keypress)="numberOnly($event)">
+                                <mat-error>{{ getErrorMessage('numeroPiezas') }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Tipo de joya:" [formControl]="tipoJoya">
+                                    <mat-option>--</mat-option>
+                                    <mat-option *ngFor="let tipoJoya of catTipoJoya" [value]="tipoJoya">
+                                        {{ tipoJoya.nombre }}</mat-option>
+                                </mat-select>
+                                <mat-error>{{ getErrorMessage('tipoJoya') }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Estado" [formControl]="estado">
+                                    <mat-option>--</mat-option>
+                                    <mat-option *ngFor="let estado of catEstadoJoya" [value]="estado"> {{estado.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>{{ getErrorMessage('estado') }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput placeholder="Peso bruto:" [formControl]="pesoBruto" (keyup)="setPesoNeto()">
+                                <span matSuffix>Gr</span>
+                                <mat-error>{{ getErrorMessage('pesoBruto') }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput placeholder="Descuento suelda:" [formControl]="descuentoSuelda" (keyup)="setPesoNeto()">
+                                <mat-error>{{getErrorMessage('descuentoSuelda') }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Tiene priedras:" [formControl]="tienePiedras" (selectionChange)="selectTienePiedras()">
+                                    <mat-option value="S">SI</mat-option>
+                                    <mat-option value="N">NO</mat-option>
+                                </mat-select>
+                                <mat-error>{{ getErrorMessage('tienePiedras') }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4" *ngIf="tienePiedras.value == 'S'">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput numeric numericType="number" type="text" placeholder="Detalle piedras:" [formControl]="detallePiedras">
+                                <mat-error>{{ getErrorMessage('detallePiedras') }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid" *ngIf="tienePiedras.value == 'S'">
+                                <input matInput placeholder="Descuento peso piedra:" [formControl]="descuentoPiedra" (keyup)="setPesoNeto()">
+                                <span matSuffix>Gr</span>
+                                <mat-error>{{ getErrorMessage('descuentoPiedra') }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput placeholder="Peso neto:" [formControl]="pesoNeto" readonly>
+                                <span matSuffix>Gr</span>
+                                <mat-error>{{ getErrorMessage('pesoNeto') }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <mat-form-field class="col-md-12">
+                            <textarea class="form-control border" [formControl]="descripcion" rows="5" placeholder="Descripci&#243;n " matInput></textarea>
+                            <mat-error>{{ getErrorMessage('descripcion') }}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <div class="offset-5 col-2 mb-5">
+                            <button mat-stroked-button color="primary" (click)="cargarJoya()">
 								<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline
 								</mat-icon>
 								<span color="primary">Agregar</span>
 							</button>
-						</div>
-					</div>
-				</form>
-				<kt-tabla-tasacion *ngIf="this.negoW && this.negoW.joyas;" [data]='this.negoW.joyas' (rowEdit)='editar($event)' (rowDelete)='eliminar($event)' [tipo]="'A'"></kt-tabla-tasacion>
-				<div *ngIf="this.negoW && this.negoW.joyas" class="row">
-					<div class="offset-5 col-2 mt-3">
-						<button mat-stroked-button color="primary" matStepperNext (click)="calcularOpciones()">
+                        </div>
+                    </div>
+                </form>
+                <kt-tabla-tasacion *ngIf="this.negoW && this.negoW.joyas;" [data]='this.negoW.joyas' (rowEdit)='editar($event)' (rowDelete)='eliminar($event)' [tipo]="'A'"></kt-tabla-tasacion>
+                <div *ngIf="this.negoW && this.negoW.joyas" class="row">
+                    <div class="offset-5 col-2 mt-3">
+                        <button mat-stroked-button color="primary" matStepperNext (click)="calcularOpciones()">
 							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
 							<span color="primary">Calcular Opciones</span>
 						</button>
-					</div>
-				</div>
-			</mat-step>
-			<mat-step [stepControl]="formOpcionesCredito">
-				<ng-template matStepLabel>Detalle Opciones de crédito</ng-template>
-				<div class="row">
-					<div class="col">
-						<mat-progress-bar *ngIf="loadOpciones.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
-					</div>
-				</div>
-				<mat-table matTableExporter  #tableNegociacion class="tableOpciones" #exporter="matTableExporter"	[dataSource]="dataSourceCreditoNegociacion ">
-					<ng-container matColumnDef="Accion">
-						<mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
-						<mat-cell *matCellDef="let row">
-							<mat-checkbox (click)="$event.stopPropagation() && masterToggle(row)"
-							(change)="$event ? masterToggle(row): null"
-							[checked]="selection.isSelected(row)"
-							[aria-label]="checkboxLabel(row)">
-			  				</mat-checkbox>	
-						</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="plazo">
-						<mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-						<mat-cell *matCellDef="let element"> 
-							{{ 
-							element.plazo ? 
-							element.plazo == '60'  ? '60 Dias (Al Vcto.)' : 
-							element.plazo == '90'  ? '90 Dias (Al Vcto.)' : 
-							element.plazo == '120' ? '120 Dias (Al Vcto.)' : 
-							element.plazo == '6'   ? '6	Cuotas' : 
-							element.plazo == '9'   ? '9	Cuotas' : 
-							element.plazo == '12'  ? '12 Cuotas' : 
-							element.plazo == '18'  ? '18 Cuotas' : 
-							element.plazo : 'Error'
-							}}
-						</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="periodoPlazo">
-						<mat-header-cell *matHeaderCellDef>periodo Plazo</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.periodoPlazo }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="periodicidadPlazo">
-						<mat-header-cell *matHeaderCellDef>periodicidad Plazo</mat-header-cell>
-						<mat-cell *matCellDef="let element"> 
-							{{ 
-								element.periodicidadPlazo ?
-								element.periodicidadPlazo == 'M' ? 'Meses' :
-								element.periodicidadPlazo : 'Error'
-							}}
-						</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="montoFinanciado">
-						<mat-header-cell *matHeaderCellDef>Monto Financiado</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.montoFinanciado }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="valorARecibir">
-						<mat-header-cell *matHeaderCellDef>Valor A Recibir</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.valorARecibir }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="valorAPagar">
-						<mat-header-cell *matHeaderCellDef>Valor A Pagar</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.valorAPagar }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="costoCustodia">
-						<mat-header-cell *matHeaderCellDef>Costo Custodia</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.costoCustodia }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="costoFideicomiso">
-						<mat-header-cell *matHeaderCellDef>Costo Resguardo</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.costoFideicomiso }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="costoSeguro">
-						<mat-header-cell *matHeaderCellDef>Costo Seguro</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.costoSeguro }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="costoTasacion">
-						<mat-header-cell *matHeaderCellDef>Costo Tasacion</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.costoTasacion }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="costoTransporte">
-						<mat-header-cell *matHeaderCellDef>Costo Transporte</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.costoTransporte }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="costoValoracion">
-						<mat-header-cell *matHeaderCellDef>Costo Valoracion</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.costoValoracion }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="impuestoSolca">
-						<mat-header-cell *matHeaderCellDef>Impuesto Solca</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.impuestoSolca }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoImpuestoSolca">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Impuesto Solca</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.formaPagoImpuestoSolca }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoCapital">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Capital</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.formaPagoCapital }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoCustodia">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Custodia</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.formaPagoCustodia }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoFideicomiso">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Resguardo</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.formaPagoFideicomiso }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoInteres">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Interes</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.formaPagoInteres }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoMora">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Mora</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{element.formaPagoMora}}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoGastoCobranza">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Gasto Cobranza</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.formaPagoGastoCobranza }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoSeguro">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Seguro</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.formaPagoSeguro }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoTasador">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Tasador</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.formaPagoTasador }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoTransporte">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Transporte</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.formaPagoTransporte }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoValoracion">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Valoracion</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.formaPagoValoracion }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="saldoInteres">
-						<mat-header-cell *matHeaderCellDef>Saldo Interes</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.saldoInteres }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="saldoMora">
-						<mat-header-cell *matHeaderCellDef>Saldo Mora</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.saldoMora }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="gastoCobranza">
-						<mat-header-cell *matHeaderCellDef>Gasto Cobranza</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.gastoCobranza }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="cuota">
-						<mat-header-cell *matHeaderCellDef>Cuota</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.cuota }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="saldoCapitalRenov">
-						<mat-header-cell *matHeaderCellDef>saldo Capital Renov</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.saldoCapitalRenov }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="montoPrevioDesembolso">
-						<mat-header-cell *matHeaderCellDef>Monto Previo Desembolso </mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.montoPrevioDesembolso }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="totalGastosNuevaOperacion">
-						<mat-header-cell *matHeaderCellDef>Total Gastos Nueva Operacion</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.totalGastosNuevaOperacion }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="totalCostosOperacionAnterior">
-						<mat-header-cell *matHeaderCellDef>Total Costos Operacion Anterior</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.totalCostosOperacionAnterior }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="custodiaDevengada">
-						<mat-header-cell *matHeaderCellDef>Custodia Devengada</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.custodiaDevengada }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="formaPagoCustodiaDevengada">
-						<mat-header-cell *matHeaderCellDef>Forma Pago Custodia Devengada</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.formaPagoCustodiaDevengada }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="tipooferta">
-						<mat-header-cell *matHeaderCellDef>Tipo oferta</mat-header-cell>
-						<mat-cell *matCellDef="let element"> 
-							{{ 
-								element.tipooferta ? 
-								element.tipooferta == 'N' ? 'Nuevo' :
-								element.tipooferta : 'Error'
-							}}
-						</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="porcentajeflujoplaneado">
-						<mat-header-cell *matHeaderCellDef>Porcentaje flujo planeado</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.porcentajeflujoplaneado }}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="dividendoflujoplaneado">
-						<mat-header-cell *matHeaderCellDef>Dividendo flujo planeado</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{element.dividendoflujoplaneado}}</mat-cell>
-					</ng-container>
-					<ng-container matColumnDef="dividendosprorrateoserviciosdiferido">
-						<mat-header-cell *matHeaderCellDef>Dividendos prorrateo servicios diferido</mat-header-cell>
-						<mat-cell *matCellDef="let element"> {{ element.dividendosprorrateoserviciosdiferido }}</mat-cell>
-					</ng-container>
-					<mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
-					<mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>
-				</mat-table>
-				<div class="row">
-					<div class="col-1 offset-11">
-						<button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'opciones', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
-					</div>
-				  </div>
-				<form [formGroup]="formOpcionesCredito">
-					<div class="row mt-3">
-						<div class="col-md-2">
-							<mat-form-field class="mat-form-field-fluid">
-								<input [formControl]="montoSolicitado" placeholder="Monto solicitado" autocomplete="off"
-									matInput numeric numericType="number">
-									<mat-error>{{ getErrorMessage('Monto')  }}</mat-error>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step [stepControl]="formOpcionesCredito">
+                <ng-template matStepLabel>Detalle Opciones de crédito</ng-template>
+                <div class="row">
+                    <div class="col">
+                        <mat-progress-bar *ngIf="loadOpciones.asObservable() | async" mode="indeterminate"> </mat-progress-bar>
+                    </div>
+                </div>
+                <mat-table matTableExporter #tableNegociacion class="tableOpciones" #exporter="matTableExporter" [dataSource]="dataSourceCreditoNegociacion ">
+                    <ng-container matColumnDef="Accion">
+                        <mat-header-cell *matHeaderCellDef>Seleccion</mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <mat-checkbox (click)="$event.stopPropagation() && masterToggle(row)" (change)="$event ? masterToggle(row): null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                            </mat-checkbox>
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="plazo">
+                        <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{ element.plazo ? element.plazo == '60' ? '60 Dias (Al Vcto.)' : element.plazo == '90' ? '90 Dias (Al Vcto.)' : element.plazo == '120' ? '120 Dias (Al Vcto.)' : element.plazo == '6' ? '6 Cuotas' : element.plazo == '9' ? '9 Cuotas' : element.plazo ==
+                            '12' ? '12 Cuotas' : element.plazo == '18' ? '18 Cuotas' : element.plazo : 'Error' }}
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="periodoPlazo">
+                        <mat-header-cell *matHeaderCellDef>periodo Plazo</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.periodoPlazo }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="periodicidadPlazo">
+                        <mat-header-cell *matHeaderCellDef>periodicidad Plazo</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{ element.periodicidadPlazo ? element.periodicidadPlazo == 'M' ? 'Meses' : element.periodicidadPlazo : 'Error' }}
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="montoFinanciado">
+                        <mat-header-cell *matHeaderCellDef>Monto Financiado</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.montoFinanciado }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorARecibir">
+                        <mat-header-cell *matHeaderCellDef>Valor A Recibir</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.valorARecibir }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="valorAPagar">
+                        <mat-header-cell *matHeaderCellDef>Valor A Pagar</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.valorAPagar }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="costoCustodia">
+                        <mat-header-cell *matHeaderCellDef>Costo Custodia</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.costoCustodia }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="costoFideicomiso">
+                        <mat-header-cell *matHeaderCellDef>Costo Resguardo</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.costoFideicomiso }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="costoSeguro">
+                        <mat-header-cell *matHeaderCellDef>Costo Seguro</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.costoSeguro }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="costoTasacion">
+                        <mat-header-cell *matHeaderCellDef>Costo Tasacion</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.costoTasacion }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="costoTransporte">
+                        <mat-header-cell *matHeaderCellDef>Costo Transporte</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.costoTransporte }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="costoValoracion">
+                        <mat-header-cell *matHeaderCellDef>Costo Valoracion</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.costoValoracion }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="impuestoSolca">
+                        <mat-header-cell *matHeaderCellDef>Impuesto Solca</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.impuestoSolca }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoImpuestoSolca">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Impuesto Solca</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.formaPagoImpuestoSolca }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoCapital">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Capital</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.formaPagoCapital }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoCustodia">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Custodia</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.formaPagoCustodia }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoFideicomiso">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Resguardo</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.formaPagoFideicomiso }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoInteres">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Interes</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.formaPagoInteres }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoMora">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Mora</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.formaPagoMora}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoGastoCobranza">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Gasto Cobranza</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.formaPagoGastoCobranza }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoSeguro">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Seguro</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.formaPagoSeguro }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoTasador">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Tasador</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.formaPagoTasador }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoTransporte">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Transporte</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.formaPagoTransporte }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoValoracion">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Valoracion</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.formaPagoValoracion }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="saldoInteres">
+                        <mat-header-cell *matHeaderCellDef>Saldo Interes</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.saldoInteres }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="saldoMora">
+                        <mat-header-cell *matHeaderCellDef>Saldo Mora</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.saldoMora }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="gastoCobranza">
+                        <mat-header-cell *matHeaderCellDef>Gasto Cobranza</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.gastoCobranza }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="cuota">
+                        <mat-header-cell *matHeaderCellDef>Cuota</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.cuota }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="saldoCapitalRenov">
+                        <mat-header-cell *matHeaderCellDef>saldo Capital Renov</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.saldoCapitalRenov }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="montoPrevioDesembolso">
+                        <mat-header-cell *matHeaderCellDef>Monto Previo Desembolso </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.montoPrevioDesembolso }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="totalGastosNuevaOperacion">
+                        <mat-header-cell *matHeaderCellDef>Total Gastos Nueva Operacion</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.totalGastosNuevaOperacion }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="totalCostosOperacionAnterior">
+                        <mat-header-cell *matHeaderCellDef>Total Costos Operacion Anterior</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.totalCostosOperacionAnterior }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="custodiaDevengada">
+                        <mat-header-cell *matHeaderCellDef>Custodia Devengada</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.custodiaDevengada }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="formaPagoCustodiaDevengada">
+                        <mat-header-cell *matHeaderCellDef>Forma Pago Custodia Devengada</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.formaPagoCustodiaDevengada }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="tipooferta">
+                        <mat-header-cell *matHeaderCellDef>Tipo oferta</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{ element.tipooferta ? element.tipooferta == 'N' ? 'Nuevo' : element.tipooferta : 'Error' }}
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="porcentajeflujoplaneado">
+                        <mat-header-cell *matHeaderCellDef>Porcentaje flujo planeado</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.porcentajeflujoplaneado }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="dividendoflujoplaneado">
+                        <mat-header-cell *matHeaderCellDef>Dividendo flujo planeado</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.dividendoflujoplaneado}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="dividendosprorrateoserviciosdiferido">
+                        <mat-header-cell *matHeaderCellDef>Dividendos prorrateo servicios diferido</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.dividendosprorrateoserviciosdiferido }}</mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion" [ngStyle]="sombrear(row)"></mat-row>
+                </mat-table>
+                <div class="row">
+                    <div class="col-1 offset-11">
+                        <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'opciones', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
+                    </div>
+                </div>
+                <form [formGroup]="formOpcionesCredito">
+                    <div class="row mt-3">
+                        <div class="col-md-2">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input [formControl]="montoSolicitado" placeholder="Monto solicitado" autocomplete="off" matInput numeric numericType="number">
+                                <mat-error>{{ getErrorMessage('Monto') }}</mat-error>
 
-							</mat-form-field>
-						</div>
-						<div class="col-md-2">
-							<button mat-stroked-button color="primary" (click)="calcularOpciones(this.montoSolicitado.value)"  matTooltip="Recalcula las opciones con el Monto solicitado" matTooltipPosition="above">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2">
+                            <button mat-stroked-button color="primary" (click)="calcularOpciones(this.montoSolicitado.value)" matTooltip="Recalcula las opciones con el Monto solicitado" matTooltipPosition="above">
 								<mat-icon style="font-size: 24px;" color="primary" >crop_rotate 
 								</mat-icon>
 								<span color="primary">Aplicar Monto</span>
 							</button>
-						</div>
-						<div class="offset-md-3 col-md-3">
-							<button mat-stroked-button color="primary" (click)="abrirPopupExcepciones()" matTooltip="Solicitar Excepcion de cobertura" matTooltipPosition="above">
+                        </div>
+                        <div class="offset-md-3 col-md-3">
+                            <button mat-stroked-button color="primary" (click)="abrirPopupExcepciones()" matTooltip="Solicitar Excepcion de cobertura" matTooltipPosition="above">
 								<mat-icon style="font-size: 24px;" color="primary" >search
 								</mat-icon>
 								<span color="primary">Solicitar Cobertura</span>
 							</button>
-						</div>
-					</div>
-					<div class="row mt-3">
-						<div class="col-4 offset-5">
-							<button mat-raised-button color="accent" (click)="guardarCredito()" style="align-self: center;">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-4 offset-5">
+                            <button mat-raised-button color="accent" (click)="guardarCredito()" style="align-self: center;">
 								<span color="primary">Negociar</span>
 							</button>
-						</div>
-					</div>
-				</form>
-			</mat-step>
-		</mat-vertical-stepper>
+                        </div>
+                    </div>
+                </form>
+            </mat-step>
+        </mat-vertical-stepper>
 
-	</re-portlet-body>
-	<re-portlet-footer></re-portlet-footer>
+    </re-portlet-body>
+    <re-portlet-footer></re-portlet-footer>
 </re-portlet>

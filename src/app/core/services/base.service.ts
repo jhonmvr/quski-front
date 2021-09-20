@@ -79,9 +79,9 @@ export class BaseService {
            //Path al rootcontext de la app 
            //Path al resources de la app
            this.appResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE006')).replace(this.keyUnencrypt, '');
-           this.appResourcesUrl = 'https://plataforma-oro.quski.ec:28888/quski-bpm/1.0.0/';
+           //this.appResourcesUrl = 'https://plataforma-oro.quski.ec:28888/quski-bpm/1.0.0/';
            
-           
+           //this.appResourcesUrl = 'http://10.37.10.180:8480/quski-oro-rest/resources/';
            
            //Path al resources de la app
 

@@ -34,8 +34,7 @@
                     </div>
                     <div class="col-md-6">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion: "
-                                [value]="fechaCreacion.value | rDate" />
+                            <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creacion: " [value]="fechaCreacion.value | rDate" />
                         </mat-form-field>
                     </div>
                 </div>
@@ -99,27 +98,13 @@
             <mat-step label="Opciones de Crédito">
                 <div class="row">
                     <div class="col">
-                        <mat-table id='tableNegociacion' class="tableOpciones"
-                            [dataSource]="dataSourceCreditoNegociacion">
+                        <mat-table id='tableNegociacion' class="tableOpciones" [dataSource]="dataSourceCreditoNegociacion">
                             <ng-container matColumnDef="plazo">
                                 <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
                                 <mat-cell *matCellDef="let element">
-                                    {{
-                                    element.plazo ?
-                                    element.plazo == '60' ? '60 Dias (Al Vcto.)' :
-                                    element.plazo == '31' ? '31 Dias (Al Vcto.)' :
-                                    element.plazo == '90' ? '90 Dias (Al Vcto.)' :
-                                    element.plazo == '120' ? '120 Dias (Al Vcto.)' :
-                                    element.plazo == '6' ? '6 Cuotas' :
-                                    element.plazo == '4' ? '4 Cuotas' :
-                                    element.plazo == '7' ? '7 Cuotas' :
-                                    element.plazo == '11' ? '11 Cuotas' :
-                                    element.plazo == '13' ? '13 Cuotas' :
-                                    element.plazo == '9' ? '9 Cuotas' :
-                                    element.plazo == '12' ? '12 Cuotas' :
-                                    element.plazo == '18' ? '18 Cuotas' :
-                                    element.plazo : 'Error'
-                                    }}
+                                    {{ element.plazo ? element.plazo == '60' ? '60 Dias (Al Vcto.)' : element.plazo == '31' ? '31 Dias (Al Vcto.)' : element.plazo == '90' ? '90 Dias (Al Vcto.)' : element.plazo == '120' ? '120 Dias (Al Vcto.)' : element.plazo == '6' ? '6 Cuotas' : element.plazo
+                                    == '4' ? '4 Cuotas' : element.plazo == '7' ? '7 Cuotas' : element.plazo == '11' ? '11 Cuotas' : element.plazo == '13' ? '13 Cuotas' : element.plazo == '9' ? '9 Cuotas' : element.plazo == '12' ? '12 Cuotas' : element.plazo
+                                    == '18' ? '18 Cuotas' : element.plazo : 'Error' }}
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="periodoPlazo">
@@ -129,12 +114,7 @@
                             <ng-container matColumnDef="periodicidadPlazo">
                                 <mat-header-cell *matHeaderCellDef>periodicidad Plazo</mat-header-cell>
                                 <mat-cell *matCellDef="let element">
-                                    {{
-                                    element.periodicidadPlazo ?
-                                    element.periodicidadPlazo == 'M' ? 'Meses' :
-                                    element.periodicidadPlazo == 'D' ? 'Dias' :
-                                    element.periodicidadPlazo : 'Error'
-                                    }}
+                                    {{ element.periodicidadPlazo ? element.periodicidadPlazo == 'M' ? 'Meses' : element.periodicidadPlazo == 'D' ? 'Dias' : element.periodicidadPlazo : 'Error' }}
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="montoFinanciado">
@@ -299,23 +279,20 @@
                         <div class="col-8">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Observacion Del Asesor: </mat-label>
-                                <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: "
-                                    [formControl]="observacionAsesor" matInput> {{ observacion }} </textarea>
+                                <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: " [formControl]="observacionAsesor" matInput> {{ observacion }} </textarea>
                             </mat-form-field>
                         </div>
                         <div class="col-8">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-label>Observacion Del Aprobador: </mat-label>
-                                <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
-                                    placeholder="Observacion Del Aprobador: " matInput></textarea>
+                                <textarea class="form-control border" [formControl]="observacionAprobador" rows="5" placeholder="Observacion Del Aprobador: " matInput></textarea>
                             </mat-form-field>
                         </div>
                     </div>
                     <div class="row mt-5">
                         <div class="col-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="cobertura" placeholder="Porcentaje Cobertura: "
-                                    (keypress)="numberOnly($event)" />
+                                <input matInput [formControl]="cobertura" placeholder="Porcentaje Cobertura: " (keypress)="numberOnly($event)" />
                             </mat-form-field>
                         </div>
                         <div class="col-4">
@@ -353,8 +330,7 @@
                             <div class="row mt-5">
                                 <div class="col-4">
                                     <mat-form-field class="mat-form-field-fluid">
-                                        <input matInput [formControl]="coberturaActual"
-                                            placeholder="Cobertura Actual: " />
+                                        <input matInput [formControl]="coberturaActual" placeholder="Cobertura Oferta: " />
                                     </mat-form-field>
                                 </div>
                                 <div class="offset-1 col-4">
@@ -364,8 +340,7 @@
                                 </div>
                                 <div class="col-4 ">
                                     <mat-form-field class="mat-form-field-fluid">
-                                        <input matInput [formControl]="valorComercial"
-                                            placeholder="Valor Comercial: " />
+                                        <input matInput [formControl]="valorComercial" placeholder="Valor Comercial: " />
                                     </mat-form-field>
                                 </div>
                                 <div class="offset-1 col-4">

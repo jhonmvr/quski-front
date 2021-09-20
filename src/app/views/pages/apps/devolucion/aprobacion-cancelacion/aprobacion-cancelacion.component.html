@@ -1,14 +1,13 @@
 <re-portlet>
     <re-portlet-header [title]="titulo" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
-            <a (click)="regresar()" matTooltip="Regresar a gestion cliente"
-                style="font-size: 12px; vertical-align: middle;">
+            <a (click)="regresar()" matTooltip="Regresar a gestion cliente" style="font-size: 12px; vertical-align: middle;">
                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
                     arrow_back</mat-icon>
                 <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
             </a>
         </ng-container>
-    </re-portlet-header> 
+    </re-portlet-header>
 
     <re-portlet-body>
         <mat-vertical-stepper #stepper (animationDone)="guardarTraking(wrapperDevolucion ? wrapperDevolucion.proceso ? wrapperDevolucion.proceso.proceso : null : null,
@@ -64,8 +63,7 @@
                     </div>
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de Nacimiento:"
-                                [value]="fechaNacimiento.value | rDate">
+                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de Nacimiento:" [value]="fechaNacimiento.value | rDate">
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">
@@ -110,8 +108,7 @@
                 <div class="row">
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="tipoCliente" [value]="tipoCliente.value.nombre"
-                                placeholder="Tipo de Cliente: ">
+                            <input matInput [formControl]="tipoCliente" [value]="tipoCliente.value.nombre" placeholder="Tipo de Cliente: ">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -127,8 +124,7 @@
                     <div class="col-12">
                         <mat-form-field class="mat-form-field-fluid">
                             <mat-label>Observacion Del Asesor: </mat-label>
-                            <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: "
-                                [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
+                            <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: " [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
                         </mat-form-field>
                     </div>
                 </div>
@@ -161,61 +157,59 @@
                     </div>
                 </div>
             </mat-step>
-            <mat-step label = "Detalle de proceso">
+            <mat-step label="Detalle de proceso">
                 <div class="row">
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaSolicitud" placeholder="Fecha de solicitud: "  [value]="fechaNacimiento.value | rDate">
+                            <input matInput [formControl]="fechaSolicitud" placeholder="Fecha de solicitud: " [value]="fechaSolicitud.value | rDate">
                         </mat-form-field>
                     </div>
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaAprobacion" placeholder="Fecha de aprobación: "  [value]="fechaNacimiento.value | rDate">
+                            <input matInput [formControl]="fechaAprobacion" placeholder="Fecha de aprobación: " [value]="fechaAprobacion.value | rDate">
                         </mat-form-field>
                     </div>
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaArribo" placeholder="Fecha de arribo:"  [value]="fechaNacimiento.value | rDate">
+                            <input matInput [formControl]="fechaArribo" placeholder="Fecha de arribo:" [value]="fechaArribo.value | rDate">
                         </mat-form-field>
                     </div>
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaRecepcionAgencia" placeholder="Fecha de recepción en agencia:"  [value]="fechaNacimiento.value | rDate">
+                            <input matInput [formControl]="fechaRecepcionAgencia" placeholder="Fecha de recepción en agencia:" [value]="fechaRecepcionAgencia.value | rDate">
                         </mat-form-field>
                     </div>
                     <div class="col-12">
                         <mat-form-field class="mat-form-field-fluid">
                             <mat-label>Observacion De Cancelacion: </mat-label>
-                            <textarea class="form-control border" rows="5" placeholder="Observacion De Cancelacion: "
-                                [formControl]="observacionCancelacion" [value]="observacionCancelacion.value" matInput> </textarea>
+                            <textarea class="form-control border" rows="5" placeholder="Observacion De Cancelacion: " [formControl]="observacionCancelacion" [value]="observacionCancelacion.value" matInput> </textarea>
                         </mat-form-field>
                     </div>
                 </div>
             </mat-step>
-            <mat-step label = "Documento Habilitantes">
+            <mat-step label="Documento Habilitantes">
                 <div class="row">
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso= procesoHablitante ;varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}" >Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedulaCliente.value "   style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}" >Habilitante Cliente</button>
-                  </div>
-                  <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'"
-                      [referencia]="varHabilitante.referencia" >
-                          </re-habilitante> 
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso= procesoHablitante ;varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedulaCliente.value " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
+                </div>
+                <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'" [referencia]="varHabilitante.referencia">
+                </re-habilitante>
                 <div class="row mt-3">
                     <div class="offset-3 col-2">
-                      <button mat-raised-button color="primary" (click)="enviarRespuesta(true)">
+                        <button mat-raised-button color="primary" (click)="enviarRespuesta(true)">
                         <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
                         </mat-icon>
                         <span class="white-icon">Aprobar Cancelacion</span>
                       </button>
                     </div>
                     <div class="offset-1 col-2">
-                      <button mat-raised-button color="warn" (click)="enviarRespuesta(false)">
+                        <button mat-raised-button color="warn" (click)="enviarRespuesta(false)">
                         <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
                         </mat-icon>
                         <span class="white-icon">Rechazar Cancelacion</span>
                       </button>
                     </div>
-                  </div>
+                </div>
             </mat-step>
         </mat-vertical-stepper>
     </re-portlet-body>
