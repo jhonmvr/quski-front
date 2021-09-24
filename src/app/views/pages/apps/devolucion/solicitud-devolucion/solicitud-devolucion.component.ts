@@ -437,7 +437,7 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
         this.calcular();
         wrapper.valorAvaluo = this.totalValorA;
         wrapper.pesoBruto = this.totalPesoB;
-        wrapper.fechaEfectiva = this.wrapperSoft.credito.fechaAprobacion;
+        //wrapper.fechaEfectiva = this.wrapperSoft.credito.fechaAprobacion;
         //wrapper.valorCustodiaAprox = this.valorCustodia.value;
         wrapper.codeHerederos = this.encodeObjetos({ heredero: this.listTablaHeredero });
         wrapper.codeDetalleCredito = this.encodeObjetos([this.objetoCredito]);
