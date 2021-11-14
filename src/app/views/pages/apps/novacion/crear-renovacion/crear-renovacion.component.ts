@@ -483,7 +483,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     let monto = this.montoSolicitado.value ? this.montoSolicitado.value : null;
     this.cal.simularOfertaRenovacion(this.riesgoTotal, cobertura ,this.agencia, monto, wrapper).subscribe( (data: any) =>{
       if(data.entidad){
-        if(data.entidad.simularResult.codigoError > 0){
+        if(data.entidad.simularResult.codigoError != 0){
           this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
           return;
         }

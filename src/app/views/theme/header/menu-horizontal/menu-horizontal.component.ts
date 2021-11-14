@@ -179,7 +179,7 @@ export class MenuHorizontalComponent implements OnInit, AfterViewInit {
 	getItemMenuSubmenuClass(item) {
 		let classes = '';
 
-		const alignment = objectPath.get(item, 'alignment') || 'right';
+		const alignment = objectPath.get(item, 'alignment') || 'left';
 
 		if (alignment) {
 			classes += ' kt-menu__submenu--' + alignment;

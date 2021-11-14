@@ -110,7 +110,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   selectUbicacionO;
   public nivelEducacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public cargaFamiliar = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-  public canalContacto = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  //public canalContacto = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public primerNombre = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public nacionalidad = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public genero = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -215,7 +215,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.formCliente.addControl("nacionalidad ", this.nacionalidad);
     this.formCliente.addControl("nivelEducacion ", this.nivelEducacion);
     this.formCliente.addControl("actividadEconomica  ", this.actividadEconomica);
-    this.formCliente.addControl("canalContacto  ", this.canalContacto);
+    //this.formCliente.addControl("canalContacto  ", this.canalContacto);
     this.formDatosContacto.addControl("telefonoFijo  ", this.telefonoFijo);
     this.formDatosContacto.addControl("email  ", this.email);
     this.formDatosDireccionDomicilio.addControl("ubicacion   ", this.ubicacion);
@@ -319,7 +319,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.consultarLugarDeNacimiento( this.wrapper.cliente.lugarNacimiento ? this.wrapper.cliente.lugarNacimiento : null );
       this.lugarNacimiento.disable();
       this.edad.setValue(this.wrapper.cliente.edad);
-      this.canalContacto.setValue(this.catMotivoVisita.find(x => x.codigo == this.wrapper.cliente.canalContacto));
+      //this.canalContacto.setValue(this.catMotivoVisita.find(x => x.codigo == this.wrapper.cliente.canalContacto));
       if (this.wrapper.telefonos) {
         this.dataSourceTelefonosCliente = new MatTableDataSource<any>(this.wrapper.telefonos);
       }
@@ -714,10 +714,10 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       const input = this.nacionalidad;
       return input.hasError('required') ? errorRequerido : '';
     }
-    if (pfield && pfield === 'canalContacto') {
+    /* if (pfield && pfield === 'canalContacto') {
       const input = this.canalContacto;
       return input.hasError('required') ? errorRequerido : '';
-    }
+    } */
     if (pfield && pfield === 'email') {
       const input = this.email;
       return input.hasError('email')
@@ -1229,7 +1229,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.wrapper.cliente.apellidoMaterno = this.apellidoMaterno.value?this.apellidoMaterno.value:" ";
     this.wrapper.cliente.primerNombre = this.primerNombre.value;
     this.wrapper.cliente.apellidoPaterno = this.apellidoPaterno.value;
-    this.wrapper.cliente.canalContacto = this.canalContacto.value.codigo;
+    //this.wrapper.cliente.canalContacto = this.canalContacto.value.codigo;
     this.wrapper.cliente.cargasFamiliares = this.cargaFamiliar ? Number(this.cargaFamiliar.value) : null;
     this.wrapper.cliente.cedulaCliente = this.identificacion.value;
     this.wrapper.cliente.edad = this.edad.value;

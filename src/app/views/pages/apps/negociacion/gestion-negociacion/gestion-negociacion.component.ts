@@ -248,6 +248,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
 
         this.negoW.proceso.proceso == 'NUEVO' ? null : 
         this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : this.validarExcepciones(this.negoW);
+        this.negoW.proceso.estadoProceso == 'EXCEPCIONADO' ? this.validarExcepciones(this.negoW):'';
         this.negoW.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
           this.negoW.proceso.estadoProceso == 'PENDIENTE_APROBACION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') : 
           this.negoW.proceso.estadoProceso == 'PENDIENTE_APROBACION_DEVUELTO' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
@@ -929,7 +930,11 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
           this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
           this.loadOpciones.next(false);
           this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
-        } else if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion
+        } else if(data.entidad.simularResult.codigoError > 0){
+          this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
+          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
+          return;
+        }else if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
           this.loadOpciones.next(false);
@@ -939,12 +944,13 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
           this.tas.getTasacionByIdCredito(null,this.negoW.credito.id).subscribe(tasa=>{
             if(tasa && tasa.list){
               this.negoW.joyas = tasa.list;
+              this.myStepper.selectedIndex = 5;
             }
           })
         } else {
           this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'warning');
         }
-        this.myStepper.selectedIndex = 5;
+        
       });
     }
   }
