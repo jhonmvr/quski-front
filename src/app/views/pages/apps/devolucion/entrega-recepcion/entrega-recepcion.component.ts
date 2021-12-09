@@ -109,8 +109,8 @@ export class EntregaRecepcionComponent extends TrackingUtil implements OnInit {
   private inicioFlujo() {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.item) {
-        this.item = json.params.item;
-        this.dev.buscarProcesoDevolucion(this.item).subscribe((data: any) => {
+        
+        this.dev.buscarProcesoDevolucion(json.params.item).subscribe((data: any) => {
           this.wrapperDevolucion = data.entidad;
           this.cre.traerCreditoVigente(this.wrapperDevolucion.devolucion.codigoOperacion).subscribe((data: any) => {
             if (data.entidad) {
@@ -118,6 +118,7 @@ export class EntregaRecepcionComponent extends TrackingUtil implements OnInit {
               if(this.wrapperSoft.credito.esMigrado){
                 this.varHabilitante ='TERMINACIONCONTRATO,ENTREGA';
               }
+              this.item = json.params.item;
               this.cargarCampos();
             } else {
               this.salirDeGestion("Error al intentar cargar el credito.");

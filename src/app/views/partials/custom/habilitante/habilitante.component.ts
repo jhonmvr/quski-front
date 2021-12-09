@@ -35,8 +35,7 @@ export class HabilitanteComponent implements OnInit {
    /**Obligatorio paginacion */
    p = new Page();
    dataSourcesHabilitantes:MatTableDataSource<HabilitanteWrapper> = new MatTableDataSource<HabilitanteWrapper>([]);
-   @ViewChild(MatPaginator, { static: true }) 
-   paginator: MatPaginator;
+   //@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
    totalResults: number;
    pageSize = 5;
    currentPage;
@@ -172,13 +171,7 @@ export class HabilitanteComponent implements OnInit {
   /**
    * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
    */
-  initiateTablePaginator(): void {
-    this.dataSourcesHabilitantes = new MatTableDataSource();
-    this.paginator.pageSize = 5;
-    this.paginator.pageIndex = 0;
-    this.totalResults = 0;
-    this.dataSourcesHabilitantes.paginator = this.paginator;
-  }
+ 
 
    /**
    * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
@@ -186,7 +179,7 @@ export class HabilitanteComponent implements OnInit {
   getPaginacion(ordenarPor: string, tipoOrden: string, paginado: string,pagina): Page {
     const p = new Page();
     p.pageNumber = pagina;
-    p.pageSize = this.paginator.pageSize;
+    //p.pageSize = this.paginator.pageSize;
     p.sortFields = ordenarPor;
     p.sortDirections = tipoOrden;
     p.isPaginated = paginado;
@@ -199,12 +192,11 @@ export class HabilitanteComponent implements OnInit {
    * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
    */
   paged() {
-    this.p=this.getPaginacion(null, null, 'Y',this.paginator.pageIndex)
+    this.p=this.getPaginacion(null, null, 'Y',0)
     this.submit();
   } 
 
   buscar() {
-    this.initiateTablePaginator();
     this.p=this.getPaginacion(null, null, 'Y',0);
     this.submit();
     //return of("respuesta");
