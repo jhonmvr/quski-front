@@ -14,7 +14,7 @@ import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
 import { diferenciaEnDias } from '../../../../../core/util/diferenciaEnDias';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
-import { SubheaderService } from '../../../../../core/_base/layout';
+import { LayoutConfigService, SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -24,6 +24,7 @@ import { TrackingService } from '../../../../../core/services/quski/tracking.ser
 import { DevolucionCreditoComponent } from '../../../../partials/custom/popups/devolucion-credito/devolucion-credito.component';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
+import { ProcesoService } from '../../../../../../app/core/services/quski/proceso.service';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -87,6 +88,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService,
+    private procesoService: ProcesoService,
+    private layoutService: LayoutConfigService,
     private subheaderService: SubheaderService,
     public tra: TrackingService
   ) { 
@@ -94,6 +97,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.cre.setParameter();
     this.sof.setParameter();
     this.cal.setParameter();
+    this.procesoService.setParameter();
 
     this.formOperacion.addControl("codigoBpm", this.codigoBpm);
     this.formOperacion.addControl("codigoOperacion", this.codigoOperacion);
@@ -127,6 +131,9 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.route.paramMap.subscribe((json: any) => {
       this.validCliente = true;
       this.riesgoTotal  = 0;
+      this.procesoService.getCabecera(json.params.item,'RENOVACION').subscribe(datosCabecera=>{
+        this.layoutService.setDatosContrato(datosCabecera);
+      })
       if (json.params.item && json.params.codigo) {
         if( json.params.codigo == 'NOV'){
           this.loadingSubject.next(true);

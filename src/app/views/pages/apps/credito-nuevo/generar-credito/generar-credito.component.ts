@@ -24,6 +24,7 @@ import { BehaviorSubject } from 'rxjs';
 import { saveAs } from 'file-saver';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { AddFotoComponent } from '../../../../../views/partials/custom/fotos/add-foto/add-foto.component';
+import { LayoutConfigService } from '../../../../../../app/core/_base/layout';
 @Component({
   selector: 'kt-generar-credito',
   templateUrl: './generar-credito.component.html',
@@ -127,6 +128,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     private par: ParametroService,
     private pro: ProcesoService,
     private sof: SoftbankService,
+    private layoutService:LayoutConfigService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private router: Router,
@@ -190,6 +192,9 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private traerOperacion() {
     this.route.paramMap.subscribe((json: any) => {
+      this.pro.getCabecera(json.params.id,'NUEVO').subscribe(datosCabecera=>{
+        this.layoutService.setDatosContrato(datosCabecera);
+      });
       if (json.params.id) {
         this.item = json.params.id;
         this.cre.traerCreditoNuevo(this.item).subscribe((data: any) => {

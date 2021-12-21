@@ -31,6 +31,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { LayoutConfigService } from '../../../../../../app/core/_base/layout/services/layout-config.service';
+import { ProcesoService } from '../../../../../../app/core/services/quski/proceso.service';
 
 
 @Component({
@@ -134,6 +136,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService,
     private subheaderService: SubheaderService,
+    private laytoutService: LayoutConfigService,
+    private procesoService: ProcesoService,
     public tra: TrackingService
   ) {
     super(tra);
@@ -142,6 +146,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.cal.setParameter();
     this.neg.setParameter();
     this.tas.setParameter();
+    this.procesoService.setParameter();
     //  RELACIONANDO FORMULARIO DE BUSQUEDA
     this.formBusqueda.addControl("identificacion", this.identificacion);
     //  RELACIONANDO FORMULARIO DE CLIENTE
@@ -181,6 +186,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.cal.setParameter();
     this.neg.setParameter();
     this.tas.setParameter();
+    this.procesoService.setParameter();
     this.subheaderService.setTitle('Negociación');
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem('idAgencia');
@@ -211,6 +217,9 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.id && json.params.origen) {
         this.myStepper.selectedIndex = 1;
+        this.procesoService.getCabecera(json.params.id,'NUEVO').subscribe(datos=>{
+          this.laytoutService.setDatosContrato(datos);
+        });
         if (json.params.origen == "NEG") {
           this.validarNegociacion(json.params.id);
         } else if (json.params.origen == "COT") {

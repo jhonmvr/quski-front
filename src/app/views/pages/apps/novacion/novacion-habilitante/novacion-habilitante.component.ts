@@ -12,7 +12,7 @@ import { ReNoticeService } from '../../../../../core/services/re-notice.service'
 import { environment } from '../../../../../../environments/environment.prod';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SubheaderService } from '../../../../../core/_base/layout';
+import { LayoutConfigService, SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -71,6 +71,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     private par: ParametroService,
     private sof: SoftbankService,
     private pro: ProcesoService,
+    private layouteService: LayoutConfigService,
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
@@ -116,6 +117,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   }
   private inicioDeFlujo() {
     this.route.paramMap.subscribe((json: any) => {
+      this.pro.getCabecera(json.params.idNegociacion,'RENOVACION').subscribe(datosCabecera=>{
+        this.layouteService.setDatosContrato(datosCabecera);
+      });
       if (json.params.idNegociacion) {
         
         this.item = json.params.idNegociacion;

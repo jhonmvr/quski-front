@@ -1,7 +1,7 @@
 // Angular
 import { Injectable } from '@angular/core';
 // RxJS
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 // Object-Path
 import * as objectPath from 'object-path';
 // Lodash
@@ -14,6 +14,7 @@ export class LayoutConfigService {
 	// Public properties
 	onConfigUpdated$: Subject<LayoutConfigModel>;
 	layoutConfig: LayoutConfigModel;
+	datosContrato: BehaviorSubject<any>;
 
 	/**
 	 * Servcie constructor
@@ -21,6 +22,10 @@ export class LayoutConfigService {
 	constructor() {
 		// register on config changed event and set default config
 		this.onConfigUpdated$ = new Subject();
+		this.datosContrato = new BehaviorSubject<any> (null);
+	}
+	setDatosContrato(datosContrato){
+		this.datosContrato.next(datosContrato);
 	}
 
 	/**

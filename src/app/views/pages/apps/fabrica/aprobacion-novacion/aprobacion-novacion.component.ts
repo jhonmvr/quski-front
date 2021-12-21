@@ -23,6 +23,7 @@ import { TrackingService } from '../../../../../core/services/quski/tracking.ser
 import { TbQoRegistrarPago } from '../../../../../core/model/quski/TbQoRegistrarPago';
 import { Observable } from 'rxjs';
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
+import { LayoutConfigService } from '../../../../../core/_base/layout';
 
 export interface CatalogoWrapper {
   nombre: string;
@@ -193,6 +194,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
     private pro: ProcesoService,
+    private layoutService: LayoutConfigService,
     private sinNotSer: ReNoticeService,
     private route: ActivatedRoute,
     private router: Router,
@@ -400,6 +402,9 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   }
   private traerCreditoNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
+      this.pro.getCabecera(data.params.idNegociacion,'RENOVACION').subscribe(datosCabecera=>{
+        this.layoutService.setDatosContrato(datosCabecera);
+      });
       if (data.params.idNegociacion) {
         this.item = data.params.idNegociacion;
         this.varHabilitante.referencia= this.item;

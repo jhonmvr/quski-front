@@ -16,6 +16,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { LayoutConfigService } from '../../../../../core/_base/layout';
 @Component({
   selector: 'kt-excepciones-riesgo',
   templateUrl: './excepciones-riesgo.component.html',
@@ -76,6 +78,8 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
     private exc: ExcepcionService,
     private cal: CalculadoraService,
     private sinNotSer: ReNoticeService,
+    private procesoService: ProcesoService,
+    private layoutService: LayoutConfigService,
     public tra: TrackingService,
 
   ) {
@@ -83,6 +87,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
     this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
+    this.procesoService.setParameter();
     this.formDisable.addControl('cliente', this.cliente);
     this.formDisable.addControl('cedula', this.cedula);
     this.formDisable.addControl('fechaCreacion', this.fechaCreacion);
@@ -97,6 +102,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
     this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
+    this.procesoService.setParameter();
     this.wp = null;
     this.loading = this.loadingSubject.asObservable();
     this.busquedaNegociacion();
@@ -121,6 +127,9 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
       if (data.params.id) {
         let excepcionRol = JSON.parse(atob(data.params.id));
         this.mensaje = excepcionRol.mensajeBre;
+        this.procesoService.getCabecera(excepcionRol.idNegociacion,'NUEVO').subscribe(datosCabecera=>{
+          this.layoutService.setDatosContrato(datosCabecera);
+        });
         this.cre.traerCreditoNegociacion(excepcionRol.idNegociacion).subscribe( (data: any)=>{
           if(data.entidad){
             this.wp = data.entidad;

@@ -15,6 +15,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatTableDataSource } from '@angular/material';
+import { LayoutConfigService } from '../../../../../../../src/app/core/_base/layout';
 
 
 
@@ -84,6 +85,7 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
     private sof: SoftbankService,
     private cli: ClienteService,
     private pro: ProcesoService,
+    private layouteService: LayoutConfigService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private exs: ExcepcionService,
@@ -183,6 +185,9 @@ export class ExcepcionesClienteComponent extends TrackingUtil implements OnInit 
         let excepcionRol = JSON.parse(atob(data.params.id));
         this.observacionAsesor.setValue(excepcionRol.observacionAsesor);
         this.mensaje = excepcionRol.mensajeBre;
+        this.pro.getCabecera(excepcionRol.idNegociacion,'NUEVO').subscribe(datosCabecera=>{
+          this.layouteService.setDatosContrato(datosCabecera);
+        });
         this.cre.traerCreditoNegociacion(excepcionRol.idNegociacion).subscribe((data: any) => {
           this.wr = data.entidad
           if (this.wr) {
