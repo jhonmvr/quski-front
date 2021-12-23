@@ -45,13 +45,22 @@ export class ReMessageComponent implements OnInit {
               config.panelClass = ['info-snackbar'];
               config.duration = 5000;
             }
-            this.snackBar.open(this.message, "cerrar", config);
+            this.snackBar.open(this.toNewLineString(this.message), "cerrar", config);
           }
         } else {
           this.message = null;
         }
       }
     );
+  }
+
+  toNewLineString(input: string) {
+    var lines = input.split('/');
+    var output = "";
+    lines.forEach(element => {
+      output += element + "\n";
+    });
+    return output;
   }
 
 }
