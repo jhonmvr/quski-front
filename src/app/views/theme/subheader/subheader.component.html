@@ -1,39 +1,53 @@
 <div ktHeader #ktHeader class="kt-subheader">
+    <style>
+        p {font-weight: 600;}
+  
+        </style>
+   
     <div *ngIf="mostratContenido.asObservable() | async" class="kt-topmenu kt-header__top">
         <div class="kt-container" [ngClass]="{'kt-container--fluid': fluid}">
-            <div class="row">
+          
                 <div class="col-md-4">
-                    <label> Nombre del cliente:</label> {{contenido.nombre}}
+                    <label> Nombre del cliente: </label> &nbsp;
+                    <p > {{contenido.nombre}}</p> 
                 </div>
                 <div class="col-md-4">
-                    <label> Número de Cédula:</label> {{contenido.cedula}}
+                    <label> Número de Cédula:</label> &nbsp;
+                    <p >{{contenido.cedula}}</p> 
                 </div>
                 <div class="col-md-4">
-                    <label> Número de crédito:</label> {{contenido.numeroCredito}}
+                    <label> Número de crédito:</label> &nbsp;
+                    <p >{{contenido.numeroCredito}}</p> 
                 </div>
-            </div>
-            <div class="row">
+      
+   
                 <div class="col-md-4">
-                    <label> Código del BPM:</label> {{contenido.codigoBPM}}
-                </div>
-                <div class="col-md-4">
-                    <label> Monto:</label> {{contenido.monto}}
-                </div>
-                <div class="col-md-4">
-                    <label> Plazo:</label> {{contenido.plazo}}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <label> Tipo crédito:</label> {{contenido.tipoCredito}}
+                    <label> Código del BPM:</label> &nbsp;
+                    <p > {{contenido.codigoBPM}}</p> 
                 </div>
                 <div class="col-md-4">
-                    <label> Número de cuenta:</label> {{contenido.numeroCuenta}}
+                    <label> Monto:</label> &nbsp;
+                    <p > {{contenido.monto}}</p> 
                 </div>
                 <div class="col-md-4">
-                    <label> Nombre del asesor:</label> {{contenido.nombreAsesor}}
+                    <label> Plazo:</label> &nbsp;
+                    <p >{{contenido.plazo}}</p> 
                 </div>
-            </div>
+         
+        
+                <div class="col-md-4">
+                    <label> Tipo crédito:</label> &nbsp;
+                    <p >{{contenido.tipoCredito}}</p> 
+                </div>
+                <div class="col-md-4">
+                    <label> Número de cuenta:</label>&nbsp;
+                    <p > {{contenido.numeroCuenta}}</p> 
+                </div>
+                <div class="col-md-4">
+                    <label> Nombre del asesor:</label> &nbsp;
+                    <p > {{contenido.nombreAsesor}}</p> 
+                </div>
+      
         </div>
     </div>
 </div>
