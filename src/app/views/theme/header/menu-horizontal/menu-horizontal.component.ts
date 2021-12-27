@@ -108,6 +108,7 @@ export class MenuHorizontalComponent implements OnInit, AfterViewInit {
 		this.router.events
 			.pipe(filter(event => event instanceof NavigationEnd))
 			.subscribe(event => {
+				this.layoutConfigService.setDatosContrato(null);
 				this.currentRouteUrl = this.router.url;
 				this.cdr.markForCheck();
 			});

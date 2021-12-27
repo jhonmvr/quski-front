@@ -27,6 +27,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { PopUpNacimientoComponent } from './pop-up-nacimiento/pop-up-nacimiento.component';
+import { ProcesoService } from '../../../../../../app/core/services/quski/proceso.service';
+import { LayoutConfigService } from '../../../../../../app/core/_base/layout';
 
 
 export interface User {
@@ -191,6 +193,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     public dialog: MatDialog,
     private sinNoticeService: ReNoticeService,
     private sp: ParametroService,
+    private procesoService:ProcesoService,
+    private laytoutService:LayoutConfigService,
     private route: ActivatedRoute,
     private router: Router,
     private subheaderService: SubheaderService,
@@ -200,6 +204,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.css.setParameter();
     this.cli.setParameter();
     this.sp.setParameter();
+    this.procesoService.setParameter();
     /** @FORMULARIOS **/
     this.formCliente.addControl("identificacion", this.identificacion);
     this.formCliente.addControl("nombresCompletos ", this.nombresCompletos);
@@ -265,6 +270,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.css.setParameter();
     this.cli.setParameter();
     this.sp.setParameter();
+    this.procesoService.setParameter();
     this.subheaderService.setTitle("Gestion de Cliente");
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
@@ -418,8 +424,10 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.loadBusqueda.next(true);
       this.origen = data.params.origen;
       this.item = data.params.item;
+      this.procesoService.getCabecera(data.params.item,'NUEVO').subscribe(datosCabecera=>{
+        this.laytoutService.setDatosContrato(datosCabecera);
+      });
       if (data.params.origen == "NEG" || data.params.origen == "NOV") {
-        this.item = data.params.item
         this.cli.traerClienteByIdNegociacion(data.params.item).subscribe((data: any) => {
           if (!data.entidad.existeError) {
             this.wrapper = data.entidad;

@@ -18,6 +18,8 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import { Component, OnInit } from '@angular/core';
 import 'hammerjs';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { ProcesoService } from '../../../../../../app/core/services/quski/proceso.service';
+import { LayoutConfigService } from '../../../../../../app/core/_base/layout';
 
 
 @Component({
@@ -74,12 +76,15 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     private par: ParametroService,
     private sof: SoftbankService,
     private cal: CalculadoraService,
+    private procesoService: ProcesoService,
+    private layouteService: LayoutConfigService,
     public tra: TrackingService,
   ) {
     super(tra);
     this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
+    this.procesoService.setParameter();
     this.formDisable.addControl('cliente', this.cliente);
     this.formDisable.addControl('cedula', this.cedula);
     this.formDisable.addControl('fechaCreacion', this.fechaCreacion);
@@ -95,6 +100,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
+    this.procesoService.setParameter();
     this.wp = null;
     this.busquedaNegociacion();
     this.usuario = atob(localStorage.getItem(environment.userKey));
@@ -120,6 +126,9 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
         let excepcionRol = JSON.parse(atob(data.params.id));
+        this.procesoService.getCabecera(excepcionRol.idNegociacion,'NUEVO').subscribe(datosCabecera=>{
+          this.layouteService.setDatosContrato(datosCabecera);
+        });
         this.cre.traerCreditoNegociacion(excepcionRol.idNegociacion).subscribe( (data: any)=>{
           if(data.entidad){
             this.wp = data.entidad;

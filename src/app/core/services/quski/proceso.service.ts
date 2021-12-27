@@ -253,5 +253,16 @@ export class ProcesoService extends BaseService {
     );
   } 
 
+  public getCabecera(idReferencia, proceso) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest +"getCabecera";
+    this.params = new HttpParams().set('idReferencia', idReferencia).set('proceso', proceso);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  } 
 
 }

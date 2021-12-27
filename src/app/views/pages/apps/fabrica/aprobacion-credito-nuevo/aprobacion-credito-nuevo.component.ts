@@ -23,6 +23,7 @@ import { Component, OnInit } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
+import { LayoutConfigService } from '../../../../../../app/core/_base/layout';
 
 export interface CatalogoWrapper {
   nombre: string;
@@ -181,6 +182,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
     private pro: ProcesoService,
+    private layouteService: LayoutConfigService,
     private doc: DocumentoHabilitanteService,
     private obj: ObjectStorageService,
     private sinNotSer: ReNoticeService,
@@ -336,6 +338,9 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
   }
   private traerCreditoNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
+      this.pro.getCabecera(data.params.id,'NUEVO').subscribe(datosCabecera=>{
+        this.layouteService.setDatosContrato(datosCabecera);
+      });
       if (data.params.id) {
         this.item = data.params.id;
         this.varHabilitante.referencia= this.item;
