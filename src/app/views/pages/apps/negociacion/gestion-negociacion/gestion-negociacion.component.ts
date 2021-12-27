@@ -85,6 +85,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public edad = new FormControl('', [Validators.required, Validators.max(75), Validators.min(18)]);
   public nacionalidad = new FormControl('', [Validators.required]);
   public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+  public nombreReferido = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+  public telefonoReferido = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(11)]);
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
   public email = new FormControl('', [Validators.required, Validators.email]);
   public campania = new FormControl('');
@@ -155,6 +157,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.formDatosCliente.addControl("email", this.email);
     this.formDatosCliente.addControl("campania", this.campania);
     this.formDatosCliente.addControl("publicidad", this.publicidad);
+    this.formDatosCliente.addControl("nombreReferido", this.nombreReferido);
+    this.formDatosCliente.addControl("telefonoReferido", this.telefonoReferido);
     this.formDatosCliente.addControl("aprobacionMupi", this.aprobacionMupi);
     //  RELACIONANDO FORMULARIO DE TASACION
     this.formTasacion.addControl("numeroPiezas", this.numeroPiezas);
@@ -181,11 +185,12 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.cal.setParameter();
     this.neg.setParameter();
     this.tas.setParameter();
+    this.getPublicidad();
     this.subheaderService.setTitle('Negociación');
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem('idAgencia');
     this.loadCatalogo();
-    this.obtenerCatalogosCore();
+   // this.obtenerCatalogosCore();
     this.componenteVariable = false;
     this.componenteRiesgo = false;
     this.desactivarCampos();
@@ -1013,6 +1018,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         numero: this.movil.value
       }
     }
+    
     let cliente = {
       id: this.tbQoCliente.id,
       cedulaCliente: this.tbQoCliente.cedulaCliente,
@@ -1020,17 +1026,30 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       campania: this.campania.value,
       fechaNacimiento: this.fechaDeNacimiento.value,
       nacionalidad: this.nacionalidad.value.id,
-      publicidad: this.publicidad.value,
+      publicidad: this.publicidad.value.nombre,
+     
       tbQoTelefonoClientes: new Array(),
       email: this.email.value
     };
+    let referido = {
+      nombre: this.nombreReferido.value,
+      telefono: this.telefonoReferido.value,
+      tbQoNegociacion: this.negoW.credito.tbQoNegociacion.id
+    }
+  
     if (this.telefonoMovil) {
       cliente.tbQoTelefonoClientes.push(this.telefonoMovil);
     }
     if (this.telefonoFijo) {
       cliente.tbQoTelefonoClientes.push(this.telefonoFijo);
     }
-    return cliente;
+    let wrapperCliente = {
+      cliente: cliente,
+      referido: referido,
+      publicidadBandera: this.publicidad.value.bandera
+    }
+    console.log("el wrappersin", wrapperCliente)
+    return wrapperCliente;
   }
   seleccionarCredito(element) {
     this.opcionCredito = element;
@@ -1081,6 +1100,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     }
     this.loadTasacion.next(true);
     let cliente = this.buildCliente();
+    //aqui llamo servicio de registrar referido
     this.neg.verPrecios(cliente).subscribe(resp => {
       this.catTipoOro = resp.entidades;
       this.loadTasacion.next(false);
@@ -1127,6 +1147,17 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   }
  
 
+  getPublicidad(){
+  this.neg.getAllPublicidad().subscribe((data:any)=>{
+    if (data.list) {
+      data.list.forEach(element => {
+        this.catPublicidad.push(element);
+      });
+    } else {
+      this.catPublicidad.push("CATALOGO NO CARGADO");
+    }
+  })
+  }
 }
 export class Pais {
   id;
