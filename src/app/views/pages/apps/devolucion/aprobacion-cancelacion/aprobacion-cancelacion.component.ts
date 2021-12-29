@@ -12,7 +12,7 @@ import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { environment } from '../../../../../../environments/environment';
-import { SubheaderService } from '../../../../../core/_base/layout';
+import { LayoutConfigService, SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -75,6 +75,7 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
     private sof: SoftbankService,
     private par: ParametroService,
     private subheaderService: SubheaderService,
+    private layooutService: LayoutConfigService,
     private dev: DevolucionService,
     private sinNoticeService: ReNoticeService,
     private dialog: MatDialog,
@@ -134,6 +135,18 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
         this.item = json.params.item;
         this.dev.buscarProcesoCancelacion(this.item).subscribe((data: any) => {
           this.wrapperDevolucion = data.entidad;
+          let datosCabecera={
+            nombre: data.entidad.devolucion.nombreCliente,
+            cedula: data.entidad.devolucion.cedulaCliente,
+            numeroCredito: data.entidad.devolucion.codigoOperacion,
+            codigoBPM: data.entidad.devolucion.codigo,
+            monto: data.entidad.devolucion.montoCredito,
+            plazo: data.entidad.devolucion.plazoCredito,
+            tipoCredito: data.entidad.devolucion.tipoCredito,
+            numeroCuenta: data.entidad.devolucion.numeroCuentaCliente,
+            nombreAsesor: data.entidad.devolucion.nombreAsesor
+          }
+          this.layooutService.setDatosContrato(datosCabecera);
           this.cre.traerCreditoVigente(this.wrapperDevolucion.devolucion.codigoOperacion).subscribe((data: any) => {
             if (data.entidad) {
               this.wrapperSoft = data.entidad;

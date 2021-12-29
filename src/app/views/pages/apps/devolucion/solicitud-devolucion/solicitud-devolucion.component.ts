@@ -14,7 +14,7 @@ import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
 import { YearMonthDay } from '../../../../../core/model/quski/YearMonthDay';
 import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { ValidateCedula } from '../../../../../core/util/validate.util';
-import { SubheaderService } from '../../../../../core/_base/layout';
+import { LayoutConfigService, SubheaderService } from '../../../../../core/_base/layout';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -90,6 +90,7 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
   constructor(
     private cre: CreditoNegociacionService,
     private dev: DevolucionService,
+    private layooutService:LayoutConfigService,
     private pro: ProcesoService,
     private sof: SoftbankService,
     private subheaderService: SubheaderService,
@@ -138,6 +139,18 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
           this.cre.traerCreditoVigente(json.params.item).subscribe((data: any) => {
             if (data.entidad) {
               this.wrapperSoft = data.entidad;
+              let datosCabecera={
+                nombre: data.entidad.cliente.nombreCompleto,
+                cedula: data.entidad.cliente.identificacion,
+                numeroCredito: data.entidad.credito.numeroOperacion,
+                codigoBPM: '',
+                monto: data.entidad.credito.montoFinanciado,
+                plazo: data.entidad.credito.plazo,
+                tipoCredito: data.entidad.credito.tipoCredito,
+                numeroCuenta: data.entidad.cliente.cuentasBancariasCliente[0].cuenta,
+                nombreAsesor: ''
+              }
+              this.layooutService.setDatosContrato(datosCabecera);
               this.cargarCampos();
             } else {
               this.salirDeGestion("Error al intentar cargar el credito.");
@@ -149,6 +162,18 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
           this.dev.buscarProcesoDevolucion(this.item).subscribe((data: any) => {
             this.wrapperDevolucion = data.entidad;
             this.idReferencia = data.entidad.devolucion.id
+            let datosCabecera={
+              nombre: data.entidad.devolucion.nombreCliente,
+              cedula: data.entidad.devolucion.cedulaCliente,
+              numeroCredito: data.entidad.devolucion.codigoOperacion,
+              codigoBPM: data.entidad.devolucion.codigo,
+              monto: data.entidad.devolucion.montoCredito,
+              plazo: data.entidad.devolucion.plazoCredito,
+              tipoCredito: data.entidad.devolucion.tipoCredito,
+              numeroCuenta: data.entidad.devolucion.numeroCuentaCliente,
+              nombreAsesor: data.entidad.devolucion.nombreAsesor
+            }
+            this.layooutService.setDatosContrato(datosCabecera);
             this.cre.traerCreditoVigente(this.wrapperDevolucion.devolucion.codigoOperacion).subscribe((data: any) => {
               if (data.entidad) {
                 this.wrapperSoft = data.entidad;
@@ -445,7 +470,12 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
         wrapper.nombreApoderado = this.nombreApoderado.value ? this.nombreApoderado.value : null;
         wrapper.cedulaApoderado = this.cedulaApoderado.value ? this.cedulaApoderado.value : null;
         wrapper.correoCliente = this.wrapperSoft.cliente.email;
-        wrapper.correoAsesor = localStorage.getItem("email")
+        wrapper.correoAsesor = localStorage.getItem("email");
+        wrapper.montoCredito = this.wrapperSoft.credito.montoFinanciado;
+        wrapper.plazoCredito = this.wrapperSoft.credito.plazo;
+        wrapper.tipoCredito = this.wrapperSoft.credito.tipoCredito;
+        wrapper.numeroCuentaCliente = this.wrapperSoft.cliente.cuentasBancariasCliente[0].cuenta;
+        wrapper.nombreAsesor = localStorage.getItem('nombre');
         this.dev.registrarSolicitudDevolucion(wrapper).subscribe((data: any) => {
           if (data.entidad) {
             console.log('data Devolucion =>', data.entidad);

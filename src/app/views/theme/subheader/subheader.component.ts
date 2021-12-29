@@ -47,7 +47,7 @@ export class SubheaderComponent implements OnInit {
 					codigoBPM: datos.codigoBPM,
 					monto: datos.monto,
 					plazo: datos.plazo,
-					tipoCredito: datos.plazoCredito,
+					tipoCredito: datos.tipoCredito,
 					numeroCuenta: datos.numeroCuenta,
 					nombreAsesor: datos.nombreAsesor
 				}

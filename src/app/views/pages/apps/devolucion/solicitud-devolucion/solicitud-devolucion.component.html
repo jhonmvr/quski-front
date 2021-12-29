@@ -1,8 +1,7 @@
 <re-portlet>
     <re-portlet-header [title]="'SOLICITUD DE DEVOLUCION DE GARANTIAS'" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
-            <a (click)="regresar()" matTooltip="Regresar a gestion cliente"
-                style="font-size: 12px; vertical-align: middle;">
+            <a (click)="regresar()" matTooltip="Regresar a gestion cliente" style="font-size: 12px; vertical-align: middle;">
                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
                     arrow_back</mat-icon>
                 <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
@@ -63,8 +62,7 @@
                     </div>
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de Nacimiento:"
-                                [value]="fechaNacimiento.value | rDate">
+                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de Nacimiento:" [value]="fechaNacimiento.value | rDate">
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">
@@ -103,14 +101,13 @@
                 </div>
             </mat-step>
             <mat-step label="Detalle de Garantía">
-                <kt-tabla-tasacion *ngIf="this.wrapperSoft && this.wrapperSoft.garantias;"
-                    [data]='this.wrapperSoft.garantias' [tipo]="'DV'"></kt-tabla-tasacion>
+                <kt-tabla-tasacion *ngIf="this.wrapperSoft && this.wrapperSoft.garantias;" [data]='this.wrapperSoft.garantias' [tipo]="'DV'"></kt-tabla-tasacion>
             </mat-step>
             <mat-step label="Gestión de Devolución">
                 <div class="row">
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid">
-                            <mat-select placeholder="Tipo de Cliente: " [formControl]="tipoCliente" (selectionChange)="limpiarCampos()"> 
+                            <mat-select placeholder="Tipo de Cliente: " [formControl]="tipoCliente" (selectionChange)="limpiarCampos()">
                                 <mat-option *ngFor="let element of catTipoCliente " [value]="element">
                                     {{ element.nombre }}
                                 </mat-option>
@@ -134,8 +131,7 @@
                     <div class="col-9">
                         <mat-form-field class="mat-form-field-fluid">
                             <mat-label>Observacion Del Asesor: </mat-label>
-                            <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: "
-                                [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
+                            <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: " [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
                         </mat-form-field>
                     </div>
                 </div>
@@ -183,7 +179,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="row" *ngIf="this.tipoCliente.value.codigo == 'SAP'">
                     <div class="col-md-3">
@@ -201,7 +197,7 @@
                 </div>
                 <div class="row">
                     <div class="col-4 offset-4">
-                        <button mat-button (click)="registrarDevolucion()">Registrar Devolucion</button>
+                        <button mat-raised-button color="primary" (click)="registrarDevolucion()">Registrar Devolucion</button>
                     </div>
                 </div>
             </mat-step>
@@ -210,7 +206,7 @@
                 </re-habilitante>
                 <div class="row">
                     <div class="col-2 offset-5">
-                        <button mat-stroked-button color="basic" (click)="solicitarAprobacion()">Solicitar
+                        <button mat-raised-button color="primary" (click)="solicitarAprobacion()">Solicitar
                             Aprobacion</button>
                     </div>
                 </div>

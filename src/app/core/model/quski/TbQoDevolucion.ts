@@ -46,6 +46,11 @@ export class TbQoDevolucion {
     valorAvaluo: number;
     correoAsesor: string;
     correoCliente: string;
+    montoCredito;
+    plazoCredito;
+    tipoCredito;
+    numeroCuentaCliente;
+    nombreAsesor;
 
     constructor(){
         
