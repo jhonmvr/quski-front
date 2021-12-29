@@ -113,12 +113,14 @@
                             </mat-form-field>
                         </div>
                     </div>
+               
+
                     <div class="row">
                         <div class="col-md-6">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Publicidad" (selectionChange)="updateCliente($event, publicidad)" (keydown)="updateCliente($event, publicidad)" [formControl]="publicidad" required="true">
                                     <mat-option *ngFor="let publicidad of catPublicidad" [value]="publicidad">
-                                        {{ publicidad }}
+                                        {{ publicidad.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -129,6 +131,21 @@
 								<input matInput  (click)="updateCliente($event, campania)"  (keydown)="updateCliente($event, campania)" [formControl]="campania" placeholder="Campaña" />
 							</mat-form-field>
 						</div> -->
+                    </div>
+                    <div class="row" *ngIf="publicidad.value.bandera">
+                        <div class="col-md-6">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="nombreReferido" (click)="updateCliente($event, telefonoDomicilio)" (keydown)="updateCliente($event, nombreReferido)" placeholder="Nombre Referido" required="true" >
+                                <mat-error>{{ getErrorMessage("telefonoDomicilio") }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-6">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="telefonoReferido" (click)="updateCliente($event, telefonoDomicilio)" (keydown)="updateCliente($event, telefonoReferido)" placeholder="Teléfono Referido" required="true" (keypress)="numberOnly($event)">
+                                <mat-error>{{ getErrorMessage("telefonoDomicilio") }}</mat-error>
+                            </mat-form-field>
+                        </div>
                     </div>
                     <div class="row">
                         <span class="ng-tns-c22-3 ng-star-inserted">Aprobado Web MUPI</span>
