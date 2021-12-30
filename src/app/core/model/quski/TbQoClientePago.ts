@@ -14,10 +14,13 @@ export class TbQoClientePago{
 	observacion : String;
 	estado: String;
 	tipo: String;
-	codigo
-	aprobador
-	asesor
-
+	codigo;
+	aprobador;
+	asesor;
+	montoCredito;
+	plazoCredito;
+	numeroCuentaCliente;
+	nombreAsesor;
 	
 	constructor(){
 		

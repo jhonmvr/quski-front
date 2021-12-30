@@ -1,53 +1,60 @@
 <div ktHeader #ktHeader class="kt-subheader">
-    <style>
-        p {font-weight: 600;}
-  
-        </style>
-   
+
+
     <div *ngIf="mostratContenido.asObservable() | async" class="kt-topmenu kt-header__top">
         <div class="kt-container" [ngClass]="{'kt-container--fluid': fluid}">
-          
-                <div class="col-md-4">
-                    <label> Nombre del cliente: </label> &nbsp;
-                    <p > {{contenido.nombre}}</p> 
-                </div>
-                <div class="col-md-4">
-                    <label> Número de Cédula:</label> &nbsp;
-                    <p >{{contenido.cedula}}</p> 
-                </div>
-                <div class="col-md-4">
-                    <label> Número de crédito:</label> &nbsp;
-                    <p >{{contenido.numeroCredito}}</p> 
-                </div>
-      
-   
-                <div class="col-md-4">
-                    <label> Código del BPM:</label> &nbsp;
-                    <p > {{contenido.codigoBPM}}</p> 
-                </div>
-                <div class="col-md-4">
-                    <label> Monto:</label> &nbsp;
-                    <p > {{contenido.monto}}</p> 
-                </div>
-                <div class="col-md-4">
-                    <label> Plazo:</label> &nbsp;
-                    <p >{{contenido.plazo}}</p> 
-                </div>
-         
-        
-                <div class="col-md-4">
-                    <label> Tipo crédito:</label> &nbsp;
-                    <p >{{contenido.tipoCredito}}</p> 
-                </div>
-                <div class="col-md-4">
-                    <label> Número de cuenta:</label>&nbsp;
-                    <p > {{contenido.numeroCuenta}}</p> 
-                </div>
-                <div class="col-md-4">
-                    <label> Nombre del asesor:</label> &nbsp;
-                    <p > {{contenido.nombreAsesor}}</p> 
-                </div>
-      
+            <style>
+                p {
+                    font-weight: 600;
+                    margin-bottom: 0px;
+                }
+                
+                label {
+                    font-size: xx-small;
+                    margin-bottom: 0px;
+                }
+            </style>
+            <div class="col-md-4">
+                <label> Nombre del cliente: </label> &nbsp;
+                <p> {{contenido.nombre}}</p>
+            </div>
+            <div class="col-md-4">
+                <label> Número de Cédula:</label> &nbsp;
+                <p>{{contenido.cedula}}</p>
+            </div>
+            <div class="col-md-4">
+                <label> Número de crédito:</label> &nbsp;
+                <p>{{contenido.numeroCredito}}</p>
+            </div>
+
+
+            <div class="col-md-4">
+                <label> Código del BPM:</label> &nbsp;
+                <p> {{contenido.codigoBPM}}</p>
+            </div>
+            <div class="col-md-4">
+                <label> Monto:</label> &nbsp;
+                <p> {{contenido.monto}}</p>
+            </div>
+            <div class="col-md-4">
+                <label> Plazo:</label> &nbsp;
+                <p>{{contenido.plazo}}</p>
+            </div>
+
+
+            <div class="col-md-4">
+                <label> Tipo crédito:</label> &nbsp;
+                <p>{{contenido.tipoCredito}}</p>
+            </div>
+            <div class="col-md-4">
+                <label> Número de cuenta:</label>&nbsp;
+                <p> {{contenido.numeroCuenta}}</p>
+            </div>
+            <div class="col-md-4">
+                <label> Nombre del asesor:</label> &nbsp;
+                <p> {{contenido.nombreAsesor}}</p>
+            </div>
+
         </div>
     </div>
 </div>

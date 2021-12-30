@@ -14,6 +14,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { saveAs } from 'file-saver';
+import { LayoutConfigService } from '../../../../../../../app/core/_base/layout';
 
 
 /**
@@ -33,6 +34,7 @@ export class RegistrarPagoComponent implements OnInit {
   private totalValorDepositado: any;
   private usuario;
   private agencia;
+  private informacionCredito;
   catTipoPagoProceso: Array<any>;
   public dataSourceComprobante = new MatTableDataSource<any>();
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera', 'cuenta', 'fechaPago', 'numeroDeDeposito', 'valorDepositado', 'tipoPago', 'descargarComprobante'];
@@ -53,6 +55,7 @@ export class RegistrarPagoComponent implements OnInit {
     private reg: RegistrarPagoService,
     private par: ParametroService,
     private route: ActivatedRoute,
+    private layoutService: LayoutConfigService,
     private router: Router,
     private dialog: MatDialog,
     private subheaderService: SubheaderService,
@@ -82,6 +85,19 @@ export class RegistrarPagoComponent implements OnInit {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.item) {
         let row = JSON.parse(atob(data.params.item));
+        this.informacionCredito = row;
+        let datosCabecera = {
+          nombre: row.nombreCliente,
+          cedula: row.identificacion,
+          numeroCredito: row.numeroOperacion,
+          codigoBPM: '',
+          monto: row.montoFinanciado,
+          plazo: row.plazo,
+          tipoCredito: row.tipoCredito,
+          numeroCuenta: '',
+          nombreAsesor: ''
+        };
+        this.layoutService.setDatosContrato(datosCabecera);
         this.cli.consultarCuentaMupi(row.identificacion).subscribe((dta: any) => {
           if (dta.entidad) {
             this.datosMupi = dta.entidad;
@@ -92,6 +108,8 @@ export class RegistrarPagoComponent implements OnInit {
             this.tipoCredito.setValue(row.tipoCredito);
             this.consultaRubros(row.numeroOperacion);
             this.simulacionPrecancelacion(row.numeroOperacion);
+            datosCabecera.numeroCuenta = dta.entidad.numeroCuenta;            
+            this.layoutService.setDatosContrato(datosCabecera);
           }
         });
       }
@@ -211,9 +229,13 @@ export class RegistrarPagoComponent implements OnInit {
           valorPrecancelado: this.valorPreCancelado.value,
           idBanco: this.datosMupi.institucionFinanciera,
           tipoPagoProceso: this.tipoPagoProceso.value.valor,
-          mailAsesor:localStorage.getItem('email')
+          mailAsesor:localStorage.getItem('email'),
+          montoCredito:this.informacionCredito.montoFinanciado,
+          plazoCredito:this.informacionCredito.plazo,
+          numeroCuentaCliente:this.codigoCuentaMupi.value,
+          nombreAsesor:localStorage.getItem('nombre')
         }
-        console.log('wrapper => ', wrapper);
+        //console.log('wrapper => ', wrapper);
         this.reg.iniciarProcesoRegistrarPago(wrapper).subscribe((data: any) => {
           if (data.entidad && data.entidad.proceso && data.entidad.proceso.estadoProceso == "PENDIENTE_APROBACION") {
             this.sinNoticeService.setNotice("PROCESO CREADO BAJO EL CODIGO BPM: " + data.entidad.cliente.codigo + ".", 'success');
@@ -222,8 +244,6 @@ export class RegistrarPagoComponent implements OnInit {
             this.sinNoticeService.setNotice("ERROR NO IDENTIFICADO", 'error');
           }
 
-        }, error => {
-          this.sinNoticeService.setNotice(error.error.msgError, 'error');
         });
       } else {
         this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'error');
