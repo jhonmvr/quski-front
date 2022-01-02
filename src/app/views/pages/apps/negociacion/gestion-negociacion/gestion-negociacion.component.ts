@@ -162,8 +162,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.formDatosCliente.addControl("email", this.email);
     this.formDatosCliente.addControl("campania", this.campania);
     this.formDatosCliente.addControl("publicidad", this.publicidad);
-    this.formDatosCliente.addControl("nombreReferido", this.nombreReferido);
-    this.formDatosCliente.addControl("telefonoReferido", this.telefonoReferido);
+    //this.formDatosCliente.addControl("nombreReferido", this.nombreReferido);
+    //this.formDatosCliente.addControl("telefonoReferido", this.telefonoReferido);
     this.formDatosCliente.addControl("aprobacionMupi", this.aprobacionMupi);
     //  RELACIONANDO FORMULARIO DE TASACION
     this.formTasacion.addControl("numeroPiezas", this.numeroPiezas);
@@ -190,7 +190,6 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.cal.setParameter();
     this.neg.setParameter();
     this.tas.setParameter();
-    this.getPublicidad();
     this.procesoService.setParameter();
     this.subheaderService.setTitle('Negociación');
     this.usuario = atob(localStorage.getItem(environment.userKey));
@@ -204,6 +203,16 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
 
   }
   public loadCatalogo() {
+    
+    this.neg.getAllPublicidad().subscribe((data:any)=>{
+      if (data.list) {
+        data.list.forEach(element => {
+          this.catPublicidad.push(element);
+        });
+      } else {
+        this.catPublicidad.push("CATALOGO NO CARGADO");
+      }
+    });
     this.sof.consultarPaisCS().subscribe((data: any) => {
       this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
     });
@@ -511,8 +520,10 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.campania.setValue('');
     this.publicidad.setValue('');
     this.aprobacionMupi.setValue(cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi : '');
-    this.publicidad.setValue(cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.publicidad : '');
+    this.publicidad.setValue(cargar ?  this.catPublicidad.find(p=>p.nombre == this.negoW.credito.tbQoNegociacion.tbQoCliente.publicidad )  : '');
     this.campania.setValue(cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.campania : '');
+    this.nombreReferido.setValue(this.negoW.referedio ? this.negoW.referedio.nombre: '');
+    this.telefonoReferido.setValue(this.negoW.referedio ? this.negoW.referedio.telefono: '');
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
     this.riesgoTotal = 0;
@@ -995,7 +1006,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     }
     if (this.tbQoCliente && this.tbQoCliente.id) {
       let cliente = this.buildCliente();
-      this.neg.updateCliente(cliente).subscribe(p => {
+      this.neg.updateCliente(cliente.cliente).subscribe(p => {
         if (p.entidad && p.entidad.tbQoTelefonoClientes) {
           p.entidad.tbQoTelefonoClientes.forEach(element => {
             if (element.tipoTelefono == 'CEL') {
@@ -1041,9 +1052,10 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       email: this.email.value
     };
     let referido = {
+      id: this.negoW.referedio?this.negoW.referedio.id:'',
       nombre: this.nombreReferido.value,
       telefono: this.telefonoReferido.value,
-      tbQoNegociacion: this.negoW.credito.tbQoNegociacion.id
+      tbQoNegociacion: this.negoW.credito.tbQoNegociacion
     }
   
     if (this.telefonoMovil) {
@@ -1055,9 +1067,9 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     let wrapperCliente = {
       cliente: cliente,
       referido: referido,
-      publicidadBandera: this.publicidad.value.bandera
+      bandera: this.publicidad.value.bandera? true:false
     }
-    console.log("el wrappersin", wrapperCliente)
+    //console.log("el wrappersin", wrapperCliente)
     return wrapperCliente;
   }
   seleccionarCredito(element) {
@@ -1104,6 +1116,11 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     }
     if (!this.fechaDeNacimiento.value || this.edad.value < 18 || this.edad.value > 75) {
       this.sinNotSer.setNotice("INGRESE UNA FECHA VALIDA QUE CORRESPONDA A UNA EDAD VALIDA", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    }
+    if(this.publicidad.value.bandera && this.nombreReferido.invalid && this.telefonoReferido.invalid){
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'warning');
       this.myStepper.selectedIndex = 1;
       return;
     }
@@ -1156,17 +1173,6 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   }
  
 
-  getPublicidad(){
-  this.neg.getAllPublicidad().subscribe((data:any)=>{
-    if (data.list) {
-      data.list.forEach(element => {
-        this.catPublicidad.push(element);
-      });
-    } else {
-      this.catPublicidad.push("CATALOGO NO CARGADO");
-    }
-  })
-  }
 }
 export class Pais {
   id;
