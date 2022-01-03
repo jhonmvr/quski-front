@@ -9,7 +9,7 @@ import { ReNoticeService } from './../../../../../../core/services/re-notice.ser
 import { environment } from '../../../../../../../../src/environments/environment';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
 import { ValidateCedula } from './../../../../../../core/util/validate.util';
-import { SubheaderService } from './../../../../../../core/_base/layout';
+import { LayoutConfigService, SubheaderService } from './../../../../../../core/_base/layout';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
@@ -40,11 +40,12 @@ export class BloquearCreditoComponent implements OnInit {
   public institucionFinanciera  = new FormControl('', []);
   public valorDepositado  = new FormControl('', []);
   public observacion = new FormControl('', [Validators.maxLength(150)]);
-
+  private informacionCredito;
   constructor(
     private sof: SoftbankService,
     private cli: ClienteService,
     private subheaderService: SubheaderService,
+    private layoutService: LayoutConfigService,
     private sinNoticeService: ReNoticeService,
     private router: Router,
     private reg: RegistrarPagoService,
@@ -89,6 +90,18 @@ export class BloquearCreditoComponent implements OnInit {
         consulta.idTipoIdentificacion = 1;
         this.sof.consultarClienteSoftbankCS( consulta ).subscribe((data: any) => {
           if (data) {
+            let datosCabecera = {
+              nombre: data.nombreCompleto,
+              cedula: data.identificacion,
+              numeroCredito: '',
+              codigoBPM: '',
+              monto:'',
+              plazo: '',
+              tipoCredito: '',
+              numeroCuenta: this.codigoCuentaMupi.value,
+              nombreAsesor: ''
+            };
+            this.layoutService.setDatosContrato(datosCabecera);
             this.nombreCliente.setValue(data.nombreCompleto);
             this.stepper.selectedIndex = 1;
             this.sinNoticeService.setNotice('DATOS CARGADOS CORRECTAMENTE','success');
@@ -174,7 +187,11 @@ export class BloquearCreditoComponent implements OnInit {
           observacion: this.observacion.value,
           valorDepositado: this.valorDepositado.value,
           idBanco: this.datosMupi.institucionFinanciera,
-          mailAsesor:localStorage.getItem('email')
+          mailAsesor:localStorage.getItem('email'),
+          montoCredito:null,
+          plazoCredito:null,
+          numeroCuentaCliente:this.codigoCuentaMupi.value,
+          nombreAsesor:localStorage.getItem('nombre')
         }
         this.reg.iniciarProcesoRegistrarBloqueo( wrapper ).subscribe( (data: any) =>{
           console.log('Data.Entidad => ', data.entidad);

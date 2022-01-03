@@ -33,7 +33,7 @@
                         </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Proceso" [formControl]="proceso">
+                                <mat-select placeholder="Proceso" (selectionChange)="loadEstadoActividad()" [formControl]="proceso" multiple>
                                     <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}
                                     </mat-option>
                                 </mat-select>

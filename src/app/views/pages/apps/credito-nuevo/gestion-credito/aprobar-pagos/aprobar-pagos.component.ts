@@ -5,7 +5,7 @@ import { SoftbankService } from './../../../../../../core/services/quski/softban
 import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
 import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
 import { environment } from './../..`/../../../../../../../environments/environment';
-import { SubheaderService } from './../../../../../../core/_base/layout';
+import { LayoutConfigService, SubheaderService } from './../../../../../../core/_base/layout';
 import { MatDialog, MatTableDataSource,  } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -46,6 +46,7 @@ export class AprobarPagosComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private reg: RegistrarPagoService,
+    private layoutSeervice: LayoutConfigService,
     private obj: ObjectStorageService,
     private sof: SoftbankService,
     private sinNoticeService: ReNoticeService,
@@ -85,6 +86,18 @@ export class AprobarPagosComponent implements OnInit {
               e.institucionFinanciera = this.catBanco ? this.catBanco.find( x => x.id == e.institucionFinanciera ) ? this.catBanco.find( x => x.id == e.institucionFinanciera ) : { nombre: 'Error Catalogo' } : { nombre: 'Error Catalogo' };
             });
             this.cliente = data.entidades[0].tbQoClientePago;
+            let datosCabecera = {
+              nombre: this.cliente.nombreCliente,
+              cedula: this.cliente.cedula,
+              numeroCredito: this.cliente.codigoOperacion,
+              codigoBPM: this.cliente.codigo,
+              monto: this.cliente.montoCredito,
+              plazo: this.cliente.plazoCredito,
+              tipoCredito: this.cliente.tipoCredito,
+              numeroCuenta:this.cliente.numeroCuentaCliente,
+              nombreAsesor: this.cliente.nombreAsesor
+            };
+            this.layoutSeervice.setDatosContrato(datosCabecera);
             this.nombreCliente.setValue(this.cliente.nombreCliente);
             this.cedula.setValue(this.cliente.cedula);
             this.consultaRubrosCS(this.cliente.codigoOperacion);

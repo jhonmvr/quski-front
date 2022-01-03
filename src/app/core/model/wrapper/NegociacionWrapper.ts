@@ -15,7 +15,7 @@ export class NegociacionWrapper{
     telefonoDomicilio: TbQoTelefonoCliente;
     telefonoMovil: TbQoTelefonoCliente;
     proceso: TbQoProceso
-
+    referedio: any;
     excepcionBre: string;
     codigoExcepcionBre;
     respuesta : boolean;

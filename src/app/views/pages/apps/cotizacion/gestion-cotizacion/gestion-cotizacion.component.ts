@@ -46,7 +46,7 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
   /** @CATALOGOS **/ 
   public catPais: Array<any>;
   public catTipoOro: Array<any>;
-  public catPublicidad : Array<any>;
+  public catPublicidad : Array<any> = ["--"];
   public catGradosInteres: Array<any>;
   public catMotivoDesestimiento: Array<any>;
   public catTipoJoya: Array<any>;
@@ -174,7 +174,7 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
   }
   /********************************** @INCIO **************************************  */
   public consultaCatalogos() {
-    this.par.findByTipo('PUB').subscribe((data: any) => {
+    /* this.par.findByTipo('PUB').subscribe((data: any) => {
       if (data && data.entidades) {
         this.catPublicidad = new Array<any>();
         data.entidades.forEach(element => {
@@ -183,7 +183,16 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
       }else{
         this.catPublicidad.push("CATALOGO NO CARGADO");
       }
-    });
+    }); */
+    this.neg.getAllPublicidad().subscribe((data:any)=>{
+      if (data.list) {
+        data.list.forEach(element => {
+          this.catPublicidad.push(element);
+        });
+      } else {
+        this.catPublicidad.push("CATALOGO NO CARGADO");
+      }
+    })
     this.par.findByTipo('DESEST').subscribe((wrapper: any) => {
       this.catMotivoDesestimiento = wrapper && wrapper.entidades ? wrapper.entidades : {valor: 'Error de catalogo'};
     });
@@ -466,7 +475,7 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
       campania:this.campania.value,
       fechaNacimiento:this.fechaNacimiento.value,
       nacionalidad:this.nacionalidad.value.id,
-      publicidad:this.publicidad.value,
+      publicidad:this.publicidad.value.nombre,
       tbQoTelefonoClientes: new Array()
     };
     if(this.telefonoMovil){
@@ -476,13 +485,19 @@ export class GestionCotizacionComponent extends TrackingUtil implements OnInit {
       cliente.tbQoTelefonoClientes.push(this.telefonoFijo);
     }
     this.wCotiz.cotizacion.tbQoCliente.nombreCompleto = this.nombresCompletos.value;
-    this.wCotiz.cotizacion.tbQoCliente.publicidad = this.publicidad.value;
+    this.wCotiz.cotizacion.tbQoCliente.publicidad = this.publicidad.value.nombre;
     this.wCotiz.cotizacion.tbQoCliente.fechaNacimiento =this.fechaNacimiento.value;
     this.wCotiz.cotizacion.tbQoCliente.edad = this.edad.value;
     this.wCotiz.cotizacion.tbQoCliente.nacionalidad = this.nacionalidad.value.id;
     this.wCotiz.cotizacion.tbQoCliente.email = this.correoElectronico.value;
     this.wCotiz.cotizacion.tbQoCliente.campania = this.campania.value;
-    return cliente;
+    let wrapperCliente = {
+      cliente: cliente,
+      //referido: referido,
+      bandera: this.publicidad.value.bandera? true:false
+    }
+    //console.log("el wrappersin", wrapperCliente)
+    return wrapperCliente;
   }
   public cargarJoya() {
     if (this.formTasacion.invalid) {
