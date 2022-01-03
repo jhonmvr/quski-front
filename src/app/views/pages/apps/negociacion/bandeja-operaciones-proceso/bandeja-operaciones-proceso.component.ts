@@ -188,11 +188,11 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       this.catRolAsesores = data.entidades ? data.entidades : null;
       this.par.findByTipo('PERFIL-REASIG').subscribe( (data: any) =>{
         this.catRolReasignacion = data.entidades ? data.entidades : null;
-        this.pro.getEstadosProceso().subscribe( (dataEstado: any) =>{
+        this.pro.getEstadosProceso(null).subscribe( (dataEstado: any) =>{
           this.catEstadoProceso = dataEstado.entidades ? dataEstado.entidades : [];
           this.pro.getProcesos().subscribe( (dataProceso: any) =>{
             this.catProceso = dataProceso.entidades ? dataProceso.entidades : [];
-            this.pro.getActividades().subscribe( (dataActividad: any) =>{
+            this.pro.getActividades(null).subscribe( (dataActividad: any) =>{
               this.catActividad = dataActividad.entidades ? dataActividad.entidades : [];
               this.cargarCatalogosOperacionesAndEnums();
             });
@@ -257,7 +257,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         w.nombreCompleto = this.nombreCompleto.value;
       }
       if(this.proceso.value != ""  && this.proceso.value!= null){
-        w.proceso = this.proceso.value.replace(/ /gi,"_",);
+        w.proceso = this.proceso.value.map( p=> {return p.replace(/ /gi,"_",) }) ;
       }
 
       this.buscarOperaciones( w );
@@ -314,5 +314,14 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   }
   public irNegociacion(){
     this.router.navigate(['negociacion/gestion-negociacion']);    
+  }
+
+  loadEstadoActividad(){
+    this.pro.getActividades(this.proceso.value.map( p=> {return p.replace(/ /gi,"_",) })).subscribe( (dataActividad: any) =>{
+      this.catActividad = dataActividad.entidades ? dataActividad.entidades : [];
+    });
+    this.pro.getEstadosProceso(this.proceso.value.map( p=> {return p.replace(/ /gi,"_",) })).subscribe( (dataEstado: any) =>{
+      this.catEstadoProceso = dataEstado.entidades ? dataEstado.entidades : [];
+    });
   }
 }

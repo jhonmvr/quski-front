@@ -51,10 +51,10 @@ export class ProcesoService extends BaseService {
   /**
    * @author Jeroham Cadenas
    */
-  public getActividades() {
+  public getActividades(proceso) {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'getActividades';
-    this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options).pipe(
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, proceso,this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
@@ -64,10 +64,10 @@ export class ProcesoService extends BaseService {
   /**
    * @author Jeroham Cadenas
    */
-  public getEstadosProceso() {
+  public getEstadosProceso(proceso) {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'getEstadosProceso';
     this.options = { headers: this.headers, params: this.params };
-    return this.http.get(serviceUrl, this.options).pipe(
+    return this.http.post(serviceUrl, proceso,this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
