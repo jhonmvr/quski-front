@@ -36,6 +36,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public catActividad : Array<string>;
   public catRolReasignacion : Array<any>;
   public catRolAsesores : Array<any>;
+  montoTotal;
   
 
 
@@ -129,6 +130,10 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         this.paginator.length = 0;
         this.dataSource.data = null;
       }
+    });
+    this.pro.getMontoFinanciado(wrapper).subscribe( (data: any) =>{
+      this.montoTotal = data.entidad;
+      
     });
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @FUNCIONALIDAD ** */
@@ -261,6 +266,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       }
 
       this.buscarOperaciones( w );
+
     } else{
       this.sinNotSer.setNotice('COMPLETE LOS CAMPOS CORRECTAMENTE', 'error');
 
