@@ -1,146 +1,170 @@
-  .spiner{
-    display: block;
-    position: fixed;
-    z-index: 1031;
-    top: 50%;
-    right: 50%; 
-  }
-  .material-icons {
-    font-size: 31px !important;
-    height: 31px;
-    width: 34px;
-    color: gray;
-    text-align: center;
-  }
-  .warning-icons {
-    font-size: 31px !important;
-    height: 31px;
-    width: 34px;
-    color: gray;
-    text-align: center;
-    vertical-align: middle;
+  .spiner {
+      display: block;
+      position: fixed;
+      z-index: 1031;
+      top: 50%;
+      right: 50%;
   }
   
-  .mat-button .mat-button-wrapper > *,
-  .mat-fab .mat-button-wrapper > *,
-  .mat-flat-button .mat-button-wrapper > *,
-  .mat-icon-button .mat-button-wrapper > *,
-  .mat-mini-fab .mat-button-wrapper > *,
-  .mat-raised-button .mat-button-wrapper > *,
-  .mat-stroked-button .mat-button-wrapper > * {
-    vertical-align: baseline;
+  .material-icons {
+      font-size: 31px !important;
+      height: 31px;
+      width: 34px;
+      color: gray;
+      text-align: center;
   }
+  
+  .warning-icons {
+      font-size: 31px !important;
+      height: 31px;
+      width: 34px;
+      color: gray;
+      text-align: center;
+      vertical-align: middle;
+  }
+  
+  .mat-button .mat-button-wrapper>*,
+  .mat-fab .mat-button-wrapper>*,
+  .mat-flat-button .mat-button-wrapper>*,
+  .mat-icon-button .mat-button-wrapper>*,
+  .mat-mini-fab .mat-button-wrapper>*,
+  .mat-raised-button .mat-button-wrapper>*,
+  .mat-stroked-button .mat-button-wrapper>* {
+      vertical-align: baseline;
+  }
+  
   .mat-header-cell {
-    text-align: center;
-    flex-direction: column;
-    justify-content: center;
-    font-size: smaller;
-    
+      text-align: center;
+      flex-direction: column;
+      justify-content: center;
+      font-size: smaller;
   }
   
   .mat-cell {
-    text-align: center;
-    justify-content:center;
-    font-size: smaller;
+      text-align: center;
+      justify-content: center;
+      font-size: smaller;
   }
-  .mat-footer-cell{
-    text-align: center;
-    justify-content:center;
-    font-size: smaller;
+  
+  .mat-footer-cell {
+      text-align: center;
+      justify-content: center;
+      font-size: smaller;
   }
+  
   .mat-button,
   .mat-flat-button,
   .mat-icon-button,
   .mat-stroked-button {
-    min-width: 28px; //da espacio al data table
-    height: fit-content !important; //quita fondo cuando sobrepone
+      min-width: 28px; //da espacio al data table
+      height: fit-content !important; //quita fondo cuando sobrepone
   }
   
   .white-icon {
-    color: white;
+      color: white;
   }
   /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  
   .white-icon svg {
       fill: white;
   }
   
   .blue-icon {
-    color:#3399ff;
+      color: #3399ff;
   }
   /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  
   .blue-icon svg {
       fill: #3399ff;
   }
+  
   .orange-icon {
-    color:#ff9900;
+      color: #ff9900;
   }
-    /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+  
   .orange-icon svg {
-    fill: #ff9900;
+      fill: #ff9900;
   }
+  
   .textArea {
-    color: black;
-    background-color: white;
-    border-color: silver;
-    font-weight: 400;
+      color: black;
+      background-color: white;
+      border-color: silver;
+      font-weight: 400;
   }
   
   .warning {
-    color: white;
-    background-color: #cc8b00;
-    border-color: white;
-    font-weight: 400;
+      color: white;
+      background-color: #cc8b00;
+      border-color: white;
+      font-weight: 400;
   }
-
+  
   .error-snackbar {
-    color: white;
-    background-color: red;
-    border-color: white;
-    font-weight: 400;
-  }    
-  .tableOpciones{
-    overflow: auto;
+      color: white;
+      background-color: red;
+      border-color: white;
+      font-weight: 400;
   }
-  #table{
-    overflow: auto;
-    width: 100%;
+  
+  .tableOpciones {
+      overflow: auto;
   }
+  
+  #table {
+      overflow: auto;
+      width: 100%;
+  }
+  
   .mat-column-Accion {
-    flex: 0 0 160px;
+      flex: 0 0 160px;
   }
+  
   .mat-column-codigoBpm {
-    flex: 0 0 100px;
+      flex: 0 0 100px;
   }
+  
   .mat-column-codigoOperacion {
-    flex: 0 0 100px;
+      flex: 0 0 100px;
   }
+  
   .mat-column-nombreCliente {
-    flex: 0 0 100px;
+      flex: 0 0 100px;
   }
+  
   .mat-column-cedulaCliente {
-    flex: 0 0 80px;
+      flex: 0 0 80px;
   }
+  
   .mat-column-montoFinanciado {
-    flex: 0 0 70px;
+      flex: 0 0 70px;
   }
+  
   .mat-column-fechaCreacion {
-    flex: 0 0 80px;
+      flex: 0 0 80px;
   }
+  
   .mat-column-agencia {
-    flex: 0 0 85px;
+      flex: 0 0 85px;
   }
+  
   .mat-column-estadoProceso {
-    flex: 0 0 80px;
+      flex: 0 0 80px;
   }
+  
   .mat-column-proceso {
-    flex: 0 0 80px;
+      flex: 0 0 80px;
   }
+  
   .mat-column-asesor {
-    flex: 0 0 100px;
+      flex: 0 0 120px;
   }
+  
   .mat-column-usuarioEjecutor {
-    flex: 0 0 100px;
+      flex: 0 0 120px;
   }
+  
   .mat-column-actividad {
-    flex: 0 0 100px;
+      flex: 0 0 100px;
   }
