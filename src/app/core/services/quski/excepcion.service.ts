@@ -181,7 +181,10 @@ export class ExcepcionService extends BaseService {
 
   public solicitarExcepcion(data: TbQoExcepcion) {
     let serviceUrl = this.appResourcesUrl +'negociacionRestController/solicitarExcepcion';
-    this.options = { headers: this.headers };
+    this.params = new HttpParams();
+    this.params = this.params.set('nombreAsesor', localStorage.getItem("nombre"));
+    this.params = this.params.set('correoAsesor', localStorage.getItem("email"));
+    this.options = { headers: this.headers, params: this.params  };
     return this.http.post(serviceUrl, data, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
