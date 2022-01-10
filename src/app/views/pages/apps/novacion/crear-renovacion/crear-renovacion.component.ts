@@ -25,6 +25,7 @@ import { DevolucionCreditoComponent } from '../../../../partials/custom/popups/d
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 import { ProcesoService } from '../../../../../../app/core/services/quski/proceso.service';
+import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -38,6 +39,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public loading;
   public usuario: string;
   variablesInternas;
+  clienteConsultar:   ConsultaCliente;
   agencia: string;
   private validCliente = true;
   private riesgoTotal: number;
@@ -58,12 +60,13 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public codigoOperacionAnterior = new FormControl();
   public codigoOperacionMadre = new FormControl();
   public recibirPagar;
+  public riesgos;
   public proceso = new FormControl();
   public estadoProceso = new FormControl();
   public nombreCompleto = new FormControl();
   public cedulaCliente = new FormControl();
   public montoSolicitado = new FormControl('',[ValidateDecimal]);
-  
+  public componenteRiesgo: boolean;
   public dataSourceCreditoNegociacion = new MatTableDataSource<any>();
   public displayedColumnsCreditoNegociacion = ['Accion','plazo', 'periodicidadPlazo', 'montoFinanciado', 'cuota', 'valorARecibir', 'valorAPagar',
   'totalCostosOperacionAnterior','totalGastosNuevaOperacion', 'costoCustodia', 'costoTasacion', 'costoFideicomiso', 'costoSeguro', 'impuestoSolca',
@@ -120,6 +123,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem( 'idAgencia' );
     this.inicioDeFlujo();
+  
+    this.componenteRiesgo = false;
   }
   private cargarCatalogos(){
     this.sof.consultarMotivoDevolucionAprobacionCS().subscribe((data: any) => {
@@ -139,6 +144,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
           this.loadingSubject.next(true);
           this.cre.buscarRenovacionByIdNegociacion(json.params.item).subscribe((data: any) => {
             this.credit = data.entidad;
+         
             this.idNego = json.params.item;
             //console.log("datos ->", this.credit);
             if (this.credit ) {
@@ -157,7 +163,10 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         }else if(json.params.codigo == 'CRE'){
           this.loadingSubject.next(true);
           this.cre.buscarRenovacionByNumeroOperacionMadre(json.params.item).subscribe((data: any) => {
+           
             this.credit = data.entidad;
+            this.riesgoAcumulado();
+            console.log("entramos aquirijillo porq es nueva reenovacion",  this.credit)
             this.simularOpciones();
             //console.log("datos ->", this.credit);
             if (this.credit ) {
@@ -582,4 +591,18 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     return null;
     
   }
+  riesgoAcumulado(){
+    let clienteConsultar :ConsultaCliente = {idTipoIdentificacion :0 , identificacion : ""}
+    clienteConsultar.idTipoIdentificacion=1;
+    clienteConsultar.identificacion= this.credit.operacionAnterior.cliente.identificacion
+    this.sof.consultaRiesgoAcumuladoCS(clienteConsultar)
+.subscribe((data:any)=>{
+  if(data ){
+    console.log("el riesgo...", data)
+    this.componenteRiesgo = true;
+    this.riesgos = data.operaciones
+  }
+ 
+
+})  }
 }
