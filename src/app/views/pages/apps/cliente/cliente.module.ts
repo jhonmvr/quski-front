@@ -55,6 +55,7 @@ import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { PopUpNacimientoComponent } from './gestion-cliente/pop-up-nacimiento/pop-up-nacimiento.component';
 import { HabilitanteComponent } from '../../../../views/partials/custom/habilitante/habilitante.component';
+import { DialogHabilitanteClienteComponent } from './list-cliente/dialog-habilitante-cliente/dialog-habilitante-cliente.component';
 
 const routes: Routes = [
 	{
@@ -149,6 +150,7 @@ declarations: [
     GestionClienteComponent,
     DialogCargarHabilitanteComponent,
     PopUpNacimientoComponent,
+    DialogHabilitanteClienteComponent,
     
 
   ],
@@ -156,7 +158,7 @@ declarations: [
 	AddFotoComponent,
 	DialogCargarHabilitanteComponent,
 	PopUpNacimientoComponent,
-	HabilitanteComponent
+	DialogHabilitanteClienteComponent
   ]
 })
 export class ClienteModule {}

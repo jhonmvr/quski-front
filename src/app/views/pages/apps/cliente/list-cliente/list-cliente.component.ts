@@ -9,6 +9,7 @@ import { TituloContratoService } from '../../../../../core/services/quski/titulo
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { SubheaderService } from '../../../../../core/_base/layout';
 import { HabilitanteComponent } from '../../../../../views/partials/custom/habilitante/habilitante.component';
+import { DialogHabilitanteClienteComponent } from './dialog-habilitante-cliente/dialog-habilitante-cliente.component';
 
 
 
@@ -38,8 +39,9 @@ export class ListClienteComponent implements OnInit {
   estadoCivil = new FormControl('', []);
   genero = new FormControl('', []);
 
-  displayedColumns = ['accion', 'cedula',  'primerNombre', 'nivelEducacion', 'genero', 'estadoCivil',
-   'nacionalidad', 'edad', 'actividadEconomica',  'canalContacto'];
+  displayedColumns = ['accion', 'cedula',  'primerNombre'];
+/*   displayedColumns = ['accion', 'cedula',  'primerNombre', 'nivelEducacion', 'genero', 'estadoCivil',
+   'nacionalidad', 'edad', 'actividadEconomica',  'canalContacto'];*/
   /**Obligatorio paginacion */
   p = new Page();
   dataSource:MatTableDataSource<TbQoCliente>=new MatTableDataSource<TbQoCliente>();
@@ -48,7 +50,7 @@ export class ListClienteComponent implements OnInit {
   totalResults: number;
   pageSize = 5;
   currentPage;
-
+  bandera = false;
   /**Obligatorio ordenamiento */
   @ViewChild('sort1', {static: true}) sort: MatSort;
   
@@ -166,10 +168,10 @@ export class ListClienteComponent implements OnInit {
   verHabilitantes(row){
    
     
-      const dialogRef = this.dialog.open(HabilitanteComponent, {
+      const dialogRef = this.dialog.open(DialogHabilitanteClienteComponent, {
         width: "1200px",
         height: "auto",
-        data: { proceso : "CLIENTE", estadoOperacion: "DETALLE" ,  idReferenciaHab:  row.cedulaCliente, useType: "FORM"}
+        data:  row.cedulaCliente
       });
       dialogRef.afterClosed().subscribe(r => {
       

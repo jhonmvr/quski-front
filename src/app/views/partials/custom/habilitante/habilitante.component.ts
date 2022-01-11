@@ -136,14 +136,6 @@ export class HabilitanteComponent implements OnInit {
   ngOnInit() {
     const suscrip =concat(this.referenciaSubject,this.procesoSubject,this.useTypeSubject);
     suscrip.subscribe(arg => this.validateLoadData());
-    console.log(this.data)
-    if (this.data){
-      this.useType = this.data.useType 
-   //   this.estadoOperacion = this.data.estadoOperacion 
-      this.referencia = this.data.idReferenciaHab 
-      this.proceso = this.data.proceso 
-
-    }
     /* this.procesoSubject.subscribe(()=>{
       
     });
