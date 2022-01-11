@@ -55,6 +55,8 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado'];
   public loadComprobante  = new BehaviorSubject<boolean>(false);
   public catCuenta;
+  public recibirPagar;
+  public recibirOPagar = 'warn'
   public catfirmadaOperacion: {nombre, codigo}[];
   public catFirmanteOperacion;
   public catTipoCliente;
@@ -126,6 +128,16 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
         
         this.cre.buscarRenovacionByIdNegociacion(this.item).subscribe((data: any) => {
           this.credit = data.entidad;
+          //Valor neto a recibir
+          this.recibirPagar = (this.credit.credito.valorARecibir - this.credit.credito.valorAPagar).toFixed(2) ;
+           if ( this.recibirPagar < 0) {
+            this.recibirOPagar = 'warn';
+          }else if( this.recibirPagar > 0){
+
+            this.recibirOPagar = 'primary'; 
+
+          }
+          console.log("esto llega aca", this.credit)
           if(data.entidad && data.entidad.credito && data.entidad.credito.id){
             this.findHistoricoObservacionByCredito(data.entidad.credito.id);
           }
