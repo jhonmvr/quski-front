@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from "@angular/core";
-import { MatTableDataSource, MatDialog, MatPaginator } from "@angular/material";
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, Inject } from "@angular/core";
+import { MatTableDataSource, MatDialog, MatPaginator, MAT_DIALOG_DATA } from "@angular/material";
 import { BehaviorSubject, concat } from "rxjs";
 import { ReNoticeService } from "../../../../core/services/re-notice.service";
 import { Page } from "../../../../core/model/page";
@@ -118,7 +118,9 @@ export class HabilitanteComponent implements OnInit {
     private sinNoticeService: ReNoticeService,
     private dh: DocumentoHabilitanteService,
     private os:ObjectStorageService,
-    public dialog: MatDialog  ) {
+    public dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) private data: any
+      ) {
     ////console.log("===========> entra en componente habilitantes");
     this.uploading = this.uploadSubject.asObservable();
     /* //console.log("cargando rol: " + this.rol);
@@ -134,7 +136,14 @@ export class HabilitanteComponent implements OnInit {
   ngOnInit() {
     const suscrip =concat(this.referenciaSubject,this.procesoSubject,this.useTypeSubject);
     suscrip.subscribe(arg => this.validateLoadData());
-    
+    console.log(this.data)
+    if (this.data){
+      this.useType = this.data.useType 
+   //   this.estadoOperacion = this.data.estadoOperacion 
+      this.referencia = this.data.idReferenciaHab 
+      this.proceso = this.data.proceso 
+
+    }
     /* this.procesoSubject.subscribe(()=>{
       
     });
@@ -155,7 +164,7 @@ export class HabilitanteComponent implements OnInit {
   validateLoadData(  ){
     console.log(">>>>>>>>>>>>>>>>>>>>",this.useType , this.useType , this.proceso , this.referencia)
     console.log("this.useType",this.useType)
-    console.log("this.useType",this.proceso)
+    console.log("this.useType",this.procesoSubject)
     console.log("this.useType",this.referencia)
     console.log( "entra a buscar ", ( this.useType && this.useType === this.TYPE_FORM && this.proceso && this.referencia ))
     if( this.useType && this.useType === this.TYPE_FORM && this.proceso && this.referencia ){
@@ -256,8 +265,9 @@ export class HabilitanteComponent implements OnInit {
     this.os.getObjectById( row.objectId,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
       ////console.log("entra a submit var json " + JSON.stringify( atob(data.entidad) ));
       if( data && data.entidad ){
+        console.log( data.entidad)
         let obj=JSON.parse( atob(data.entidad) );
-        //console.log("entra a retorno json " + JSON.stringify( obj ));
+        console.log("entra a retorno json " + JSON.stringify( obj ));
         const byteCharacters = atob(obj.fileBase64);
         const byteNumbers = new Array(byteCharacters.length);
         for (let i = 0; i < byteCharacters.length; i++) {

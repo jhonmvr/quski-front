@@ -54,6 +54,7 @@ import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick
 import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { PopUpNacimientoComponent } from './gestion-cliente/pop-up-nacimiento/pop-up-nacimiento.component';
+import { HabilitanteComponent } from '../../../../views/partials/custom/habilitante/habilitante.component';
 
 const routes: Routes = [
 	{
@@ -123,7 +124,7 @@ const routes: Routes = [
 		MatButtonToggleModule,
 		NgbProgressbarModule,
 		MatTreeModule,
-		
+		PartialsModule,
 		MatStepperModule,
 		PartialsModule
   ],
@@ -154,7 +155,8 @@ declarations: [
   entryComponents: [
 	AddFotoComponent,
 	DialogCargarHabilitanteComponent,
-	PopUpNacimientoComponent
+	PopUpNacimientoComponent,
+	HabilitanteComponent
   ]
 })
 export class ClienteModule {}

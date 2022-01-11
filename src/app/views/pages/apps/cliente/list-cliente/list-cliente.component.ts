@@ -8,6 +8,7 @@ import { TbQoCliente } from '../../../../../core/model/quski/TbQoCliente';
 import { TituloContratoService } from '../../../../../core/services/quski/titulo.contrato.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { SubheaderService } from '../../../../../core/_base/layout';
+import { HabilitanteComponent } from '../../../../../views/partials/custom/habilitante/habilitante.component';
 
 
 
@@ -160,6 +161,23 @@ export class ListClienteComponent implements OnInit {
     //console.log( "====> valor proceso " + this.identificacionCliente.value );
     this.proceso=this.identificacionCliente.value;
   }
+
+
+  verHabilitantes(row){
+   
+    
+      const dialogRef = this.dialog.open(HabilitanteComponent, {
+        width: "1200px",
+        height: "auto",
+        data: { proceso : "CLIENTE", estadoOperacion: "DETALLE" ,  idReferenciaHab:  row.cedulaCliente, useType: "FORM"}
+      });
+      dialogRef.afterClosed().subscribe(r => {
+      
+      });
+    
+  }
+
+
 
 }
   

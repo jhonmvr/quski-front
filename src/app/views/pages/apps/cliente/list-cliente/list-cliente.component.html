@@ -76,6 +76,10 @@
                             <mat-icon style="font-size: 16px;" class="green-icon"   matTooltipPosition="above" matTooltip="Editar cliente">remove_red_eye
                             </mat-icon>
                         </a>
+                        <a href="javascript:void(0);" (click)="verHabilitantes(row)" color="primary" [ngClass]="['primary']">
+                            <mat-icon style="font-size: 16px;" class="green-icon"   matTooltipPosition="above" matTooltip="Ver Documentos">remove_red_eye
+                            </mat-icon>
+                        </a>
                     </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="cedula">
@@ -129,8 +133,7 @@
             
         </div>
         <!--end MAT TABLE-->
-        <re-habilitante [proceso]="proceso" [useType]="'FORM'" [referencia]="'1'" [rol]="'1'">
-        </re-habilitante>
+       
     </re-portlet-body>    
     <re-portlet-footer></re-portlet-footer>
 </re-portlet>
