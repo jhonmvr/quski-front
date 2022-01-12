@@ -127,6 +127,7 @@ export class NegociacionService extends BaseService {
   agregarJoya(joya: TbQoTasacion) {
     const serviceUrl = this.appResourcesUrl + this.urlRest + 'agregarJoya';
     this.params = new HttpParams().set('asesor',atob(localStorage.getItem(environment.userKey)));
+    this.params = this.params.set("nombreAsesor",localStorage.getItem("nombre")).set("correoAsesor",localStorage.getItem("email"));
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, joya, this.options).pipe(
       tap( // Log the result or error
