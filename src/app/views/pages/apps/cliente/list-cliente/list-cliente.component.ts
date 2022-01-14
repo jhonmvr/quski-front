@@ -39,7 +39,7 @@ export class ListClienteComponent implements OnInit {
   estadoCivil = new FormControl('', []);
   genero = new FormControl('', []);
 
-  displayedColumns = ['accion', 'cedula',  'primerNombre'];
+  displayedColumns = ['accion', 'cedula',  'nombreCompleto'];
 /*   displayedColumns = ['accion', 'cedula',  'primerNombre', 'nivelEducacion', 'genero', 'estadoCivil',
    'nacionalidad', 'edad', 'actividadEconomica',  'canalContacto'];*/
   /**Obligatorio paginacion */
@@ -135,7 +135,7 @@ export class ListClienteComponent implements OnInit {
     //console.log("====> paged: " + JSON.stringify( this.p ));
     this.loadingSubject.next(true);
     this.dataSource = null;
-    this.clienteService.findClienteByParams(this.p, this.identificacionCliente.value, this.nombreCliente.value, this.apellidoCliente.value
+    this.clienteService.findClienteByParams(this.p, this.identificacionCliente.value, this.nombreCliente.value, null
       ,null,null,null,null,null,null,null,null,null).subscribe((data: any) => {
       this.loadingSubject.next(false);
       //console.log("====> datos: " + JSON.stringify( data ));

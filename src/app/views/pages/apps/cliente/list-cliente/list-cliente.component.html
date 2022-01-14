@@ -66,7 +66,7 @@
         <!--START MAT TABLE-->
         <div class="mat-table__wrapper">
             <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
-            matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
+            matSort #sort1="matSort" matSortActive="nombreCompleto" matSortDirection="asc" matSortDisableClear>
                 <ng-container matColumnDef="accion">
                     <mat-header-cell *matHeaderCellDef>
                         Acciones
@@ -86,7 +86,7 @@
                 <mat-header-cell *matHeaderCellDef>Cedula</mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.cedulaCliente}}</mat-cell>
             </ng-container>
-                <ng-container matColumnDef="primerNombre" >
+                <ng-container matColumnDef="nombreCompleto" >
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Nombres Completos</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.primerNombre}} {{element.segundoNombre}} {{element.apellidoPaterno}} {{element.apellidoMaterno}}</mat-cell>
                 </ng-container>

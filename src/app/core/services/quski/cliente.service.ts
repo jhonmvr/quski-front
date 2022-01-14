@@ -235,7 +235,7 @@ export class ClienteService extends BaseService {
       this.params = this.params.set('identificacion', identificacion);
     }
     if (nombre && nombre !== '') {
-      this.params = this.params.set('nombre', nombre);
+      this.params = this.params.set('nombreCompleto', nombre);
     }
     if (apellido && apellido !== '') {
       this.params = this.params.set('apellido', apellido);
