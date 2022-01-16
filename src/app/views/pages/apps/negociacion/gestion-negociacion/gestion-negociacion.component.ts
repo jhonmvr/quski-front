@@ -1067,7 +1067,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     let wrapperCliente = {
       cliente: cliente,
       referido: referido,
-      bandera: this.publicidad.value.bandera? true:false
+      bandera: this.publicidad.value?this.publicidad.value.bandera? true:false : false
     }
     //console.log("el wrappersin", wrapperCliente)
     return wrapperCliente;
