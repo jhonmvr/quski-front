@@ -55,6 +55,8 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado'];
   public loadComprobante  = new BehaviorSubject<boolean>(false);
   public catCuenta;
+  public recibirPagar;
+  public recibirOPagar = 'warn'
   public catfirmadaOperacion: {nombre, codigo}[];
   public catFirmanteOperacion;
   public catTipoCliente;
@@ -126,6 +128,16 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
         
         this.cre.buscarRenovacionByIdNegociacion(this.item).subscribe((data: any) => {
           this.credit = data.entidad;
+          //Valor neto a recibir
+          this.recibirPagar = (this.credit.credito.valorARecibir - this.credit.credito.valorAPagar).toFixed(2) ;
+           if ( this.recibirPagar < 0) {
+            this.recibirOPagar = 'warn';
+          }else if( this.recibirPagar > 0){
+
+            this.recibirOPagar = 'primary'; 
+
+          }
+          console.log("esto llega aca", this.credit)
           if(data.entidad && data.entidad.credito && data.entidad.credito.id){
             this.findHistoricoObservacionByCredito(data.entidad.credito.id);
           }
@@ -153,7 +165,10 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.numeroCuenta.disable();
     this.firmanteOperacion.setValue( this.catFirmanteOperacion ? this.catFirmanteOperacion[0] ? this.catFirmanteOperacion[0] :{nombre: 'Error cargando catalogo'} :{nombre: 'Error cargando catalogo'} )
     this.firmanteOperacion.disable();
-    this.excepcionOperativa.setValue(wr.credito.excepcionOperativa ? this.catExcepcionOperativa.find(x => x.valor == wr.credito.excepcionOperativa) : this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') );
+    let excepcionesOperativas = ""
+    excepcionesOperativas.concat(wr.credito.excepcionOperativa ? this.catExcepcionOperativa.find(x => x.valor == wr.credito.excepcionOperativa) : this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION'))
+   // excepcionesOperativas.push(wr.credito.excepcionOperativa ? this.catExcepcionOperativa.find(x => x.valor == wr.credito.excepcionOperativa) : this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION'))
+    this.excepcionOperativa.setValue(excepcionesOperativas);
     this.habilitarExcepcionOperativa();
     wr.pagos ? this.dataSourceComprobante = new MatTableDataSource<any>(wr.pagos) : null;
     if( this.dataSourceComprobante.data ){
@@ -167,6 +182,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.credito.codigo + ".", "success");
   }
   public habilitarExcepcionOperativa(){
+    console.log("qui esta ", this.excepcionOperativa.value)
     if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
       this.fechaRegularizacion.disable();
       this.fechaRegularizacion.setValue(null);
@@ -247,6 +263,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
     this.credit.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
     this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
+    console.log("las excepciones", this.credit.credito.excepcionOperativa)
     let list = new Array<any>( );
     if(this.dataSourceComprobante.data.length > 0){
       this.dataSourceComprobante.data.forEach( e=>{

@@ -71,6 +71,18 @@
                     </div>
                 </div>
             </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Riesgo Acumulado</ng-template>
+                <ng-container *ngIf="componenteRiesgo">
+                    <kt-tabla-riesgo-acumulado [base]="riesgos"></kt-tabla-riesgo-acumulado> 
+                </ng-container>
+
+                <div class="row " *ngIf="!componenteRiesgo">
+                    <div class="col-4 offset-4">
+                        <strong> EL CLIENTE NO TIENE RIESGO</strong>
+                    </div>
+                </div>
+            </mat-step>
             <mat-step label='Detalle de garantias'>
                 <div class="row">
                     <div class="col" *ngIf="credit && credit.operacionAnterior && credit.operacionAnterior.garantias">

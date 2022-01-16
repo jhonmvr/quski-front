@@ -35,13 +35,13 @@
                             <input matInput [formControl]="nombreCliente" placeholder="Nombres " autocomplete="off">
                         </mat-form-field>
                     </div>
-                    <div class="col-md-3 kt-margin-bottom-10-mobile">
+                    <div class="col-md-3 kt-margin-bottom-10-mobile" *ngIf="bandera">
                         <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="apellidoCliente" placeholder="Apellidos " autocomplete="off">
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="row align-items-center" >
+                <div class="row align-items-center"  *ngIf="bandera">
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento " autocomplete="off" [value]="fechaNacimiento.value | rDate">
@@ -66,14 +66,18 @@
         <!--START MAT TABLE-->
         <div class="mat-table__wrapper">
             <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
-            matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
+            matSort #sort1="matSort" matSortActive="nombreCompleto" matSortDirection="asc" matSortDisableClear>
                 <ng-container matColumnDef="accion">
                     <mat-header-cell *matHeaderCellDef>
                         Acciones
                     </mat-header-cell>
                     <mat-cell *matCellDef="let row">
-                        <a href="javascript:void(0);" [routerLink]="['../gestion-cliente', row.id]" color="primary" [ngClass]="['primary']">
+                        <!-- <a href="javascript:void(0);" [routerLink]="['../gestion-cliente', row.id]" color="primary" [ngClass]="['primary']">
                             <mat-icon style="font-size: 16px;" class="green-icon"   matTooltipPosition="above" matTooltip="Editar cliente">remove_red_eye
+                            </mat-icon>
+                        </a> -->
+                        <a href="javascript:void(0);" (click)="verHabilitantes(row)" color="primary" [ngClass]="['primary']">
+                            <mat-icon style="font-size: 16px;" class="green-icon"   matTooltipPosition="above" matTooltip="Ver Documentos">remove_red_eye
                             </mat-icon>
                         </a>
                     </mat-cell>
@@ -82,11 +86,11 @@
                 <mat-header-cell *matHeaderCellDef>Cedula</mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.cedulaCliente}}</mat-cell>
             </ng-container>
-                <ng-container matColumnDef="primerNombre">
+                <ng-container matColumnDef="nombreCompleto" >
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Nombres Completos</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.primerNombre}} {{element.segundoNombre}} {{element.apellidoPaterno}} {{element.apellidoMaterno}}</mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="nivelEducacion">
+                <!-- <ng-container matColumnDef="nivelEducacion">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Nivel de Educacion</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.nivelEducacion}} </mat-cell>
                 </ng-container>
@@ -118,7 +122,7 @@
             <ng-container matColumnDef="canalContacto">
                 <mat-header-cell *matHeaderCellDef>Canal de Contacto</mat-header-cell>
                 <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
-            </ng-container>
+            </ng-container> -->
             
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
@@ -129,8 +133,7 @@
             
         </div>
         <!--end MAT TABLE-->
-        <re-habilitante [proceso]="proceso" [useType]="'FORM'" [referencia]="'1'" [rol]="'1'">
-        </re-habilitante>
+       
     </re-portlet-body>    
     <re-portlet-footer></re-portlet-footer>
 </re-portlet>
