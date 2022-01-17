@@ -49,7 +49,8 @@ export class SubheaderComponent implements OnInit {
 					plazo: datos.plazo,
 					tipoCredito: datos.tipoCredito,
 					numeroCuenta: datos.numeroCuenta,
-					nombreAsesor: datos.nombreAsesor
+					nombreAsesor: datos.nombreAsesor,
+					numeroCreditoAnterior: datos.numeroCreditoAnterior
 				}
 			} else {
 				this.mostratContenido.next(false);
@@ -73,4 +74,5 @@ export class Contenido {
 	tipoCredito: any;
 	numeroCuenta: any;
 	nombreAsesor: any;
+	numeroCreditoAnterior: any;
 }

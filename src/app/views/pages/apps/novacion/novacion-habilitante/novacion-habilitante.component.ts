@@ -264,6 +264,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
     this.cre.crearOperacionRenovacion(this.credit.credito, list , this.usuario).subscribe( (data: any) =>{
       if(data.entidad){
+        this.pro.getCabecera(this.item,'RENOVACION').subscribe(datosCabecera=>{
+          this.layouteService.setDatosContrato(datosCabecera);
+        });
         if(this.credit && this.credit.credito.periodoPlazo == 'C'){
           console.log("total==>",data.entidad.cuotasAmortizacion && data.entidad.cuotasAmortizacion[0].total);
           console.log("ingreso==>",(this.ingresoNeto * this.politicaIngreso));

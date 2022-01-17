@@ -127,6 +127,7 @@ export class CreditoNegociacionService extends BaseService {
     .set('telefonoAsesor', localStorage.getItem('telefono')).set('numeroOperacion', numeroOperacion)
     .set('numeroOperacionMadre', numeroOperacionMadre).set('asesor', asesor).set('idAgencia', idAgencia)
     .set('nombreAsesor',localStorage.getItem('nombre'));
+    this.params = this.params.set('correoAsesor',localStorage.getItem('email'));
     if(idNegociacion){
       this.params = this.params.set('idNegociacion', idNegociacion);
     }
