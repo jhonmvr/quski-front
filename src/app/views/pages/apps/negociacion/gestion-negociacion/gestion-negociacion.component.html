@@ -135,14 +135,14 @@
                     <div class="row" *ngIf="publicidad.value?publicidad.value.bandera:false">
                         <div class="col-md-6">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="nombreReferido" (click)="updateCliente($event, telefonoDomicilio)" (keydown)="updateCliente($event, nombreReferido)" placeholder="Nombre Referido" required="true">
+                                <input matInput [formControl]="nombreReferido" (click)="updateCliente($event, telefonoDomicilio)" (keydown)="updateCliente($event, nombreReferido)" placeholder="Nombre Referidor" required="true">
                                 <mat-error>{{ getErrorMessage("telefonoDomicilio") }}</mat-error>
                             </mat-form-field>
                         </div>
 
                         <div class="col-md-6">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="telefonoReferido" (click)="updateCliente($event, telefonoDomicilio)" (keydown)="updateCliente($event, telefonoReferido)" placeholder="Teléfono Referido" required="true" (keypress)="numberOnly($event)">
+                                <input matInput [formControl]="telefonoReferido" (click)="updateCliente($event, telefonoDomicilio)" (keydown)="updateCliente($event, telefonoReferido)" placeholder="Teléfono Referidor" required="true" (keypress)="numberOnly($event)">
                                 <mat-error>{{ getErrorMessage("telefonoDomicilio") }}</mat-error>
                             </mat-form-field>
                         </div>
