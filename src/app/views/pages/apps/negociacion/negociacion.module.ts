@@ -56,6 +56,7 @@ import { ReasignarUsuarioComponent } from '../../../../views/partials/custom/pop
 import { DetalleNegociacionComponent } from './detalle-negociacion/detalle-negociacion.component';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { MatTableExporterModule } from 'mat-table-exporter';
+import { BandejaProcesoGerenciaComponent } from './bandeja-proceso-gerencia/bandeja-proceso-gerencia.component';
 
 const routes: Routes = [
 	{
@@ -77,6 +78,9 @@ const routes: Routes = [
 			},{
 				path: 'bandeja-operaciones',
 				component: BandejaOperacionesProcesoComponent
+			},{
+				path: 'bandeja-administracion',
+				component: BandejaProcesoGerenciaComponent
 			},
 			{
 				path: 'gestion-negociacion/:origen/:id',
@@ -144,7 +148,8 @@ const routes: Routes = [
 		GestionNegociacionComponent,
 		NegociacionComponent,
 		BandejaOperacionesProcesoComponent,
-		DetalleNegociacionComponent
+		DetalleNegociacionComponent,
+		BandejaProcesoGerenciaComponent
 	],
 	entryComponents: [	
 		ErrorCargaInicialComponent,

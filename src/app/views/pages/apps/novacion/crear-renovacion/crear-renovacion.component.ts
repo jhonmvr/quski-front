@@ -592,17 +592,16 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     
   }
   riesgoAcumulado(){
-    let clienteConsultar :ConsultaCliente = {idTipoIdentificacion :0 , identificacion : ""}
-    clienteConsultar.idTipoIdentificacion=1;
-    clienteConsultar.identificacion= this.credit.operacionAnterior.cliente.identificacion
-    this.sof.consultaRiesgoAcumuladoCS(clienteConsultar)
-.subscribe((data:any)=>{
-  if(data ){
-    console.log("el riesgo...", data)
-    this.componenteRiesgo = true;
-    this.riesgos = data.operaciones
-  }
- 
+        let clienteConsultar :ConsultaCliente = {idTipoIdentificacion :0 , identificacion : ""}
+        clienteConsultar.idTipoIdentificacion=1;
+        clienteConsultar.identificacion= this.credit.operacionAnterior.cliente.identificacion
+        this.sof.consultaRiesgoAcumuladoCS(clienteConsultar).subscribe((data:any)=>{
+          if(data ){
+            this.componenteRiesgo = true;
+            this.riesgos = data.operaciones
+          }
+    
 
-})  }
+    })  
+  }
 }

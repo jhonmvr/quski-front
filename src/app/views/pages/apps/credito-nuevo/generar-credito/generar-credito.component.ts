@@ -430,6 +430,9 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       }
       this.cre.crearOperacionNuevo( this.operacionNuevo.credito ).subscribe( (data: any) =>{
         if(data.entidad){
+          this.pro.getCabecera(this.item,'NUEVO').subscribe(datosCabecera=>{
+            this.layoutService.setDatosContrato(datosCabecera);
+          });
           this.operacionSoft = data.entidad;  
           this.cargarOperacion( this.operacionSoft.credito );
         }else{ 

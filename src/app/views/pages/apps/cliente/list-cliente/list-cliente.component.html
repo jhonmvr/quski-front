@@ -1,13 +1,8 @@
-  
-
 <re-portlet>
     <re-portlet-header [title]="'Listado Clientes'" [class]="'kt-portlet__head--lg'">
-        
-		<ng-container ktPortletTools>
-            <a href="javascript:void(0);" (click)="buscar()" matTooltip="Buscar Cliente" style="font-size: 12px; vertical-align: middle;">
-                <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above" >search</mat-icon>
-                <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar cliente</span>
-            </a>
+
+        <!-- <ng-container ktPortletTools>
+           
             <a href="javascript:void(0);" [routerLink]="['../gestion-cliente','']" matTooltip="Crear nuevo cliente" style="font-size: 12px; vertical-align: middle;">
                 <mat-icon style="font-size: 24px" matTooltipPosition="above" class="blue-icon">control_point</mat-icon>
                 <span style="position: relative;top: -10px;margin-left: 5px;" class="blue-icon">Nuevo cliente</span>
@@ -17,7 +12,7 @@
                 <mat-icon style="font-size: 24px" matTooltipPosition="above" class="blue-icon">control_point</mat-icon>
                 <span style="position: relative;top: -10px;margin-left: 5px;" class="blue-icon">Test</span>
             </a>
-        </ng-container>
+        </ng-container> -->
     </re-portlet-header>
     <re-portlet-body>
         <!-- start::FILTERS & GROUP ACTIONS -->
@@ -41,7 +36,7 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="row align-items-center"  *ngIf="bandera">
+                <div class="row align-items-center" *ngIf="bandera">
                     <div class="col-md-3 kt-margin-bottom-10-mobile">
                         <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento " autocomplete="off" [value]="fechaNacimiento.value | rDate">
@@ -58,15 +53,19 @@
                         </mat-form-field>
                     </div>
                 </div>
-                
+
             </div>
-        </div> 
+        </div>
         <!-- END FILTERS -->
-        
+        <div class="row">
+            <a href="javascript:void(0);" (click)="buscar()" matTooltip="Buscar Cliente" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size:24px" class="orange-icon" matTooltipPosition="above">search</mat-icon>
+                <span style="position: relative;top: -10px;margin-left: 5px;" class="orange-icon">Buscar cliente</span>
+            </a>
+        </div>
         <!--START MAT TABLE-->
         <div class="mat-table__wrapper">
-            <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource"
-            matSort #sort1="matSort" matSortActive="nombreCompleto" matSortDirection="asc" matSortDisableClear>
+            <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource" matSort #sort1="matSort" matSortActive="nombreCompleto" matSortDirection="asc" matSortDisableClear>
                 <ng-container matColumnDef="accion">
                     <mat-header-cell *matHeaderCellDef>
                         Acciones
@@ -77,16 +76,16 @@
                             </mat-icon>
                         </a> -->
                         <a href="javascript:void(0);" (click)="verHabilitantes(row)" color="primary" [ngClass]="['primary']">
-                            <mat-icon style="font-size: 16px;" class="green-icon"   matTooltipPosition="above" matTooltip="Ver Documentos">remove_red_eye
+                            <mat-icon style="font-size: 16px;" class="green-icon" matTooltipPosition="above" matTooltip="Ver Documentos">remove_red_eye
                             </mat-icon>
                         </a>
                     </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="cedula">
-                <mat-header-cell *matHeaderCellDef>Cedula</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.cedulaCliente}}</mat-cell>
-            </ng-container>
-                <ng-container matColumnDef="nombreCompleto" >
+                    <mat-header-cell *matHeaderCellDef>Cedula</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.cedulaCliente}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="nombreCompleto">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Nombres Completos</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.primerNombre}} {{element.segundoNombre}} {{element.apellidoPaterno}} {{element.apellidoMaterno}}</mat-cell>
                 </ng-container>
@@ -123,17 +122,16 @@
                 <mat-header-cell *matHeaderCellDef>Canal de Contacto</mat-header-cell>
                 <mat-cell *matCellDef="let element">{{element.estado}} </mat-cell>
             </ng-container> -->
-            
+
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
             </mat-table>
-            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" 
-            [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
             </mat-paginator>
-            
+
         </div>
         <!--end MAT TABLE-->
-       
-    </re-portlet-body>    
+
+    </re-portlet-body>
     <re-portlet-footer></re-portlet-footer>
 </re-portlet>

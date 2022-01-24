@@ -1,30 +1,24 @@
-import { ReasignarUsuarioComponent } from '../../../../partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
-import { OperacionesProcesoWrapper } from '../../../../../core/model/wrapper/OperacionesProcesoWrapper';
-import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { environment } from '../../../../../../../src/environments/environment';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatPaginator, MatTableDataSource } from '@angular/material';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatPaginator, MatTableDataSource, MatDialog, MatOption } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
-import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
-import { WrapperBusqueda } from '../../../../../core/model/wrapper/WrapperBusqueda';
-import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
-import { ParametroService } from '../../../../../core/services/quski/parametro.service';
-
-export interface Agencia{
-  id: number;
-  nombre: string; 
-  direccion: string;
-  idResidencia: number; 
-}
+import { WrapperBusqueda } from '../../../../../../app/core/model/wrapper/WrapperBusqueda';
+import { OperacionesProcesoWrapper } from '../../../../../../app/core/model/wrapper/OperacionesProcesoWrapper';
+import { ParametroService } from '../../../../../../app/core/services/quski/parametro.service';
+import { ProcesoService } from '../../../../../../app/core/services/quski/proceso.service';
+import { SoftbankService } from '../../../../../../app/core/services/quski/softbank.service';
+import { ReNoticeService } from '../../../../../../app/core/services/re-notice.service';
+import { ReasignarUsuarioComponent, Usuario } from '../../../../../../app/views/partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
+import { environment } from '../../../../../../environments/environment';
+import { Agencia } from '../bandeja-operaciones-proceso/bandeja-operaciones-proceso.component';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'kt-bandeja-operaciones-proceso',
-  templateUrl: './bandeja-operaciones-proceso.component.html',
-  styleUrls: ['./bandeja-operaciones-proceso.component.scss']
+  selector: 'kt-bandeja-proceso-gerencia',
+  templateUrl: './bandeja-proceso-gerencia.component.html',
+  styleUrls: ['./bandeja-proceso-gerencia.component.scss']
 })
-export class BandejaOperacionesProcesoComponent implements OnInit {
+export class BandejaProcesoGerenciaComponent implements OnInit {
   /** ** @VARIABLES ** */
   public loading;
   public usuario: string;
@@ -37,6 +31,8 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public catRolReasignacion : Array<any>;
   public catRolAsesores : Array<any>;
   montoTotal;
+  catUsuarios : Array<Usuario>;
+  selected=[]
   
 
 
@@ -53,9 +49,11 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   public codigoBpm = new FormControl('');
   public codigoSoft = new FormControl('');
   public agencia = new FormControl('');
-  asesor = new FormControl('');
+  public asesor = new FormControl('');
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
+  @ViewChild('allSelected', { static: true }) private allSelected: MatOption;
   dataSource = new MatTableDataSource<OperacionesProcesoWrapper>();
   displayedColumns = ['Accion', 'codigoBpm', 'codigoOperacion', 'nombreCliente', 'cedulaCliente', 'montoFinanciado', 'fechaCreacion', 'agencia', 'estadoProceso', 'proceso', 'asesor', 'usuarioEjecutor','actividad'];
 
@@ -89,17 +87,18 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     this.sof.setParameter();
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.asesor.setValue(this.usuario);
+    //this.asesor.setValue(this.usuario);
     this.rol = localStorage.getItem( 're1001' );
-    console.log( 'Rol => ', this.rol);
+    //console.log( 'Rol => ', this.rol);
     this.cargarEnumBase();
+    this.cargarListaAsesores();
 
   }
 
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private buscarOperaciones(wrapper?: WrapperBusqueda) {
     if(this.asesor.value){
-      wrapper.asesor = [this.asesor.value];
+      wrapper.asesor = this.asesor.value;
     }
     
    /*  if( this.catRolAsesores ){
@@ -216,7 +215,6 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       control.setErrors(null);
       control.setValue(null);
     });
-    this.asesor.setValue(this.usuario);
     this.buscarOperaciones(new WrapperBusqueda());
   }
   public numberOnly(event): boolean {
@@ -241,7 +239,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       }
       if(this.estado.value != "" && this.estado.value != null ){
         console.log(this.estado.value)
-        w.estado = this.estado.value.map( p=> {return p.replace(/ /gi,"_",) }) ;
+        w.estado = this.estado.value.map( p=> {return p?p.replace(/ /gi,"_",):0 }) ;
       }      
       if(this.codigoBpm.value){
         w.codigoBpm = this.codigoBpm.value.replace(/ /gi,"",);
@@ -265,7 +263,11 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         w.nombreCompleto = this.nombreCompleto.value;
       }
       if(this.proceso.value != ""  && this.proceso.value!= null){
-        w.proceso = this.proceso.value.map( p=> {return p.replace(/ /gi,"_",) }) ;
+        w.proceso = this.proceso.value.map( p=> {return p?p.replace(/ /gi,"_",):0 }) ;
+      }
+
+      if(this.agencia.value){
+        w.agencia = this.agencia.value
       }
 
       this.buscarOperaciones( w );
@@ -333,4 +335,52 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       this.catEstadoProceso = dataEstado.entidades ? dataEstado.entidades : [];
     });
   }
+
+  private cargarListaAsesores() {
+    this.par.findByTipo('ROL-REASIG').subscribe((data: any) => {
+      let x = data.entidades.map( p=>{
+        return p.valor
+      });
+      this.sof.consultarAsesoresCS(x).subscribe((data: any) => {
+        if (!data.existeError) {
+          this.catUsuarios = data.catalogo;
+        } 
+      });
+    });
+  }
+
+
+  allSelecUsuarios(all) {
+     if (all.selected) {
+       this.asesor
+         .patchValue([...this.catUsuarios.map(item => item.codigo), 0]);
+     } else {
+       this.asesor.patchValue([]);
+     }
+   }
+
+   allSelecAgencias(all) {
+    if (all.selected) {
+      this.agencia
+        .patchValue([...this.catAgencia.map(item => item.id), 0]);
+    } else {
+      this.agencia.patchValue([]);
+    }
+  }
+  allSelecEstados(all) {
+   if (all.selected) {
+     this.estado
+       .patchValue([...this.catEstadoProceso.map(item => item), 0]);
+   } else {
+     this.estado.patchValue([]);
+   }
+ }
+ allSelecProcesos(all) {
+  if (all.selected) {
+    this.proceso
+      .patchValue([...this.catProceso.map(item => item), 0]);
+  } else {
+    this.proceso.patchValue([]);
+  }
+}
 }

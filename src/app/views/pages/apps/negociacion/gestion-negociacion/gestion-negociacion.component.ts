@@ -1119,7 +1119,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       this.myStepper.selectedIndex = 1;
       return;
     }
-    if(this.publicidad.value.bandera && this.nombreReferido.invalid && this.telefonoReferido.invalid){
+    if(this.publicidad.value && this.publicidad.value.bandera && this.nombreReferido.invalid && this.telefonoReferido.invalid){
       this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'warning');
       this.myStepper.selectedIndex = 1;
       return;

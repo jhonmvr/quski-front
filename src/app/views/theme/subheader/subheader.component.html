@@ -2,7 +2,7 @@
 
 
     <div *ngIf="mostratContenido.asObservable() | async" class="kt-topmenu kt-header__top">
-        <div class="kt-container" [ngClass]="{'kt-container--fluid': fluid}">
+        <div class="kt-container" [ngClass]="{'kt-container--fluid': fluid}" style="background-color: lavender;">
             <style>
                 p {
                     font-weight: 600;
@@ -23,8 +23,8 @@
                 <p>{{contenido.cedula}}</p>
             </div>
             <div class="col-md-4">
-                <label> Número de crédito:</label> &nbsp;
-                <p>{{contenido.numeroCredito}}</p>
+                <label> Número de crédito en proceso:</label> &nbsp;
+                <p>{{contenido.numeroCredito != 'NULL' ? contenido.numeroCredito : " "}}</p>
             </div>
 
 
@@ -37,14 +37,15 @@
                 <p> {{contenido.monto}}</p>
             </div>
             <div class="col-md-4">
-                <label> Plazo:</label> &nbsp;
-                <p>{{contenido.plazo}}</p>
+                <label> Número de crédito anterior:</label> &nbsp;
+                <p>{{contenido.numeroCreditoAnterior != 'NULL' ? contenido.numeroCreditoAnterior : " "}}</p>
             </div>
 
 
             <div class="col-md-4">
-                <label> Tipo crédito:</label> &nbsp;
-                <p>{{contenido.tipoCredito}}</p>
+                <label> Plazo:</label> &nbsp;
+                <p>{{ contenido.plazo ? contenido.plazo == '60.00' ? '60 Dias (Al Vcto.)' : contenido.plazo == '90.00' ? '90 Dias (Al Vcto.)' : contenido.plazo == '120.00' ? '120 Dias (Al Vcto.)' : contenido.plazo == '6.00' ? '6 Cuotas' : contenido.plazo
+                    == '9.00' ? '9 Cuotas' : contenido.plazo == '12.00' ? '12 Cuotas' : contenido.plazo == '18.00' ? '18 Cuotas' : contenido.plazo : 'Error' }}</p>
             </div>
             <div class="col-md-4">
                 <label> Número de cuenta:</label>&nbsp;

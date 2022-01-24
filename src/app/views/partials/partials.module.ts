@@ -217,7 +217,7 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		ImpuestosComTableComponent,
 		VentanaPrecancelacionComponent,
 		AlertaTiempoAprobadorComponent,
-		HistoricoObservacionComponent,
+		HistoricoObservacionComponent
 	
 
 	],
