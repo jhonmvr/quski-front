@@ -5,7 +5,7 @@ import { environment } from '../../../../../../../src/environments/environment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatPaginator, MatTableDataSource } from '@angular/material';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { WrapperBusqueda } from '../../../../../core/model/wrapper/WrapperBusqueda';
@@ -64,6 +64,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     private par: ParametroService,
     private sof: SoftbankService,
     private router: Router,
+    private route: ActivatedRoute,
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService
   ) {
@@ -91,8 +92,8 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.asesor.setValue(this.usuario);
     this.rol = localStorage.getItem( 're1001' );
-    console.log( 'Rol => ', this.rol);
     this.cargarEnumBase();
+   
 
   }
 
@@ -172,7 +173,19 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
     this.sof.consultarAgenciasCS().subscribe( (data: any) =>{
       if(!data.existeError){
         this.catAgencia = data.catalogo;
-        this.buscarOperaciones( new WrapperBusqueda() );
+        this.route.paramMap.subscribe((data: any) => {
+          
+          if (data.params.item) {
+            let w;
+            this.paginator.pageIndex = 0; 
+             w = new WrapperBusqueda(this.paginator.pageSize);
+             w.codigoSoft = data.params.item;
+            this.buscarOperaciones( w );
+          }else{
+            this.buscarOperaciones( new WrapperBusqueda() );
+          }
+        });
+        
       } else {
         //console.log("Me cai en la Cat de agencia :c");
       }

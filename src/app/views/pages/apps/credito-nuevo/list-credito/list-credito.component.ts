@@ -70,11 +70,11 @@ export class ListCreditoComponent implements OnInit {
 
   /** @CREDITOS **/
   dataSource = new MatTableDataSource<any>();
-  displayedColumns = ['accion', 'nombreCliente', 'identificacion', 'numeroOperacionMadre', 'numeroOperacion',
+  displayedColumns = ['navegar','accion', 'nombreCliente', 'identificacion', 'numeroOperacionMadre', 'numeroOperacion',
   // 'fechaSolicitud',
    'fechaAprobacion','fechaVencimiento','montoFinanciado','saldo', 'estado' , 'tipoCredito', 'tablaArmotizacion' ,
    'plazo','numeroCuotas', 'impago','esMigrado', 'retanqueo' , 'coberturaInicial','coberturaActual', 'diasMora',
-  'EstadoProcesoGarantia', 'EstadoUbicacionGrantia'];
+  'EstadoProcesoGarantia', 'EstadoUbicacionGrantia','bloqueo','numeroCash','valorDesembolso'];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   constructor(
     private sinNotSer: ReNoticeService,
@@ -105,8 +105,10 @@ export class ListCreditoComponent implements OnInit {
     this.sof.setParameter();
     this.loading = this.loadingSubject.asObservable();
     this.usuario = atob(localStorage.getItem(environment.userKey));
+    this.asesor.setValue(this.usuario);
+    
     this.cargarCats();
-    this.buscarCreditos();
+    
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * *  * @FUNCIONALIDAD ** */
   public numberOnly(event): boolean {
@@ -122,6 +124,16 @@ export class ListCreditoComponent implements OnInit {
     });
     this.sof.consultarEstadoOperacionQuskiCS().subscribe( (data: any) =>{
       this.catEstado = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
+      this.estado.setValue( this.catEstado.find(p=> p.codigo == "AFE"));
+
+      let w = {} as WrapperBusqueda;
+      w.numeroPagina =  1;
+      this.paginator.pageIndex = w.numeroPagina - 1;
+      w.tamanioPagina =  5;
+      this.paginator.pageSize = w.tamanioPagina         
+      w.codigoUsuarioAsesor = this.asesor.value ? this.asesor.value.codigo : null;
+      w.codigoEstadoOperacion = this.estado.value ? this.estado.value.codigo : null;
+      this.buscarCreditos(w);
     });/* 
     this.sof.consultarAsesoresCS().subscribe( (data: any) =>{
       this.catAsesor = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
@@ -231,5 +243,17 @@ export class ListCreditoComponent implements OnInit {
     } else{
       this.sinNotSer.setNotice('COMPLETE LOS CAMPOS CORRECTAMENTE', 'error');
     }
+  }
+
+  buscarCreditosMadre(row){
+    
+    let w = {} as WrapperBusqueda;
+    w.numeroPagina = 1;
+    w.tamanioPagina = 5;
+    w.numeroOperacionMadre = row.numeroOperacionMadre;
+    this.buscarCreditos( w );   
+  }
+  buscarProcesos(row){
+    this.router.navigate(['negociacion/bandeja-operaciones/', row.numeroOperacion ]);
   }
 }
