@@ -249,7 +249,7 @@ export class ListCreditoComponent implements OnInit {
     
     let w = {} as WrapperBusqueda;
     w.numeroPagina = 1;
-    w.tamanioPagina = 5;
+    w.tamanioPagina = 50;
     w.numeroOperacionMadre = row.numeroOperacionMadre;
     this.buscarCreditos( w );   
   }
