@@ -343,7 +343,16 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
       });
       this.sof.consultarAsesoresCS(x).subscribe((data: any) => {
         if (!data.existeError) {
-          this.catUsuarios = data.catalogo;
+          if(data.catalogo){
+
+            const result = [];
+            data.catalogo.forEach((item)=>{
+                if(!result.map(p=>{return p.codigo}).includes(item.codigo)){
+                  result.push(item);
+              }
+            });
+            this.catUsuarios = result;
+          }
         } 
       });
     });
