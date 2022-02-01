@@ -33,6 +33,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LayoutConfigService } from '../../../../../../app/core/_base/layout/services/layout-config.service';
 import { ProcesoService } from '../../../../../../app/core/services/quski/proceso.service';
+import { runInThisContext } from 'vm';
 
 
 @Component({
@@ -72,6 +73,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public totalValorR: number;
   public totalValorC: number;
   public totalValorO: number;
+  public codigoError: number;
 
   opcionCredito;
 
@@ -948,9 +950,12 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       this.cal.simularOferta(this.negoW.credito.id, montoSolicitado, this.riesgoTotal).subscribe((data: any) => {
         if (data.entidad.simularResult.codigoError == 3) {
           this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
-          this.loadOpciones.next(false);
-          this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
-          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
+         // this.loadOpciones.next(false);
+          this.codigoError = data.entidad.simularResult.codigoError;
+         // console.log("LA DATA" ,data.entidad)
+          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+     //     this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
+       
         } else if (data.entidad.simularResult.codigoError == 2) {
           this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
           this.loadOpciones.next(false);
@@ -1087,6 +1092,11 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     return numSelected === numRows;
   }
   guardarCredito() {
+    if (this.codigoError == 3) {
+     
+      this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
+      return;
+    }
     if(this.clienteBloqueado){
       this.sinNotSer.setNotice(this.negoW.excepcionBre, 'error');
       return;
@@ -1164,7 +1174,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
 
   sombrear(row){
     if(row.tipooferta == 'V'){
-      console.log("stilo po")
+    //  console.log("stilo po")
 
       return {background: 'cornflowerblue'};
     }
