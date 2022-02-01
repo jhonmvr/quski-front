@@ -1,25 +1,25 @@
 <re-portlet>
-    <re-portlet-header style="position: relative;" [title]="'Listado Tracking'" [class]="'kt-portlet__head--lg'">
-        <ng-container ktPortletTools>
-            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
-                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
-                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
-            </a>
-        </ng-container>
 
-    </re-portlet-header>
     <re-portlet-body>
-        <div class="row">
-            <div class="col-md-4">
-                <mat-form-field class="mat-form-field-fluid">
-                    <input matInput [formControl]="codigoBPM" placeholder="CodigoBPM">
-                </mat-form-field>
-            </div>
-        </div>
         <div class="row justify-content-center">
             <div class="offset-1 col-3">
                 <button mat-raised-button (click)="buscarBoton()">
-                    <span>Buscar</span>
+                    <span>ACTIVIDAD</span>
+                </button>
+            </div>
+            <div class="offset-1 col-3">
+                <button mat-raised-button (click)="buscarBoton()">
+                    <span>SECCION</span>
+                </button>
+            </div>
+            <div class="offset-1 col-3">
+                <button mat-raised-button (click)="buscarBoton()">
+                    <span>SECCION CONSOLIDADO</span>
+                </button>
+            </div>
+            <div class="offset-1 col-3">
+                <button mat-raised-button (click)="buscarBoton()">
+                    <span>AREA</span>
                 </button>
             </div>
         </div>
@@ -31,9 +31,7 @@
                     <ng-container matColumnDef="accion">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                            <a href="javascript:void(0);" (click)="verDetalle(element)">
-                                <mat-icon matTooltip="Ver Detalle" matTooltipPosition="above" class="blue-icon">remove_red_eye</mat-icon>
-                            </a>
+
                         </mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>

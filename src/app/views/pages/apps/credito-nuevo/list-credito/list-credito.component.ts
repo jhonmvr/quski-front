@@ -131,7 +131,7 @@ export class ListCreditoComponent implements OnInit {
       this.paginator.pageIndex = w.numeroPagina - 1;
       w.tamanioPagina =  5;
       this.paginator.pageSize = w.tamanioPagina         
-      w.codigoUsuarioAsesor = this.asesor.value ? this.asesor.value.codigo : null;
+      w.codigoUsuarioAsesor = this.asesor.value ? this.asesor.value : null;
       w.codigoEstadoOperacion = this.estado.value ? this.estado.value.codigo : null;
       this.buscarCreditos(w);
     });/* 
@@ -219,7 +219,7 @@ export class ListCreditoComponent implements OnInit {
       w.numeroOperacionMadre = this.codigoOperacionMadre.value ? this.codigoOperacionMadre.value : null;
       w.numeroOperacion = this.codigoOperacion.value ? this.codigoOperacion.value : null;
       w.idAgencia = this.agencia.value ? this.agencia.value.id : null;
-      w.codigoUsuarioAsesor = this.asesor.value ? this.asesor.value.codigo : null;
+      w.codigoUsuarioAsesor = this.asesor.value ? this.asesor.value : null;
       w.identificacion = this.cedulaCliente.value ? this.cedulaCliente.value : null;
       w.plazo = this.plazo.value ? this.plazo.value : null;
       w.fechaInicioSolicitud = this.fechaCreacionDesde.value ? this.fechaCreacionDesde.value.getFullYear()+'-'+
@@ -239,6 +239,7 @@ export class ListCreditoComponent implements OnInit {
       w.esCuotas = this.tipoCredito.value ? this.tipoCredito.value.valor : null;
       w.impago = this.impago.value ? this.impago.value.valor : null;
       w.retanqueo = this.retanqueo.value ? this.retanqueo.value.valor : null;
+      
       this.buscarCreditos( w );
     } else{
       this.sinNotSer.setNotice('COMPLETE LOS CAMPOS CORRECTAMENTE', 'error');

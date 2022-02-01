@@ -1,24 +1,25 @@
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { TrackingService } from './../../../../../core/services/quski/tracking.service';
-import { ReNoticeService } from './../../../../../core/services/re-notice.service';
-import { TbQoTracking } from './../../../../../core/model/quski/TbQoTracking';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Page } from './../../../../../core/model/page';
-import { Component, OnInit } from '@angular/core';
-import { ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
-import moment from 'moment';
+import { Page } from '../../../../../../../app/core/model/page';
+import { TbQoTracking } from '../../../../../../../app/core/model/quski/TbQoTracking';
+import { TrackingService } from '../../../../../../../app/core/services/quski/tracking.service';
+import { ReNoticeService } from '../../../../../../../app/core/services/re-notice.service';
 
 @Component({
-  selector: 'kt-list-tracking',
-  templateUrl: './list-tracking.component.html',
-  styleUrls: ['./list-tracking.component.scss']
+  selector: 'kt-traking-detalle',
+  templateUrl: './traking-detalle.component.html',
+  styleUrls: ['./traking-detalle.component.scss']
 })
-export class ListTrackingComponent implements OnInit {
+export class TrakingDetalleComponent implements OnInit {
   catProceso:   Array<any>;
   cargardatos = new BehaviorSubject<boolean>(false);
-  displayedColumns = [ 'accion','proceso','codigoBPM','codigoSoftbank','fechaCreacion','horaInicio', 'horaFin', 'tiempoTranscurrido', 'vendedor', 'aprobador', 'observacion'];
-
+  displayedActividad = [ 'proceso','codigoBPM','codigoSoftbank','fechaCreacion','actividad', 'tiempoTranscurrido', 'usuario'];
+  displayedSeccion = [ 'proceso','codigoBPM','codigoSoftbank','fechaCreacion','actividad', 'seccion', 'usuario', 'horaInicio', 'horaFin', 'tiempoTranscurrido','observacion'];
+  displayedSeccionConsolidado = [ 'proceso','codigoBPM','seccion','tiempoTranscurrido'];
+  displayedArea = [ 'proceso','codigoBPM','fechaCreacion','area', 'tiempoTranscurrido'];
+  displayedColumns = this.displayedActividad;
   /**Obligatorio paginacion */
   p = new Page();
   dataSource: MatTableDataSource<TbQoTracking> = new MatTableDataSource<TbQoTracking>();
@@ -129,36 +130,6 @@ export class ListTrackingComponent implements OnInit {
     });
     this.buscarBoton();
   }
-  calcularTiempo( ms ){
-    var duration = moment.duration(ms);
-    if (duration.asHours() > 1) {
-      return Math.floor(duration.asHours()) + moment.utc(duration.asMilliseconds()).format(":mm:ss");
-    } else {
-      return moment.utc(duration.asMilliseconds()).format("mm:ss");
-    }
-  }
-
-  calcularTotales(xd){
-    const datos = this.dataSource.data;
-    if(datos.length >0 ){
-      return datos.map(t=>t[xd]).reduce((r, n) =>r+n,0);
-    }
-  }
-
-  verDetalle(element){
-    
-  }
  
 
-}
-  export class TrakingWrapper {
-  proceso: any
-  actividad: any
-  seccion: any
-  codigoBpm: any
-  codigoOperacionSoftbank: any
-  usuarioCreacion: any
-  fechaDesde: any
-  fechaHasta: any
-  constructor() {}
 }

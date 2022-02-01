@@ -14,6 +14,7 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root'
 })
 export class TrackingService extends BaseService {
+ 
 
   constructor(_http: HttpClient,
     private dialog: MatDialog) {
@@ -170,6 +171,20 @@ export class TrackingService extends BaseService {
     
     let wp = { }
     return this.http.post( atob(environment.api_t),wp, optionsLoc);
+  }
+
+  findTrakingByCodigoBpm(p: Page, codigoBpm) {
+    const serviceUrl = this.appResourcesUrl + 'trackingRestController/findTrakingByCodigoBpm';
+    this.setSearchParams(p);
+    this.params = this.params.set('codigoBpm',codigoBpm);
+
+    this.options = { headers: this.headers , params: this.params};
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => {  }
+      )
+    );
   }
 
  
