@@ -55,7 +55,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Estado" [formControl]="estado" multiple>
                                     <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}
@@ -138,6 +138,11 @@
                     <ng-container matColumnDef="Accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
                         <mat-cell *matCellDef="let row">
+                            <ng-container>
+                                <a (click)="verTraking(row)">
+                                    <mat-icon matTooltip="Ver traking">timeline</mat-icon>
+                                </a>
+                            </ng-container>
                             <ng-container *ngIf="(row.estadoProceso == 'CREADO' || row.estadoProceso == 'EXCEPCIONADO' || row.estadoProceso == 'DEVUELTO'  || row.estadoProceso == 'ARRIBADO') && row.asesor == usuario">
                                 <a (click)="verOperacion(row)">
                                     <mat-icon matTooltip="Ver Operacion">edit</mat-icon>

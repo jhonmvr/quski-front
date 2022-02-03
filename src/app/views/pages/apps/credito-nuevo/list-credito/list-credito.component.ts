@@ -72,9 +72,9 @@ export class ListCreditoComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
   displayedColumns = ['navegar','accion', 'nombreCliente', 'identificacion', 'numeroOperacionMadre', 'numeroOperacion',
   // 'fechaSolicitud',
-   'fechaAprobacion','fechaVencimiento','montoFinanciado','saldo', 'estado' , 'tipoCredito', 'tablaArmotizacion' ,
-   'plazo','numeroCuotas', 'impago','esMigrado', 'retanqueo' , 'coberturaInicial','coberturaActual', 'diasMora',
-  'EstadoProcesoGarantia', 'EstadoUbicacionGrantia','bloqueo','numeroCash','valorDesembolso'];
+   'fechaAprobacion','fechaVencimiento','montoFinanciado','saldo', 'estado' , 'tipoCredito','retanqueo',
+   'plazo','numeroCuotas', 'impago','esMigrado',  'coberturaInicial','coberturaActual', 'diasMora',
+  'EstadoProcesoGarantia', 'EstadoUbicacionGrantia','bloqueo','numeroCash','valorDesembolso', 'tablaArmotizacion'];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   constructor(
     private sinNotSer: ReNoticeService,

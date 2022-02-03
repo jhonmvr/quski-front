@@ -288,6 +288,10 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
 
     }
   }
+
+  verTraking(row){
+    this.router.navigate(['tracking/list-tracking/',row.codigoBpm]);
+  }
   public verDetalle(row: OperacionesProcesoWrapper ){
     if(row.id != null){
       if(row.proceso == 'NUEVO'){

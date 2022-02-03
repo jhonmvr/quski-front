@@ -307,6 +307,10 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
       }
     }
   }
+
+  verTraking(row){
+    this.router.navigate(['tracking/list-tracking/',row.codigoBpm]);
+  }
   public reasignar(row: OperacionesProcesoWrapper ){
     const dialogRefGuardar = this.dialog.open(ReasignarUsuarioComponent, {
       width: '500px',

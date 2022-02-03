@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Page } from '../../../../../../../app/core/model/page';
 import { TbQoTracking } from '../../../../../../../app/core/model/quski/TbQoTracking';
@@ -22,7 +23,7 @@ export class TrakingDetalleComponent implements OnInit {
   displayedColumns = this.displayedActividad;
   /**Obligatorio paginacion */
   p = new Page();
-  dataSource: MatTableDataSource<TbQoTracking> = new MatTableDataSource<TbQoTracking>();
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<TbQoTracking>();
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
   totalResults: number;
@@ -30,51 +31,38 @@ export class TrakingDetalleComponent implements OnInit {
   total: number;
   pageSize = 5;
   currentPage;
+  varBoton = 'SECCION';
 
-  public formCliente: FormGroup = new FormGroup({});
-  public proceso = new FormControl('', [Validators.maxLength(50)]);
-  public actividad = new FormControl('', [Validators.maxLength(50)]);
-  public seccion = new FormControl('', [Validators.maxLength(50)]);
-  public codigoBPM = new FormControl('', [Validators.maxLength(50)]);
-  public codigoSoftbank = new FormControl('', [Validators.maxLength(50)]);
-  public usuario = new FormControl('', [Validators.maxLength(50)]);
-  public fechaDesde = new FormControl('', []);
-  public fechaHasta = new FormControl('', []);
+  public codigoBPM;
 
 
   constructor(
+    private route: ActivatedRoute,
     private tra: TrackingService,
     private sinNoticeService: ReNoticeService,
-    public dialog: MatDialog
+    @Inject(MAT_DIALOG_DATA) private data: any,
+    public dialogRefGuardar: MatDialogRef<any>,
   ) {
     this.tra.setParameter();
 
-    this.formCliente.addControl("proceso", this.proceso);
-    this.formCliente.addControl("actividad", this.actividad);
-    this.formCliente.addControl("seccion", this.seccion);
-    this.formCliente.addControl("codigoBPM", this.codigoBPM);
-    this.formCliente.addControl("codigoSoftbank", this.codigoSoftbank);
-    this.formCliente.addControl("usuario", this.usuario);
-    this.formCliente.addControl("fechaDesde", this.fechaDesde);
-    this.formCliente.addControl("fechaHasta", this.fechaHasta);
+    
   }
 
   ngOnInit() {
     this.tra.setParameter();
-    this.traerEnums();
-    this.initiateTablePaginator();
-    //this.buscarBoton();
+    this.codigoBPM = this.data.codigoBpm;
+    this.route.paramMap.subscribe((data: any) => {
+      if (data.params.id) {
+        this.codigoBPM = data.params.id;
+        this.buscarSeccion();
+      }
+    });
+    
   }
   /**
    * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
    */
-  initiateTablePaginator(): void {
-    this.dataSource = new MatTableDataSource();
-    this.paginator.pageSize = 5;
-    this.paginator.pageIndex = 0;
-    this.totalResults = 0;
-    this.dataSource.paginator = this.paginator;
-  }
+  
   /**
    * Obligatorio Paginacion: Obtiene el objeto paginacion a utilizar
    */
@@ -87,49 +75,129 @@ export class TrakingDetalleComponent implements OnInit {
     p.sortFields = 'id';
     return p;
   }
-  buscarBoton(pageIndex?, pageSize?){
-    
-    if(pageIndex){
+  buscarActividad(pageIndex?, pageSize?){
+    this.cargardatos.next(false);
+    if(pageIndex != null){
       this.p.size = pageSize;
       this.p.pageNumber = pageIndex;
     }else{
       this.p.size = 5;
-      this.paginator.pageSize =5;
-      this.paginator.pageIndex=0;
+      //
+      //
       this.p.pageNumber = 0;
     }
-    
-    
-    this.tra.findTrakingByCodigoBpm(this.p, this.codigoBPM.value).subscribe((data: any) => {
+    this.displayedColumns = this.displayedActividad;
+    this.tra.findTrakingActividadByCodigoBpm(this.p, this.codigoBPM).subscribe((data: any) => {
+      this.cargardatos.next(true);
       if (data.list != null) {
         this.dataSource = new MatTableDataSource<any>(data.list);
         this.totalResults = data.totalResults;
-        this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
-        this.cargardatos.next(false);
       } else {
-        this.cargardatos.next(false);
-        this.initiateTablePaginator();
+        this.totalResults =0;
+        this.dataSource = new MatTableDataSource<any>();
         this.sinNoticeService.setNotice("NO SE ENCONTRARON REGISTROS", 'info');
       }
-    }
-    );
+    });
   }
-  private traerEnums() {
-    this.tra.getActividadesProcesosAndSecciones().subscribe( (data: any) =>{
-      if(data.entidad && data.entidad.procesos){
-        this.catProceso = data.entidad.procesos;
+  buscarSeccion(pageIndex?, pageSize?){
+    console.log("datos de paguina", pageIndex, pageSize);
+    this.cargardatos.next(false);
+    if(pageIndex != null){
+      this.p.size = pageSize;
+      this.p.pageNumber = pageIndex;
+    }else{
+      this.p.size = 5;
+      this.p.pageNumber = 0;
+    }
+    console.log("datos de paguina", this.p);
+    this.displayedColumns = this.displayedSeccion;
+    this.tra.findTrakingSeccionByCodigoBpm(this.p, this.codigoBPM).subscribe((data: any) => {
+      this.cargardatos.next(true);
+      if (data.list != null) {
+        this.dataSource = new MatTableDataSource<any>(data.list);
+        this.totalResults = data.totalResults;
+        
+      } else {
+        this.totalResults =0;
+        this.dataSource = new MatTableDataSource<any>();
+        this.sinNoticeService.setNotice("NO SE ENCONTRARON REGISTROS", 'info');
       }
     });
   }
-  public limpiarFiltros(){
-    Object.keys(this.formCliente.controls).forEach((name) => {
-      const control = this.formCliente.controls[name];
-      control.reset();
-      control.setErrors(null);
-      control.setValue(null);
+  buscarSeccionConsolidado(pageIndex?, pageSize?){
+    this.cargardatos.next(false);
+    if(pageIndex != null){
+      this.p.size = pageSize;
+      this.p.pageNumber = pageIndex;
+    }else{
+      this.p.size = 5;
+      
+      
+      this.p.pageNumber = 0;
+    }
+    this.displayedColumns = this.displayedSeccionConsolidado;
+    this.tra.findTrakingSeccionConsolidadoByCodigoBpm(this.p, this.codigoBPM).subscribe((data: any) => {
+      this.cargardatos.next(true);
+      if (data.list != null) {
+        this.dataSource = new MatTableDataSource<any>(data.list);
+        this.totalResults = data.totalResults;
+        
+      } else {
+        this.totalResults =0;
+        this.dataSource = new MatTableDataSource<any>();
+        this.sinNoticeService.setNotice("NO SE ENCONTRARON REGISTROS", 'info');
+      }
     });
-    this.buscarBoton();
   }
- 
+  buscarArea(pageIndex?, pageSize?){
+    this.cargardatos.next(false);
+    if(pageIndex != null){
+      this.p.size = pageSize;
+      this.p.pageNumber = pageIndex;
+    }else{
+      this.p.size = 5;
+      
+      
+      this.p.pageNumber = 0;
+    }
+    this.displayedColumns = this.displayedArea;
+    this.tra.findTrakingAreaByCodigoBpm(this.p, this.codigoBPM).subscribe((data: any) => {
+      this.cargardatos.next(true);
+      if (data.list != null) {
+        this.dataSource = new MatTableDataSource<any>(data.list);
+        this.totalResults = data.totalResults;
+        
+      } else {
+        this.totalResults =0;
+        this.dataSource = new MatTableDataSource<any>();
+        this.sinNoticeService.setNotice("NO SE ENCONTRARON REGISTROS", 'info');
+      }
+    });
+  }
+
+  sumarTiempo(){
+   
+    let hour =0;
+    let minute = 0;
+    let second =0;
+    if(this.dataSource.data && this.dataSource.data.length >0){
+      this.dataSource.data.forEach(p=>{
+        if(p.tiempoTranscurrido && p.tiempoTranscurrido != " "){
+          var splitTime1=  p.tiempoTranscurrido.split(':');
+          hour = hour + parseInt(splitTime1[0]);
+          minute = minute + parseInt(splitTime1[1]);
+          hour = hour + minute/60;
+          minute = minute%60;
+          second = second + parseInt(splitTime1[2]);
+          minute = minute + second/60;
+          second = second%60;
+          minute = Math.trunc(minute);
+          hour = Math.trunc(hour);
+        }
+      });
+    }
+    return String(hour).padStart(2, '0') +':'+String(minute).padStart(2, '0')+':'+String(second).padStart(2, '0');
+    
+  }
 
 }

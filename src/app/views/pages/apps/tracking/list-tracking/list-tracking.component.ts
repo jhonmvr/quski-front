@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import moment from 'moment';
+import { TrakingDetalleComponent } from './traking-detalle/traking-detalle.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'kt-list-tracking',
@@ -21,7 +23,7 @@ export class ListTrackingComponent implements OnInit {
 
   /**Obligatorio paginacion */
   p = new Page();
-  dataSource: MatTableDataSource<TbQoTracking> = new MatTableDataSource<TbQoTracking>();
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<TbQoTracking>();
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
   totalResults: number;
@@ -42,6 +44,8 @@ export class ListTrackingComponent implements OnInit {
 
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private tra: TrackingService,
     private sinNoticeService: ReNoticeService,
     public dialog: MatDialog
@@ -63,6 +67,12 @@ export class ListTrackingComponent implements OnInit {
     this.traerEnums();
     this.initiateTablePaginator();
     //this.buscarBoton();
+    this.route.paramMap.subscribe((data: any) => {
+      if (data.params.id) {
+        this.codigoBPM.setValue(data.params.id);
+        this.buscarBoton();
+      }
+    });
   }
   /**
    * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
@@ -88,7 +98,7 @@ export class ListTrackingComponent implements OnInit {
   }
   buscarBoton(pageIndex?, pageSize?){
     
-    if(pageIndex){
+    if(pageIndex != null){
       this.p.size = pageSize;
       this.p.pageNumber = pageIndex;
     }else{
@@ -146,9 +156,41 @@ export class ListTrackingComponent implements OnInit {
   }
 
   verDetalle(element){
-    
+    this.router.navigate(['tracking/detalle-traking/', element.codigoBpm]);   
+   /*  const dialogRef = this.dialog.open(TrakingDetalleComponent, {
+      width: "900px",
+      height: "auto",
+      data: element
+    });
+    dialogRef.afterClosed().subscribe(r => {
+     
+    }); */
   }
  
+  sumarTiempo(){
+   
+    let hour =0;
+    let minute = 0;
+    let second =0;
+    if(this.dataSource.data && this.dataSource.data.length >0){
+      this.dataSource.data.forEach(p=>{
+        if(p.tiempoTranscurrido && p.tiempoTranscurrido != " "){
+          var splitTime1=  p.tiempoTranscurrido.split(':');
+          hour = hour + parseInt(splitTime1[0]);
+          minute = minute + parseInt(splitTime1[1]);
+          hour = hour + minute/60;
+          minute = minute%60;
+          second = second + parseInt(splitTime1[2]);
+          minute = minute + second/60;
+          second = second%60;
+          minute = Math.trunc(minute);
+          hour = Math.trunc(hour);
+        }
+      });
+    }
+    return String(hour).padStart(2, '0') +':'+String(minute).padStart(2, '0')+':'+String(second).padStart(2, '0');
+    
+  }
 
 }
   export class TrakingWrapper {

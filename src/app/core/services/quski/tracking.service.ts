@@ -187,6 +187,62 @@ export class TrackingService extends BaseService {
     );
   }
 
+
+  
+  findTrakingActividadByCodigoBpm(p: Page, codigoBpm) {
+    const serviceUrl = this.appResourcesUrl + 'trackingRestController/findTrakingActividadByCodigoBpm';
+    this.setSearchParams(p);
+    this.params = this.params.set('codigoBpm',codigoBpm);
+
+    this.options = { headers: this.headers , params: this.params};
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => {  }
+      )
+    );
+  }
+
+  findTrakingSeccionByCodigoBpm(p: Page, codigoBpm) {
+    const serviceUrl = this.appResourcesUrl + 'trackingRestController/findTrakingSeccionByCodigoBpm';
+    this.setSearchParams(p);
+    this.params = this.params.set('codigoBpm',codigoBpm);
+
+    this.options = { headers: this.headers , params: this.params};
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => {  }
+      )
+    );
+  }
+  findTrakingSeccionConsolidadoByCodigoBpm(p: Page, codigoBpm) {
+    const serviceUrl = this.appResourcesUrl + 'trackingRestController/findTrakingSeccionConsolidadoByCodigoBpm';
+    this.setSearchParams(p);
+    this.params = this.params.set('codigoBpm',codigoBpm);
+
+    this.options = { headers: this.headers , params: this.params};
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => {  }
+      )
+    );
+  }
+ 
+  findTrakingAreaByCodigoBpm(p: Page, codigoBpm) {
+    const serviceUrl = this.appResourcesUrl + 'trackingRestController/findTrakingAreaByCodigoBpm';
+    this.setSearchParams(p);
+    this.params = this.params.set('codigoBpm',codigoBpm);
+
+    this.options = { headers: this.headers , params: this.params};
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => {  }
+      )
+    );
+  }
  
 
 }

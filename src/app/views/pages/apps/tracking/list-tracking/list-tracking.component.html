@@ -76,7 +76,7 @@
                     <ng-container matColumnDef="tiempoTranscurrido">
                         <mat-header-cell *matHeaderCellDef>Tiempo transcurrido</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.tiempoTranscurrido}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                        <mat-footer-cell *matFooterCellDef>{{sumarTiempo()}} </mat-footer-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="vendedor">

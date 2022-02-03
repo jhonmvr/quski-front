@@ -70,6 +70,14 @@ const routes: Routes = [
 				component: ListTrackingComponent
 			},
 			{
+				path: 'list-tracking/:id',
+				component: ListTrackingComponent
+			},
+			{
+				path: 'detalle-traking/:id',
+				component: TrakingDetalleComponent
+			},
+			{
 				path: 'tracking-pagos',
 				component: TrackingPagosComponent
 			}
@@ -136,7 +144,7 @@ declarations: [
     TrakingDetalleComponent
   ],
   entryComponents: [
-	AddFotoComponent
+	AddFotoComponent,TrakingDetalleComponent
   ]
 })
 export class TrackingModule {}
