@@ -73,7 +73,7 @@ export class LoaderInterceptor implements HttpInterceptor {
     else if (error instanceof HttpErrorResponse) {
       if (error.status != 200) {
         if (error.message) {
-          this.sinNoticeService.setNotice(error.message, 'error');
+          this.sinNoticeService.setNotice(error.message.split('autorizacion')[0], 'error');
         }
       }
     } else if (error.error instanceof ProgressEvent) {
