@@ -83,6 +83,7 @@ export class BaseService {
            
           // this.appResourcesUrl = 'http://10.37.10.180:8480/quski-oro-rest/resources/';
           // this.appResourcesUrl = 'http://localhost:8080/quski-oro-rest/resources/';
+          //this.appResourcesUrl = 'http://10.37.10.81:8480/quski-oro-rest/resources/';
            //Path al resources de la app
 
            //Full url al servidor de websocket generic-relative-core
