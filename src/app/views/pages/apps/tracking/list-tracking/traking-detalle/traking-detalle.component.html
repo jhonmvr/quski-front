@@ -1,42 +1,19 @@
 <re-portlet>
-    <re-portlet-header style="position: relative;" [title]="'Listado Tracking'" [class]="'kt-portlet__head--lg'">
-        <ng-container ktPortletTools>
-            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
-                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
-                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
-            </a>
-        </ng-container>
 
-    </re-portlet-header>
     <re-portlet-body>
-        <div class="row">
-            <div class="col-md-4">
-                <mat-form-field class="mat-form-field-fluid">
-                    <input matInput [formControl]="codigoBPM" placeholder="CodigoBPM">
-                </mat-form-field>
-            </div>
-        </div>
         <div class="row justify-content-center">
-            <div class="offset-1 col-3">
-                <button mat-raised-button (click)="buscarBoton()">
-                    <span>Buscar</span>
-                </button>
-            </div>
+            <button varHabilitante mat-raised-button (click)="buscarActividad(); varBoton ='ACTIVIDAD' " style="color: aliceblue;" [ngStyle]="varBoton =='ACTIVIDAD'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">ACTIVIDAD</button>
+            <button varHabilitante mat-raised-button (click)="buscarSeccionConsolidado(); varBoton ='SECCION CONSOLIDADO' " style="color: aliceblue;" [ngStyle]="varBoton =='SECCION CONSOLIDADO'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">SECCION CONSOLIDADO</button>
+            <button varHabilitante mat-raised-button (click)="buscarArea(); varBoton ='AREA' " style="color: aliceblue;" [ngStyle]="varBoton =='AREA'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">AREA</button>
+            <button varHabilitante mat-raised-button (click)="buscarSeccion(); varBoton ='SECCION' " style="color: aliceblue;" [ngStyle]="varBoton =='SECCION'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">SECCION</button>
+
         </div>
         <div class="row">
             <div class="col-12 mt-3 table-container">
                 <mat-progress-bar mode="indeterminate" *ngIf="cargardatos.asObservable() | async"></mat-progress-bar>
                 <mat-table #table matTableExporter class="mat-elevation-z8 " matSort #sort1="matSort" [dataSource]='dataSource' matSortDirection="asc" matSortDisableClear #exporter="matTableExporter">
 
-                    <ng-container matColumnDef="accion">
-                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            <a href="javascript:void(0);" (click)="verDetalle(element)">
-                                <mat-icon matTooltip="Ver Detalle" matTooltipPosition="above" class="blue-icon">remove_red_eye</mat-icon>
-                            </a>
-                        </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
-                    </ng-container>
+
                     <ng-container matColumnDef="proceso">
                         <mat-header-cell *matHeaderCellDef>Proceso</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.proceso }}</mat-cell>
@@ -44,13 +21,13 @@
                     </ng-container>
 
                     <ng-container matColumnDef="codigoBPM">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Codigo BPM</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef>Codigo BPM</mat-header-cell>
                         <mat-cell *matCellDef="let element "> {{element.codigoBpm}}</mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="codigoSoftbank">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Codigo Softbank</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef>Codigo Softbank</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.codigoSoftbank }} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
@@ -60,7 +37,21 @@
                         <mat-cell *matCellDef="let element"> {{element.fechaCreacion | rDate}}</mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
-
+                    <ng-container matColumnDef="area">
+                        <mat-header-cell *matHeaderCellDef>area</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.area }} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="seccion">
+                        <mat-header-cell *matHeaderCellDef>seccion</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.seccion }} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="actividad">
+                        <mat-header-cell *matHeaderCellDef>actividad</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.actividad }} </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
                     <ng-container matColumnDef="horaInicio">
                         <mat-header-cell *matHeaderCellDef>Hora inicio HH:mm:ss</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.horaInicio }}</mat-cell>
@@ -79,15 +70,9 @@
                         <mat-footer-cell *matFooterCellDef>{{sumarTiempo()}} </mat-footer-cell>
                     </ng-container>
 
-                    <ng-container matColumnDef="vendedor">
-                        <mat-header-cell *matHeaderCellDef>Vendedor</mat-header-cell>
-                        <mat-cell class="mat-form-field-fluid" *matCellDef="let element">{{element.venderdor}} </mat-cell>
-                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="aprobador">
-                        <mat-header-cell *matHeaderCellDef>Aprobador</mat-header-cell>
-                        <mat-cell class="mat-form-field-fluid" *matCellDef="let element"> {{element.aprobador}} </mat-cell>
+                    <ng-container matColumnDef="usuario">
+                        <mat-header-cell *matHeaderCellDef>usuario</mat-header-cell>
+                        <mat-cell class="mat-form-field-fluid" *matCellDef="let element">{{element.usuario}} </mat-cell>
                         <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                     </ng-container>
 
@@ -101,7 +86,13 @@
                     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                     <mat-footer-row *matFooterRowDef="displayedColumns"></mat-footer-row>
                 </mat-table>
-                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="buscarBoton(this.paginator.pageIndex, this.paginator.pageSize)">
+                <mat-paginator *ngIf="varBoton =='ACTIVIDAD'" #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="buscarActividad(this.paginator.pageIndex, this.paginator.pageSize)">
+                </mat-paginator>
+                <mat-paginator *ngIf="varBoton =='SECCION'" #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="buscarSeccion(this.paginator.pageIndex, this.paginator.pageSize)">
+                </mat-paginator>
+                <mat-paginator *ngIf="varBoton =='SECCION CONSOLIDADO'" #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="buscarSeccionConsolidado(this.paginator.pageIndex, this.paginator.pageSize)">
+                </mat-paginator>
+                <mat-paginator *ngIf="varBoton =='AREA'" #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="buscarArea(this.paginator.pageIndex, this.paginator.pageSize)">
                 </mat-paginator>
 
             </div>

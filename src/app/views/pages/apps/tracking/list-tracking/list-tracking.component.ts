@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import moment from 'moment';
+import { TrakingDetalleComponent } from './traking-detalle/traking-detalle.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'kt-list-tracking',
@@ -17,11 +19,11 @@ import moment from 'moment';
 export class ListTrackingComponent implements OnInit {
   catProceso:   Array<any>;
   cargardatos = new BehaviorSubject<boolean>(false);
-  displayedColumns = [ 'codigoBpm','codigoOperacionSoftbank','proceso','actividad','seccion', 'usuario', 'fechaCreacion', 'fechaActualizacion', 'tiempoTotal', 'fecha'];
+  displayedColumns = [ 'accion','proceso','codigoBPM','codigoSoftbank','fechaCreacion','horaInicio', 'horaFin', 'tiempoTranscurrido', 'vendedor', 'aprobador', 'observacion'];
 
   /**Obligatorio paginacion */
   p = new Page();
-  dataSource: MatTableDataSource<TbQoTracking> = new MatTableDataSource<TbQoTracking>();
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<TbQoTracking>();
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
   totalResults: number;
@@ -42,6 +44,8 @@ export class ListTrackingComponent implements OnInit {
 
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private tra: TrackingService,
     private sinNoticeService: ReNoticeService,
     public dialog: MatDialog
@@ -63,6 +67,12 @@ export class ListTrackingComponent implements OnInit {
     this.traerEnums();
     this.initiateTablePaginator();
     //this.buscarBoton();
+    this.route.paramMap.subscribe((data: any) => {
+      if (data.params.id) {
+        this.codigoBPM.setValue(data.params.id);
+        this.buscarBoton();
+      }
+    });
   }
   /**
    * Obligatorio Paginacion: Limpia paginacion previa y genera nueva
@@ -86,51 +96,23 @@ export class ListTrackingComponent implements OnInit {
     p.sortFields = 'id';
     return p;
   }
-  /**
-  * Obligatorio Paginacion: Ejecuta la busqueda cuando se ejecuta los botones del paginador
-  */
-  paged() {
-    this.p = this.getPaginacion('Y', this.paginator.pageIndex);
-    this.buscar();
-  }
-  buscarBoton(){
-    this.dataSource.paginator = this.paginator;
-    this.p = this.getPaginacion('Y', 0);
-    this.buscar();
-  }
-  public buscar() {
-    this.cargardatos.next(true);
-    this.totalTiempo = 0;
-    let trackingWrapper = new TrakingWrapper();
-    if (this.proceso.value)
-      trackingWrapper.proceso = this.proceso.value.replace(/ /gi,"_");
-    if (this.actividad.value)
-      trackingWrapper.actividad = this.actividad.value.toUpperCase();
-    if (this.seccion.value)
-      trackingWrapper.seccion = this.seccion.value;
-    if (this.codigoBPM.value)
-      trackingWrapper.codigoBpm = this.codigoBPM.value;
-    if (this.codigoSoftbank.value)
-      trackingWrapper.codigoOperacionSoftbank = this.codigoSoftbank.value;
-    if (this.usuario.value)
-      trackingWrapper.usuarioCreacion = this.usuario.value.toLowerCase();
-    if (this.fechaDesde.value)
-      trackingWrapper.fechaDesde = this.fechaDesde.value;
-    if (this.fechaHasta.value)
-      trackingWrapper.fechaHasta = this.fechaHasta.value;
-
-    this.tra.busquedaTracking(this.p, trackingWrapper).subscribe((data: any) => {
+  buscarBoton(pageIndex?, pageSize?){
+    
+    if(pageIndex != null){
+      this.p.size = pageSize;
+      this.p.pageNumber = pageIndex;
+    }else{
+      this.p.size = 5;
+      this.paginator.pageSize =5;
+      this.paginator.pageIndex=0;
+      this.p.pageNumber = 0;
+    }
+    
+    
+    this.tra.findTrakingByCodigoBpm(this.p, this.codigoBPM.value).subscribe((data: any) => {
       if (data.list != null) {
-        
-        this.dataSource = new MatTableDataSource<TbQoTracking>(data.list);
-        this.dataSource.data.forEach(e => {
-          e.proceso = e.proceso.replace(/_/gi, " ");
-          e.actividad = e.actividad.replace(/_/gi, " ");
-          e.seccion = e.seccion.replace(/_/gi, " ");
-          this.totalTiempo = this.totalTiempo + e.tiempoTranscurrido;
-        })
+        this.dataSource = new MatTableDataSource<any>(data.list);
         this.totalResults = data.totalResults;
-        //this.dataSource.paginator = this.paginator;
         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
         this.cargardatos.next(false);
       } else {
@@ -155,7 +137,7 @@ export class ListTrackingComponent implements OnInit {
       control.setErrors(null);
       control.setValue(null);
     });
-    this.buscar();
+    this.buscarBoton();
   }
   calcularTiempo( ms ){
     var duration = moment.duration(ms);
@@ -172,7 +154,43 @@ export class ListTrackingComponent implements OnInit {
       return datos.map(t=>t[xd]).reduce((r, n) =>r+n,0);
     }
   }
+
+  verDetalle(element){
+    this.router.navigate(['tracking/detalle-traking/', element.codigoBpm]);   
+   /*  const dialogRef = this.dialog.open(TrakingDetalleComponent, {
+      width: "900px",
+      height: "auto",
+      data: element
+    });
+    dialogRef.afterClosed().subscribe(r => {
+     
+    }); */
+  }
  
+  sumarTiempo(){
+   
+    let hour =0;
+    let minute = 0;
+    let second =0;
+    if(this.dataSource.data && this.dataSource.data.length >0){
+      this.dataSource.data.forEach(p=>{
+        if(p.tiempoTranscurrido && p.tiempoTranscurrido != " "){
+          var splitTime1=  p.tiempoTranscurrido.split(':');
+          hour = hour + parseInt(splitTime1[0]);
+          minute = minute + parseInt(splitTime1[1]);
+          hour = hour + minute/60;
+          minute = minute%60;
+          second = second + parseInt(splitTime1[2]);
+          minute = minute + second/60;
+          second = second%60;
+          minute = Math.trunc(minute);
+          hour = Math.trunc(hour);
+        }
+      });
+    }
+    return String(hour).padStart(2, '0') +':'+String(minute).padStart(2, '0')+':'+String(second).padStart(2, '0');
+    
+  }
 
 }
   export class TrakingWrapper {

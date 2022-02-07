@@ -52,6 +52,7 @@ import { TrackingPagosComponent } from './tracking-pagos/tracking-pagos.componen
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
 import { MatTableExporterModule } from 'mat-table-exporter';
+import { TrakingDetalleComponent } from './list-tracking/traking-detalle/traking-detalle.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -67,6 +68,14 @@ const routes: Routes = [
 			{
 				path: 'list-tracking',
 				component: ListTrackingComponent
+			},
+			{
+				path: 'list-tracking/:id',
+				component: ListTrackingComponent
+			},
+			{
+				path: 'detalle-traking/:id',
+				component: TrakingDetalleComponent
 			},
 			{
 				path: 'tracking-pagos',
@@ -132,9 +141,10 @@ declarations: [
     TrackingComponent,
     ListTrackingComponent,
     TrackingPagosComponent,
+    TrakingDetalleComponent
   ],
   entryComponents: [
-	AddFotoComponent
+	AddFotoComponent,TrakingDetalleComponent
   ]
 })
 export class TrackingModule {}

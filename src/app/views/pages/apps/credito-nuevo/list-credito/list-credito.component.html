@@ -26,7 +26,7 @@
                 </div>
                 <div class="col-md-4">
                     <mat-form-field class="mat-form-field-fluid">
-                        <mat-select placeholder="Asesor" formControlName="asesor">
+                        <mat-select placeholder="Asesor" [formControl]="asesor">
                             <mat-option>--</mat-option>
                             <mat-option value="{{ usuario }}" selected>{{ usuario }}</mat-option>
                             <mat-option>--</mat-option>
@@ -35,21 +35,21 @@
                 </div>
                 <div class="col-md-4">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input matInput [matDatepicker]="pckFechaCreacionDesde" formControlName="fechaCreacionDesde" placeholder="Fecha creacion desde: ">
+                        <input matInput [matDatepicker]="pckFechaCreacionDesde" [formControl]="fechaCreacionDesde" placeholder="Fecha creacion desde: ">
                         <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionDesde"></mat-datepicker-toggle>
                         <mat-datepicker #pckFechaCreacionDesde></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-md-4">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input matInput [matDatepicker]="pckFechaCreacionHasta" formControlName="fechaCreacionHasta" placeholder="Fecha creacion hasta: ">
+                        <input matInput [matDatepicker]="pckFechaCreacionHasta" [formControl]="fechaCreacionHasta" placeholder="Fecha creacion hasta: ">
                         <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionHasta"></mat-datepicker-toggle>
                         <mat-datepicker #pckFechaCreacionHasta></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-md-4">
                     <mat-form-field class="mat-form-field-fluid">
-                        <mat-select placeholder="Agencia" formControlName="agencia">
+                        <mat-select placeholder="Agencia" [formControl]="agencia">
                             <mat-option>--</mat-option>
                             <mat-option *ngFor="let element of catAgencia" [value]="element">{{ element.nombre }}
                             </mat-option>
@@ -58,21 +58,21 @@
                 </div>
                 <div class="col-md-4">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input matInput [matDatepicker]="pckFechaAprobacionDesde" formControlName="fechaAprobacionDesde" placeholder="Fecha Aprobacion desde: ">
+                        <input matInput [matDatepicker]="pckFechaAprobacionDesde" [formControl]="fechaAprobacionDesde" placeholder="Fecha Aprobacion desde: ">
                         <mat-datepicker-toggle matSuffix [for]="pckFechaAprobacionDesde"></mat-datepicker-toggle>
                         <mat-datepicker #pckFechaAprobacionDesde></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-md-4">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input matInput [matDatepicker]="pckFechaAprobacionHasta" formControlName="fechaAprobacionHasta" placeholder="Fecha Aprobacion hasta: ">
+                        <input matInput [matDatepicker]="pckFechaAprobacionHasta" [formControl]="fechaAprobacionHasta" placeholder="Fecha Aprobacion hasta: ">
                         <mat-datepicker-toggle matSuffix [for]="pckFechaAprobacionHasta"></mat-datepicker-toggle>
                         <mat-datepicker #pckFechaAprobacionHasta></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-md-4 ">
                     <mat-form-field class="mat-form-field-fluid">
-                        <mat-select placeholder="Estado" formControlName="estado">
+                        <mat-select placeholder="Estado" [formControl]="estado">
                             <mat-option>--</mat-option>
                             <mat-option *ngFor="let element of catEstado" [value]="element">
                                 {{ element.nombre }}
@@ -82,21 +82,21 @@
                 </div>
                 <div class="col-md-4 ">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input matInput [matDatepicker]="pckFechaVencimientoDesde" formControlName="fechaVencimientoDesde" placeholder="Fecha vencimiento desde: ">
+                        <input matInput [matDatepicker]="pckFechaVencimientoDesde" [formControl]="fechaVencimientoDesde" placeholder="Fecha vencimiento desde: ">
                         <mat-datepicker-toggle matSuffix [for]="pckFechaVencimientoDesde"></mat-datepicker-toggle>
                         <mat-datepicker #pckFechaVencimientoDesde></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-md-4 ">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input placeholder="Fecha Vencimiento hasta: " matInput [matDatepicker]="picker" formControlName="fechaVencimientoHasta">
+                        <input placeholder="Fecha Vencimiento hasta: " matInput [matDatepicker]="picker" [formControl]="fechaVencimientoHasta">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-md-4 ">
                     <mat-form-field class="mat-form-field-fluid">
-                        <mat-select placeholder="Tipo de credito" formControlName="tipoCredito">
+                        <mat-select placeholder="Tipo de credito" [formControl]="tipoCredito">
                             <mat-option>--</mat-option>
                             <mat-option *ngFor="let element of catDecision" [value]="element">
                                 {{ element.nombre }}
@@ -111,7 +111,7 @@
                 </div>
                 <div class="col-md-4 ">
                     <mat-form-field class="mat-form-field-fluid">
-                        <mat-select placeholder="Impago" formControlName="impago">
+                        <mat-select placeholder="Impago" [formControl]="impago">
                             <mat-option>--</mat-option>
                             <mat-option *ngFor="let element of catDecision" [value]="element">
                                 {{ element.nombre }}
@@ -121,7 +121,7 @@
                 </div>
                 <div class="col-md-4 ">
                     <mat-form-field class="mat-form-field-fluid">
-                        <mat-select placeholder="Retanqueo" formControlName="retanqueo">
+                        <mat-select placeholder="Retanqueo" [formControl]="retanqueo">
                             <mat-option>--</mat-option>
                             <mat-option *ngFor="let element of catDecision" [value]="element">
                                 {{ element.nombre }}
