@@ -1,15 +1,15 @@
-import { ConfirmarAccionComponent } from './../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
-import { PopupPagoComponent } from './../../../../partials/custom/popups/popup-pago/popup-pago.component';
-import { RegistrarPagoService } from './../../../../../core/services/quski/registrarPago.service';
-import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
-import { ClienteSoftbank } from './../../../../../core/model/softbank/ClienteSoftbank';
-import { ClienteService } from './../../../../../core/services/quski/cliente.service';
-import { TbQoClientePago } from './../../../../../core/model/quski/TbQoClientePago';
-import { ReNoticeService } from './../../../../../core/services/re-notice.service';
-import { environment } from '../../../../../../../src/environments/environment';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { PopupPagoComponent } from '../../../../partials/custom/popups/popup-pago/popup-pago.component';
+import { RegistrarPagoService } from '../../../../../core/services/quski/registrarPago.service';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { ClienteSoftbank } from '../../../../../core/model/softbank/ClienteSoftbank';
+import { ClienteService } from '../../../../../core/services/quski/cliente.service';
+import { TbQoClientePago } from '../../../../../core/model/quski/TbQoClientePago';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { environment } from '../../../../../../environments/environment';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
-import { ValidateCedula } from './../../../../../core/util/validate.util';
-import { LayoutConfigService, SubheaderService } from './../../../../../core/_base/layout';
+import { ValidateCedula } from '../../../../../core/util/validate.util';
+import { LayoutConfigService, SubheaderService } from '../../../../../core/_base/layout';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
@@ -250,6 +250,10 @@ export class BloquearCreditoComponent implements OnInit {
   /********************************************* @COMPROBANTE *********************    */
 
   public agregarComprobante(){
+    if(!this.datosMupi){
+      this.sinNoticeService.setNotice('PRIMERO DEBE BUSCAR UN CLIENTE','info');
+      return;
+    }
     this.loadComprobante.next(true);
     const dialogRef = this.dialog.open(PopupPagoComponent, {
       width: "800px",

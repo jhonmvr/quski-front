@@ -32,6 +32,18 @@ export class ModuleGuard implements CanActivate {
        return false;        
     }
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean>  {
+        const moduleName = route.data.moduleName as Array<string>;
+        var result = false;
+        if(moduleName && moduleName.length >0){
+            moduleName.forEach(p=>{
+                if (state.url.indexOf(p) !== -1) {
+                    result = true;
+                }
+            });
+            if(result)
+                return of(result);
+        }
+      
         
         let x = this.findUri({submenu:this.menuHorService.menuList$.getValue()  },state.url);
         if(!x){

@@ -57,6 +57,7 @@ import { ModuleGuard } from '../../../../../app/core/auth';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { VentanaPrecancelacionComponent } from '../../../partials/custom/popups/ventana-precancelacion/ventana-precancelacion.component';
+import { BloquearCreditoComponent } from './bloquear-credito/bloquear-credito.component';
 
 
 
@@ -85,6 +86,10 @@ const routes: Routes = [
 				path: 'registrar-pago/:item',
 				component: RegistrarPagoComponent
 			},
+			{
+				path: 'gestion-credito/bloquear-credito',
+				component: BloquearCreditoComponent
+			},
 		]
 	}
 ];
@@ -95,6 +100,7 @@ const routes: Routes = [
 	  RegistrarPagoComponent,
 	  UploadFileComponent,
 	  DetalleCreditoComponent,
+	  BloquearCreditoComponent
 	],
   imports: [
 	CommonModule,MatTableExporterModule,

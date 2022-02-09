@@ -58,7 +58,6 @@ import { DetalleNegociacionComponent } from './detalle-negociacion/detalle-negoc
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { BandejaProcesoGerenciaComponent } from './bandeja-proceso-gerencia/bandeja-proceso-gerencia.component';
-import { BloquearCreditoComponent } from './bloquear-credito/bloquear-credito.component';
 import { GenerarCreditoComponent } from './generar-credito/generar-credito.component';
 import { NovacionHabilitanteComponent } from './novacion-habilitante/novacion-habilitante.component';
 import { GestionClienteComponent } from './gestion-cliente/gestion-cliente.component';
@@ -70,7 +69,7 @@ const routes: Routes = [
 		path: '',
 		component: NegociacionComponent,
 		canActivate: [ModuleGuard],
-		// data: { moduleName: 'ecommerce' },
+		data: { moduleName: ['gestion-negociacion','bandeja-operaciones'] },
 		children: [
 			{
 				path: '',
@@ -100,10 +99,6 @@ const routes: Routes = [
 			{
 				path: 'bandeja-operaciones/:item',
 				component: BandejaOperacionesProcesoComponent
-			},
-			{
-				path: 'gestion-credito/bloquear-credito',
-				component: BloquearCreditoComponent
 			},
 			{
 				path: 'generar-credito',
@@ -186,7 +181,6 @@ const routes: Routes = [
 		BandejaOperacionesProcesoComponent,
 		DetalleNegociacionComponent,
 		BandejaProcesoGerenciaComponent,
-		BloquearCreditoComponent,
 		GenerarCreditoComponent,
 		NovacionHabilitanteComponent,
 		GestionClienteComponent,		

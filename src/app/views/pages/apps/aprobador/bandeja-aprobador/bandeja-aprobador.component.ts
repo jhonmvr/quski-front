@@ -199,11 +199,11 @@ export class BandejaAprobadorComponent implements OnInit {
               }
               if(row.proceso =="PAGO" && row.codigo.includes('PAGO') ){
                 this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                this.router.navigate(['credito-nuevo/gestion-credito/aprobar-pagos/',row.idReferencia]);
+                this.router.navigate(['aprobador/gestion-credito/aprobar-pagos/',row.idReferencia]);
               }
               if(row.proceso =="PAGO" && row.codigo.includes('BLOQ') ){
                 this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                this.router.navigate(['credito-nuevo/gestion-credito/aprobar-bloqueo-fondos/',row.idReferencia]);  
+                this.router.navigate(['aprobador/gestion-credito/aprobar-bloqueo-fondos/',row.idReferencia]);  
               }
               if(row.proceso =="DEVOLUCION"){
                 this.pro.findByIdReferencia(row.idReferencia, row.proceso).subscribe( (dat:any) =>{
