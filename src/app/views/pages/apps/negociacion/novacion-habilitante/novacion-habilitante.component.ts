@@ -7,7 +7,7 @@ import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCred
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
-import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
+import { TrackingUtil } from '../../../../../core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { environment } from '../../../../../../environments/environment.prod';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
@@ -191,7 +191,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
   }
   public regresar(){
-    this.router.navigate(['cliente/gestion-cliente/NOV/',this.item]);
+    this.router.navigate(['negociacion/gestion-cliente/NOV/',this.item]);
   }
   public agregarComprobante(){
     this.loadComprobante.next(true);

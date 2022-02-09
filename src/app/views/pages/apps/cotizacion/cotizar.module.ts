@@ -58,7 +58,7 @@ const routes: Routes = [
 	{
 		path: '',
 		component: CotizarComponent,
-		// canActivate: [ModuleGuard],
+		canActivate: [ModuleGuard],
 		// data: { moduleName: 'ecommerce' },
 		children: [
 			{

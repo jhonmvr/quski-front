@@ -42,14 +42,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPermissionsModule } from 'ngx-permissions';
 
-import { AprobacionCreditoNuevoComponent } from './aprobacion-credito-nuevo/aprobacion-credito-nuevo.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
-import { AprobacionNovacionComponent } from './aprobacion-novacion/aprobacion-novacion.component';
-import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
-import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
+import { PickDateAdapter, PICK_FORMATS } from '../../../../core/util/pick-date-adapter';
 import { MatTableExporterModule } from 'mat-table-exporter';
-
 
 
 const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>('USD');
@@ -57,6 +53,7 @@ const routes: Routes = [
   {
     path: '',
     component: FabricaComponent,
+		canActivate: [ModuleGuard],
 
     children: [
       {
@@ -67,14 +64,6 @@ const routes: Routes = [
       {
         path: 'aprobacion',
         component: FabricaComponent
-      },
-      {
-        path: 'aprobacion-credito-nuevo/:id',
-        component: AprobacionCreditoNuevoComponent
-      },
-      {
-        path: 'aprobacion-novacion/:idNegociacion',
-        component: AprobacionNovacionComponent
       }
 
     ]
@@ -135,8 +124,6 @@ const routes: Routes = [
   ],
   declarations: [
     FabricaComponent,
-    AprobacionCreditoNuevoComponent,
-    AprobacionNovacionComponent
   ],
   entryComponents: [
     ErrorCargaInicialComponent,

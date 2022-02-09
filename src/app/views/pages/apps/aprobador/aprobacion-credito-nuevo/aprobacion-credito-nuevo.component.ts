@@ -2,17 +2,17 @@ import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/con
 import { DocumentoHabilitanteService } from '../../../../../core/services/quski/documento-habilitante.service';
 import { CreditoNegociacionService } from '../../../../../core/services/quski/credito.negociacion.service';
 import { TbQoIngresoEgresoCliente } from '../../../../../core/model/quski/TbQoIngresoEgresoCliente';
-import { SubheaderService } from './../../../../../core/_base/layout/services/subheader.service';
+import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
 import { ObjectStorageService } from '../../../../../core/services/object-storage.service';
 
 import { AprobacionWrapper } from '../../../../../core/model/wrapper/AprobacionWrapper';
-import { CatalogosWrapper } from './../../../../../core/model/wrapper/CatalogosWrapper';
-import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
+import { CatalogosWrapper } from '../../../../../core/model/wrapper/CatalogosWrapper';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
-import { ProcesoService } from './../../../../../core/services/quski/proceso.service';
-import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
+import { TrackingUtil } from '../../../../../core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { environment } from '../../../../../../../src/environments/environment';
+import { environment } from '../../../../../../environments/environment';
 import { TbQoPatrimonio } from '../../../../../core/model/quski/TbQoPatrimonio';
 import { TbReferencia } from '../../../../../core/model/quski/TbReferencia';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -23,7 +23,7 @@ import { Component, OnInit } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
-import { LayoutConfigService } from '../../../../../../app/core/_base/layout';
+import { LayoutConfigService } from '../../../../../core/_base/layout';
 
 export interface CatalogoWrapper {
   nombre: string;

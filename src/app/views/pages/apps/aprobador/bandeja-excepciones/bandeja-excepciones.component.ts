@@ -115,13 +115,13 @@ export class BandejaExcepcionesComponent implements OnInit {
               if(data.entidad){
                 if (row.tipoExcepcion == 'EXCEPCION_CLIENTE') {
                   this.sinNoticeService.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                  this.router.navigate(['./excepciones/excepcion-cliente/', btoa(JSON.stringify(row))])
+                  this.router.navigate(['./aprobador/excepcion-cliente/', btoa(JSON.stringify(row))])
                 } else if (row.tipoExcepcion == 'EXCEPCION_RIESGO') {
                   this.sinNoticeService.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                  this.router.navigate(['./excepciones/excepcion-riesgo/', btoa(JSON.stringify(row))]);
+                  this.router.navigate(['./aprobador/excepcion-riesgo/', btoa(JSON.stringify(row))]);
                 } else if (row.tipoExcepcion == 'EXCEPCION_COBERTURA') {
                   this.sinNoticeService.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                  this.router.navigate(['./excepciones/excepcion-cobertura/', btoa(JSON.stringify(row))])
+                  this.router.navigate(['./aprobador/excepcion-cobertura/', btoa(JSON.stringify(row))])
                 }
               }
             });

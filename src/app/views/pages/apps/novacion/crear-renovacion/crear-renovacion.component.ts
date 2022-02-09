@@ -458,7 +458,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
             this.usuario, this.agencia, this.garantiasSimuladas, this.idNego, this.variablesInternas ).subscribe( data =>{
             if(data.entidad){
               this.credit = data.entidad;
-              this.router.navigate(['cliente/gestion-cliente/NOV/',this.credit.proceso.idReferencia]);
+              this.router.navigate(['negociacion/gestion-cliente/NOV/',this.credit.proceso.idReferencia]);
             }
           });
         }else{

@@ -48,20 +48,14 @@ import { ClienteComponent } from './cliente.component';
 import { ListClienteComponent } from './list-cliente/list-cliente.component';
 import { AddFotoComponent } from '../../../../views/partials/custom/fotos/add-foto/add-foto.component';
 import { PartialsModule } from '../../../partials/partials.module';
-import { DialogCargarHabilitanteComponent } from './gestion-cliente/dialog-cargar-habilitante/dialog-cargar-habilitante.component';
-import { GestionClienteComponent } from './gestion-cliente/gestion-cliente.component';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
-import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
 import { MatTableExporterModule } from 'mat-table-exporter';
-import { PopUpNacimientoComponent } from './gestion-cliente/pop-up-nacimiento/pop-up-nacimiento.component';
-import { HabilitanteComponent } from '../../../../views/partials/custom/habilitante/habilitante.component';
 import { DialogHabilitanteClienteComponent } from './list-cliente/dialog-habilitante-cliente/dialog-habilitante-cliente.component';
 
 const routes: Routes = [
 	{
 		path: '',
 		component: ClienteComponent,
-		// canActivate: [ModuleGuard],
 		// data: { moduleName: 'ecommerce' },
 		children: [
 			{
@@ -71,7 +65,8 @@ const routes: Routes = [
 			},
 			{
 				path: 'lista-cliente',
-				component: ListClienteComponent
+				component: ListClienteComponent,
+				canActivate: [ModuleGuard],
 			},
 			{
 				path: 'lista-cliente/:id',
@@ -81,10 +76,6 @@ const routes: Routes = [
 				path: 'gestion-cliente',
 				redirectTo: 'lista-cliente',
 				pathMatch: 'full'
-			},
-			{
-				path: 'gestion-cliente/:origen/:item',     // Ejem:  /NEG/130 
-				component: GestionClienteComponent		   // Ejem:  /CED/1760451987
 			}
 		]
 	}
@@ -147,17 +138,12 @@ const routes: Routes = [
 declarations: [
     ClienteComponent,
     ListClienteComponent,
-    GestionClienteComponent,
-    DialogCargarHabilitanteComponent,
-    PopUpNacimientoComponent,
     DialogHabilitanteClienteComponent,
     
 
   ],
   entryComponents: [
 	AddFotoComponent,
-	DialogCargarHabilitanteComponent,
-	PopUpNacimientoComponent,
 	DialogHabilitanteClienteComponent
   ]
 })

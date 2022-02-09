@@ -57,7 +57,6 @@ const routes: Routes = [
 	{
 		path: '',
 		component: TrackingComponent,
-		// canActivate: [ModuleGuard],
 		// data: { moduleName: 'ecommerce' },
 		children: [
 			{

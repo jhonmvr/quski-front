@@ -49,6 +49,13 @@ import { BandejaAprobadorComponent } from './bandeja-aprobador/bandeja-aprobador
 import { ConfirmarAccionComponent } from '../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { MatTableExporterModule } from 'mat-table-exporter';
+import { AprobacionNovacionComponent } from './aprobacion-novacion/aprobacion-novacion.component';
+import { ExcepcionesClienteComponent } from './excepciones-cliente/excepciones-cliente.component';
+import { ExcepcionesCoberturaComponent } from './excepciones-cobertura/excepciones-cobertura.component';
+import { ExcepcionesRiesgoComponent } from './excepciones-riesgo/excepciones-riesgo.component';
+import { AprobacionCreditoNuevoComponent } from './aprobacion-credito-nuevo/aprobacion-credito-nuevo.component';
+import { AprobarBloqueoFondosComponent } from './aprobar-bloqueo-fondos/aprobar-bloqueo-fondos.component';
+import { AprobarPagosComponent } from './aprobar-pagos/aprobar-pagos.component';
 
 
 
@@ -57,6 +64,7 @@ const routes: Routes = [
   {
     path: '',
     component: AprobadorComponent,
+		canActivate: [ModuleGuard],
 
     children: [
       {
@@ -72,6 +80,34 @@ const routes: Routes = [
         path: 'bandeja-aprobador',
         component: BandejaAprobadorComponent
       },
+      {
+        path: 'aprobacion-credito-nuevo/:id',
+        component: AprobacionCreditoNuevoComponent
+      },
+      {
+        path: 'aprobacion-novacion/:idNegociacion',
+        component: AprobacionNovacionComponent
+      },
+			{
+				path: 'excepcion-cliente/:id',
+				component: ExcepcionesClienteComponent
+			},
+			{
+				path: 'excepcion-cobertura/:id',
+				component: ExcepcionesCoberturaComponent
+			},
+			{
+				path: 'excepcion-riesgo/:id',
+				component: ExcepcionesRiesgoComponent
+			},
+			{
+				path: 'gestion-credito/aprobar-bloqueo-fondos/:id',
+				component: AprobarBloqueoFondosComponent
+			},
+			{
+				path: 'gestion-credito/aprobar-pagos/:id',
+				component: AprobarPagosComponent
+			},
 
 
     ]
@@ -134,7 +170,15 @@ const routes: Routes = [
   declarations: [
     AprobadorComponent,
     BandejaExcepcionesComponent,
-    BandejaAprobadorComponent
+    BandejaAprobadorComponent,
+    AprobacionCreditoNuevoComponent,
+    AprobacionNovacionComponent,
+    ExcepcionesClienteComponent,
+    ExcepcionesCoberturaComponent,
+    ExcepcionesRiesgoComponent,
+    AprobarBloqueoFondosComponent,
+    AprobarPagosComponent
+
   ],
   entryComponents: [
     ErrorCargaInicialComponent,

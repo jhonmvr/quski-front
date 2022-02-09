@@ -70,7 +70,8 @@ const routes: Routes = [
 			},
 			{
 				path: 'set-arribo',
-				component: SeleccionFechaComponent
+				component: SeleccionFechaComponent,
+				canActivate: [ModuleGuard],
 			},
 			{
 				path: 'lista-pendientes',
@@ -156,4 +157,4 @@ const routes: Routes = [
   
   entryComponents: []
 })
-export class DevolucionModule {jspdf }
+export class DevolucionModule { }

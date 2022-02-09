@@ -191,11 +191,11 @@ export class BandejaAprobadorComponent implements OnInit {
             if(data.entidad){
               if(row.proceso =="NUEVO"){
                 this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                this.router.navigate(['fabrica/aprobacion-credito-nuevo/',row.idReferencia]);    
+                this.router.navigate(['aprobador/aprobacion-credito-nuevo/',row.idReferencia]);    
               }
               if(row.proceso =="RENOVACION"){
                 this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                this.router.navigate(['fabrica/aprobacion-novacion/',row.idReferencia]);    
+                this.router.navigate(['aprobador/aprobacion-novacion/',row.idReferencia]);    
               }
               if(row.proceso =="PAGO" && row.codigo.includes('PAGO') ){
                 this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");

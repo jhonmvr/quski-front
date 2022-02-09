@@ -1,17 +1,17 @@
-import { ConfirmarAccionComponent } from './../../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
-import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
-import { ObjectStorageService } from './../../../../../../core/services/object-storage.service';
-import { SoftbankService } from './../../../../../../core/services/quski/softbank.service';
-import { TbQoClientePago } from './../../../../../../core/model/quski/TbQoClientePago';
-import { ReNoticeService } from './../../../../../../core/services/re-notice.service';
-import { environment } from './../..`/../../../../../../../environments/environment';
-import { LayoutConfigService, SubheaderService } from './../../../../../../core/_base/layout';
+import { ConfirmarAccionComponent } from './../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { RegistrarPagoService } from './../../../../../core/services/quski/registrarPago.service';
+import { ObjectStorageService } from './../../../../../core/services/object-storage.service';
+import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
+import { TbQoClientePago } from './../../../../../core/model/quski/TbQoClientePago';
+import { ReNoticeService } from './../../../../../core/services/re-notice.service';
+import { environment } from './../..`/../../../../../../environments/environment';
+import { LayoutConfigService, SubheaderService } from './../../../../../core/_base/layout';
 import { MatDialog, MatTableDataSource,  } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
-import { ValidateDecimal } from './../../../../../../core/util/validator.decimal';
+import { ValidateDecimal } from './../../../../../core/util/validator.decimal';
 
 
 @Component({

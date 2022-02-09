@@ -55,7 +55,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'fabrica',
-				loadChildren: () => import('../app/views/pages/apps/fabrica/fabrica.module').then(m => m.FabricaModule)
+				loadChildren: () => import('./views/pages/apps/fabrica/fabrica.module').then(m => m.FabricaModule)
 			},			
 			{
 				path: 'novacion',
@@ -71,8 +71,8 @@ const routes: Routes = [
 				data: {
 					type: 'error-v6',
 					code: 403,
-					title: '403... Access forbidden',
-					desc: 'Looks like you don\'t have permission to access for requested page.<br> Please, contact administrator'
+					title: '403... Acceso denegado',
+					desc: 'Tu no tienes permisos para acceder a esta paguina.<br> Por favor, contactate con el administrador del sistema'
 				}
 			},
 			{ path: 'error/:type', component: ErrorPageComponent },

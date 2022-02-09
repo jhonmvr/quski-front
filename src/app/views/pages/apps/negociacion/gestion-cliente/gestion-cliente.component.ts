@@ -1335,8 +1335,8 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       if (data.entidad && data.entidad.isCore) {
         this.loadingSubject.next(false);
         this.sinNoticeService.setNotice("CLIENTE REGISTRADO CORRECTAMENTE", 'success');
-        if (this.origen == 'NEG') { this.router.navigate(['credito-nuevo/generar-credito/', this.item]); }
-        if (this.origen == 'NOV') { this.router.navigate(['novacion/novacion-habilitante/', this.item]); }
+        if (this.origen == 'NEG') { this.router.navigate(['negociacion/generar-credito/', this.item]); }
+        if (this.origen == 'NOV') { this.router.navigate(['negociacion/novacion-habilitante/', this.item]); }
         if (this.origen == 'CED') { this.router.navigate(['negociacion/bandeja-operaciones']); }
       } else {
         this.sinNoticeService.setNotice("NO SE PUDO REGISTRAR EL CLIENTE EN SOFTBANK", 'warning');

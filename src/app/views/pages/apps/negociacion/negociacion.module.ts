@@ -39,6 +39,7 @@ import {
 	MatButtonToggleGroup,
 	DateAdapter,
 	MAT_DATE_FORMATS,
+	MatTreeModule,
 } from '@angular/material';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
@@ -57,30 +58,40 @@ import { DetalleNegociacionComponent } from './detalle-negociacion/detalle-negoc
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { BandejaProcesoGerenciaComponent } from './bandeja-proceso-gerencia/bandeja-proceso-gerencia.component';
+import { BloquearCreditoComponent } from './bloquear-credito/bloquear-credito.component';
+import { GenerarCreditoComponent } from './generar-credito/generar-credito.component';
+import { NovacionHabilitanteComponent } from './novacion-habilitante/novacion-habilitante.component';
+import { GestionClienteComponent } from './gestion-cliente/gestion-cliente.component';
+import { DialogCargarHabilitanteComponent } from './gestion-cliente/dialog-cargar-habilitante/dialog-cargar-habilitante.component';
+import { PopUpNacimientoComponent } from './gestion-cliente/pop-up-nacimiento/pop-up-nacimiento.component';
 
 const routes: Routes = [
 	{
 		path: '',
 		component: NegociacionComponent,
-		// canActivate: [ModuleGuard],
+		canActivate: [ModuleGuard],
 		// data: { moduleName: 'ecommerce' },
 		children: [
 			{
 				path: '',
 				redirectTo: 'bandeja-operaciones',
 				pathMatch: 'full'
-			},{
+			},
+			{
 				path: 'gestion-negociacion',
 				component: GestionNegociacionComponent
-			},{
+			},
+			{
 				path: 'detalle-negociacion/:id',
 				component: DetalleNegociacionComponent
-			},{
+			},
+			{
 				path: 'bandeja-operaciones',
 				component: BandejaOperacionesProcesoComponent
-			},{
+			},
+			{
 				path: 'bandeja-administracion',
-				component: BandejaProcesoGerenciaComponent
+				component: BandejaProcesoGerenciaComponent,
 			},
 			{
 				path: 'gestion-negociacion/:origen/:id',
@@ -90,6 +101,26 @@ const routes: Routes = [
 				path: 'bandeja-operaciones/:item',
 				component: BandejaOperacionesProcesoComponent
 			},
+			{
+				path: 'gestion-credito/bloquear-credito',
+				component: BloquearCreditoComponent
+			},
+			{
+				path: 'generar-credito',
+				component: GenerarCreditoComponent
+			},
+			{
+				path: 'generar-credito/:id',
+				component: GenerarCreditoComponent
+			},
+			{
+				path: 'novacion-habilitante/:idNegociacion',
+				component: NovacionHabilitanteComponent
+			},
+			{
+				path: 'gestion-cliente/:origen/:item',     // Ejem:  /NEG/130 
+				component: GestionClienteComponent		   // Ejem:  /CED/1760451987
+			}
 
 		]
 	}
@@ -129,14 +160,15 @@ const routes: Routes = [
 		MatTooltipModule,
 		MatButtonToggleModule,
 		NgbProgressbarModule,
-   	    MatStepperModule,
-        PartialsModule
+		MatStepperModule,
+		PartialsModule,
+		MatTreeModule
 	],
 	providers: [
 		ModuleGuard,
-		
-		{provide: DateAdapter, useClass: PickDateAdapter},
-		{provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS},
+
+		{ provide: DateAdapter, useClass: PickDateAdapter },
+		{ provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS },
 		{ provide: MatDialogRef, useValue: {} },
 		{
 			provide: MAT_DIALOG_DEFAULT_OPTIONS,
@@ -153,13 +185,21 @@ const routes: Routes = [
 		NegociacionComponent,
 		BandejaOperacionesProcesoComponent,
 		DetalleNegociacionComponent,
-		BandejaProcesoGerenciaComponent
+		BandejaProcesoGerenciaComponent,
+		BloquearCreditoComponent,
+		GenerarCreditoComponent,
+		NovacionHabilitanteComponent,
+		GestionClienteComponent,		
+		DialogCargarHabilitanteComponent,
+		PopUpNacimientoComponent,
 	],
-	entryComponents: [	
+	entryComponents: [
 		ErrorCargaInicialComponent,
 		VerCotizacionesComponent,
 		ListaExcepcionesComponent,
-		ReasignarUsuarioComponent
+		ReasignarUsuarioComponent,		
+		DialogCargarHabilitanteComponent,
+		PopUpNacimientoComponent,
 	]
 })
 export class NegociacionModule { }

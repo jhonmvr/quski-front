@@ -233,6 +233,9 @@
                     "configurations": {
                         "production": {
                             "devServerTarget": "metronic:serve:production"
+                        },
+                        "staging": {
+                            "devServerTarget": "metronic:serve:staging"
                         }
                     }
                 },

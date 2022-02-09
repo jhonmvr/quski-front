@@ -1,20 +1,20 @@
-import { ConfirmarAccionComponent } from '../../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
-import { PopupPagoComponent } from '../../../../../partials/custom/popups/popup-pago/popup-pago.component';
-import { SimulacionPrecancelacion } from '../../../../../../core/model/softbank/SimulacionPrecancelacion';
-import { RegistrarPagoService } from './../../../../../../core/services/quski/registrarPago.service';
-import { SubheaderService } from '../../../../../../core/_base/layout/services/subheader.service';
-import { ParametroService } from './../../../../../../core/services/quski/parametro.service';
-import { SoftbankService } from './../../../../../../core/services/quski/softbank.service';
-import { ClienteService } from '../../../../../../core/services/quski/cliente.service';
-import { ReNoticeService } from '../../../../../../core/services/re-notice.service';
-import { environment } from '../../../../../../../../src/environments/environment';
+import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { PopupPagoComponent } from '../../../../partials/custom/popups/popup-pago/popup-pago.component';
+import { SimulacionPrecancelacion } from '../../../../../core/model/softbank/SimulacionPrecancelacion';
+import { RegistrarPagoService } from '../../../../../core/services/quski/registrarPago.service';
+import { SubheaderService } from '../../../../../core/_base/layout/services/subheader.service';
+import { ParametroService } from '../../../../../core/services/quski/parametro.service';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
+import { ClienteService } from '../../../../../core/services/quski/cliente.service';
+import { ReNoticeService } from '../../../../../core/services/re-notice.service';
+import { environment } from '../../../../../../environments/environment';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { saveAs } from 'file-saver';
-import { LayoutConfigService } from '../../../../../../../app/core/_base/layout';
+import { LayoutConfigService } from '../../../../../core/_base/layout';
 
 
 /**

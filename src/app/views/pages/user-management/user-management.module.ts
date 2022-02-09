@@ -52,13 +52,15 @@ import {
 } from '@angular/material';
 import {
 	usersReducer,
-	UserEffects
+	UserEffects,
+	ModuleGuard
 } from '../../../core/auth';
 
 const routes: Routes = [
 	{
 		path: '',
 		component: UserManagementComponent,
+		canActivate: [ModuleGuard],
 		children: [
 			{
 				path: '',

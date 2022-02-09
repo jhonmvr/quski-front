@@ -11,7 +11,7 @@ import { ObjectStorageService } from '../../../../../core/services/object-storag
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
-import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
+import { TrackingUtil } from '../../../../../core/util/TrakingUtil';
 import { OperacionSoft } from '../../../../../core/model/softbank/OperacionSoft';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatTableDataSource, MatDialog, MatStepper } from '@angular/material';
@@ -23,8 +23,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { saveAs } from 'file-saver';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
-import { AddFotoComponent } from '../../../../../views/partials/custom/fotos/add-foto/add-foto.component';
-import { LayoutConfigService } from '../../../../../../app/core/_base/layout';
+import { AddFotoComponent } from '../../../../partials/custom/fotos/add-foto/add-foto.component';
+import { LayoutConfigService } from '../../../../../core/_base/layout';
 @Component({
   selector: 'kt-generar-credito',
   templateUrl: './generar-credito.component.html',
@@ -411,7 +411,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     
   }
   public  regresar(){
-    this.router.navigate(['cliente/gestion-cliente/NEG/',this.item]);
+    this.router.navigate(['negociacion/gestion-cliente/NEG/',this.item]);
   }
   public generarCredito(anular?: boolean ) {
     if(this.formFunda.valid ){

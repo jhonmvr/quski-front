@@ -1108,7 +1108,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     if (confirm("ESTA SEGURO DE GENERAR LA SOLICITUD DE CREDITO?")) {
       this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response => {
         console.log( )
-        this.router.navigate(['cliente/gestion-cliente/NEG/', this.negoW.credito.tbQoNegociacion.id]);
+        this.router.navigate(['negociacion/gestion-cliente/NEG/', this.negoW.credito.tbQoNegociacion.id]);
       }, error => {
         this.sinNotSer.setNotice(error.error.msgError, 'error');
       });

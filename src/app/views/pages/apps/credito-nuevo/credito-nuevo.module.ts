@@ -49,13 +49,8 @@ import { CreditoNuevoComponent } from './credito-nuevo.component';
 
 
 import { PartialsModule } from '../../../partials/partials.module';
-import { GenerarCreditoComponent } from './generar-credito/generar-credito.component';
-import { GestionCreditoComponent } from './gestion-credito/gestion-credito.component';
 import { ListCreditoComponent } from './list-credito/list-credito.component';
-import { RegistrarPagoComponent } from './gestion-credito/registrar-pago/registrar-pago.component';
-import { BloquearCreditoComponent } from './gestion-credito/bloquear-credito/bloquear-credito.component';
-import { AprobarBloqueoFondosComponent } from './gestion-credito/aprobar-bloqueo-fondos/aprobar-bloqueo-fondos.component';
-import { AprobarPagosComponent } from './gestion-credito/aprobar-pagos/aprobar-pagos.component';
+import { RegistrarPagoComponent } from './registrar-pago/registrar-pago.component';
 import { UploadFileComponent } from './upload-file/upload-file.component';
 import { DetalleCreditoComponent } from './detalle-credito/detalle-credito.component';
 import { ModuleGuard } from '../../../../../app/core/auth';
@@ -78,14 +73,6 @@ const routes: Routes = [
 				pathMatch: 'full'
 			},
 			{
-				path: 'generar-credito',
-				component: GenerarCreditoComponent
-			},
-			{
-				path: 'generar-credito/:id',
-				component: GenerarCreditoComponent
-			},
-			{
 				path: 'detalle-credito/:numeroOperacion',
 				component: DetalleCreditoComponent
 			},
@@ -95,24 +82,8 @@ const routes: Routes = [
 				component: ListCreditoComponent
 			},
 			{
-				path: 'gestion-credito',
-				component: GestionCreditoComponent
-			},
-			{
 				path: 'registrar-pago/:item',
 				component: RegistrarPagoComponent
-			},
-			{
-				path: 'gestion-credito/bloquear-credito',
-				component: BloquearCreditoComponent
-			},
-			{
-				path: 'gestion-credito/aprobar-bloqueo-fondos/:id',
-				component: AprobarBloqueoFondosComponent
-			},
-			{
-				path: 'gestion-credito/aprobar-pagos/:id',
-				component: AprobarPagosComponent
 			},
 		]
 	}
@@ -120,13 +91,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [CreditoNuevoComponent,
-	 GenerarCreditoComponent, 
-	 GestionCreditoComponent,
 	  ListCreditoComponent,
 	  RegistrarPagoComponent,
-	  BloquearCreditoComponent,
-	  AprobarBloqueoFondosComponent,
-	  AprobarPagosComponent,
 	  UploadFileComponent,
 	  DetalleCreditoComponent,
 	],

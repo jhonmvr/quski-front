@@ -45,7 +45,6 @@ import { PartialsModule } from '../../../partials/partials.module';
 import { ErrorCargaInicialComponent } from '../../../../views/partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
 import { ListaExcepcionesComponent } from '../../../partials/custom/secciones-generales/lista-excepciones/lista-excepciones.component';
 import { ReasignarUsuarioComponent } from '../../../../views/partials/custom/popups/reasignar-usuario/reasignar-usuario.component';
-import { NovacionHabilitanteComponent } from './novacion-habilitante/novacion-habilitante.component';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { MatTableExporterModule } from 'mat-table-exporter';
 const routes: Routes = [
@@ -62,10 +61,6 @@ const routes: Routes = [
 				path: 'crear-novacion/:codigo/:item',
 				component: CrearRenovacionComponent
 			},
-			{
-				path: 'novacion-habilitante/:idNegociacion',
-				component: NovacionHabilitanteComponent
-			}
 
 		]
 	}
@@ -124,8 +119,7 @@ const routes: Routes = [
 	],
   	declarations: [
 		CrearRenovacionComponent,
-		NovacionComponent,
-		NovacionHabilitanteComponent
+		NovacionComponent
 		
 	],
 	entryComponents: [	
