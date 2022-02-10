@@ -1,4 +1,3 @@
-  
 <re-portlet>
     <re-portlet-header [title]="titulo" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
@@ -26,7 +25,7 @@
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento" [value]="fechaNacimiento.value | rDate"/>
+                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento" [value]="fechaNacimiento.value | rDate" />
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -85,7 +84,7 @@
                 </div>
             </mat-step>
             <mat-step label="Riesgo Acumulado">
-                <div class="row mt-1 mb-1" >
+                <div class="row mt-1 mb-1">
                     <div class="col" *ngIf="this.detalle && this.detalle.riesgos;">
                         <kt-tabla-riesgo-acumulado [base]="this.detalle.riesgos"></kt-tabla-riesgo-acumulado>
                     </div>
@@ -99,7 +98,7 @@
                     <div class="col" *ngIf="detalle && detalle.joyas">
                         <kt-tabla-tasacion [data]='this.detalle.joyas' [tipo]="'T'"></kt-tabla-tasacion>
                     </div>
-                    <div class="col-4 offset-4"  *ngIf="!detalle || !detalle.joyas">
+                    <div class="col-4 offset-4" *ngIf="!detalle || !detalle.joyas">
                         <strong> NO POSEE JOYAS RELACIONADAS </strong>
                     </div>
                 </div>
@@ -107,21 +106,12 @@
             <mat-step label="Detalle de credito">
                 <div class="row">
                     <div class="col-12" *ngIf="detalle && detalle.joyas && detalle.credito.plazoCredito">
-                        <mat-table #tableNegociacion class="garantia"	[dataSource]="dataSourceCreditoNegociacion">
+                        <mat-table #tableNegociacion class="garantia" [dataSource]="dataSourceCreditoNegociacion">
                             <ng-container matColumnDef="plazo">
                                 <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> 
-                                    {{ 
-                                    element.plazoCredito ? 
-                                    element.plazoCredito == '60'  ? '60 Dias (Al Vcto.)' : 
-                                    element.plazoCredito == '90'  ? '90 Dias (Al Vcto.)' : 
-                                    element.plazoCredito == '120' ? '120 Dias (Al Vcto.)' : 
-                                    element.plazoCredito == '6'   ? '6	Cuotas' : 
-                                    element.plazoCredito == '9'   ? '9	Cuotas' : 
-                                    element.plazoCredito == '12'  ? '12 Cuotas' : 
-                                    element.plazoCredito == '18'  ? '18 Cuotas' : 
-                                    element.plazoCredito : 'Error'
-                                    }}
+                                <mat-cell *matCellDef="let element">
+                                    {{ element.plazoCredito ? element.plazoCredito == '60' ? '60 Dias (Al Vcto.)' : element.plazoCredito == '90' ? '90 Dias (Al Vcto.)' : element.plazoCredito == '120' ? '120 Dias (Al Vcto.)' : element.plazoCredito == '6' ? '6 Cuotas' : element.plazoCredito
+                                    == '9' ? '9 Cuotas' : element.plazoCredito == '12' ? '12 Cuotas' : element.plazoCredito == '18' ? '18 Cuotas' : element.plazoCredito : 'Error' }}
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="periodoPlazo">
@@ -130,12 +120,8 @@
                             </ng-container>
                             <ng-container matColumnDef="periodicidadPlazo">
                                 <mat-header-cell *matHeaderCellDef>Periodicidad Plazo</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> 
-                                    {{ 
-                                        element.periodicidadPlazo ?
-                                        element.periodicidadPlazo == 'M' ? 'Meses' :
-                                        element.periodicidadPlazo : 'Error'
-                                    }}
+                                <mat-cell *matCellDef="let element">
+                                    {{ element.periodicidadPlazo ? element.periodicidadPlazo == 'M' ? 'Meses' : element.periodicidadPlazo : 'Error' }}
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="montoFinanciado">
@@ -264,12 +250,8 @@
                             </ng-container>
                             <ng-container matColumnDef="tipooferta">
                                 <mat-header-cell *matHeaderCellDef>Tipo oferta</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> 
-                                    {{ 
-                                        element.tipoOferta ? 
-                                        element.tipoOferta == 'N' ? 'Nuevo' :
-                                        element.tipoOferta : 'Error'
-                                    }}
+                                <mat-cell *matCellDef="let element">
+                                    {{ element.tipoOferta ? element.tipoOferta == 'N' ? 'Nuevo' : element.tipoOferta : 'Error' }}
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="porcentajeflujoplaneado">
@@ -288,19 +270,19 @@
                             <mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>
                         </mat-table>
                     </div>
-                    <div class="col-4 offset-4"  *ngIf="!detalle || !detalle.joyas || !detalle.credito.plazoCredito">
+                    <div class="col-4 offset-4" *ngIf="!detalle || !detalle.joyas || !detalle.credito.plazoCredito">
                         <strong> NO POSEE UN CREDITO SELECCIONADO </strong>
                     </div>
                 </div>
             </mat-step>
-              <mat-step label="Habilitantes">
+            <mat-step label="Habilitantes">
                 <div class="row">
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =referencia " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}" >Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedula.value "   style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}" >Habilitante Cliente</button>
+                    <button varHabilitante mat-raised-button *ngIf="detalle.proceso.proceso == 'RENOVACION'" (click)="varHabilitante.proceso='NOVACION';varHabilitante.referencia =referencia " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button *ngIf="detalle.proceso.proceso == 'NUEVO'" (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =referencia " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedula.value " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
                 </div>
-                <re-habilitante [proceso]="varHabilitante.proceso" [estadoOperacion]="'DETALLE'" [useType]="'FORM'"
-                    [referencia]="varHabilitante.referencia" >
-                </re-habilitante> 
+                <re-habilitante [proceso]="varHabilitante.proceso" [estadoOperacion]="'DETALLE'" [useType]="'FORM'" [referencia]="varHabilitante.referencia">
+                </re-habilitante>
             </mat-step>
         </mat-vertical-stepper>
     </re-portlet-body>

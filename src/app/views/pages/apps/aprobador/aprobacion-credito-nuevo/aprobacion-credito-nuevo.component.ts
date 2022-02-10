@@ -501,7 +501,8 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
             this.catalogos.catTipoReferencia.find( x => x.codigo == e.parentesco ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
     });
     this.numeroFunda.setValue( ap.credito.numeroFunda ) ;
-    this.tipoFunda.setValue( ap.credito.codigoTipoFunda ? this.catalogos ? this.catalogos.catTipoFunda ? this.catalogos.catTipoFunda.find(x => x.codigo ) ? this.catalogos.catTipoFunda.find(x => x.codigo ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo');
+ 
+    this.tipoFunda.setValue( ap.credito.codigoTipoFunda ? this.catalogos ? this.catalogos.catTipoFunda ? this.catalogos.catTipoFunda.find(x => x.codigo==ap.credito.codigoTipoFunda ) ? this.catalogos.catTipoFunda.find(x => x.codigo == ap.credito.codigoTipoFunda ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo');
     this.tipoProceso.setValue( ap.proceso.proceso );
     /** @DATOS_CREDITO_NUEVO */
     this.plazo.setValue( ap.credito.plazoCredito);
@@ -616,7 +617,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
   }
 
   private cargarFotoHabilitante(tipoDocumento, proceso, referencia):Observable<String> {
-    console.log("cargar documentos fotos",tipoDocumento, proceso, referencia);
+    //console.log("cargar documentos fotos",tipoDocumento, proceso, referencia);
     return this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).pipe(switchMap(data=> 
          this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).pipe(switchMap((dataDos: any) => {
           let file = JSON.parse( atob( dataDos.entidad ) );

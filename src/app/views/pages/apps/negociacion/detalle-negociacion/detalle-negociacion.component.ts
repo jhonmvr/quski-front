@@ -115,7 +115,11 @@ export class DetalleNegociacionComponent implements OnInit {
     }); 
     this.dataSourceCreditoNegociacion.data.push( ap.credito? ap.credito : null );
     this.varHabilitante.referencia= this.referencia;
-    this.varHabilitante.proceso='NUEVO,FUNDA';
+    if(ap.proceso.proceso == 'NUEVO'){
+      this.varHabilitante.proceso='NUEVO,FUNDA';
+    }else{
+      this.varHabilitante.proceso='NOVACION';
+    }
     this.sinNotSer.setNotice('DETALLE DE CREDITO EN PROCESO CARGADO', 'success');
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
