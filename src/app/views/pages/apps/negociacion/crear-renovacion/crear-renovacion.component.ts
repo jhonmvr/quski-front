@@ -7,8 +7,8 @@ import { DataInjectExcepciones } from '../../../../../core/model/wrapper/DataInj
 import { CalculadoraService } from '../../../../../core/services/quski/calculadora.service';
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
-import { environment } from '../../../../../../../src/environments/environment.prod';
-import { TrackingUtil } from '../../../../../../../src/app/core/util/TrakingUtil';
+import { environment } from '../../../../../../environments/environment.prod';
+import { TrackingUtil } from '../../../../../core/util/TrakingUtil';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
 import { MatDialog, MatStepper, MatTableDataSource } from '@angular/material';
 import { TbQoExcepcion } from '../../../../../core/model/quski/TbQoExcepcion';
@@ -24,7 +24,7 @@ import { TrackingService } from '../../../../../core/services/quski/tracking.ser
 import { DevolucionCreditoComponent } from '../../../../partials/custom/popups/devolucion-credito/devolucion-credito.component';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
-import { ProcesoService } from '../../../../../../app/core/services/quski/proceso.service';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
 export interface cliente {
   identificacion: string;

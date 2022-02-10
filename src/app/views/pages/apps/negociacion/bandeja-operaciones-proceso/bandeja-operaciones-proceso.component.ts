@@ -180,6 +180,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
             this.paginator.pageIndex = 0; 
              w = new WrapperBusqueda(this.paginator.pageSize);
              w.codigoSoft = data.params.item;
+             this.asesor.setValue(null);
             this.buscarOperaciones( w );
           }else{
             this.buscarOperaciones( new WrapperBusqueda() );
@@ -314,7 +315,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       if(row.proceso == 'NUEVO'){
         this.router.navigate(['negociacion/gestion-negociacion/NEG/',row.id]);    
       }else if(row.proceso == 'RENOVACION'){
-        this.router.navigate(['novacion/crear-novacion/NOV/', row.id]);
+        this.router.navigate(['negociacion/crear-novacion/NOV/', row.id]);
       }else if(row.proceso == 'DEVOLUCION' && row.estadoProceso == 'ARRIBADO'){
         this.router.navigate(['devolucion/entrega-recepcion/',row.id]);
       }else if(row.proceso == 'DEVOLUCION' && row.estadoProceso == 'CREADO' ){

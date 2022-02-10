@@ -156,17 +156,8 @@ export class ListCreditoComponent implements OnInit {
     this.router.navigate(['credito-nuevo/detalle-credito/', row.numeroOperacion]);    
   }
   public irNovar(row: any){
-    console.log('credito',row);
-    if( (row.codigoEstadoProcesoGarantia == 'UTI' && row.codigoEstadoUbicacionGrantia == 'CUS')
-    || (row.codigoEstadoProcesoGarantia == 'UTI' && row.codigoEstadoUbicacionGrantia == 'AGE')
-    || (row.codigoEstadoProcesoGarantia == 'ASI' && row.codigoEstadoUbicacionGrantia == 'CUS')
-    || (row.codigoEstadoProcesoGarantia == 'PRO' && row.codigoEstadoUbicacionGrantia == 'CUS')
-    || (row.codigoEstadoProcesoGarantia == 'COM' && row.codigoEstadoUbicacionGrantia == 'CUS')
-    || (row.codigoEstadoProcesoGarantia == 'PRM' && row.codigoEstadoUbicacionGrantia == 'TRM')){
-      this.router.navigate(['novacion/crear-novacion/CRE', row.numeroOperacion]);    
-    }else{
-      this.sinNotSer.setNotice('ESTADOS DE LAS GARANTIAS INCORRECTOS. CONSULTAR CON OPERACIONES', 'info') ; 
-    }
+    
+    this.router.navigate(['negociacion/crear-novacion/CRE', row.numeroOperacion]);    
     
   }
   irDevolucion(row:any){

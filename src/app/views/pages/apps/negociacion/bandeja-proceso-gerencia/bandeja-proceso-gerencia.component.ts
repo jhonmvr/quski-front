@@ -299,7 +299,7 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
       if(row.proceso == 'NUEVO'){
         this.router.navigate(['negociacion/gestion-negociacion/NEG/',row.id]);    
       }else if(row.proceso == 'RENOVACION'){
-        this.router.navigate(['novacion/crear-novacion/NOV/', row.id]);
+        this.router.navigate(['negociacion/crear-novacion/NOV/', row.id]);
       }else if(row.proceso == 'DEVOLUCION' && row.estadoProceso == 'ARRIBADO'){
         this.router.navigate(['devolucion/entrega-recepcion/',row.id]);
       }else if(row.proceso == 'DEVOLUCION' && row.estadoProceso == 'CREADO' ){

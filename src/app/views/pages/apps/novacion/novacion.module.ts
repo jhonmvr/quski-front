@@ -39,7 +39,6 @@ import {
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgxPermissionsModule } from 'ngx-permissions';
 // Component
-import { CrearRenovacionComponent } from './crear-renovacion/crear-renovacion.component';
 import { NovacionComponent } from './novacion.component';
 import { PartialsModule } from '../../../partials/partials.module';
 import { ErrorCargaInicialComponent } from '../../../../views/partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
@@ -57,11 +56,6 @@ const routes: Routes = [
 				redirectTo: 'crear-novacion',
 				pathMatch: 'full'
 			},
-			{
-				path: 'crear-novacion/:codigo/:item',
-				component: CrearRenovacionComponent
-			},
-
 		]
 	}
 ];
@@ -118,7 +112,6 @@ const routes: Routes = [
 		},
 	],
   	declarations: [
-		CrearRenovacionComponent,
 		NovacionComponent
 		
 	],

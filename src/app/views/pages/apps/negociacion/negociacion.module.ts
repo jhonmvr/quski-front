@@ -63,13 +63,14 @@ import { NovacionHabilitanteComponent } from './novacion-habilitante/novacion-ha
 import { GestionClienteComponent } from './gestion-cliente/gestion-cliente.component';
 import { DialogCargarHabilitanteComponent } from './gestion-cliente/dialog-cargar-habilitante/dialog-cargar-habilitante.component';
 import { PopUpNacimientoComponent } from './gestion-cliente/pop-up-nacimiento/pop-up-nacimiento.component';
+import { CrearRenovacionComponent } from './crear-renovacion/crear-renovacion.component';
 
 const routes: Routes = [
 	{
 		path: '',
 		component: NegociacionComponent,
 		canActivate: [ModuleGuard],
-		data: { moduleName: ['gestion-negociacion','bandeja-operaciones'] },
+		data: { moduleName: ['gestion-negociacion','bandeja-operaciones','crear-novacion'] },
 		children: [
 			{
 				path: '',
@@ -115,7 +116,12 @@ const routes: Routes = [
 			{
 				path: 'gestion-cliente/:origen/:item',     // Ejem:  /NEG/130 
 				component: GestionClienteComponent		   // Ejem:  /CED/1760451987
-			}
+			},
+			{
+				path: 'crear-novacion/:codigo/:item',
+				component: CrearRenovacionComponent
+			},
+
 
 		]
 	}
@@ -186,6 +192,7 @@ const routes: Routes = [
 		GestionClienteComponent,		
 		DialogCargarHabilitanteComponent,
 		PopUpNacimientoComponent,
+		CrearRenovacionComponent
 	],
 	entryComponents: [
 		ErrorCargaInicialComponent,
