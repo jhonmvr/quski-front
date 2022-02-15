@@ -15,7 +15,7 @@ import { TrackingModule } from './apps/tracking/tracking.module';
 import { CotizarModule } from './apps/cotizacion/cotizar.module';
 import { CreditoNuevoModule } from './apps/credito-nuevo/credito-nuevo.module';
 import { NegociacionModule } from './apps/negociacion/negociacion.module';
-import { ExcepcionesModule } from './apps/excepciones/excepciones.module';
+import { VisorModule } from './visor/visor.module';
 import { AprobadorModule } from './apps/aprobador/aprobador.module';
 import { NovacionModule } from './apps/novacion/novacion.module';
 
@@ -49,7 +49,7 @@ const RELATIVE_DATE_FORMATS = {
 		TrackingModule,
 		CotizarModule,
 		NegociacionModule,
-		ExcepcionesModule,
+		VisorModule,
 		UserManagementModule,
 		AprobadorModule,
 		NovacionModule

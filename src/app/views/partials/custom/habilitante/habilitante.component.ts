@@ -116,18 +116,13 @@ export class HabilitanteComponent implements OnInit {
 
   constructor(
     private sinNoticeService: ReNoticeService,
+    private router: Router,
     private dh: DocumentoHabilitanteService,
     private os:ObjectStorageService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) private data: any
       ) {
-    ////console.log("===========> entra en componente habilitantes");
     this.uploading = this.uploadSubject.asObservable();
-    /* //console.log("cargando rol: " + this.rol);
-    //console.log("cargando proceso: " + this.proceso);
-    //console.log("cargando referencia: " + this.referencia);
-    //console.log("cargando estadoOperacion: " + this.estadoOperacion);
-    //console.log("cargando tipoDocumento: " + this.tipoDocumento); */
     this.dh.setParameter();
     this.os.setParameter();
   
@@ -154,16 +149,10 @@ export class HabilitanteComponent implements OnInit {
   }
 
   validateLoadData(  ){
-    console.log(">>>>>>>>>>>>>>>>>>>>",this.useType , this.useType , this.proceso , this.referencia)
-    console.log("this.useType",this.useType)
-    console.log("this.useType",this.procesoSubject)
-    console.log("this.useType",this.referencia)
-    console.log( "entra a buscar ", ( this.useType && this.useType === this.TYPE_FORM && this.proceso && this.referencia ))
     if( this.useType && this.useType === this.TYPE_FORM && this.proceso && this.referencia ){
-      console.log("====Carga informacion para  " + this.TYPE_FORM);
-      this.buscar();
+     
     } else if( this.useType && this.useType === this.TYPE_LIST  ){
-      console.log("====Carga informacion para  " + this.TYPE_LIST);
+     
       this.buscar();
     }
   }
@@ -180,11 +169,10 @@ export class HabilitanteComponent implements OnInit {
   getPaginacion(ordenarPor: string, tipoOrden: string, paginado: string,pagina): Page {
     const p = new Page();
     p.pageNumber = pagina;
-    //p.pageSize = this.paginator.pageSize;
     p.sortFields = ordenarPor;
     p.sortDirections = tipoOrden;
     p.isPaginated = paginado;
-    ////console.log("==>en buscas  getPaginacion " + JSON.stringify(this.p) );
+  
     return p;
   }
 
@@ -205,20 +193,12 @@ export class HabilitanteComponent implements OnInit {
 
   submit() {
     this.buscarObservable.next(true);
-    console.log("loadDocumentoHabilitante cargando rol: " + localStorage.getItem(environment.rolKey));
-    console.log("loadDocumentoHabilitante cargando proceso: " + this.proceso);
-    console.log("loadDocumentoHabilitante cargando referencia: " + this.referencia);
-    console.log("loadDocumentoHabilitante cargando estadoOperacion: " + this.estadoOperacion);
-    console.log("loadDocumentoHabilitante cargando tipoDocumento: " + this.tipoDocumento);
-    console.log("==>entra a documentos habilitantes loadDocumentoHabilitante"); 
-    //this.uploadSubject.next(false);
+   
     this.dataSourcesHabilitantes = new MatTableDataSource<any>();
-    console.log( "Datos entrada" ,this.tipoDocumento, this.referencia)
     this.dh.findByRolTipoDocumentoReferenciaProcesoEstadoOperacion(localStorage.getItem(environment.rolKey),this.tipoDocumento, this.referencia,
     this.proceso,this.estadoOperacion, this.p  ).subscribe(
         (data: any) => {
           
-          console.log("resultadotipos de documento " ,data);
           if (data && data.list) {
             let existentes=data.list.filter(e=>e.estaCargado==true);
             if( existentes && existentes.length==data.list.length ){
@@ -227,11 +207,9 @@ export class HabilitanteComponent implements OnInit {
               this.enableEnd=false;
             }
             this.dataSourcesHabilitantes = new MatTableDataSource<HabilitanteWrapper>(data.list);
-            //this.getPermisoAccion();
             this.buscarObservable.next(false);
             this.totalResults=data.totalResults;
           } else {
-            //console.log("no hay datos ");
             this.sinNoticeService.setNotice("NO SE ENCONTRARON HABILITANTES PARA ESTE PROCESO ","warning");
           }
         },
@@ -252,51 +230,37 @@ export class HabilitanteComponent implements OnInit {
 
   descargarArchivoHabilitante(row:HabilitanteWrapper) {
     
-    //console.log("descargarArchivoHabilitante");
     
     this.os.getObjectById( row.objectId,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
-      ////console.log("entra a submit var json " + JSON.stringify( atob(data.entidad) ));
       if( data && data.entidad ){
-        console.log( data.entidad)
         let obj=JSON.parse( atob(data.entidad) );
-        console.log("entra a retorno json " + JSON.stringify( obj ));
-        const byteCharacters = atob(obj.fileBase64);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray]);
-        saveAs(blob , obj.name);
+        this.openOrSave(obj);
+        
       }else {
         this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
       }
     },
     error => {
-      //console.log("================>error: " + JSON.stringify(error));
       this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
     });
   }
 
   descargarPlantillaHabilitante(row:HabilitanteWrapper) {
-    ////console.log(      "<<<<<<<<<<<<<<<<descargarPlantillaHabilitante id>>>>>>>>>>>>>>>>",      this.codigoContratoLocal    );
-    ////console.log("entra a submit var json " + row.id);
+    
    
-    console.log("XD", row)
     this.dh.generatePlantillaHabilitantesByParams(
         row.servicio, row.idReferencia == null ? this.referencia :  String(row.idReferencia),
         row.idTipoDocumento?String(row.idTipoDocumento):null, row.proceso, 
         row.estadoOperacion, 
         row.idDocumentoHabilitante?String(row.idDocumentoHabilitante):null,"PDF"
       ).subscribe((data: any) => {
-          console.log("descargarNotificacion datos xx ", data);
-          ////console.log("descargarNotificacion datos " + JSON.stringify(data));
           if(data.uriHabilitantes){
             this.os.getObjectById(data.uriHabilitantes, this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
               ////console.log("entra a submit var json " + JSON.stringify( atob(data.entidad) ));
               if( data && data.entidad ){
                 let obj=JSON.parse( atob(data.entidad) );
-                //console.log("entra a retorno json " + JSON.stringify( obj ));
+                this.openOrSave(obj);
+               /*  console.log("entra a retorno json " , obj);
                 const byteCharacters = atob(obj.fileBase64);
                 const byteNumbers = new Array(byteCharacters.length);
                 for (let i = 0; i < byteCharacters.length; i++) {
@@ -304,7 +268,7 @@ export class HabilitanteComponent implements OnInit {
                 }
                 const byteArray = new Uint8Array(byteNumbers);
                 const blob = new Blob([byteArray]);
-                saveAs(blob , obj.name);
+                saveAs(blob , obj.name); */
               }else {
                 this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
               }
@@ -315,18 +279,10 @@ export class HabilitanteComponent implements OnInit {
             });
           }else if(data.objectoStorage){
                 let obj=JSON.parse( atob(data.objectoStorage) );
-                const byteCharacters = atob(obj.fileBase64);
-                const byteNumbers = new Array(byteCharacters.length);
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray]);
-                saveAs(blob , obj.name);
+                this.openOrSave(obj);
               
             
           }else if (data.documentoHabilitanteByte) {            
-           // let blob = new Blob([data.documentoHabilitanteByte], { type: 'application/pdf'});
            
             const byteCharacters = atob(data.documentoHabilitanteByte);
             const byteNumbers = new Array(byteCharacters.length);
@@ -342,13 +298,35 @@ export class HabilitanteComponent implements OnInit {
           }
         },
         error => {
-          //console.log("================>error: " + JSON.stringify(error));
           this.sinNoticeService.setNotice("ERROR DESCARGA DE PLANTILLA HABILITANTE","error");
         }
       );
-    ////console.log("descargarNotificacion");
   }
 
+  openOrSave(obj){
+    if(obj){
+      const byteCharacters = atob(obj.fileBase64);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob =  new Blob([byteArray],{type:obj.type});
+      console.log('tipo de archivo',obj.type);
+      var url = window.URL.createObjectURL(blob); 
+    
+      let a = document.createElement("a");
+      a.href = url;
+      a.target = "_blank"
+      if(!obj.type){
+        a.download = obj.name
+      }
+      a.click();
+      URL.revokeObjectURL(url);
+    }else{
+      this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
+    }
+  }
     
   navigatetoList(){
     
@@ -363,17 +341,10 @@ export class HabilitanteComponent implements OnInit {
     return false;
   }
 
-  /*descargaPlantilla: boolean;
-  cargaDocumento: boolean;
-  descargaDocumento: boolean;
-  cargaDocumentoAdicional: boolean;
-  descargaDocumentoAdicional: boolean;*/
   getPermiso(tipo:string, permisos, objectid? ):boolean{
     this.buscarObservable.next(true);
     if( permisos && permisos.length>0 ){
-      ////console.log("===> getPermiso rol " + localStorage.getItem( environment.rolKey ) + " tipo: " +  tipo + " datos "+ JSON.stringify( permisos));
       let existPermisos=permisos.filter(p=>p.idRol === Number( localStorage.getItem( environment.rolKey ) ));
-      ////console.log("===> permisos filter " + JSON.stringify( existPermisos));
       if( existPermisos &&  existPermisos.length >0 ){
         this.buscarObservable.next(false);
         if( tipo === "DESCARGA_PLA" &&  existPermisos[0].descargaPlantilla && existPermisos[0].descargaPlantilla===true  ){
@@ -412,9 +383,7 @@ export class HabilitanteComponent implements OnInit {
     page.isPaginated="N";
     this.dh.findByRolTipoDocumentoProcesoEstadoOperacion(localStorage.getItem(environment.rolKey),this.tipoDocumento,this.proceso,this.estadoOperacion, page).subscribe((data:any)=>{
       if( data && data.entidades ){
-        ////console.log("==> acciones permisos " + JSON.stringify( data.entidades ));
         this.acciones=data.entidades.filter(p=>p.idTipoDocumento==null);
-        ////console.log("==> acciones permisos filtrado " + JSON.stringify( this.acciones ));
       } else {
         this.sinNoticeService.setNotice("ERROR NO EXISTE ASIGNACION DE PERMISOS EN COMPONENTE HABILITANTE PARA REALIZAR ACCIONES");
       }
@@ -440,17 +409,12 @@ export class HabilitanteComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(r => {
-        ////console.log("===>>ertorno al cierre: " + JSON.stringify(r));
         if (r) {
-          ////console.log("===>>va a recargar: " );
           this.buscar();
           this.sinNoticeService.setNotice("ARCHIVO CARGADO CORRECTAMENTE","success");
-          //this.validateContratoByHabilitante('false');
         }
-        //this.submit();
       });
     } else {
-      //console.log("===>>errorrrr al cierre: ");
       this.sinNoticeService.setNotice("ERROR AL CARGAR NO EXISTE DOCUMENTO ASOCIADO","error");
     }
   }

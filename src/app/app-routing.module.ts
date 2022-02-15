@@ -8,7 +8,14 @@ import { ErrorPageComponent } from './views/theme/content/error-page/error-page.
 import { AuthGuard } from './core/auth';
 
 const routes: Routes = [
-	{ path: 'auth', loadChildren: () => import('../app/views/pages/auth/auth.module').then(m => m.AuthModule) },
+	{
+		 path: 'auth',
+		  loadChildren: () => import('../app/views/pages/auth/auth.module').then(m => m.AuthModule) 
+	},
+	{
+		path: 'visor',
+		loadChildren: () => import('./views/pages/visor/visor.module').then(m => m.VisorModule)
+	},
 
 	{
 		path: '',
@@ -40,10 +47,6 @@ const routes: Routes = [
 			{
 				path: 'credito-nuevo',
 				loadChildren: () => import('../app/views/pages/apps/credito-nuevo/credito-nuevo.module').then(m => m.CreditoNuevoModule)
-			},
-			{
-				path: 'excepciones',
-				loadChildren: () => import('../app/views/pages/apps/excepciones/excepciones.module').then(m => m.ExcepcionesModule)
 			},
 			{
 				path: 'devolucion',

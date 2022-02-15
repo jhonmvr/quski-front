@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Translate Module
 import { TranslateModule } from '@ngx-translate/core';
 // Auth
-import { ModuleGuard } from '../../../../core/auth';
+import { AuthGuard, ModuleGuard } from '../../../core/auth';
 // Material
 import {
 	MatSliderModule,
@@ -44,28 +44,28 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPermissionsModule } from 'ngx-permissions';
 
-import { PartialsModule } from '../../../partials/partials.module';
-import { ExcepcionesComponent } from './excepciones.component';
-import { ErrorCargaInicialComponent } from '../../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
-import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
-import { CreditoNuevoModule } from '../credito-nuevo/credito-nuevo.module';
+import { PartialsModule } from '../../partials/partials.module';
+import { VisorComponent } from './visor.component';
+import { ErrorCargaInicialComponent } from '../../partials/custom/popups/error-carga-inicial/error-carga-inicial.component';
+import { PickDateAdapter, PICK_FORMATS } from '../../../core/util/pick-date-adapter';
 import { MatTableExporterModule } from 'mat-table-exporter';
+import { VisorArchivosComponent } from './visor-archivos/visor-archivos.component';
+import { CoreModule } from '../../../../app/core/core.module';
 
 const routes: Routes = [
 	{
 		path: '',
-		component: ExcepcionesComponent,
-		canActivate: [ModuleGuard],
+		component: VisorComponent,
 		children: [
 			{
 				path: '',
-				redirectTo: 'excepciones',
+				redirectTo: 'archivo',
 				pathMatch: 'full'
 			},
 			{
-				path: 'excepciones',
-				component: ExcepcionesComponent
-			}
+				path: 'archivo/:item',
+				component: VisorArchivosComponent
+			},
 		]
 	}
 ];
@@ -107,10 +107,11 @@ const routes: Routes = [
 		NgbProgressbarModule,
 
 		MatStepperModule,
-		PartialsModule
+		PartialsModule,
+		CoreModule
 	],
 	providers: [
-		ModuleGuard,
+		AuthGuard,
 		
 		{provide: DateAdapter, useClass: PickDateAdapter},
 		{provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS},
@@ -126,7 +127,8 @@ const routes: Routes = [
 		},
 	],
 	declarations: [
-		ExcepcionesComponent
+		VisorComponent,
+		VisorArchivosComponent
 	],
 	entryComponents: [
 		ErrorCargaInicialComponent,
@@ -136,4 +138,4 @@ const routes: Routes = [
 
 	]
 })
-export class ExcepcionesModule { }
+export class VisorModule { }
