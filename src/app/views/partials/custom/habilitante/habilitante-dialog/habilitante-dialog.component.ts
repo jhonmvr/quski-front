@@ -137,7 +137,7 @@ export class HabilitanteDialogComponent implements OnInit {
         console.log("datos de la fotito",r)
         this.dataUpload = {
           name: Date()+'.jpg',
-          type: 'jpg',
+          type: 'image/jpeg',
           process: this.data.proceso,
           relatedId: this.data.documentoHabilitante?Number(this.data.documentoHabilitante):null,
           relatedIdStr: this.data.referencia,

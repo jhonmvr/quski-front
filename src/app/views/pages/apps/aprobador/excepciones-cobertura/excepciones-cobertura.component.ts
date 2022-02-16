@@ -211,20 +211,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   }
   public calcularOpciones() {
     if (this.wp && this.wp.joyas && this.wp.joyas.length > 0) {
-      this.wp.proceso.proceso == "RENOVACION" ? 
-        this.cal.simularOfertaRenovacionExcepcion(this.wp.credito.id, this.wp.credito.cobertura ? this.wp.credito.cobertura : 0).subscribe( data =>{
-          if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
-            && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion
-            && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion.length > 1) {
-              this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado.toFixed(2));
-              this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
-          }
-          if(data.entidad && data.entidad.simularResult && data.entidad.simularResult.xmlVariablesInternas  && data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable ){
-            this.wp.variables = data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable;
-            //console.log("estas son las variabes", this.variablesInternas)
-          }
-        }):
-      this.cal.simularOferta(this.wp.credito.id, null, null).subscribe((data: any) => {
+      this.cal.simularOfertaExcepcion(this.wp.credito.id, null, null,this.codigoAgencia.codigo).subscribe((data: any) => {
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
