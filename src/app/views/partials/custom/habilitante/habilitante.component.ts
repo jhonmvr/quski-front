@@ -311,8 +311,9 @@ export class HabilitanteComponent implements OnInit {
           byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
       const byteArray = new Uint8Array(byteNumbers);
-      const blob =  new Blob([byteArray],{type:obj.type});
+      
       console.log('tipo de archivo',obj.type);
+      const blob =  new Blob([byteArray],{type:obj.type = 'CREAR'?'application/pdf':obj.type});
       var url = window.URL.createObjectURL(blob); 
     
       let a = document.createElement("a");
