@@ -277,8 +277,8 @@
             </mat-step>
             <mat-step label="Habilitantes">
                 <div class="row">
-                    <button varHabilitante mat-raised-button *ngIf="detalle.proceso.proceso == 'RENOVACION'" (click)="varHabilitante.proceso='NOVACION';varHabilitante.referencia =referencia " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button *ngIf="detalle.proceso.proceso == 'NUEVO'" (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =referencia " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'RENOVACION':false:false" (click)="varHabilitante.proceso='NOVACION';varHabilitante.referencia =referencia " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'NUEVO':false:false" (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =referencia " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
                     <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedula.value " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
                 </div>
                 <re-habilitante [proceso]="varHabilitante.proceso" [estadoOperacion]="'DETALLE'" [useType]="'FORM'" [referencia]="varHabilitante.referencia">

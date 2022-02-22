@@ -188,7 +188,7 @@
                     <div class="row">
                         <div class="col-4 offset-2">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select required placeholder="Tipo Excepcion" [formControl]="excepcionOperativa" (selectionChange)="habilitarExcepcionOperativa()">
+                                <mat-select required placeholder="Tipo Excepcion" [formControl]="excepcionOperativa" (selectionChange)="habilitarExcepcionOperativa()" multiple>
                                     <mat-option *ngFor="let element of catExcepcionOperativa" [value]="element">
                                         {{element.valor }}
                                     </mat-option>

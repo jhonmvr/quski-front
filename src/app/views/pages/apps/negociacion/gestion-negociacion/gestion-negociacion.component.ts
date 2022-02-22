@@ -42,6 +42,9 @@ import { runInThisContext } from 'vm';
   styleUrls: ['./gestion-negociacion.component.scss']
 })
 export class GestionNegociacionComponent extends TrackingUtil implements OnInit {
+
+  //excepciones
+  excepciones = new Array();;
   // VARIABLES PUBLICAS
   selection = new SelectionModel<any>(true, []);
   public loadingTasacion;
@@ -233,11 +236,12 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.id && json.params.origen) {
         this.myStepper.selectedIndex = 1;
-        this.procesoService.getCabecera(json.params.id,'NUEVO').subscribe(datos=>{
-          this.laytoutService.setDatosContrato(datos);
-        });
+        
         if (json.params.origen == "NEG") {
           this.validarNegociacion(json.params.id);
+          this.procesoService.getCabecera(json.params.id,'NUEVO').subscribe(datos=>{
+            this.laytoutService.setDatosContrato(datos);
+          });
         } else if (json.params.origen == "COT") {
           this.iniciarNegociacionFromCot(json.params.id);
         } else {
@@ -255,7 +259,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         if(this.negoW.proceso.estadoProceso == 'CREADO'){
             if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
             this.abrirPopupExcepciones(new DataInjectExcepciones(true));
-            return;
+            //return;
           } else   if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 1) {
             this.clienteBloqueado = true;
             const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
@@ -270,9 +274,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
           }
         }
         
-
-        this.negoW.proceso.proceso == 'NUEVO' ? null : 
-        this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : this.validarExcepciones(this.negoW);
+        //this.negoW.proceso.proceso == 'NUEVO' ? null : 
+        this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : null;
         this.negoW.proceso.estadoProceso == 'EXCEPCIONADO' ? this.validarExcepciones(this.negoW):'';
         this.negoW.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
           this.negoW.proceso.estadoProceso == 'PENDIENTE_APROBACION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') : 
@@ -398,6 +401,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         this.limpiarNegociacion();
         this.loadBusqueda.next(false);
         this.negoW = wrapper.entidad;
+        this.cargarValores(this.negoW, false);
         this.myStepper.selectedIndex = 1;
         if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
           this.abrirPopupExcepciones(new DataInjectExcepciones(true));
@@ -414,7 +418,6 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
           });
          
         }
-        this.cargarValores(this.negoW, false);
       } else {
         this.abrirPopupDeAutorizacion(this.identificacion.value);
       }
@@ -613,9 +616,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     let entryData = {
       titulo: 'Algo',
       mensajeAprobador: this.negoW.credito.descripcionDevuelto,
-      motivoDevolucion: this.catMotivoDevolucion ?
-        this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto) ?
-          this.catMotivoDevolucion.find(m => m.codigo == this.negoW.credito.codigoDevuelto).nombre : 'No definido' : 'No definido',
+      motivoDevolucion: this.negoW.credito.codigoDevuelto,
       aprobador: this.negoW.credito.tbQoNegociacion.aprobador,
       codigoBpm: this.negoW.credito.codigo
     }
@@ -631,6 +632,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     }
     data.mensajeBre = this.negoW.excepcionBre;
     data.idNegociacion = this.negoW.credito.tbQoNegociacion.id;
+    this.excepciones.push(data);
     const dialogRefGuardar = this.dialog.open(SolicitudDeExcepcionesComponent, {
       width: '800px',
       height: 'auto',
@@ -643,14 +645,37 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         if (data.isCobertura) {
           this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
         } else {
-          this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', 'NEGOCIACION CANCELADA');
+          //this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', 'NEGOCIACION CANCELADA');
         }
       }
     });
   }
   solicitarCobertura() {
+    let x ;
+    if(this.excepciones.length > 0){
+      x = this.excepciones.find(p=>p.isCliente);
+    }
     if (this.negoW.joyas && this.negoW.joyas.length > 0) {
-      this.abrirPopupExcepciones();
+      let data = new DataInjectExcepciones(false, false, true);
+      data.mensajeBre = x?x.mensajeBre:null;
+      data.idNegociacion = this.negoW.credito.tbQoNegociacion.id;
+      this.excepciones.push(data);
+      const dialogRefGuardar = this.dialog.open(SolicitudDeExcepcionesComponent, {
+        width: '800px',
+        height: 'auto',
+        data: data
+      });
+      dialogRefGuardar.afterClosed().subscribe((result: any) => {
+        if (result) {
+          this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+        } else {
+          if (data.isCobertura) {
+            this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
+          } else {
+            //this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', 'NEGOCIACION CANCELADA');
+          }
+        }
+      });
     } else {
       this.sinNotSer.setNotice('REGISTRE ALMENOS UNA JOYA EN TASACION', 'warning');
     }
@@ -954,7 +979,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
           this.codigoError = data.entidad.simularResult.codigoError;
          // console.log("LA DATA" ,data.entidad)
           this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
-     //     this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
+          this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
        
         } else if (data.entidad.simularResult.codigoError == 2) {
           this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
@@ -1092,10 +1117,44 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     return numSelected === numRows;
   }
   guardarCredito() {
-    if (this.codigoError == 3) {
+    /* if (this.codigoError == 3) {
      
       this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
       return;
+    } */
+    if(this.excepciones.length > 0){
+      console.log("tengo mas excepciones",this.excepciones);
+      let xCliente = this.excepciones.find(p=>p.isCliente);
+      let xRiesgo = this.excepciones.find(p=>p.isRiesgo);
+      if(xRiesgo && xRiesgo.isRiesgo){
+        console.log("excepcion cliente", xCliente)
+        console.log("excepcion xRiesgo", xRiesgo)
+        let data = new DataInjectExcepciones(false, true, false);
+        data.mensajeBre = xRiesgo.mensajeBre + ' ' + (xCliente?xCliente.mensajeBre:'');
+        data.idNegociacion = this.negoW.credito.tbQoNegociacion.id;
+        const dialogRefGuardar = this.dialog.open(SolicitudDeExcepcionesComponent, {
+          width: '800px',
+          height: 'auto',
+          data: data
+        });
+        dialogRefGuardar.afterClosed().subscribe((result: any) => {
+          if (result) {
+            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+          } else {
+            if (data.isCobertura) {
+              this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
+            } else {
+              //this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', 'NEGOCIACION CANCELADA');
+            }
+          }
+        });
+        return;
+      }
+      if(xCliente && xCliente.isCliente){
+        this.abrirPopupExcepciones(new DataInjectExcepciones(true, false, false));
+        return;
+      }
+        
     }
     if(this.clienteBloqueado){
       this.sinNotSer.setNotice(this.negoW.excepcionBre, 'error');

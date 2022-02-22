@@ -650,6 +650,35 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row" *ngIf="this.crediW?this.crediW.credito?this.crediW.credito.tipoCliente == 'SAP' : false :false">
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input matInput [formControl]="nombreApoderado" placeholder="Nombre Completo (Apoderado)" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (Apoderado)" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input matInput [formControl]="fechaNacimientoApoderado" [value]="fechaNacimientoApoderado.value | rDate" placeholder="Fecha Nacimiento (Apoderado)" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="this.crediW?this.crediW.credito?this.crediW.credito.tipoCliente == 'SCD' : false :false">
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input matInput [formControl]="nombreCodeudor" placeholder="Nombre Completo (Codeudor)" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <input matInput [formControl]="identificacionCodeudor" placeholder="Identificacion (Codeudor)" />
+                                </mat-form-field>
+                            </div>
+                        </div>
                     </mat-tab>
                     <mat-tab label="Comprobante de pagos">
                         <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante">
@@ -691,6 +720,13 @@
                     </mat-tab>
                     <mat-tab label="Excepciones">
                         <kt-lista-excepciones [idNegociacion]="item"></kt-lista-excepciones>
+                    </mat-tab>
+                    <mat-tab label="Historico Excepcion Operativa">
+                        <div class="row mt-1 mb-1">
+                            <div class="col-md-10 offset-md-1">
+                                <kt-historico-operativa [data]="dataHistoricoOperativa"></kt-historico-operativa>
+                            </div>
+                        </div>
                     </mat-tab>
                 </mat-tab-group>
                 <div class="row">
@@ -809,8 +845,7 @@
                     <div class="row">
                         <div *ngIf="aprobacion.value=='false'" class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Motivo Devolucion:" [formControl]="motivoDevolucion">
-                                    <mat-option>--</mat-option>
+                                <mat-select placeholder="Motivo Devolucion:" [formControl]="motivoDevolucion" multiple>
                                     <mat-option *ngFor="let element of catMotivoDevolucionAprobacion" [value]="element">
                                         {{ element.nombre }}</mat-option>
                                 </mat-select>
@@ -823,7 +858,7 @@
                         </div>
                         <div *ngIf="aprobacion.value=='true'" class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="valorCash" placeholder="Valor Cash:" matInput />
+                                <input [formControl]="valorCash" placeholder="Valor de desembolso:" matInput />
                                 <mat-error *ngIf="valorCash.hasError('invalido')">Ingrese un numero</mat-error>
                             </mat-form-field>
                         </div>

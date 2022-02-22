@@ -39,6 +39,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   /** @VARIABLES_GLOBALES */
 
   dataHistoricoObservacion;
+  dataHistoricoOperativa;
   public usuario: string;
   public agencia: any;
   public fechaActual: string;
@@ -150,7 +151,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public aRecibirCliente = new FormControl('', []);
   public totalCostoNuevaOperacion = new FormControl('', []);
   public dataSourceComprobante = new MatTableDataSource<TbQoRegistrarPago>();
-  public displayedColumnsComprobante = ['intitucionFinanciera', 'cuenta', 'fechaPago', 'numeroDeDeposito', 'valorDepositado'];
+  public displayedColumnsComprobante = ['intitucionFinanciera', 'cuenta', 'fechaPago', 'numeroDeDeposito', 'valorDepositado','tipoPago'];
   public tipoCartera = new FormControl('', []);
   public tablaAmortizacion = new FormControl('', []);
   public numeroOperacion = new FormControl('', []);
@@ -162,6 +163,12 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public montoFinanciado = new FormControl('', []);
   public cuota = new FormControl('', []);
   public totalInteres = new FormControl('', []);
+  nombreApoderado = new FormControl('', []);
+  identificacionApoderado = new FormControl('', []);
+  fechaNacimientoApoderado = new FormControl('', []);
+  nombreCodeudor = new FormControl('', []);
+  identificacionCodeudor = new FormControl('', []);
+
   /** @OPERACION_ANTERIOR */
   public antNumeroOperacion = new FormControl('', []);
   public antReferenciaMupi = new FormControl('', []);
@@ -314,6 +321,12 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.formDisable.addControl("antGastoCobranza", this.antGastoCobranza);
     this.formDisable.addControl("antCustodiaVencida", this.antCustodiaVencida);
     this.formDisable.addControl("antValorPrecancelacion", this.antValorPrecancelacion);
+    this.formDisable.addControl("nombreApoderado", this.nombreApoderado);
+    this.formDisable.addControl("identificacionApoderado", this.identificacionApoderado);
+    this.formDisable.addControl("fechaNacimientoApoderado", this.fechaNacimientoApoderado);
+    this.formDisable.addControl("nombreCodeudor", this.nombreCodeudor);
+    this.formDisable.addControl("identificacionCodeudor", this.identificacionCodeudor);
+
   }
 
   ngOnInit() {
@@ -409,6 +422,9 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
         this.item = data.params.idNegociacion;
         this.varHabilitante.referencia= this.item;
         this.varHabilitante.proceso='NOVACION,FUNDA';
+        this.cre.findHistoricoOperativaByidNegociacion(data.params.idNegociacion).subscribe((data: any) => {
+          this.dataHistoricoOperativa = data.entidades;
+        });
         this.cre.traerCreditonovacionPorAprobar(data.params.idNegociacion).subscribe((data: any) => {
           if (data.entidad) {
             if(data.entidad && data.entidad.credito && data.entidad.credito.id){
@@ -586,6 +602,13 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.dataSourceComprobante.data ? this.dataSourceComprobante.data.forEach( e =>{
       e.institucionFinanciera = this.catBanco.find( x => x.id == e.institucionFinanciera);
     }) : null;
+
+    
+    this.nombreApoderado.setValue(ap.credito.nombreCompletoApoderado);
+    this.identificacionApoderado.setValue(ap.credito.identificacionApoderado);
+    this.fechaNacimientoApoderado.setValue(ap.credito.fechaNacimientoApoderado);
+    this.nombreCodeudor.setValue(ap.credito.nombreCompletoCodeudor);
+    this.identificacionCodeudor.setValue(ap.credito.identificacionCodeudor);
     /** @OPERACION_ANTERIOR */
     if(this.creditoAnterior){
       this.antNumeroOperacion.setValue(this.creditoAnterior.numeroOperacion);
@@ -620,12 +643,16 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
       return;
     }
     if( this.codigoCash.valid && this.valorCash.invalid ){
-        this.sinNotSer.setNotice('INGRESE EL VALOR CASH','warning');
+        this.sinNotSer.setNotice('INGRESE EL VALOR DE DESEMBOLSO','warning');
         return;
     }
     if( this.aprobacion.value == 'false' && !this.motivoDevolucion.value ){
       this.sinNotSer.setNotice('INGRESE EL MOTIVO DE DEVOLUCION','warning');
       return;
+    }
+    if( this.aprobacion.value == 'true' && (this.crediW.credito.aRecibirCliente - this.crediW.credito.aPagarCliente) >0){
+      this.sinNotSer.setNotice('INGRESE EL VALOR DE DESEMBOLSO','warning');
+        return;
     }
     let mensaje = this.aprobacion.value == 'true' ? "Aprobar el credito: " + this.crediW.credito.codigo + "." : "Devolver a la negociacion el credito: " + this.crediW.credito.codigo + ".";
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
@@ -633,6 +660,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
       height: "auto",
       data: mensaje
     });
+
     dialogRef.afterClosed().subscribe(r => {
       if(r){
         this.cre.aprobarNovacion(
@@ -642,7 +670,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
           this.codigoCash.value,
           this.agencia,
           this.usuario,
-          this.motivoDevolucion.value,
+          this.motivoDevolucion.value?JSON.stringify(this.motivoDevolucion.value.map((p) => {return p.nombre})):null,
           this.aprobacion.value).subscribe( (data: any) =>{
             if(!data.entidad){
               this.sinNotSer.setNotice('ERROR ENVIANDO LA RESPUESTA: ' + data.entidad, 'error');

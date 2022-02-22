@@ -11,6 +11,7 @@ import { ReNoticeService } from '../re-notice.service';
   providedIn: 'root'
 })
 export class CreditoNegociacionService extends BaseService {
+ 
 
   urlRest = "creditoNegociacionRestController/";
 
@@ -188,7 +189,9 @@ export class CreditoNegociacionService extends BaseService {
     this.params = this.params.set('cash',cash);
     this.params = this.params.set('agencia',agencia.toString());
     this.params = this.params.set('usuario',usuario);
-    this.params = this.params.set('codigoMotivo',codigoMotivo);
+    if(codigoMotivo){
+      this.params = this.params.set('codigoMotivo',codigoMotivo);
+    }
     this.params = this.params.set('aprobar', aprobar ? 'true':'false');
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
@@ -273,6 +276,18 @@ export class CreditoNegociacionService extends BaseService {
 
   public findHistoricoObservacionByIdCredito(idCredito){
     let serviceUrl = this.appResourcesUrl + "historicoObservacionRestController/byIdCredito" ;
+    this.params = new HttpParams().set('idCredito', idCredito);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl,  this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+
+  findHistoricoOperativaByidNegociacion(idCredito: any) {
+    let serviceUrl = this.appResourcesUrl + "historicoOperativaRestController/byIdCredito" ;
     this.params = new HttpParams().set('idCredito', idCredito);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl,  this.options).pipe(

@@ -36,6 +36,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   codigoAgencia
   dataSourceTelefonosCliente = new MatTableDataSource<any>();
 
+  mensaje
   public wp: NegociacionWrapper = null;
   public formDisable: FormGroup = new FormGroup({});
   public cliente = new FormControl('', []);
@@ -126,6 +127,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
         let excepcionRol = JSON.parse(atob(data.params.id));
+        this.mensaje = excepcionRol.mensajeBre;
         this.procesoService.getCabecera(excepcionRol.idNegociacion,'NUEVO').subscribe(datosCabecera=>{
           this.layouteService.setDatosContrato(datosCabecera);
         });
@@ -134,13 +136,15 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
             this.wp = data.entidad;
             if(this.wp.credito && this.wp.excepciones && this.wp.excepciones.find(e => e.id == excepcionRol.id ) && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ){
               this.excepcion = this.wp.excepciones.find(e => e.id == excepcionRol.id );
+              
               this.sof.consultarAgenciasCS().subscribe(data=>{
                 const catalogoAgencia = data.catalogo;
                 if(catalogoAgencia){
 
                   this.codigoAgencia = catalogoAgencia.find(p=>p.id==this.wp.credito.idAgencia );
+                  
                   if(this.codigoAgencia){
-                    this.codigoAgencia
+                    this.calcularOpciones();
                   }else{
                     console.log("error al asignar codigo de la agencia");
                   }
@@ -178,7 +182,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
       this.dataSourceTelefonosCliente = new MatTableDataSource<any>(wp.telefonos);
     }
     this.email.setValue( wp.credito.tbQoNegociacion.tbQoCliente.email );
-    this.calcularOpciones();
+    //this.calcularOpciones();
     this.camposAdicinales( wp );
     this.observacionAsesor.setValue( this.excepcion.observacionAsesor );
     this.usuarioAsesor.setValue( this.excepcion.idAsesor );
@@ -210,7 +214,6 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     
   }
   public calcularOpciones() {
-    if (this.wp && this.wp.joyas && this.wp.joyas.length > 0) {
       this.cal.simularOfertaExcepcion(this.wp.credito.id, null, null,this.codigoAgencia.codigo).subscribe((data: any) => {
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
@@ -223,9 +226,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
           //console.log("estas son las variabes", this.variablesInternas)
         }
       });
-    } else {
-      this.sinNoticeService.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
-    }
+   
 
   }
   public numberOnly(event): boolean {

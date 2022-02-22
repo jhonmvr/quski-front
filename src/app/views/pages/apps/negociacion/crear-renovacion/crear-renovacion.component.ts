@@ -36,6 +36,8 @@ export interface cliente {
   styleUrls: ['./crear-renovacion.component.scss']
 })
 export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
+
+  excepciones = new Array();
   public loading;
   public usuario: string;
   variablesInternas;
@@ -226,9 +228,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     let entryData = {
       titulo: 'Algo',
       mensajeAprobador: this.credit.credito.descripcionDevuelto,
-      motivoDevolucion: this.catMotivoDevolucion ?
-        this.catMotivoDevolucion.find(m => m.codigo == this.credit.credito.codigoDevuelto) ?
-          this.catMotivoDevolucion.find(m => m.codigo == this.credit.credito.codigoDevuelto).nombre : 'No definido' : 'No definido',
+      motivoDevolucion: this.credit.credito.codigoDevuelto,
       aprobador: this.credit.credito.tbQoNegociacion.aprobador,
       codigoBpm: this.credit.credito.codigo
     }
@@ -426,6 +426,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.loadingSubject.next(false);
     data.idNegociacion = this.credit.proceso.idReferencia;
     data.mensajeBre = data.isCliente ? 'El cliente supera el limite de edad establecido' : null;
+    this.excepciones.push(data);
     const dialogRefGuardar = this.dialog.open(SolicitudDeExcepcionesComponent, {
       width: '800px',
       height: 'auto',
@@ -438,12 +439,27 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         if (data.isCobertura) {
           this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'error');
         } else {
-          this.abrirSalirGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION','NEGOCIACION CANCELADA');
+          //this.abrirSalirGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION','NEGOCIACION CANCELADA');
         }
       }
     });
   }
   public actualizarCliente(){
+
+    if(this.excepciones.length > 0){
+      console.log("tengo mas excepciones",this.excepciones);
+      let x = this.excepciones.find(p=>p.isRiesgo || p.isCliente);
+      console.log("excepcion de riesgo", x);
+      if(x && x.isRiesgo){
+        this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
+        return;
+      }
+      if(x && x.isCliente){
+        this.abrirPopupExcepciones(new DataInjectExcepciones(true, false, false));
+        return;
+      }
+        
+    }
     if( this.selection.selected.length > 0 ){
       let mensaje = "Crear operacion para el credito: " + this.numeroOperacion;
       const dialogRef = this.dialog.open(ConfirmarAccionComponent, {

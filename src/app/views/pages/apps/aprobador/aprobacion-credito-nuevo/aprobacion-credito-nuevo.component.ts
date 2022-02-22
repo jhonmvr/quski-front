@@ -39,6 +39,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
   // VARIABLES PUBLICAS  
   private divicionPolitica: CatalogoWrapper[];
   dataHistoricoObservacion;
+  dataHistoricoOperativa;
   public usuario: string;
   srcFunda;
   srcJoya;
@@ -125,6 +126,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
   public tipoProceso = new FormControl('', []);
   public numeroFunda = new FormControl('', []);
   public tipoFunda = new FormControl('', []);
+  public totalPesoBrutoFunda = new FormControl('');
 
   /** @CREDITO_NUEVO */
   public plazo = new FormControl('', []);
@@ -346,6 +348,9 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
         this.varHabilitante.referencia= this.item;
         this.varHabilitante.proceso='NUEVO,FUNDA';
         this.loadingSubject.next(true);
+        this.cre.findHistoricoOperativaByidNegociacion(data.params.id).subscribe((data: any) => {
+          this.dataHistoricoOperativa = data.entidades;
+        });
         this.cre.traerCreditoNegociacionExistente(data.params.id).subscribe((data: any) => {
           this.crediW = data.entidad;
           if(data.entidad && data.entidad.credito && data.entidad.credito.id){
@@ -503,6 +508,15 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.numeroFunda.setValue( ap.credito.numeroFunda ) ;
  
     this.tipoFunda.setValue( ap.credito.codigoTipoFunda ? this.catalogos ? this.catalogos.catTipoFunda ? this.catalogos.catTipoFunda.find(x => x.codigo==ap.credito.codigoTipoFunda ) ? this.catalogos.catTipoFunda.find(x => x.codigo == ap.credito.codigoTipoFunda ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo');
+    
+    try{
+      const x = Number(ap?ap.credito? ap.credito.codigoTipoFunda: 0: 0)+ Number(this.crediW.joyas.map(t=>t['pesoBruto']).reduce((r, n) =>r+n,0)) ;
+      
+      this.totalPesoBrutoFunda.setValue( x.toFixed(2) );
+     }catch(e){
+       console.log("error en la suma de funda y peso bruto");
+
+     }
     this.tipoProceso.setValue( ap.proceso.proceso );
     /** @DATOS_CREDITO_NUEVO */
     this.plazo.setValue( ap.credito.plazoCredito);
@@ -581,7 +595,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
           aprobar? this.codigoCash.value: null,
           this.agencia,
           this.usuario,
-          aprobar? null: this.motivoDevolucion.value.codigo,
+          aprobar? null:  this.motivoDevolucion.value?JSON.stringify(this.motivoDevolucion.value.map((p) => {return p.nombre})):null,
           aprobar ).subscribe( (data: any) =>{
             if(!data.entidad){
               this.sinNotSer.setNotice('ERROR ENVIANDO LA RESPUESTA: ' + data.entidad, 'error');

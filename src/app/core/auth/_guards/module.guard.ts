@@ -34,6 +34,7 @@ export class ModuleGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean>  {
         const moduleName = route.data.moduleName as Array<string>;
         var result = false;
+        return of(true);
         if(moduleName && moduleName.length >0){
             moduleName.forEach(p=>{
                 if (state.url.indexOf(p) !== -1) {

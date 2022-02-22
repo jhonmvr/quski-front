@@ -114,6 +114,8 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   //dia de pago
   diasMax;
   diasMin;
+  
+  mySelections: string[];
   //negociacion
   dataSourceCreditoNegociacion = new MatTableDataSource<any>();
   dataSourcesHabilitantes = new MatTableDataSource<any>([{id:""}]);
@@ -238,12 +240,19 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     }
   }
   public habilitarExcepcionOperativa(){
-    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
+    if(this.excepcionOperativa.value && this.excepcionOperativa.value.find(p=>p.valor == 'SIN EXCEPCION') ){
+      this.excepcionOperativa.setValue([this.catExcepcionOperativa.find(p=>p.valor == 'SIN EXCEPCION')]);
+      this.mySelections = this.excepcionOperativa.value;
       this.fechaRegularizacion.disable();
       this.fechaRegularizacion.setValue(null);
     }else{
+      if (this.excepcionOperativa.value.length < 3) {
+        this.mySelections = this.excepcionOperativa.value;
+      } else {
+        this.sinNotSer.setNotice("SOLO PUEDE SELECCION DOS EXCEPCIONES", "warning");
+        this.excepcionOperativa.setValue(this.mySelections);
+      }
       this.fechaRegularizacion.enable();
-      this.fechaRegularizacion = new FormControl('',[Validators.required]);
     }
   }
   setearDiaPago(dia: number):Date{
@@ -275,9 +284,23 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
         }
       });
     }
-    if( this.catExcepcionOperativa ){
-      this.excepcionOperativa.setValue( data.credito.excepcionOperativa ? this.catExcepcionOperativa.find(x => x.valor == data.credito.excepcionOperativa) : this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION') );
-      this.habilitarExcepcionOperativa();
+    if(data.credito.excepcionOperativa && this.catExcepcionOperativa){
+      
+      let excepcionesOperativas = JSON.parse( data.credito.excepcionOperativa).map( ex=>{ 
+        return this.catExcepcionOperativa.find( p => p.valor == ex );
+      } );
+      this.excepcionOperativa.setValue(excepcionesOperativas);
+      if(this.excepcionOperativa.value && this.excepcionOperativa.value.find(p=>p.valor == 'SIN EXCEPCION') ){
+        this.fechaRegularizacion.disable();
+        this.fechaRegularizacion.setValue(null);
+      }else{
+        this.fechaRegularizacion.enable();
+        this.fechaRegularizacion.setValue(new Date(data.credito.fechaRegularizacion) );
+      }
+    }else{
+      this.excepcionOperativa.setValue([this.catExcepcionOperativa.find(x => x.valor == 'SIN EXCEPCION')]);
+      this.fechaRegularizacion.disable();
+      this.fechaRegularizacion.setValue(null);
     }
     this.cargarFotoHabilitante(this.fundaFoto.tipoDocumento, this.fundaFoto.proceso, data.credito.tbQoNegociacion.id.toString());
     this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.tbQoNegociacion.id.toString());
@@ -423,7 +446,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       this.operacionNuevo.credito.idAgencia = this.agencia;
       this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value;
       this.operacionNuevo.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
-      this.operacionNuevo.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
+      this.operacionNuevo.credito.excepcionOperativa =  this.excepcionOperativa.value ? JSON.stringify(this.excepcionOperativa.value.map(p=>{return p.valor}) ) : null;
       if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor !== 'SIN EXCEPCION' && this.fechaRegularizacion.invalid){
         this.sinNotSer.setNotice('SELECCIONES UNA FECHA DE REGULARIZACION', 'warning');
         return;

@@ -67,7 +67,7 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
   private solitudCobertura(dataExcepciones: DataInjectExcepciones) {
     this.titulo   = TituloExcepcionEnum.COBERTURA;
     this.mensaje  = MensajeExcepcionEnum.COBERTURA;
-    this.bre        = 'No aplica';
+    this.bre        = dataExcepciones.mensajeBre ? dataExcepciones.mensajeBre : 'No aplica';
     this.subBotones = false;
     this.abrirSubBotones = true;
 

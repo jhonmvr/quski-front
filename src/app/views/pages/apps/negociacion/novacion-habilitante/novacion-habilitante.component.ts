@@ -65,6 +65,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   aprobar: boolean;
   item: any;
   private agencia: any;
+  mySelections: string[];
   
   
 
@@ -137,7 +138,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
             this.recibirOPagar = 'primary'; 
 
           }
-          console.log("esto llega aca", this.credit)
+          
           if(data.entidad && data.entidad.credito && data.entidad.credito.id){
             this.findHistoricoObservacionByCredito(data.entidad.credito.id);
           }
@@ -165,11 +166,26 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.numeroCuenta.disable();
     this.firmanteOperacion.setValue( this.catFirmanteOperacion ? this.catFirmanteOperacion[0] ? this.catFirmanteOperacion[0] :{nombre: 'Error cargando catalogo'} :{nombre: 'Error cargando catalogo'} )
     this.firmanteOperacion.disable();
-    let excepcionesOperativas = ""
-    excepcionesOperativas.concat(wr.credito.excepcionOperativa ? this.catExcepcionOperativa.find(x => x.valor == wr.credito.excepcionOperativa) : this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION'))
-   // excepcionesOperativas.push(wr.credito.excepcionOperativa ? this.catExcepcionOperativa.find(x => x.valor == wr.credito.excepcionOperativa) : this.catExcepcionOperativa.find(x => x.nombre == 'SIN_EXCEPCION'))
-    this.excepcionOperativa.setValue(excepcionesOperativas);
-    this.habilitarExcepcionOperativa();
+    if(wr.credito.excepcionOperativa && this.catExcepcionOperativa){
+      
+      let excepcionesOperativas = JSON.parse( wr.credito.excepcionOperativa).map( ex=>{ 
+        return this.catExcepcionOperativa.find( p => p.valor == ex );
+      } );
+      this.excepcionOperativa.setValue(excepcionesOperativas);
+      if(this.excepcionOperativa.value && this.excepcionOperativa.value.find(p=>p.valor == 'SIN EXCEPCION') ){
+        this.fechaRegularizacion.disable();
+        this.fechaRegularizacion.setValue(null);
+      }else{
+        this.fechaRegularizacion.enable();
+        this.fechaRegularizacion.setValue(new Date(wr.credito.fechaRegularizacion) );
+      }
+    }else{
+      this.excepcionOperativa.setValue([this.catExcepcionOperativa.find(x => x.valor == 'SIN EXCEPCION')]);
+      this.fechaRegularizacion.disable();
+      this.fechaRegularizacion.setValue(null);
+    }
+    
+    
     wr.pagos ? this.dataSourceComprobante = new MatTableDataSource<any>(wr.pagos) : null;
     if( this.dataSourceComprobante.data ){
       this.dataSourceComprobante.data.forEach( e =>{
@@ -182,11 +198,18 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.credito.codigo + ".", "success");
   }
   public habilitarExcepcionOperativa(){
-    console.log("qui esta ", this.excepcionOperativa.value)
-    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
+    if(this.excepcionOperativa.value && this.excepcionOperativa.value.find(p=>p.valor == 'SIN EXCEPCION') ){
+      this.excepcionOperativa.setValue([this.catExcepcionOperativa.find(p=>p.valor == 'SIN EXCEPCION')]);
+      this.mySelections = this.excepcionOperativa.value;
       this.fechaRegularizacion.disable();
       this.fechaRegularizacion.setValue(null);
     }else{
+      if (this.excepcionOperativa.value.length < 3) {
+        this.mySelections = this.excepcionOperativa.value;
+      } else {
+        this.sinNotSer.setNotice("SOLO PUEDE SELECCION DOS EXCEPCIONES", "warning");
+        this.excepcionOperativa.setValue(this.mySelections);
+      }
       this.fechaRegularizacion.enable();
     }
   }
@@ -258,12 +281,11 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       this.credit.credito.nombreCompletoCodeudor = this.nombreCodeudor.value;
     }
     if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor !== 'SIN EXCEPCION' && this.fechaRegularizacion.invalid){
-      this.sinNotSer.setNotice('SELECCIONES UNA FECHA DE REGULARIZACION', 'warning');
+      this.sinNotSer.setNotice('SELECCIONE UNA FECHA DE REGULARIZACION', 'warning');
       return;
     }
     this.credit.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
-    this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.valor : null;
-    console.log("las excepciones", this.credit.credito.excepcionOperativa)
+    this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? JSON.stringify(this.excepcionOperativa.value.map(p=>{return p.valor}) ) : null;
     let list = new Array<any>( );
     if(this.dataSourceComprobante.data.length > 0){
       this.dataSourceComprobante.data.forEach( e=>{
@@ -348,7 +370,6 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
             });
           }
         });
-        console.log("setear dia pago ==>",this.diasMax,this.diasMin);
       }else{
         this.sinNotSer.setNotice("NO SE PUEDE LEER LOS PARAMETROS DIAS DE DIFERIMIENTO",'error');
       }

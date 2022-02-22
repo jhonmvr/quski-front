@@ -149,8 +149,9 @@ export class HabilitanteComponent implements OnInit {
   }
 
   validateLoadData(  ){
+   
     if( this.useType && this.useType === this.TYPE_FORM && this.proceso && this.referencia ){
-     
+      this.buscar();
     } else if( this.useType && this.useType === this.TYPE_LIST  ){
      
       this.buscar();
@@ -313,7 +314,7 @@ export class HabilitanteComponent implements OnInit {
       const byteArray = new Uint8Array(byteNumbers);
       
       console.log('tipo de archivo',obj.type);
-      const blob =  new Blob([byteArray],{type:obj.type = 'CREAR'?'application/pdf':obj.type});
+      const blob =  new Blob([byteArray],{type:obj.type == 'CREAR'?'application/pdf':obj.type});
       var url = window.URL.createObjectURL(blob); 
     
       let a = document.createElement("a");
