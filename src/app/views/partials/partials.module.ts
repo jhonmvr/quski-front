@@ -133,6 +133,7 @@ import { AlertaTiempoAprobadorComponent } from './custom/alerta-tiempo-aprobador
 import { HistoricoObservacionComponent } from './custom/secciones-generales/historico-observacion/historico-observacion.component';
 import { RelativeTimePipe } from '../../../app/core/_base/layout/pipes/time-relative.pipe';
 import { HistoricoOperativaComponent } from './custom/secciones-generales/historico-operativa/historico-operativa.component';
+import { HitoricoObservacionEntregaComponent } from './custom/secciones-generales/hitorico-observacion-entrega/hitorico-observacion-entrega.component';
 
 
 
@@ -219,11 +220,13 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		VentanaPrecancelacionComponent,
 		AlertaTiempoAprobadorComponent,
 		HistoricoObservacionComponent,
-		HistoricoOperativaComponent
+		HistoricoOperativaComponent,
+		HitoricoObservacionEntregaComponent
 	
 
 	],
 	exports: [
+		HitoricoObservacionEntregaComponent,
 		HistoricoOperativaComponent,
 		HistoricoObservacionComponent,
 		ListaExcepcionesComponent,

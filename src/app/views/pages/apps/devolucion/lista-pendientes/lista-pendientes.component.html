@@ -6,8 +6,7 @@
             <div class="row mt-4">
                 <div class="offset-4 col-4">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input matInput [formControl]="codigoOperacion" placeholder="Numero Operación: "
-                            autocomplete="off">
+                        <input matInput [formControl]="codigoOperacion" placeholder="Numero Operación: " autocomplete="off">
                     </mat-form-field>
                 </div>
             </div>
@@ -16,15 +15,14 @@
                     <button mat-raised-button color="primary" (click)="buscar()">
                         <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
                         </mat-icon>
-                        <span class="white-icon">Buscar Devoluciones</span>
+                        <span class="white-icon">Buscar</span>
                     </button>
                 </div>
             </div>
         </form>
         <div class="row mt-5">
             <div class="col">
-                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource" matSort #sort1="matSort"
-                    matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
+                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource" matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
                     <ng-container matColumnDef="accion">
                         <mat-header-cell *matHeaderCellDef>
                             Acción
@@ -81,7 +79,7 @@
                     </ng-container>
                     <ng-container matColumnDef="valorAvaluo">
                         <mat-header-cell *matHeaderCellDef>Valor Avalúo</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.valorAvaluao | currency:'CAD':'symbol-narrow':'1.2-2'}}  </mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.valorAvaluao | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="pesoBruto">
                         <mat-header-cell *matHeaderCellDef>Peso Bruto</mat-header-cell>
@@ -90,8 +88,7 @@
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                 </mat-table>
-                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
-                    [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
                 </mat-paginator>
             </div>
         </div>

@@ -507,8 +507,6 @@ export class SolicitudDevolucionComponent  extends TrackingUtil  implements OnIn
             this.sinNoticeService.setNotice( 'EL PROCESO DE DEVOLUCION SE ENVIO A APROBACION', 'success');
             this.router.navigate(['negociacion/bandeja-operaciones']);
           }
-        }, error =>{
-          this.sinNoticeService.setNotice( error.error.codError.replace(/_/gi, " "), 'warning');
         })
       } else {
         this.sinNoticeService.setNotice('SE CANCELO LA ACCION', 'warning');

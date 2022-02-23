@@ -109,7 +109,7 @@ export class ListaPendientesComponent implements OnInit {
       this.noticeService.setNotice("SELECCIONE AL MENOS ALGUN ITEM DE LA LISTA.", 'warning');
       return;
     }
-    let mensaje = 'Aceptar el arribo de las fundas para los procesos de devolucion: ';
+    let mensaje = 'Aceptar el arribo de las fundas para los procesos de entrega de garantias: ';
     this.selection.selected.forEach(x => {
       mensaje = mensaje.concat(x.codigo + ", ");
     });

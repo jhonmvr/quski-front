@@ -14,6 +14,7 @@ import { environment } from '../../../../../src/environments/environment';
   providedIn: 'root'
 })
 export class DevolucionService extends BaseService {
+ 
 
   constructor(_http: HttpClient,
     private dialog: MatDialog) {
@@ -276,9 +277,9 @@ existeCancelacionCancelacion(idDevolucion: any) {
     );
   }
 
-  public aprobarVerificacionFirmas(id){
+  public aprobarVerificacionFirmas(id, motivo){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/aprobarVerificacionFirmas";
-    this.params = this.params.set('idDevolucion', id).set('usuario', atob(localStorage.getItem(environment.userKey) ));  
+    this.params = this.params.set('idDevolucion', id).set('motivo', motivo).set('usuario', atob(localStorage.getItem(environment.userKey) ));  
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, null, this.options).pipe(
       tap( // Log the result or error
@@ -289,11 +290,23 @@ existeCancelacionCancelacion(idDevolucion: any) {
   }
 
   
-  public rechazarVerificacionFirmas(id){
+  public rechazarVerificacionFirmas(id, motivo){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/rechazarVerificacionFirmas";
-    this.params = this.params.set('idDevolucion', id);  
+    this.params = this.params.set('idDevolucion', id).set('motivo', motivo).set('usuario', atob(localStorage.getItem(environment.userKey) ));  
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, null, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+
+  historicoEntregaByIdEntrega(idEntrega: any) {
+    this.params = new HttpParams().set('idEntrega', idEntrega).set('usuario', atob(localStorage.getItem(environment.userKey) ));
+    let serviceUrl = this.appResourcesUrl + "historicoObservacionEntregaRestController/byIdEntrega";
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }

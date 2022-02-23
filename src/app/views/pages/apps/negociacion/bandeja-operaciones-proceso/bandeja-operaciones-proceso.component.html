@@ -159,7 +159,7 @@
                                 </a>
                             </ng-container>
                             <ng-container *ngIf="row.proceso == 'DEVOLUCION' && row.estadoProceso != 'APROBADO' && row.estadoProceso != 'RECHAZADO' && row.estadoProceso != 'CANCELADO' && row.asesor == usuario">
-                                <a (click)="cancelarDevolucion(row)" matTooltip="Cancelar Devolucion" style="font-size: 12px; vertical-align: middle;">
+                                <a (click)="cancelarDevolucion(row)" matTooltip="Cancelar Entrega de garantias" style="font-size: 12px; vertical-align: middle;">
                                     <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">
                                         highlight_off</mat-icon>
                                 </a>

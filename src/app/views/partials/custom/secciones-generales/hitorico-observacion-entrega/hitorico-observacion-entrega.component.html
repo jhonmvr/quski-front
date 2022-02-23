@@ -8,11 +8,11 @@
     </ng-container>
     <ng-container matColumnDef="fecha">
         <th mat-header-cell *matHeaderCellDef> Fecha </th>
-        <td mat-cell *matCellDef="let row"> {{row.fecha |rDate }} </td>
+        <td mat-cell *matCellDef="let row"> {{row.fechaCreacion |rDate }} </td>
     </ng-container>
     <ng-container matColumnDef="hora">
         <th mat-header-cell *matHeaderCellDef> Hora </th>
-        <td mat-cell *matCellDef="let row"> {{row.fecha | date:"HH:mm:ss"}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.fechaCreacion | date:"HH:mm:ss"}} </td>
     </ng-container>
     <ng-container matColumnDef="usuario">
         <th mat-header-cell *matHeaderCellDef> Usuario </th>

@@ -282,8 +282,8 @@ export class AprobacionSolicitudComponent extends TrackingUtil implements OnInit
       this.sinNoticeService.setNotice("INGRESE EL MOTIVO DE APROBACION O RECHAZO");
       return;
     }
-    let mensaje = aprobado ? 'Aprobar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo + '.' :
-      'Negar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo + '.';
+    let mensaje = aprobado ? 'Aprobar la solicitud de entrega de garantias para el proceso: ' + this.wrapperDevolucion.devolucion.codigo + '.' :
+      'Negar la solicitud de entrega de garantias para el proceso: ' + this.wrapperDevolucion.devolucion.codigo + '.';
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
       width: "800px",
       height: "auto",
@@ -294,10 +294,10 @@ export class AprobacionSolicitudComponent extends TrackingUtil implements OnInit
         this.dev.aprobarNegarSolicitudDevolucion(this.item, aprobado, this.motivo.value).subscribe((data: any) => {
           if(data.entidad){
             if (aprobado && data.entidad.proceso.estadoProceso == 'PENDIENTE_FECHA') {
-              this.sinNoticeService.setNotice("SE HA APROBADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
+              this.sinNoticeService.setNotice("SE HA APROBADO CORRECTAMENTE LA SOLICITUD DE ENTREGA DE GARANTIAS", "success");
               this.router.navigate(['aprobador/bandeja-aprobador']);
             } else if (!aprobado && data.entidad.proceso.estadoProceso == 'RECHAZADO') {
-              this.sinNoticeService.setNotice("SE HA RECHAZADO CORRECTAMENTE LA SOLICITUD DE DEVOLUCION", "success");
+              this.sinNoticeService.setNotice("SE HA RECHAZADO CORRECTAMENTE LA SOLICITUD DE ENTREGA DE GARANTIAS", "success");
               this.router.navigate(['aprobador/bandeja-aprobador']);
             } else {
               this.sinNoticeService.setNotice("ERROR AL APROBAR O NEGAR EL PROCESO", 'error');

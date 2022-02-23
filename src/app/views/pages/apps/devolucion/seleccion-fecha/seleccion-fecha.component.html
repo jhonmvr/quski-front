@@ -1,19 +1,18 @@
 <re-portlet>
     <re-portlet-header [title]="'SELECCION DE FECHA DE ARRIBO '" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
-			<a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
-			</a>
-		</ng-container>
+            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
+            </a>
+        </ng-container>
     </re-portlet-header>
     <re-portlet-body>
         <form [formGroup]="formFiltros">
-        <div class="row">
+            <div class="row">
                 <div class="col-md-4">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input matInput [formControl]="codigoOperacion" placeholder="Numero Operación: "
-                            autocomplete="off">
+                        <input matInput [formControl]="codigoOperacion" placeholder="Numero Operación: " autocomplete="off">
                     </mat-form-field>
                 </div>
                 <div class="col-md-4">
@@ -32,16 +31,14 @@
                 </div>
                 <div class=" offset-2 col-md-4">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input matInput [matDatepicker]="pckFechaCreacionDesde" [formControl]="fechaAprobacionDesde"
-                            placeholder="Fecha de aprobación desde: ">
+                        <input matInput [matDatepicker]="pckFechaCreacionDesde" [formControl]="fechaAprobacionDesde" placeholder="Fecha de aprobación desde: ">
                         <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionDesde"></mat-datepicker-toggle>
                         <mat-datepicker #pckFechaCreacionDesde></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-md-4">
                     <mat-form-field class="mat-form-field-fluid">
-                        <input matInput [matDatepicker]="pckFechaCreacionFin" [formControl]="fechaAprobacionFin"
-                            placeholder="Fecha de aprobación hasta: ">
+                        <input matInput [matDatepicker]="pckFechaCreacionFin" [formControl]="fechaAprobacionFin" placeholder="Fecha de aprobación hasta: ">
                         <mat-datepicker-toggle matSuffix [for]="pckFechaCreacionFin"></mat-datepicker-toggle>
                         <mat-datepicker #pckFechaCreacionFin></mat-datepicker>
                     </mat-form-field>
@@ -53,20 +50,18 @@
                 <button mat-raised-button color="primary" (click)="buscar()">
                     <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
                     </mat-icon>
-                    <span class="white-icon">Buscar Devoluciones</span>
+                    <span class="white-icon">Buscar</span>
                 </button>
             </div>
         </div>
         <div class="row">
             <div class="col-1 offset-11">
-              <button mat-raised-button
-                (click)="exporter.exportTable('xlsx', {fileName:'reporte de egresos', sheet: 'sheet_name', Props: {Author: 'jhonmvr'}})">Exportar</button>
+                <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'reporte de egresos', sheet: 'sheet_name', Props: {Author: 'jhonmvr'}})">Exportar</button>
             </div>
-          </div>
+        </div>
         <div class="row mt-5">
             <div class="col-12">
-                <mat-table  matTableExporter #tableFecha class="tableFecha"  #exporter="matTableExporter" [dataSource]="dataSource" matSort #sort1="matSort"
-                    matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
+                <mat-table matTableExporter #tableFecha class="tableFecha" #exporter="matTableExporter" [dataSource]="dataSource" matSort #sort1="matSort" matSortActive="primerNombre" matSortDirection="asc" matSortDisableClear>
                     <ng-container matColumnDef="accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
                         <mat-cell *matCellDef="let row">
@@ -142,8 +137,7 @@
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                 </mat-table>
-                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
-                    [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
+                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="paged()">
                 </mat-paginator>
             </div>
         </div>

@@ -192,7 +192,7 @@ export class SeleccionFechaComponent implements OnInit {
       this.sinNoticeService.setNotice("SELECCIONE AL MENOS UN ITEM DE LA TABLA", "warning");
       return;
     }
-    let mensaje = "Seleccionar fecha de arribo para las devoluciones seleccionadas?";
+    let mensaje = "Seleccionar fecha de arribo para las entregas de garantias seleccionadas?";
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
       width: "800px",
       height: "auto",

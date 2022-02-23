@@ -14,7 +14,7 @@ import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { LayoutConfigService, SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 @Component({
@@ -60,6 +60,7 @@ export class VerificacionFirmaComponent  extends TrackingUtil implements OnInit 
   public displayedColumnsDetalle = ['fechaAprobacion', 'fechaVencimiento', 'monto'];
   public dataSourceHeredero = new MatTableDataSource<any>();
   public displayedColumnsHeredero = ['cedula', 'nombre'];
+  motivo = new FormControl('',[Validators.required, Validators.maxLength(500)]);
   idReferencia
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
@@ -270,6 +271,10 @@ export class VerificacionFirmaComponent  extends TrackingUtil implements OnInit 
     return JSON.parse(atob(entrada))
   }
   public enviarRespuesta(aprobar) {
+    if(this.motivo.invalid){
+      this.sinNoticeService.setNotice("INGRESE EL MOTIVO DE APROBACION O RECHAZO");
+      return;
+    }
     let mensaje = aprobar ? " Aprobar la verificacion de firmas del proceso: " + this.wrapperDevolucion.devolucion.codigo + '. ' :
       'Devolver la verificacion de firmas del proceso: ' + this.wrapperDevolucion.devolucion.codigo + '. ';
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
@@ -279,12 +284,12 @@ export class VerificacionFirmaComponent  extends TrackingUtil implements OnInit 
     });
     dialogRef.afterClosed().subscribe(r => {
       if (r && aprobar) {
-        this.dev.aprobarVerificacionFirmas(this.item).subscribe((data: any) => {
+        this.dev.aprobarVerificacionFirmas(this.item, this.motivo.value).subscribe((data: any) => {
           this.sinNoticeService.setNotice(" SE APROBO LA VERIFICACION DE FIRMAS.", "success");
           this.router.navigate(['aprobador/bandeja-aprobador']);
         });
       } else if (r && !aprobar) {
-        this.dev.rechazarVerificacionFirmas(this.item).subscribe((data: any) => {
+        this.dev.rechazarVerificacionFirmas(this.item, this.motivo.value).subscribe((data: any) => {
           this.sinNoticeService.setNotice("SE RECHAZO LA VERIFICACION DE FIRMAS.", "success");
           this.router.navigate(['aprobador/bandeja-aprobador']);
         });

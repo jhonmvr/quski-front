@@ -377,6 +377,11 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.neg.iniciarNegociacionFromCot(id, this.usuario, this.agencia).subscribe((wrapper: any) => {
       if (wrapper.entidad.respuesta) {
         this.negoW = wrapper.entidad;
+        if(this.negoW && this.negoW.credito && this.negoW.credito.tbQoNegociacion){
+          this.procesoService.getCabecera(this.negoW.credito.tbQoNegociacion.id,'NUEVO').subscribe(datos=>{
+            this.laytoutService.setDatosContrato(datos);
+          });
+        }
         if (!this.negoW.excepcionBre) {
           this.cargarValores(this.negoW, true);
         } else {

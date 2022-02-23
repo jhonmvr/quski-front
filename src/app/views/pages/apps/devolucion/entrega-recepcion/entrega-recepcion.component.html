@@ -2,13 +2,13 @@
     <re-portlet-header [title]="titulo" [class]="'kt-portlet__head--lg'">
         <ng-container ktPortletTools>
             <a (click)="regresar()" matTooltip="Regresar a gestion cliente" style="font-size: 12px; vertical-align: middle;">
-				<mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
-					arrow_back</mat-icon>
-				<span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
-			</a>
-		</ng-container>
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+                    arrow_back</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+            </a>
+        </ng-container>
     </re-portlet-header>
-	<re-portlet-body>
+    <re-portlet-body>
         <mat-vertical-stepper #stepper (animationDone)="guardarTraking(wrapperDevolucion ? wrapperDevolucion.proceso ? wrapperDevolucion.proceso.proceso : null : null,
         wrapperDevolucion ? wrapperDevolucion.devolucion ? wrapperDevolucion.devolucion.codigo : null : null, 
         ['Información Operación','Datos Personales del cliente','Detalle de Crédito','Detalle de Garantía','Gestion Devolución','Documento Habilitantes'], 
@@ -62,8 +62,7 @@
                     </div>
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de Nacimiento:"
-                                [value]="fechaNacimiento.value | rDate">
+                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de Nacimiento:" [value]="fechaNacimiento.value | rDate">
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">
@@ -102,8 +101,7 @@
                 </div>
             </mat-step>
             <mat-step label="Detalle de Garantía">
-                <kt-tabla-tasacion *ngIf="wrapperSoft && wrapperSoft.garantias;" [data]='wrapperSoft.garantias'
-                    [tipo]="'DV'"></kt-tabla-tasacion>
+                <kt-tabla-tasacion *ngIf="wrapperSoft && wrapperSoft.garantias;" [data]='wrapperSoft.garantias' [tipo]="'DV'"></kt-tabla-tasacion>
             </mat-step>
             <mat-step label="Gestion Devolución">
                 <div class="row">
@@ -125,8 +123,7 @@
                     <div class="col-12">
                         <mat-form-field class="mat-form-field-fluid">
                             <mat-label>Observacion Del Asesor: </mat-label>
-                            <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: "
-                                [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
+                            <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: " [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
                         </mat-form-field>
                     </div>
                 </div>
@@ -158,9 +155,10 @@
                         </mat-form-field>
                     </div>
                 </div>
+                <kt-hitorico-observacion-entrega [id]="this.item"></kt-hitorico-observacion-entrega>
             </mat-step>
-            <mat-step label = "Documento Habilitantes">
-                <re-habilitante [proceso]="varHabilitante" [useType]="'FORM'" [referencia]="this.item"></re-habilitante> 
+            <mat-step label="Documento Habilitantes">
+                <re-habilitante [proceso]="varHabilitante" [useType]="'FORM'" [referencia]="this.item"></re-habilitante>
                 <div class="row">
                     <div class="offset-4 col-3">
                         <button mat-raised-button color="primary" (click)="guardar()">
@@ -172,6 +170,6 @@
                 </div>
             </mat-step>
         </mat-vertical-stepper>
-	</re-portlet-body>
+    </re-portlet-body>
 
 </re-portlet>

@@ -279,8 +279,6 @@ export class EntregaRecepcionComponent extends TrackingUtil implements OnInit {
           }else {
             this.sinNoticeService.setNotice('ERROR AL CAMBIAR DE ESTADO DE DEVOLUCION', 'error');
           }
-        }, error => {
-          this.sinNoticeService.setNotice(error.error.codError.replace(/_/gi, " "), 'warning');
         });
       }else{
           this.sinNoticeService.setNotice('SE CANCELO LA ACCION','warning');

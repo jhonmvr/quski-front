@@ -49,7 +49,7 @@ export class SubheaderComponent implements OnInit {
 					plazo: datos.plazo,
 					tipoCredito: datos.tipoCredito,
 					numeroCuenta: datos.numeroCuenta,
-					nombreAsesor: datos.nombreAsesor,
+					nombreAsesor: datos.nombreAsesor=='NULL'?'':datos.nombreAsesor,
 					numeroCreditoAnterior: datos.numeroCreditoAnterior
 				}
 			} else {
