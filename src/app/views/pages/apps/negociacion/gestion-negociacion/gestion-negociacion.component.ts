@@ -1123,12 +1123,9 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       return;
     } */
     if(this.excepciones.length > 0){
-      console.log("tengo mas excepciones",this.excepciones);
       let xCliente = this.excepciones.find(p=>p.isCliente);
       let xRiesgo = this.excepciones.find(p=>p.isRiesgo);
       if(xRiesgo && xRiesgo.isRiesgo){
-        console.log("excepcion cliente", xCliente)
-        console.log("excepcion xRiesgo", xRiesgo)
         let data = new DataInjectExcepciones(false, true, false);
         data.mensajeBre = xRiesgo.mensajeBre + ' ' + (xCliente?xCliente.mensajeBre:'');
         data.idNegociacion = this.negoW.credito.tbQoNegociacion.id;

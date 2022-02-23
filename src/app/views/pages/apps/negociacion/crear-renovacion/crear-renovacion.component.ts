@@ -447,9 +447,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public actualizarCliente(){
 
     if(this.excepciones.length > 0){
-      console.log("tengo mas excepciones",this.excepciones);
       let x = this.excepciones.find(p=>p.isRiesgo || p.isCliente);
-      console.log("excepcion de riesgo", x);
       if(x && x.isRiesgo){
         this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
         return;
