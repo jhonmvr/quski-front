@@ -50,6 +50,7 @@ import { VerificacionFirmaComponent } from './verificacion-firma/verificacion-fi
 import { ModuleGuard } from '../../../../../app/core/auth';
 import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick-date-adapter';
 import { MatTableExporterModule } from 'mat-table-exporter';
+import { ReporteEntregaGarantiaComponent } from './reporte-entrega-garantia/reporte-entrega-garantia.component';
 
 const routes: Routes = [
 	{
@@ -96,13 +97,17 @@ const routes: Routes = [
 			{
 				path: 'verificacion-firmas/:item',
 				component: VerificacionFirmaComponent
+			},	
+			{
+				path: 'reporte-entrega/:item',
+				component: ReporteEntregaGarantiaComponent
 			}
 		]
 	}
 ];
 
 @NgModule({
-  declarations: [SolicitudDevolucionComponent, DevolucionComponent, SeleccionFechaComponent, ListaPendientesComponent, AprobacionSolicitudComponent, ListaPendientesComponent, EntregaRecepcionComponent, DetalleDevolucionComponent, CancelacionSolicitudDevolucionComponent, AprobacionCancelacionComponent, VerificacionFirmaComponent],
+  declarations: [SolicitudDevolucionComponent, DevolucionComponent, SeleccionFechaComponent, ListaPendientesComponent, AprobacionSolicitudComponent, ListaPendientesComponent, EntregaRecepcionComponent, DetalleDevolucionComponent, CancelacionSolicitudDevolucionComponent, AprobacionCancelacionComponent, VerificacionFirmaComponent, ReporteEntregaGarantiaComponent],
   imports: [
     CommonModule,MatTableExporterModule,
 		RouterModule.forChild(routes),

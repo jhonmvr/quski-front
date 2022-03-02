@@ -14,7 +14,7 @@ import { environment } from '../../../../../src/environments/environment';
   providedIn: 'root'
 })
 export class DevolucionService extends BaseService {
- 
+  
 
   constructor(_http: HttpClient,
     private dialog: MatDialog) {
@@ -313,4 +313,18 @@ existeCancelacionCancelacion(idDevolucion: any) {
       )
     );
   }
+
+  reporteDevolucion(p: Page, value: any) {
+    this.setSearchParams(p);
+  
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/reporteDevolucion";
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl,value, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+ 
 }

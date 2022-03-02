@@ -1,0 +1,114 @@
+<re-portlet>
+    <re-portlet-header [title]="'REPORTES DE ENTREGA DE GARANTIAS'" [class]="'kt-portlet__head--lg'">
+    </re-portlet-header>
+    <re-portlet-body>
+        <div class="row">
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="codigoOperacion" placeholder="Código operación">
+            </mat-form-field>
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="codigoBpm" placeholder="Código Bpm">
+            </mat-form-field>
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="estado" placeholder="Estado">
+            </mat-form-field>
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="agenciaEntrega" placeholder="Agencia entrega">
+            </mat-form-field>
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [formControl]="agenciaRecepcion" placeholder="Agencia recepción">
+            </mat-form-field>
+
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [matDatepicker]="fcd" [formControl]="fechaCreacionDesde" placeholder="Fecha creación desde">
+                <mat-datepicker-toggle matSuffix [for]="fcd"></mat-datepicker-toggle>
+                <mat-datepicker #fcd></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [matDatepicker]="fch" [formControl]="fechaCreacionHasta" placeholder="Fecha creación hasta">
+                <mat-datepicker-toggle matSuffix [for]="fch"></mat-datepicker-toggle>
+                <mat-datepicker #fch></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [matDatepicker]="fad" [formControl]="fechaArriboDesde" placeholder="Fecha arribo desde">
+                <mat-datepicker-toggle matSuffix [for]="fad"></mat-datepicker-toggle>
+                <mat-datepicker #fad></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [matDatepicker]="fah" [formControl]="fechaArriboHasta" placeholder="Fecha arribo hasta">
+                <mat-datepicker-toggle matSuffix [for]="fah"></mat-datepicker-toggle>
+                <mat-datepicker #fah></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [matDatepicker]="fed" [formControl]="fechaEntregaDesde" placeholder="Fecha entrega desde">
+                <mat-datepicker-toggle matSuffix [for]="fed"></mat-datepicker-toggle>
+                <mat-datepicker #fed></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="mat-form-field-fluid">
+                <input matInput [matDatepicker]="feh" [formControl]="fechaEntregaHasta" placeholder="Fecha entrega hasta">
+                <mat-datepicker-toggle matSuffix [for]="feh"></mat-datepicker-toggle>
+                <mat-datepicker #feh></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="row justify-content-center">
+            <div class="offset-1 col-3">
+                <button mat-raised-button (click)="buscarBoton()">
+                    <span>Buscar</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="codigoOperacion">
+                    <th mat-header-cell *matHeaderCellDef> Código de operación </th>
+                    <td mat-cell *matCellDef="let row"> {{row.codigoOperacion}} </td>
+                </ng-container>
+                <ng-container matColumnDef="codigoBpm">
+                    <th mat-header-cell *matHeaderCellDef> Código bpm </th>
+                    <td mat-cell *matCellDef="let row"> {{row.codigoBpm}} </td>
+                </ng-container>
+                <ng-container matColumnDef="nombreCliente">
+                    <th mat-header-cell *matHeaderCellDef> Nombre Cliente </th>
+                    <td mat-cell *matCellDef="let row"> {{row.nombreCliente}} </td>
+                </ng-container>
+                <ng-container matColumnDef="identificacionCliente">
+                    <th mat-header-cell *matHeaderCellDef> Identificación Cliente </th>
+                    <td mat-cell *matCellDef="let row"> {{row.cedulaCliente}} </td>
+                </ng-container>
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef> Estado </th>
+                    <td mat-cell *matCellDef="let row"> {{row.estadoProceso}} </td>
+                </ng-container>
+                <ng-container matColumnDef="agenciaEntrega">
+                    <th mat-header-cell *matHeaderCellDef> Agencia entrega </th>
+                    <td mat-cell *matCellDef="let row"> {{nombreAgencia(row.igAgenciaEntrega)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="agenciaRecepcion">
+                    <th mat-header-cell *matHeaderCellDef> Agencia recepción </th>
+                    <td mat-cell *matCellDef="let row"> {{nombreAgencia(row.idAgencia)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="fechaCreacion">
+                    <th mat-header-cell *matHeaderCellDef> Fecha de creación </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fechaCreacion}} </td>
+                </ng-container>
+                <ng-container matColumnDef="fechaArribo">
+                    <th mat-header-cell *matHeaderCellDef> Fecha de arribo </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fechaArribo}} </td>
+                </ng-container>
+                <ng-container matColumnDef="fechaEntrega">
+                    <th mat-header-cell *matHeaderCellDef> Fecha de entrega </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fechaEngrega}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="['codigoOperacion','codigoBpm','nombreCliente','identificacionCliente','estado','agenciaEntrega','agenciaRecepcion','fechaCreacion','fechaArribo','fechaEntrega']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['codigoOperacion','codigoBpm','nombreCliente','identificacionCliente','estado','agenciaEntrega','agenciaRecepcion','fechaCreacion','fechaArribo','fechaEntrega'];"></tr>
+            </table>
+            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="buscarBoton(this.paginator.pageIndex, this.paginator.pageSize)">
+            </mat-paginator>
+        </div>
+    </re-portlet-body>
+</re-portlet>
