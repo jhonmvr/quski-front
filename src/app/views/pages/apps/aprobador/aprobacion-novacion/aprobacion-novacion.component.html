@@ -465,302 +465,308 @@
                     </mat-tab>
                     <mat-tab label="Datos operacion nueva">
                         <div class="row">
-                          
-                          
-                                    <div class="col-md-2">
-                                        <span> Número de la operación:</span> 
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{numeroOperacion.value}}</span>    
-   
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span> Descripción del Producto:</span> 
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{descripcionProducto.value}}</span>    
-   
-                                    </div>
-                                        
-                                 
-                                    <div class="col-md-2"> 
-                                        <span>Estado de la Operación: </span>
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span class="info"> {{estadoOperacion.value}}</span>        
-                                                                             
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-2">
-                                        <span>Tipo Oferta: </span>
-                                    </div>
-                                    <div class="col-md-2">
-                                            <span class="info"> {{tipoOferta.value}}</span>        
-                                                                               
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>Plazo: </span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{plazo.value}}</span>            
-                                                                            
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>Día Pago Fijo:</span>    
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{diaPagoFijo.value | rDate}}</span>  
-                                                                           
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-2">
-                                        <span>Es ahorro ?: </span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{tipoCuenta.value}}</span>  
-                                                                          
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>Número de Cuenta </span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{numeroCuenta.value}}</span>  
-                                         
-                                     
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>"Cuota: </span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{cuota.value}}</span>  
-                                       
-                              
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-2">
-                                        <span> Firmada Operación:</span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{firmadaOperacion.value}}</span>      
-                                                                            
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span>Tipo de Cartera: </span>
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span class="info"> {{tipoCartera.value}}</span>                                               
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span> Tabla Amortizacion</span>
-                                    </div>
+                            <div class="col-md-2">
+                                <span>Monto Financiado:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{montoFinanciado.value}}</span>
 
-                                    <div class="col-md-2">
-                                        <span class="info"> {{tablaAmortizacion.value}}</span>            
-                                                                    
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-2">
-                                        <span>Monto Previo Desembolso: </span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{montoPrevioDesembolso.value}}</span>        
-                                                                   
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>Monto Financiado: </span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{montoFinanciado.value}}</span>       
-                                     
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>Costo Custodia: </span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{costoCustodia.value}}</span>           
-                                                                           
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-2">
-                                        <span> Forma de Pago Custodia:</span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{formaPagoCustodia.value}}</span>       
-                                       
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span> Costo Resguardo:</span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{costoResguardo.value}}</span>        
-                      
-                                      
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>Forma de Pago Resguardo:</span>
-                                     </div>
-                                     <div class="col-md-2">
-                                        <span class="info"> {{formaPagoResguardo.value}}</span>             
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-2">
-                                        <span> Costo Transporte:</span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{costoTransporte.value}}</span>      
-                                     
-                            
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span> Forma de Pago Transporte:</span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{formaPagoTransporte.value}}</span>       
-                                   
-                                    
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>Costo Valoración: </span>
-                                     </div>
-                                     <div class="col-md-2">
-                                        <span class="info"> {{costoValoracion.value}}</span>        
-                                        
-                                     
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-2">
-                                        <span>Forma de Pago Valoración: </span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{formaPagoValoracion.value}}</span>        
-         
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>Costo Tasación: </span> 
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{costoTasacion.value}}</span>           
-                                 
-                               
-                                    </div>
-                                    <div class="col-md-2">
-                                    <span>Forma de Pago Tasación: </span>    
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{formaPagoTasacion.value}}</span>         
-                                  
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-2">
-                                        <span>Costo Seguro: </span> 
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{costoSeguro.value}}</span>       
-                                     
-                                       
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span>Forma de Pago Seguro: </span>
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span class="info"> {{formaPagoSeguro.value}}</span>      
-                                      
-                                 
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>Solca:</span>
-                                     </div>
-                                     <div class="col-md-2">
-                                        <span class="info"> {{solca.value}}</span>         
-                                      
-                                     
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-2">
-                                        <span>Forma de Pago Solca: </span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{formaPagoSolca.value}}</span>           
-                                      
-                                       
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span>A Pagar Cliente: </span>
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span class="info"> {{aPagarCliente.value}}</span>      
-                                      
-                                        
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span>A Recibir Cliente: </span>
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span class="info"> {{aRecibirCliente.value}}</span>          
-                                      
-                                     
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-2"> 
-                                        <span>Total Costo Nueva Operacion: </span>
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span class="info"> {{totalCostoNuevaOperacion.value}}</span>           
-                  
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span> Valor neto al cliente</span>
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span class="info"> {{recibirPagar.value}}</span>         
-                                      
-                              
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span>Tipo Cliente: </span>
-                                    </div>
-                                    <div class="col-md-2"> 
-                                        <span class="info"> {{tipoCliente.value}}</span>             
-                                        
-                                      
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-2">
-                                    <span>Total Interés: </span>    
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{totalInteres.value}}</span>       
-                                       
-                                        
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>Fecha de vencimiento: </span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{fechaVencimiento.value | rDate}}</span>                                             
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>Fecha Efectiva:</span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span class="info"> {{fechaEfectiva.value | rDate}}</span>      
-                                      
-                                     
-                                    </div>
-                                </div>
-                         
-                 
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Plazo:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info">{{plazo.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Tipo Operacion:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info">{{ plazo.value ? plazo.value == '60.00' ? 'Dias (Al Vcto.)' : plazo.value == '90.00' ? 'Dias (Al Vcto.)' : plazo.value == '120.00' ? 'Dias (Al Vcto.)' : plazo.value == '6.00' ? 'Cuotas' : plazo.value
+                                == '9.00' ? 'Cuotas' : plazo.value == '12.00' ? 'Cuotas' : plazo.value == '18.00' ? 'Cuotas' : plazo.value : 'Error' }}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Tipo Oferta:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{tipoOferta.value}}</span>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Saldo capital Op anterior:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{saldoCapitalOpAnt.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Saldo interes Op anterior:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{saldoInteresOpAnt.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Forma de Pago interes:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{formaPagoInteresOpAnt.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Saldo Mora Op anterior:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{saldoMoraOpAnt.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Forma de Pago Mora:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{formaPagoMoraOpAnt.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Gastos de cobranza Op anterior:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{gastosCobranzaOpAnt.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Forma de Pago Cobranza:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{formaPagogastosCobranzaOpAnt.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Abono capital Op anterior:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{abonoCapitalOpAnt.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Forma de Pago abono al capital:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{formaPagoabonoCapitalOpAnt.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Custodia vencida op anterior:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{custodiaVencidaOpAnt.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Forma de custodia vencida:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{formaPagocustodiaVencidaOpAnt.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Costo Custodia:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{costoCustodia.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Forma de Pago Custodia:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{formaPagoCustodia.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Costo Transporte:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{costoTransporte.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Forma de Pago Transporte:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{formaPagoTransporte.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Costo Valoración:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{costoValoracion.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Forma de Pago Valoración:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{formaPagoValoracion.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Costo Tasación:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{costoTasacion.value}}</span>
+
+                            </div>
+                            <div class="col-md-2">
+                                <span>Forma de Pago Tasación:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{formaPagoTasacion.value}}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Costo Seguro:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{costoSeguro.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Forma de Pago Seguro:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{formaPagoSeguro.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Solca:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{solca.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Forma de Pago Solca:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{formaPagoSolca.value}}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Total Costo Nueva Operacion:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{totalCostoNuevaOperacion.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>A pagar por el cliente:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{aPagarCliente.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>A recibir cliente:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{aRecibirCliente.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Neto al cliente:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{aRecibirCliente.value - aPagarCliente.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Número de la operación:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info">{{numeroOperacion.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Tipo de Cartera:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{tipoCartera.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Fecha Efectiva:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{fechaEfectiva.value | rDate}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Fecha de vencimiento:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{fechaVencimiento.value | rDate}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Fecha del Softbank:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{fechaSistema.value | rDate}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Total Interés:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{totalInteres.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Cuota:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{cuota.value}}</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span>Día Pago Fijo:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info">  {{diaPagoFijo.value | rDate}} </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Número de Cuenta:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{numeroCuenta.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Firmante de la operación:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info">{{firmadaOperacion.value}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Tipo de cliente:</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info">{{tipoCliente.value == 'SAP'?'APODERADO': tipoCliente.value == 'SCD' ? 'CODEUDOR':'DEUDOR'}}</span>
+                            </div>
+                        </div>
                         <div class="row" *ngIf="this.crediW?this.crediW.credito?this.crediW.credito.tipoCliente == 'SAP' : false :false">
                             <div class="col-md-4">
                                 <mat-form-field class="mat-form-field-fluid">
@@ -790,6 +796,15 @@
                                 </mat-form-field>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Tabla Amortizacion</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="info"> {{tablaAmortizacion.value}}</span>
+                            </div>
+                        </div>
+
                     </mat-tab>
                     <mat-tab label="Comprobante de pagos">
                         <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante">
@@ -851,135 +866,135 @@
                 <div class="row">
                     <div class="col-2">
                         <span>Numero Operacion</span>
-                        </div>
-                        <div class="col-2">
-                            <input [formControl]="antNumeroOperacion"  matInput> 
+                    </div>
+                    <div class="col-2">
+                        <input [formControl]="antNumeroOperacion" matInput>
                     </div>
                     <div class="col-2">
                         <span> Referencia Mupi</span>
-                        </div>
-                        <div class="col-2">
-                            <input [formControl]="antReferenciaMupi" matInput>
-                       
+                    </div>
+                    <div class="col-2">
+                        <input [formControl]="antReferenciaMupi" matInput>
+
                     </div>
                     <div class="col-2">
                         <span> Operacion Madre </span>
-                        </div>
-                        <div class="col-2">
-                            <input [formControl]="antOperacionMadre"  matInput>
-                    </div>
-                    </div>
-                    <div class="row">
-                    <div class="col-2">
-                    <span>Plazo </span>    
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antPlazo" matInput>
+                        <input [formControl]="antOperacionMadre" matInput>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <span>Plazo </span>
+                    </div>
+                    <div class="col-2">
+                        <input [formControl]="antPlazo" matInput>
                     </div>
 
                     <div class="col-2">
                         <span> Tipo Credito</span>
                     </div>
-                        <div class="col-2">
-                            <input [formControl]="antTipoCredito"  matInput>
+                    <div class="col-2">
+                        <input [formControl]="antTipoCredito" matInput>
                     </div>
                     <div class="col-2">
-                    <span>Estado Operacion   </span>    
+                        <span>Estado Operacion   </span>
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antEstadoOperacion"  matInput>          
+                        <input [formControl]="antEstadoOperacion" matInput>
                     </div>
-                    </div>
+                </div>
 
-                    <div class="row">
+                <div class="row">
                     <div class="col-2">
                         <span>Fecha Efectiva</span>
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antFechaEfectiva"  matInput [value]="antFechaEfectiva.value | rDate">
-                 
+                        <input [formControl]="antFechaEfectiva" matInput [value]="antFechaEfectiva.value | rDate">
+
                     </div>
                     <div class="col-2">
                         <span>Fecha Vecimiento</span>
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antFechaVecimiento"  matInput [value]="antFechaVecimiento.value | rDate">
+                        <input [formControl]="antFechaVecimiento" matInput [value]="antFechaVecimiento.value | rDate">
                     </div>
                     <div class="col-2">
                         <span>Fecha Compra Cartera </span>
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antFechaCompraCartera" matInput [value]="antFechaCompraCartera.value | rDate">
-                        
+                        <input [formControl]="antFechaCompraCartera" matInput [value]="antFechaCompraCartera.value | rDate">
+
                     </div>
-                    </div>
-                    <div class="row">
+                </div>
+                <div class="row">
                     <div class="col-2">
                         <span>Monto Financiado </span>
-                        </div>
-                        <div class="col-2">
-                            <input [formControl]="antMontoFinanciado" matInput>
+                    </div>
+                    <div class="col-2">
+                        <input [formControl]="antMontoFinanciado" matInput>
                     </div>
 
                     <div class="col-2">
-                    <span>Cuota  </span>    
+                        <span>Cuota  </span>
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antCuota" matInput>
-                 
+                        <input [formControl]="antCuota" matInput>
+
                     </div>
                     <div class="col-2">
-                        <span>Ultima Cuota Pagada </span>    
+                        <span>Ultima Cuota Pagada </span>
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antUltimaCuotaPagada" matInput>
-             
+                        <input [formControl]="antUltimaCuotaPagada" matInput>
+
                     </div>
-                    </div>
-                    <div class="row">
+                </div>
+                <div class="row">
                     <div class="col-2">
-                        <span>Saldo Capital </span>    
+                        <span>Saldo Capital </span>
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antSaldoCapital"  matInput>
-                    
+                        <input [formControl]="antSaldoCapital" matInput>
+
                     </div>
                     <div class="col-2">
                         <span>Saldo Interes </span>
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antSaldoInteres"  matInput>
-                     
+                        <input [formControl]="antSaldoInteres" matInput>
+
                     </div>
                     <div class="col-2">
                         <span>Saldo Mora</span>
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antSaldoMora"matInput>
-                      
+                        <input [formControl]="antSaldoMora" matInput>
+
                     </div>
-                    </div>
-                    <div class="row">
+                </div>
+                <div class="row">
                     <div class="col-2">
                         <span>Gasto Cobranza </span>
-                    </div>   
+                    </div>
                     <div class="col-2">
-                            <input [formControl]="antGastoCobranza"  matInput>
-                    
+                        <input [formControl]="antGastoCobranza" matInput>
+
                     </div>
                     <div class="col-2">
                         <span> Custodia Vencida</span>
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antCustodiaVencida"  matInput>
-                      
+                        <input [formControl]="antCustodiaVencida" matInput>
+
                     </div>
                     <div class="col-2">
                         <span> Valor Precancelacion</span>
                     </div>
                     <div class="col-2">
-                            <input [formControl]="antValorPrecancelacion"  matInput>
-                       
+                        <input [formControl]="antValorPrecancelacion" matInput>
+
                     </div>
 
                 </div>

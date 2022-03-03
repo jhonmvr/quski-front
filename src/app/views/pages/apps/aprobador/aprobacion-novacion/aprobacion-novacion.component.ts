@@ -168,6 +168,21 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   fechaNacimientoApoderado = new FormControl('', []);
   nombreCodeudor = new FormControl('', []);
   identificacionCodeudor = new FormControl('', []);
+  
+  saldoCapitalOpAnt = new FormControl('', []);
+  saldoInteresOpAnt = new FormControl('', []);
+  saldoMoraOpAnt = new FormControl('', []);
+  gastosCobranzaOpAnt = new FormControl('', []);
+  abonoCapitalOpAnt = new FormControl('', []);
+  custodiaVencidaOpAnt = new FormControl('', []);
+
+  formaPagoCapitalOpAnt = new FormControl('', []);
+  formaPagoInteresOpAnt = new FormControl('', []);
+  formaPagoMoraOpAnt = new FormControl('', []);
+  formaPagogastosCobranzaOpAnt = new FormControl('', []);
+  formaPagoabonoCapitalOpAnt = new FormControl('', []);
+  formaPagocustodiaVencidaOpAnt = new FormControl('', []);
+
 
   /** @OPERACION_ANTERIOR */
   public antNumeroOperacion = new FormControl('', []);
@@ -197,6 +212,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public observacionAprobador = new FormControl('', [Validators.required]);
   catTipoCliente: Array<any>;
   catBanco: Array<any>;
+  fechaSistema = new FormControl('', []);
   constructor(
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
@@ -340,6 +356,11 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.agencia = localStorage.getItem( 'idAgencia' );
     this.formDisable.disable();
     this.traerCreditoNegociacion();
+    this.sof.fechasistema( this.agencia ).subscribe( ( data: any) =>{
+      if( !data.existeError ){
+        this.fechaSistema.setValue( data.fechaSistema  );
+      }
+    });
   }
   public descargarComprobante(row) {
     saveAs(row.comprobante.fileBase64, row.comprobante.name);
@@ -597,6 +618,21 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.montoFinanciado.setValue(ap.credito.montoFinanciado);
     this.cuota.setValue(ap.credito.cuota);
     this.totalInteres.setValue(ap.credito.totalInteresVencimiento);
+
+    this.saldoCapitalOpAnt.setValue(ap.credito.saldoCapitalRenov);
+    this.saldoInteresOpAnt.setValue(ap.credito.saldoInteres);
+    this.saldoMoraOpAnt.setValue(ap.credito.saldoMora);
+    this.gastosCobranzaOpAnt.setValue(ap.credito.gastoCobranza);
+    this.abonoCapitalOpAnt.setValue('--');
+    this.custodiaVencidaOpAnt.setValue(ap.credito.custodiaDevengada);
+  
+    this.formaPagoCapitalOpAnt.setValue('--');
+    this.formaPagoInteresOpAnt.setValue(ap.credito.formaPagoInteres);
+    this.formaPagoMoraOpAnt.setValue(ap.credito.formaPagoMora);
+    this.formaPagogastosCobranzaOpAnt.setValue(ap.credito.formaPagoGastoCobranza);
+    this.formaPagoabonoCapitalOpAnt.setValue('--');
+    this.formaPagocustodiaVencidaOpAnt.setValue(ap.credito.formaPagoCustodiaDevengada);
+
 
     this.dataSourceComprobante.data = ap.pagos;
     this.dataSourceComprobante.data ? this.dataSourceComprobante.data.forEach( e =>{
