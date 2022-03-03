@@ -738,96 +738,139 @@
             </mat-step>
             <mat-step label="Datos de Operacion Anterior">
                 <div class="row">
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antNumeroOperacion" placeholder="Numero Operacion" matInput>
-                        </mat-form-field>
+                    <div class="col-2">
+                        <span>Numero Operacion</span>
+                        </div>
+                        <div class="col-2">
+                            <input [formControl]="antNumeroOperacion"  matInput> 
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antReferenciaMupi" placeholder="Referencia Mupi" matInput>
-                        </mat-form-field>
+                    <div class="col-2">
+                        <span> Referencia Mupi</span>
+                        </div>
+                        <div class="col-2">
+                            <input [formControl]="antReferenciaMupi" matInput>
+                       
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antOperacionMadre" placeholder="Operacion Madre" matInput>
-                        </mat-form-field>
+                    <div class="col-2">
+                        <span> Operacion Madre </span>
+                        </div>
+                        <div class="col-2">
+                            <input [formControl]="antOperacionMadre"  matInput>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antPlazo" placeholder="Plazo" matInput>
-                        </mat-form-field>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antTipoCredito" placeholder="Tipo Credito" matInput>
-                        </mat-form-field>
+                    <div class="row">
+                    <div class="col-2">
+                    <span>Plazo </span>    
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antEstadoOperacion" placeholder="Estado Operacion" matInput>
-                        </mat-form-field>
+                    <div class="col-2">
+                            <input [formControl]="antPlazo" matInput>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antFechaEfectiva" placeholder="Fecha Efectiva" matInput [value]="antFechaEfectiva.value | rDate">
-                        </mat-form-field>
+
+                    <div class="col-2">
+                        <span> Tipo Credito</span>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antFechaVecimiento" placeholder="Fecha Vecimiento" matInput [value]="antFechaVecimiento.value | rDate">
-                        </mat-form-field>
+                        <div class="col-2">
+                            <input [formControl]="antTipoCredito"  matInput>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antFechaCompraCartera" placeholder="Fecha Compra Cartera" matInput [value]="antFechaCompraCartera.value | rDate">
-                        </mat-form-field>
+                    <div class="col-2">
+                    <span>Estado Operacion   </span>    
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antMontoFinanciado" placeholder="Monto Financiado" matInput>
-                        </mat-form-field>
+                    <div class="col-2">
+                            <input [formControl]="antEstadoOperacion"  matInput>          
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antCuota" placeholder="Cuota" matInput>
-                        </mat-form-field>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antUltimaCuotaPagada" placeholder="Ultima Cuota Pagada" matInput>
-                        </mat-form-field>
+
+                    <div class="row">
+                    <div class="col-2">
+                        <span>Fecha Efectiva</span>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antSaldoCapital" placeholder="Saldo Capital" matInput>
-                        </mat-form-field>
+                    <div class="col-2">
+                            <input [formControl]="antFechaEfectiva"  matInput [value]="antFechaEfectiva.value | rDate">
+                 
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antSaldoInteres" placeholder="Saldo Interes" matInput>
-                        </mat-form-field>
+                    <div class="col-2">
+                        <span>Fecha Vecimiento</span>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antSaldoMora" placeholder="Saldo Mora" matInput>
-                        </mat-form-field>
+                    <div class="col-2">
+                            <input [formControl]="antFechaVecimiento"  matInput [value]="antFechaVecimiento.value | rDate">
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antGastoCobranza" placeholder="Gasto Cobranza" matInput>
-                        </mat-form-field>
+                    <div class="col-2">
+                        <span>Fecha Compra Cartera </span>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antCustodiaVencida" placeholder="Custodia Vencida" matInput>
-                        </mat-form-field>
+                    <div class="col-2">
+                            <input [formControl]="antFechaCompraCartera" matInput [value]="antFechaCompraCartera.value | rDate">
+                        
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input [formControl]="antValorPrecancelacion" placeholder="Valor Precancelacion" matInput>
-                        </mat-form-field>
                     </div>
+                    <div class="row">
+                    <div class="col-2">
+                        <span>Monto Financiado </span>
+                        </div>
+                        <div class="col-2">
+                            <input [formControl]="antMontoFinanciado" matInput>
+                    </div>
+
+                    <div class="col-2">
+                    <span>Cuota  </span>    
+                    </div>
+                    <div class="col-2">
+                            <input [formControl]="antCuota" matInput>
+                 
+                    </div>
+                    <div class="col-2">
+                        <span>Ultima Cuota Pagada </span>    
+                    </div>
+                    <div class="col-2">
+                            <input [formControl]="antUltimaCuotaPagada" matInput>
+             
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-2">
+                        <span>Saldo Capital </span>    
+                    </div>
+                    <div class="col-2">
+                            <input [formControl]="antSaldoCapital"  matInput>
+                    
+                    </div>
+                    <div class="col-2">
+                        <span>Saldo Interes </span>
+                    </div>
+                    <div class="col-2">
+                            <input [formControl]="antSaldoInteres"  matInput>
+                     
+                    </div>
+                    <div class="col-2">
+                        <span>Saldo Mora</span>
+                    </div>
+                    <div class="col-2">
+                            <input [formControl]="antSaldoMora"matInput>
+                      
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-2">
+                        <span>Gasto Cobranza </span>
+                    </div>   
+                    <div class="col-2">
+                            <input [formControl]="antGastoCobranza"  matInput>
+                    
+                    </div>
+                    <div class="col-2">
+                        <span> Custodia Vencida</span>
+                    </div>
+                    <div class="col-2">
+                            <input [formControl]="antCustodiaVencida"  matInput>
+                      
+                    </div>
+                    <div class="col-2">
+                        <span> Valor Precancelacion</span>
+                    </div>
+                    <div class="col-2">
+                            <input [formControl]="antValorPrecancelacion"  matInput>
+                       
+                    </div>
+
                 </div>
             </mat-step>
             <mat-step label="Resultado de la operación">
