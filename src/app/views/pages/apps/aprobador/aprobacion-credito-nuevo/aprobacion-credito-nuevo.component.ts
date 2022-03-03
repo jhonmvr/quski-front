@@ -111,6 +111,11 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
   public ocupacion = new FormControl('', []);
   public cargo = new FormControl('', []);
   public relacionDependencia = new FormControl('');
+  nombreApoderado = new FormControl('');
+  identificacionApoderado = new FormControl('');
+  fechaNacimientoApoderado = new FormControl('');
+  nombreCodeudor = new FormControl('');
+  identificacionCodeudor = new FormControl('');
 
   displayedColumnsActivo = ['Activo', 'Avaluo'];
   displayedColumnsPasivo = ['Pasivo', 'Avaluo'];
@@ -173,7 +178,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
   public montoFinanciado = new FormControl('', []);
   public cuota = new FormControl('', []);
   public totalInteres = new FormControl('', []);
-
+  fechaSistema = new FormControl('', []);
   /** @RESULTADO_OPERACION */
   public formResultadoOperacion: FormGroup = new FormGroup({});
   public motivoDevolucion  = new FormControl('', []);
@@ -305,6 +310,11 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.agencia = localStorage.getItem( 'idAgencia' );
     this.traerCreditoNegociacion();
     this.formDisable.disable();
+    this.sof.fechasistema( this.agencia ).subscribe( ( data: any) =>{
+      if( !data.existeError ){
+        this.fechaSistema.setValue( data.fechaSistema  );
+      }
+    });
   }
   private traerCatalogos() {
     this.loadingSubject.next(true);
@@ -559,6 +569,11 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.montoFinanciado.setValue(  ap.credito.montoFinanciado );
     this.cuota.setValue( ap.credito.cuota );
     this.totalInteres.setValue(  ap.credito.totalInteresVencimiento );
+    this.nombreApoderado.setValue(ap.credito.nombreCompletoApoderado);
+    this.identificacionApoderado.setValue(ap.credito.identificacionApoderado);
+    this.fechaNacimientoApoderado.setValue(ap.credito.fechaNacimientoApoderado);
+    this.nombreCodeudor.setValue(ap.credito.nombreCompletoCodeudor);
+    this.identificacionCodeudor.setValue(ap.credito.identificacionCodeudor);
 
     this.cargarFotoHabilitante('6','FUNDA',ap.credito.tbQoNegociacion.id ).subscribe(data=>{
       this.srcJoya = data;
