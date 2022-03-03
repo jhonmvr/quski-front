@@ -465,191 +465,302 @@
                     </mat-tab>
                     <mat-tab label="Datos operacion nueva">
                         <div class="row">
-                            <div class="col-6">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="numeroOperacion" placeholder="Número de la operación:" matInput />
-                                        </mat-form-field>
+                          
+                          
+                                    <div class="col-md-2">
+                                        <span> Número de la operación:</span> 
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="descripcionProducto" placeholder="Descripción del Producto:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{numeroOperacion.value}}</span>    
+   
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="estadoOperacion" placeholder="Estado de la Operación:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span> Descripción del Producto:</span> 
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="tipoOferta" placeholder="Tipo Oferta:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{descripcionProducto.value}}</span>    
+   
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="plazo" placeholder="Plazo:" matInput />
-                                        </mat-form-field>
+                                        
+                                 
+                                    <div class="col-md-2"> 
+                                        <span>Estado de la Operación: </span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [value]="diaPagoFijo.value | rDate " placeholder="Día Pago Fijo:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2"> 
+                                        <span class="info"> {{estadoOperacion.value}}</span>        
+                                                                             
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input matInput [formControl]="tipoCuenta" placeholder="Es ahorro ?:" />
-                                        </mat-form-field>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="numeroCuenta" placeholder="Número de Cuenta:" matInput />
-                                        </mat-form-field>
+                                    <div class="row">
+                                    <div class="col-md-2">
+                                        <span>Tipo Oferta: </span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="cuota" placeholder="Cuota:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                            <span class="info"> {{tipoOferta.value}}</span>        
+                                                                               
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="firmadaOperacion" placeholder="Firmada Operación:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span>Plazo: </span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="tipoCartera" placeholder="Tipo de Cartera:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{plazo.value}}</span>            
+                                                                            
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="tablaAmortizacion" placeholder="Tabla Amortizacion" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span>Día Pago Fijo:</span>    
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="montoPrevioDesembolso" placeholder="Monto Previo Desembolso:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{diaPagoFijo.value | rDate}}</span>  
+                                                                           
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="montoFinanciado" placeholder="Monto Financiado:" matInput />
-                                        </mat-form-field>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="costoCustodia" placeholder="Costo Custodia:" matInput />
-                                        </mat-form-field>
+                                    <div class="row">
+                                    <div class="col-md-2">
+                                        <span>Es ahorro ?: </span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="formaPagoCustodia" placeholder="Forma de Pago Custodia:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{tipoCuenta.value}}</span>  
+                                                                          
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="costoResguardo" placeholder="Costo Resguardo:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span>Número de Cuenta </span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="formaPagoResguardo" placeholder="Forma de Pago Resguardo:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{numeroCuenta.value}}</span>  
+                                         
+                                     
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="costoTransporte" placeholder="Costo Transporte:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span>"Cuota: </span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="formaPagoTransporte" placeholder="Forma de Pago Transporte:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{cuota.value}}</span>  
+                                       
+                              
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="costoValoracion" placeholder="Costo Valoración:" matInput />
-                                        </mat-form-field>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="formaPagoValoracion" placeholder="Forma de Pago Valoración:" matInput />
-                                        </mat-form-field>
+                                    <div class="row">
+                                    <div class="col-md-2">
+                                        <span> Firmada Operación:</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="costoTasacion" placeholder="Costo Tasación:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{firmadaOperacion.value}}</span>      
+                                                                            
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="formaPagoTasacion" placeholder="Forma de Pago Tasación:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2"> 
+                                        <span>Tipo de Cartera: </span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="costoSeguro" placeholder="Costo Seguro:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2"> 
+                                        <span class="info"> {{tipoCartera.value}}</span>                                               
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="formaPagoSeguro" placeholder="Forma de Pago Seguro:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span> Tabla Amortizacion</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="solca" placeholder="Solca:" matInput />
-                                        </mat-form-field>
+
+                                    <div class="col-md-2">
+                                        <span class="info"> {{tablaAmortizacion.value}}</span>            
+                                                                    
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="formaPagoSolca" placeholder="Forma de Pago Solca:" matInput />
-                                        </mat-form-field>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="aPagarCliente" placeholder="A Pagar Cliente:" matInput />
-                                        </mat-form-field>
+                                    <div class="row">
+                                    <div class="col-md-2">
+                                        <span>Monto Previo Desembolso: </span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="aRecibirCliente" placeholder="A Recibir Cliente:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{montoPrevioDesembolso.value}}</span>        
+                                                                   
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="totalCostoNuevaOperacion" placeholder="Total Costo Nueva Operacion:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span>Monto Financiado: </span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="recibirPagar" placeholder="Valor neto al cliente" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{montoFinanciado.value}}</span>       
+                                     
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="tipoCliente" placeholder="Tipo Cliente:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span>Costo Custodia: </span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="totalInteres" placeholder="Total Interés:" matInput />
-                                        </mat-form-field>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{costoCustodia.value}}</span>           
+                                                                           
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="fechaVencimiento" placeholder="Fecha de vencimiento:" matInput [value]="fechaVencimiento.value | rDate" />
-                                        </mat-form-field>
                                     </div>
-                                    <div class="col-md-6">
-                                        <mat-form-field class="mat-form-field-fluid">
-                                            <input [formControl]="fechaEfectiva" placeholder="Fecha Efectiva:" matInput [value]="fechaEfectiva.value | rDate" />
-                                        </mat-form-field>
+                                    <div class="row">
+                                    <div class="col-md-2">
+                                        <span> Forma de Pago Custodia:</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{formaPagoCustodia.value}}</span>       
+                                       
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span> Costo Resguardo:</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{costoResguardo.value}}</span>        
+                      
+                                      
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>Forma de Pago Resguardo:</span>
+                                     </div>
+                                     <div class="col-md-2">
+                                        <span class="info"> {{formaPagoResguardo.value}}</span>             
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-2">
+                                        <span> Costo Transporte:</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{costoTransporte.value}}</span>      
+                                     
+                            
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span> Forma de Pago Transporte:</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{formaPagoTransporte.value}}</span>       
+                                   
+                                    
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>Costo Valoración: </span>
+                                     </div>
+                                     <div class="col-md-2">
+                                        <span class="info"> {{costoValoracion.value}}</span>        
+                                        
+                                     
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-2">
+                                        <span>Forma de Pago Valoración: </span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{formaPagoValoracion.value}}</span>        
+         
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>Costo Tasación: </span> 
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{costoTasacion.value}}</span>           
+                                 
+                               
+                                    </div>
+                                    <div class="col-md-2">
+                                    <span>Forma de Pago Tasación: </span>    
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{formaPagoTasacion.value}}</span>         
+                                  
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-2">
+                                        <span>Costo Seguro: </span> 
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{costoSeguro.value}}</span>       
+                                     
+                                       
+                                    </div>
+                                    <div class="col-md-2"> 
+                                        <span>Forma de Pago Seguro: </span>
+                                    </div>
+                                    <div class="col-md-2"> 
+                                        <span class="info"> {{formaPagoSeguro.value}}</span>      
+                                      
+                                 
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>Solca:</span>
+                                     </div>
+                                     <div class="col-md-2">
+                                        <span class="info"> {{solca.value}}</span>         
+                                      
+                                     
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-2">
+                                        <span>Forma de Pago Solca: </span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{formaPagoSolca.value}}</span>           
+                                      
+                                       
+                                    </div>
+                                    <div class="col-md-2"> 
+                                        <span>A Pagar Cliente: </span>
+                                    </div>
+                                    <div class="col-md-2"> 
+                                        <span class="info"> {{aPagarCliente.value}}</span>      
+                                      
+                                        
+                                    </div>
+                                    <div class="col-md-2"> 
+                                        <span>A Recibir Cliente: </span>
+                                    </div>
+                                    <div class="col-md-2"> 
+                                        <span class="info"> {{aRecibirCliente.value}}</span>          
+                                      
+                                     
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-2"> 
+                                        <span>Total Costo Nueva Operacion: </span>
+                                    </div>
+                                    <div class="col-md-2"> 
+                                        <span class="info"> {{totalCostoNuevaOperacion.value}}</span>           
+                  
+                                    </div>
+                                    <div class="col-md-2"> 
+                                        <span> Valor neto al cliente</span>
+                                    </div>
+                                    <div class="col-md-2"> 
+                                        <span class="info"> {{recibirPagar.value}}</span>         
+                                      
+                              
+                                    </div>
+                                    <div class="col-md-2"> 
+                                        <span>Tipo Cliente: </span>
+                                    </div>
+                                    <div class="col-md-2"> 
+                                        <span class="info"> {{tipoCliente.value}}</span>             
+                                        
+                                      
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-2">
+                                    <span>Total Interés: </span>    
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{totalInteres.value}}</span>       
+                                       
+                                        
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>Fecha de vencimiento: </span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{fechaVencimiento.value | rDate}}</span>                                             
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>Fecha Efectiva:</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="info"> {{fechaEfectiva.value | rDate}}</span>      
+                                      
+                                     
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                         
+                 
                         <div class="row" *ngIf="this.crediW?this.crediW.credito?this.crediW.credito.tipoCliente == 'SAP' : false :false">
                             <div class="col-md-4">
                                 <mat-form-field class="mat-form-field-fluid">
