@@ -269,7 +269,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   public crearOperacion(){
     this.credit.credito.numeroCuenta = this.numeroCuenta.value;
     this.credit.credito.pagoDia = this.diaFijoPago.value;
-    this.credit.credito.firmanteOperacion = this.firmanteOperacion.value.codigo;
+    this.credit.credito.firmanteOperacion = this.firmanteOperacion.value.nombre;
     this.credit.credito.tipoCliente = this.tipoCliente.value.codigo;
     if( this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA'){
       this.credit.credito.identificacionApoderado = this.identificacionApoderado.value;
