@@ -14,6 +14,7 @@ import { environment } from '../../../../../src/environments/environment';
   providedIn: 'root'
 })
 export class DevolucionService extends BaseService {
+ 
   
 
   constructor(_http: HttpClient,
@@ -318,6 +319,17 @@ existeCancelacionCancelacion(idDevolucion: any) {
     this.setSearchParams(p);
   
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/reporteDevolucion";
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl,value, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+
+  descargarReporteDevolucion( value: {}) {
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/descargarReporte";
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl,value, this.options).pipe(
       tap( // Log the result or error
