@@ -255,7 +255,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       }
       if(this.estado.value != "" && this.estado.value != null ){
         console.log(this.estado.value)
-        w.estado = this.estado.value.map( p=> {return p.replace(/ /gi,"_",) }) ;
+        w.estado = this.estado.value.map( p=> {return p?p.replace(/ /gi,"_",):0 }) ;
       }      
       if(this.codigoBpm.value){
         w.codigoBpm = this.codigoBpm.value.replace(/ /gi,"",);
@@ -279,7 +279,7 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
         w.nombreCompleto = this.nombreCompleto.value;
       }
       if(this.proceso.value != ""  && this.proceso.value!= null){
-        w.proceso = this.proceso.value.map( p=> {return p.replace(/ /gi,"_",) }) ;
+        w.proceso = this.proceso.value.map( p=> {return p?p.replace(/ /gi,"_",):0 }) ;
       }
 
       this.buscarOperaciones( w );
@@ -344,11 +344,27 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
   }
 
   loadEstadoActividad(){
-    this.pro.getActividades(this.proceso.value.map( p=> {return p.replace(/ /gi,"_",) })).subscribe( (dataActividad: any) =>{
+    this.pro.getActividades(this.proceso.value.map( p=> {return p?p.replace(/ /gi,"_",):0 })).subscribe( (dataActividad: any) =>{
       this.catActividad = dataActividad.entidades ? dataActividad.entidades : [];
     });
-    this.pro.getEstadosProceso(this.proceso.value.map( p=> {return p.replace(/ /gi,"_",) })).subscribe( (dataEstado: any) =>{
+    this.pro.getEstadosProceso(this.proceso.value.map( p=> {return p?p.replace(/ /gi,"_",):0 })).subscribe( (dataEstado: any) =>{
       this.catEstadoProceso = dataEstado.entidades ? dataEstado.entidades : [];
     });
+  }
+  allSelecProcesos(all) {
+    if (all.selected) {
+      this.proceso
+        .patchValue([...this.catProceso.map(item => item), 0]);
+    } else {
+      this.proceso.patchValue([]);
+    }
+  }
+  allSelecEstados(all) {
+    if (all.selected) {
+      this.estado
+        .patchValue([...this.catEstadoProceso.map(item => item), 0]);
+    } else {
+      this.estado.patchValue([]);
+    }
   }
 }

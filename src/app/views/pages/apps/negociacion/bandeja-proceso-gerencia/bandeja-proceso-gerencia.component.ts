@@ -332,10 +332,10 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
   }
 
   loadEstadoActividad(){
-    this.pro.getActividades(this.proceso.value.map( p=> {return p.replace(/ /gi,"_",) })).subscribe( (dataActividad: any) =>{
+    this.pro.getActividades(this.proceso.value.map( p=> {return p?p.replace(/ /gi,"_",):0 })).subscribe( (dataActividad: any) =>{
       this.catActividad = dataActividad.entidades ? dataActividad.entidades : [];
     });
-    this.pro.getEstadosProceso(this.proceso.value.map( p=> {return p.replace(/ /gi,"_",) })).subscribe( (dataEstado: any) =>{
+    this.pro.getEstadosProceso(this.proceso.value.map( p=> {return p?p.replace(/ /gi,"_",):0 })).subscribe( (dataEstado: any) =>{
       this.catEstadoProceso = dataEstado.entidades ? dataEstado.entidades : [];
     });
   }
@@ -389,11 +389,11 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
    }
  }
  allSelecProcesos(all) {
-  if (all.selected) {
-    this.proceso
-      .patchValue([...this.catProceso.map(item => item), 0]);
-  } else {
-    this.proceso.patchValue([]);
+    if (all.selected) {
+      this.proceso
+        .patchValue([...this.catProceso.map(item => item), 0]);
+    } else {
+      this.proceso.patchValue([]);
+    }
   }
-}
 }

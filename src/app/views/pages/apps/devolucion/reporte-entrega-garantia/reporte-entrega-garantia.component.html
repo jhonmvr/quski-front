@@ -10,13 +10,20 @@
                 <input matInput [formControl]="codigoBpm" placeholder="Código Bpm">
             </mat-form-field>
             <mat-form-field class="mat-form-field-fluid">
-                <input matInput [formControl]="estado" placeholder="Estado">
+                <mat-select placeholder="Estado" [formControl]="estado">
+                    <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
             <mat-form-field class="mat-form-field-fluid">
-                <input matInput [formControl]="agenciaEntrega" placeholder="Agencia entrega">
+                <mat-select placeholder="Agencia Entrega" [formControl]="agenciaEntrega">
+                    <mat-option *ngFor="let element of catAgencia" [value]="element.id">{{ element.nombre }}</mat-option>
+                </mat-select>
             </mat-form-field>
             <mat-form-field class="mat-form-field-fluid">
-                <input matInput [formControl]="agenciaRecepcion" placeholder="Agencia recepción">
+                <mat-select placeholder="Agencia recepcion" [formControl]="agenciaRecepcion">
+                    <mat-option *ngFor="let element of catAgencia" [value]="element.id">{{ element.nombre }}</mat-option>
+                </mat-select>
             </mat-form-field>
 
             <mat-form-field class="mat-form-field-fluid">
@@ -59,6 +66,11 @@
             <div class="offset-1 col-3">
                 <button mat-raised-button (click)="buscarBoton()">
                     <span>Buscar</span>
+                </button>
+            </div>
+            <div class="offset-1 col-3">
+                <button mat-raised-button (click)="descargarBoton()">
+                    <span>Descargar</span>
                 </button>
             </div>
         </div>

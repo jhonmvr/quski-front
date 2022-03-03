@@ -34,6 +34,7 @@
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Proceso" (selectionChange)="loadEstadoActividad()" [formControl]="proceso" multiple>
+                                    <mat-option #allProceso (click)="allSelecProcesos(allProceso)" [value]="0">TODOS</mat-option>
                                     <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}
                                     </mat-option>
                                 </mat-select>
@@ -50,6 +51,7 @@
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Actividad" [formControl]="actividad">
+                                    <mat-option [value]="0">--</mat-option>
                                     <mat-option *ngFor="let element of catActividad" [value]="element">{{ element }}
                                     </mat-option>
                                 </mat-select>
@@ -58,6 +60,7 @@
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Estado" [formControl]="estado" multiple>
+                                    <mat-option #allEstado (click)="allSelecEstados(allEstado)" [value]="0">TODOS</mat-option>
                                     <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}
                                     </mat-option>
                                 </mat-select>

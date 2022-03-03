@@ -1,7 +1,7 @@
 export class BusquedaAprobadorWrapper{
     cedula: string;
-    proceso: string;
-    idAgencia: number;
+    proceso: any;
+    idAgencia: any;
     codigo: string;
     numberItems: number
     numberPage:number

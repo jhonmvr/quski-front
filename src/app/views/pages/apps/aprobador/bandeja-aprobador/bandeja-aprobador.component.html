@@ -26,15 +26,18 @@
                         </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Proceso" [formControl]="proceso">
-                                    <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}</mat-option>
+                                <mat-select placeholder="Proceso" [formControl]="proceso" multiple>
+                                    <mat-option #allProceso (click)="allSelecProcesos(allProceso)" [value]="0">TODOS</mat-option>
+                                    <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}
+                                    </mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Agencia" [formControl]="agencia">
-                                    <mat-option *ngFor="let element of catAgencia" [value]="element">{{ element.nombre }}</mat-option>
+                                <mat-select placeholder="Agencia" [formControl]="agencia" multiple>
+                                    <mat-option #allAgencia (click)="allSelecAgencias(allAgencia)" [value]="0">TODOS</mat-option>
+                                    <mat-option *ngFor="let element of catAgencia" [value]="element.id">{{ element.nombre }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>

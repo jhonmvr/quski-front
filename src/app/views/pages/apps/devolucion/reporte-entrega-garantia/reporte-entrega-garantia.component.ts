@@ -8,6 +8,7 @@ import { DevolucionService } from '../../../../../../app/core/services/quski/dev
 import { ReNoticeService } from '../../../../../../app/core/services/re-notice.service';
 import { count } from 'rxjs/operators';
 import { xor } from 'lodash';
+import { ProcesoService } from '../../../../../../app/core/services/quski/proceso.service';
 
 @Component({
   selector: 'kt-reporte-entrega-garantia',
@@ -35,10 +36,12 @@ export class ReporteEntregaGarantiaComponent implements OnInit {
   fechaEntregaDesde = new FormControl('',[]);
   fechaEntregaHasta = new FormControl('',[]);
   catAgencia:Array<any>;
+  catEstadoProceso;
 
   dataSource
   constructor(private sinNoticeService: ReNoticeService,
     public sof: SoftbankService,
+    private pro: ProcesoService,
     public dev: DevolucionService) {
       this.dev.setParameter();
       this.sof.setParameter();
@@ -49,6 +52,9 @@ export class ReporteEntregaGarantiaComponent implements OnInit {
     this.sof.setParameter();
     this.sof.consultarAgenciasCS().subscribe(cat=>{
       this.catAgencia = cat.catalogo;
+    });
+    this.pro.getEstadosProceso(["DEVOLUCION"]).subscribe( (dataEstado: any) =>{
+      this.catEstadoProceso = dataEstado.entidades ? dataEstado.entidades : [];
     });
   }
 
@@ -78,10 +84,19 @@ export class ReporteEntregaGarantiaComponent implements OnInit {
       this.p.pageNumber = 0;
     }
 
-    
-    
-    
-    this.dev.reporteDevolucion(this.p, {}).subscribe((data: any) => {
+    this.dev.reporteDevolucion(this.p, {
+      codigoOperacion : this.codigoOperacion.value,
+      codigoBpm : this.codigoBpm.value,
+      estado : this.estado.value,
+      agenciaEntrega : this.agenciaEntrega.value,
+      agenciaRecepcion : this.agenciaRecepcion.value,
+      fechaCreacionDesde : this.fechaCreacionDesde.value,
+      fechaCreacionHasta : this.fechaCreacionHasta.value,
+      fechaArriboDesde : this.fechaArriboDesde.value,
+      fechaArriboHasta : this.fechaArriboHasta.value,
+      fechaEntregaDesde : this.fechaEntregaDesde.value,
+      fechaEntregaHasta : this.fechaEntregaHasta.value
+    }).subscribe((data: any) => {
       if (data.list != null) {
         this.dataSource = new MatTableDataSource<any>(data.list);
         this.totalResults = data.totalResults;
@@ -92,7 +107,47 @@ export class ReporteEntregaGarantiaComponent implements OnInit {
         this.initiateTablePaginator();
         this.sinNoticeService.setNotice("NO SE ENCONTRARON REGISTROS", 'info');
       }
+    } );
+  }
+
+  descargarBoton(){
+    if(confirm("ESTA SEGURO CON QUE DESEA GENERARL EL REPORTE?. ESTO PODRIA TARDAR VARIOS MINUTOS")){
+      this.dev.descargarReporteDevolucion( {
+        codigoOperacion : this.codigoOperacion.value,
+        codigoBpm : this.codigoBpm.value,
+        estado : this.estado.value,
+        agenciaEntrega : this.agenciaEntrega.value,
+        agenciaRecepcion : this.agenciaRecepcion.value,
+        fechaCreacionDesde : this.fechaCreacionDesde.value,
+        fechaCreacionHasta : this.fechaCreacionHasta.value,
+        fechaArriboDesde : this.fechaArriboDesde.value,
+        fechaArriboHasta : this.fechaArriboHasta.value,
+        fechaEntregaDesde : this.fechaEntregaDesde.value,
+        fechaEntregaHasta : this.fechaEntregaHasta.value
+      }).subscribe((data: any) => {
+        if (data.documentoHabilitanteByte) {
+          const byteCharacters = atob(data.documentoHabilitanteByte);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          
+          const blob =  new Blob([byteArray]);
+          var url = window.URL.createObjectURL(blob); 
+        
+          let a = document.createElement("a");
+          a.href = url;
+          a.target = "_blank"
+          
+          a.download = 'reporte-entrega.xls';
+          
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      } );
     }
-    );
+    
+
   }
 }

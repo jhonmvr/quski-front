@@ -161,10 +161,10 @@ export class BandejaAprobadorComponent implements OnInit {
         w.cedula = this.cedula.value;
       }
       if(this.agencia.value != "" && this.agencia.value != null){
-        w.idAgencia = this.agencia.value.id;
+        w.idAgencia = this.agencia.value;
       }
-      if(this.proceso.value != ""  && this.proceso.value != null){
-        w.proceso = this.proceso.value.replace(/ /gi,"_",);
+      if(this.proceso.value != ""  && this.proceso.value!= null){
+        w.proceso = this.proceso.value.map( p=> {return p?p.replace(/ /gi,"_",):0 }) ;
       }
       this.buscarOperaciones( w );
     } else{
@@ -235,6 +235,22 @@ export class BandejaAprobadorComponent implements OnInit {
       });
     });
    
+  }
+  allSelecAgencias(all) {
+    if (all.selected) {
+      this.agencia
+        .patchValue([...this.catAgencia.map(item => item.id), 0]);
+    } else {
+      this.agencia.patchValue([]);
+    }
+  }
+  allSelecProcesos(all) {
+    if (all.selected) {
+      this.proceso
+        .patchValue([...this.catProceso.map(item => item), 0]);
+    } else {
+      this.proceso.patchValue([]);
+    }
   }
 
 }
