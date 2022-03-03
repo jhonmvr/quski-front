@@ -655,22 +655,22 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <span>A pagar por el cliente:</span>
+                        <strong class="valorNeto">A pagar por el cliente:</strong>
                     </div>
                     <div class="col-md-2">
-                        <span class="info"> {{aPagarCliente.value}}</span>
+                        <strong class="valorNeto"> {{aPagarCliente.value}}</strong>
                     </div>
                     <div class="col-md-2">
-                        <span>A recibir cliente:</span>
+                        <strong class="valorNeto">A recibir cliente:</strong>
                     </div>
                     <div class="col-md-2">
-                        <span class="info"> {{aRecibirCliente.value}}</span>
+                        <strong class="valorNeto"> {{aRecibirCliente.value}}</strong>
                     </div>
                     <div class="col-md-2">
-                        <span>Neto al cliente:</span>
+                        <strong class="valorNeto">Neto al cliente:</strong>
                     </div>
                     <div class="col-md-2">
-                        <span class="info"> {{aRecibirCliente.value - aPagarCliente.value}}</span>
+                        <strong class="valorNeto"> {{(aRecibirCliente.value - aPagarCliente.value ) | currency:'CAD':'symbol-narrow':'1.2-2'}}</strong>
                     </div>
                 </div>
                 <div class="row">
@@ -748,7 +748,7 @@
                         <span>Tipo de cliente:</span>
                     </div>
                     <div class="col-md-2">
-                        <span class="info">{{tipoCliente.value == 'SAP'?'APODERADO': tipoCliente.value == 'SCD' ? 'CODEUDOR':'DEUDOR'}}</span>
+                        <span class="info">{{this.crediW?this.crediW.credito?this.crediW.credito.tipoCliente == 'SAP'?'APODERADO':this.crediW?this.crediW.credito?this.crediW.credito.tipoCliente == 'SCD'? 'CODEUDOR':'DEUDOR':'DEUDOR':'DEUDOR':'DEUDOR':'DEUDOR'}}</span>
                     </div>
                 </div>
                 <div class="row" *ngIf="this.crediW?this.crediW.credito?this.crediW.credito.tipoCliente == 'SAP' : false :false">
@@ -786,14 +786,6 @@
                     </div>
                     <div class="col-md-2">
                         <span class="info"> {{tablaAmortizacion.value}}</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <span>Valor Desembolso:</span>
-                    </div>
-                    <div class="col-md-2">
-                        <span class="info"> {{valorDesembolso.value}}</span>
                     </div>
                 </div>
                 <div class="row">
