@@ -505,31 +505,32 @@
                         <span>Número de la operación:</span>
                     </div>
                     <div class="col-md-2">
-          
-                            <input [formControl]="numeroOperacion" matInput />
-                   
+                        <span class="info">{{numeroOperacion.value}}</span>  
                     </div>
                     <div class="col-md-2">
                         <span>Descripción del Producto:</span>
 
                     </div>
                     <div class="col-md-2">
-                    <input [formControl]="descripcionProducto" matInput />
+                        <span class="info"> {{descripcionProducto.value}}</span>  
+                      
                 </div>
                     <div class="col-md-2">
                         <span>Estado de la Operación:</span>
                     </div>
                     <div class="col-md-2">
-                            <input [formControl]="estadoOperacion" matInput /> 
+                        <span class="info">{{estadoOperacion.value}}</span>  
+                 
                     </div>
                 </div>
                    
                 <div class="row">
                     <div class="col-md-2">
-                        <span>Tipo Oferta:</span>
+                        <span >Tipo Oferta:</span>
                     </div>
                     <div class="col-md-2">
-                            <input [formControl]="tipoOferta" matInput />
+                        <span class="info"> {{tipoOferta.value}}</span>      
+                     
                        
                     </div>
                   
@@ -537,14 +538,15 @@
                             <span>Plazo:</span>
                         </div>
                             <div class="col-md-2">
-                            <input [formControl]="plazo" matInput />
+                                <span class="info">{{plazo.value}}</span>    
                         </div>
                 
                     <div class="col-md-2">
                         <span>Día Pago Fijo:</span>
                     </div>
                     <div class="col-md-2"> 
-                        <input [formControl]="diaPagoFijo" matInput [value]="diaPagoFijo.value | rDate" />
+                        <span class="info" >  {{diaPagoFijo.value | rDate}} </span>
+                        <!-- <input [formControl]="diaPagoFijo" matInput [value]="diaPagoFijo.value | rDate" /> -->
                     
                         </div>
                     </div>
@@ -555,21 +557,21 @@
                         </div>
                        
                         <div class="col-md-2">
-                            <input matInput [formControl]="tipoCuenta" />
+                            <span class="info"> {{tipoCuenta.value}}</span>    
                         </div>
                 
                     <div class="col-md-2">
                         <span>Número de Cuenta:</span>
                         </div>
                         <div class="col-md-2">
-                      
-                            <input [formControl]="numeroCuenta" matInput />
+                            <span class="info"> {{numeroCuenta.value}}</span>  
+                            
                     </div>
                     <div class="col-md-2">
                         <span>Cuota:</span>
                     </div>
                     <div class="col-md-2">
-                            <input [formControl]="cuota" matInput />
+                        <span class="info"> {{cuota.value}}</span>      
                     </div>
                     </div>
                     <div class="row">
@@ -577,7 +579,8 @@
                         <span>Firmada Operación:</span>
                     </div>
                     <div class="col-md-2">
-                            <input [formControl]="firmadaOperacion" matInput />
+                        <span class="info">{{firmadaOperacion.value}}</span>
+                         
                     </div>
                    
                     <div class="col-md-2">
@@ -585,13 +588,15 @@
                         </div>
 
                         <div class="col-md-2">
-                            <input [formControl]="tipoCartera" matInput />
+                            <span class="info"> {{tipoCartera.value}}</span>      
+                           
                     </div>
                     <div class="col-md-2">
                         <span>Tabla Amortizacion</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="tablaAmortizacion" matInput />
+                            
+                            <span class="info"> {{tablaAmortizacion.value}}</span>   
                      
                     </div>
                 </div>
@@ -600,21 +605,24 @@
                         <span>Valor Desembolso:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="valorDesembolso" matInput />
+                            <span class="info"> {{valorDesembolso.value}}</span>   
+                           
                       
                     </div>
                     <div class="col-md-2">
                         <span>Monto Financiado:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="montoFinanciado" matInput />
+                            <span class="info"> {{montoFinanciado.value}}</span>   
+                           
                      
                     </div>
                     <div class="col-md-2">
                         <span>Forma de Pago Custodia:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="formaPagoCustodia" matInput />
+                            <span class="info"> {{formaPagoCustodia.value}}</span>   
+                          
                         
                     </div>
                     </div>
@@ -623,21 +631,24 @@
                         <span>Costo Custodia:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="costoCustodia" matInput />
+                            <span class="info"> {{costoCustodia.value}}</span>   
+                           
                     
                     </div>
                     <div class="col-md-2">
                         <span>Forma de Pago Resguardo:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="formaPagoFideicomiso" matInput />
+                            <span class="info"> {{formaPagoFideicomiso.value}}</span>   
+                         
                
                     </div>
                     <div class="col-md-2">
                         <span>Costo Resguardo:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="costoFideicomiso" matInput />
+                            <span class="info"> {{costoFideicomiso.value}}</span>   
+                
                     </div>
                     </div>
                     <div class="row">
@@ -645,22 +656,23 @@
                         <span>Forma de Pago Transporte:</span>
                     </div>
                     <div class="col-md-2">
-                            <input [formControl]="formaPagoTransporte" matInput />
+                        <span class="info"> {{formaPagoTransporte.value}}</span>   
+  
                    
                     </div>
                     <div class="col-md-2">
                         <span>Costo Transporte:</span>
                     </div>
                     <div class="col-md-2">
-                            <input [formControl]="costoTransporte" matInput />
+                        <span class="info"> {{costoTransporte.value}}</span>       
+   
                  
                     </div>
                     <div class="col-md-2">
                         <span>Forma de Pago Valoración:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="formaPagoValoracion" matInput />
-          
+                            <span class="info"> {{formaPagoValoracion.value}}</span>       
                     </div>
                     </div> 
                     <div class="row">
@@ -668,22 +680,20 @@
                         <span>Costo Valoración:</span>
                         </div>  
                         <div class="col-md-2">
-                            <input [formControl]="costoValoracion" matInput />
-                 
+                            <span class="info"> {{costoValoracion.value}}</span>                        
                     </div>
                     <div class="col-md-2">
                         <span>Forma de Pago Tasación:</span>
                         </div>  
                         <div class="col-md-2">
-                            <input [formControl]="formaPagoTasacion" matInput />
-                    
+                            <span class="info"> {{formaPagoTasacion.value}}</span>                                        
                     </div>
                     <div class="col-md-2">
                         <span>Costo Tasación:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="costoTasacion" matInput />
-                  
+                            <span class="info"> {{costoTasacion.value}}</span>               
+               
                     </div>
                     </div> 
                      <div class="row">
@@ -691,44 +701,41 @@
                         <span>Forma de Pago Custodia Devengada:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="formaPagoCustodiaDevengada" matInput />
-                   
+                            <span class="info"> {{formaPagoCustodiaDevengada.value}}</span>                         
                     </div>
                     <div class="col-md-2">
                         <span>Costo Devengada:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="custodiaDevengada" matInput />
-                      
+                            <span class="info"> {{custodiaDevengada.value}}</span>                           
                     </div>
                     <div class="col-md-2">
                         <span>Forma de Pago Seguro:</span>
                         </div>  
                         <div class="col-md-2">
-                            <input [formControl]="formaPagoSeguro" matInput />
-               
+                            <span class="info"> {{formaPagoSeguro.value}}</span>                 
+                                       
                     </div>
                     </div> 
                      <div class="row">
                     <div class="col-md-2">
-                        <span>Costo Seguro:</span>
+                        <span >Costo Seguro:</span>
                     </div>
                     <div class="col-md-2">
-                            <input [formControl]="costoSeguro" matInput />
+                        <span class="info"> {{costoSeguro.value}}</span>               
                        
                     </div>
                     <div class="col-md-2">
                         <span>Forma de Pago Solca:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="formaPagoSolca" matInput />
-                       
+                            <span class="info"> {{formaPagoSolca.value}}</span>                                
                     </div>
                     <div class="col-md-2">
                         <span>Solca:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="solca" matInput />
+                            <span class="info"> {{solca.value}}</span>             
            
                     </div>
                     </div>  
@@ -738,14 +745,14 @@
                         <span>Fecha de vencimiento:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="fechaVencimiento" matInput [value]="fechaVencimiento.value | rDate" />
-                    
+                             <span class="info"> {{fechaVencimiento.value | rDate}}</span>                      
                     </div>
                     <div class="col-md-2">
                         <span>Fecha Efectiva:</span>
                         </div>
                         <div class="col-md-2">
-                            <input [formControl]="fechaEfectiva" matInput [value]="fechaEfectiva.value | rDate" />
+                             <span class="info"> {{fechaEfectiva.value | rDate}}</span>             
+                             <!-- <input [formControl]="fechaEfectiva" matInput [value]="fechaEfectiva.value | rDate" /> -->
                  
                     </div>
                     <div class="col-md-2">
@@ -753,8 +760,7 @@
                         </div>
 
                         <div class="col-md-2">
-                            <input [formControl]="totalCostoNuevaOperacion" matInput />
-                       
+                            <span class="info"> {{totalCostoNuevaOperacion.value}}</span>                            
                     </div>
                     </div> 
                      <div class="row">
@@ -763,8 +769,7 @@
                         </div>
 
                         <div class="col-md-2">
-                            <input [formControl]="totalInteres" matInput />
-                      
+                            <span class="info"> {{totalInteres.value}}</span>                                         
                     </div>
                 </div> 
                 <div class="row">
