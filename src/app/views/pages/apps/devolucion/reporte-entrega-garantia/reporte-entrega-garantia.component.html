@@ -11,17 +11,20 @@
             </mat-form-field>
             <mat-form-field class="mat-form-field-fluid">
                 <mat-select placeholder="Estado" [formControl]="estado">
+                    <mat-option> </mat-option>
                     <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field class="mat-form-field-fluid">
                 <mat-select placeholder="Agencia Entrega" [formControl]="agenciaEntrega">
+                    <mat-option> </mat-option>
                     <mat-option *ngFor="let element of catAgencia" [value]="element.id">{{ element.nombre }}</mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field class="mat-form-field-fluid">
                 <mat-select placeholder="Agencia recepcion" [formControl]="agenciaRecepcion">
+                    <mat-option> </mat-option>
                     <mat-option *ngFor="let element of catAgencia" [value]="element.id">{{ element.nombre }}</mat-option>
                 </mat-select>
             </mat-form-field>

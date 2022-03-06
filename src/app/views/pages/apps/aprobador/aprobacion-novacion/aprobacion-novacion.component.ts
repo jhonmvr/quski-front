@@ -168,6 +168,8 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   fechaNacimientoApoderado = new FormControl('', []);
   nombreCodeudor = new FormControl('', []);
   identificacionCodeudor = new FormControl('', []);
+  costoFideicomiso = new FormControl('', []);
+  formaPagoFideicomiso = new FormControl('', []);
   
   saldoCapitalOpAnt = new FormControl('', []);
   saldoInteresOpAnt = new FormControl('', []);
@@ -618,7 +620,8 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.montoFinanciado.setValue(ap.credito.montoFinanciado);
     this.cuota.setValue(ap.credito.cuota);
     this.totalInteres.setValue(ap.credito.totalInteresVencimiento);
-
+    this.costoFideicomiso.setValue( ap.credito.costoFideicomiso);
+    this.formaPagoFideicomiso.setValue(ap.credito.formaPagoFideicomiso);
     this.saldoCapitalOpAnt.setValue(ap.credito.saldoCapitalRenov);
     this.saldoInteresOpAnt.setValue(ap.credito.saldoInteres);
     this.saldoMoraOpAnt.setValue(ap.credito.saldoMora);
@@ -678,15 +681,11 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
       this.sinNotSer.setNotice('INGRESE LA OBSERVACION DEL APROBADOR','warning');
       return;
     }
-    if( this.codigoCash.valid && this.valorCash.invalid ){
-        this.sinNotSer.setNotice('INGRESE EL VALOR DE DESEMBOLSO','warning');
-        return;
-    }
     if( this.aprobacion.value == 'false' && !this.motivoDevolucion.value ){
       this.sinNotSer.setNotice('INGRESE EL MOTIVO DE DEVOLUCION','warning');
       return;
     }
-    if( this.aprobacion.value == 'true' && (this.crediW.credito.aRecibirCliente - this.crediW.credito.aPagarCliente) >0){
+    if( this.aprobacion.value == 'true' && (this.crediW.credito.aRecibirCliente - this.crediW.credito.aPagarCliente) >0 && this.codigoCash.invalid && this.valorCash.invalid){
       this.sinNotSer.setNotice('INGRESE EL VALOR DE DESEMBOLSO','warning');
         return;
     }

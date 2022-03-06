@@ -101,6 +101,10 @@ const routes: Routes = [
 			{
 				path: 'reporte-entrega/:item',
 				component: ReporteEntregaGarantiaComponent
+			},	
+			{
+				path: 'reporte-entrega',
+				component: ReporteEntregaGarantiaComponent
 			}
 		]
 	}
