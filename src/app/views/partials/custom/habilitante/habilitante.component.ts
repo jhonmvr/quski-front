@@ -245,6 +245,29 @@ export class HabilitanteComponent implements OnInit {
       this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
     });
   }
+  descargarArchivoHabilitanteDes(row:HabilitanteWrapper) {
+    
+    
+    this.os.getObjectById( row.objectId,this.os.mongoDb, environment.mongoHabilitanteCollection ).subscribe((data:any)=>{
+      if( data && data.entidad ){
+        let obj=JSON.parse( atob(data.entidad) );
+        const byteCharacters = atob(obj.fileBase64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray]);
+        saveAs(blob , obj.name); 
+        
+      }else {
+        this.sinNoticeService.setNotice("NO SE ENCONTRO REGISTRO PARA DESCARGA", "error" );
+      }
+    },
+    error => {
+      this.sinNoticeService.setNotice("ERROR DESCARGA DE ARCHIVO HABILITANTE REGISTRADO", "error" );
+    });
+  }
 
   descargarPlantillaHabilitante(row:HabilitanteWrapper) {
     
