@@ -98,6 +98,14 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public email = new FormControl('', [Validators.required, Validators.email]);
   public campania = new FormControl('');
   public aprobacionMupi = new FormControl('', [Validators.required]);
+  public tipoCliente = new FormControl('', [Validators.required]);
+  public identificacionApoderado = new FormControl('', [Validators.required]);
+  public nombreApoderado = new FormControl('', [Validators.required]);
+  public fechaNacimientoApoderado = new FormControl('', [Validators.required]);
+  public fechaNacimientoCodeudor = new FormControl('', [Validators.required]);
+  
+  public identificacionCodeudor = new FormControl('', [Validators.required]);
+  public nombreCodeudor = new FormControl('', [Validators.required]);
   // FORMULARIO TASACION
   public formTasacion: FormGroup = new FormGroup({});
   public tipoOro = new FormControl('', [Validators.required]);
@@ -115,9 +123,11 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public valorAvaluo = new FormControl('', []);
   public valorRealizacion = new FormControl('', []);
   public descripcion = new FormControl('', [Validators.required]);
-
+  public catTipoCliente;
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public montoSolicitado = new FormControl('', [Validators.required, ValidateDecimal, Validators.min(0.01)]);
+
+  public formOperacion: FormGroup = new FormGroup({});
 
   public tbQoCliente;
   clienteBloqueado = false;
@@ -167,6 +177,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.formDatosCliente.addControl("email", this.email);
     this.formDatosCliente.addControl("campania", this.campania);
     this.formDatosCliente.addControl("publicidad", this.publicidad);
+    this.formDatosCliente.addControl("tipoCliente",this.tipoCliente);
     //this.formDatosCliente.addControl("nombreReferido", this.nombreReferido);
     //this.formDatosCliente.addControl("telefonoReferido", this.telefonoReferido);
     this.formDatosCliente.addControl("aprobacionMupi", this.aprobacionMupi);
@@ -229,6 +240,9 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     });
     this.sof.consultarEstadoJoyaCS().subscribe((data: any) => {
       this.catEstadoJoya = !data.existeError ? data.catalogo : "Error al cargar catalogo";
+    });
+    this.sof.consultarTipoClienteCS().subscribe( data =>{
+      this.catTipoCliente = data.catalogo ? data.catalogo :  ['No se cargo el catalogo. Error'];
     });
   }
   /** ********************************************* @ENTRADA ********************* **/
@@ -536,6 +550,13 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.telefonoReferido.setValue(this.negoW.referedio ? this.negoW.referedio.telefono: '');
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
+    this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo ==this.negoW.credito.tipoCliente) );
+    this.nombreApoderado.setValue(this.negoW.credito.nombreCompletoApoderado);
+    this.nombreCodeudor.setValue(this.negoW.credito.nombreCompletoCodeudor);
+    this.identificacionApoderado.setValue(this.negoW.credito.identificacionApoderado);
+    this.identificacionCodeudor.setValue(this.negoW.credito.identificacionCodeudor);
+    this.fechaNacimientoApoderado.setValue(this.negoW.credito.fechaNacimientoApoderado? new Date(this.negoW.credito.fechaNacimientoApoderado): null);
+    this.fechaNacimientoCodeudor.setValue(this.negoW.credito.fechaNacimientoCodeudor? new Date(this.negoW.credito.fechaNacimientoCodeudor): null);
     this.riesgoTotal = 0;
     if (this.negoW.riesgos) {
       this.negoW.riesgos.forEach(element => {
@@ -1099,10 +1120,19 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     if (this.telefonoFijo) {
       cliente.tbQoTelefonoClientes.push(this.telefonoFijo);
     }
+
     let wrapperCliente = {
       cliente: cliente,
       referido: referido,
-      bandera: this.publicidad.value?this.publicidad.value.bandera? true:false : false
+      bandera: this.publicidad.value?this.publicidad.value.bandera? true:false : false,
+      nombreApoderado: this.nombreApoderado.value,
+      identificacionApoderado: this.identificacionApoderado.value,
+      fechaNacimientoApoderado: this.fechaNacimientoApoderado.value,
+      fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value,
+      tipoCliente: this.tipoCliente.value?this.tipoCliente.value.codigo:null,
+      nombreCodeudor: this.nombreCodeudor.value,
+      identificacionCodeudor: this.identificacionCodeudor.value,
+      idCreditoNegociacion: this.negoW.credito.id
     }
     //console.log("el wrappersin", wrapperCliente)
     return wrapperCliente;
@@ -1167,7 +1197,19 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       return;
     }
     if (confirm("ESTA SEGURO DE GENERAR LA SOLICITUD DE CREDITO?")) {
-      this.neg.guardarOpcionCredito(this.selection.selected, this.negoW.credito.id).subscribe(response => {
+    
+      let wrapper = {
+        opcionCredito:this.selection.selected,
+        nombreApoderado: this.nombreApoderado.value,
+        identificacionApoderado: this.identificacionApoderado.value,
+        fechaNacimientoApoderado: this.fechaNacimientoApoderado.value,
+        fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value,
+        tipoCliente: this.tipoCliente.value?this.tipoCliente.value.codigo:null,
+        nombreCodeudor: this.nombreCodeudor.value,
+        identificacionCodeudor: this.identificacionCodeudor.value,
+        idCreditoNegociacion: this.negoW.credito.id
+      }
+      this.neg.guardarOpcionCredito(wrapper, this.negoW.credito.id).subscribe(response => {
         console.log( )
         this.router.navigate(['negociacion/gestion-cliente/NEG/', this.negoW.credito.tbQoNegociacion.id]);
       }, error => {
@@ -1192,6 +1234,11 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     }
     if(this.publicidad.value && this.publicidad.value.bandera && this.nombreReferido.invalid && this.telefonoReferido.invalid){
       this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    }
+    if(this.formOperacion.invalid){
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CODEUDOR/APODERADO", 'warning');
       this.myStepper.selectedIndex = 1;
       return;
     }
@@ -1241,6 +1288,47 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     }
     return null;
     
+  }
+
+  public cambiarCliente(){
+    this.limpiarGarantes();
+    //console.log('Tipo de cliente solicitado ->', this.tipoCliente.value);
+    if(this.tipoCliente.value && (this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA')){
+      this.formOperacion.addControl("nombreApoderado", this.nombreApoderado);
+      this.formOperacion.addControl("fechaNacimientoApoderado", this.fechaNacimientoApoderado);
+      this.formOperacion.addControl("identificacionApoderado", this.identificacionApoderado);
+    }
+    if(this.tipoCliente.value && (this.tipoCliente.value.codigo == 'SCD' || this.tipoCliente.value.codigo == 'CYA')){
+      this.formOperacion.addControl("identificacionCodeudor", this.identificacionCodeudor);
+      this.formOperacion.addControl("nombreCodeudor", this.nombreCodeudor);
+      this.formOperacion.addControl("fechaNacimientoCodeudor", this.fechaNacimientoCodeudor);
+    }
+  }
+  public limpiarGarantes(){
+    this.formOperacion.removeControl('nombreApoderado');
+      this.nombreApoderado.reset();
+      this.nombreApoderado.setErrors(null);
+      this.nombreApoderado.setValue(null);
+    this.formOperacion.removeControl('fechaNacimientoApoderado');
+      this.fechaNacimientoApoderado.reset();
+      this.fechaNacimientoApoderado.setErrors(null);
+      this.fechaNacimientoApoderado.setValue(null);
+    this.formOperacion.removeControl('identificacionApoderado');
+      this.identificacionApoderado.reset();
+      this.identificacionApoderado.setErrors(null);
+      this.identificacionApoderado.setValue(null);
+    this.formOperacion.removeControl('identificacionCodeudor');
+      this.identificacionCodeudor.reset();
+      this.identificacionCodeudor.setErrors(null);
+      this.identificacionCodeudor.setValue(null);
+    this.formOperacion.removeControl('nombreCodeudor');
+      this.nombreCodeudor.reset();
+      this.nombreCodeudor.setErrors(null);
+      this.nombreCodeudor.setValue(null);
+    this.formOperacion.removeControl('fechaNacimientoCodeudor');
+      this.fechaNacimientoCodeudor.reset();
+      this.fechaNacimientoCodeudor.setErrors(null);
+      this.fechaNacimientoCodeudor.setValue(null);
   }
  
 
