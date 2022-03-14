@@ -198,11 +198,16 @@
                                 <input matInput [formControl]="identificacionCodeudor" placeholder="Identificacion (Codeudor)" />
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [matDatepicker]="picker6" [formControl]="fechaNacimientoCodeudor" placeholder="Fecha Nacimiento">
+                                <input matInput (dateChange)="cargarEdadCodeudor()" [matDatepicker]="picker6" [formControl]="fechaNacimientoCodeudor" placeholder="Fecha Nacimiento">
                                 <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
                                 <mat-datepicker #picker6></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="edadCodeudor" placeholder="Edad (Codeudor)" />
                             </mat-form-field>
                         </div>
                     </div>

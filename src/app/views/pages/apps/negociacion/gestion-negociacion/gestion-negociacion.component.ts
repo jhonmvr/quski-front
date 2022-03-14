@@ -90,6 +90,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public publicidad = new FormControl('', [Validators.required]);
   public fechaDeNacimiento = new FormControl('', [Validators.required]);
   public edad = new FormControl('', [Validators.required, Validators.max(75), Validators.min(18)]);
+  public edadCodeudor = new FormControl('', [Validators.required, Validators.max(64), Validators.min(18)]);
   public nacionalidad = new FormControl('', [Validators.required]);
   public movil = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   public nombreReferido = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -557,6 +558,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.identificacionCodeudor.setValue(this.negoW.credito.identificacionCodeudor);
     this.fechaNacimientoApoderado.setValue(this.negoW.credito.fechaNacimientoApoderado? new Date(this.negoW.credito.fechaNacimientoApoderado): null);
     this.fechaNacimientoCodeudor.setValue(this.negoW.credito.fechaNacimientoCodeudor? new Date(this.negoW.credito.fechaNacimientoCodeudor): null);
+    
+    this.cargarEdadCodeudor();
     this.riesgoTotal = 0;
     if (this.negoW.riesgos) {
       this.negoW.riesgos.forEach(element => {
@@ -869,6 +872,18 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       this.par.getDiffBetweenDateInicioActual(convertFechas.format(fechaSeleccionada, "input"), "dd/MM/yyy").subscribe((rDiff: any) => {
         const diff: YearMonthDay = rDiff.entidad;
         this.edad.setValue(diff.year);
+      });
+    }
+  }
+
+  cargarEdadCodeudor(){
+    if (this.fechaNacimientoCodeudor.valid) {
+      const fechaSeleccionada = new Date(this.fechaNacimientoCodeudor.value);
+      const convertFechas = new RelativeDateAdapter();
+      this.par.getDiffBetweenDateInicioActual(convertFechas.format(fechaSeleccionada, "input"), "dd/MM/yyy").subscribe((rDiff: any) => {
+        const diff: YearMonthDay = rDiff.entidad;
+        this.edadCodeudor.setValue(diff.year);
+        this.edadCodeudor.disable()
       });
     }
   }
@@ -1195,6 +1210,17 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     if (this.selection.selected.length == 0) {
       this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO", 'warning');
       return;
+    }    
+    if ((!this.fechaDeNacimiento.value || this.edad.value < 18 || this.edad.value > 75) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'DEU') {
+      this.sinNotSer.setNotice("LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS DEBE INGRESAR LA INFORMACION DEL CODEUDOR", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    }
+    
+    if ((!this.fechaNacimientoCodeudor.value || this.edadCodeudor.value < 18 || this.edadCodeudor.value > 65) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'SCD') {
+      this.sinNotSer.setNotice("LA EDAD DEL CODEUDOR ES MAYOR A 65 AÑOS DEBE INGRESE OTRO CODEUDOR", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
     }
     if (confirm("ESTA SEGURO DE GENERAR LA SOLICITUD DE CREDITO?")) {
     
@@ -1227,8 +1253,13 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       this.myStepper.selectedIndex = 1;
       return;
     }
-    if (!this.fechaDeNacimiento.value || this.edad.value < 18 || this.edad.value > 75) {
-      this.sinNotSer.setNotice("INGRESE UNA FECHA VALIDA QUE CORRESPONDA A UNA EDAD VALIDA", 'warning');
+    if ((!this.fechaDeNacimiento.value || this.edad.value < 18 || this.edad.value > 75) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'DEU') {
+      this.sinNotSer.setNotice("LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS DEBE INGRESAR LA INFORMACION DEL CODEUDOR", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    }
+    if ((!this.fechaNacimientoCodeudor.value || this.edadCodeudor.value < 18 || this.edadCodeudor.value > 65) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'SCD') {
+      this.sinNotSer.setNotice("LA EDAD DEL CODEUDOR ES MAYOR A 65 AÑOS DEBE INGRESE OTRO CODEUDOR", 'warning');
       this.myStepper.selectedIndex = 1;
       return;
     }
