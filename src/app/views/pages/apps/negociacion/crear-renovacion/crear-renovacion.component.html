@@ -57,6 +57,16 @@
                                 <input matInput [formControl]="cedulaCliente" placeholder="Cedula Cliente" />
                             </mat-form-field>
                         </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="fechaNacimientoCliente" placeholder="Fecha de nacimiento" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="edadCliente" placeholder="Edad" />
+                            </mat-form-field>
+                        </div>
                     </div>
                 </form>
             </mat-step>
@@ -74,7 +84,7 @@
             <mat-step>
                 <ng-template matStepLabel>Riesgo Acumulado</ng-template>
                 <ng-container *ngIf="componenteRiesgo">
-                    <kt-tabla-riesgo-acumulado [base]="riesgos"></kt-tabla-riesgo-acumulado> 
+                    <kt-tabla-riesgo-acumulado [base]="riesgos"></kt-tabla-riesgo-acumulado>
                 </ng-container>
 
                 <div class="row " *ngIf="!componenteRiesgo">
@@ -98,6 +108,60 @@
                 </div>
             </mat-step>
             <mat-step label='Simular opciones de crédito'>
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <mat-select required [formControl]="tipoCliente" placeholder="Tipo Cliente" (selectionChange)="cambiarCliente()">
+                                <mat-option *ngFor="let element of catTipoCliente" [value]="element">
+                                    {{element.nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row" *ngIf="tipoCliente.value && (tipoCliente.value.codigo == 'SAP' || tipoCliente.value.codigo == 'CYA')">
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="nombreApoderado" placeholder="Nombre Completo (Apoderado)" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="identificacionApoderado" placeholder="Identificacion (Apoderado)" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [matDatepicker]="picker5" [formControl]="fechaNacimientoApoderado" placeholder="Fecha Nacimiento">
+                            <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                            <mat-datepicker #picker5></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row" *ngIf="this.tipoCliente.value && (tipoCliente.value.codigo == 'SCD' || tipoCliente.value.codigo == 'CYA')">
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="nombreCodeudor" placeholder="Nombre Completo (Codeudor)" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="identificacionCodeudor" placeholder="Identificacion (Codeudor)" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput (dateChange)="cargarEdadCodeudor()" [matDatepicker]="picker6" [formControl]="fechaNacimientoCodeudor" placeholder="Fecha Nacimiento">
+                            <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                            <mat-datepicker #picker6></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="edadCodeudor" placeholder="Edad (Codeudor)" />
+                        </mat-form-field>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="offset-9 col-3">
                         <button mat-stroked-button color="{{ recibirOpagar }}">

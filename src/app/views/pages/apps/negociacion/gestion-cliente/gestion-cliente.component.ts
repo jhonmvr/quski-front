@@ -290,7 +290,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
           this.router.navigate(['negociacion/gestion-negociacion/NEG/', this.item]);
         }
         if (this.origen == 'NOV') {
-          this.router.navigate(['novacion/crear-novacion/NOV/', this.item]);
+          this.router.navigate(['negociacion/crear-novacion/NOV/', this.item]);
         }
       }
     });

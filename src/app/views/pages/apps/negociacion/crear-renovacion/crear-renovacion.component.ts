@@ -17,7 +17,7 @@ import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { LayoutConfigService, SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
@@ -26,6 +26,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ValidateDecimal } from '../../../../../core/util/validator.decimal';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
+import { RelativeDateAdapter } from './../../../../../core/util/relative.dateadapter';
+import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -53,9 +55,19 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   selection = new SelectionModel<any>(true, []);
   private garantiasSimuladas: any[];
   private catMotivoDevolucion: Array<any>;
+  public catTipoCliente;
+  public tipoCliente = new FormControl('', [Validators.required]);
+  public identificacionApoderado = new FormControl('', [Validators.required]);
+  public nombreApoderado = new FormControl('', [Validators.required]);
+  public fechaNacimientoApoderado = new FormControl('', [Validators.required]);
+  public fechaNacimientoCodeudor = new FormControl('', [Validators.required]);
+  public edadCodeudor = new FormControl('', [Validators.required, Validators.max(64), Validators.min(18)]);
+  public identificacionCodeudor = new FormControl('', [Validators.required]);
+  public nombreCodeudor = new FormControl('', [Validators.required]);
 
   /** @FORMULARIOS */
   public formOperacion: FormGroup = new FormGroup({});
+  formTipoCliente: FormGroup = new FormGroup({});
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public codigoBpm = new FormControl();
   public codigoOperacion = new FormControl();
@@ -67,6 +79,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public estadoProceso = new FormControl();
   public nombreCompleto = new FormControl();
   public cedulaCliente = new FormControl();
+  fechaNacimientoCliente = new FormControl('', [Validators.required]);
+  edadCliente = new FormControl();
   public montoSolicitado = new FormControl('',[ValidateDecimal]);
   public componenteRiesgo: boolean;
   public dataSourceCreditoNegociacion = new MatTableDataSource<any>();
@@ -112,6 +126,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.formOperacion.addControl("estadoProceso", this.estadoProceso);
     this.formOperacion.addControl("nombreCompleto", this.nombreCompleto);
     this.formOperacion.addControl("cedulaCliente", this.cedulaCliente);
+    this.formOperacion.addControl("fechaNacimientoCliente",this.fechaNacimientoCliente);
+    this.formOperacion.addControl("edadCliente",this.edadCliente);
     this.formOpcionesCredito.addControl("montoSolicitado", this.montoSolicitado);
   }
 
@@ -129,6 +145,10 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.componenteRiesgo = false;
   }
   private cargarCatalogos(){
+    
+    this.sof.consultarTipoClienteCS().subscribe( data =>{
+      this.catTipoCliente = data.catalogo ? data.catalogo :  ['No se cargo el catalogo. Error'];
+    });
     this.sof.consultarMotivoDevolucionAprobacionCS().subscribe((data: any) => {
       this.catMotivoDevolucion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
     });
@@ -243,6 +263,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.codigoOperacionMadre.setValue(this.credit.operacionAnterior.credito.numeroOperacionMadre);
     this.nombreCompleto.setValue(this.credit.operacionAnterior.cliente.nombreCompleto);
     this.cedulaCliente.setValue(this.credit.operacionAnterior.cliente.identificacion);
+    this.fechaNacimientoCliente.setValue(this.credit.operacionAnterior.cliente.fechaNacimiento);
+    this.cargarEdad();
     this.numeroOperacion = this.credit.operacionAnterior.credito.numeroOperacion;
     this.numeroOperacionMadre = this.credit.operacionAnterior.credito.numeroOperacionMadre;
     this.codigoOperacionAnterior.setValue(this.credit.operacionAnterior.credito.numeroOperacion );
@@ -256,6 +278,15 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         this.credit ? this.credit.credito ? this.credit.credito.numeroOperacion : null : null )
     this.formOperacion.disable();
     if(this.credit.credito){
+      this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo ==this.credit.credito.tipoCliente) );
+      this.cambiarCliente();
+      this.nombreApoderado.setValue(this.credit.credito.nombreCompletoApoderado);
+      this.nombreCodeudor.setValue(this.credit.credito.nombreCompletoCodeudor);
+      this.identificacionApoderado.setValue(this.credit.credito.identificacionApoderado);
+      this.identificacionCodeudor.setValue(this.credit.credito.identificacionCodeudor);
+      this.fechaNacimientoApoderado.setValue(this.credit.credito.fechaNacimientoApoderado? new Date(this.credit.credito.fechaNacimientoApoderado): null);
+      this.fechaNacimientoCodeudor.setValue(this.credit.credito.fechaNacimientoCodeudor? new Date(this.credit.credito.fechaNacimientoCodeudor): null);
+      this.cargarEdadCodeudor();
       this.dataSourceCreditoNegociacion = new MatTableDataSource();
       let calculadora: any = {
         codigoTabla: this.credit.credito.tablaAmortizacion,
@@ -366,7 +397,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       if(data.entidad){
         let valor = data.entidad.valor;
         this.par.getDiffBetweenDateInicioActual(this.credit.operacionAnterior.cliente.fechaNacimiento, 'yyyy-MM-dd').subscribe( (data: any) =>{
-          if(data.entidad.year > valor && this.validCliente){
+          if(data.entidad.year +1 > valor && this.validCliente){
             this.credit.excepciones ? this.credit.excepciones.forEach(e =>{
               if(e.tipoExcepcion != 'EXCEPCION_CLIENTE'){
                 this.solicitarExcepcionCliente();
@@ -383,9 +414,26 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       }
     });
   }
+
+  validarEdadCliente
   public solicitarExcepcionRiesgo(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion,
+      if(this.tipoCliente.invalid){
+        this.sinNotSer.setNotice("SELECCIONA UN TIPO DE CLIENTE", 'warning');
+        return;
+      }
+      if(this.formTipoCliente.invalid){
+        this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LA INFORMACION DEL CODEUDOR/APODERADO", 'warning');
+        return;
+      }
+      this.cre.crearCreditoRenovacion( {opcion: this.selection.selected.length > 0 ? this.selection.selected[0] : null,
+        nombreApoderado: this.nombreApoderado.value,
+        identificacionApoderado: this.identificacionApoderado.value,
+        fechaNacimientoApoderado: this.fechaNacimientoApoderado.value,
+        fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value,
+        tipoCliente: this.tipoCliente.value?this.tipoCliente.value.codigo:null,
+        nombreCodeudor: this.nombreCodeudor.value,
+        identificacionCodeudor: this.identificacionCodeudor.value },  this.numeroOperacion,
          this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
@@ -398,7 +446,22 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionCliente(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion( this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion,
+      if(this.tipoCliente.invalid){
+        this.sinNotSer.setNotice("SELECCIONA UN TIPO DE CLIENTE", 'warning');
+        return;
+      }
+      if(this.formTipoCliente.invalid){
+        this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LA INFORMACION DEL CODEUDOR/APODERADO", 'warning');
+        return;
+      }
+      this.cre.crearCreditoRenovacion( {opcion: this.selection.selected.length > 0 ? this.selection.selected[0] : null,
+        nombreApoderado: this.nombreApoderado.value,
+        identificacionApoderado: this.identificacionApoderado.value,
+        fechaNacimientoApoderado: this.fechaNacimientoApoderado.value,
+        fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value,
+        tipoCliente: this.tipoCliente.value?this.tipoCliente.value.codigo:null,
+        nombreCodeudor: this.nombreCodeudor.value,
+        identificacionCodeudor: this.identificacionCodeudor.value },  this.numeroOperacion,
          this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
@@ -411,7 +474,22 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public solicitarExcepcionCobertura(){
     if(!this.credit.proceso){
-      this.cre.crearCreditoRenovacion(  this.selection.selected.length > 0 ? this.selection.selected[0] : null,  this.numeroOperacion,
+      if(this.tipoCliente.invalid){
+        this.sinNotSer.setNotice("SELECCIONA UN TIPO DE CLIENTE", 'warning');
+        return;
+      }
+      if(this.formTipoCliente.invalid){
+        this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LA INFORMACION DEL CODEUDOR/APODERADO", 'warning');
+        return;
+      }
+      this.cre.crearCreditoRenovacion({opcion: this.selection.selected.length > 0 ? this.selection.selected[0] : null,
+        nombreApoderado: this.nombreApoderado.value,
+        identificacionApoderado: this.identificacionApoderado.value,
+        fechaNacimientoApoderado: this.fechaNacimientoApoderado.value,
+        fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value,
+        tipoCliente: this.tipoCliente.value?this.tipoCliente.value.codigo:null,
+        nombreCodeudor: this.nombreCodeudor.value,
+        identificacionCodeudor: this.identificacionCodeudor.value },  this.numeroOperacion,
          this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
         if(data.entidad){
           this.credit = data.entidad;
@@ -446,13 +524,30 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
   public actualizarCliente(){
 
+    if(this.tipoCliente.invalid){
+      this.sinNotSer.setNotice("SELECCIONA UN TIPO DE CLIENTE", 'warning');
+      return;
+    }
+    if(this.formTipoCliente.invalid){
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LA INFORMACION DEL CODEUDOR/APODERADO", 'warning');
+      return;
+    }
+    if ((this.edadCliente.value < 18 || this.edadCliente.value > 74) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'DEU') {
+      this.sinNotSer.setNotice("LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS DEBE INGRESAR LA INFORMACION DEL CODEUDOR", 'warning');
+      return;
+    }
+    if ((this.fechaNacimientoCodeudor.invalid || this.edadCodeudor.value < 18 || this.edadCodeudor.value > 64) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'SCD') {
+      this.sinNotSer.setNotice("LA EDAD DEL CODEUDOR ES MAYOR A 65 AÑOS DEBE INGRESE OTRO CODEUDOR", 'warning');
+      return;
+    }
     if(this.excepciones.length > 0){
-      let x = this.excepciones.find(p=>p.isRiesgo || p.isCliente);
-      if(x && x.isRiesgo){
+      let xriesgo = this.excepciones.find(p=>p.isRiesgo);
+      let xcliente = this.excepciones.find(p=>p.isCliente);
+      if(xriesgo){
         this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
         return;
       }
-      if(x && x.isCliente){
+      if(xcliente){
         this.abrirPopupExcepciones(new DataInjectExcepciones(true, false, false));
         return;
       }
@@ -468,7 +563,15 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       dialogRef.afterClosed().subscribe(r => {
         this.loadingSubject.next(true);
         if(r){
-          this.cre.crearCreditoRenovacion( this.selection.selected[0], this.numeroOperacion, this.numeroOperacionMadre, 
+          this.cre.crearCreditoRenovacion( {opcion:this.selection.selected[0],
+            nombreApoderado: this.nombreApoderado.value,
+            identificacionApoderado: this.identificacionApoderado.value,
+            fechaNacimientoApoderado: this.fechaNacimientoApoderado.value,
+            fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value,
+            tipoCliente: this.tipoCliente.value?this.tipoCliente.value.codigo:null,
+            nombreCodeudor: this.nombreCodeudor.value,
+            identificacionCodeudor: this.identificacionCodeudor.value } ,
+            this.numeroOperacion, this.numeroOperacionMadre, 
             this.usuario, this.agencia, this.garantiasSimuladas, this.idNego, this.variablesInternas ).subscribe( data =>{
             if(data.entidad){
               this.credit = data.entidad;
@@ -544,7 +647,9 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
           this.variablesInternas = data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable;
           //console.log("estas son las variabes", this.variablesInternas)
         }
-        this.validarCliente( data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion );
+        
+        this.dataSourceCreditoNegociacion.data =  data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
+        //this.validarCliente( data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion );
       }
     });
   }
@@ -617,5 +722,68 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     
 
     })  
+  }
+
+  
+  public cambiarCliente(){
+    this.limpiarGarantes();
+    //console.log('Tipo de cliente solicitado ->', this.tipoCliente.value);
+    if(this.tipoCliente.value && (this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA')){
+      this.formTipoCliente.addControl("nombreApoderado", this.nombreApoderado);
+      this.formTipoCliente.addControl("fechaNacimientoApoderado", this.fechaNacimientoApoderado);
+      this.formTipoCliente.addControl("identificacionApoderado", this.identificacionApoderado);
+    }
+    if(this.tipoCliente.value && (this.tipoCliente.value.codigo == 'SCD' || this.tipoCliente.value.codigo == 'CYA')){
+      this.formTipoCliente.addControl("identificacionCodeudor", this.identificacionCodeudor);
+      this.formTipoCliente.addControl("nombreCodeudor", this.nombreCodeudor);
+      this.formTipoCliente.addControl("fechaNacimientoCodeudor", this.fechaNacimientoCodeudor);
+    }
+  }
+  public limpiarGarantes(){
+    this.formTipoCliente.removeControl('nombreApoderado');
+      this.nombreApoderado.reset();
+      this.nombreApoderado.setErrors(null);
+      this.nombreApoderado.setValue(null);
+    this.formTipoCliente.removeControl('fechaNacimientoApoderado');
+      this.fechaNacimientoApoderado.reset();
+      this.fechaNacimientoApoderado.setErrors(null);
+      this.fechaNacimientoApoderado.setValue(null);
+    this.formTipoCliente.removeControl('identificacionApoderado');
+      this.identificacionApoderado.reset();
+      this.identificacionApoderado.setErrors(null);
+      this.identificacionApoderado.setValue(null);
+    this.formTipoCliente.removeControl('identificacionCodeudor');
+      this.identificacionCodeudor.reset();
+      this.identificacionCodeudor.setErrors(null);
+      this.identificacionCodeudor.setValue(null);
+    this.formTipoCliente.removeControl('nombreCodeudor');
+      this.nombreCodeudor.reset();
+      this.nombreCodeudor.setErrors(null);
+      this.nombreCodeudor.setValue(null);
+    this.formTipoCliente.removeControl('fechaNacimientoCodeudor');
+      this.fechaNacimientoCodeudor.reset();
+      this.fechaNacimientoCodeudor.setErrors(null);
+      this.fechaNacimientoCodeudor.setValue(null);
+  }
+  cargarEdadCodeudor(){
+    if (this.fechaNacimientoCodeudor.valid) {
+      const fechaSeleccionada = new Date(this.fechaNacimientoCodeudor.value);
+      const convertFechas = new RelativeDateAdapter();
+      this.par.getDiffBetweenDateInicioActual(convertFechas.format(fechaSeleccionada, "input"), "dd/MM/yyy").subscribe((rDiff: any) => {
+        const diff: YearMonthDay = rDiff.entidad;
+        this.edadCodeudor.setValue(diff.year);
+        this.edadCodeudor.disable()
+      });
+    }
+  }
+  public cargarEdad() {
+    if (this.fechaNacimientoCliente.valid) {
+      const fechaSeleccionada = new Date(this.fechaNacimientoCliente.value);
+      const convertFechas = new RelativeDateAdapter();
+      this.par.getDiffBetweenDateInicioActual(convertFechas.format(fechaSeleccionada, "input"), "dd/MM/yyy").subscribe((rDiff: any) => {
+        const diff: YearMonthDay = rDiff.entidad;
+        this.edadCliente.setValue(diff.year);
+      });
+    }
   }
 }

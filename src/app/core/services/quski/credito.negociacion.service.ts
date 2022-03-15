@@ -122,7 +122,7 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
-  public crearCreditoRenovacion( opcion, numeroOperacion, numeroOperacionMadre, asesor, idAgencia, garantias,  idNegociacion, variablesInternas) {
+  public crearCreditoRenovacion( wp, numeroOperacion, numeroOperacionMadre, asesor, idAgencia, garantias,  idNegociacion, variablesInternas) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "crearCreditoRenovacion";
     this.params = new HttpParams().set('nombreAgencia', localStorage.getItem('nombreAgencia'))
     .set('telefonoAsesor', localStorage.getItem('telefono')).set('numeroOperacion', numeroOperacion)
@@ -134,9 +134,26 @@ export class CreditoNegociacionService extends BaseService {
     }
     let wrapper ;
     if(garantias){
-      wrapper = { opcion: opcion, garantias: garantias, variablesInternas: variablesInternas}
+      wrapper = { opcion: wp.opcion,
+          garantias: garantias,
+          variablesInternas: variablesInternas,
+          nombreApoderado: wp.nombreApoderado,
+          identificacionApoderado: wp.identificacionApoderado,
+          fechaNacimientoApoderado: wp.fechaNacimientoApoderado,
+          fechaNacimientoCodeudor: wp.fechaNacimientoCodeudor,
+          tipoCliente: wp.tipoCliente,
+          nombreCodeudor: wp.nombreCodeudor,
+          identificacionCodeudor: wp.identificacionCodeudor
+        }
     }else{
-      wrapper = { opcion: opcion, variablesInternas: variablesInternas }
+      wrapper = { opcion: wp.opcion, variablesInternas: variablesInternas,
+        nombreApoderado: wp.nombreApoderado,
+        identificacionApoderado: wp.identificacionApoderado,
+        fechaNacimientoApoderado: wp.fechaNacimientoApoderado,
+        fechaNacimientoCodeudor: wp.fechaNacimientoCodeudor,
+        tipoCliente: wp.tipoCliente,
+        nombreCodeudor: wp.nombreCodeudor,
+        identificacionCodeudor: wp.identificacionCodeudor }
     }
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, wrapper, this.options).pipe(

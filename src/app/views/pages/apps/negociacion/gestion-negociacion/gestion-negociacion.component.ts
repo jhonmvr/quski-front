@@ -551,7 +551,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.telefonoReferido.setValue(this.negoW.referedio ? this.negoW.referedio.telefono: '');
     this.componenteVariable = wrapper.variables != null ? true : false;
     this.componenteRiesgo = wrapper.riesgos != null ? true : false;
-    this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo ==this.negoW.credito.tipoCliente) );
+    //this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo ==this.negoW.credito.tipoCliente) ); 
+    this.tipoCliente.setValue({codigo:"DEU"}); 
     this.nombreApoderado.setValue(this.negoW.credito.nombreCompletoApoderado);
     this.nombreCodeudor.setValue(this.negoW.credito.nombreCompletoCodeudor);
     this.identificacionApoderado.setValue(this.negoW.credito.identificacionApoderado);
@@ -1211,17 +1212,21 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO", 'warning');
       return;
     }    
-    if ((!this.fechaDeNacimiento.value || this.edad.value < 18 || this.edad.value > 75) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'DEU') {
+    /* if ((!this.fechaDeNacimiento.value || this.edad.value < 18 || this.edad.value > 75) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'DEU') {
+      this.sinNotSer.setNotice("LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS DEBE INGRESAR LA INFORMACION DEL CODEUDOR", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    } */
+    if (this.edad.value < 18 || this.edad.value > 74) {
       this.sinNotSer.setNotice("LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS DEBE INGRESAR LA INFORMACION DEL CODEUDOR", 'warning');
       this.myStepper.selectedIndex = 1;
       return;
     }
-    
-    if ((!this.fechaNacimientoCodeudor.value || this.edadCodeudor.value < 18 || this.edadCodeudor.value > 65) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'SCD') {
+    /* if ((!this.fechaNacimientoCodeudor.value || this.edadCodeudor.value < 18 || this.edadCodeudor.value > 65) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'SCD') {
       this.sinNotSer.setNotice("LA EDAD DEL CODEUDOR ES MAYOR A 65 AÑOS DEBE INGRESE OTRO CODEUDOR", 'warning');
       this.myStepper.selectedIndex = 1;
       return;
-    }
+    } */
     if (confirm("ESTA SEGURO DE GENERAR LA SOLICITUD DE CREDITO?")) {
     
       let wrapper = {
@@ -1253,16 +1258,21 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       this.myStepper.selectedIndex = 1;
       return;
     }
-    if ((!this.fechaDeNacimiento.value || this.edad.value < 18 || this.edad.value > 75) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'DEU') {
+    /* if ((!this.fechaDeNacimiento.value || this.edad.value < 18 || this.edad.value > 75) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'DEU') {
+      this.sinNotSer.setNotice("LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS DEBE INGRESAR LA INFORMACION DEL CODEUDOR", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    } */
+    if (this.edad.value < 18 || this.edad.value > 74) {
       this.sinNotSer.setNotice("LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS DEBE INGRESAR LA INFORMACION DEL CODEUDOR", 'warning');
       this.myStepper.selectedIndex = 1;
       return;
     }
-    if ((!this.fechaNacimientoCodeudor.value || this.edadCodeudor.value < 18 || this.edadCodeudor.value > 65) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'SCD') {
+    /* if ((!this.fechaNacimientoCodeudor.value || this.edadCodeudor.value < 18 || this.edadCodeudor.value > 65) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'SCD') {
       this.sinNotSer.setNotice("LA EDAD DEL CODEUDOR ES MAYOR A 65 AÑOS DEBE INGRESE OTRO CODEUDOR", 'warning');
       this.myStepper.selectedIndex = 1;
       return;
-    }
+    } */
     if(this.publicidad.value && this.publicidad.value.bandera && this.nombreReferido.invalid && this.telefonoReferido.invalid){
       this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'warning');
       this.myStepper.selectedIndex = 1;

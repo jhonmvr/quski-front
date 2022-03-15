@@ -270,16 +270,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.credit.credito.numeroCuenta = this.numeroCuenta.value;
     this.credit.credito.pagoDia = this.diaFijoPago.value;
     this.credit.credito.firmanteOperacion = this.firmanteOperacion.value.nombre;
-    this.credit.credito.tipoCliente = this.tipoCliente.value.codigo;
-    if( this.tipoCliente.value.codigo == 'SAP' || this.tipoCliente.value.codigo == 'CYA'){
-      this.credit.credito.identificacionApoderado = this.identificacionApoderado.value;
-      this.credit.credito.nombreCompletoApoderado = this.nombreApoderado.value;
-      this.credit.credito.fechaNacimientoApoderado = this.fechaNacimientoApoderado.value;
-    }
-    if(this.tipoCliente.value.codigo == 'SCD' || this.tipoCliente.value.codigo == 'CYA'){
-      this.credit.credito.identificacionCodeudor = this.identificacionCodeudor.value;
-      this.credit.credito.nombreCompletoCodeudor = this.nombreCodeudor.value;
-    }
+   
     if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor !== 'SIN EXCEPCION' && this.fechaRegularizacion.invalid){
       this.sinNotSer.setNotice('SELECCIONE UNA FECHA DE REGULARIZACION', 'warning');
       return;
