@@ -18,6 +18,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetalleNegociacionComponent implements OnInit {
   varHabilitante = {proceso:'CLIENTE',referencia:''};
+  dataHistoricoOperativa;
+  dataHistoricoObservacion;
   referencia;
   titulo
   public detalle: DetalleNegociacionWrapper;
@@ -36,7 +38,11 @@ export class DetalleNegociacionComponent implements OnInit {
   public aprobadoMupi = new FormControl('',[])
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
   displayedColumnsCreditoNegociacion = ['plazo','periodicidadPlazo','tipooferta','montoFinanciado','valorARecibir','cuota','totalGastosNuevaOperacion','costoCustodia', 'costoTransporte','costoTasacion','costoSeguro','costoFideicomiso','impuestoSolca'];
-    constructor(
+  renovacion = ['plazo', 'periodicidadPlazo', 'montoFinanciado', 'cuota', 'valorARecibir', 'valorAPagar',
+  'totalCostosOperacionAnterior','totalGastosNuevaOperacion', 'costoCustodia', 'costoTasacion', 'costoFideicomiso', 'costoSeguro', 'impuestoSolca',
+  'saldoCapitalRenov', 'saldoInteres', 'saldoMora', 'gastoCobranza', 'custodiaDevengada', 'porcentajeflujoplaneado','formaPagoCustodia','formaPagoTasador', 
+  'formaPagoFideicomiso', 'formaPagoSeguro',  'formaPagoImpuestoSolca', 'formaPagoGastoCobranza'];
+  constructor(
     private route: ActivatedRoute,
     private cre: CreditoNegociacionService,
     private sinNotSer: ReNoticeService,
@@ -74,9 +80,18 @@ export class DetalleNegociacionComponent implements OnInit {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
         this.referencia = data.params.id
+        this.cre.findHistoricoOperativaByidNegociacion(this.referencia).subscribe((data: any) => {
+          this.dataHistoricoOperativa = data.entidades;
+        });
+        this.cre.findHistoricoObservacionByIdCredito(this.referencia).subscribe(result=>{
+          this.dataHistoricoObservacion = result.entidades;
+        });
         this.cre.traerCreditoNegociacion(data.params.id).subscribe((data: any) => {
           if (!data.entidad.existeError) {
             this.detalle = data.entidad;
+            if(this.detalle.credito.numeroOperacionAnterior){
+              this.displayedColumnsCreditoNegociacion = this.renovacion;
+            }
             this.setearValores( this.detalle );
           }else{
             this.salirDeGestion("Error al intentar cargar el credito: "+ data.entidad.mensaje);
