@@ -15,6 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { saveAs } from 'file-saver';
 import { LayoutConfigService } from '../../../../../core/_base/layout';
+import { TablaAmortizacionComponent } from '../../../../../views/partials/custom/popups/tabla-amortizacion/tabla-amortizacion.component';
 
 
 /**
@@ -257,5 +258,15 @@ export class RegistrarPagoComponent implements OnInit {
     this.par.findByTipo('TIPO-PAGO-PROCESO').subscribe((data: any) => {
       this.catTipoPagoProceso = data.entidades ? data.entidades : { nombre: 'ERR', valor: 'Error al cargar catalogo' }
     });
+  }
+  public mostrarTablaDeAmortizacion() {
+    this.css.consultaTablaAmortizacionOperacionAprobadaCS(this.codigoOperacion.value).subscribe(p => {
+      const dialogRef = this.dialog.open(TablaAmortizacionComponent, {
+        width: "800px",
+        height: "auto",
+        data: p.cuotas
+      })
+    });
+
   }
 }

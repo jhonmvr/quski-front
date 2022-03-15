@@ -285,6 +285,10 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
         this.router.navigate(['negociacion/detalle-negociacion/', row.id]);      
       }else if(row.proceso == 'DEVOLUCION'){
         this.router.navigate(['devolucion/detalle-devolucion/',row.id]);
+      }else if(row.proceso == 'PAGO' && row.codigoOperacion){
+        this.router.navigate(['negociacion/pago/detalle-pago/',row.id]);
+      }else if(row.proceso == 'PAGO' && !row.codigoOperacion){
+        this.router.navigate(['negociacion/pago/detalle-bloqueo/',row.id]);
       }
    
     }

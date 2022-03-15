@@ -1,26 +1,25 @@
-import { ConfirmarAccionComponent } from './../../../../partials/custom/popups/confirmar-accion/confirmar-accion.component';
-import { RegistrarPagoService } from './../../../../../core/services/quski/registrarPago.service';
-import { ObjectStorageService } from './../../../../../core/services/object-storage.service';
-import { SoftbankService } from './../../../../../core/services/quski/softbank.service';
-import { TbQoClientePago } from './../../../../../core/model/quski/TbQoClientePago';
-import { ReNoticeService } from './../../../../../core/services/re-notice.service';
-import { environment } from './../..`/../../../../../../environments/environment';
-import { LayoutConfigService, SubheaderService } from './../../../../../core/_base/layout';
-import { MatDialog, MatTableDataSource,  } from '@angular/material';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatTableDataSource, MatDialog } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TbQoClientePago } from '../../../../../../app/core/model/quski/TbQoClientePago';
+import { ObjectStorageService } from '../../../../../../app/core/services/object-storage.service';
+import { RegistrarPagoService } from '../../../../../../app/core/services/quski/registrarPago.service';
+import { SoftbankService } from '../../../../../../app/core/services/quski/softbank.service';
+import { ReNoticeService } from '../../../../../../app/core/services/re-notice.service';
+import { ValidateDecimal } from '../../../../../../app/core/util/validator.decimal';
+import { LayoutConfigService, SubheaderService } from '../../../../../../app/core/_base/layout';
+import { ConfirmarAccionComponent } from '../../../../../../app/views/partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { environment } from '../../../../../../environments/environment';
 import { saveAs } from 'file-saver';
-import { ValidateDecimal } from './../../../../../core/util/validator.decimal';
 import { TablaAmortizacionComponent } from './../../../../../../app/views/partials/custom/popups/tabla-amortizacion/tabla-amortizacion.component';
 
-
 @Component({
-  selector: 'kt-aprobar-pagos',
-  templateUrl: './aprobar-pagos.component.html',
-  styleUrls: ['./aprobar-pagos.component.scss']
+  selector: 'kt-detalle-pago',
+  templateUrl: './detalle-pago.component.html',
+  styleUrls: ['./detalle-pago.component.scss']
 })
-export class AprobarPagosComponent implements OnInit {
+export class DetallePagoComponent implements OnInit {
   public usuario;
   public item: any;
   private catBanco: {id: number, nombre:string}[];

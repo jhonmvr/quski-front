@@ -1,10 +1,9 @@
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" rel="stylesheet">
 <re-portlet>
-    <re-portlet-header [title]="'Aprobar / Rechazar Pagos'" [class]="'kt-portlet__head--lg'">
+    <re-portlet-header [title]="'Aprobar / Rechazar Bloqueo de Fondos'" [class]="'kt-portlet__head--lg'">
     </re-portlet-header>
     <re-portlet-body>
         <mat-vertical-stepper>
-            <mat-step label="Información de Crédito">
+            <mat-step label="Información de Cliente">
                 <div class="row">
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">
@@ -16,33 +15,14 @@
                             <input matInput [formControl]="cedula" placeholder="Cédula:" />
                         </mat-form-field>
                     </div>
-                    <!-- <div class="col-md-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="cuentaMupi" placeholder="Cuenta Mupi:"/>
-                        </mat-form-field>
-                    </div> -->
-                    <div class="col-md-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="codigoOperacion" placeholder="Código de Operación:" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="tipoCredito" placeholder="Tipo de crédito:" />
-                        </mat-form-field>
-                    </div>
+                    <!--  <div class="col-md-4">
+            <mat-form-field class="mat-form-field-fluid">
+              <input matInput [formControl]="codigoCuentaMupi" placeholder="Cuenta Mupi:" />
+            </mat-form-field>
+          </div> -->
                 </div>
             </mat-step>
-            <mat-step label="Tabla de amortizacion">
-                <div class="row mb-5">
-                    <div class="offset-md-5 col-md-5">
-                        <button mat-raised-button color="primary" (click)=" mostrarTablaDeAmortizacion()"> Tabla de amortizacion </button>
-                    </div>
-                </div>
-                <kt-tabla-custom [data]="dataSourceRubro.data" [nombreRubro]="'rubro'" [numeroCuota]="'numeroCuota'" [numeroOperacion]="codigoOperacion.value"></kt-tabla-custom>
-
-            </mat-step>
-            <mat-step label="Comprobantes de Pagos">
+            <mat-step label="Comprobante de Pagos">
                 <mat-table *ngIf="dataSourceComprobante.data" class="garantia" [dataSource]="dataSourceComprobante">
                     <ng-container matColumnDef="intitucionFinanciera">
                         <mat-header-cell *matHeaderCellDef>Intitucion Financiera</mat-header-cell>
@@ -64,10 +44,6 @@
                         <mat-header-cell *matHeaderCellDef>Valor Depositado</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ element.valorPagado | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="tipoPago">
-                        <mat-header-cell *matHeaderCellDef>Tipo Pago</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.tipoPago }} </mat-cell>
-                    </ng-container>
                     <ng-container matColumnDef="descargarComprobante">
                         <mat-header-cell *matHeaderCellDef>Descargar Comprobante</mat-header-cell>
                         <mat-cell *matCellDef="let row">
@@ -80,28 +56,13 @@
                     <mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
                 </mat-table>
                 <div class="row mt-2">
-                    <div class="col-md-3">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="tipoPagoProceso" placeholder="Tipo Pago Proceso:" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-3">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="valorPreCancelado" placeholder="Valor Pre-cancelacion:" />
-                        </mat-form-field>
-                    </div>
+                    <!-- <div class="offset-6 col-md-3">
+            <mat-form-field class="mat-form-field-fluid">
+              <input matInput [formControl]="valorDepositado" placeholder="Valor Depositado:" />
+            </mat-form-field>
+          </div> -->
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="valorDepositado" placeholder="Valor Depositado:" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-3">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="valorDepositadoAprobador" placeholder="Cambiar Valor Depositado:" />
-                        </mat-form-field>
-                    </div>
                     <div class="offset-1 col-md-10">
                         <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="observacion" type="text" rows="2">
@@ -111,13 +72,13 @@
                 <div class="row mt-3">
                     <div class="offset-md-3 col-md-2">
                         <button mat-raised-button color="primary" (click)="enviarRespuesta(true)">
-                        <span class="white-icon">Aprobar</span>
-                      </button>
+              <span class="white-icon">Aprobar</span>
+            </button>
                     </div>
                     <div class="offset-md-1 col-md-2">
                         <button mat-raised-button color="warn" (click)="enviarRespuesta(false)">
-                        <span class="white-icon">Rechazar</span>
-                      </button>
+              <span class="white-icon">Rechazar</span>
+            </button>
                     </div>
                 </div>
             </mat-step>

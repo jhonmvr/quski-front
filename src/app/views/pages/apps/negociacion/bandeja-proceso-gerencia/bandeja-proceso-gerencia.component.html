@@ -153,7 +153,7 @@
                                     <mat-icon matTooltip="Ver Operacion">edit</mat-icon>
                                 </a>
                             </ng-container>
-                            <ng-container *ngIf="row.proceso != 'CANCELACION DEVOLUCION' && row.proceso != 'PAGO'">
+                            <ng-container *ngIf="row.proceso != 'CANCELACION DEVOLUCION'">
                                 <a (click)="verDetalle(row)">
                                     <mat-icon matTooltip="Ver Detalle" class="blue-icon">remove_red_eye</mat-icon>
                                 </a>

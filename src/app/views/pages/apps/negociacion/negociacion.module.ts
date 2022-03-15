@@ -64,6 +64,8 @@ import { GestionClienteComponent } from './gestion-cliente/gestion-cliente.compo
 import { DialogCargarHabilitanteComponent } from './gestion-cliente/dialog-cargar-habilitante/dialog-cargar-habilitante.component';
 import { PopUpNacimientoComponent } from './gestion-cliente/pop-up-nacimiento/pop-up-nacimiento.component';
 import { CrearRenovacionComponent } from './crear-renovacion/crear-renovacion.component';
+import { DetallePagoComponent } from './detalle-pago/detalle-pago.component';
+import { DetalleBloqueoComponent } from './detalle-bloqueo/detalle-bloqueo.component';
 
 const routes: Routes = [
 	{
@@ -121,6 +123,16 @@ const routes: Routes = [
 				path: 'crear-novacion/:codigo/:item',
 				component: CrearRenovacionComponent
 			},
+			{
+				path: 'pago/detalle-bloqueo/:id',
+				component: DetalleBloqueoComponent
+			},
+			{
+				path: 'pago/detalle-pago/:id',
+				component: DetallePagoComponent
+			}
+			
+			
 
 
 		]
@@ -192,7 +204,9 @@ const routes: Routes = [
 		GestionClienteComponent,		
 		DialogCargarHabilitanteComponent,
 		PopUpNacimientoComponent,
-		CrearRenovacionComponent
+		CrearRenovacionComponent,
+		DetallePagoComponent,
+		DetalleBloqueoComponent
 	],
 	entryComponents: [
 		ErrorCargaInicialComponent,
