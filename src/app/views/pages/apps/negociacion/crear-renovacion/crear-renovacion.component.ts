@@ -158,12 +158,13 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.route.paramMap.subscribe((json: any) => {
       this.validCliente = true;
       this.riesgoTotal  = 0;
-      this.procesoService.getCabecera(json.params.item,'RENOVACION').subscribe(datosCabecera=>{
-        this.layoutService.setDatosContrato(datosCabecera);
-      })
+      
       if (json.params.item && json.params.codigo) {
         if( json.params.codigo == 'NOV'){
           this.loadingSubject.next(true);
+          this.procesoService.getCabecera(json.params.item,'RENOVACION').subscribe(datosCabecera=>{
+            this.layoutService.setDatosContrato(datosCabecera);
+          });
           this.cre.buscarRenovacionByIdNegociacion(json.params.item).subscribe((data: any) => {
             this.credit = data.entidad;
          
