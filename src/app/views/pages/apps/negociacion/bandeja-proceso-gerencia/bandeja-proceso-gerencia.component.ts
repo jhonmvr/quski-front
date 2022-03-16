@@ -55,7 +55,7 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
 
   @ViewChild('allSelected', { static: true }) private allSelected: MatOption;
   dataSource = new MatTableDataSource<OperacionesProcesoWrapper>();
-  displayedColumns = ['Accion', 'codigoBpm', 'codigoOperacion', 'nombreCliente', 'cedulaCliente', 'montoFinanciado', 'fechaCreacion', 'agencia', 'estadoProceso', 'proceso', 'asesor', 'usuarioEjecutor','actividad'];
+  displayedColumns = ['Accion', 'codigoBpm', 'codigoOperacion', 'nombreCliente', 'cedulaCliente', 'montoFinanciado', 'fechaCreacion', 'agencia', 'estadoProceso', 'proceso', 'asesor', 'usuarioEjecutor','actividad','motivo'];
 
   constructor(
     private pro: ProcesoService,

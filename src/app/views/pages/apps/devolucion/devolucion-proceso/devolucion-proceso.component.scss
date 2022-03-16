@@ -1,0 +1,34 @@
+table {
+    overflow: auto;
+    width: 100%;
+}
+
+.mat-cell {
+    text-align: center;
+    justify-content: center;
+    font-size: x-small;
+}
+
+.mat-column-agenciaEntrega {
+    flex: 0 0 200px;
+}
+
+.mat-column-agenciaRecepcion {
+    flex: 0 0 200px;
+}
+
+.mat-column-nombreCliente {
+    flex: 0 0 200px;
+}
+
+.mat-column-asesor {
+    flex: 0 0 200px;
+}
+
+.mat-column-estado {
+    flex: 0 0 200px;
+}
+
+.mat-column-accion {
+    flex: 0 0 100px;
+}
