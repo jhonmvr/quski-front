@@ -41,6 +41,10 @@ export class DetallePagoComponent implements OnInit {
   public valorDepositadoAprobador = new FormControl('', [ValidateDecimal, Validators.required, Validators.maxLength(13)]);
   public valorDepositado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public observacion = new FormControl('', [Validators.maxLength(150)]);
+  public codigoOperacionMupi = new FormControl('',[]);
+  
+  public observacionAprobador= new FormControl('', [Validators.maxLength(150)]);
+ 
  
   constructor(
     private router: Router,
@@ -65,6 +69,8 @@ export class DetallePagoComponent implements OnInit {
     this.formAprobarPago.addControl("tipoPagoProceso", this.tipoPagoProceso);
     this.formAprobarPago.addControl("valorDepositado", this.valorDepositado);
     this.formAprobarPago.addControl("observacion", this.observacion);
+    this.formAprobarPago.addControl("observacionAprobador", this.observacionAprobador);
+    this.formAprobarPago.addControl("codigoOperacionMupi", this.codigoOperacionMupi);
   }
   ngOnInit() {
     this.obj.setParameter();
@@ -107,6 +113,8 @@ export class DetallePagoComponent implements OnInit {
             this.tipoPagoProceso.setValue(this.cliente.tipoPagoProceso);
             this.valorDepositado.setValue(this.cliente.valorDepositado);
             this.observacion.setValue(this.cliente.observacion);
+            this.observacionAprobador.setValue(this.cliente.observacionAprobador);
+            this.codigoOperacionMupi.setValue(this.cliente.codigoCuentaMupi);
             let banco = this.catBanco.find(x => x.id == this.cliente.codigoCuentaMupi);
             if(banco){
               this.cuentaMupi.setValue( banco.nombre );
@@ -138,44 +146,7 @@ export class DetallePagoComponent implements OnInit {
       this.sinNoticeService.setNotice(error.error.msgError, 'error');
     });
   }
-  public enviarRespuesta(aprobar){
-    if(aprobar && this.valorDepositadoAprobador.invalid){
-      this.sinNoticeService.setNotice("INGRESE EL VALOR DEPOSITADO",'error');
-      return;
-    }
-    let mensaje = aprobar ? 
-    "Aprobar el proceso de registro de pago con el codigo: " + this.cliente.codigo:
-    "Negar el proceso de registro de pago con el codigo: " + this.cliente.codigo;
-      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-        width: "800px",
-        height: "auto",
-        data: mensaje
-      });
-    dialogRef.afterClosed().subscribe(r => {
-      if(r){
-        
-        this.reg.enviarRespuesta(this.cliente.id, true, aprobar, this.usuario, this.correoUsuario, this.valorDepositadoAprobador.value).subscribe((data: any) => {
-          if(data.entidad.estadoProceso){
-            if(aprobar && data.entidad.estadoProceso == "APROBADO"){
-              this.sinNoticeService.setNotice("PROCESO DE PAGO APROBADO CORRECTAMENTE", 'success');
-              this.router.navigate(['aprobador']);
-            } else if(!aprobar && data.entidad.estadoProceso == "RECHAZADO"){
-              this.sinNoticeService.setNotice("PROCESO DE PAGO RECHAZADO CORRECTAMENTE", 'success')
-              this.router.navigate(['aprobador']);
-            } else{
-              this.sinNoticeService.setNotice(" ERROR, PROCESO DE PAGO NO FUE ACTUALIZADO", 'error')
-            }
-          }else{
-            this.sinNoticeService.setNotice(" ERROR PROCESO DE PAGO DESCONOCIDO", 'error');
-          }
-        }, error => {
-          this.sinNoticeService.setNotice(error.error.msgError, 'error');
-        });
-      }else{
-        this.sinNoticeService.setNotice('SE CANCELO LA ACCION','error');
-      }
-    });
-  }
+
   descargarComprobante(row) {
     this.obj.findObjectById( this.obj.mongoDb,  environment.mongoHabilitanteCollection, row.idComprobante).subscribe((data:any)=>{
       let json = JSON.parse(atob(data.entidad));

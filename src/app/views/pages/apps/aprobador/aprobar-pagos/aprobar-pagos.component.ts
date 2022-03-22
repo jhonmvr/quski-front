@@ -42,6 +42,9 @@ export class AprobarPagosComponent implements OnInit {
   public valorDepositadoAprobador = new FormControl('', [ValidateDecimal, Validators.required, Validators.maxLength(13)]);
   public valorDepositado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public observacion = new FormControl('', [Validators.maxLength(150)]);
+  public codigoOperacionMupi = new FormControl('',[]);
+  
+  public observacionAprobador= new FormControl('', [Validators.maxLength(150)]);
  
   constructor(
     private router: Router,
@@ -66,6 +69,7 @@ export class AprobarPagosComponent implements OnInit {
     this.formAprobarPago.addControl("tipoPagoProceso", this.tipoPagoProceso);
     this.formAprobarPago.addControl("valorDepositado", this.valorDepositado);
     this.formAprobarPago.addControl("observacion", this.observacion);
+    this.formAprobarPago.addControl("codigoOperacionMupi", this.codigoOperacionMupi);
   }
   ngOnInit() {
     this.obj.setParameter();
@@ -108,6 +112,7 @@ export class AprobarPagosComponent implements OnInit {
             this.tipoPagoProceso.setValue(this.cliente.tipoPagoProceso);
             this.valorDepositado.setValue(this.cliente.valorDepositado);
             this.observacion.setValue(this.cliente.observacion);
+            this.codigoOperacionMupi.setValue(this.cliente.codigoOperacionMupi);
             let banco = this.catBanco.find(x => x.id == this.cliente.codigoCuentaMupi);
             if(banco){
               this.cuentaMupi.setValue( banco.nombre );
@@ -155,7 +160,7 @@ export class AprobarPagosComponent implements OnInit {
     dialogRef.afterClosed().subscribe(r => {
       if(r){
         
-        this.reg.enviarRespuesta(this.cliente.id, true, aprobar, this.usuario, this.correoUsuario, this.valorDepositadoAprobador.value).subscribe((data: any) => {
+        this.reg.enviarRespuesta(this.cliente.id, true, aprobar, this.usuario, this.correoUsuario, this.valorDepositadoAprobador.value, this.observacionAprobador.value).subscribe((data: any) => {
           if(data.entidad.estadoProceso){
             if(aprobar && data.entidad.estadoProceso == "APROBADO"){
               this.sinNoticeService.setNotice("PROCESO DE PAGO APROBADO CORRECTAMENTE", 'success');

@@ -23,6 +23,11 @@
                     </div> -->
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="codigoOperacionMupi" placeholder="Numero de operacion MUPI" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="codigoOperacion" placeholder="Código de Operación:" />
                         </mat-form-field>
                     </div>
@@ -104,11 +109,16 @@
                     </div>
                     <div class="offset-1 col-md-10">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="observacion" type="text" rows="2">
+                            <input matInput [formControl]="observacion" placeholder="Observacion del asesor:" type="text" rows="2">
                         </mat-form-field>
                     </div>
                 </div>
                 <div class="row mt-3">
+                    <div class="offset-1 col-md-10">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="observacionAprobador" placeholder="Observacion del aprobador:" type="text" rows="2">
+                        </mat-form-field>
+                    </div>
                     <div class="offset-md-3 col-md-2">
                         <button mat-raised-button color="primary" (click)="enviarRespuesta(true)">
                         <span class="white-icon">Aprobar</span>

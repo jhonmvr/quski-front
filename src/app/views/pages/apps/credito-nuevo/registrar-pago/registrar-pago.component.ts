@@ -49,6 +49,7 @@ export class RegistrarPagoComponent implements OnInit {
   public valorDepositado = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public observacion = new FormControl('', [Validators.maxLength(150)]);
   public tipoPagoProceso = new FormControl('', [Validators.required, Validators.maxLength(13)]);
+  public codigoOperacionMupi = new FormControl('',[]);
 
   constructor(
     private css: SoftbankService,
@@ -71,6 +72,7 @@ export class RegistrarPagoComponent implements OnInit {
     this.formRegistrarPago.addControl("tipoCredito", this.tipoCredito);
     this.formRegistrarPago.addControl("valorPreCancelado", this.valorPreCancelado);
     this.formRegistrarPago.addControl("valorDepositado", this.valorDepositado);
+    this.formRegistrarPago.addControl("codigoOperacionMupi", this.codigoOperacionMupi);
   }
   ngOnInit() {
     this.css.setParameter();
@@ -102,6 +104,7 @@ export class RegistrarPagoComponent implements OnInit {
         this.cli.consultarCuentaMupi(row.identificacion).subscribe((dta: any) => {
           if (dta.entidad) {
             this.datosMupi = dta.entidad;
+            this.codigoOperacionMupi.setValue(this.informacionCredito.numeroOperacionMupi);
             this.codigoCuentaMupi.setValue(dta.entidad.numeroCuenta);
             this.cedula.setValue(row.identificacion);
             this.codigoOperacion.setValue(row.numeroOperacion);
@@ -234,7 +237,8 @@ export class RegistrarPagoComponent implements OnInit {
           montoCredito:this.informacionCredito.montoFinanciado,
           plazoCredito:this.informacionCredito.plazo,
           numeroCuentaCliente:this.codigoCuentaMupi.value,
-          nombreAsesor:localStorage.getItem('nombre')
+          nombreAsesor:localStorage.getItem('nombre'),
+          codigoOperacionMupi: this.codigoOperacionMupi.value
         }
         //console.log('wrapper => ', wrapper);
         this.reg.iniciarProcesoRegistrarPago(wrapper).subscribe((data: any) => {

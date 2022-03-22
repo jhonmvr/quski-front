@@ -107,6 +107,10 @@
                     <th mat-header-cell *matHeaderCellDef> Agencia recepción </th>
                     <td mat-cell *matCellDef="let row"> {{nombreAgencia(row.idAgencia)}} </td>
                 </ng-container>
+                <ng-container matColumnDef="fundaActual">
+                    <th mat-header-cell *matHeaderCellDef> Funda actual </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fundaActual}} </td>
+                </ng-container>
                 <ng-container matColumnDef="fechaCreacion">
                     <th mat-header-cell *matHeaderCellDef> Fecha de creación </th>
                     <td mat-cell *matCellDef="let row"> {{row.fechaCreacion}} </td>
@@ -119,8 +123,8 @@
                     <th mat-header-cell *matHeaderCellDef> Fecha de entrega </th>
                     <td mat-cell *matCellDef="let row"> {{row.fechaEngrega}} </td>
                 </ng-container>
-                <tr mat-header-row *matHeaderRowDef="['codigoOperacion','codigoBpm','nombreCliente','identificacionCliente','estado','agenciaEntrega','agenciaRecepcion','fechaCreacion','fechaArribo','fechaEntrega']"></tr>
-                <tr mat-row *matRowDef="let row; columns: ['codigoOperacion','codigoBpm','nombreCliente','identificacionCliente','estado','agenciaEntrega','agenciaRecepcion','fechaCreacion','fechaArribo','fechaEntrega'];"></tr>
+                <tr mat-header-row *matHeaderRowDef="['codigoOperacion','codigoBpm','nombreCliente','identificacionCliente','estado','agenciaEntrega','agenciaRecepcion','fundaActual','fechaCreacion','fechaArribo','fechaEntrega']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['codigoOperacion','codigoBpm','nombreCliente','identificacionCliente','estado','agenciaEntrega','agenciaRecepcion','fundaActual','fechaCreacion','fechaArribo','fechaEntrega'];"></tr>
             </table>
             <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="buscarBoton(this.paginator.pageIndex, this.paginator.pageSize)">
             </mat-paginator>

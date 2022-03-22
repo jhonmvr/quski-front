@@ -21,6 +21,8 @@ export class TbQoClientePago{
 	plazoCredito;
 	numeroCuentaCliente;
 	nombreAsesor;
+	codigoOperacionMupi;
+	observacionAprobador;
 	
 	constructor(){
 		

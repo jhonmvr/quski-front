@@ -1,6 +1,6 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" rel="stylesheet">
 <re-portlet>
-    <re-portlet-header [title]="'Aprobar / Rechazar Pagos'" [class]="'kt-portlet__head--lg'">
+    <re-portlet-header [title]="'DETALLE PAGOS'" [class]="'kt-portlet__head--lg'">
     </re-portlet-header>
     <re-portlet-body>
         <mat-vertical-stepper>
@@ -21,6 +21,11 @@
                             <input matInput [formControl]="cuentaMupi" placeholder="Cuenta Mupi:"/>
                         </mat-form-field>
                     </div> -->
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="codigoOperacionMupi" placeholder="Numero de operacion MUPI" />
+                        </mat-form-field>
+                    </div>
                     <div class="col-md-4">
                         <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="codigoOperacion" placeholder="Código de Operación:" />
@@ -97,14 +102,16 @@
                             <input matInput [formControl]="valorDepositado" placeholder="Valor Depositado:" />
                         </mat-form-field>
                     </div>
-                    <div class="col-md-3">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="valorDepositadoAprobador" placeholder="Cambiar Valor Depositado:" />
-                        </mat-form-field>
-                    </div>
                     <div class="offset-1 col-md-10">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="observacion" type="text" rows="2">
+                            <input matInput [formControl]="observacion" placeholder="observacion asesor:" type="text" rows="2">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="offset-1 col-md-10">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="observacionAprobador" placeholder="Observacion aprobador:" type="text" rows="2">
                         </mat-form-field>
                     </div>
                 </div>

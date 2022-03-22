@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatTableDataSource, MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TbQoClientePago } from '../../../../../../app/core/model/quski/TbQoClientePago';
@@ -32,6 +32,7 @@ export class DetalleBloqueoComponent implements OnInit {
   public codigoCuentaMupi = new FormControl('', []);
   public valorDepositado = new FormControl('', []);
   public observacion = new FormControl('', []);
+  public observacionAprobador= new FormControl('', [Validators.maxLength(150)]);
 
   constructor(
     private router: Router,
@@ -52,6 +53,7 @@ export class DetalleBloqueoComponent implements OnInit {
     this.formBloqueoFondo.addControl("codigoCuentaMupi", this.codigoCuentaMupi);
     this.formBloqueoFondo.addControl("valorDepositado", this.valorDepositado);
     this.formBloqueoFondo.addControl("observacion", this.observacion);
+    this.formBloqueoFondo.addControl("observacionAprobador", this.observacionAprobador);
   }
   ngOnInit() {
     this.reg.setParameter();
@@ -95,6 +97,7 @@ export class DetalleBloqueoComponent implements OnInit {
             }
             this.valorDepositado.setValue(this.cliente.valorDepositado);
             this.observacion.setValue(this.cliente.observacion);
+            this.observacionAprobador.setValue(this.cliente.observacionAprobador);
             this.subheaderService.setTitle( "Proceso: " + this.cliente.codigo );
           } else {
             this.sinNoticeService.setNotice("No me trajo datos 'clientePagoByIdCliente'", 'error');
@@ -120,39 +123,5 @@ export class DetalleBloqueoComponent implements OnInit {
     }) 
   }
 
-  public enviarRespuesta(aprobar){
-    let mensaje = aprobar ? 
-    "Aprobar el proceso de registro de bloqueo con el codigo: " + this.cliente.codigo:
-    "Negar el proceso de registro de bloqueo con el codigo: " + this.cliente.codigo;
-      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-        width: "800px",
-        height: "auto",
-        data: mensaje
-      });
-    dialogRef.afterClosed().subscribe(r => {
-      if(r){
-        let valor 
-        this.reg.enviarRespuesta(this.cliente.id, false, aprobar, this.usuario, this.correoUsuario, valor).subscribe((data: any) => {
-          if(data.entidad.estadoProceso){
-            if(aprobar && data.entidad.estadoProceso == "APROBADO"){
-              this.sinNoticeService.setNotice("PROCESO DE BLOQUEO DE FONDOS APROBADO CORRECTAMENTE", 'success');
-              this.router.navigate(['aprobador']);
-            } else if(!aprobar && data.entidad.estadoProceso == "RECHAZADO"){
-              this.sinNoticeService.setNotice("PROCESO DE BLOQUEO DE FONDOS RECHAZADO CORRECTAMENTE", 'success')
-              this.router.navigate(['aprobador']);
-            } else{
-              this.sinNoticeService.setNotice(" ERROR, PROCESO DE BLOQUEO DE FONDOS NO FUE ACTUALIZADO", 'error')
-            }
-          }else{
-            this.sinNoticeService.setNotice(" ERROR PROCESO DE BLOQUEO DE FONDOS DESCONOCIDO", 'error');
-          }
-        }, error => {
-          this.sinNoticeService.setNotice(error.error.msgError, 'error');
-        });
-      }else{
-        this.sinNoticeService.setNotice('SE CANCELO LA ACCION','error');
-      }
-    });
-  }
 }
 

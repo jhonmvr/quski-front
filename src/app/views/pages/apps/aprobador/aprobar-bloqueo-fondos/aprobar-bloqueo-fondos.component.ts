@@ -8,7 +8,7 @@ import { environment } from '../../../../../../environments/environment';
 import { LayoutConfigService, SubheaderService } from '../../../../../core/_base/layout';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
 @Component({
@@ -30,6 +30,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
   public codigoCuentaMupi = new FormControl('', []);
   public valorDepositado = new FormControl('', []);
   public observacion = new FormControl('', []);
+  public observacionAprobador= new FormControl('', [Validators.maxLength(150)]);
 
   constructor(
     private router: Router,
@@ -130,7 +131,7 @@ export class AprobarBloqueoFondosComponent implements OnInit {
     dialogRef.afterClosed().subscribe(r => {
       if(r){
         let valor 
-        this.reg.enviarRespuesta(this.cliente.id, false, aprobar, this.usuario, this.correoUsuario, valor).subscribe((data: any) => {
+        this.reg.enviarRespuesta(this.cliente.id, false, aprobar, this.usuario, this.correoUsuario, valor, this.observacionAprobador).subscribe((data: any) => {
           if(data.entidad.estadoProceso){
             if(aprobar && data.entidad.estadoProceso == "APROBADO"){
               this.sinNoticeService.setNotice("PROCESO DE BLOQUEO DE FONDOS APROBADO CORRECTAMENTE", 'success');
