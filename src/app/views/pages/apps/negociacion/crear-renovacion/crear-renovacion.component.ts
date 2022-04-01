@@ -189,7 +189,6 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
            
             this.credit = data.entidad;
             this.riesgoAcumulado();
-            console.log("entramos aquirijillo porq es nueva reenovacion",  this.credit)
             this.simularOpciones();
             //console.log("datos ->", this.credit);
             if (this.credit ) {
@@ -278,8 +277,9 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         0, 'CREAR RENOVACION',
         this.credit ? this.credit.credito ? this.credit.credito.numeroOperacion : null : null )
     this.formOperacion.disable();
+    this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo == 'DEU') );
     if(this.credit.credito){
-      this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo ==this.credit.credito.tipoCliente) );
+      this.tipoCliente.setValue(this.catTipoCliente.find(x => x.codigo ==this.credit.credito.tipoCliente ? this.credit.credito.tipoCliente : 'DEU') );
       this.cambiarCliente();
       this.nombreApoderado.setValue(this.credit.credito.nombreCompletoApoderado);
       this.nombreCodeudor.setValue(this.credit.credito.nombreCompletoCodeudor);
@@ -350,7 +350,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       }
 
       this.credit.excepciones? this.credit.excepciones.forEach(e=>{
-        console.log('Hola? probando excepciones -->', this.credit.excepciones);
+        //console.log('Hola? probando excepciones -->', this.credit.excepciones);
         if(e.estadoExcepcion == 'PENDIENTE'){
           this.abrirSalirGestion('Su novacion se encuentra en revision por fabrica. Espere a que su credito sea revisado','Excepcion en proceso');
         }
@@ -680,7 +680,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.selection.clear()        
     this.selection.select(event) 
     this.recibirPagar = (event.valorARecibir - event.valorAPagar).toFixed(2) ;
-    console.log('Valor =>', this.selection.isSelected(event) );
+    //console.log('Valor =>', this.selection.isSelected(event) );
     if(this.selection.isSelected(event) && this.recibirPagar > 0){
       this.recibirOpagar = 'primary'; 
     }else if (this.selection.isSelected(event)  && this.recibirPagar < 0) {
@@ -704,7 +704,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
 
   sombrear(row){
     if(row.tipooferta == 'V'){
-      console.log("stilo po")
+      //console.log("stilo po")
 
       return {background: 'cornflowerblue'};
     }

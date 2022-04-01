@@ -106,7 +106,7 @@ export class DevolucionProcesoComponent implements OnInit {
       codigoOperacion : this.codigoOperacion.value,
       codigoBpm : this.codigoBpm.value,
       estados : this.estado.value?this.estado.value:null,
-      agenciaEntrega : this.agenciaEntrega.value,
+      agenciaEntrega : this.idAgencia,
       agenciaRecepcion : this.agenciaRecepcion.value,
       fechaCreacionDesde : this.fechaCreacionDesde.value,
       fechaCreacionHasta : this.fechaCreacionHasta.value,
@@ -115,7 +115,8 @@ export class DevolucionProcesoComponent implements OnInit {
       fechaEntregaDesde : this.fechaEntregaDesde.value,
       fechaEntregaHasta : this.fechaEntregaHasta.value,
       nombreCliente : this.nombreCliente.value,
-      identificacionCliente : this.identificacionCliente.value
+      identificacionCliente : this.identificacionCliente.value,
+      asesor : this.usuario
     }).subscribe((data: any) => {
       if (data.list != null) {
         this.dataSource = new MatTableDataSource<any>(data.list);

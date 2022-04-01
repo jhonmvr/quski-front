@@ -5,11 +5,12 @@ import { TbQoCreditoNegociacion } from '../../../../../core/model/quski/TbQoCred
 import { ParametroService } from '../../../../../core/services/quski/parametro.service';
 import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 import { ReNoticeService } from '../../../../../core/services/re-notice.service';
-import { SubheaderService } from '../../../../../core/_base/layout';
+import { LayoutConfigService, SubheaderService } from '../../../../../core/_base/layout';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 
 @Component({
   selector: 'kt-detalle-negociacion',
@@ -48,6 +49,8 @@ export class DetalleNegociacionComponent implements OnInit {
     private sinNotSer: ReNoticeService,
     private par: ParametroService,
     private sof: SoftbankService,
+    private procesoService: ProcesoService,
+    private layoutService: LayoutConfigService,
     private dialog: MatDialog,
     private subheaderService: SubheaderService,
     private router: Router
@@ -80,6 +83,9 @@ export class DetalleNegociacionComponent implements OnInit {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
         this.referencia = data.params.id
+        this.procesoService.getCabecera(data.params.id,'RENOVACION').subscribe(datosCabecera=>{
+          this.layoutService.setDatosContrato(datosCabecera);
+        });
         this.cre.findHistoricoOperativaByidNegociacion(this.referencia).subscribe((data: any) => {
           this.dataHistoricoOperativa = data.entidades;
         });

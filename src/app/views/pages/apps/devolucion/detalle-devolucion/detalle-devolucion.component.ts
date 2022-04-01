@@ -133,7 +133,7 @@ export class DetalleDevolucionComponent implements OnInit {
     this.idReferencia =this.wrapperDevolucion.devolucion.id
     this.titulo = 'DETALLE DE PROCESO DE DEVOLUCION: '+ this.wrapperDevolucion.devolucion.codigo;
     this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);
-    this.procesoDev.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi," ")  );
+    this.procesoDev.setValue(this.wrapperDevolucion.proceso?this.wrapperDevolucion.proceso.estadoProceso:''  );
     this.nombresCompletos.setValue(this.wrapperDevolucion.devolucion.nombreCliente);
     this.cedulaCliente.setValue(this.wrapperDevolucion.devolucion.cedulaCliente);
     

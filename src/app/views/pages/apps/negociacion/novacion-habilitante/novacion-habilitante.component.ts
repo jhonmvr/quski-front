@@ -166,11 +166,13 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.numeroCuenta.disable();
     this.firmanteOperacion.setValue( this.catFirmanteOperacion ? this.catFirmanteOperacion[0] ? this.catFirmanteOperacion[0] :{nombre: 'Error cargando catalogo'} :{nombre: 'Error cargando catalogo'} )
     this.firmanteOperacion.disable();
+    this.diaFijoPago.setValue(new Date(this.credit.credito.pagoDia) );
     if(wr.credito.excepcionOperativa && this.catExcepcionOperativa){
       
-      let excepcionesOperativas = JSON.parse( wr.credito.excepcionOperativa).map( ex=>{ 
+      let excepcionesOperativas = wr.credito.excepcionOperativa.split(',').map( ex=>{ 
         return this.catExcepcionOperativa.find( p => p.valor == ex );
       } );
+      
       this.excepcionOperativa.setValue(excepcionesOperativas);
       if(this.excepcionOperativa.value && this.excepcionOperativa.value.find(p=>p.valor == 'SIN EXCEPCION') ){
         this.fechaRegularizacion.disable();
@@ -239,10 +241,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.loadComprobante.next(false);
   }
   public solicitarAprobacion(){
-    if(this.observacionAsesor.invalid){
-      this.sinNotSer.setNotice("ERROR EN OBSERVACION ASESOR",'warning');
-      return;
-    }
+    
     if(this.formOperacion.valid){
       let mensaje = "Solicitar la aprobacion del credito: " + this.credit.credito.codigo;
       const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
@@ -267,6 +266,10 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
   }
   public crearOperacion(){
+    if(this.observacionAsesor.invalid){
+      this.sinNotSer.setNotice("ERROR EN OBSERVACION ASESOR",'warning');
+      return;
+    }
     this.credit.credito.numeroCuenta = this.numeroCuenta.value;
     this.credit.credito.pagoDia = this.diaFijoPago.value;
     this.credit.credito.firmanteOperacion = this.firmanteOperacion.value.nombre;
@@ -276,7 +279,8 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       return;
     }
     this.credit.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
-    this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? JSON.stringify(this.excepcionOperativa.value.map(p=>{return p.valor}) ) : null;
+    this.credit.credito.tbQoNegociacion.observacionAsesor = this.observacionAsesor.value;
+    this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') : null;
     let list = new Array<any>( );
     if(this.dataSourceComprobante.data.length > 0){
       this.dataSourceComprobante.data.forEach( e=>{

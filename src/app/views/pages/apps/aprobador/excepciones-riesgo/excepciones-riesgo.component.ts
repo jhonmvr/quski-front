@@ -18,6 +18,7 @@ import { BehaviorSubject } from 'rxjs';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { ProcesoService } from '../../../../../core/services/quski/proceso.service';
 import { LayoutConfigService } from '../../../../../core/_base/layout';
+import { SoftbankService } from '../../../../../core/services/quski/softbank.service';
 @Component({
   selector: 'kt-excepciones-riesgo',
   templateUrl: './excepciones-riesgo.component.html',
@@ -66,7 +67,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
   public valorComercial = new FormControl('', []);
   public valorAvaluo = new FormControl('', []);
   public usuarioAsesor = new FormControl('', []);
-
+  codigoAgencia;
 
   constructor(
     private route: ActivatedRoute,
@@ -77,6 +78,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
     private cre: CreditoNegociacionService,
     private exc: ExcepcionService,
     private cal: CalculadoraService,
+    private sof: SoftbankService,
     private sinNotSer: ReNoticeService,
     private procesoService: ProcesoService,
     private layoutService: LayoutConfigService,
@@ -87,6 +89,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
     this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
+    this.sof.setParameter();
     this.procesoService.setParameter();
     this.formDisable.addControl('cliente', this.cliente);
     this.formDisable.addControl('cedula', this.cedula);
@@ -102,6 +105,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
     this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
+    this.sof.setParameter();
     this.procesoService.setParameter();
     this.wp = null;
     this.loading = this.loadingSubject.asObservable();
@@ -136,6 +140,19 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
             this.formDisable.disable();
             if(this.wp.credito && this.wp.excepciones && this.wp.excepciones.find(e => e.id == excepcionRol.id ) && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ){
               this.excepcion = this.wp.excepciones.find(e => e.id == excepcionRol.id );
+              this.sof.consultarAgenciasCS().subscribe(data=>{
+                const catalogoAgencia = data.catalogo;
+                if(catalogoAgencia){
+
+                  this.codigoAgencia = catalogoAgencia.find(p=>p.id==this.wp.credito.idAgencia );
+                  
+                  if(this.codigoAgencia){
+                    this.calcularOpciones();
+                  }else{
+                    console.log("error al asignar codigo de la agencia");
+                  }
+                }
+              })
               this.cargarCampos(this.wp) 
             }else{
               this.sinNoticeService.setNotice('ERROR CARGANDO EXCEPCION','error');            
@@ -191,7 +208,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
   public calcularOpciones() {
     if (this.wp && this.wp.joyas && this.wp.joyas.length > 0) {
       this.loadingSubject.next(true);
-      this.cal.simularOferta(this.wp.credito.id, null, null).subscribe((data: any) => {
+      this.cal.simularOfertaExcepcion(this.wp.credito.id, null, null,this.codigoAgencia.codigo).subscribe((data: any) => {
         this.loadingSubject.next(false);
         console.log("info", data.entidad)
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 

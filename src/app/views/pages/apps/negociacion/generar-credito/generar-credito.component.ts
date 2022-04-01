@@ -286,7 +286,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     }
     if(data.credito.excepcionOperativa && this.catExcepcionOperativa){
       
-      let excepcionesOperativas = JSON.parse( data.credito.excepcionOperativa).map( ex=>{ 
+      let excepcionesOperativas = data.credito.excepcionOperativa.split(',').map( ex=>{ 
         return this.catExcepcionOperativa.find( p => p.valor == ex );
       } );
       this.excepcionOperativa.setValue(excepcionesOperativas);
@@ -437,6 +437,11 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.router.navigate(['negociacion/gestion-cliente/NEG/',this.item]);
   }
   public generarCredito(anular?: boolean ) {
+    
+    if(this.observacionAsesor.invalid){
+      this.sinNotSer.setNotice("ERROR EN OBSERVACION ASESOR",'warning');
+      return;
+    }
     if(this.formFunda.valid ){
       this.operacionNuevo.credito.pagoDia = this.fechaCuota.value != null ? this.fechaCuota.value : null;
       this.operacionNuevo.credito.codigoTipoFunda = this.pesoFunda.value.codigo;
@@ -446,7 +451,8 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       this.operacionNuevo.credito.idAgencia = this.agencia;
       this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value;
       this.operacionNuevo.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
-      this.operacionNuevo.credito.excepcionOperativa =  this.excepcionOperativa.value ? JSON.stringify(this.excepcionOperativa.value.map(p=>{return p.valor}) ) : null;
+      this.operacionNuevo.credito.excepcionOperativa =  this.excepcionOperativa.value ? this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') : null;
+      this.operacionNuevo.credito.tbQoNegociacion.observacionAsesor = this.observacionAsesor.value;
       if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor !== 'SIN EXCEPCION' && this.fechaRegularizacion.invalid){
         this.sinNotSer.setNotice('SELECCIONES UNA FECHA DE REGULARIZACION', 'warning');
         return;

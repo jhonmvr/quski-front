@@ -1015,23 +1015,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
 
       this.loadOpciones.next(true);
       this.cal.simularOferta(this.negoW.credito.id, montoSolicitado, this.riesgoTotal).subscribe((data: any) => {
-        if (data.entidad.simularResult.codigoError == 3) {
-          this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
-         // this.loadOpciones.next(false);
-          this.codigoError = data.entidad.simularResult.codigoError;
-         // console.log("LA DATA" ,data.entidad)
-          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
-          this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
-       
-        } else if (data.entidad.simularResult.codigoError == 2) {
-          this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
-          this.loadOpciones.next(false);
-          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
-        } else if(data.entidad.simularResult.codigoError > 0){
-          this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
-          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
-          return;
-        }else if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion
+        if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
           this.loadOpciones.next(false);
@@ -1044,8 +1028,23 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
               this.myStepper.selectedIndex = 5;
             }
           })
-        } else {
-          this.sinNotSer.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'warning');
+        }
+        if (data.entidad.simularResult.codigoError == 3) {
+          this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
+         // this.loadOpciones.next(false);
+          this.codigoError = data.entidad.simularResult.codigoError;
+         // console.log("LA DATA" ,data.entidad)
+         // this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+          this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
+       
+        } else if (data.entidad.simularResult.codigoError == 2) {
+          this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
+          this.loadOpciones.next(false);
+          //this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
+        } else if(data.entidad.simularResult.codigoError > 0){
+          this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
+          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(null);
+          return;
         }
         
       });
@@ -1066,7 +1065,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.neg.actualizarVariables( variablesBase, this.negoW.credito.tbQoNegociacion.id ).subscribe( (data: any) =>{
       if( data.entidades){
         this.negoW.variables = data.entidades;
-        this.sinNotSer.setNotice("LAS VARIABLES CREDITICIAS FUERON ACTUALIZADAS", 'success');
+        //this.sinNotSer.setNotice("LAS VARIABLES CREDITICIAS FUERON ACTUALIZADAS", 'success');
         this.componenteVariable = true;
         this.loadVariables.next(false);
       }
@@ -1217,11 +1216,28 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       this.myStepper.selectedIndex = 1;
       return;
     } */
-    if (this.edad.value < 18 || this.edad.value > 74) {
-      this.sinNotSer.setNotice("LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS DEBE INGRESAR LA INFORMACION DEL CODEUDOR", 'warning');
-      this.myStepper.selectedIndex = 1;
+    /* if (this.edad.value < 18 || this.edad.value > 74) {
+      
+      let data = new DataInjectExcepciones(false, true, false);
+      data.mensajeBre = 'LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS';
+      data.idNegociacion = this.negoW.credito.tbQoNegociacion.id;
+      this.excepciones.push(data);
+      const dialogRefGuardar = this.dialog.open(SolicitudDeExcepcionesComponent, {
+        width: '800px',
+        height: 'auto',
+        data: data
+      });
+      dialogRefGuardar.afterClosed().subscribe((result: any) => {
+        if (result) {
+          this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+        } else {
+          this.sinNotSer.setNotice("LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS", 'warning');
+          this.myStepper.selectedIndex = 1;
+        }
+      });
+
       return;
-    }
+    } */
     /* if ((!this.fechaNacimientoCodeudor.value || this.edadCodeudor.value < 18 || this.edadCodeudor.value > 65) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'SCD') {
       this.sinNotSer.setNotice("LA EDAD DEL CODEUDOR ES MAYOR A 65 AÑOS DEBE INGRESE OTRO CODEUDOR", 'warning');
       this.myStepper.selectedIndex = 1;
@@ -1264,9 +1280,9 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       return;
     } */
     if (this.edad.value < 18 || this.edad.value > 74) {
-      this.sinNotSer.setNotice("LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS DEBE INGRESAR LA INFORMACION DEL CODEUDOR", 'warning');
-      this.myStepper.selectedIndex = 1;
-      return;
+      this.sinNotSer.setNotice("LA EDAD DEL CLIENTE ES MAYOR A 75 AÑOS", 'warning');
+      //this.myStepper.selectedIndex = 1;
+     // return;
     }
     /* if ((!this.fechaNacimientoCodeudor.value || this.edadCodeudor.value < 18 || this.edadCodeudor.value > 65) && this.tipoCliente.value && this.tipoCliente.value.codigo == 'SCD') {
       this.sinNotSer.setNotice("LA EDAD DEL CODEUDOR ES MAYOR A 65 AÑOS DEBE INGRESE OTRO CODEUDOR", 'warning');

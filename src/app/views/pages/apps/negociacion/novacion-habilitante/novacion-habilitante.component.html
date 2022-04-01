@@ -11,7 +11,7 @@
     <re-portlet-body>
         <mat-vertical-stepper #stepper [linear]="true" (animationDone)="guardarTraking('RENOVACION',
         credit ? credit.credito ? credit.credito.codigo : null : null, 
-        ['Información Operación','Detalle de garantias','Simular opciones de crédito'], 
+        ['Datos Instruccion Operacion','Comprobante De Pago','Documentos Legales'], 
         stepper.selectedIndex, 'GENERAR CREDITO RENOVACION',
         credit ? credit.credito ? credit.credito.numeroOperacion : null : null )">
             <mat-step label='Datos Instruccion Operacion' [stepControl]="formOperacion">
@@ -65,6 +65,12 @@
                                 <mat-datepicker #picker6></mat-datepicker>
                             </mat-form-field>
                         </div>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="col-md-12">
+                            <textarea class="form-control border" [formControl]="observacionAsesor" rows="5" placeholder="Observacion asesor " matInput></textarea>
+                            <mat-error *ngIf="observacionAsesor.hasError('maxlength')"><strong>maximo de caracteres</strong></mat-error>
+                        </mat-form-field>
                     </div>
                 </form>
             </mat-step>
@@ -142,12 +148,7 @@
                         <kt-historico-observacion [data]="dataHistoricoObservacion"></kt-historico-observacion>
                     </div>
                 </div>
-                <div class="row">
-                    <mat-form-field class="col-md-12">
-                        <textarea class="form-control border" [formControl]="observacionAsesor" rows="5" placeholder="Observacion asesor " matInput></textarea>
-                        <mat-error *ngIf="observacionAsesor.hasError('maxlength')"><strong>maximo de caracteres</strong></mat-error>
-                    </mat-form-field>
-                </div>
+
                 <div class="row" *ngIf="flagSolicitud.asObservable() | async">
                     <div class="col-md-5 offset-md-5">
                         <button mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>

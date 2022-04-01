@@ -85,6 +85,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
+    this.sof.setParameter();
     this.procesoService.setParameter();
     this.formDisable.addControl('cliente', this.cliente);
     this.formDisable.addControl('cedula', this.cedula);
@@ -101,6 +102,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     this.cre.setParameter();
     this.exc.setParameter();
     this.cal.setParameter();
+    this.sof.setParameter();
     this.procesoService.setParameter();
     this.wp = null;
     this.busquedaNegociacion();
