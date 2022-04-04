@@ -53,8 +53,12 @@ export class CalculadoraService extends BaseService {
       )
     );
   }
-  public simularOfertaExcepcion(idCredito, montoSolicitado, riesgoTotal,codigoAgencia ) {
-    const serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOferta';
+  public simularOfertaExcepcion(idCredito, montoSolicitado, riesgoTotal,codigoAgencia, numeroOperacionAnterior) {
+    let serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOferta';
+    if(numeroOperacionAnterior){
+      serviceUrl = this.appResourcesUrl + 'calculadoraRestController/simularOfertaRenovacionExcepcion';
+    }
+   
    this.params = new HttpParams();
    this.params = this.params.set('idCredito',idCredito);
    this.params = this.params.set('codigoAgencia',codigoAgencia.slice(2, 5));

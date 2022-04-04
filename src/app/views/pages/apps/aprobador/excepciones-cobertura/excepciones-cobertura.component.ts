@@ -216,7 +216,8 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     
   }
   public calcularOpciones() {
-      this.cal.simularOfertaExcepcion(this.wp.credito.id, null, null,this.codigoAgencia.codigo).subscribe((data: any) => {
+    console.log(" renovacion o nuevo", this.wp.credito.numeroOperacionAnterior?true:false)
+      this.cal.simularOfertaExcepcion(this.wp.credito.id, null, null,this.codigoAgencia.codigo,this.wp.credito.numeroOperacionAnterior).subscribe((data: any) => {
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
