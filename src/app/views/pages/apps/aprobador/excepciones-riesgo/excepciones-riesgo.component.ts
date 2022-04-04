@@ -208,7 +208,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
   public calcularOpciones() {
     if (this.wp && this.wp.joyas && this.wp.joyas.length > 0) {
       this.loadingSubject.next(true);
-      this.cal.simularOfertaExcepcion(this.wp.credito.id, null, null,this.codigoAgencia.codigo).subscribe((data: any) => {
+      this.cal.simularOfertaExcepcion(this.wp.credito.id, null, null,this.codigoAgencia.codigo,this.wp.credito.numeroOperacionAnterior).subscribe((data: any) => {
         this.loadingSubject.next(false);
         console.log("info", data.entidad)
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
