@@ -166,7 +166,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.numeroCuenta.disable();
     this.firmanteOperacion.setValue( this.catFirmanteOperacion ? this.catFirmanteOperacion[0] ? this.catFirmanteOperacion[0] :{nombre: 'Error cargando catalogo'} :{nombre: 'Error cargando catalogo'} )
     this.firmanteOperacion.disable();
-    this.diaFijoPago.setValue(new Date(this.credit.credito.pagoDia) );
+    //this.diaFijoPago.setValue(new Date(this.credit.credito.pagoDia) );
     if(wr.credito.excepcionOperativa && this.catExcepcionOperativa){
       
       let excepcionesOperativas = wr.credito.excepcionOperativa.split(',').map( ex=>{ 
