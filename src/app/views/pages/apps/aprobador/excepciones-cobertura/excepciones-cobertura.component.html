@@ -260,7 +260,7 @@
                                 <mat-cell *matCellDef="let element"> {{ element.dividendosprorrateoserviciosdiferido }}
                                 </mat-cell>
                             </ng-container>
-                            <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
+                            <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion;  sticky: true"></mat-header-row>
                             <mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion"></mat-row>
                         </mat-table>
                     </div>
@@ -336,22 +336,32 @@
                         </div>
                         <div class="col-6">
                             <div class="row mt-5">
-                                <div class="col-4">
+                                <div class="offset-1 col-4">
                                     <mat-form-field class="mat-form-field-fluid">
                                         <input matInput [formControl]="coberturaActual" placeholder="Cobertura Oferta: " />
                                     </mat-form-field>
                                 </div>
+                                <div class="col-4">
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input matInput [formControl]="perfilInterno" placeholder="Perfil Interno: " />
+                                    </mat-form-field>
+                                </div>
                                 <div class="offset-1 col-4">
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input matInput [formControl]="PerfilExterno" placeholder="Perfil Externo: " />
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-4">
                                     <mat-form-field class="mat-form-field-fluid">
                                         <input matInput [formControl]="montoActual" placeholder="Monto Actual: " />
                                     </mat-form-field>
                                 </div>
-                                <div class="col-4 ">
+                                <div class="offset-1 col-4 ">
                                     <mat-form-field class="mat-form-field-fluid">
                                         <input matInput [formControl]="valorComercial" placeholder="Valor Comercial: " />
                                     </mat-form-field>
                                 </div>
-                                <div class="offset-1 col-4">
+                                <div class="col-4">
                                     <mat-form-field class="mat-form-field-fluid">
                                         <input matInput [formControl]="valorAvaluo" placeholder="Valor Avaluo: " />
                                     </mat-form-field>

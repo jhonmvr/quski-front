@@ -563,7 +563,7 @@
                         <mat-header-cell *matHeaderCellDef>Dividendos prorrateo servicios diferido</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{ element.dividendosprorrateoserviciosdiferido }}</mat-cell>
                     </ng-container>
-                    <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
+                    <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion;  sticky: true"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumnsCreditoNegociacion" [ngStyle]="sombrear(row)"></mat-row>
                 </mat-table>
                 <div class="row">

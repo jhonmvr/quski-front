@@ -22,7 +22,7 @@ export class BandejaExcepcionesComponent implements OnInit {
   public identificacion = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
   usuario: string;
   //VARIABLES DE LA TABLA
-  displayedColumnsExcepciones = ['accion', 'tipoExcepcion', 'nombreCliente','identificacion','observacionAsesor'];
+  displayedColumnsExcepciones = ['accion', 'tipoExcepcion', 'nombreCliente','asesor','identificacion','observacionAsesor','operacion','codigo'];
   dataSourceExcepcionRol = new MatTableDataSource<TbQoExcepcionRol>();
   private agregar = new Array<TbQoExcepcionRol>();
 
@@ -54,7 +54,7 @@ export class BandejaExcepcionesComponent implements OnInit {
    * @memberof BandejaExcepcionesComponent
    */
   private busquedaExcepciones(rol: string) {
-    this.exr.findByRolAndIdentificacion(rol, null).subscribe((data: any) => {
+    this.exr.findByRolAndIdentificacion(this.usuario, this.identificacion.value).subscribe((data: any) => {
       if (data && data.list) {
         this.dataSourceExcepcionRol = data.list;
       }
@@ -69,36 +69,13 @@ export class BandejaExcepcionesComponent implements OnInit {
     });
     this.busquedaExcepciones(this.usuario);
   }
-  public find() {
-    this.dataSourceExcepcionRol = null;
-    this.exr.findByRolAndIdentificacion(this.usuario, this.identificacion.value).subscribe((data: any) => {
-      let listRecuperados = new Array<TbQoExcepcionRol>();
-      this.agregar = new Array<TbQoExcepcionRol>();
-      listRecuperados = data.list;
-      if (listRecuperados) {
-        this.dataSourceExcepcionRol = null;
-        for (let index = 0; index < listRecuperados.length; index++) {
-          if (this.identificacion.value === listRecuperados[index].identificacion) {
-            let encontrados = new TbQoExcepcionRol();
-            //console.log('INGRESA AL IF');
-            encontrados = listRecuperados[index];
-            this.agregar.push(encontrados);
-          }
-        }
-      } else {
-        this.sinNoticeService.setNotice('NO EXISTE ESA CEDULA', 'error');
-      }
-      this.dataSourceExcepcionRol = new MatTableDataSource(this.agregar);
-    });
-
-  }
 
   public traerExcepciones() {
-    if (this.identificacion.value == "") {
-      this.busquedaExcepciones(this.usuario);
-    } else {
-      this.find();
-    }
+    this.exr.findByRolAndIdentificacion(this.usuario, this.identificacion.value).subscribe((data: any) => {
+      if (data && data.list) {
+        this.dataSourceExcepcionRol = data.list;
+      }
+    });
 
   }
   public abrirSolicitud(row ){

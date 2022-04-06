@@ -115,7 +115,7 @@
         <mat-footer-cell *matFooterCellDef> {{deudaTotal | currency:'CAD':'symbol-narrow':'1.2-2'}} </mat-footer-cell>
 
     </ng-container>
-    <mat-header-row *matHeaderRowDef="displayedColumnsRiesgoAcumulado"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="displayedColumnsRiesgoAcumulado; sticky: true"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumnsRiesgoAcumulado"></mat-row>
     <mat-footer-row *matFooterRowDef="displayedColumnsRiesgoAcumulado; sticky: true"></mat-footer-row>
 

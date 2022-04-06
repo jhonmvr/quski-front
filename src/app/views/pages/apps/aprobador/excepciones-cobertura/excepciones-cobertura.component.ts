@@ -62,6 +62,8 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   public usuarioAsesor = new FormControl('', []);
 
   public coberturaActual = new FormControl('', []);
+  public perfilInterno = new FormControl('', []);
+  public PerfilExterno = new FormControl('', []);
   public montoActual = new FormControl('', [ValidateDecimal]);
   public valorComercial = new FormControl('', [ValidateDecimal]);
   public valorAvaluo = new FormControl('', [ValidateDecimal]);
@@ -117,11 +119,20 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
       totalValorAvaluo += e.valorAvaluo;
       totalValorComercial += e.valorComercial;
     }); 
-    this.coberturaActual.setValue( this.wp.variables.find( v => v.codigo == 'Cobertura') ? this.wp.variables.find( v => v.codigo == 'Cobertura').valor : 'No aplica');
+    if(this.wp.variables){
+      let cobertura = this.wp.variables.find( v => v.codigo == 'Cobertura');
+      let perfilInterno = this.wp.variables.find( v => v.codigo == 'PerfilInterno');
+      let PerfilExterno = this.wp.variables.find( v => v.codigo == 'PerfilExterno');
+      this.coberturaActual.setValue( cobertura ? cobertura.valor : 'No aplica');
+      this.perfilInterno.setValue( perfilInterno? perfilInterno.valor : 'No aplica');
+      this.PerfilExterno.setValue(  PerfilExterno? PerfilExterno.valor : 'No aplica');
+    }
     this.valorComercial.setValue( totalValorComercial.toFixed(2) );
     this.valorAvaluo.setValue( totalValorAvaluo.toFixed(2) );
     this.montoActual.disable();
     this.coberturaActual.disable();
+    this.perfilInterno.disable();
+    this.PerfilExterno.disable();
     this.valorComercial.disable();
     this.valorAvaluo.disable();
   }

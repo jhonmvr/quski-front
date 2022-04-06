@@ -1,6 +1,6 @@
 <mat-table #table matTableExporter class="mat-elevation-z8" #exporter="matTableExporter" [dataSource]="dataSourceVariablesCrediticias">
     <ng-container matColumnDef="orden">
-        <mat-header-cell  *matHeaderCellDef>Orden</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>Orden</mat-header-cell>
         <mat-cell *matCellDef="let element">
             {{element.orden}}
         </mat-cell>
@@ -17,11 +17,11 @@
             {{element.valor}}
         </mat-cell>
     </ng-container>
-    <mat-header-row *matHeaderRowDef="displayedColumnsVariablesCrediticias"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="displayedColumnsVariablesCrediticias; sticky: true"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumnsVariablesCrediticias"></mat-row>
 </mat-table>
 <div class="row">
     <div class="col-1 offset-11">
-      <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'variables', sheet: 'sheet_name', Props: {Author: 'jhonmvr'}})">Exportar</button>
+        <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'variables', sheet: 'sheet_name', Props: {Author: 'jhonmvr'}})">Exportar</button>
     </div>
 </div>
