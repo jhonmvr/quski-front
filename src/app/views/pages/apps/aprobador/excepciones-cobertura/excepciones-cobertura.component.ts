@@ -44,6 +44,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   public fechaCreacion = new FormControl('', []);
   public proceso = new FormControl('', []);
   public email = new FormControl('', []);
+  aprobadoWebMupi = new FormControl('', []);
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
   displayedColumnsCreditoNegociacion = ['plazo','periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
   'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
@@ -94,6 +95,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
     this.formDisable.addControl('fechaCreacion', this.fechaCreacion);
     this.formDisable.addControl('proceso', this.proceso);
     this.formDisable.addControl('email', this.email);
+    this.formDisable.addControl('aprobadoWebMupi', this.aprobadoWebMupi);
     this.formDisable.addControl('observacionAsesor', this.observacionAsesor);
     this.formDisable.addControl('usuarioAsesor', this.usuarioAsesor);
     this.formDatosExcepcion.addControl('observacionAprobador', this.observacionAprobador);
@@ -195,6 +197,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
       this.dataSourceTelefonosCliente = new MatTableDataSource<any>(wp.telefonos);
     }
     this.email.setValue( wp.credito.tbQoNegociacion.tbQoCliente.email );
+    this.aprobadoWebMupi.setValue(wp.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S'? 'Si' : 'No');
     //this.calcularOpciones();
     this.camposAdicinales( wp );
     this.observacionAsesor.setValue( this.excepcion.observacionAsesor );

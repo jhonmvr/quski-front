@@ -41,6 +41,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
   public fechaCreacion = new FormControl('', []);
   public proceso = new FormControl('', []);
   public email = new FormControl('', []);
+  aprobadoWebMupi = new FormControl('', []);
   public componenteVariable: boolean;
   negoW: NegociacionWrapper;
   mensaje;
@@ -96,6 +97,7 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
     this.formDisable.addControl('fechaCreacion', this.fechaCreacion);
     this.formDisable.addControl('proceso', this.proceso);
     this.formDisable.addControl('email', this.email);
+    this.formDisable.addControl('aprobadoWebMupi', this.aprobadoWebMupi);
     this.formDisable.addControl('usuarioAsesor', this.usuarioAsesor);
     this.formDatosExcepcion.addControl('observacionAprobador', this.observacionAprobador);
     this.formDatosExcepcion.addControl('cobertura', this.cobertura);
@@ -184,8 +186,9 @@ export class ExcepcionesRiesgoComponent extends TrackingUtil implements OnInit {
       this.dataSourceTelefonosCliente = new MatTableDataSource<any>(wp.telefonos);
     }
     this.email.setValue( wp.credito.tbQoNegociacion.tbQoCliente.email );
+    this.aprobadoWebMupi.setValue(wp.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S'? 'Si' : 'No');
     this.observacionAsesor.disable();
-    this.calcularOpciones();
+    //this.calcularOpciones();
     this.camposAdicinales( );
     this.observacion = this.excepcion.observacionAsesor;
     this.observacionAsesor.setValue( this.excepcion.observacionAsesor );

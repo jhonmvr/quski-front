@@ -44,6 +44,11 @@
                             <input matInput [formControl]="fechaCreacion" placeholder="Fecha Creación: " [value]="fechaCreacion.value | rDate" />
                         </mat-form-field>
                     </div>
+                    <div class="col-md-6">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input [formControl]="aprobadoWebMupi" placeholder="Aprobado Web Mupi:" matInput />
+                        </mat-form-field>
+                    </div>
                 </div>
             </mat-step>
             <mat-step label="Datos Contacto Cliente">
