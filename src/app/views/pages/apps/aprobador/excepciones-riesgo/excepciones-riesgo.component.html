@@ -257,6 +257,14 @@
                                     {{ element.tipooferta ? element.tipooferta == 'N' ? 'Nuevo' : element.tipooferta : 'Error' }}
                                 </mat-cell>
                             </ng-container>
+                            <ng-container matColumnDef="abonoCapital">
+                                <mat-header-cell *matHeaderCellDef>Abono Capital</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.abonoCapital | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="formaPagoAbonoCapital">
+                                <mat-header-cell *matHeaderCellDef>Forma de Abono Capital</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.formaPagoAbonoCapital }}</mat-cell>
+                            </ng-container>
                             <ng-container matColumnDef="porcentajeflujoplaneado">
                                 <mat-header-cell *matHeaderCellDef>porcentaje flujo planeado</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.porcentajeflujoplaneado }}</mat-cell>

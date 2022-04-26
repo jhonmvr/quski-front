@@ -251,6 +251,14 @@
                                 <mat-header-cell *matHeaderCellDef>Tipo oferta</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.tipooferta }}</mat-cell>
                             </ng-container>
+                            <ng-container matColumnDef="abonoCapital">
+                                <mat-header-cell *matHeaderCellDef>Abono Capital</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.abonoCapital | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="formaPagoAbonoCapital">
+                                <mat-header-cell *matHeaderCellDef>Forma de Abono Capital</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.formaPagoAbonoCapital }}</mat-cell>
+                            </ng-container>
                             <ng-container matColumnDef="porcentajeflujoplaneado">
                                 <mat-header-cell *matHeaderCellDef>Porcentaje flujo planeado</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.porcentajeflujoplaneado }}</mat-cell>

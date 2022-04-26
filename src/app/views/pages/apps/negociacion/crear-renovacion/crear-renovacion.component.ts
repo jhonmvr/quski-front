@@ -86,8 +86,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public dataSourceCreditoNegociacion = new MatTableDataSource<any>();
   public displayedColumnsCreditoNegociacion = ['Accion','plazo', 'periodicidadPlazo', 'montoFinanciado', 'cuota', 'valorARecibir', 'valorAPagar',
   'totalCostosOperacionAnterior','totalGastosNuevaOperacion', 'costoCustodia', 'costoTasacion', 'costoFideicomiso', 'costoSeguro', 'impuestoSolca',
-  'saldoCapitalRenov', 'saldoInteres', 'saldoMora', 'gastoCobranza', 'custodiaDevengada', 'porcentajeflujoplaneado','formaPagoCustodia','formaPagoTasador', 
-  'formaPagoFideicomiso', 'formaPagoSeguro',  'formaPagoImpuestoSolca', 'formaPagoGastoCobranza'];
+  'saldoCapitalRenov', 'saldoInteres','abonoCapital', 'saldoMora', 'gastoCobranza', 'custodiaDevengada', 'porcentajeflujoplaneado','formaPagoCustodia','formaPagoTasador', 
+  'formaPagoFideicomiso', 'formaPagoSeguro',  'formaPagoImpuestoSolca', 'formaPagoGastoCobranza','formaPagoAbonoCapital'];
   /*'costoTransporte', 'costoValoracion', 
    'formaPagoCapital',  'formaPagoInteres', 'formaPagoMora',
      'formaPagoTransporte', 'formaPagoValoracion', 
@@ -328,7 +328,9 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         totalCostosOperacionAnterior: this.credit.credito.totalCostosOperacionAnterior,
         totalGastosNuevaOperacion: this.credit.credito.totalGastosNuevaOperacion,
         valorAPagar: this.credit.credito.valorAPagar,
-        valorARecibir: this.credit.credito.valorARecibir
+        valorARecibir: this.credit.credito.valorARecibir,
+        formaPagoAbonoCapital: this.credit.credito.formaPagoAbonoCapital,
+        abonoCapital: this.credit.credito.abonoCapital
       }
       this.dataSourceCreditoNegociacion.data.push( calculadora );
       this.masterToggle( calculadora ) ;

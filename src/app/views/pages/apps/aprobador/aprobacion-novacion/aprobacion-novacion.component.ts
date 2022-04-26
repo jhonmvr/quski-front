@@ -626,14 +626,14 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.saldoInteresOpAnt.setValue(ap.credito.saldoInteres);
     this.saldoMoraOpAnt.setValue(ap.credito.saldoMora);
     this.gastosCobranzaOpAnt.setValue(ap.credito.gastoCobranza);
-    this.abonoCapitalOpAnt.setValue('--');
+    this.abonoCapitalOpAnt.setValue(ap.credito.abonoCapital);
     this.custodiaVencidaOpAnt.setValue(ap.credito.custodiaDevengada);
   
     this.formaPagoCapitalOpAnt.setValue('--');
     this.formaPagoInteresOpAnt.setValue(ap.credito.formaPagoInteres);
     this.formaPagoMoraOpAnt.setValue(ap.credito.formaPagoMora);
     this.formaPagogastosCobranzaOpAnt.setValue(ap.credito.formaPagoGastoCobranza);
-    this.formaPagoabonoCapitalOpAnt.setValue('--');
+    this.formaPagoabonoCapitalOpAnt.setValue(ap.credito.formaPagoAbonoCapital);
     this.formaPagocustodiaVencidaOpAnt.setValue(ap.credito.formaPagoCustodiaDevengada);
 
 
