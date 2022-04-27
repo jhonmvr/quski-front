@@ -94,6 +94,8 @@ export class TbQoCreditoNegociacion {
     fechaRegularizacion: Date;
     excepcionOperativa: string;
     cobertura;
+    abonoCapital;
+    formaPagoAbonoCapital;
     constructor(idNegociacion?: number) {
         this.tbQoNegociacion = new TbQoNegociacion();
         this.tbQoNegociacion.id = idNegociacion > 0 ? idNegociacion : null;

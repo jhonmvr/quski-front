@@ -46,13 +46,15 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   public email = new FormControl('', []);
   aprobadoWebMupi = new FormControl('', []);
   dataSourceCreditoNegociacion = new MatTableDataSource<TbQoCreditoNegociacion>();
-  displayedColumnsCreditoNegociacion = ['plazo','periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
+  /* displayedColumnsCreditoNegociacion = ['plazo','periodicidadPlazo', 'montoFinanciado', 'valorARecibir', 'valorAPagar',
   'costoCustodia', 'costoFideicomiso', 'costoSeguro', 'costoTasacion', 'costoTransporte', 'costoValoracion', 'impuestoSolca',
   'formaPagoImpuestoSolca', 'formaPagoCapital', 'formaPagoCustodia', 'formaPagoFideicomiso', 'formaPagoInteres', 'formaPagoMora',
   'formaPagoGastoCobranza', 'formaPagoSeguro', 'formaPagoTasador', 'formaPagoTransporte', 'formaPagoValoracion', 'saldoInteres',
   'saldoMora', 'gastoCobranza', 'cuota', 'saldoCapitalRenov', 'montoPrevioDesembolso', 'totalGastosNuevaOperacion',
   'totalCostosOperacionAnterior', 'custodiaDevengada', 'formaPagoCustodiaDevengada', 'tipooferta', 'porcentajeflujoplaneado',
-  'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido'];
+  'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido']; */
+
+  displayedColumnsCreditoNegociacion = ['plazo', 'periodicidadPlazo', 'tipooferta', 'montoFinanciado', 'valorARecibir', 'cuota', 'totalGastosNuevaOperacion', 'costoCustodia', 'costoTransporte', 'costoTasacion', 'costoSeguro', 'costoFideicomiso', 'impuestoSolca'];
   dataSourceCobertura = new MatTableDataSource<any>();
   displayedColumnsCobertura = ['plazo','montoCredito','riesgoAcumulado','valorDesembolso','cuota'];
 
@@ -149,6 +151,12 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
         this.cre.traerCreditoNegociacion(excepcionRol.idNegociacion).subscribe( (data: any)=>{
           if(data.entidad){
             this.wp = data.entidad;
+            if(this.wp.proceso.proceso == "RENOVACION"){
+              this.displayedColumnsCreditoNegociacion = ['plazo', 'periodicidadPlazo', 'montoFinanciado', 'cuota', 'valorARecibir', 'valorAPagar',
+              'totalCostosOperacionAnterior','totalGastosNuevaOperacion', 'costoCustodia', 'costoTasacion', 'costoFideicomiso', 'costoSeguro', 'impuestoSolca',
+              'saldoCapitalRenov', 'saldoInteres','abonoCapital', 'saldoMora', 'gastoCobranza', 'custodiaDevengada', 'porcentajeflujoplaneado','formaPagoCustodia','formaPagoTasador', 
+              'formaPagoFideicomiso', 'formaPagoSeguro',  'formaPagoImpuestoSolca', 'formaPagoGastoCobranza','formaPagoAbonoCapital'];
+            }
             if(this.wp.credito && this.wp.excepciones && this.wp.excepciones.find(e => e.id == excepcionRol.id ) && this.wp.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ){
               this.excepcion = this.wp.excepciones.find(e => e.id == excepcionRol.id );
               
