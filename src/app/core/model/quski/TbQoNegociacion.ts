@@ -9,7 +9,8 @@ export class TbQoNegociacion {
     asesor: string
     aprobador: string
     observacionAsesor: string
-
+    estadoCredito;
+    motivo;
     tbQoCliente: TbQoCliente
     constructor(idCliente?: number) {
         this.tbQoCliente = new TbQoCliente();

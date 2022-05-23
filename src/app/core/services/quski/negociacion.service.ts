@@ -11,7 +11,7 @@ import { TbQoVariablesCrediticia } from '../../model/quski/TbQoVariablesCreditic
   providedIn: 'root'
 })
 export class NegociacionService extends BaseService {
-
+  
 
   urlRest = "negociacionRestController/";
 
@@ -187,5 +187,20 @@ export class NegociacionService extends BaseService {
       )
     );
   }
+  guardarEstadoCredito(idNego,estadoCredito, motivo) {
+    const serviceUrl = this.appResourcesUrl + 'creditoNegociacionRestController/guardarEstadoMotivo';
+    this.params = new HttpParams()
+    .set('idNego',idNego)
+    .set('estadoCredito',estadoCredito)
+    .set('motivo',motivo);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+
 
 }

@@ -34,6 +34,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { LayoutConfigService } from '../../../../../../app/core/_base/layout/services/layout-config.service';
 import { ProcesoService } from '../../../../../../app/core/services/quski/proceso.service';
 import { runInThisContext } from 'vm';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -66,6 +67,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public catTipoOro: Array<any>;
   public catEstadoJoya: Array<any>;
   catPais;
+  catEstadoCredito;
+  catMotivo;
   private catMotivoDevolucion: Array<any>;
   filteredPais: Observable<Pais[]>;
   public totalNumeroJoya: number;
@@ -89,6 +92,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public nombresCompletos = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public publicidad = new FormControl('', [Validators.required]);
   public fechaDeNacimiento = new FormControl('', [Validators.required]);
+  motivo = new FormControl('', [Validators.required]);
+  estadoCredito = new FormControl('', [Validators.required]);
   public edad = new FormControl('', [Validators.required, Validators.max(75), Validators.min(18)]);
   public edadCodeudor = new FormControl('', [Validators.required, Validators.max(64), Validators.min(18)]);
   public nacionalidad = new FormControl('', [Validators.required]);
@@ -230,6 +235,13 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         this.catPublicidad.push("CATALOGO NO CARGADO");
       }
     });
+
+    this.par.findByTipo('CREDITO_ESTADO').subscribe( (data: any)=>{ 
+      this.catEstadoCredito = data.entidades;
+    },error=>{
+
+      this.catEstadoCredito = null;
+    });
     this.sof.consultarPaisCS().subscribe((data: any) => {
       this.catPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
     });
@@ -247,6 +259,18 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     });
   }
   /** ********************************************* @ENTRADA ********************* **/
+
+  cargarMotivo(estadoCredito){
+    this.par.findByTipo(estadoCredito.value? estadoCredito.value.valor:'').subscribe( (data: any)=>{ 
+      this.catMotivo = data.entidades;
+      this.motivo.enable();
+      this.motivo = new FormControl('', [Validators.required]);
+    },error=>{
+      this.sinNotSer.setNotice('NO TIENE MOTIVOS','clear');
+      this.catMotivo = null;
+      this.motivo.disable();
+    });
+  }
   private inicioDeFlujo() {
     this.route.paramMap.subscribe((json: any) => {
       if (json.params.id && json.params.origen) {
@@ -610,6 +634,18 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         valorAPagar: this.negoW.credito.valorAPagar,
         valorARecibir: this.negoW.credito.valorARecibir
       }
+      this.estadoCredito.setValue(this.catEstadoCredito.find(x=>x.nombre==this.negoW.credito.tbQoNegociacion.estadoCredito));
+      this.par.findByTipo(this.estadoCredito.value? this.estadoCredito.value.valor:'').subscribe( (data: any)=>{ 
+        this.catMotivo = data.entidades;
+        this.motivo.enable();
+        this.motivo = new FormControl('', [Validators.required]);
+        this.motivo.setValue(this.catMotivo.find(x=>x.nombre==this.negoW.credito.tbQoNegociacion.motivo));
+      },error=>{
+        this.sinNotSer.setNotice('','clear');
+        this.catMotivo = null;
+        this.motivo.disable();
+      });
+     
       this.dataSourceCreditoNegociacion.data.push(calculadora);
       this.seleccionarCredito(this.dataSourceCreditoNegociacion.data[0]);
       this.masterToggle(this.dataSourceCreditoNegociacion.data[0]);
@@ -1386,6 +1422,20 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       this.fechaNacimientoCodeudor.reset();
       this.fechaNacimientoCodeudor.setErrors(null);
       this.fechaNacimientoCodeudor.setValue(null);
+  }
+
+  guardarEstado(){
+    if(!this.negoW || !this.negoW.credito ){
+      this.sinNotSer.setNotice('NO SE PUEDE LEER EL ID DE LA NEGOCIACION','warning');
+      return;
+    }
+    
+    if(this.estadoCredito.invalid || this.motivo.invalid){
+      this.sinNotSer.setNotice('DEBE ESCOGER UN ESTADO Y UN MOTIVO','info');
+      return;
+    }
+
+    this.neg.guardarEstadoCredito(this.negoW.credito.tbQoNegociacion.id, this.estadoCredito.value.nombre, this.motivo.value.nombre).subscribe( x=>{});
   }
  
 

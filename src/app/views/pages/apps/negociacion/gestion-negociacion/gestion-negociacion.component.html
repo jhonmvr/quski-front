@@ -607,5 +607,31 @@
         </mat-vertical-stepper>
 
     </re-portlet-body>
-    <re-portlet-footer></re-portlet-footer>
+    <re-portlet-footer>
+        <div class="row">
+            <div class="col-md-6 ">
+                <mat-form-field class="example-full-width">
+                    <mat-select placeholder="Estado Credito" [formControl]="estadoCredito" (selectionChange)="cargarMotivo($event)">
+                        <mat-option *ngFor="let item of catEstadoCredito" [value]="item">
+                            {{item.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-5 ">
+                <mat-form-field class="example-full-width">
+                    <mat-select placeholder="Motivo" [formControl]="motivo">
+                        <mat-option *ngFor="let item of catMotivo" [value]="item">
+                            {{item.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-1 ">
+                <button mat-raised-button (click)="guardarEstado()" style="align-self: center;" matTooltip="Guardar Estado" matTooltipPosition="left">
+                    <mat-icon>save</mat-icon>
+                </button>
+            </div>
+        </div>
+    </re-portlet-footer>
 </re-portlet>
