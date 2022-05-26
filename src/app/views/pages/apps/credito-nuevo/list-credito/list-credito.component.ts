@@ -11,7 +11,7 @@ export interface WrapperBusqueda{
   numeroOperacionMadre: string;
   numeroOperacionMupi: string;
   numeroOperacion: string;
-  idAgencia: number;
+  idAgencia;
   codigoUsuarioAsesor: string;
   identificacion: string;
   plazo: number;
@@ -29,6 +29,8 @@ export interface WrapperBusqueda{
   retanqueo: boolean;
   numeroPagina: number;
   tamanioPagina: number;
+  codigoEstadoProceso;
+  codigoEstadoUbicacion;
 }
 @Component({
   selector: 'kt-list-credito',
@@ -189,9 +191,9 @@ export class ListCreditoComponent implements OnInit {
     this.dataSource.data.forEach(e=>{
       e.numeroOperacionMadre = e.numeroOperacionMadre ? e.numeroOperacionMadre : 'No aplica';
       e.tablaArmotizacion = e.codigoTipoTablaArmotizacionQuski;
-      e.estado = this.catEstado ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion) ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion).nombre : 'Sin Estado' : 'Sin estado';
-      e.estadoProcesoGarantia = this.catEstadoProcesoGarantia ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia) ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia).nombre : 'Sin Estado': 'Sin Estado';
-      e.estadoUbicacionGrantia = this.catEstadoUbicacionGarantia? this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGrantia) ? this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGrantia).nombre : 'Sin Estado': 'Sin Estado';
+      e.estado = this.catEstado ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion) ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion).nombre : e.codigoEstadoOperacion : e.codigoEstadoOperacion;
+      e.estadoProcesoGarantia = this.catEstadoProcesoGarantia ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia) ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia).nombre : e.codigoEstadoProcesoGarantia: e.codigoEstadoProcesoGarantia;
+      e.estadoUbicacionGrantia = this.catEstadoUbicacionGarantia? this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGrantia) ? this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGarantia).nombre : e.codigoEstadoUbicacionGarantia: e.codigoEstadoUbicacionGarantia;
     
     });
     this.paginator.length = data.numeroTotalRegistros;

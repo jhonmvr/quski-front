@@ -1,0 +1,110 @@
+<re-portlet>
+    <re-portlet-header style="position: relative;" [title]="'PENDIENTE DE ENVÍO A TEVCOL'" [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTools>
+            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
+            </a>
+        </ng-container>
+
+    </re-portlet-header>
+    <re-portlet-body>
+
+        <div class="row justify-content-center">
+            <div class="offset-1 col-3">
+                <button mat-raised-button (click)="buscarBoton()">
+                    <span>Buscar</span>
+                </button>
+            </div>
+            <div class="offset-1 col-3">
+                <button mat-raised-button matTooltip="Enviar todas las garantias de tevcol" matTooltipPosition="above" (click)="enviar()">
+                    <span>Enviar</span>
+                </button>
+            </div>
+
+            <div class="offset-1 col-3">
+                <button mat-raised-button matTooltip="No enviado a custodia" matTooltipPosition="above" (click)="noEnviar()">
+                    <span>No Enviado</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mt-3 table-container">
+                <mat-progress-bar mode="indeterminate" *ngIf="cargardatos.asObservable() | async"></mat-progress-bar>
+                <mat-table #table matTableExporter class="mat-elevation-z8 " matSort #sort1="matSort" [dataSource]='dataSource' matSortDirection="asc" matSortDisableClear #exporter="matTableExporter">
+                    <ng-container matColumnDef="select">
+                        <mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                            </mat-checkbox>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                            </mat-checkbox>
+                        </mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroOperacion">
+                        <mat-header-cell *matHeaderCellDef>Numero de operacion</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.numeroOperacion }}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroOperacionMadre">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Numero de operacion madre</mat-header-cell>
+                        <mat-cell *matCellDef="let element "> {{element.numeroOperacionMadre}}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroFundaActual">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Funda actual</mat-header-cell>
+                        <mat-cell *matCellDef="let element "> {{element.numeroFundaJoya}}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroFundaMadre">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Funda madre</mat-header-cell>
+                        <mat-cell *matCellDef="let element "> {{element.numeroFundaMadre}}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="agencia">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>agencia</mat-header-cell>
+                        <mat-cell *matCellDef="let element "> {{nombreAgencia(element.idAgencia)}}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="estadoGarantia">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Estado garantia</mat-header-cell>
+                        <mat-cell *matCellDef="let element "> {{element.codigoEstadoProcesoGarantia}}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="ubicacionGarantia">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Ubicacion garantia</mat-header-cell>
+                        <mat-cell *matCellDef="let element "> {{element.codigoEstadoUbicacionGarantia}}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="nombreCliente">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre cliente</mat-header-cell>
+                        <mat-cell *matCellDef="let element "> {{element.nombreCliente}}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="identificacionCliente">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Identificacion cliente</mat-header-cell>
+                        <mat-cell *matCellDef="let element "> {{element.identificacion}}</mat-cell>
+                        <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    <mat-footer-row *matFooterRowDef="displayedColumns"></mat-footer-row>
+                </mat-table>
+                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 100, 200]" [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage" (page)="buscarBoton(this.paginator.pageIndex, this.paginator.pageSize)">
+                </mat-paginator>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-1 offset-11">
+                <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'traking', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
+            </div>
+        </div>
+        <!--end MAT TABLE
+    </div>-->
+    </re-portlet-body>
+    <re-portlet-footer></re-portlet-footer>
+</re-portlet>

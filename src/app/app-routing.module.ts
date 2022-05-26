@@ -69,6 +69,10 @@ const routes: Routes = [
 				loadChildren: () => import('../app/views/theme/content/builder/builder.module').then(m => m.BuilderModule)
 			},
 			{
+				path: 'tevcol',
+				loadChildren: () => import('./views/pages/apps/tevcol/tevcol.module').then(m => m.TevcolModule)
+			},
+			{
 				path: 'error/403',
 				component: ErrorPageComponent,
 				data: {

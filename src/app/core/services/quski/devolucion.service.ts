@@ -14,7 +14,7 @@ import { environment } from '../../../../../src/environments/environment';
   providedIn: 'root'
 })
 export class DevolucionService extends BaseService {
- 
+
   
 
   constructor(_http: HttpClient,
@@ -351,5 +351,64 @@ existeCancelacionCancelacion(idDevolucion: any) {
       )
     );
   }
+
+  enviarTevcol(operaciones: any) {
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/envioTevcol";
+    this.params = new HttpParams().set('usuario',localStorage.getItem('reUser'));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl,operaciones, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+
+  noEnviarTevcol(operaciones: any) {
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/noEnviadoTevcol";
+    this.params = new HttpParams().set('usuario',localStorage.getItem('reUser'));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl,operaciones, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+
+  enTransporteTevcol(operaciones: any) {
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/transporteTevcol";
+    this.params = new HttpParams().set('usuario',localStorage.getItem('reUser'));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl,operaciones, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  confirmar(operaciones: any) {
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/confirmarTevcol";
+    this.params = new HttpParams().set('usuario',localStorage.getItem('reUser'));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl,operaciones, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  noConfirmar(operaciones: any) {
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/reportarTevcol";
+    this.params = new HttpParams().set('usuario',localStorage.getItem('reUser'));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl,operaciones, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+ 
  
 }

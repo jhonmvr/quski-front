@@ -83,6 +83,20 @@ export class SoftbankService extends BaseService {
         console.log("peticion===>>",x) // Revisar Busqueda;
     return x;
   }
+  public buscarCreditoEstado( wrapper: any ) {
+    let serviceUrl = this.softBaseBankUrl + 'api/prestamo/operacion/consultaglobalestados';
+    let headers = new HttpHeaders().set("Content-Type", "application/json")
+    .set("Accept", "application/json");
+    this.options = {Headers: headers };
+    let x = this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+        console.log("peticion===>>",x) // Revisar Busqueda;
+    return x;
+  }
   /**
    * @author Jeroham Cadenas - Developer Twelve
    * @description Consultar cliente Softbank
