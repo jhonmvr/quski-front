@@ -105,7 +105,7 @@ export class PendienteEnvioComponent implements OnInit {
     }
     if(confirm("Esta seguro que decea enviar a tevcol " + this.totalResults + " garantias de la agencia: " + this.nombreAgencia(this.w.idAgencia))){
       this.dev.enTransporteTevcol(this.selection.selected.map(p=>{ return {codigoOperacion: p.numeroOperacion, cedulaCliente: p.identificacion}})).subscribe(t=>{
-        this.selection.clear();
+        
         this.buscarBoton();
       });
     }
@@ -122,14 +122,14 @@ export class PendienteEnvioComponent implements OnInit {
     }
     if(confirm("Esta seguro que decea enviar a tevcol " + this.totalResults + " garantias de la agencia: " + this.nombreAgencia(this.w.idAgencia))){
       this.dev.noEnviarTevcol(this.selection.selected.map(p=>{ return {codigoOperacion: p.numeroOperacion, cedulaCliente: p.identificacion}})).subscribe(t=>{
-        this.selection.clear();
+        
         this.buscarBoton();
       });
     }
   }
 
   buscarBoton(pageIndex?, pageSize?){
-    
+    this.selection.clear();
     if(pageIndex != null){
       this.p.size = pageSize;
       this.p.pageNumber = pageIndex;
@@ -145,8 +145,8 @@ export class PendienteEnvioComponent implements OnInit {
     
     this.paginator.pageSize = this.w.tamanioPagina         
     this.w.idAgencia = localStorage.getItem('idAgencia');
-    this.w.codigoEstadoProceso="UTI";
-    this.w.codigoEstadoUbicacion="AGE";
+    this.w.codigoEstadoProceso="PEC";
+    this.w.codigoEstadoUbicacion="CUS";
     this.sof.buscarCreditoEstado(this.w).subscribe((data: any) => {
       if (data.operaciones != null) {
         this.dataSource = new MatTableDataSource<any>(data.operaciones);

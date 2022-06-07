@@ -104,7 +104,7 @@ export class RecepcionEnvioComponent implements OnInit {
     }
     if(confirm("Esta seguro que decea enviar a tevcol " + this.totalResults + " garantias de la agencia: " + this.nombreAgencia(this.w.idAgencia))){
       this.dev.confirmar(this.selection.selected.map(p=>{ return {codigoOperacion: p.numeroOperacion, cedulaCliente: p.identificacion}})).subscribe(t=>{
-        this.selection.clear();
+        
         this.buscarBoton();
       });
     }
@@ -120,15 +120,15 @@ export class RecepcionEnvioComponent implements OnInit {
       return;
     }
     if(confirm("Esta seguro que decea enviar a tevcol " + this.totalResults + " garantias de la agencia: " + this.nombreAgencia(this.w.idAgencia))){
-      this.dev.noEnviarTevcol(this.selection.selected.map(p=>{ return {codigoOperacion: p.numeroOperacion, cedulaCliente: p.identificacion}})).subscribe(t=>{
-        this.selection.clear();
+      this.dev.noConfirmar(this.selection.selected.map(p=>{ return {codigoOperacion: p.numeroOperacion, cedulaCliente: p.identificacion}})).subscribe(t=>{
+        
         this.buscarBoton();
       });
     }
   }
 
   buscarBoton(pageIndex?, pageSize?){
-    
+    this.selection.clear();
     if(pageIndex != null){
       this.p.size = pageSize;
       this.p.pageNumber = pageIndex;

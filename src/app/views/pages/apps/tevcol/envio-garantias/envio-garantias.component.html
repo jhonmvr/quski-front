@@ -34,11 +34,17 @@
                     <span>Buscar</span>
                 </button>
             </div>
-            <div class="offset-1 col-3">
+            <div class="offset-1 col-3" *ngIf="estadoUbicacion.value?estadoUbicacion.value.proceso=='UTI':false">
                 <button mat-raised-button matTooltip="Enviar todas las garantias de tevcol" matTooltipPosition="above" (click)="enviar()">
                     <span>Enviar</span>
                 </button>
             </div>
+            <div class="offset-1 col-3" *ngIf="estadoUbicacion.value?estadoUbicacion.value.proceso=='NEC':false">
+                <button mat-raised-button matTooltip="Enviar todas las garantias a la agencia" matTooltipPosition="above" (click)="enviarAgencia()">
+                    <span>Enviar Agencia</span>
+                </button>
+            </div>
+
         </div>
         <div class="row">
             <div class="col-12 mt-3 table-container">

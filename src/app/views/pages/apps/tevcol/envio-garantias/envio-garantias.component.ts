@@ -108,6 +108,23 @@ export class EnvioGarantiasComponent implements OnInit {
       });
     }
   }
+  
+  enviarAgencia(){
+    if(!this.operaciones){
+      this.sinNoticeService.setNotice("NO SE ENCONTRARON OPERACIONES", 'warning');
+      return;
+    }
+    if(!this.w.idAgencia){
+      this.sinNoticeService.setNotice("PRIMERO DEBE SELECCIONAR UNA AGENCIA", 'warning');
+      return;
+    }
+    if(confirm("Esta seguro que decea enviar a tevcol " + this.totalResults + " garantias de la agencia: " + this.nombreAgencia(this.w.idAgencia))){
+      this.dev.enviarAgencia(this.operaciones.map(p=>{ return {codigoOperacion: p.numeroOperacion, cedulaCliente: p.identificacion}})).subscribe(t=>{
+        
+        this.buscarBoton();
+      });
+    }
+  }
   buscarBoton(pageIndex?, pageSize?){
     if(this.estadoUbicacion.invalid){
       this.sinNoticeService.setNotice("DEBE SELECCIONAR UN ESTADO Y UBICACION",'info');

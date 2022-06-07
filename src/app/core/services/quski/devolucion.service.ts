@@ -364,6 +364,18 @@ existeCancelacionCancelacion(idDevolucion: any) {
     );
   }
 
+  enviarAgencia(operaciones: any) {
+    let serviceUrl = this.appResourcesUrl + "devolucionRestController/enviarAgencia";
+    this.params = new HttpParams().set('usuario',localStorage.getItem('reUser'));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl,operaciones, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+
   noEnviarTevcol(operaciones: any) {
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/noEnviadoTevcol";
     this.params = new HttpParams().set('usuario',localStorage.getItem('reUser'));
