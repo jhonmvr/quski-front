@@ -273,7 +273,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
 
         if(this.negoW.proceso.estadoProceso == 'CREADO'){
             if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
-            this.abrirPopupExcepciones(new DataInjectExcepciones(true));
+            this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false,true));
             //return;
           } else   if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 1) {
             this.clienteBloqueado = true;
@@ -318,7 +318,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
             }
           });
           dialogRef.afterClosed().subscribe(r => {
-            this.abrirPopupExcepciones(new DataInjectExcepciones(true));
+            this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false,true));
             return;
           });
         } else if (e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.NEGADO && e.tipoExcepcion == 'EXCEPCION_RIESGO') {
@@ -400,7 +400,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         if (!this.negoW.excepcionBre) {
           this.cargarValores(this.negoW, true);
         } else {
-          this.abrirPopupExcepciones(new DataInjectExcepciones(true));
+          this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false,true));
         }
       } else {
         this.limpiarCamposBusqueda();
@@ -424,7 +424,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         this.cargarValores(this.negoW, false);
         this.myStepper.selectedIndex = 1;
         if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
-          this.abrirPopupExcepciones(new DataInjectExcepciones(true));
+          this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false,true));
           return;
         } else   if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 1) {
           this.clienteBloqueado = true;
@@ -450,7 +450,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         this.negoW = wrapper.entidad;
         this.myStepper.selectedIndex = 1;
         if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
-          this.abrirPopupExcepciones(new DataInjectExcepciones(true));
+          this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false,true));
           return;
         } else   if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
           const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
@@ -686,7 +686,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       x = this.excepciones.find(p=>p.isCliente);
     }
     if (this.negoW.joyas && this.negoW.joyas.length > 0) {
-      let data = new DataInjectExcepciones(false, false, true);
+      let data = new DataInjectExcepciones(false, false, true, false);
       data.mensajeBre = x?x.mensajeBre:null;
       data.idNegociacion = this.negoW.credito.tbQoNegociacion.id;
       this.excepciones.push(data);
@@ -1035,7 +1035,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
           this.codigoError = data.entidad.simularResult.codigoError;
          // console.log("LA DATA" ,data.entidad)
          // this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
-          this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
+          this.abrirPopupExcepciones(new DataInjectExcepciones(false,true,false,true));
        
         } else if (data.entidad.simularResult.codigoError == 2) {
           this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
