@@ -332,10 +332,11 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
             }
           });
           dialogRef.afterClosed().subscribe(r => {
-            this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
+            this.abrirPopupExcepcionesCliente(new DataInjectExcepciones(false, true, false,true,  e.mensajeBre));
             return;
           });
         } else if (e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.NEGADO && e.tipoExcepcion == 'EXCEPCION_COBERTURA') {
+         
           const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
             width: "800px",
             height: "auto",
@@ -345,6 +346,12 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
               , titulo: 'EXCEPCION DE COBERTURA NEGADA'
             }
           });
+          if(e.mensajeBre !== 'No aplica'){
+            dialogRef.afterClosed().subscribe(r => {
+              this.abrirPopupExcepcionesCliente(new DataInjectExcepciones(true, false, false, true, e.mensajeBre));
+              return;
+            });
+          }
         } else if (e.estado == 'ACT' && e.estadoExcepcion == EstadoExcepcionEnum.APROBADO && e.tipoExcepcion == 'EXCEPCION_COBERTURA') {
           this.coberturaExcepcionada = tmp.credito.cobertura;
           const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
@@ -661,6 +668,30 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       data = new DataInjectExcepciones(false, false, true);
     }
     data.mensajeBre = this.negoW.excepcionBre;
+    data.idNegociacion = this.negoW.credito.tbQoNegociacion.id;
+    this.excepciones.push(data);
+    const dialogRefGuardar = this.dialog.open(SolicitudDeExcepcionesComponent, {
+      width: '800px',
+      height: 'auto',
+      data: data
+    });
+    dialogRefGuardar.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+      } else {
+        if (data.isCobertura) {
+          this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
+        } else {
+          //this.salirDeGestion('NO SE REALIZO LA EXCEPCION, SE CERRARA LA NEGOCIACION', 'NEGOCIACION CANCELADA');
+        }
+      }
+    });
+  }
+  public abrirPopupExcepcionesCliente(data: DataInjectExcepciones = null) {
+    if (data == null) {
+      data = new DataInjectExcepciones(false, false, true);
+    }
+    //data.mensajeBre = this.negoW.excepcionBre;
     data.idNegociacion = this.negoW.credito.tbQoNegociacion.id;
     this.excepciones.push(data);
     const dialogRefGuardar = this.dialog.open(SolicitudDeExcepcionesComponent, {
