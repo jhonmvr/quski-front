@@ -103,7 +103,10 @@ export class PendienteEnvioComponent implements OnInit {
       this.sinNoticeService.setNotice("PRIMERO DEBE SELECCIONAR UNA AGENCIA", 'warning');
       return;
     }
-    if(confirm("Esta seguro que decea enviar a tevcol " + this.totalResults + " garantias de la agencia: " + this.nombreAgencia(this.w.idAgencia))){
+    let totalAvaluo = this.selection.selected.map(p=> {return p.totalValorAvaluo }).reduce((p,n) =>   p + n, 0 );
+    let totalGarantias = this.selection.selected.length;
+    
+    if(confirm("Esta seguro que decea enviar a tevcol " + totalGarantias + " garantias de la agencia: " + this.nombreAgencia(this.w.idAgencia) + " con un total avaluo de: " + totalAvaluo)){
       this.dev.enTransporteTevcol(this.selection.selected.map(p=>{ return {codigoOperacion: p.numeroOperacion, cedulaCliente: p.identificacion}})).subscribe(t=>{
         
         this.buscarBoton();
@@ -120,7 +123,10 @@ export class PendienteEnvioComponent implements OnInit {
       this.sinNoticeService.setNotice("PRIMERO DEBE SELECCIONAR UNA AGENCIA", 'warning');
       return;
     }
-    if(confirm("Esta seguro que decea enviar a tevcol " + this.totalResults + " garantias de la agencia: " + this.nombreAgencia(this.w.idAgencia))){
+    let totalAvaluo = this.selection.selected.map(p=> {return p.totalValorAvaluo }).reduce((p,n) =>   p + n, 0 );
+    let totalGarantias = this.selection.selected.length;
+    
+    if(confirm("Confirma que no envia " + totalGarantias + " garantias de la agencia: " + this.nombreAgencia(this.w.idAgencia) + " con un total avaluo de: " + totalAvaluo)){
       this.dev.noEnviarTevcol(this.selection.selected.map(p=>{ return {codigoOperacion: p.numeroOperacion, cedulaCliente: p.identificacion}})).subscribe(t=>{
         
         this.buscarBoton();

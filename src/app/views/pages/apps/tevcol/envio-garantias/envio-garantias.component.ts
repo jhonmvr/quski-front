@@ -153,6 +153,7 @@ export class EnvioGarantiasComponent implements OnInit {
         this.operaciones = data.operaciones;
         this.totalResults = data.numeroTotalRegistros;
         this.sinNoticeService.setNotice("INFORMACION CARGADA CORRECTAMENTE", 'success');
+        //console.log("total:",data.operaciones.map(p=> {return p.totalValorAvaluo }).reduce((p,n) =>   p + n, 0 ));
         this.cargardatos.next(false);
       } else {
         this.cargardatos.next(false);
