@@ -60,24 +60,42 @@ export class SolicitudDeExcepcionesComponent implements OnInit {
     this.titulo     = TituloExcepcionEnum.RIESGO;
     this.mensaje    = MensajeExcepcionEnum.RIESGO;
     this.bre        = dataExcepciones.mensajeBre ? dataExcepciones.mensajeBre : 'No aplica';
-    this.subBotones = true;
-    this.abrirSubBotones = false;
+    if(dataExcepciones.isNotificacion){
+      this.subBotones = false;
+      this.abrirSubBotones = false;
+    }else{
+      this.subBotones = true;
+      this.abrirSubBotones = false;
+    }
+   
     
   }
   private solitudCobertura(dataExcepciones: DataInjectExcepciones) {
     this.titulo   = TituloExcepcionEnum.COBERTURA;
     this.mensaje  = MensajeExcepcionEnum.COBERTURA;
     this.bre        = dataExcepciones.mensajeBre ? dataExcepciones.mensajeBre : 'No aplica';
-    this.subBotones = false;
-    this.abrirSubBotones = true;
+    if(dataExcepciones.isNotificacion){
+      this.subBotones = false;
+      this.abrirSubBotones = false;
+    }else{
+      this.subBotones = false;
+      this.abrirSubBotones = true;
+    }
+  
+    console.log("datos ", dataExcepciones, this.subBotones,this.abrirSubBotones);
 
   }
   private solitudCliente(dataExcepciones: DataInjectExcepciones) {
     this.titulo   = TituloExcepcionEnum.CLIENTE;
     this.mensaje  = MensajeExcepcionEnum.CLIENTE;
     this.bre        = dataExcepciones.mensajeBre ? dataExcepciones.mensajeBre : 'No aplica';
-    this.subBotones = true;
+    if(dataExcepciones.isNotificacion){
+      this.subBotones = false;
+      this.abrirSubBotones = false;
+    }else{
+      this.subBotones = true;
     this.abrirSubBotones = false;
+    }
 
   }
   private mostrarError(mensaje: string) {

@@ -228,7 +228,10 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
           valorAplicable: element.valorComercial,
           valorAvaluo: element.valorAvaluo,
           valorOro: element.valorOro,
-          valorRealizacion: element.valorRealizacion
+          valorRealizacion: element.valorRealizacion,
+          numeroExpediente: element.numeroExpediente,
+          numeroGarantia: element.numeroGarantia
+
         };
         x.push(g);
       });
