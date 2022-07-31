@@ -98,10 +98,10 @@ export class RecepcionEnvioComponent implements OnInit {
       this.sinNoticeService.setNotice("DEBES SELECCIONAR ALMENOS UNA OPERACION", 'warning');
       return;
     }
-    if(!this.w.idAgencia){
+   /*  if(!this.w.idAgencia){
       this.sinNoticeService.setNotice("PRIMERO DEBE SELECCIONAR UNA AGENCIA", 'warning');
       return;
-    }
+    } */
     if(confirm("Esta seguro que decea enviar a tevcol " + this.totalResults + " garantias de la agencia: " + this.nombreAgencia(this.w.idAgencia))){
       this.dev.confirmar(this.selection.selected.map(p=>{ return {codigoOperacion: p.numeroOperacion, cedulaCliente: p.identificacion}})).subscribe(t=>{
         
@@ -115,10 +115,10 @@ export class RecepcionEnvioComponent implements OnInit {
       this.sinNoticeService.setNotice("DEBES SELECCIONAR ALMENOS UNA OPERACION", 'warning');
       return;
     }
-    if(!this.w.idAgencia){
+    /* if(!this.w.idAgencia){
       this.sinNoticeService.setNotice("PRIMERO DEBE SELECCIONAR UNA AGENCIA", 'warning');
       return;
-    }
+    } */
     if(confirm("Esta seguro que decea enviar a tevcol " + this.totalResults + " garantias de la agencia: " + this.nombreAgencia(this.w.idAgencia))){
       this.dev.noConfirmar(this.selection.selected.map(p=>{ return {codigoOperacion: p.numeroOperacion, cedulaCliente: p.identificacion}})).subscribe(t=>{
         
@@ -143,7 +143,7 @@ export class RecepcionEnvioComponent implements OnInit {
     this.w.tamanioPagina = this.p.size;
     
     this.paginator.pageSize = this.w.tamanioPagina         
-    this.w.idAgencia = localStorage.getItem('idAgencia');
+    //this.w.idAgencia = localStorage.getItem('idAgencia');
     this.w.codigoEstadoProceso="ENC";
     this.w.codigoEstadoUbicacion="CUS";
     this.sof.buscarCreditoEstado(this.w).subscribe((data: any) => {
