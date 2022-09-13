@@ -103,7 +103,38 @@
             <mat-step label="Detalle de Garantía">
                 <kt-tabla-tasacion *ngIf="wrapperSoft && wrapperSoft.garantias;" [data]='wrapperSoft.garantias' [tipo]="'DV'"></kt-tabla-tasacion>
             </mat-step>
+            <mat-step label="Documento Habilitantes">
+                <div class="row">
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso= procesoHablitante ;varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedulaCliente.value " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
+                </div>
+                <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'" [referencia]="varHabilitante.referencia">
+                </re-habilitante>
+
+            </mat-step>
             <mat-step label="Gestion Devolución">
+                <div class="row">
+                    <div class="col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="fechaSolicitud" placeholder="Fecha de solicitud: " [value]="fechaSolicitud.value | rDate">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="fechaAprobacion" placeholder="Fecha de aprobación: " [value]="fechaAprobacion.value | rDate">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="fechaArribo" placeholder="Fecha de arribo:" [value]="fechaArribo.value | rDate">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="fechaRecepcionAgencia" placeholder="Fecha de recepción en agencia:" [value]="fechaRecepcionAgencia.value | rDate">
+                        </mat-form-field>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
@@ -156,14 +187,6 @@
                     </div>
                 </div>
                 <kt-hitorico-observacion-entrega [id]="this.item"></kt-hitorico-observacion-entrega>
-            </mat-step>
-            <mat-step label="Documento Habilitantes">
-                <div class="row">
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso= procesoHablitante ;varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedulaCliente.value " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
-                </div>
-                <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'" [referencia]="varHabilitante.referencia">
-                </re-habilitante>
                 <div class="row">
                     <div class="col-8">
                         <mat-form-field class="mat-form-field-fluid">
@@ -188,6 +211,7 @@
                     </div>
                 </div>
             </mat-step>
+
         </mat-vertical-stepper>
     </re-portlet-body>
 </re-portlet>

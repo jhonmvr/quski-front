@@ -60,6 +60,10 @@ export class VerificacionFirmaComponent  extends TrackingUtil implements OnInit 
   public displayedColumnsDetalle = ['fechaAprobacion', 'fechaVencimiento', 'monto'];
   public dataSourceHeredero = new MatTableDataSource<any>();
   public displayedColumnsHeredero = ['cedula', 'nombre'];
+  public fechaSolicitud = new FormControl('');
+  public fechaAprobacion = new FormControl('');
+  public fechaArribo = new FormControl('');
+  public fechaRecepcionAgencia = new FormControl('');
   motivo = new FormControl('',[Validators.required, Validators.maxLength(500)]);
   idReferencia
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
@@ -218,7 +222,7 @@ export class VerificacionFirmaComponent  extends TrackingUtil implements OnInit 
     this.formCreditoNuevo.disable();
     this.idReferencia = this.wrapperDevolucion.devolucion.id
     this.numeroOperacion.setValue(this.wrapperDevolucion.devolucion.codigoOperacion);
-    this.estadoProceso.setValue(this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi, " "));
+    this.estadoProceso.setValue(this.wrapperDevolucion.proceso ?this.wrapperDevolucion.proceso.estadoProceso.replace(/_/gi, " "):'');
     this.nombresCompletos.setValue(this.wrapperDevolucion.devolucion.nombreCliente);
     this.cedulaCliente.setValue(this.wrapperDevolucion.devolucion.cedulaCliente);
     this.fechaNacimiento.setValue(this.wrapperDevolucion.devolucion.fechaNacimiento);
@@ -252,6 +256,10 @@ export class VerificacionFirmaComponent  extends TrackingUtil implements OnInit 
     }
     this.varHabilitante.proceso = this.procesoHablitante;
     this.varHabilitante.referencia = this.item;
+    this.fechaSolicitud.setValue(this.wrapperDevolucion.devolucion.fechaCreacion ? this.wrapperDevolucion.devolucion.fechaCreacion : 'No Aplica')
+    this.fechaAprobacion.setValue(this.wrapperDevolucion.devolucion.fechaAprobacionSolicitud ? this.wrapperDevolucion.devolucion.fechaAprobacionSolicitud : 'No Aplica')
+    this.fechaArribo.setValue(this.wrapperDevolucion.devolucion.fechaArribo ? this.wrapperDevolucion.devolucion.fechaArribo : 'No Aplica')
+    this.fechaRecepcionAgencia.setValue(this.wrapperDevolucion.devolucion.fechaEfectiva ? this.wrapperDevolucion.devolucion.fechaEfectiva : 'No Aplica')
     this.sinNoticeService.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
   }
   private cargarItem(catalogo, cod, index) {

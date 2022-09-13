@@ -191,9 +191,9 @@ export class DevolucionService extends BaseService {
   }
 
   
-  public aprobarCancelacionSolicitudDevolucion(id){
+  public aprobarCancelacionSolicitudDevolucion(id, motivo){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/aprobarCancelacionSolicitudDevolucion";
-    this.params = this.params.set('id', id).set('usuario', atob(localStorage.getItem(environment.userKey) ));  
+    this.params = this.params.set('id', id).set('usuario', atob(localStorage.getItem(environment.userKey) )).set('motivo', motivo);  
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, null, this.options).pipe(
       tap( // Log the result or error
@@ -202,9 +202,9 @@ export class DevolucionService extends BaseService {
       )
     );
   }
-  public rechazarCancelacionSolicitudDevolucion(id){
+  public rechazarCancelacionSolicitudDevolucion(id, motivo){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/rechazarCancelacionSolicitudDevolucion";
-    this.params = this.params.set('id', id).set('usuario', atob(localStorage.getItem(environment.userKey) ));  
+    this.params = this.params.set('id', id).set('usuario', atob(localStorage.getItem(environment.userKey) )).set('motivo', motivo);  
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, null , this.options).pipe(
       tap( // Log the result or error
@@ -266,9 +266,9 @@ existeCancelacionCancelacion(idDevolucion: any) {
 
 
 /////////
-  public guardarEntregaRecepcion(id){
+  public guardarEntregaRecepcion(id, motivo){
     let serviceUrl = this.appResourcesUrl + "devolucionRestController/guardarEntregaRecepcion";
-    this.params = this.params.set('idDevolucion', id).set('usuario', atob(localStorage.getItem(environment.userKey) ));  
+    this.params = this.params.set('idDevolucion', id).set('usuario', atob(localStorage.getItem(environment.userKey) )).set('motivo', motivo);  
     this.options = { headers: this.headers, params: this.params };
     return this.http.post(serviceUrl, null, this.options).pipe(
       tap( // Log the result or error

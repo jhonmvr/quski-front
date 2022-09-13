@@ -104,60 +104,70 @@
             <mat-step label="Detalle de Garantía">
                 <kt-tabla-tasacion *ngIf="wrapperSoft && wrapperSoft.garantias;" [data]='wrapperSoft.garantias' [tipo]="'DV'"></kt-tabla-tasacion>
             </mat-step>
-            <mat-step label="Gestion Devolución">
+
+            <mat-step label="Documento Habilitantes">
                 <div class="row">
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="tipoCliente" [value]="tipoCliente.value.nombre" placeholder="Tipo de Cliente: ">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="agenciaEntrega" placeholder="Agencia de entrega: ">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="valorCustodia" placeholder="Valor apróximado de custodia :">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-12">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <mat-label>Observacion Del Asesor: </mat-label>
-                            <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: " [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
-                        </mat-form-field>
-                    </div>
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso= procesoHablitante ;varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedulaCliente.value " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
                 </div>
-                <div class="row" *ngIf="this.tipoCliente.value.codigo == 'HER'">
-                    <div class="col-8 offset-2">
-                        <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceHeredero">
-                            <ng-container matColumnDef="cedula">
-                                <mat-header-cell *matHeaderCellDef>Cédula</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.cedula}}</mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="nombre">
-                                <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.nombre}} </mat-cell>
-                            </ng-container>
-                            <mat-header-row *matHeaderRowDef="displayedColumnsHeredero"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumnsHeredero;"></mat-row>
-                        </mat-table>
-                    </div>
-                </div>
-                <div class="row" *ngIf="this.tipoCliente.value.codigo == 'SAP'">
-                    <div class="col-md-3">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="cedulaApoderado" placeholder="Cédula Apoderado :">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-3">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="nombreApoderado" placeholder="Nombre Apoderado :">
-                        </mat-form-field>
-                    </div>
-                </div>
+                <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'" [referencia]="varHabilitante.referencia">
+                </re-habilitante>
+
             </mat-step>
             <mat-step label="Detalle de proceso">
+                <div class="row">
+                    <div class="row">
+                        <div class="col-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="tipoCliente" [value]="tipoCliente.value.nombre" placeholder="Tipo de Cliente: ">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="agenciaEntrega" placeholder="Agencia de entrega: ">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="valorCustodia" placeholder="Valor apróximado de custodia :">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-label>Observacion Del Asesor: </mat-label>
+                                <textarea class="form-control border" rows="5" placeholder="Observacion Del Asesor: " [formControl]="observaciones" [value]="observaciones.value" matInput> </textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="this.tipoCliente.value.codigo == 'HER'">
+                        <div class="col-8 offset-2">
+                            <mat-table #table class="mat-elevation-z8" [dataSource]="dataSourceHeredero">
+                                <ng-container matColumnDef="cedula">
+                                    <mat-header-cell *matHeaderCellDef>Cédula</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.cedula}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="nombre">
+                                    <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.nombre}} </mat-cell>
+                                </ng-container>
+                                <mat-header-row *matHeaderRowDef="displayedColumnsHeredero"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumnsHeredero;"></mat-row>
+                            </mat-table>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="this.tipoCliente.value.codigo == 'SAP'">
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="cedulaApoderado" placeholder="Cédula Apoderado :">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [formControl]="nombreApoderado" placeholder="Nombre Apoderado :">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid">
@@ -186,14 +196,14 @@
                         </mat-form-field>
                     </div>
                 </div>
-            </mat-step>
-            <mat-step label="Documento Habilitantes">
+                <kt-hitorico-observacion-entrega [id]="this.item"></kt-hitorico-observacion-entrega>
                 <div class="row">
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso= procesoHablitante ;varHabilitante.referencia =item " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedulaCliente.value " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
+                    <div class="col-8">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <textarea matInput class="form-control border" rows="5" [formControl]="motivo" placeholder=" Motivo aprobacion/rechazo:"></textarea>
+                        </mat-form-field>
+                    </div>
                 </div>
-                <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'" [referencia]="varHabilitante.referencia">
-                </re-habilitante>
                 <div class="row mt-3">
                     <div class="offset-3 col-2">
                         <button mat-raised-button color="primary" (click)="enviarRespuesta(true)">
@@ -211,6 +221,7 @@
                     </div>
                 </div>
             </mat-step>
+
         </mat-vertical-stepper>
     </re-portlet-body>
 </re-portlet>

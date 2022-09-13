@@ -13,7 +13,7 @@ import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 import { LayoutConfigService, SubheaderService } from '../../../../../core/_base/layout';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 @Component({
@@ -48,6 +48,7 @@ export class EntregaRecepcionComponent extends TrackingUtil implements OnInit {
   public dataSourceHeredero: MatTableDataSource<any> = new MatTableDataSource<any>();
   public displayedColumnsHeredero = ['cedula', 'nombre']
 
+  motivo = new FormControl('',[Validators.required, Validators.maxLength(500)]);
   public item: any;
   public wrapperSoft: any;
   public wrapperDevolucion: { proceso: TbQoProceso, devolucion: TbQoDevolucion }
@@ -263,6 +264,10 @@ export class EntregaRecepcionComponent extends TrackingUtil implements OnInit {
     });
   }
   public guardar() {
+    if(this.motivo.invalid){
+      this.sinNoticeService.setNotice("INGRESE EL MOTIVO DE APROBACION O RECHAZO");
+      return;
+    }
     let mensaje = " Generar acta de entrega y enviar al aprobador para verificacion de firmas.";
     
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
@@ -272,7 +277,7 @@ export class EntregaRecepcionComponent extends TrackingUtil implements OnInit {
     });
     dialogRef.afterClosed().subscribe(r => {
       if(r){
-        this.dev.guardarEntregaRecepcion(this.item).subscribe( (data: any) => {
+        this.dev.guardarEntregaRecepcion(this.item, this.motivo.value).subscribe( (data: any) => {
           if(data.entidad){
             this.sinNoticeService.setNotice('PROCESO DE DEVOLUCION ENVIADO A APROBACION DE FIRMAS','success');
             this.router.navigate(['negociacion/bandeja-operaciones']);

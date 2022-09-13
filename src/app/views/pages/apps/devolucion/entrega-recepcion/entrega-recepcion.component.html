@@ -160,6 +160,13 @@
             <mat-step label="Documento Habilitantes">
                 <re-habilitante [proceso]="varHabilitante" [useType]="'FORM'" [referencia]="this.item"></re-habilitante>
                 <div class="row">
+                    <div class="col-8">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <textarea matInput class="form-control border" rows="5" [formControl]="motivo" placeholder=" Observacion del Asesor:"></textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="offset-4 col-3">
                         <button mat-raised-button color="primary" (click)="guardar()">
                             <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">check

@@ -15,7 +15,7 @@ import { environment } from '../../../../../../environments/environment';
 import { LayoutConfigService, SubheaderService } from '../../../../../core/_base/layout';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 @Component({
   selector: 'kt-aprobacion-cancelacion',
@@ -50,6 +50,7 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
   public fechaArribo = new FormControl('');
   public fechaRecepcionAgencia = new FormControl('');
   public observacionCancelacion = new FormControl('');
+  motivo = new FormControl('',[Validators.required, Validators.maxLength(500)]);
   
   public item: any;
   private usuario: string;
@@ -288,6 +289,10 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
     });
   }
   public enviarRespuesta(aprobado) {
+    if(this.motivo.invalid){
+      this.sinNoticeService.setNotice("INGRESE EL MOTIVO DE APROBACION O RECHAZO");
+      return;
+    }
     let mensaje = aprobado ? 'Aprobar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo + '.' :
       'Negar la solicitud de devolucion garantia para el proceso: ' + this.wrapperDevolucion.devolucion.codigo + '.';
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
@@ -298,14 +303,14 @@ export class AprobacionCancelacionComponent extends TrackingUtil implements OnIn
     dialogRef.afterClosed().subscribe(r => {
       if (r) {
         if( aprobado ){
-          this.dev.aprobarCancelacionSolicitudDevolucion(this.wrapperDevolucion.devolucion.id).subscribe((data: any) => {
+          this.dev.aprobarCancelacionSolicitudDevolucion(this.wrapperDevolucion.devolucion.id, this.motivo.value).subscribe((data: any) => {
             if (data.entidad) {
               this.sinNoticeService.setNotice("SE HA CANCELADO CORRECTAMENTE LA DEVOLUCION: " + this.wrapperDevolucion.devolucion.codigo, "success");
               this.router.navigate(['aprobador/bandeja-aprobador']);
             }
           });
         }else{
-          this.dev.rechazarCancelacionSolicitudDevolucion(this.wrapperDevolucion.devolucion.id).subscribe((data: any) => {
+          this.dev.rechazarCancelacionSolicitudDevolucion(this.wrapperDevolucion.devolucion.id, this.motivo.value).subscribe((data: any) => {
             if (data.entidad) {
               this.sinNoticeService.setNotice("SE HA CANCELADO CORRRECTAMENTE LA DEVOLUCION: "+ this.wrapperDevolucion.devolucion.codigo, "success")
               this.router.navigate(['aprobador/bandeja-aprobador']);
