@@ -9,7 +9,10 @@
         </ng-container>
     </re-portlet-header>
     <re-portlet-body>
-        <mat-vertical-stepper>
+        <mat-vertical-stepper #stepper (animationDone)="guardarTraking('PAGO',codigoBPM, 
+        ['Información de Crédito','Tabla de amortizacion','Comprobantes de Pagos'], 
+        stepper.selectedIndex, 'SOLICITUD PAGO',
+        informacionCredito ? informacionCredito.numeroOperacionMupi ? informacionCredito.numeroOperacionMupi : null : null )">
             <mat-step label="Información de Crédito">
                 <div class="row">
                     <div class="col-md-4">

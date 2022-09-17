@@ -16,6 +16,8 @@ import { BehaviorSubject } from 'rxjs';
 import { saveAs } from 'file-saver';
 import { LayoutConfigService } from '../../../../../core/_base/layout';
 import { TablaAmortizacionComponent } from '../../../../../views/partials/custom/popups/tabla-amortizacion/tabla-amortizacion.component';
+import { TrackingUtil } from '../../../../../core/util/TrakingUtil';
+import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 
 
 /**
@@ -26,7 +28,7 @@ import { TablaAmortizacionComponent } from '../../../../../views/partials/custom
   templateUrl: './registrar-pago.component.html',
   styleUrls: ['./registrar-pago.component.scss']
 })
-export class RegistrarPagoComponent implements OnInit {
+export class RegistrarPagoComponent extends TrackingUtil implements OnInit {
   /** @TABLAS **/
   public displayedColumnsRubro = ['rubro', 'numeroCuota', 'proyectado', 'calculado', 'estado'];
   public dataSourceRubro = new MatTableDataSource<any>();
@@ -35,7 +37,7 @@ export class RegistrarPagoComponent implements OnInit {
   private totalValorDepositado: any;
   private usuario;
   private agencia;
-  private informacionCredito;
+  public informacionCredito;
   catTipoPagoProceso: Array<any>;
   public dataSourceComprobante = new MatTableDataSource<any>();
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera', 'cuenta', 'fechaPago', 'numeroDeDeposito', 'valorDepositado', 'tipoPago', 'descargarComprobante'];
@@ -50,6 +52,7 @@ export class RegistrarPagoComponent implements OnInit {
   public observacion = new FormControl('', [Validators.maxLength(150)]);
   public tipoPagoProceso = new FormControl('', [Validators.required, Validators.maxLength(13)]);
   public codigoOperacionMupi = new FormControl('',[]);
+  codigoBPM ='';
 
   constructor(
     private css: SoftbankService,
@@ -62,7 +65,9 @@ export class RegistrarPagoComponent implements OnInit {
     private dialog: MatDialog,
     private subheaderService: SubheaderService,
     private sinNoticeService: ReNoticeService,
+    public tra: TrackingService
   ) {
+    super(tra);
     this.css.setParameter();
     this.reg.setParameter();
     this.formRegistrarPago.addControl("nombresCliente", this.nombreCliente);
@@ -243,6 +248,7 @@ export class RegistrarPagoComponent implements OnInit {
         //console.log('wrapper => ', wrapper);
         this.reg.iniciarProcesoRegistrarPago(wrapper).subscribe((data: any) => {
           if (data.entidad && data.entidad.proceso && data.entidad.proceso.estadoProceso == "PENDIENTE_APROBACION") {
+            this.codigoBPM= data.entidad.cliente.codigo;
             this.sinNoticeService.setNotice("PROCESO CREADO BAJO EL CODIGO BPM: " + data.entidad.cliente.codigo + ".", 'success');
             this.router.navigate(['negociacion/bandeja-operaciones']);
           } else {

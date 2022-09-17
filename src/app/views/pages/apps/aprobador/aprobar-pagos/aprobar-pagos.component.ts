@@ -13,6 +13,8 @@ import { Component, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
 import { ValidateDecimal } from './../../../../../core/util/validator.decimal';
 import { TablaAmortizacionComponent } from './../../../../../../app/views/partials/custom/popups/tabla-amortizacion/tabla-amortizacion.component';
+import { TrackingUtil } from './../../../../../core/util/TrakingUtil';
+import { TrackingService } from './../../../../../core/services/quski/tracking.service';
 
 
 @Component({
@@ -20,7 +22,7 @@ import { TablaAmortizacionComponent } from './../../../../../../app/views/partia
   templateUrl: './aprobar-pagos.component.html',
   styleUrls: ['./aprobar-pagos.component.scss']
 })
-export class AprobarPagosComponent implements OnInit {
+export class AprobarPagosComponent extends TrackingUtil implements OnInit {
   public usuario;
   public item: any;
   private catBanco: {id: number, nombre:string}[];
@@ -55,8 +57,10 @@ export class AprobarPagosComponent implements OnInit {
     private sof: SoftbankService,
     private sinNoticeService: ReNoticeService,
     private subheaderService: SubheaderService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public tra: TrackingService
     ) {
+      super(tra);
       this.sof.setParameter();
       this.obj.setParameter();
       this.reg.setParameter();

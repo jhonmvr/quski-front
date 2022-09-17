@@ -5,7 +5,7 @@ export class TbQoClientePago{
 	
     nombreCliente : String;
 	cedula : String;
-	codigoOperacion : String;
+	codigoOperacion : any;
 	codigoCuentaMupi : any;
 	tipoCredito : String;
 	valorPrecancelado : number;
@@ -14,7 +14,7 @@ export class TbQoClientePago{
 	observacion : String;
 	estado: String;
 	tipo: String;
-	codigo;
+	codigo: any;
 	aprobador;
 	asesor;
 	montoCredito;

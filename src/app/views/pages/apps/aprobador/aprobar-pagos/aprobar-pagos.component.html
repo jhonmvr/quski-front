@@ -3,7 +3,10 @@
     <re-portlet-header [title]="'Aprobar / Rechazar Pagos'" [class]="'kt-portlet__head--lg'">
     </re-portlet-header>
     <re-portlet-body>
-        <mat-vertical-stepper>
+        <mat-vertical-stepper #stepper (animationDone)="guardarTraking('PAGO',cliente?cliente.codigo?cliente.codigo : null : null, 
+        ['Información de Crédito','Tabla de amortizacion','Comprobantes de Pagos'], 
+        stepper.selectedIndex, 'RESPUESTA PAGO',
+        cliente ? cliente.codigoOperacion ? cliente.codigoOperacion : null : null )">
             <mat-step label="Información de Crédito">
                 <div class="row">
                     <div class="col-md-4">
