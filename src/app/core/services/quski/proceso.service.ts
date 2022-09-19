@@ -115,6 +115,18 @@ export class ProcesoService extends BaseService {
       )
     );
   }
+
+  public asignarAprobadorValidate(idReferencia: number, proceso: string, aprobador: string, idProceso ) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest +'asignarAprobadorValidate';
+    this.params = new HttpParams().set('idReferencia', idReferencia.toString()).set('idProceso', idProceso.toString()).set('proceso', proceso).set('aprobador',aprobador);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
   public validarAprobador(idReferencia: number, proceso: string, aprobador: string, idProceso ) {
     const serviceUrl = this.appResourcesUrl + this.urlRest +'validarAprobador';
     this.params = new HttpParams().set('idReferencia', idReferencia.toString()).set('idProceso', idProceso.toString()).set('proceso', proceso).set('aprobador',aprobador);

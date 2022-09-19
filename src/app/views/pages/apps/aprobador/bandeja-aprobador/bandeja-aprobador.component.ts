@@ -172,75 +172,111 @@ export class BandejaAprobadorComponent implements OnInit {
 
     }
   }
-  public abrirSolicitud(row ){
-    this.pro.validarAprobador( row.idReferencia, row.proceso, this.usuario, row.id).subscribe( (data: any) =>{
-      let mensaje;
-      if(data.entidad == 'NULL'){
-        mensaje = 'Tomar y gestionar la operacion '+row.codigoBpm+'. Que actualmente esta libre.';
-      }else{
+
+  abrirSolicitud(row){
+    this.pro.asignarAprobadorValidate( row.idReferencia, row.proceso, this.usuario, row.id).subscribe( (data: any) =>{
+      if(data.entidad != this.usuario){
+        let mensaje;
         mensaje = 'Tomar y gestionar la operacion '+row.codigoBpm+'. Que actualmente esta tomada por: '+ data.entidad;
-      }
-      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+        const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
           width: "800px",
           height: "auto",
           data: mensaje
-      });
-      dialogRef.afterClosed().subscribe(r => {
-        if(r){
-          this.pro.validarAprobador( row.idReferencia, row.proceso, this.usuario, row.id).subscribe( (data: any) =>{ 
-            if(data.entidad != this.usuario && !confirm('¿Está seguro que desea tomar esta operación?') ){
-              return;
-            }
-            this.pro.asignarAprobador( row.idReferencia, row.proceso, this.usuario, row.id).subscribe( (data: any) =>{
-              if(data.entidad){
-                if(row.proceso =="NUEVO"){
-                  this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                  this.router.navigate(['aprobador/aprobacion-credito-nuevo/',row.idReferencia]);    
-                }
-                if(row.proceso =="RENOVACION"){
-                  this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                  this.router.navigate(['aprobador/aprobacion-novacion/',row.idReferencia]);    
-                }
-                if(row.proceso =="PAGO" && row.codigo.includes('PAGO') ){
-                  this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                  this.router.navigate(['aprobador/gestion-credito/aprobar-pagos/',row.idReferencia]);
-                }
-                if(row.proceso =="PAGO" && row.codigo.includes('BLOQ') ){
-                  this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                  this.router.navigate(['aprobador/gestion-credito/aprobar-bloqueo-fondos/',row.idReferencia]);  
-                }
-                if(row.proceso =="DEVOLUCION"){
-                  this.pro.findByIdReferencia(row.idReferencia, row.proceso).subscribe( (dat:any) =>{
-                    if(dat.entidad.estadoProceso == 'PENDIENTE_APROBACION_FIRMA'){
-                      this.router.navigate(['devolucion/verificacion-firmas/', row.idReferencia]);
-                      this.sinNotSer.setNotice("OPERACION DE VERIFICACION DE FIRMA ASIGNADA A: "+ data.entidad,"success");
-                    }else{
-                      this.router.navigate(['devolucion/aprobar-solicitud-devolucion/', row.idReferencia]);
-                      this.sinNotSer.setNotice("OPERACION DE SOLICITUD DE DEVOLUCION ASIGNADA A: "+ data.entidad,"success");
-                    }
-                  });
-                } 
-                if(row.proceso =="CANCELACION_DEVOLUCION"){
-                  this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-                  this.router.navigate(['devolucion/aprobacion-cancelacion-solicitud/', row.id]);
-                }
-                
-                if(row.proceso =="VERIFICACION_TELEFONICA"){
-                  this.sinNotSer.setNotice("APROBACION VERIFICACION TELEFONICA, SIN DESARROLLO",'warning');
-                  this.limpiarFiltros();
-                  this.router.navigate(['aprobador']);    
-                }
-              }
-            });
-          });
-          
-        }else{
-          this.sinNotSer.setNotice('SE CANCELO LA ACCION','error');
+        });
+        dialogRef.afterClosed().subscribe(r => {
+          if(r){
+            
+              this.asignar(row);
+            
+          }else{
+            this.sinNotSer.setNotice('NO SE ASIGNO LA OPERACION','info');
+          }
+    
+        });
+      }else if(data.entidad == this.usuario){
+        if(row.proceso =="NUEVO"){
+          this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+          this.router.navigate(['aprobador/aprobacion-credito-nuevo/',row.idReferencia]);    
         }
-  
-      });
+        if(row.proceso =="RENOVACION"){
+          this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+          this.router.navigate(['aprobador/aprobacion-novacion/',row.idReferencia]);    
+        }
+        if(row.proceso =="PAGO" && row.codigo.includes('PAGO') ){
+          this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+          this.router.navigate(['aprobador/gestion-credito/aprobar-pagos/',row.idReferencia]);
+        }
+        if(row.proceso =="PAGO" && row.codigo.includes('BLOQ') ){
+          this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+          this.router.navigate(['aprobador/gestion-credito/aprobar-bloqueo-fondos/',row.idReferencia]);  
+        }
+        if(row.proceso =="DEVOLUCION"){
+          this.pro.findByIdReferencia(row.idReferencia, row.proceso).subscribe( (dat:any) =>{
+            if(dat.entidad.estadoProceso == 'PENDIENTE_APROBACION_FIRMA'){
+              this.router.navigate(['devolucion/verificacion-firmas/', row.idReferencia]);
+              this.sinNotSer.setNotice("OPERACION DE VERIFICACION DE FIRMA ASIGNADA A: "+ data.entidad,"success");
+            }else{
+              this.router.navigate(['devolucion/aprobar-solicitud-devolucion/', row.idReferencia]);
+              this.sinNotSer.setNotice("OPERACION DE SOLICITUD DE DEVOLUCION ASIGNADA A: "+ data.entidad,"success");
+            }
+          });
+        } 
+        if(row.proceso =="CANCELACION_DEVOLUCION"){
+          this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+          this.router.navigate(['devolucion/aprobacion-cancelacion-solicitud/', row.id]);
+        }
+        
+        if(row.proceso =="VERIFICACION_TELEFONICA"){
+          this.sinNotSer.setNotice("APROBACION VERIFICACION TELEFONICA, SIN DESARROLLO",'warning');
+          this.limpiarFiltros();
+          this.router.navigate(['aprobador']);    
+        }
+      }
     });
-   
+  }
+
+  asignar(row){
+    this.pro.asignarAprobador( row.idReferencia, row.proceso, this.usuario, row.id).subscribe( (data: any) =>{
+      if(data.entidad){
+        if(row.proceso =="NUEVO"){
+          this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+          this.router.navigate(['aprobador/aprobacion-credito-nuevo/',row.idReferencia]);    
+        }
+        if(row.proceso =="RENOVACION"){
+          this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+          this.router.navigate(['aprobador/aprobacion-novacion/',row.idReferencia]);    
+        }
+        if(row.proceso =="PAGO" && row.codigo.includes('PAGO') ){
+          this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+          this.router.navigate(['aprobador/gestion-credito/aprobar-pagos/',row.idReferencia]);
+        }
+        if(row.proceso =="PAGO" && row.codigo.includes('BLOQ') ){
+          this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+          this.router.navigate(['aprobador/gestion-credito/aprobar-bloqueo-fondos/',row.idReferencia]);  
+        }
+        if(row.proceso =="DEVOLUCION"){
+          this.pro.findByIdReferencia(row.idReferencia, row.proceso).subscribe( (dat:any) =>{
+            if(dat.entidad.estadoProceso == 'PENDIENTE_APROBACION_FIRMA'){
+              this.router.navigate(['devolucion/verificacion-firmas/', row.idReferencia]);
+              this.sinNotSer.setNotice("OPERACION DE VERIFICACION DE FIRMA ASIGNADA A: "+ data.entidad,"success");
+            }else{
+              this.router.navigate(['devolucion/aprobar-solicitud-devolucion/', row.idReferencia]);
+              this.sinNotSer.setNotice("OPERACION DE SOLICITUD DE DEVOLUCION ASIGNADA A: "+ data.entidad,"success");
+            }
+          });
+        } 
+        if(row.proceso =="CANCELACION_DEVOLUCION"){
+          this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
+          this.router.navigate(['devolucion/aprobacion-cancelacion-solicitud/', row.id]);
+        }
+        
+        if(row.proceso =="VERIFICACION_TELEFONICA"){
+          this.sinNotSer.setNotice("APROBACION VERIFICACION TELEFONICA, SIN DESARROLLO",'warning');
+          this.limpiarFiltros();
+          this.router.navigate(['aprobador']);    
+        }
+      }
+    });
   }
   allSelecAgencias(all) {
     if (all.selected) {
