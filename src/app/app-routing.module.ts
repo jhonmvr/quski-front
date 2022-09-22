@@ -73,6 +73,10 @@ const routes: Routes = [
 				loadChildren: () => import('./views/pages/apps/tevcol/tevcol.module').then(m => m.TevcolModule)
 			},
 			{
+				path: 'gestor-documental',
+				loadChildren: () => import('../app/views/pages/gestor-documental/administrador.module').then(m => m.AdministradorModule)
+			},
+			{
 				path: 'error/403',
 				component: ErrorPageComponent,
 				data: {

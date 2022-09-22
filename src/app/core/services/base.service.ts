@@ -17,6 +17,8 @@ export class BaseService {
   // public httpOld:Http;
   public parametros: Array<Parametro>;
 
+  public databaseName: string;
+  public estructuraArchivos: string;
   public segRootContextUrl: string;
   public segResourcesUrl: string;
   //public appRootContextUrl: string;
@@ -99,6 +101,8 @@ export class BaseService {
            this.crmResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE012')).replace(this.keyUnencrypt, '');
            //parametros cloudstudio
            this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
+           this.databaseName="quski-core-documento";
+           this.estructuraArchivos="estructura-archivos";
            
   } 
   

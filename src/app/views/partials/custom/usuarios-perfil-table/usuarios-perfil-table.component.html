@@ -1,0 +1,26 @@
+
+
+<mat-spinner *ngIf="bandera.asObservable() | async"></mat-spinner>
+
+<mat-table class="mat-elevation-z8" [dataSource]="datasource">
+    <ng-container matColumnDef="accion" sticky>
+        <mat-header-cell *matHeaderCellDef>Seleccionar</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()"
+            (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)"
+            [aria-label]="checkboxLabel(row)">
+            </mat-checkbox> 
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="usuario">
+        <mat-header-cell *matHeaderCellDef>Usuario</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.codigo}}</mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumnPerfiles"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumnPerfiles;"></mat-row>
+</mat-table>
+    <button mat-raised-button (click)="eliminarPerfil()">
+        <mat-icon style="font-size: 32px" matTooltipPosition="above">move_to_inbox</mat-icon>
+        <span>Eliminar usuario del perfil</span>
+    </button>

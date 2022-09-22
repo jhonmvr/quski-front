@@ -134,6 +134,8 @@ import { HistoricoObservacionComponent } from './custom/secciones-generales/hist
 import { RelativeTimePipe } from '../../../app/core/_base/layout/pipes/time-relative.pipe';
 import { HistoricoOperativaComponent } from './custom/secciones-generales/historico-operativa/historico-operativa.component';
 import { HitoricoObservacionEntregaComponent } from './custom/secciones-generales/hitorico-observacion-entrega/hitorico-observacion-entrega.component';
+import { UsuariosPerfilTableComponent } from './custom/usuarios-perfil-table/usuarios-perfil-table.component';
+import { ExploradorComponent } from './custom/explorador/explorador.component';
 
 
 
@@ -221,7 +223,9 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		AlertaTiempoAprobadorComponent,
 		HistoricoObservacionComponent,
 		HistoricoOperativaComponent,
-		HitoricoObservacionEntregaComponent
+		HitoricoObservacionEntregaComponent,
+		UsuariosPerfilTableComponent,
+		ExploradorComponent
 	
 
 	],
@@ -289,7 +293,9 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		DetallesComponent,
 		SolicitudDeExcepcionesComponent,
 		VentanaPrecancelacionComponent,
-		AlertaTiempoAprobadorComponent
+		AlertaTiempoAprobadorComponent,
+		UsuariosPerfilTableComponent,
+		ExploradorComponent
 
 	],
 	imports: [
