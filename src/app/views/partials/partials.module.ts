@@ -28,6 +28,8 @@ import {
 	MatTooltipModule,
 	MatDialogRef,
 	MAT_DIALOG_DATA,
+	MatTreeModule,
+	MatListModule
 } from '@angular/material';
 // NgBootstrap
 import { NgbDropdownModule, NgbTabsetModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
@@ -136,6 +138,9 @@ import { HistoricoOperativaComponent } from './custom/secciones-generales/histor
 import { HitoricoObservacionEntregaComponent } from './custom/secciones-generales/hitorico-observacion-entrega/hitorico-observacion-entrega.component';
 import { UsuariosPerfilTableComponent } from './custom/usuarios-perfil-table/usuarios-perfil-table.component';
 import { ExploradorComponent } from './custom/explorador/explorador.component';
+import { ArbolComponent } from './custom/arbol/arbol.component';
+import { ContenidoComponent } from './custom/contenido/contenido.component';
+import { PathComponent } from './custom/path/path.component';
 
 
 
@@ -225,7 +230,10 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		HistoricoOperativaComponent,
 		HitoricoObservacionEntregaComponent,
 		UsuariosPerfilTableComponent,
-		ExploradorComponent
+		ExploradorComponent,
+		ArbolComponent,
+		ContenidoComponent,
+		PathComponent
 	
 
 	],
@@ -295,7 +303,10 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		VentanaPrecancelacionComponent,
 		AlertaTiempoAprobadorComponent,
 		UsuariosPerfilTableComponent,
-		ExploradorComponent
+		ExploradorComponent,
+		ArbolComponent,
+		ContenidoComponent,
+		PathComponent
 
 	],
 	imports: [
@@ -332,6 +343,8 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		MatTabsModule,
 		MatTooltipModule,
 		MatDialogModule,
+		MatTreeModule,
+		MatListModule,
 
 
 

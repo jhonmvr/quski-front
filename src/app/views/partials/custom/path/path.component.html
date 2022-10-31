@@ -1,0 +1,8 @@
+<div>
+    <span *ngFor="let item of path;let i = index">
+        <span *ngIf="i != 0">/</span>
+    <!-- {{i}} -->
+    <button mat-button *ngIf="i == 0" (click)="verNodo(item)">root</button>
+    <button *ngIf='i!=0' mat-button (click)="verNodo(item)"> {{item.Name}}</button>
+    </span>
+</div>

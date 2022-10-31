@@ -1,94 +1,85 @@
+<div class="row">
 
-     
-      <div class="row">   
-
-        <div class="col-md-4">
+    <div class="col-md-4">
         <form [formGroup]="formFiltros">
             <mat-form-field class="mat-form-field-fluid">
-                <input matInput [formControl]="codigoUsuario" placeholder="Usuario: "
-                    autocomplete="off">
+                <input matInput [formControl]="codigoUsuario" placeholder="Usuario: " autocomplete="off">
             </mat-form-field>
         </form>
-        </div>
+    </div>
 
-        <div class="col-2 offset-5">
-            <button mat-raised-button color="primary" (click)="buscar()">
+    <div class="col-2 offset-5">
+        <button mat-raised-button color="primary" (click)="buscar()">
                 <mat-icon style="font-size: 24px;" class="white-icon" matTooltipPosition="above">search
                 </mat-icon>
                 <span class="white-icon">Buscar</span>
             </button>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field class="example-full-width">
-                <mat-select placeholder="Perfiles" (selectionChange)="getUsuariosPorPerfil($event.value)" [(ngModel)]="perfil">
-                    <mat-option *ngFor="let perfil of listaPerfiles" [value]="perfil">
-                        {{perfil.nombre}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>    
-        </div>
     </div>
 
-    <div class="row">
-        <div class="col-5 offset-1">
-            
-            <mat-table class="mat-elevation-z8" [dataSource]="dataSourceUsuarios">
-                <ng-container matColumnDef="accion" sticky>
-                    <mat-header-cell *matHeaderCellDef>Seleccionar</mat-header-cell>
-                    <mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation()"
-                        (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)"
-                        [aria-label]="checkboxLabel(row)">
-                        </mat-checkbox>
-                    </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="usuario">
-                    <mat-header-cell *matHeaderCellDef>Usuario</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.codigo}}</mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="verPerfil">
-                    <mat-header-cell *matHeaderCellDef>Ver Perfil</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <a   (click)="verPerfiles(element)"  >
-                            <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="Ver Detalle">
-                                remove_red_eye
-                            </mat-icon>
-                        </a>
-                    </mat-cell>
-                </ng-container>
-                <mat-header-row *matHeaderRowDef="displayedColumnsUsuarios"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumnsUsuarios;"></mat-row>
-            </mat-table>
-            <mat-paginator #paginator [length]="100"
-              [pageSize]="10"
-              [pageSizeOptions]="[5, 10, 25, 100]"
-              aria-label="Select page">
-            </mat-paginator>
-           
-               
-                    <button mat-raised-button (click)="agregarUsuarioAPerfil()">
+    <div class="col-md-4">
+        <mat-form-field class="example-full-width">
+            <mat-select placeholder="Perfiles" (selectionChange)="getUsuariosPorPerfil($event.value)" [(ngModel)]="perfil">
+                <mat-option *ngFor="let perfil of listaPerfiles" [value]="perfil">
+                    {{perfil.nombre}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-5 offset-1">
+
+        <mat-table class="mat-elevation-z8" [dataSource]="dataSourceUsuarios">
+            <ng-container matColumnDef="accion" sticky>
+                <mat-header-cell *matHeaderCellDef>Seleccionar</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                    </mat-checkbox>
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="usuario">
+                <mat-header-cell *matHeaderCellDef>Usuario</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.codigo}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="verPerfil">
+                <mat-header-cell *matHeaderCellDef>Ver Perfil</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <a (click)="verPerfiles(element)">
+                        <mat-icon style="font-size: 32px !important" matTooltipPosition="above" matTooltip="Ver Detalle">
+                            remove_red_eye
+                        </mat-icon>
+                    </a>
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumnsUsuarios"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumnsUsuarios;"></mat-row>
+        </mat-table>
+        <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
+        </mat-paginator>
+
+
+        <button mat-raised-button (click)="agregarUsuarioAPerfil()">
                        
                         <span>Agregar usuario a perfil</span>
                     </button>
-                    
-                    <button mat-raised-button (click)="seleccionarFecha()">
+
+        <button mat-raised-button (click)="seleccionarFecha()">
                 
                         <span>Agregar Acceso a archivos</span>
-                    </button>       
-                
-               
-               
-                   
-         
-        </div>
-       
-        <div class="col-5 offset-1">
-            <kt-usuarios-perfil-table [listaUsuarios]="usuariosPorPerfil" [listaPerfilesInput]="listaPerfiles" [perfilSeleccionadoInput]="perfilSeleccionado"> </kt-usuarios-perfil-table>
-          
-        </div>
+                    </button>
+
+
+
+
+
     </div>
+
+    <div class="col-5 offset-1">
+        <kt-usuarios-perfil-table [listaUsuarios]="usuariosPorPerfil" [listaPerfilesInput]="listaPerfiles" [perfilSeleccionadoInput]="perfilSeleccionado"> </kt-usuarios-perfil-table>
+
+    </div>
+</div>
 
 
 <br>
@@ -96,5 +87,3 @@
 <div class="row">
     <h5>Acceso</h5>
 </div>
-
-<kt-explorador></kt-explorador>

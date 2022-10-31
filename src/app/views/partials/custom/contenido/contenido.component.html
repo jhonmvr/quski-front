@@ -1,0 +1,19 @@
+<div class="contenido">
+    <mat-progress-bar mode="indeterminate" *ngIf="loadBusqueda.getValue() ">
+    </mat-progress-bar>
+    <div *ngIf="empyFlat.getValue()">
+        <mat-list>
+            <mat-list-item *ngFor="let item of myObservableArray | async">
+                <a href="javascript:void(0);" (click)="abrir(item)">
+                    <mat-icon mat-list-icon *ngIf="item.Type=='CARPETA'">folder</mat-icon>
+                    <mat-icon mat-list-icon *ngIf="item.Type=='ARCHIVO'">archive</mat-icon>
+                    <div mat-line>{{item.Name}}</div>
+                </a>
+            </mat-list-item>
+
+        </mat-list>
+    </div>
+    <div *ngIf="!empyFlat.getValue()">
+        <a>esta vacio</a>
+    </div>
+</div>

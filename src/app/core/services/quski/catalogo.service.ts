@@ -71,4 +71,11 @@ export class CatalogoService extends BaseService {
       )
     );
   }
+
+  consultarAsesoresCS(x) {
+    let serviceUrl = this.softBaseBankUrl + "api/catalogo/asesor" ;
+    let wrapper =  {roles:x};
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl,wrapper,this.options);
+  } 
 }

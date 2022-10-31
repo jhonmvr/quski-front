@@ -1,0 +1,8 @@
+.mat-tree {
+    overflow: auto;
+    max-height: 600px;
+}
+
+mat-tree-node {
+    overflow: visible !important;
+}

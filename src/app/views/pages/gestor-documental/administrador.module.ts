@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule, MatDatepickerModule, MatDialogModule, MatExpansionModule, MatIconModule, MatInputModule, MatMenuModule, MatNativeDateModule, MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule, MatSelectModule, MatSnackBarModule, MatSortModule, MatTableModule, MatTabsModule, MatTooltipModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
 import { InterceptService, HttpUtilsService, TypesUtilsService, LayoutUtilsService } from '../../../../app/core/_base/crud';
+import { ExploradorDocumentoComponent } from './explorador-documento/explorador-documento.component';
 
 const routes: Routes = [
 	{
@@ -21,6 +22,10 @@ const routes: Routes = [
 			{
 				path: 'usuario',
 				component: GestionUsuarioComponent
+			},
+			{
+				path: 'documento',
+				component: ExploradorDocumentoComponent
 			}
 		]
 	}
@@ -28,7 +33,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [AdministradorComponent, GestionUsuarioComponent],
+  declarations: [AdministradorComponent, GestionUsuarioComponent, ExploradorDocumentoComponent],
   imports: [
 	CommonModule,
 	HttpClientModule,

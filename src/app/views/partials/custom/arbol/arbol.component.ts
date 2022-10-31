@@ -15,6 +15,7 @@ import { UsuariosService } from '../../../../core/services/gestor-documental/usu
 export class ArbolComponent implements OnInit {
 
   @Output() nodo: EventEmitter<TodoItemFlatNode> = new EventEmitter<TodoItemFlatNode>();
+  @Output() nodoPadre: EventEmitter<Array<TreeNodo>> = new EventEmitter<Array<TreeNodo>>();
   treeControl: FlatTreeControl<TodoItemFlatNode>;
   dataSource: MatTreeFlatDataSource<TreeNodo, TodoItemFlatNode>;
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
@@ -28,7 +29,7 @@ export class ArbolComponent implements OnInit {
   
   pathNode;
   inputBuscar  = new FormControl('', [Validators.required]);
-  nodePadre;
+  nodePadre:Array<TreeNodo>;
 
   usuario = {nombre: ""}
   entidades =[];
@@ -238,12 +239,13 @@ export class ArbolComponent implements OnInit {
   
   
     generarArbol(carpetas: Array<any>){
-      let padre:Array<TreeNodo> = carpetas.filter(p=>p.ParentId===null);
+      this.nodePadre = carpetas.filter(p=>p.ParentId===null);
+      this.nodoPadre.emit(this.nodePadre);
   
      
-      this.findHijos(padre,carpetas)
+      this.findHijos(this.nodePadre,carpetas)
       //console.log("padres=>>>>>>>>>>>>>>>>>>>>", padre);
-      return padre;
+      return this.nodePadre;
    
     }
     findHijos(padre: Array<any>,carpetas){
@@ -259,7 +261,7 @@ export class ArbolComponent implements OnInit {
 
     verNodo(nodoEmitido){
       this.pathNode = new Array<any>();
-      //console.log("mi nodo click", nodoEmitido);
+      console.log("mi nodo click", nodoEmitido);
       this.nodo.emit(nodoEmitido);
       //this.getParent(nodoEmitido);
       this.bcService.nodo.next(nodoEmitido);

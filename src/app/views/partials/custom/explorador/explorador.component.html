@@ -1,9 +1,22 @@
-<div  class="row">   
-    <div class="col-md-4" ><kt-arbol (nodo)='verNodo($event)'></kt-arbol>
+<div class="row">
+    <div class="col-md-4">
+        <mat-form-field class="mat-form-field-fluid">
+            <input matInput [formControl]="inputBusqueda" type="text" placeholder="">
+        </mat-form-field>
     </div>
-    <div class="col-md-6">
-        <div class ="row">  <kt-path [listaNodos]="path"> </kt-path>
-             </div>
-        <kt-contenido [nodo]="nodoAEnviar"></kt-contenido>
+    <div class="col-md-2">
+        <button mat-button (click)='buscar()'><mat-icon>search</mat-icon></button>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <kt-arbol (nodo)='verNodo($event)'></kt-arbol>
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <kt-path (nodo)='verNodo($event)' [listaNodos]="path"> </kt-path>
+        </div>
+        <kt-contenido [nodo]="nodoAEnviar" [busqueda]="busqueda"></kt-contenido>
     </div>
 </div>

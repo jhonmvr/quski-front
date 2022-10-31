@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { TodoItemFlatNode } from '../arbol/arbol.component';
 
@@ -11,12 +12,15 @@ export class ExploradorComponent implements OnInit {
 
   path;
   nodoAEnviar;
+  inputBusqueda = new FormControl('', []);
+  busqueda;
   
   @Input() set listaNodos(object: any) {
     this.dataObservableLista.next(object);
   } 
 
   private dataObservableLista: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
   constructor() { }
 
   async ngOnInit() {
@@ -28,6 +32,11 @@ export class ExploradorComponent implements OnInit {
       }
  
     })
+    
+  }
+
+  buscar(){
+    this.busqueda = this.inputBusqueda.value;
     
   }
 
