@@ -11,7 +11,7 @@ import { TbQoVariablesCrediticia } from '../../model/quski/TbQoVariablesCreditic
   providedIn: 'root'
 })
 export class NegociacionService extends BaseService {
-  
+ 
 
   urlRest = "negociacionRestController/";
 
@@ -201,6 +201,20 @@ export class NegociacionService extends BaseService {
       )
     );
   }
+
+  consultaWebMupi(idCliente: any) {
+    const serviceUrl = this.appResourcesUrl + 'clienteRestController/consultaWebMupi';
+    this.params = new HttpParams()
+    .set('idCliente',idCliente);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  
 
 
 }

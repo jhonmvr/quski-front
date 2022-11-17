@@ -38,6 +38,7 @@ export class TbQoCliente {
   egresos: number;
   pasivos: number;
   activos: number;
+  detalleWebMupi;
 
 
   tbQoArchivoClientes: null;

@@ -55,6 +55,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public loadOpciones = new BehaviorSubject<boolean>(false);
   public loadBusqueda = new BehaviorSubject<boolean>(false);
   public loadVariables = new BehaviorSubject<boolean>(false);
+  public validMupiButton = new BehaviorSubject<boolean>(false);
+  
 
   @ViewChild('stepper', { static: true }) myStepper: MatStepper;
   // ENTIDADES
@@ -104,6 +106,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public email = new FormControl('', [Validators.required, Validators.email]);
   public campania = new FormControl('');
   public aprobacionMupi = new FormControl('', [Validators.required]);
+  public detalleWebMupi= new FormControl('', []);
   public tipoCliente = new FormControl('', [Validators.required]);
   public identificacionApoderado = new FormControl('', [Validators.required]);
   public nombreApoderado = new FormControl('', [Validators.required]);
@@ -575,7 +578,16 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.email.setValue(this.tbQoCliente.email);
     this.campania.setValue('');
     this.publicidad.setValue('');
-    this.aprobacionMupi.setValue(cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi : '');
+    if(!cargar){
+      
+      this.findWebMupi();
+    }else{
+      this.aprobacionMupi.setValue(this.negoW.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi);
+      this.detalleWebMupi.setValue(this.negoW.credito.tbQoNegociacion.tbQoCliente.detalleWebMupi);
+      this.aprobacionMupi.disable();
+      this.detalleWebMupi.disable();
+    }
+    
     this.publicidad.setValue(cargar ?  this.catPublicidad.find(p=>p.nombre == this.negoW.credito.tbQoNegociacion.tbQoCliente.publicidad )  : '');
     this.campania.setValue(cargar ? this.negoW.credito.tbQoNegociacion.tbQoCliente.campania : '');
     this.nombreReferido.setValue(this.negoW.referedio ? this.negoW.referedio.nombre: '');
@@ -663,6 +675,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.guardarTraking('NUEVO', this.negoW?this.negoW.credito?this.negoW.credito.codigo:'':'', 
     ['Busqueda de Cliente','Datos Cliente','Variables Crediticias','Riesgo Acumulado','Tasación','Detalle Opciones de crédito'], 
     0, 'NEGOCIACION', this.negoW?this.negoW.credito?this.negoW.credito.numeroOperacion:'':'')
+
   }
   public abrirPopupVerCotizacion(identificacion: string) {
     const dialogRefGuardar = this.dialog.open(VerCotizacionesComponent, {
@@ -1467,6 +1480,27 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     }
 
     this.neg.guardarEstadoCredito(this.negoW.credito.tbQoNegociacion.id, this.estadoCredito.value.nombre, this.motivo.value.nombre).subscribe( x=>{});
+  }
+
+  findWebMupi(){
+    this.neg.consultaWebMupi(this.tbQoCliente.id).subscribe(p=>{
+      if(p.existeError){
+        this.sinNotSer.setNotice(p.mensaje,'warning');
+        return
+      }
+      this.detalleWebMupi.setValue(p.detalle);
+      this.aprobacionMupi.setValue(p.estado=="RECHAZADO"?'N':'S');
+      this.validMupiButton.next(false);
+     
+    },r=>{
+      this.aprobacionMupi.setValue('N');
+      this.validMupiButton.next(true);
+      this.detalleWebMupi.disable();
+      this.aprobacionMupi.disable()
+    },()=>{
+      this.detalleWebMupi.disable();
+      this.aprobacionMupi.disable()
+      });
   }
  
 

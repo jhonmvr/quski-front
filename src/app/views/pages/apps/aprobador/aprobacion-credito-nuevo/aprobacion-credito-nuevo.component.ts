@@ -72,6 +72,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
   public estadoCivil = new FormControl('', []);
   public cargaFamiliar = new FormControl('', []);
   public nacionalidad = new FormControl('', []);
+  public detalleWebMupi = new FormControl('', []);
   public lugarDeNacimiento = new FormControl('', []);
   public edad = new FormControl('', []);
   public fechaNacimiento = new FormControl('', []);
@@ -220,6 +221,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.formDisable.addControl( "estadoCivil", this.estadoCivil );
     this.formDisable.addControl( "cargaFamiliar", this.cargaFamiliar );
     this.formDisable.addControl( "nacionalidad", this.nacionalidad );
+    this.formDisable.addControl( "detalleWebMupi", this.detalleWebMupi );
     this.formDisable.addControl( "lugarDeNacimiento", this.lugarDeNacimiento );
     this.formDisable.addControl( "edad", this.edad );
     this.formDisable.addControl( "fechaNacimiento", this.fechaNacimiento );
@@ -428,6 +430,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.consultarLugarDeNacimiento( ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento );
     this.identificacion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.aprobacionMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S'? 'SI': 'NO' );
+    this.detalleWebMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.detalleWebMupi);
     this.nombresCompletos.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     this.primerNombre.setValue(ap.credito.tbQoNegociacion.tbQoCliente.primerNombre);
     this.segundoNombre.setValue(ap.credito.tbQoNegociacion.tbQoCliente.segundoNombre);

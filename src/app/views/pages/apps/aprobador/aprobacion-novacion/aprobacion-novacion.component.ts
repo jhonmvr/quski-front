@@ -67,6 +67,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   /** @DATOS_PERSONALES */
   public identificacion = new FormControl('', []);
   public aprobacionMupi = new FormControl('', []);
+  public detalleWebMupi = new FormControl('', []);
   public nombresCompletos = new FormControl('', []);
   public primerNombre = new FormControl('', []);
   public segundoNombre = new FormControl('', []);
@@ -237,6 +238,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.formDisable.addControl("nombresCompletoCliente", this.nombresCompletoCliente);
     this.formDisable.addControl("identificacion", this.identificacion);
     this.formDisable.addControl("aprobacionMupi", this.aprobacionMupi);
+    this.formDisable.addControl("detalleWebMupi", this.detalleWebMupi);
     this.formDisable.addControl("nombresCompletos", this.nombresCompletos);
     this.formDisable.addControl("primerNombre", this.primerNombre);
     this.formDisable.addControl("segundoNombre", this.segundoNombre);
@@ -491,6 +493,7 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.consultarLugarDeNacimiento(ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento );
     this.identificacion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
     this.aprobacionMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S' ? 'SI' : 'NO');
+    this.detalleWebMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.detalleWebMupi);
     this.nombresCompletos.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     this.primerNombre.setValue(ap.credito.tbQoNegociacion.tbQoCliente.primerNombre);
     this.segundoNombre.setValue(ap.credito.tbQoNegociacion.tbQoCliente.segundoNombre);

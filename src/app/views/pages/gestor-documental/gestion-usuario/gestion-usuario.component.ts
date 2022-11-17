@@ -210,4 +210,7 @@ console.log(" xd xd", this.usuariosPorPerfil)
     this.nodoAEnviar = nodeins
     console.log("llega aca", this.nodoAEnviar)
   }
+  seleccionarFecha(){
+    
+  }
 }
