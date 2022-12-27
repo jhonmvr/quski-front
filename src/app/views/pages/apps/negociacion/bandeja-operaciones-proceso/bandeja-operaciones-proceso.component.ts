@@ -371,4 +371,17 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       this.estado.patchValue([]);
     }
   }
+  
+  verActividad(element){
+    console.log(element)
+    this.pro.verActividad(element.codigoBpm).subscribe( p =>{
+      if( !p ) {
+
+        this.sinNotSer.setNotice('SIN ACTIVIDAD', 'info');
+      }
+      this.sinNotSer.setNotice('ACTIVIDAD: ' + p.actividad, 'info');
+
+    })
+    
+  }
 }

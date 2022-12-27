@@ -48,7 +48,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Actividad" [formControl]="actividad">
                                     <mat-option [value]="0">--</mat-option>
@@ -56,7 +56,7 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </div>
+                        </div> -->
                         <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Estado" [formControl]="estado" multiple>
@@ -218,7 +218,10 @@
                     </ng-container>
                     <ng-container matColumnDef="actividad">
                         <mat-header-cell *matHeaderCellDef>Actividad</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{ element.actividad | titlecase }}</mat-cell>
+                        <mat-cell *matCellDef="let element">
+                            <a href="javascript:void(0);" (click)="verActividad(element)">
+                                <mat-icon style="font-size: 24px;">remove_red_eye</mat-icon><span style="position: relative; top: -10px; "> Ver actividad</span></a>
+                        </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="motivo">
                         <mat-header-cell *matHeaderCellDef>Motivo devolucion</mat-header-cell>

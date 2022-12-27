@@ -13,6 +13,7 @@ import { ReNoticeService } from '../re-notice.service';
   providedIn: 'root'
 })
 export class ProcesoService extends BaseService {
+ 
 
   urlRest = "procesoRestController/";
   constructor(_http: HttpClient,
@@ -289,5 +290,16 @@ export class ProcesoService extends BaseService {
     );
   }
 
+  verActividad(codigoBpm: any) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest +"verActividad";
+    this.params = new HttpParams().set('codigoBpm', codigoBpm);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
 
 }
