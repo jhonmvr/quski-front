@@ -1109,13 +1109,21 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
             }
           })
         }
-        if (data.entidad.simularResult.codigoError == 3) {
+        if (data.entidad.simularResult.codigoError == 4) {
+          this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
+         // this.loadOpciones.next(false);
+          this.codigoError = data.entidad.simularResult.codigoError;
+          //console.log("LA DATA" ,data.entidad)
+          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+          this.abrirPopupExcepciones(new DataInjectExcepciones(false,true,false,true));
+       
+        } else if (data.entidad.simularResult.codigoError == 3) {
           this.negoW.excepcionBre = data.entidad.simularResult.mensaje;
          // this.loadOpciones.next(false);
           this.codigoError = data.entidad.simularResult.codigoError;
          // console.log("LA DATA" ,data.entidad)
-         // this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
-          this.abrirPopupExcepciones(new DataInjectExcepciones(false,true,false,true));
+          this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+          this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false,true));
        
         } else if (data.entidad.simularResult.codigoError == 2) {
           this.sinNotSer.setNotice(data.entidad.simularResult.mensaje, 'error');
