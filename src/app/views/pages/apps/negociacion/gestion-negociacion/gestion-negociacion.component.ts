@@ -35,6 +35,9 @@ import { LayoutConfigService } from '../../../../../../app/core/_base/layout/ser
 import { ProcesoService } from '../../../../../../app/core/services/quski/proceso.service';
 import { runInThisContext } from 'vm';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { DialogCargarAutorizacionComponent } from './dialog-cargar-autorizacion/dialog-cargar-autorizacion.component';
+import { DocumentoHabilitanteService } from '../../../../../../app/core/services/quski/documento-habilitante.service';
+import { Page } from "../../../../../../app/core/model/page";
 
 
 @Component({
@@ -158,6 +161,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     private neg: NegociacionService,
     private tas: TasacionService,
     private route: ActivatedRoute,
+    private dh: DocumentoHabilitanteService,
     private router: Router,
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService,
@@ -172,6 +176,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     this.cal.setParameter();
     this.neg.setParameter();
     this.tas.setParameter();
+    this.dh.setParameter();
     this.procesoService.setParameter();
     //  RELACIONANDO FORMULARIO DE BUSQUEDA
     this.formBusqueda.addControl("identificacion", this.identificacion);
@@ -285,7 +290,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
             this.laytoutService.setDatosContrato(datos);
           });
         } else if (json.params.origen == "COT") {
-          this.iniciarNegociacionFromCot(json.params.id);
+          //this.iniciarNegociacionFromCot(json.params.id);
         } else {
           this.salirDeGestion("Error al intentar ingresar a la Negociacion.");
         }
@@ -297,6 +302,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       
       if (wrapper.entidad.respuesta) {
         this.negoW = wrapper.entidad;
+        this.consultarHabilitanteAutoricacion(this.negoW.credito.tbQoNegociacion.id);
 
         if(this.negoW.proceso.estadoProceso == 'CREADO'){
             if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
@@ -457,6 +463,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         this.negoW = wrapper.entidad;
         this.cargarValores(this.negoW, false);
         this.myStepper.selectedIndex = 1;
+        this.cargarComponenteHabilitante();
         if (this.negoW.excepcionBre && this.negoW.codigoExcepcionBre == 3) {
           this.abrirPopupExcepciones(new DataInjectExcepciones(true,false,false,true));
           return;
@@ -473,7 +480,9 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
          
         }
       } else {
-        this.abrirPopupDeAutorizacion(this.identificacion.value);
+        this.limpiarCamposBusqueda();
+        this.sinNotSer.setNotice('NO SE PUDO INICIAR NEGOCIACION, CLIENTE NO ENCONTRADO EN EQUIFAX', 'error')
+        
       }
     });
   }
@@ -542,22 +551,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       control.setValue(null);
     });
   }
-  private abrirPopupDeAutorizacion(cedula: string): any {
-    this.myStepper.selectedIndex = 0;
-    const dialogRefGuardar = this.dialog.open(SolicitudAutorizacionDialogComponent, {
-      width: '600px',
-      height: 'auto',
-      data: cedula
-    });
-    dialogRefGuardar.afterClosed().subscribe((respuesta: any) => {
-      if (respuesta) {
-        this.iniciarNegociacionEquifax(cedula);
-      } else {
-        this.sinNotSer.setNotice('CONSULTA EQUIFAX CANCELADA', 'warning');
-        this.limpiarCamposBusqueda();
-      }
-    });
-  }
+
   private cargarValores(wrapper: NegociacionWrapper, cargar: boolean) {
     this.bloquearBusqueda = true;
     this.tbQoCliente = wrapper.credito.tbQoNegociacion.tbQoCliente;
@@ -1509,6 +1503,42 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       this.detalleWebMupi.disable();
       this.aprobacionMupi.disable()
       });
+  }
+  public cargarComponenteHabilitante() {
+    if (this.negoW && this.negoW.credito && this.negoW.credito.tbQoNegociacion.id) {
+      const dialogRef = this.dialog.open(DialogCargarAutorizacionComponent, {
+        width: "900px",
+        height: "400px",
+        data: this.negoW.credito.tbQoNegociacion.id
+      });
+      dialogRef.afterClosed().subscribe(p=>{
+        this.consultarHabilitanteAutoricacion(this.negoW.credito.tbQoNegociacion.id);
+      });
+    } else {
+      this.sinNotSer.setNotice("ERROR NO HAY CLIENTE PARA ACTUALIZAR LOS HABILITANTES", 'error');
+    }
+  }
+
+  consultarHabilitanteAutoricacion(idReferencia) {
+    const p = new Page();
+    p.pageNumber = 0;
+    p.sortFields = null;
+    p.sortDirections = null;
+    p.isPaginated = "Y";
+    this.dh.findByRolTipoDocumentoReferenciaProcesoEstadoOperacion(localStorage.getItem(environment.rolKey),"18", idReferencia,
+    "NUEVO","AUTORIZACION", p  ).subscribe(
+        (data: any) => {
+          
+          if (data && data.list && data.list[0] && !data.list[0].objectId) {
+            this.cargarComponenteHabilitante();
+            
+          } 
+        },
+        error => {
+        
+        }
+      );
+      
   }
  
 

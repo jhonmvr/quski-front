@@ -100,7 +100,13 @@ export class AutorizacionService  {
     
     return this.http.post<BaseWrapper>( atob(environment.cat_r), wp);
   }
-
+  public getCatalogoDivisionPolitica(tokenApi):Observable<any>{
+    localStorage.setItem(environment.token_type,tokenApi.token_type );
+    localStorage.setItem(environment.access_token,tokenApi.access_token );
+    let wp = {};
+    
+    return this.http.post<BaseWrapper>( atob(environment.cat_dp), wp);
+  }
   public getPerfil(token:string, usuario:string):Observable<Array<RolWrapper>>{
     //console.log("=========> ejecuta getperfil");
    
@@ -127,16 +133,19 @@ export class AutorizacionService  {
           switchMap( dataParam=>this.getTokenApi(dataParam)
 			.pipe(
 			switchMap( tokenApi=>this.getCatalogoRol(tokenApi )
+					.pipe( 
+            switchMap( catalogoRol=>this.getCatalogoDivisionPolitica(tokenApi )
 					.pipe(  
-						switchMap( catalogoRol=>this.userReturn( usuariowp,dataParam,null, authData,catalogoRol )
+						switchMap( catalogoDivision=>this.userReturn( usuariowp,dataParam,null, authData,catalogoRol, catalogoDivision )
           ) )
           ) ) 
+          ) )
           ) )
         ))
     ));
 	}
 
-  private userReturn(  dataLogin,dataParam,dataRoles:Array<RolWrapper>, credential, catalogoRol): Observable<UsuarioAuth>{
+  private userReturn(  dataLogin,dataParam,dataRoles:Array<RolWrapper>, credential, catalogoRol, catalogoDivision): Observable<UsuarioAuth>{
         
     ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: " ) ;
     ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataLogin " + JSON.stringify(dataLogin) ) ;
@@ -180,7 +189,8 @@ export class AutorizacionService  {
           localStorage.setItem("direccionAgencia",dataLogin.agencia.direccion); 
           localStorage.setItem("idResidenciaAgencia",dataLogin.agencia.idResidencia); 
           localStorage.setItem("idTevcolAgencia",dataLogin.agencia.idUbicacionTevcol); 
-
+          let m = catalogoDivision.catalogo.find(x => x.id == dataLogin.agencia.idResidencia);
+          localStorage.setItem("ciudadAgencia", m?m.nombre:''); 
         }
         if(catalogoRol.catalogo){
           const x = catalogoRol.catalogo.find(p=>p.codigo == dataLogin.roles[0]);

@@ -63,13 +63,15 @@ export const environment = {
  seg_r :"aHR0cHM6Ly9wbGF0YWZvcm1hLW9yby5xdXNraS5lYzo5ODg4L1NvZnRiYW5rQVBJL2FwaS9zZWd1cmlkYWQv",
  //catalogo rol
  cat_r:"aHR0cHM6Ly9wbGF0YWZvcm1hLW9yby5xdXNraS5lYzo5ODg4L1NvZnRiYW5rQVBJL2FwaS9jYXRhbG9nby9yb2w=",
+ //catalogo division politica
+ cat_dp:"aHR0cHM6Ly9wbGF0YWZvcm1hLW9yby5xdXNraS5lYzo5ODg4L1NvZnRiYW5rQVBJL2FwaS9jYXRhbG9nby9kaXZpc2lvbnBvbGl0aWNh",
  //apigw
  api_t:"aHR0cHM6Ly9wbGF0YWZvcm1hLW9yby5xdXNraS5lYzoyODg4OC90b2tlbg==",
  
  apitoken:'blVZekRtZmdaelYyWmdEWWZCRklMbDVaNGJ3YToxdWRYQXV2bWFfc0dpcG5yUFhLbWpSb21HR0lh',
 
 
- //PRE-PRODUCCION
+ //PRE-PRODUCCION 
  //app_p : 'aHR0cHM6Ly9hcGlndy5xdXNraS5lYzo4MjQzL3F1c2tpLWdlbmVyaWMvMS4wLjAvcmVsYXRpdmUvZ2V0UmVsYXRpdmU',
  //agente supervisor
  //abu : 'aHR0cDovL2xvY2FsaG9zdDoyODA4MC9taWRhcy1vcm8tcmVzdC9yZXNvdXJjZXMvYWdlbnRlUmVzdENvbnRyb2xsZXIvYWdlbnRlT3JTdXBlcnZpc29yQnlVc2VybmFtZQ==',

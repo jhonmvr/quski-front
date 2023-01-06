@@ -66,6 +66,7 @@ import { PopUpNacimientoComponent } from './gestion-cliente/pop-up-nacimiento/po
 import { CrearRenovacionComponent } from './crear-renovacion/crear-renovacion.component';
 import { DetallePagoComponent } from './detalle-pago/detalle-pago.component';
 import { DetalleBloqueoComponent } from './detalle-bloqueo/detalle-bloqueo.component';
+import { DialogCargarAutorizacionComponent } from './gestion-negociacion/dialog-cargar-autorizacion/dialog-cargar-autorizacion.component';
 
 const routes: Routes = [
 	{
@@ -206,7 +207,8 @@ const routes: Routes = [
 		PopUpNacimientoComponent,
 		CrearRenovacionComponent,
 		DetallePagoComponent,
-		DetalleBloqueoComponent
+		DetalleBloqueoComponent,
+		DialogCargarAutorizacionComponent
 	],
 	entryComponents: [
 		ErrorCargaInicialComponent,
@@ -215,6 +217,7 @@ const routes: Routes = [
 		ReasignarUsuarioComponent,		
 		DialogCargarHabilitanteComponent,
 		PopUpNacimientoComponent,
+		DialogCargarAutorizacionComponent
 	]
 })
 export class NegociacionModule { }

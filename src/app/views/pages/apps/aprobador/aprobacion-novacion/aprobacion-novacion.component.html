@@ -42,8 +42,9 @@
             </mat-step>
             <mat-step label="Habilitantes">
                 <div class="row">
-                    <button varHabilitante mat-raised-button (click)="cambiarHabilitantes('NOVACION,FUNDA',item) " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button (click)="cambiarHabilitantes('NOVACION,FUNDA',item) " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE' || varHabilitante.proceso=='AUTORIZACION'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
                     <button varHabilitante mat-raised-button (click)="cambiarHabilitantes('CLIENTE',identificacion.value) " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
+                    <button varHabilitante mat-raised-button (click)="cambiarHabilitantes('AUTORIZACION',antOperacionMadre.value) " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='AUTORIZACION'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Autorizacion</button>
                 </div>
                 <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'" [referencia]="varHabilitante.referencia">
                 </re-habilitante>

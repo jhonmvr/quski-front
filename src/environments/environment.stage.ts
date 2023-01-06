@@ -79,6 +79,8 @@ export const environment = {
  seg_r :"aHR0cDovLzEwLjM3LjEwLjE1MDo4MDk0L1NvZnRiYW5rQVBJL2FwaS9zZWd1cmlkYWQv",
  //catalogo rol
  cat_r:"aHR0cDovLzEwLjM3LjEwLjE1MDo4MDk0L1NvZnRiYW5rQVBJL2FwaS9jYXRhbG9nby9yb2w=",
+ //catalogo division politica
+ cat_dp:"aHR0cDovLzEwLjM3LjEwLjE1MDo4MDk0L1NvZnRiYW5rQVBJL2FwaS9jYXRhbG9nby9kaXZpc2lvbnBvbGl0aWNh",
  //apigw
  api_t:"aHR0cHM6Ly8xMC4zNy4xMC4xODA6ODI0My90b2tlbg==",
  

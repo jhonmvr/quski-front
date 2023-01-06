@@ -22,7 +22,8 @@ export class DetalleNegociacionComponent implements OnInit {
   dataHistoricoOperativa;
   dataHistoricoObservacion;
   referencia;
-  titulo
+  titulo;
+  operacionMadre;
   public detalle: DetalleNegociacionWrapper;
   public catPais: Array<any>;
   public formDisable: FormGroup = new FormGroup({});
@@ -126,6 +127,7 @@ export class DetalleNegociacionComponent implements OnInit {
     this.correo.setValue( ap.credito.tbQoNegociacion.tbQoCliente.email );
     this.campania.setValue( ap.credito.tbQoNegociacion.tbQoCliente.campania );
     this.aprobadoMupi.setValue( ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S' ? 'Si' : 'No' );
+    this.operacionMadre = ap.credito.numeroOperacionMadre;
     !ap.telefonos ? null : ap.telefonos.forEach( e=>{
       if( e.tipoTelefono == 'CEL'){
         this.telefonoMovil.setValue( e.numero );

@@ -100,6 +100,13 @@ export class AutorizacionService  {
     return this.http.post<BaseWrapper>( atob(environment.cat_r), wp);
   }
 
+  public getCatalogoDivisionPolitica():Observable<any>{
+   
+    let wp = {};
+    
+    return this.http.post<BaseWrapper>( atob(environment.cat_dp), wp);
+  }
+
   public getPerfil(token:string, usuario:string):Observable<Array<RolWrapper>>{
     //console.log("=========> ejecuta getperfil");
    
@@ -123,15 +130,18 @@ export class AutorizacionService  {
         .pipe( 
           switchMap( dataParam=>this.getCatalogoRol( )
 					.pipe(  
-						switchMap( catalogoRol=>this.userReturn( usuariowp,dataParam,null, authData,catalogoRol )
+            switchMap( catalogoRol=>this.getCatalogoDivisionPolitica( )
+            .pipe(  
+						switchMap( catalogoDivision=>this.userReturn( usuariowp,dataParam,null, authData,catalogoRol, catalogoDivision )
           ) )
           ) ) 
+          ))
           
         
     ));
 	}
 
-  private userReturn(  dataLogin,dataParam,dataRoles:Array<RolWrapper>, credential, catalogoRol): Observable<UsuarioAuth>{
+  private userReturn(  dataLogin,dataParam,dataRoles:Array<RolWrapper>, credential, catalogoRol, catalogoDivision): Observable<UsuarioAuth>{
         
     ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: " ) ;
     ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: dataLogin " + JSON.stringify(dataLogin) ) ;
@@ -175,8 +185,10 @@ export class AutorizacionService  {
           localStorage.setItem("direccionAgencia",dataLogin.agencia.direccion); 
           localStorage.setItem("idResidenciaAgencia",dataLogin.agencia.idResidencia); 
           localStorage.setItem("idTevcolAgencia",dataLogin.agencia.idUbicacionTevcol); 
-
+          let m = catalogoDivision.catalogo.find(x => x.id == dataLogin.agencia.idResidencia);
+          localStorage.setItem("ciudadAgencia", m?m.nombre:''); 
         }
+        
         if(catalogoRol.catalogo){
           const x = catalogoRol.catalogo.find(p=>p.codigo == dataLogin.roles[0]);
           localStorage.setItem("nombreRol",x.nombre);
@@ -214,7 +226,7 @@ export class AutorizacionService  {
         return this.http.post(serviceUrl,id, options);
       }
 
-
+      
       
     getUserByToken(): Observable<User> {
         //console.log( "=====>mi getUserByToken " );
