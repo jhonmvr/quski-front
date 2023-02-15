@@ -66,8 +66,8 @@ export class AutorizacionService  {
       params:params
     };
     let keyUnencrypt = atob( dataParam[environment.prefix +'RE011']);
-    //Url de acceso al rootcontext de seguridad core-security-web
-    let token = atob(dataParam[environment.prefix +  'RE020']).replace(keyUnencrypt, '');
+    //RE021 para el token api de pruebas 
+    let token = atob(dataParam[environment.prefix +  'RE021']).replace(keyUnencrypt, '');
     localStorage.setItem(environment.token_type,'basic');
     localStorage.setItem(environment.access_token,token);
     
@@ -78,7 +78,7 @@ export class AutorizacionService  {
  
 
   public getRelative(token:string):Observable<any>{
-    //console.log("=========> ejecuta relative");
+    console.log("=========> ESTAN EN PRUEBAS ");
     
     const headersLoc= new HttpHeaders({
       //'Authorization':environment.authprefix+ token,
@@ -93,8 +93,9 @@ export class AutorizacionService  {
     return this.http.get<any>( atob(environment.app_p) , optionsLoc);
   }
 
-  public getCatalogoRol():Observable<any>{
-   
+  public getCatalogoRol(tokenApi):Observable<any>{
+    localStorage.setItem(environment.token_type,tokenApi.token_type );
+    localStorage.setItem(environment.access_token,tokenApi.access_token );
     let wp = {};
     
     return this.http.post<BaseWrapper>( atob(environment.cat_r), wp);
@@ -123,7 +124,7 @@ export class AutorizacionService  {
     return this.http.get<Array<RolWrapper>>(url,optionsLoc);
   }
 
-  public serverLogin(authData): Observable<UsuarioAuth>{
+  /* public serverLogin(authData): Observable<UsuarioAuth>{
 		return this.login( authData ) 
       .pipe( 
         switchMap( usuariowp=>this.getRelative( usuariowp.token )
@@ -139,8 +140,26 @@ export class AutorizacionService  {
           
         
     ));
-	}
+	} */
 
+  public serverLogin(authData): Observable<UsuarioAuth>{
+		return this.login( authData ) 
+      .pipe( 
+        switchMap( usuariowp=>this.getRelative( usuariowp.token )
+        .pipe( 
+          switchMap( dataParam=>this.getTokenApi(dataParam)
+			.pipe(
+			switchMap( tokenApi=>this.getCatalogoRol(tokenApi )
+					.pipe( 
+            switchMap( catalogoRol=>this.getCatalogoDivisionPolitica( )
+					.pipe(  
+						switchMap( catalogoDivision=>this.userReturn( usuariowp,dataParam,null, authData,catalogoRol, catalogoDivision )
+          ) )
+          ) ) 
+          ) )
+          ) )
+    ));
+	}
   private userReturn(  dataLogin,dataParam,dataRoles:Array<RolWrapper>, credential, catalogoRol, catalogoDivision): Observable<UsuarioAuth>{
         
     ////console.log( "++>FLAT MAP BUSCANDO PARAMETROS: " ) ;
