@@ -10,8 +10,8 @@
     </re-portlet-header>
     <re-portlet-body>
         <mat-vertical-stepper #stepper (animationDone)="guardarTraking('RENOVACION',
-        credit ? credit.operacionAnterior ? credit.operacionAnterior.codigo : null : null, 
-        ['Información Operación','Variables Crediticias','Detalle de garantias','Simular opciones de crédito'], 
+        credit ? credit.operacionAnterior ? credit.operacionAnterior.codigo : null : null,
+        ['Información Operación','Variables Crediticias','Detalle de garantias','Simular opciones de crédito'],
         stepper.selectedIndex, 'CREAR RENOVACION',
         credit ? credit.operacionAnterior ? credit.operacionAnterior.numeroOperacion : null : null )">
             <mat-step label='Información Operación'>
@@ -180,9 +180,7 @@
                             <ng-container matColumnDef="plazo">
                                 <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
                                 <mat-cell *matCellDef="let element">
-                                    {{ element.plazo ? element.plazo == '100' ? '100 Dias (Al Vcto.)' :element.plazo == '130' ? '130 Dias (Al Vcto.)' :element.plazo == '60' ? '60 Dias (Al Vcto.)' : element.plazo == '31' ? '31 Dias (Al Vcto.)' : element.plazo == '90' ? '90 Dias (Al Vcto.)'
-                                    : element.plazo == '120' ? '120 Dias (Al Vcto.)' : element.plazo == '6' ? '6 Cuotas' : element.plazo == '4' ? '4 Cuotas' : element.plazo == '7' ? '7 Cuotas' : element.plazo == '11' ? '11 Cuotas' : element.plazo == '13'
-                                    ? '13 Cuotas' : element.plazo == '9' ? '9 Cuotas' : element.plazo == '12' ? '12 Cuotas' : element.plazo == '18' ? '18 Cuotas' : element.plazo : 'Error' }}
+                                    {{ element.descripcion}}
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="periodoPlazo">

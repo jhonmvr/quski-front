@@ -422,8 +422,7 @@
                     <ng-container matColumnDef="plazo">
                         <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                            {{ element.plazo ? element.plazo == '60' ? '60 Dias (Al Vcto.)' : element.plazo == '90' ? '90 Dias (Al Vcto.)' : element.plazo == '120' ? '120 Dias (Al Vcto.)' : element.plazo == '6' ? '6 Cuotas' : element.plazo == '9' ? '9 Cuotas' : element.plazo ==
-                            '12' ? '12 Cuotas' : element.plazo == '18' ? '18 Cuotas' : element.plazo : 'Error' }}
+                            {{ element.descripcion }}
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="periodoPlazo">
@@ -597,7 +596,7 @@
                         </div>
                         <div class="col-md-2">
                             <button mat-stroked-button color="primary" (click)="calcularOpciones(this.montoSolicitado.value)" matTooltip="Recalcula las opciones con el Monto solicitado" matTooltipPosition="above">
-								<mat-icon style="font-size: 24px;" color="primary" >crop_rotate 
+								<mat-icon style="font-size: 24px;" color="primary" >crop_rotate
 								</mat-icon>
 								<span color="primary">Aplicar Monto</span>
 							</button>
