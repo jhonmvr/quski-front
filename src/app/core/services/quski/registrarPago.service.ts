@@ -30,7 +30,7 @@ import { ReNoticeService } from '../re-notice.service';
       )
     );
   }
-  /*   
+  /*
   public crearRegistrarComprobanteRenovacion(registro) {
     const serviceUrl = this.appResourcesUrl + 'registrarPagoRestController/crearRegistrarComprobanteRenovacion';
     this.options = { headers: this.headers, params: this.params };
@@ -40,14 +40,24 @@ import { ReNoticeService } from '../re-notice.service';
         error => {  }
       )
     );
-  } 
+  }
   */
 
   public iniciarProcesoRegistrarPago(registro) {
     const serviceUrl = this.appResourcesUrl + 'registrarPagoRestController/iniciarProcesoRegistrarPago';
     this.options = { headers: this.headers };
     return this.http.post(serviceUrl, registro, this.options).pipe(
-      tap( 
+      tap(
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  public aprobarBotPago(registro) {
+    const serviceUrl = this.appResourcesUrl + 'registrarPagoRestController/aprobarBotPago';
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, registro, this.options).pipe(
+      tap(
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
@@ -132,5 +142,5 @@ import { ReNoticeService } from '../re-notice.service';
       )
     );
   }
-  
+
 }

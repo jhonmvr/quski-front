@@ -117,7 +117,7 @@ export class RegistrarPagoComponent extends TrackingUtil implements OnInit {
             this.tipoCredito.setValue(row.tipoCredito);
             this.consultaRubros(row.numeroOperacion);
             this.simulacionPrecancelacion(row.numeroOperacion);
-            datosCabecera.numeroCuenta = dta.entidad.numeroCuenta;            
+            datosCabecera.numeroCuenta = dta.entidad.numeroCuenta;
             this.layoutService.setDatosContrato(datosCabecera);
           }
         });
@@ -156,7 +156,7 @@ export class RegistrarPagoComponent extends TrackingUtil implements OnInit {
     const dialogRef = this.dialog.open(PopupPagoComponent, {
       width: "800px",
       height: "auto",
-      data: { id: null, banco: this.datosMupi.institucionFinanciera, numeroCuenta: this.datosMupi.numeroCuenta }
+      data: { id: null, banco: this.datosMupi?this.datosMupi.institucionFinanciera:'', numeroCuenta: this.datosMupi?this.datosMupi.numeroCuenta:'' }
     });
     dialogRef.afterClosed().subscribe(r => {
       if (r) {
@@ -236,7 +236,7 @@ export class RegistrarPagoComponent extends TrackingUtil implements OnInit {
           observacion: this.observacion.value,
           valorDepositado: this.valorDepositado.value,
           valorPrecancelado: this.valorPreCancelado.value,
-          idBanco: this.datosMupi.institucionFinanciera,
+          idBanco: this.datosMupi?this.datosMupi.institucionFinanciera:'',
           tipoPagoProceso: this.tipoPagoProceso.value.valor,
           mailAsesor:localStorage.getItem('email'),
           montoCredito:this.informacionCredito.montoFinanciado,
@@ -248,6 +248,9 @@ export class RegistrarPagoComponent extends TrackingUtil implements OnInit {
         //console.log('wrapper => ', wrapper);
         this.reg.iniciarProcesoRegistrarPago(wrapper).subscribe((data: any) => {
           if (data.entidad && data.entidad.proceso && data.entidad.proceso.estadoProceso == "PENDIENTE_APROBACION") {
+            this.reg.aprobarBotPago(data.entidad).subscribe(p=>{
+              console.log("paog",p)
+            });
             this.codigoBPM= data.entidad.cliente.codigo;
             this.sinNoticeService.setNotice("PROCESO CREADO BAJO EL CODIGO BPM: " + data.entidad.cliente.codigo + ".", 'success');
             this.router.navigate(['negociacion/bandeja-operaciones']);

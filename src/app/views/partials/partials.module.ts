@@ -141,6 +141,7 @@ import { ExploradorComponent } from './custom/explorador/explorador.component';
 import { ArbolComponent } from './custom/arbol/arbol.component';
 import { ContenidoComponent } from './custom/contenido/contenido.component';
 import { PathComponent } from './custom/path/path.component';
+import { ValidacionDocumentoComponent } from './custom/secciones-generales/validacion-documento/validacion-documento.component';
 
 
 
@@ -233,8 +234,9 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		ExploradorComponent,
 		ArbolComponent,
 		ContenidoComponent,
-		PathComponent
-	
+		PathComponent,
+		ValidacionDocumentoComponent
+
 
 	],
 	exports: [
@@ -306,7 +308,8 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		ExploradorComponent,
 		ArbolComponent,
 		ContenidoComponent,
-		PathComponent
+		PathComponent,
+		ValidacionDocumentoComponent
 
 	],
 	imports: [

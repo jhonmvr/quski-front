@@ -11,7 +11,8 @@ import { ReNoticeService } from '../re-notice.service';
   providedIn: 'root'
 })
 export class CreditoNegociacionService extends BaseService {
- 
+
+
 
   urlRest = "creditoNegociacionRestController/";
 
@@ -46,7 +47,7 @@ export class CreditoNegociacionService extends BaseService {
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
-  }   
+  }
   public buscarRenovacionByIdNegociacion( idNegociacion: number) {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + 'creditoNegociacionRestController/buscarRenovacionByIdNegociacion';
@@ -58,7 +59,7 @@ export class CreditoNegociacionService extends BaseService {
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
-  }  
+  }
   public consultarTablaAmortizacion( numeroOperacion: string, agencia: number, usuario: string) {
     this.setParameter();
     const serviceUrl = this.appResourcesUrl + 'creditoNegociacionRestController/consultarTablaAmortizacion';
@@ -85,7 +86,7 @@ export class CreditoNegociacionService extends BaseService {
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
-  }  
+  }
   public solicitarAprobacionNuevo( idNegociacion, correoAsesor, nombreAsesor, observacionAsesor) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "solicitarAprobacionNuevo" ;
     this.params = new HttpParams().set('idNegociacion', idNegociacion).set('correoAsesor', correoAsesor).set('nombreAsesor', nombreAsesor).set('observacionAsesor',observacionAsesor);
@@ -96,7 +97,7 @@ export class CreditoNegociacionService extends BaseService {
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
-  }  
+  }
   public solicitarAprobacionRenovacion( idNegociacion, correoAsesor, nombreAsesor, observacionAsesor) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "solicitarAprobacionRenovacion" ;
     this.params = this.params.set('idNegociacion',idNegociacion);
@@ -110,7 +111,7 @@ export class CreditoNegociacionService extends BaseService {
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
-  }  
+  }
   public crearOperacionRenovacion( credito: TbQoCreditoNegociacion, pagos : any[], asesor: string) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "crearOperacionRenovacion" ;
     this.options = { headers: this.headers };
@@ -306,6 +307,29 @@ export class CreditoNegociacionService extends BaseService {
   findHistoricoOperativaByidNegociacion(idCredito: any) {
     let serviceUrl = this.appResourcesUrl + "historicoOperativaRestController/byIdCredito" ;
     this.params = new HttpParams().set('idCredito', idCredito);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl,  this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+
+  validacionDocumento(idNegociacion: number) {
+    let serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/solicitarValidarDocumento" ;
+    this.params = new HttpParams().set('idNegociacion', idNegociacion.toString());
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl,  this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  listValidacionDocumento(idNegociacion: number) {
+    let serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/listValidacionDocumento" ;
+    this.params = new HttpParams().set('idNegociacion', idNegociacion.toString());
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl,  this.options).pipe(
       tap( // Log the result or error

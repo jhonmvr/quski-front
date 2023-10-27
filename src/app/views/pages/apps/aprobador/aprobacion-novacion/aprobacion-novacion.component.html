@@ -17,8 +17,8 @@
 
     <re-portlet-body>
         <mat-vertical-stepper #stepper (animationDone)="guardarTraking('RENOVACION',
-        crediW ? crediW.credito ? crediW.credito.codigo : null : null, 
-        ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de Operacion Anterior','Resultado de la operación'], 
+        crediW ? crediW.credito ? crediW.credito.codigo : null : null,
+        ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de Operacion Anterior','Resultado de la operación'],
         stepper.selectedIndex, 'APROBACION CREDITO RENOVACION',
         crediW ? crediW.credito ? crediW.credito.numeroOperacion : null : null )">
             <mat-step label="Información Operación">
@@ -48,6 +48,7 @@
                 </div>
                 <re-habilitante [proceso]="varHabilitante.proceso" [useType]="'FORM'" [referencia]="varHabilitante.referencia">
                 </re-habilitante>
+                <kt-validacion-documento [idNegociacion]="item"></kt-validacion-documento>
             </mat-step>
             <mat-step label="Datos Del Cliente">
                 <mat-tab-group mat-align-tabs="start">
@@ -860,7 +861,7 @@
                                     <a *ngIf="row.idComprobante" (click)="descargarComprobante(row)">
                                         <mat-icon matTooltip="Descargar">vertical_align_bottom</mat-icon>
                                     </a>
-                                </mat-cell>					
+                                </mat-cell>
                             </ng-container> -->
                             <mat-header-row *matHeaderRowDef="displayedColumnsComprobante"></mat-header-row>
                             <mat-row *matRowDef="let row; columns: displayedColumnsComprobante;"></mat-row>
