@@ -14,9 +14,9 @@ import { ConfirmarAccionComponent } from '../../../../partials/custom/popups/con
 
 export interface Agencia{
   id: number;
-  nombre: string; 
+  nombre: string;
   direccion: string;
-  idResidencia: number; 
+  idResidencia: number;
 }
 
 @Component({
@@ -29,7 +29,7 @@ export class BandejaAprobadorComponent implements OnInit {
   public usuario: string;
   public catAgencia : Array<Agencia>;
   public catProceso : Array<string>;
-  
+
   /** ** @FORMULARIO ** */
   public formFiltro: FormGroup = new FormGroup({});
   public cedula   = new FormControl('', [Validators.minLength(10), Validators.maxLength(10)]);
@@ -40,14 +40,14 @@ export class BandejaAprobadorComponent implements OnInit {
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   dataSource = new MatTableDataSource<OperacionesAprobadorWrapper>();
-  displayedColumns = ['accion', 'codigoBpm', 'codigoOperacion', 'proceso', 'fechaSolicitud', 'cedulaCliente', 'nombreCliente', 'nombreAgencia', 'asesor', 'aprobador'];
+  displayedColumns = ['accion', 'codigoBpm', 'codigoOperacion', 'proceso', 'fechaSolicitud', 'cedulaCliente', 'nombreCliente', 'nombreAgencia', 'asesor', 'aprobador','aciertos'];
   constructor(
     private pro: ProcesoService,
     private sof: SoftbankService,
     private router: Router,
     private dialog: MatDialog,
     private sinNotSer: ReNoticeService
-  ) { 
+  ) {
     /** ** @FORMULARIO ** */
     this.formFiltro.addControl("cedula", this.cedula);
     this.formFiltro.addControl("codigo", this.codigo);
@@ -66,7 +66,7 @@ export class BandejaAprobadorComponent implements OnInit {
   private buscarOperaciones(wrapper?: BusquedaAprobadorWrapper) {
     this.pro.buscarOperacionesAprobador(wrapper).subscribe( (data: any) =>{
       if( data.entidad  && data.entidad.operaciones){
-       
+
         this.dataSource = new MatTableDataSource<any>(data.entidad.operaciones);
         this.paginator.length = data.entidad.result;
       } else {
@@ -81,7 +81,7 @@ export class BandejaAprobadorComponent implements OnInit {
        const age = this.catAgencia.find(p=>p.id ==idAgencia);
        return age?age.nombre:'SIN AGENCIA'
     }
-    
+
   }
    /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @FUNCIONALIDAD ** */
    public getErrorMessage(pfield: string) {
@@ -149,7 +149,7 @@ export class BandejaAprobadorComponent implements OnInit {
       if(limite || pagina){
          w = new BusquedaAprobadorWrapper(this.paginator.pageSize,this.paginator.pageIndex);
       }else{
-        this.paginator.pageIndex = 0; 
+        this.paginator.pageIndex = 0;
          w = new BusquedaAprobadorWrapper(this.paginator.pageSize);
       }
       if(this.codigo.value != "" && this.codigo.value != null){
@@ -185,22 +185,22 @@ export class BandejaAprobadorComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(r => {
           if(r){
-            
+
               this.asignar(row);
-            
+
           }else{
             this.sinNotSer.setNotice('NO SE ASIGNO LA OPERACION','info');
           }
-    
+
         });
       }else if(data.entidad == this.usuario){
         if(row.proceso =="NUEVO"){
           this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-          this.router.navigate(['aprobador/aprobacion-credito-nuevo/',row.idReferencia]);    
+          this.router.navigate(['aprobador/aprobacion-credito-nuevo/',row.idReferencia]);
         }
         if(row.proceso =="RENOVACION"){
           this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-          this.router.navigate(['aprobador/aprobacion-novacion/',row.idReferencia]);    
+          this.router.navigate(['aprobador/aprobacion-novacion/',row.idReferencia]);
         }
         if(row.proceso =="PAGO" && row.codigo.includes('PAGO') ){
           this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
@@ -208,7 +208,7 @@ export class BandejaAprobadorComponent implements OnInit {
         }
         if(row.proceso =="PAGO" && row.codigo.includes('BLOQ') ){
           this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-          this.router.navigate(['aprobador/gestion-credito/aprobar-bloqueo-fondos/',row.idReferencia]);  
+          this.router.navigate(['aprobador/gestion-credito/aprobar-bloqueo-fondos/',row.idReferencia]);
         }
         if(row.proceso =="DEVOLUCION"){
           this.pro.findByIdReferencia(row.idReferencia, row.proceso).subscribe( (dat:any) =>{
@@ -220,16 +220,16 @@ export class BandejaAprobadorComponent implements OnInit {
               this.sinNotSer.setNotice("OPERACION DE SOLICITUD DE DEVOLUCION ASIGNADA A: "+ data.entidad,"success");
             }
           });
-        } 
+        }
         if(row.proceso =="CANCELACION_DEVOLUCION"){
           this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
           this.router.navigate(['devolucion/aprobacion-cancelacion-solicitud/', row.id]);
         }
-        
+
         if(row.proceso =="VERIFICACION_TELEFONICA"){
           this.sinNotSer.setNotice("APROBACION VERIFICACION TELEFONICA, SIN DESARROLLO",'warning');
           this.limpiarFiltros();
-          this.router.navigate(['aprobador']);    
+          this.router.navigate(['aprobador']);
         }
       }
     });
@@ -240,11 +240,11 @@ export class BandejaAprobadorComponent implements OnInit {
       if(data.entidad){
         if(row.proceso =="NUEVO"){
           this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-          this.router.navigate(['aprobador/aprobacion-credito-nuevo/',row.idReferencia]);    
+          this.router.navigate(['aprobador/aprobacion-credito-nuevo/',row.idReferencia]);
         }
         if(row.proceso =="RENOVACION"){
           this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-          this.router.navigate(['aprobador/aprobacion-novacion/',row.idReferencia]);    
+          this.router.navigate(['aprobador/aprobacion-novacion/',row.idReferencia]);
         }
         if(row.proceso =="PAGO" && row.codigo.includes('PAGO') ){
           this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
@@ -252,7 +252,7 @@ export class BandejaAprobadorComponent implements OnInit {
         }
         if(row.proceso =="PAGO" && row.codigo.includes('BLOQ') ){
           this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
-          this.router.navigate(['aprobador/gestion-credito/aprobar-bloqueo-fondos/',row.idReferencia]);  
+          this.router.navigate(['aprobador/gestion-credito/aprobar-bloqueo-fondos/',row.idReferencia]);
         }
         if(row.proceso =="DEVOLUCION"){
           this.pro.findByIdReferencia(row.idReferencia, row.proceso).subscribe( (dat:any) =>{
@@ -264,16 +264,16 @@ export class BandejaAprobadorComponent implements OnInit {
               this.sinNotSer.setNotice("OPERACION DE SOLICITUD DE DEVOLUCION ASIGNADA A: "+ data.entidad,"success");
             }
           });
-        } 
+        }
         if(row.proceso =="CANCELACION_DEVOLUCION"){
           this.sinNotSer.setNotice("OPERACION ASIGNADA A: "+data.entidad,"success");
           this.router.navigate(['devolucion/aprobacion-cancelacion-solicitud/', row.id]);
         }
-        
+
         if(row.proceso =="VERIFICACION_TELEFONICA"){
           this.sinNotSer.setNotice("APROBACION VERIFICACION TELEFONICA, SIN DESARROLLO",'warning');
           this.limpiarFiltros();
-          this.router.navigate(['aprobador']);    
+          this.router.navigate(['aprobador']);
         }
       }
     });
