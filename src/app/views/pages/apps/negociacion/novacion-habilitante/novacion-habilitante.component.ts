@@ -66,8 +66,8 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   item: any;
   private agencia: any;
   mySelections: string[];
-  
-  
+
+
 
   constructor(
     private cre: CreditoNegociacionService,
@@ -83,7 +83,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     public tra: TrackingService
 
 
-  ) { 
+  ) {
     super(tra);
     this.cre.setParameter();
     this.sof.setParameter();
@@ -124,9 +124,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
         this.layouteService.setDatosContrato(datosCabecera);
       });
       if (json.params.idNegociacion) {
-        
+
         this.item = json.params.idNegociacion;
-        
+
         this.cre.buscarRenovacionByIdNegociacion(this.item).subscribe((data: any) => {
           this.credit = data.entidad;
           //Valor neto a recibir
@@ -135,10 +135,10 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
             this.recibirOPagar = 'warn';
           }else if( this.recibirPagar > 0){
 
-            this.recibirOPagar = 'primary'; 
+            this.recibirOPagar = 'primary';
 
           }
-          
+
           if(data.entidad && data.entidad.credito && data.entidad.credito.id){
             this.findHistoricoObservacionByCredito(data.entidad.credito.id);
           }
@@ -148,7 +148,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
             this.abrirSalirGestion("Error al intentar cargar el credito.");
           }
         });
-      } 
+      }
     });
   }
   private cargarCampos(wr) {
@@ -168,11 +168,11 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.firmanteOperacion.disable();
     //this.diaFijoPago.setValue(new Date(this.credit.credito.pagoDia) );
     if(wr.credito.excepcionOperativa && this.catExcepcionOperativa){
-      
-      let excepcionesOperativas = wr.credito.excepcionOperativa.split(',').map( ex=>{ 
+
+      let excepcionesOperativas = wr.credito.excepcionOperativa.split(',').map( ex=>{
         return this.catExcepcionOperativa.find( p => p.valor == ex );
       } );
-      
+
       this.excepcionOperativa.setValue(excepcionesOperativas);
       if(this.excepcionOperativa.value && this.excepcionOperativa.value.find(p=>p.valor == 'SIN EXCEPCION') ){
         this.fechaRegularizacion.disable();
@@ -186,16 +186,16 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       this.fechaRegularizacion.disable();
       this.fechaRegularizacion.setValue(null);
     }
-    
-    
+
+
     wr.pagos ? this.dataSourceComprobante = new MatTableDataSource<any>(wr.pagos) : null;
     if( this.dataSourceComprobante.data ){
       this.dataSourceComprobante.data.forEach( e =>{
         e.intitucionFinanciera = this.catCuenta ? this.catCuenta.find(x => x.id == e.intitucionFinanciera) ? this.catCuenta.find(x => x.id == e.intitucionFinanciera) : {nombre: 'Error cargando catalogo'}: {nombre: 'Error cargando catalogo'};
       });
     }
-    this.guardarTraking('RENOVACION', wr ? wr.credito ? wr.credito.codigo : null : null, 
-      ['Información Operación','Detalle de garantias','Simular opciones de crédito'], 
+    this.guardarTraking('RENOVACION', wr ? wr.credito ? wr.credito.codigo : null : null,
+      ['Información Operación','Detalle de garantias','Simular opciones de crédito'],
       0, 'CREAR RENOVACION', wr ? wr.credito ? wr.credito.numeroOperacion : null : null );
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.credito.codigo + ".", "success");
   }
@@ -241,7 +241,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.loadComprobante.next(false);
   }
   public solicitarAprobacion(){
-    
+
     if(this.formOperacion.valid){
       let mensaje = "Solicitar la aprobacion del credito: " + this.credit.credito.codigo;
       const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
@@ -255,12 +255,15 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
             if(data.entidad){
               this.sinNotSer.setNotice('CREDITO ENVIADO A APROBACION FABRICA','success');
               this.router.navigate(['negociacion/bandeja-operaciones']);
+              this.cre.validacionDocumento(this.credit.credito.tbQoNegociacion.id).subscribe(a=>{
+
+              });
             }
           });
         }else{
           this.sinNotSer.setNotice('SE CANCELO LA ACCION','warning');
         }
-      });  
+      });
     }else{
       this.sinNotSer.setNotice('Complete los campos correctamente','warning');
     }
@@ -273,7 +276,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.credit.credito.numeroCuenta = this.numeroCuenta.value;
     this.credit.credito.pagoDia = this.diaFijoPago.value;
     this.credit.credito.firmanteOperacion = this.firmanteOperacion.value.nombre;
-   
+
     if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor !== 'SIN EXCEPCION' && this.fechaRegularizacion.invalid){
       this.sinNotSer.setNotice('SELECCIONE UNA FECHA DE REGULARIZACION', 'warning');
       return;
@@ -334,7 +337,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.dataSourceComprobante.data = data;
   }
   public descargarComprobante(row){
-    saveAs(this.cre.dataURItoBlob(row.comprobante.fileBase64), row.comprobante.name);    
+    saveAs(this.cre.dataURItoBlob(row.comprobante.fileBase64), row.comprobante.name);
   }
   /** @FUNCIONALIDAD */
   private cargarCatalogos(){
@@ -425,9 +428,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
   }
 
-   //validacion de los dias 27 - 30 
+   //validacion de los dias 27 - 30
    onlyOdds = (d: Date): boolean => {
-    const date = d.getDate(); 
+    const date = d.getDate();
     return date<27;
   }
 }

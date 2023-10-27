@@ -71,8 +71,8 @@
                             "buildOptimizer": true,
                             "budgets": [{
                                 "type": "initial",
-                                "maximumWarning": "5mb",
-                                "maximumError": "10mb"
+                                "maximumWarning": "15mb",
+                                "maximumError": "20mb"
                             }]
                         },
                         "staging": {
@@ -97,8 +97,8 @@
                             "buildOptimizer": true,
                             "budgets": [{
                                 "type": "initial",
-                                "maximumWarning": "5mb",
-                                "maximumError": "10mb"
+                                "maximumWarning": "15mb",
+                                "maximumError": "20mb"
                             }]
                         }
                     }

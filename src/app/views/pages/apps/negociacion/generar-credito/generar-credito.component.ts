@@ -59,14 +59,14 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   public fechaCuota = new FormControl('', [Validators.required]);
   public fechaSistema = new FormControl('', [Validators.required]);
   public fechaUtil: diferenciaEnDias;
-  
+
   /** @FORM_FUNDA **/
   public formFunda: FormGroup = new FormGroup({});
   public pesoFunda = new FormControl('', [Validators.required]);
   public numeroFunda = new FormControl('');
   public totalPesoBrutoFunda = new FormControl('');
   public totalPesoNeto = new FormControl('');
-  
+
   /** @FORM_INSTRUCCION **/
   public formInstruccion: FormGroup = new FormGroup({});
   public tipoCuenta = new FormControl('', [Validators.required]);
@@ -114,7 +114,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   //dia de pago
   diasMax;
   diasMin;
-  
+
   mySelections: string[];
   //negociacion
   dataSourceCreditoNegociacion = new MatTableDataSource<any>();
@@ -154,13 +154,13 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.formInformacion.addControl("cedulaCliente", this.cedulaCliente);
     this.formInformacion.addControl("nombreCompleto", this.nombreCompleto);
     this.formFecha.addControl("fechaSistema", this.fechaSistema);
-    
+
     this.formFecha.addControl("fechaCuota", this.fechaCuota);
     this.formFunda.addControl("pesoFunda", this.pesoFunda);
     this.formFunda.addControl("numeroFunda", this.numeroFunda);
     this.formFunda.addControl("totalPesoBrutoFunda", this.totalPesoBrutoFunda);
     this.formFunda.addControl("totalPesoNeto", this.totalPesoNeto);
-    
+
     this.formInstruccion.addControl("tipoCuenta", this.tipoCuenta);
     this.formInstruccion.addControl("numeroCuenta", this.numeroCuenta);
     this.formInstruccion.addControl("firmanteOperacion", this.firmanteOperacion);
@@ -176,7 +176,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.formCredito.addControl("pagarCliente", this.pagarCliente);
     this.formCredito.addControl("riesgoTotalCliente", this.riesgoTotalCliente);
     this.formCredito.addControl("recibirCliente", this.recibirCliente);
-  
+
   }
 
   ngOnInit() {
@@ -285,8 +285,8 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       });
     }
     if(data.credito.excepcionOperativa && this.catExcepcionOperativa){
-      
-      let excepcionesOperativas = data.credito.excepcionOperativa.split(',').map( ex=>{ 
+
+      let excepcionesOperativas = data.credito.excepcionOperativa.split(',').map( ex=>{
         return this.catExcepcionOperativa.find( p => p.valor == ex );
       } );
       this.excepcionOperativa.setValue(excepcionesOperativas);
@@ -306,7 +306,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.cargarFotoHabilitante(this.joyaFoto.tipoDocumento, this.joyaFoto.proceso, data.credito.tbQoNegociacion.id.toString());
     if( data.credito.numeroFunda){
       this.fechaCuota.setValue(data.credito.pagoDia ? new Date(data.credito.pagoDia) : null);
-      
+
       this.pesoFunda.setValue( this.catTipoFunda ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) ? this.catTipoFunda.find(x => x.codigo == data.credito.codigoTipoFunda) : null : null )
       this.numeroFunda.setValue( data.credito.numeroFunda ? data.credito.numeroFunda : null);
       let totalPesoB :any = 0 ;
@@ -314,12 +314,12 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       this.operacionNuevo.joyas.forEach(e =>{
         totalPesoB  = (Number(totalPesoB) + Number( e.pesoBruto )).toFixed(2);
         totalPesoN  = (Number(totalPesoN) + Number( e.pesoNeto )).toFixed(2);
-        
+
       });
 
      try{
       const x = Number(this.pesoFunda.value.codigo)+ Number(totalPesoB) ;
-      
+
       this.totalPesoBrutoFunda.setValue( x.toFixed(2) );
      }catch{
        console.log("error en la suma de funda y peso bruto");
@@ -333,8 +333,8 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     let x = new Array()
     x.push(data.credito);
     this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(x);
-    this.guardarTraking('NUEVO', this.operacionNuevo ? this.operacionNuevo.credito ? this.operacionNuevo.credito.codigo : null : null, 
-        ['Información Operación','Día de pago','Asignacion de Funda','Datos Instruccion Operativa','Datos del Credito nuevo','Documento Habilitantes'], 
+    this.guardarTraking('NUEVO', this.operacionNuevo ? this.operacionNuevo.credito ? this.operacionNuevo.credito.codigo : null : null,
+        ['Información Operación','Día de pago','Asignacion de Funda','Datos Instruccion Operativa','Datos del Credito nuevo','Documento Habilitantes'],
         0, 'GENERAR CREDITO',
         this.operacionNuevo ? this.operacionNuevo.credito ? this.operacionNuevo.credito.numeroOperacion : null : null );
   }
@@ -353,7 +353,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       this.router.navigate(['negociacion/bandeja-operaciones']);
     });
   }
-  private obtenerCatalogosSoftbank() { 
+  private obtenerCatalogosSoftbank() {
     this.sof.consultarTipoFundaCS().subscribe((data: any) => {
       this.catTipoFunda = !data.existeError ? data.catalogo : "Error al cargar catalogo";
       this.sof.consultarFirmanteOperacionCS().subscribe((data: any) => {
@@ -411,33 +411,33 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       this.operacionNuevo.credito.tbQoNegociacion.asesor = atob(localStorage.getItem(environment.userKey));
       this.operacionNuevo.credito.idAgencia = this.agencia;
       this.operacionNuevo.credito.firmanteOperacion = this.firmanteOperacion.value;
-  
+
       this.cre.numeroDeFunda( this.operacionNuevo.credito ).subscribe( (data: any) =>{
         if(data.entidad){
           this.anular = true;
-          this.numeroFunda.setValue( data.entidad.numeroFunda ); 
+          this.numeroFunda.setValue( data.entidad.numeroFunda );
           let totalPesoB :any = 0 ;
           let totalPesoN :any = 0 ;
           this.operacionNuevo.joyas.forEach(e =>{
             totalPesoB  = (Number(totalPesoB) + Number( e.pesoBruto )).toFixed(2);
             totalPesoN  = (Number(totalPesoN) + Number( e.pesoNeto )).toFixed(2);
-            
+
           });
-          
+
           this.totalPesoBrutoFunda.setValue( Number(this.pesoFunda.value.codigo) + Number(totalPesoB) );
           this.totalPesoNeto.setValue( totalPesoN );
-        }else{ 
+        }else{
           this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
         }
       });
     }
-    
+
   }
   public  regresar(){
     this.router.navigate(['negociacion/gestion-cliente/NEG/',this.item]);
   }
   public generarCredito(anular?: boolean ) {
-    
+
     if(this.observacionAsesor.invalid){
       this.sinNotSer.setNotice("ERROR EN OBSERVACION ASESOR",'warning');
       return;
@@ -462,16 +462,16 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
           this.pro.getCabecera(this.item,'NUEVO').subscribe(datosCabecera=>{
             this.layoutService.setDatosContrato(datosCabecera);
           });
-          this.operacionSoft = data.entidad;  
+          this.operacionSoft = data.entidad;
           this.cargarOperacion( this.operacionSoft.credito );
-        }else{ 
+        }else{
           this.sinNotSer.setNotice('Error en servicio. No se creo la operacion. Preguntar a soporte.', 'error');
         }
       });
     }else{
       this.sinNotSer.setNotice('Complete todos los campos solicitados.', 'error');
     }
-  } 
+  }
   private cargarOperacion( data: TbQoCreditoNegociacion ){
     this.tipoCartera.setValue( data.tipoCarteraQuski );
     this.descripcionProducto.setValue( data.descripcionProducto );
@@ -482,13 +482,13 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.cuotas.setValue( data.valorCuota );
     this.pagarCliente.setValue( data.aPagarCliente );
     this.recibirCliente.setValue( data.aRecibirCliente );
-    this.numeroFunda.setValue( data.numeroFunda ); 
+    this.numeroFunda.setValue( data.numeroFunda );
     this.anular = data.numeroFunda?true:false;
     this.numeroOperacion.setValue( data.numeroOperacion );
     this.deudaInicial.setValue( data.deudaInicial );
     this.stepper.selectedIndex = data.periodoPlazo != 'D' ? 4 : 3;
-    this.fechaVencimiento.setValue( data.fechaVencimiento ); 
-    this.fechaEfectiva.setValue( data.fechaEfectiva); 
+    this.fechaVencimiento.setValue( data.fechaVencimiento );
+    this.fechaEfectiva.setValue( data.fechaEfectiva);
     if(this.operacionSoft && this.operacionSoft.cuotasAmortizacion){
       if(this.operacionNuevo && this.operacionNuevo.credito.periodoPlazo == 'C'){
         console.log("total==>",this.operacionSoft.cuotasAmortizacion[0].total);
@@ -509,7 +509,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
           this.flagSolicitud.next(true);
         }
       }
-      
+
     }
     if(!this.operacionSoft){
       this.cre.consultarTablaAmortizacion( data.numeroOperacion, this.agencia, atob(localStorage.getItem(environment.userKey) ))
@@ -517,7 +517,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
           if(data.entidades){
             this.operacionSoft = new OperacionSoft();
             this.operacionSoft.cuotasAmortizacion = data.entidades;
-           
+
           }
       });
     }
@@ -620,6 +620,9 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
           this.cre.solicitarAprobacionNuevo(this.operacionNuevo.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor, this.observacionAsesor.value).subscribe( (data: any) =>{
             if(data){
               this.router.navigate(['negociacion/bandeja-operaciones']);
+              this.cre.validacionDocumento(this.operacionNuevo.credito.tbQoNegociacion.id).subscribe(a=>{
+
+              });
             }
           });
         }else{
@@ -634,9 +637,9 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       return this.operacionNuevo.joyas.map(t=>t[xd]).reduce((r, n) =>r+n,0);
     }
   }
-  //validacion de los dias 25 - 30 
+  //validacion de los dias 25 - 30
   onlyOdds = (d: Date): boolean => {
-    const date = d.getDate(); 
+    const date = d.getDate();
     return date<27;
   }
 }
