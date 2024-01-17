@@ -1249,6 +1249,11 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     return numSelected === numRows;
   }
   guardarCredito() {
+    if (this.formDatosCliente.invalid) {
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    }
     /* if (this.codigoError == 3) {
      
       this.abrirPopupExcepciones(new DataInjectExcepciones(false, true, false));
