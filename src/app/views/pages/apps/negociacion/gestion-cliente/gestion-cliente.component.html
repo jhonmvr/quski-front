@@ -163,6 +163,15 @@
                                 </mat-form-field>
                             </form>
                         </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select placeholder="Etnia:" [formControl]="etnia">
+                                    <mat-option *ngFor="let element of catEtnia" [value]="element">
+                                        {{ element.nombre }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
                         <!-- <div class="col-md-4">
                             <mat-form-field class="mat-form-field-fluid">
                                 <mat-select placeholder="Canal de Contacto:" [formControl]="canalContacto">

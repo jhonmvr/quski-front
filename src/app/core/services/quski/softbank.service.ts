@@ -966,6 +966,17 @@ export class SoftbankService extends BaseService {
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
       )
     );
+  }
+  public consultarEtniaCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "etnia" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
   } 
   /** 
    * ************************************* @CREDITOS_OPERACION

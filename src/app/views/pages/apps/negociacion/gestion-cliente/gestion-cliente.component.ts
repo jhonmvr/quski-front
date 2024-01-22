@@ -88,6 +88,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   public catOcupacion: Array<any>;
   public catCargo: Array<any>;
   public catTipoTelefono: Array<any>;
+  public catEtnia: Array<any>;
   idSofDOM;
   idSofOFI;
   idDatosTrabajo;
@@ -120,6 +121,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   public segundoNombre = new FormControl('', [Validators.maxLength(50)]);
   public estadoCivil = new FormControl('', Validators.required);
   public edad = new FormControl('', []);
+  public etnia = new FormControl('', []);
 
   public formDatosContacto: FormGroup = new FormGroup({});
   public ubicacion = new FormControl('', [Validators.required, Validators.maxLength(50)]);
@@ -220,6 +222,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.formCliente.addControl("nacionalidad ", this.nacionalidad);
     this.formCliente.addControl("nivelEducacion ", this.nivelEducacion);
     this.formCliente.addControl("actividadEconomica  ", this.actividadEconomica);
+    this.formCliente.addControl("etnia", this.etnia);
     //this.formCliente.addControl("canalContacto  ", this.canalContacto);
     this.formDatosContacto.addControl("telefonoFijo  ", this.telefonoFijo);
     this.formDatosContacto.addControl("email  ", this.email);
@@ -314,6 +317,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
       this.onChangeFechaNacimiento();
       this.nivelEducacion.setValue(this.catEducacion.find(x => x.codigo == this.wrapper.cliente.nivelEducacion));
       this.nacionalidad.setValue(this.catPais.find(x => x.id == this.wrapper.cliente.nacionalidad));
+      this.etnia.setValue(this.catEtnia.find(x => x.id == this.wrapper.cliente.etnia));
       this.email.setValue(this.wrapper.cliente.email);
       this.primerNombre.setValue(this.wrapper.cliente.primerNombre);
       this.segundoNombre.setValue(this.wrapper.cliente.segundoNombre);
@@ -461,6 +465,9 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
           const subActivi = nombreconsultaActividadEconomica.find(sa => sa.id == activi.idPadre) || {};
           const padre = subActivi.nombre ? " / " + subActivi.nombre : "";
           return { nombre: activi.nombre + padre, id: activi.id, esPorDefecto: activi.esPorDefecto };
+        });
+        this.css.consultarEtniaCS().subscribe((data: any) => {
+          this.catEtnia = !data.existeError ? data.catalogo : "Error al cargar catalogo";
         });
         this.css.consultarActividadEconomicaMupiCS().subscribe((data: any) => {
           this.catActividadEconomicaMupi = !data.existeError ? data.catalogo : "Error al cargar catalogo";
@@ -1253,6 +1260,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
     this.wrapper.cliente.segundoNombre = this.segundoNombre.value?this.segundoNombre.value:" ";
     this.wrapper.cliente.usuario = this.usuario;
     this.wrapper.cliente.agencia = this.agencia;
+    this.wrapper.cliente.etnia = this.etnia.value ? this.etnia.value.id : null;
 
     this.wrapper.cliente.pasivos = this.avaluoPasivo.value;
     this.wrapper.cliente.activos = this.avaluoActivo.value;

@@ -25,6 +25,7 @@ export class TbQoCliente {
   lugarNacimiento: string;
   nacionalidad: string;
   nivelEducacion: string;
+  etnia: string;
   primerNombre: string;
   profesion: string;
   publicidad: string;
