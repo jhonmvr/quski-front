@@ -17,7 +17,7 @@
     <re-portlet-body>
         <mat-vertical-stepper [linear]="true" #stepper (animationDone)="guardarTraking('NUEVO',
         operacionNuevo ? operacionNuevo.credito ? operacionNuevo.credito.codigo : null : null, 
-        ['Información Operación','Día de pago','Asignacion de Funda','Datos Instruccion Operativa','Datos del Credito nuevo','Documento Habilitantes'], 
+        ['Información Operación','Día de pago','Asignacion de Funda','Datos Instruccion Operativa','Datos del Credito nuevo','Comprobantes De Desembolso','Documento Habilitantes'], 
         stepper.selectedIndex, 'GENERAR CREDITO',
         operacionNuevo ? operacionNuevo.credito ? operacionNuevo.credito.numeroOperacion : null : null )">
             <mat-step label="Información Operación" [stepControl]="formInformacion">
@@ -455,6 +455,48 @@
                     </mat-table>
 
                 </form>
+            </mat-step>
+            <mat-step label='Comprobantes De Desembolso'>
+                <div class="row m-5">
+                    <div class="col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <mat-select required  placeholder="Institucion Financiera"  [formControl]="institucionFinanciera">
+                                <mat-option *ngFor="let element of catCuenta" [value]="element">
+                                    {{element.nombre }}
+                                </mat-option>
+                            </mat-select>
+                            <!-- <mat-error>{{ getErrorMessage("institucionFinanciera") }}</mat-error> -->
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <mat-select [formControl]="tipoCuentaCD" placeholder="Tipo de Cuenta">
+                              <mat-option value="AHORRO">AHORRO</mat-option>
+                              <mat-option value="CORRIENTE">CORRIENTE</mat-option>
+                            </mat-select>
+                            <!-- <mat-error>{{ getErrorMessage("tipoCuentaCD") }}</mat-error> -->
+                          </mat-form-field>
+                    </div>			
+                    <div class="col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="numeroCuentaCD" placeholder="Numero de Cuenta" numeric numericType="number"/>
+                            <!-- <mat-error>{{ getErrorMessage("numeroCuentaCD") }}</mat-error> -->
+            
+                        </mat-form-field>
+                    </div>					
+                </div>
+                <div class="row mt-2 mb-2">
+                    <div class="col-2 offset-4">
+                        <button mat-stroked-button color="primary" matStepperNext>
+                            <span color="primary">Aceptar</span>
+                        </button>
+                    </div>
+                    <div class="col-2"> 
+                        <button mat-stroked-button color="warn" matStepperNext>
+                            <span color="warn">Cancelar</span>
+                        </button>
+                    </div>
+                </div>
             </mat-step>
             <mat-step label="Documento Habilitantes">
                 <ng-container *ngIf="existeCredito">

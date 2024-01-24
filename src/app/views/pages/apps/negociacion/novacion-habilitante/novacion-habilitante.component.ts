@@ -51,10 +51,14 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   public dataSourceComprobante = new MatTableDataSource<any>();
   public excepcionOperativa = new FormControl('');
   public fechaRegularizacion = new FormControl('',[Validators.required]);
+  institucionFinanciera = new FormControl('');
+  tipoCuenta = new FormControl('');
+  numeroCuentaCD = new FormControl('');
   observacionAsesor = new FormControl('',[Validators.maxLength(1000)]);
   public displayedColumnsComprobante = ['accion', 'intitucionFinanciera','cuenta','fechaPago','numeroDeDeposito','valorDepositado'];
   public loadComprobante  = new BehaviorSubject<boolean>(false);
   public catCuenta;
+  public catBanco;
   public recibirPagar;
   public recibirOPagar = 'warn'
   public catfirmadaOperacion: {nombre, codigo}[];
@@ -93,6 +97,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.formOperacion.addControl("numeroCuenta", this.numeroCuenta);
     this.formOperacion.addControl("firmanteCuenta", this.firmanteOperacion);
     this.formOperacion.addControl("tipoCliente", this.tipoCliente);
+    // this.formOperacion.addControl("institucionFinanciera", this.institucionFinanciera);
+    // this.formOperacion.addControl("tipoCuenta", this.tipoCuenta);
+    // this.formOperacion.addControl("numeroCuentaCD", this.numeroCuentaCD);
     this.par.findByNombre('POLITICA_INGRESOS').subscribe(data=>{
       if(data){
         this.politicaIngreso = data.entidad.valor;
@@ -346,6 +353,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     });
     this.sof.consultarBancosCS().subscribe( data =>{
       this.catCuenta = data.catalogo ? data.catalogo :  ['No se cargo el catalogo. Error'];
+      this.catBanco = data.catalogo ? data.catalogo :  ['No se cargo el catalogo. Error'];
     });
     this.sof.consultarTipoClienteCS().subscribe( data =>{
       this.catTipoCliente = data.catalogo ? data.catalogo :  ['No se cargo el catalogo. Error'];
@@ -432,5 +440,19 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
    onlyOdds = (d: Date): boolean => {
     const date = d.getDate();
     return date<27;
+  }
+  public getErrorMessage(pfield: string) {
+    console.log(pfield);
+    const errorRequerido = 'Ingrese valores';
+    if (pfield && pfield === 'institucionFinanciera') {
+      const input = this.formOperacion.get("institucionFinanciera");
+      return input.hasError("required") ? errorRequerido : "";
+    }if (pfield && pfield === 'numeroCuentaCD') {
+      const input = this.formOperacion.get("numeroCuentaCD");
+      return input.hasError("required") ? errorRequerido : "";
+    }if (pfield && pfield === 'tipoCuenta') {
+      const input = this.formOperacion.get("tipoCuenta");
+      return input.hasError("required") ? errorRequerido : "";
+    }
   }
 }

@@ -180,6 +180,10 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
   public cuota = new FormControl('', []);
   public totalInteres = new FormControl('', []);
   fechaSistema = new FormControl('', []);
+  /** @COMPROBANTES_DE_DESEMBOLSO */
+  public institucionFinanciera: FormGroup = new FormGroup({});
+  public tipoDeCuenta: FormGroup = new FormGroup({});
+  public numeroDeCuenta: FormGroup = new FormGroup({});
   /** @RESULTADO_OPERACION */
   public formResultadoOperacion: FormGroup = new FormGroup({});
   public motivoDevolucion  = new FormControl('', []);
@@ -300,6 +304,9 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.formDisable.addControl( "cuota", this.cuota );
     this.formDisable.addControl( "totalInteres", this.totalInteres );
     this.formDisable.addControl( "excepcionOperativa", this.excepcionOperativa );
+    this.formDisable.addControl( "institucionFinanciera", this.institucionFinanciera );
+    this.formDisable.addControl( "tipoDeCuenta", this.tipoDeCuenta );
+    this.formDisable.addControl( "numeroDeCuenta", this.numeroDeCuenta );
 
   }
 

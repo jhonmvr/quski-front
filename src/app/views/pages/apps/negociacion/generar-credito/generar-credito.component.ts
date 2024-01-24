@@ -99,6 +99,10 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   fotoFunda;
   public excepcionOperativa = new FormControl('');
   public fechaRegularizacion = new FormControl('',[Validators.required]);
+
+  institucionFinanciera = new FormControl('');
+  tipoCuentaCD = new FormControl('');
+  numeroCuentaCD = new FormControl('');
   /** @CATALOGOS **/
   public catTipoFunda: Array<any>;
   public catFirmanteOperacion: Array<any>;
