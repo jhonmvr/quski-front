@@ -11,7 +11,7 @@
     <re-portlet-body>
         <mat-vertical-stepper #stepper [linear]="true" (animationDone)="guardarTraking('RENOVACION',
         credit ? credit.credito ? credit.credito.codigo : null : null, 
-        ['Datos Instruccion Operacion','Comprobante De Pago','Comprobantes De Desembolso','Documentos Legales'], 
+        ['Datos Instruccion Operacion','Comprobantes De Desembolso','Comprobante De Pago','Documentos Legales'], 
         stepper.selectedIndex, 'GENERAR CREDITO RENOVACION',
         credit ? credit.credito ? credit.credito.numeroOperacion : null : null )">
             <mat-step label='Datos Instruccion Operacion' [stepControl]="formOperacion">
@@ -73,6 +73,35 @@
                         </mat-form-field><mat-error *ngIf="observacionAsesor.hasError('maxlength')"><strong>maximo de caracteres</strong></mat-error>
                     </div>
                 </form>
+            </mat-step>
+            <mat-step label='Comprobantes De Desembolso'>
+                <div class="row m-5">
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <mat-select placeholder="Institucion Financiera"  [formControl]="institucionFinanciera">
+                                <mat-option *ngFor="let element of catBanco" [value]="element">
+                                    {{element.nombre }}
+                                </mat-option>
+                            </mat-select>
+                            <!-- <mat-error>{{ getErrorMessage("institucionFinanciera") }}</mat-error> -->
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <mat-select [formControl]="tipoCuenta" placeholder="Tipo de Cuenta">
+                              <mat-option value="AHORRO">AHORRO</mat-option>
+                              <mat-option value="CORRIENTE">CORRIENTE</mat-option>
+                            </mat-select>
+                            <!-- <mat-error>{{ getErrorMessage("tipoCuentaCD") }}</mat-error> -->
+                          </mat-form-field>
+                    </div>			
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="numeroCuentaCD" placeholder="Numero de Cuenta" numeric numericType="number"/>
+                            <!-- <mat-error>{{ getErrorMessage("numeroCuentaCD") }}</mat-error> -->
+                        </mat-form-field>
+                    </div>					
+                </div>
             </mat-step>
             <mat-step label='Comprobante De Pago'>
                 <div class="row mt-2 mb-2">
@@ -137,47 +166,6 @@
                 <div class="row mt-2 mb-2">
                     <div class="col-md-2 offset-md-5">
                         <button class="mat-elevation-z4" mat-raised-button color="primary" (click)="crearOperacion()">Crear Operacion</button>
-                    </div>
-                </div>
-            </mat-step>
-            <mat-step label='Comprobantes De Desembolso'>
-                <div class="row m-5">
-                    <div class="col-md-3">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <mat-select required  placeholder="Institucion Financiera"  [formControl]="institucionFinanciera">
-                                <mat-option *ngFor="let element of catBanco" [value]="element">
-                                    {{element.nombre }}
-                                </mat-option>
-                            </mat-select>
-                            <!-- <mat-error>{{ getErrorMessage("institucionFinanciera") }}</mat-error> -->
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-3">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <mat-select [formControl]="tipoCuenta" placeholder="Tipo de Cuenta">
-                              <mat-option value="AHORRO">AHORRO</mat-option>
-                              <mat-option value="CORRIENTE">CORRIENTE</mat-option>
-                            </mat-select>
-                            <!-- <mat-error>{{ getErrorMessage("tipoCuentaCD") }}</mat-error> -->
-                          </mat-form-field>
-                    </div>			
-                    <div class="col-md-3">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="numeroCuentaCD" placeholder="Numero de Cuenta" numeric numericType="number"/>
-                            <!-- <mat-error>{{ getErrorMessage("numeroCuentaCD") }}</mat-error> -->
-                        </mat-form-field>
-                    </div>					
-                </div>
-                <div class="row mt-2 mb-2">
-                    <div class="col-2 offset-4">
-                        <button mat-stroked-button color="primary" matStepperNext>
-                            <span color="primary">Aceptar</span>
-                        </button>
-                    </div>
-                    <div class="col-2"> 
-                        <button mat-stroked-button color="warn" matStepperNext>
-                            <span color="warn">Cancelar</span>
-                        </button>
                     </div>
                 </div>
             </mat-step>

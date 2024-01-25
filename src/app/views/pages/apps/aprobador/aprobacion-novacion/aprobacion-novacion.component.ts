@@ -206,6 +206,10 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
   public antGastoCobranza = new FormControl('', []);
   public antCustodiaVencida = new FormControl('', []);
   public antValorPrecancelacion = new FormControl('', []);
+  /** @COMPROBANTE_DESEMBOLSO */
+  public institucionFinanciera = new FormControl('', []);
+  public tipoDeCuenta = new FormControl('', []);
+  public numeroDeCuenta = new FormControl('', []);
   /** @RESULTADO_OPERACION */
   public formResultadoOperacion: FormGroup = new FormGroup({});
   public motivoDevolucion = new FormControl('', []);
@@ -346,6 +350,9 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
     this.formDisable.addControl("fechaNacimientoApoderado", this.fechaNacimientoApoderado);
     this.formDisable.addControl("nombreCodeudor", this.nombreCodeudor);
     this.formDisable.addControl("identificacionCodeudor", this.identificacionCodeudor);
+    this.formDisable.addControl("institucionFinanciera", this.institucionFinanciera);
+    this.formDisable.addControl("tipoDeCuenta", this.tipoDeCuenta);
+    this.formDisable.addControl("numeroDeCuenta", this.numeroDeCuenta);
 
   }
 
@@ -672,7 +679,10 @@ export class AprobacionNovacionComponent extends TrackingUtil implements OnInit 
       this.antCustodiaVencida.setValue( this.creditoAnterior.custodia);
       this.antValorPrecancelacion.setValue( this.creditoAnterior.valorTotalPrestamoVencimiento);
     }
-    
+    /** @COMPROBANTE_DESEMBOLSO */
+    this.institucionFinanciera.setValue(this.catBanco.find( x => x.id == ap.credito.desembolsoInstitucionFinanciera).nombre);
+    this.tipoDeCuenta.setValue(ap.credito.desembolsoTipoCuenta);
+    this.numeroDeCuenta.setValue(ap.credito.desembolsoNumeroCuenta);
   }
 
   public enviarRespuesta(){

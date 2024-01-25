@@ -205,6 +205,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       ['Información Operación','Detalle de garantias','Simular opciones de crédito'],
       0, 'CREAR RENOVACION', wr ? wr.credito ? wr.credito.numeroOperacion : null : null );
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + wr.credito.codigo + ".", "success");
+    this.institucionFinanciera.setValue(this.catBanco.find( x => x.id == wr.credito.desembolsoInstitucionFinanciera))
+    this.tipoCuenta.setValue(wr.credito.desembolsoTipoCuenta);
+    this.numeroCuentaCD.setValue(wr.credito.desembolsoNumeroCuenta);
   }
   public habilitarExcepcionOperativa(){
     if(this.excepcionOperativa.value && this.excepcionOperativa.value.find(p=>p.valor == 'SIN EXCEPCION') ){
@@ -291,6 +294,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     this.credit.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
     this.credit.credito.tbQoNegociacion.observacionAsesor = this.observacionAsesor.value;
     this.credit.credito.excepcionOperativa = this.excepcionOperativa.value ? this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') : null;
+    this.credit.credito.desembolsoInstitucionFinanciera = this.institucionFinanciera.value ? this.institucionFinanciera.value.id : null
+    this.credit.credito.desembolsoTipoCuenta = this.tipoCuenta.value ? this.tipoCuenta.value : null
+    this.credit.credito.desembolsoNumeroCuenta = this.numeroCuentaCD.value ? this.numeroCuentaCD.value : null
     let list = new Array<any>( );
     if(this.dataSourceComprobante.data.length > 0){
       this.dataSourceComprobante.data.forEach( e=>{

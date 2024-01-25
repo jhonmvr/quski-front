@@ -18,7 +18,7 @@
     <re-portlet-body>
         <mat-vertical-stepper #stepper (animationDone)="guardarTraking('RENOVACION',
         crediW ? crediW.credito ? crediW.credito.codigo : null : null,
-        ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de Operacion Anterior','Resultado de la operación'],
+        ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de Operacion Anterior','Datos Comprobante de Desembolso','Resultado de la operación'],
         stepper.selectedIndex, 'APROBACION CREDITO RENOVACION',
         crediW ? crediW.credito ? crediW.credito.numeroOperacion : null : null )">
             <mat-step label="Información Operación">
@@ -1020,6 +1020,25 @@
 
                     </div>
 
+                </div>
+            </mat-step>
+            <mat-step label="Datos Comprobante de Desembolso">
+                <div class="row">
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="institucionFinanciera" placeholder="Institución Financiera">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="tipoDeCuenta" placeholder="Tipo de Cuenta" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="numeroDeCuenta" placeholder="Número de Cuenta" />
+                        </mat-form-field>
+                    </div>
                 </div>
             </mat-step>
             <mat-step label="Resultado de la operación">

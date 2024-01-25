@@ -96,6 +96,9 @@ export class TbQoCreditoNegociacion {
     cobertura;
     abonoCapital;
     formaPagoAbonoCapital;
+    desembolsoInstitucionFinanciera: number;
+    desembolsoTipoCuenta: string;
+    desembolsoNumeroCuenta: string;
     constructor(idNegociacion?: number) {
         this.tbQoNegociacion = new TbQoNegociacion();
         this.tbQoNegociacion.id = idNegociacion > 0 ? idNegociacion : null;

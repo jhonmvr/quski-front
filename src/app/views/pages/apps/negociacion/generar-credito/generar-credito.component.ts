@@ -273,6 +273,9 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.nombreCompleto.setValue(data.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     this.numeroCuenta.setValue( data.cuentas[0].cuenta);
     this.tipoCuenta.setValue( this.catCuenta.find( x => x.id == data.cuentas[0].banco) );
+    this.institucionFinanciera.setValue(this.catCuenta.find( x => x.id == data.credito.desembolsoInstitucionFinanciera))
+    this.tipoCuentaCD.setValue(data.credito.desembolsoTipoCuenta);
+    this.numeroCuentaCD.setValue(data.credito.desembolsoNumeroCuenta);
     if(data.credito.tbQoNegociacion.tbQoCliente){
       this.ingresoNeto = Number( data.credito.tbQoNegociacion.tbQoCliente.ingresos ? data.credito.tbQoNegociacion.tbQoCliente.ingresos : 0 ) - Number( data.credito.tbQoNegociacion.tbQoCliente.egresos ? data.credito.tbQoNegociacion.tbQoCliente.egresos : 0 );
     }
@@ -457,6 +460,9 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       this.operacionNuevo.credito.fechaRegularizacion = this.fechaRegularizacion.value ? this.fechaRegularizacion.value : null;
       this.operacionNuevo.credito.excepcionOperativa =  this.excepcionOperativa.value ? this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') : null;
       this.operacionNuevo.credito.tbQoNegociacion.observacionAsesor = this.observacionAsesor.value;
+      this.operacionNuevo.credito.desembolsoInstitucionFinanciera = this.institucionFinanciera.value ? this.institucionFinanciera.value.id : null
+      this.operacionNuevo.credito.desembolsoTipoCuenta = this.tipoCuentaCD.value ? this.tipoCuentaCD.value : null
+      this.operacionNuevo.credito.desembolsoNumeroCuenta = this.numeroCuentaCD.value ? this.numeroCuentaCD.value : null
       if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor !== 'SIN EXCEPCION' && this.fechaRegularizacion.invalid){
         this.sinNotSer.setNotice('SELECCIONES UNA FECHA DE REGULARIZACION', 'warning');
         return;
