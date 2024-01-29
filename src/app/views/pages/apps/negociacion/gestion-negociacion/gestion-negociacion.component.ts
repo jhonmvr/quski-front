@@ -1249,8 +1249,18 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     return numSelected === numRows;
   }
   guardarCredito() {
-    if (this.formDatosCliente.invalid) {
-      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL CLIENTE", 'warning');
+    if(this.email.invalid){
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL EMAIL DEL CLIENTE", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    }
+    if(this.telefonoDomicilio.invalid){
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL TELEFONO DE DOMICILIO DEL CLIENTE", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    }
+    if(this.movil.invalid){
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL MOVIL DEL CLIENTE", 'warning');
       this.myStepper.selectedIndex = 1;
       return;
     }
