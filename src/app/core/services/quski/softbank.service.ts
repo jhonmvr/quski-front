@@ -978,6 +978,28 @@ export class SoftbankService extends BaseService {
       )
     );
   } 
+  public consultarSupervisoresCS() {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "supervisores" ;
+    let wrapper =  "";
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  } 
+  public consultarAgenciasPorSupervisorCS(nombre) {
+    let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "agenciasporsupervisor" ;
+    let wrapper =  {'nombre':nombre};
+    this.options = { headers: this.headers };
+    return this.http.post(serviceUrl, wrapper, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  } 
   /** 
    * ************************************* @CREDITOS_OPERACION
    */

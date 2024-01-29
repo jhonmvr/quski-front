@@ -85,15 +85,22 @@
                                 <mat-datepicker #pickerFechaCreacionHasta></mat-datepicker>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-4 offset-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Agencia" [formControl]="agencia" multiple>
-                                    <mat-option #allAgencia (click)="allSelecAgencias(allAgencia)" [value]="0">TODOS</mat-option>
-                                    <mat-option *ngFor="let element of catAgencia" [value]="element.id">{{ element.nombre }}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-
+                            <div class="offset-2 col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <mat-select placeholder="Supervisor" [formControl]="supervisor" multiple (selectionChange)="onSupervisorSelectionChange()">
+                                        <mat-option #allSupervisor (click)="allSelecSupervisor(allSupervisor)" [value]="0">TODOS</mat-option>
+                                        <mat-option *ngFor="let element of catSupervisor" [value]="element">{{ element.nombre }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field class="mat-form-field-fluid">
+                                    <mat-select placeholder="Agencia" [formControl]="agencia" multiple>
+                                        <mat-option #allAgencia (click)="allSelecAgencias(allAgencia)" [value]="0">TODOS</mat-option>
+                                        <mat-option *ngFor="let element of catAgencia" [value]="element.id">{{ element.nombre }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
                     </div>
                     <div class="row">
                         <div class="col-3">

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatPaginator, MatTableDataSource, MatDialog, MatOption } from '@angular/material';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, forkJoin } from 'rxjs';
 import { WrapperBusqueda } from '../../../../../../app/core/model/wrapper/WrapperBusqueda';
 import { OperacionesProcesoWrapper } from '../../../../../../app/core/model/wrapper/OperacionesProcesoWrapper';
 import { ParametroService } from '../../../../../../app/core/services/quski/parametro.service';
@@ -30,10 +30,10 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
   public catActividad : Array<string>;
   public catRolReasignacion : Array<any>;
   public catRolAsesores : Array<any>;
+  public catSupervisor : Array<any>;
   montoTotal;
   catUsuarios : Array<Usuario>;
   selected=[]
-  
 
 
 
@@ -49,6 +49,7 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
   public codigoBpm = new FormControl('');
   public codigoSoft = new FormControl('');
   public agencia = new FormControl('');
+  public supervisor = new FormControl('');
   public asesor = new FormControl('');
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -92,7 +93,6 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
     //console.log( 'Rol => ', this.rol);
     this.cargarEnumBase();
     this.cargarListaAsesores();
-
   }
 
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
@@ -191,6 +191,9 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
     return false;
   }
   private cargarEnumBase(){
+    this.sof.consultarSupervisoresCS().subscribe((data:any)=>{
+      this.catSupervisor = !data.existeError ? data.catalogo.filter(e=> e.nombre !== null) : "Error al cargar catalogo";
+    })
     this.par.findByTipo('PERFIL-ASESOR').subscribe( (data: any)=>{
       this.catRolAsesores = data.entidades ? data.entidades : null;
       this.par.findByTipo('PERFIL-REASIG').subscribe( (data: any) =>{
@@ -377,7 +380,8 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
    }
 
    allSelecAgencias(all) {
-    if (all.selected) {
+    console.log(all);
+    if (all && all.selected) {
       this.agencia
         .patchValue([...this.catAgencia.map(item => item.id), 0]);
     } else {
@@ -404,12 +408,78 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
     console.log(element)
     this.pro.verActividad(element.codigoBpm).subscribe( p =>{
       if( !p ) {
-
         this.sinNotSer.setNotice('SIN ACTIVIDAD', 'info');
       }
       this.sinNotSer.setNotice('ACTIVIDAD: ' + p.actividad, 'info');
-
     })
-    
+  }
+  allSelecSupervisor(all) {
+    if (all.selected) {
+      this.supervisor
+        .patchValue([...this.catSupervisor.map(item => item),0]);
+    } else {
+      this.supervisor.patchValue([]);
+      this.sof.consultarAgenciasCS().subscribe((data: any) =>{
+        if(!data.existeError){
+          this.catAgencia = data.catalogo;
+        }
+      });
+    }
+  }
+
+  onSupervisorSelectionChange() {
+    setTimeout(() => {
+      if (this.supervisor.value.includes(0)) {
+        let catAgenciaTemp: Array<Agencia>=[];
+        const requests = this.catSupervisor.map(e=>{
+          return this.sof.consultarAgenciasPorSupervisorCS(e.nombre)
+        })
+        forkJoin(requests).subscribe((responses: any[]) => {
+          responses.forEach(data => {
+            let catAgenciaT = this.catAgencia.filter(item =>
+              data.catalogo.some(subItem => subItem.id === item.id)
+            );
+            catAgenciaTemp.push(...catAgenciaT);
+          });
+          this.catAgencia = this.catAgencia.filter(e => {
+            const foundItem = catAgenciaTemp.find(item => item.id === e.id);
+            return foundItem !== undefined;
+          });
+          this.agencia.patchValue([...this.catAgencia.map(e=>e.id),0]);
+        });
+    } else if(this.supervisor.value.length > 0 && !this.supervisor.value.includes(0)) {
+        this.sof.consultarAgenciasCS().subscribe((data: any) =>{
+          if(!data.existeError){
+            this.catAgencia = data.catalogo;
+          }
+        });
+        let catAgenciaTemp: Array<Agencia> = [];
+        // Realiza la operación cuando se selecciona otra opción
+        const requests = this.supervisor.value.map(e => {
+          return this.sof.consultarAgenciasPorSupervisorCS(e.nombre);
+        });
+        // Espera a que todas las solicitudes de consulta se completen
+        forkJoin(requests).subscribe((responses: any[]) => {
+          responses.forEach(data => {
+            let catAgenciaT = this.catAgencia.filter(item =>
+              data.catalogo.some(subItem => subItem.id === item.id)
+            );
+            catAgenciaTemp.push(...catAgenciaT);
+          });
+          this.catAgencia = this.catAgencia.filter(e => {
+            const foundItem = catAgenciaTemp.find(item => item.id === e.id);
+            return foundItem !== undefined;
+          });
+        });
+        this.agencia.patchValue([...this.catAgencia.map(e=>e.id),0]);
+    } else if(this.supervisor.value.length === 0){
+      this.sof.consultarAgenciasCS().subscribe((data: any) =>{
+        if(!data.existeError){
+          this.catAgencia = data.catalogo;
+        }
+      });
+      this.agencia.patchValue([]);
+    }
+    })
   }
 }
