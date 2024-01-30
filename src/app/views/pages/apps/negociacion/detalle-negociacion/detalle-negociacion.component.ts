@@ -87,18 +87,19 @@ export class DetalleNegociacionComponent implements OnInit {
         this.procesoService.getCabecera(data.params.id,'RENOVACION').subscribe(datosCabecera=>{
           this.layoutService.setDatosContrato(datosCabecera);
         });
-        this.cre.findHistoricoOperativaByidNegociacion(this.referencia).subscribe((data: any) => {
-          this.dataHistoricoOperativa = data.entidades;
-        });
-        this.cre.findHistoricoObservacionByIdCredito(this.referencia).subscribe(result=>{
-          this.dataHistoricoObservacion = result.entidades;
-        });
+        
         this.cre.traerCreditoNegociacion(data.params.id).subscribe((data: any) => {
           if (!data.entidad.existeError) {
             this.detalle = data.entidad;
             if(this.detalle.credito.numeroOperacionAnterior){
               this.displayedColumnsCreditoNegociacion = this.renovacion;
             }
+            this.cre.findHistoricoOperativaByidNegociacion(this.detalle.credito.id).subscribe((data: any) => {
+              this.dataHistoricoOperativa = data.entidades;
+            });
+            this.cre.findHistoricoObservacionByIdCredito(this.detalle.credito.id).subscribe(result=>{
+              this.dataHistoricoObservacion = result.entidades;
+            });
             this.setearValores( this.detalle );
           }else{
             this.salirDeGestion("Error al intentar cargar el credito: "+ data.entidad.mensaje);
