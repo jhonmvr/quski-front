@@ -93,7 +93,7 @@
                         </div>
                         <div class="col-md-6 ">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput numeric numericType="number" (click)="updateCliente($event, movil)" (keydown)="updateCliente($event, movil)" [formControl]="movil" placeholder="Móvil" required="true" (keypress)="numberOnly($event)" />
+                                <input matInput numeric numericType="number" [formControl]="movil" (input)="updateCliente($event, movil)"  placeholder="Móvil" required="true" (keypress)="numberOnly($event)" />
                                 <mat-error>{{ getErrorMessage("movil") }}</mat-error>
                             </mat-form-field>
                         </div>
@@ -101,14 +101,14 @@
                     <div class="row">
                         <div class="col-md-6 ">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="email" (click)="updateCliente($event, email)" (keydown)="updateCliente($event, email)" placeholder="Correo Eléctronico" required="true" />
+                                <input matInput [formControl]="email" (input)="updateCliente($event, email)" placeholder="Correo Eléctronico" required="true" />
                                 <mat-error>{{getErrorMessage("email") }}</mat-error>
                             </mat-form-field>
                         </div>
 
                         <div class="col-md-6">
                             <mat-form-field class="mat-form-field-fluid">
-                                <input matInput [formControl]="telefonoDomicilio" (click)="updateCliente($event, telefonoDomicilio)" (keydown)="updateCliente($event, telefonoDomicilio)" placeholder="Teléfono Domicilio" required="true" (keypress)="numberOnly($event)">
+                                <input matInput [formControl]="telefonoDomicilio" (input)="updateCliente($event, telefonoDomicilio)" placeholder="Teléfono Domicilio" required="true" (keypress)="numberOnly($event)">
                                 <mat-error>{{ getErrorMessage("telefonoDomicilio") }}</mat-error>
                             </mat-form-field>
                         </div>

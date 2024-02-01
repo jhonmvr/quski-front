@@ -106,7 +106,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public nombreReferido = new FormControl('', [Validators.required, Validators.maxLength(50)]);
   public telefonoReferido = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(11)]);
   public telefonoDomicilio = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
-  public email = new FormControl('', [Validators.required, Validators.email]);
+  public email = new FormControl('', [Validators.required, Validators.pattern(/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/)]);
   public campania = new FormControl('');
   public aprobacionMupi = new FormControl('', [Validators.required]);
   public detalleWebMupi= new FormControl('', []);
@@ -648,7 +648,12 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         valorARecibir: this.negoW.credito.valorARecibir
       }
       this.estadoCredito.setValue(this.catEstadoCredito.find(x=>x.nombre==this.negoW.credito.tbQoNegociacion.estadoCredito));
-      this.par.findByTipo(this.estadoCredito.value? this.estadoCredito.value.valor:'').subscribe( (data: any)=>{ 
+      let credito_estado = this.estadoCredito.value ? 
+      (this.estadoCredito.value.valor === "CREDITO ESTADO " ? 
+        this.estadoCredito.value.valor.replace(/\s/, '_').trim() : 
+        this.estadoCredito.value.valor) : 
+      '';
+      this.par.findByTipo(credito_estado).subscribe( (data: any)=>{ 
         this.catMotivo = data.entidades;
         this.motivo.enable();
         this.motivo = new FormControl('', [Validators.required]);
@@ -856,7 +861,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     }
     if (pfield && pfield == "email") {
       const input = this.email;
-      return input.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo + this.email.errors.maxlength.requiredLength : '';
+      return input.hasError('required') ? errorRequerido : this.email.hasError('email') ? 'E-mail no valido' : this.email.hasError('maxlength') ? maximo + this.email.errors.maxlength.requiredLength : this.email.hasError('pattern') ? 'El formato del correo electrónico no es válido' : '';
     }
     if (pfield && pfield == "aprobacionMupi") {
       const input = this.email;
