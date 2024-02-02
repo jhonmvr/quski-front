@@ -185,7 +185,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   ///datos de contacto cliente
   dataSourceTelefonosCliente = new MatTableDataSource<any>();
   tipoTelefonoCliente = new FormControl('', []);
-  public email = new FormControl('', [Validators.email, Validators.maxLength(100), Validators.required]);
+  public email = new FormControl('', [Validators.required, Validators.maxLength(100), Validators.pattern(/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/)]);
   public telefonoFijo = new FormControl('', [Validators.minLength(9), Validators.maxLength(9)]);
   teleId;
 
@@ -1353,17 +1353,18 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
   }
   cambiarTipoTelefonoCliente() {
     if (this.tipoTelefonoCliente.value.codigo == 'DOM') {
+      console.log(this.tipoTelefonoCliente.value.codigo);
       this.telefonoFijo = new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
-    }
-    if (this.tipoTelefonoCliente.value.codigo == 'CEL') {
+    } else if (this.tipoTelefonoCliente.value.codigo == 'CEL') {
       this.telefonoFijo = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]);
+    }else{
+      this.telefonoFijo = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]);
     }
-    this.telefonoFijo = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]);
 
   }
 
   agregarTelefonoCliente() {
-    if (this.tipoTelefonoCliente.invalid) {
+    if (this.tipoTelefonoCliente.invalid || this.tipoTelefonoCliente.value === '') {
       this.sinNoticeService.setNotice('Selecione un tipo de telefono', 'warning');
       return;
     }
@@ -1399,7 +1400,7 @@ export class GestionClienteComponent extends TrackingUtil implements OnInit {
 
   editarTelefono(element) {
     this.teleId = element;
-    this.tipoTelefonoCliente.setValue(this.catTipoTelefono ? this.catTipoTelefono.find(p => p.codigo == element.codigoTipoTelefono) : '');
+    this.tipoTelefonoCliente.setValue(this.catTipoTelefono ? this.catTipoTelefono.find(p => p.codigo === element.tipoTelefono) : '');
     this.telefonoFijo.setValue(element.numero);
   }
 
