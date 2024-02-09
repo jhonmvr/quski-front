@@ -79,7 +79,7 @@ export class BandejaProcesoGerenciaComponent implements OnInit {
     this.formFiltro.addControl("codigoBpm", this.codigoBpm);
     this.formFiltro.addControl("codigoSoft", this.codigoSoft);
     this.formFiltro.addControl("agencia", this.agencia);
-    
+    this.formFiltro.addControl("supervisor", this.supervisor);
     this.formFiltro.addControl("asesor", this.asesor);
   }
 
