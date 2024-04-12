@@ -1,0 +1,17 @@
+.doubleFactor {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.doubleFactor h2 {
+  margin-top: 3rem;
+  font-size: 1rem;
+}
+
+.doubleFactor img {
+  width: 20rem;
+  height: 20rem;
+  object-fit: cover; /*The object-fit CSS property sets how the content of a replaced element, such as img an or video, should be resized to fit its containe*/
+}

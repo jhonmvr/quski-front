@@ -1,0 +1,49 @@
+<div class="kt-login__body">
+  <div class="kt-login__form">
+    <div class="kt-login__title">
+      <h3>{{ "REGENERAL.QR_PAGE.OTP" | translate }}</h3>
+    </div>
+    <kt-auth-notice></kt-auth-notice>
+    <div class="doubleFactor">
+      <div class="inputlist">
+        <form [formGroup]="formOTP">
+          <input
+            #txtUnoVc
+            formControlName="txtUno"
+            (keyup)="onKeyUp($event, 1)"
+          />
+          -
+          <input
+            #txtDosVc
+            formControlName="txDos"
+            (keyup)="onKeyUp($event, 2)"
+          />
+          -
+          <input
+            #txtTresVc
+            formControlName="txtTres"
+            (keyup)="onKeyUp($event, 3)"
+          />
+          -
+          <input
+            #txtCuatroVc
+            formControlName="txtCuatro"
+            (keyup)="onKeyUp($event, 4)"
+          />
+          -
+          <input
+            #txtCincoVc
+            formControlName="txtCinco"
+            (keyup)="onKeyUp($event, 5)"
+          />
+          -
+          <input
+            #txtSeisVc
+            formControlName="txtSeis"
+            (keyup)="onKeyUp($event, 6)"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

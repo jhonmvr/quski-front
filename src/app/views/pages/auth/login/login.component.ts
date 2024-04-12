@@ -1,194 +1,262 @@
 // Angular
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+} from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 // RxJS
-import { Observable, Subject } from 'rxjs';
-import { finalize, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject } from "rxjs";
+import { finalize, takeUntil, tap } from "rxjs/operators";
 // Translate
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService } from "@ngx-translate/core";
 // Store
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../../core/reducers';
+import { Store } from "@ngrx/store";
+import { AppState } from "../../../../core/reducers";
 // Auth
-import { AuthNoticeService, AuthService, currentUser, Login, User, UserLoaded } from '../../../../core/auth';
-import { AutorizacionService } from '../../../../core/services/autorizacion.service';
-import { environment } from '../../../../../environments/environment';
-import * as uuid from 'uuid';
-import { WebsocketUtilService } from '../../../../core/services/websocket-util.service';
-
-
+import { AuthNoticeService } from "../../../../core/auth";
+import { AutorizacionService } from "../../../../core/services/autorizacion.service";
+import { WebsocketUtilService } from "../../../../core/services/websocket-util.service";
 
 /**
  * ! Just example => Should be removed in development
  */
 const DEMO_PARAMS = {
-	EMAIL: '',
-	PASSWORD: ''
+  EMAIL: "",
+  PASSWORD: "",
 };
 
 @Component({
-	selector: 'kt-login',
-	templateUrl: './login.component.html',
-	encapsulation: ViewEncapsulation.None
+  selector: "kt-login",
+  templateUrl: "./login.component.html",
+  encapsulation: ViewEncapsulation.None,
 })
 export class LoginComponent implements OnInit, OnDestroy {
-	// Public params
-	loginForm: FormGroup;
-	loading = false;
-	isLoggedIn$: Observable<boolean>;
-	errors: any = [];
+  // Public params
+  loginForm: FormGroup;
+  loading = false;
+  isLoggedIn$: Observable<boolean>;
+  errors: any = [];
 
-	private unsubscribe: Subject<any>;
+  private unsubscribe: Subject<any>;
 
-	private returnUrl: any;
+  returnUrl: string = "";
+  // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
 
-	// Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
+  /**
+   * Component constructor
+   *
+   * @param router: Router
+   * @param auth: AuthService
+   * @param authNoticeService: AuthNoticeService
+   * @param translate: TranslateService
+   * @param store: Store<AppState>
+   * @param fb: FormBuilder
+   * @param cdr
+   * @param route
+   */
+  constructor(
+    private router: Router,
+    private authRelative: AutorizacionService,
+    private authNoticeService: AuthNoticeService,
+    private translate: TranslateService,
+    private store: Store<AppState>,
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
+  ) {
+    //this.authRelative.setParameter();
+    this.unsubscribe = new Subject();
+  }
 
-	/**
-	 * Component constructor
-	 *
-	 * @param router: Router
-	 * @param auth: AuthService
-	 * @param authNoticeService: AuthNoticeService
-	 * @param translate: TranslateService
-	 * @param store: Store<AppState>
-	 * @param fb: FormBuilder
-	 * @param cdr
-	 * @param route
-	 */
-	constructor(
-		private router: Router,
-		private authRelative:AutorizacionService,
-		private authNoticeService: AuthNoticeService,
-		private translate: TranslateService,
-		private store: Store<AppState>,
-		private fb: FormBuilder,
-		private cdr: ChangeDetectorRef,
-		private route: ActivatedRoute,
-		private ws:WebsocketUtilService
-	) {
-		//this.authRelative.setParameter();
-		this.unsubscribe = new Subject();
-	}
+  /**
+   * @ Lifecycle sequences => https://angular.io/guide/lifecycle-hooks
+   */
 
-	/**
-	 * @ Lifecycle sequences => https://angular.io/guide/lifecycle-hooks
-	 */
+  /**
+   * On init
+   */
+  ngOnInit(): void {
+    this.initLoginForm();
 
-	/**
-	 * On init
-	 */
-	ngOnInit(): void {
-		this.initLoginForm();
+    // redirect back to the returnUrl before login
+    this.route.queryParams.subscribe((params) => {
+      this.returnUrl = params.returnUrl || "/";
+    });
+  }
 
-		// redirect back to the returnUrl before login
-		this.route.queryParams.subscribe(params => {
-			this.returnUrl = params.returnUrl || '/';
-		});
-	}
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    this.authNoticeService.setNotice(null);
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+    this.loading = false;
+  }
 
-	/**
-	 * On destroy
-	 */
-	ngOnDestroy(): void {
-		this.authNoticeService.setNotice(null);
-		this.unsubscribe.next();
-		this.unsubscribe.complete();
-		this.loading = false;
-	}
+  /**
+   * Form initalization
+   * Default params, validators
+   */
+  initLoginForm() {
+    this.loginForm = this.fb.group({
+      email: [
+        DEMO_PARAMS.EMAIL,
+        Validators.compose([
+          Validators.required,
+          //Validators.email,
+          Validators.minLength(3),
+          Validators.maxLength(320), // https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+        ]),
+      ],
+      password: [
+        DEMO_PARAMS.PASSWORD,
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(100),
+        ]),
+      ],
+    });
+  }
 
-	/**
-	 * Form initalization
-	 * Default params, validators
-	 */
-	initLoginForm() {
-		this.loginForm = this.fb.group({
-			email: [DEMO_PARAMS.EMAIL, Validators.compose([
-				Validators.required,
-				//Validators.email,
-				Validators.minLength(3),
-				Validators.maxLength(320) // https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
-			])
-			],
-			password: [DEMO_PARAMS.PASSWORD, Validators.compose([
-				Validators.required,
-				Validators.minLength(3),
-				Validators.maxLength(100)
-			])
-			]
-		});
-	}
+  /**
+   * Form Submit
+   */
+  submit() {
+    const controls = this.loginForm.controls;
+    /** check form */
+    if (this.loginForm.invalid) {
+      Object.keys(controls).forEach((controlName) =>
+        controls[controlName].markAsTouched()
+      );
+      return;
+    }
+    this.loading = true;
+    const authData = {
+      email: controls.email.value,
+      password: controls.password.value,
+    };
 
-	/**
-	 * Form Submit
-	 */
-	submit() {
-		const controls = this.loginForm.controls;
-		/** check form */
-		if (this.loginForm.invalid) {
-			Object.keys(controls).forEach(controlName =>
-				controls[controlName].markAsTouched()
-			);
-			return;
-		}
-		this.loading = true;
-		const authData = {
-			email: controls.email.value,
-			password: controls.password.value
-		};
-		
-		this.authRelative.serverLogin(authData).pipe( tap(
-			usuarioAuth => {
-				console.log("=en tap termino validaciones con usuarioAuth " + JSON.stringify(usuarioAuth))
-					if (usuarioAuth && usuarioAuth.existLogin ) {
-						console.log("=en tap termino exiete login " + usuarioAuth.accessToken );
-						localStorage.setItem( environment.userKey, btoa( authData.email)  );
-						localStorage.setItem( environment.authKey, btoa( ""+ usuarioAuth.id) );
-						localStorage.setItem( environment.hashWebSocketKey,uuid.v4() );
-						let fecha = new Date();
-						fecha.getDay()
-						localStorage.setItem( 'date',fecha.getFullYear() +'-'+fecha.getMonth()+'-'+fecha.getDay())
-						this.store.dispatch(new Login({authToken: usuarioAuth.accessToken}));
-						//let user = new User();
-						//user.fullname = usuarioAuth.fullname;
-						//this.store.dispatch(new UserLoaded({ user: user }))
-						console.log("=socket ruta " + this.ws.appWebSocketUrl + localStorage.getItem( environment.hashWebSocketKey )+"?dummy=1" );
-						this.ws.setParameter();
-						this.ws.connect(this.ws.appWebSocketUrl + localStorage.getItem( environment.hashWebSocketKey )+"?dummy=1");
-						this.ws.messages.subscribe(msg => {			
-							console.log("Response from websocket: ",msg);
-						});
-				//console.log("ruta de main ===>>>",this.returnUrl);
-						this.router.navigateByUrl(this.returnUrl); // Main page
-					} else if(usuarioAuth){
-						this.authNoticeService.setNotice(this.translate.instant(usuarioAuth.mensajeError), 'danger');
-					} else {
-						this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
-					}
-				}
+    this.authRelative
+      .serverLogin(authData)
+      .pipe(
+        tap((usuarioAuth) => {
+          //   console.log(
+          //     "=en tap termino validaciones con usuarioAuth " +
+          //       JSON.stringify(usuarioAuth)
+          //   );
+          if (usuarioAuth && usuarioAuth.existLogin) {
+            // console.log(
+            //   "=en tap termino exiete login ",
+            //   usuarioAuth.accessToken,
+            //   usuarioAuth.tieneDobleFactor
+            // );
 
-		), 
-		takeUntil(this.unsubscribe),
-		finalize(() => {
-			this.loading = false;
-			this.cdr.markForCheck();
-		}) ).subscribe(data=>{},
-			error=>{
-				if( error.error ){
-					this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN') + 
-					' - ' + error.error.codError + ' - ' + error.error.msgError
-				, 'danger');
-				} else {
-					this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN') , 'danger');
-				}
-				
-			});
-		
-	
-	}
+            /*
+			**CODIGO MOVIDO A OTP PARA QUE SE HABILITE SOLO SI ESTA LOGEADO
+			localStorage.setItem(environment.userKey, btoa(authData.email));
+            localStorage.setItem(
+              environment.authKey,
+              btoa("" + usuarioAuth.id)
+            );
+            localStorage.setItem(environment.hashWebSocketKey, uuid.v4());
+            let fecha = new Date();
+            fecha.getDay();
+            localStorage.setItem(
+              "date",
+              fecha.getFullYear() +
+                "-" +
+                fecha.getMonth() +
+                "-" +
+                fecha.getDay()
+            );
+            this.store.dispatch(
+              new Login({ authToken: usuarioAuth.accessToken })
+            );
+            console.log(
+              "=socket ruta " +
+                this.ws.appWebSocketUrl +
+                localStorage.getItem(environment.hashWebSocketKey) +
+                "?dummy=1"
+            );
+            this.ws.setParameter();
+            this.ws.connect(
+              this.ws.appWebSocketUrl +
+                localStorage.getItem(environment.hashWebSocketKey) +
+                "?dummy=1"
+            );
+            this.ws.messages.subscribe((msg) => {
+              console.log("Response from websocket: ", msg);
+            });*/
 
-	/*
+            if (usuarioAuth.tieneDobleFactor == false) {
+              //console.log("@@@@@@@@@@@@@===>> entra en paring ", authData);
+              this.router.navigateByUrl(
+                "/auth/paring?token=" +
+                  usuarioAuth.accessToken +
+                  "&user=" +
+                  authData.email
+              );
+            } else {
+              //   console.log(
+              //     "@@@@@@@@@@@@@===>> entra en validation ",
+              //     authData,
+              //     btoa(JSON.stringify(usuarioAuth))
+              //   );
+              usuarioAuth.timestamp = Date.now();
+              this.router.navigateByUrl(
+                "/auth/validation?user=" +
+                  authData.email +
+                  "&data=" +
+                  btoa(JSON.stringify(usuarioAuth))
+              );
+            }
+          } else if (usuarioAuth) {
+            this.authNoticeService.setNotice(
+              this.translate.instant(usuarioAuth.mensajeError),
+              "danger"
+            );
+          } else {
+            this.authNoticeService.setNotice(
+              this.translate.instant("AUTH.VALIDATION.INVALID_LOGIN"),
+              "danger"
+            );
+          }
+        }),
+        takeUntil(this.unsubscribe),
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        })
+      )
+      .subscribe(
+        (data) => {},
+        (error) => {
+          if (error.error) {
+            this.authNoticeService.setNotice(
+              this.translate.instant("AUTH.VALIDATION.INVALID_LOGIN") +
+                " - " +
+                error.error.codError +
+                " - " +
+                error.error.msgError,
+              "danger"
+            );
+          } else {
+            this.authNoticeService.setNotice(
+              this.translate.instant("AUTH.VALIDATION.INVALID_LOGIN"),
+              "danger"
+            );
+          }
+        }
+      );
+  }
+
+  /*
 	public serverLogin(authData): Observable<UsuarioAuth>{
 		
 		return this.authRelative.login( authData.email, authData.password )
@@ -202,23 +270,24 @@ export class LoginComponent implements OnInit, OnDestroy {
 	}
 	*/
 
-	/**
-	 * Checking control validation
-	 *
-	 * @param controlName: string => Equals to formControlName
-	 * @param validationType: string => Equals to valitors name
-	 */
-	isControlHasError(controlName: string, validationType: string): boolean {
-		const control = this.loginForm.controls[controlName];
-		if (!control) {
-			return false;
-		}
+  /**
+   * Checking control validation
+   *
+   * @param controlName: string => Equals to formControlName
+   * @param validationType: string => Equals to valitors name
+   */
+  isControlHasError(controlName: string, validationType: string): boolean {
+    const control = this.loginForm.controls[controlName];
+    if (!control) {
+      return false;
+    }
 
-		const result = control.hasError(validationType) && (control.dirty || control.touched);
-		return result;
-	}
+    const result =
+      control.hasError(validationType) && (control.dirty || control.touched);
+    return result;
+  }
 
-	/*
+  /*
 	private userReturn(  dataLogin,dataParam,dataRoles:Array<RolWrapper>, credential): Observable<any>{
         
         //console.log( "++>FLAT MAP BUSCANDO PARAMETROS: " ) ;
@@ -272,5 +341,4 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
 	}
 	*/
-	
 }

@@ -1,0 +1,41 @@
+<div class="kt-login__body">
+  <div class="kt-login__form">
+    <div class="kt-login__title">
+      <h3>{{ "REGENERAL.QR_PAGE.REGISTRO_QR" | translate }}</h3>
+    </div>
+    <kt-auth-notice></kt-auth-notice>
+    <article class="doubleFactor">
+      <img
+        style="width: 10rem; height: 10rem"
+        *ngIf="loadQr | async"
+        src="{{ 'data:image/jpg;base64,' + qr }}"
+      />
+      <h2>
+        Por favor en su t&#233;lefono descargue la aplicaci&#243;n Google
+        Authenticator, luego registre su c&#243;digo QR en la
+        aplicaci&#243;n.<br />
+        Esta aplicaci&#243;n genera un c&#243;digo temporal de 6 d&#237;gitos,
+        los mismos que le ser&#225;n solicitados de aqu&#237; en adelante una
+        vez que realice el login en el sistema.<br />
+        Si tiene dudas comuniquese con soporte al correo soporte@quski.ec o
+        revise el siguiente
+        <a href="https://www.youtube.com/watch?v=N90enOxB_Z8" target="_blank"
+          >video</a
+        >
+      </h2>
+    </article>
+    <div class="kt-login__actions">
+      <button
+        *ngIf="buttonNotClicked"
+        class="btn btn-primary btn-elevate kt-login__btn-primary"
+        [ngClass]="{
+          'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light':
+            loading
+        }"
+        (click)="registroQr()"
+      >
+        {{ "REGENERAL.QR_PAGE.CONTINUAR" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
