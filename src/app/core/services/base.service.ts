@@ -38,7 +38,7 @@ export class BaseService {
   public idelTimeout: string;
   public versionFront: string;
 
-  public softBaseBankUrl:string;  
+  public softBaseBankUrl:string;
 
   constructor() {
     this.params = new HttpParams();
@@ -46,7 +46,7 @@ export class BaseService {
       this.headers= new HttpHeaders({ 'Content-Type': 'application/json' });
       //console.log("Hola, creaste los headers");
       if( localStorage.getItem( environment.authTokenKey ) ){
-        this.headers=new HttpHeaders({ 
+        this.headers=new HttpHeaders({
           'Authorization':environment.authprefix+ localStorage.getItem(environment.authTokenKey),
           'Content-Type': 'application/json' }
           );
@@ -78,13 +78,13 @@ export class BaseService {
            this.userRolServiceUrl = atob(localStorage.getItem( environment.prefix + 'RE003')).replace(this.keyUnencrypt, '');
            //Full url par datos del servicio core-security-web
            this.menuServiceUrl = atob(localStorage.getItem( environment.prefix + 'RE004')).replace(this.keyUnencrypt, '');
-           //Path al rootcontext de la app 
+           //Path al rootcontext de la app
            //Path al resources de la app
            this.appResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE006')).replace(this.keyUnencrypt, '');
           // this.appResourcesUrl = 'https://plataforma-oro.quski.ec:28888/quski-bpm/1.0.0/';
-           
+
           // this.appResourcesUrl = 'http://10.37.10.180:8480/quski-oro-rest/resources/';
-          // this.appResourcesUrl = 'http://localhost:28080/quski-oro-rest/resources/';
+           this.appResourcesUrl = 'http://localhost:8080/quski-oro-rest/resources/';
           //this.appResourcesUrl = 'http://10.37.10.81:8480/quski-oro-rest/resources/';
            //Path al resources de la app
 
@@ -93,8 +93,8 @@ export class BaseService {
            //Path contextroot generic-relative-core
            this.genericResourcesUrl = atob(localStorage.getItem( environment.prefix + 'RE008')).replace(this.keyUnencrypt, '');
 
-           
-           //object storage 
+
+           //object storage
            this.mongoDb = atob(localStorage.getItem( environment.prefix + 'RE009')).replace(this.keyUnencrypt, '');
            this.mongoAlertaColeccion = atob(localStorage.getItem( environment.prefix + 'RE010')).replace(this.keyUnencrypt, '');
            //parametros quski
@@ -103,9 +103,9 @@ export class BaseService {
            this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
            this.databaseName="quski-core-documento";
            this.estructuraArchivos="estructura-archivos";
-           
-  } 
-  
+
+  }
+
  /*  public setParameter() {
     localStorage.setItem('setRE000', 'true');
     this.keyUnencrypt = atob( localStorage.getItem(environment.prefix +'RE011'));
@@ -116,7 +116,7 @@ export class BaseService {
     //Full url para datos de usuario por rol core-security-web
     this.userRolServiceUrl = 'http://localhost:28080/core-security-web/resources/usuarioRolRestController/getEntitiesByUsuario';
     //Full url par datos del servicio core-security-web
-    //Path al rootcontext de la app 
+    //Path al rootcontext de la app
     //this.appRootContextUrl = 'http://localhost:28080/quski-oro-rest/';
     //Path al resources de la app
     this.appResourcesUrl = 'http://localhost:28080/quski-oro-rest/resources/';
@@ -125,7 +125,7 @@ export class BaseService {
     //Path contextroot generic-relative-core
     //this.genericResourcesUrl = 'http://186.4.199.176:18080/generic-relative-rest/resources/';
     this.genericResourcesUrl = 'http://localhost:28080/generic-relative-rest/resources/';
-    //object storage 
+    //object storage
     this.mongoDb = atob(localStorage.getItem( environment.prefix + 'RE009')).replace(this.keyUnencrypt, '');
     this.mongoAlertaColeccion = atob(localStorage.getItem( environment.prefix + 'RE010')).replace(this.keyUnencrypt, '');
     //parametros quski
@@ -133,10 +133,10 @@ export class BaseService {
     //parametros cloudstudio
     this.softBaseBankUrl = atob(localStorage.getItem( environment.prefix + 'RE013')).replace(this.keyUnencrypt, '');
   } */
-  
+
 
   public getSystemDate() {
-    this.options = { headers: this.headers };      
+    this.options = { headers: this.headers };
     return this.http.get(
       this.genericResourcesUrl + 'parametroRestController/getSystemDate',
       this.options
@@ -205,7 +205,7 @@ export class BaseService {
   }
 
   public generateToken() {
-    
+
     // if (!localStorage.getItem(AppConfig.TOKEN_KEY)) {
     //   localStorage.removeItem(AppConfig.TOKEN_KEY);
     //   localStorage.removeItem(AppConfig.EXPIRATION_TOKEN_KEY);
@@ -297,6 +297,6 @@ export class BaseService {
 
 
 
-  
+
 
 }

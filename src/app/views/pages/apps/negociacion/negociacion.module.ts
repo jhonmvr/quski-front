@@ -67,6 +67,7 @@ import { CrearRenovacionComponent } from './crear-renovacion/crear-renovacion.co
 import { DetallePagoComponent } from './detalle-pago/detalle-pago.component';
 import { DetalleBloqueoComponent } from './detalle-bloqueo/detalle-bloqueo.component';
 import { DialogCargarAutorizacionComponent } from './gestion-negociacion/dialog-cargar-autorizacion/dialog-cargar-autorizacion.component';
+import { ExcepcionOperativaListComponent } from './excepcion-operativa-list/excepcion-operativa-list.component';
 
 const routes: Routes = [
 	{
@@ -117,7 +118,7 @@ const routes: Routes = [
 				component: NovacionHabilitanteComponent
 			},
 			{
-				path: 'gestion-cliente/:origen/:item',     // Ejem:  /NEG/130 
+				path: 'gestion-cliente/:origen/:item',     // Ejem:  /NEG/130
 				component: GestionClienteComponent		   // Ejem:  /CED/1760451987
 			},
 			{
@@ -131,9 +132,13 @@ const routes: Routes = [
 			{
 				path: 'pago/detalle-pago/:id',
 				component: DetallePagoComponent
+			},
+			{
+				path: 'excepcion-operativa/list',
+				component: ExcepcionOperativaListComponent
 			}
-			
-			
+
+
 
 
 		]
@@ -202,19 +207,20 @@ const routes: Routes = [
 		BandejaProcesoGerenciaComponent,
 		GenerarCreditoComponent,
 		NovacionHabilitanteComponent,
-		GestionClienteComponent,		
+		GestionClienteComponent,
 		DialogCargarHabilitanteComponent,
 		PopUpNacimientoComponent,
 		CrearRenovacionComponent,
 		DetallePagoComponent,
 		DetalleBloqueoComponent,
-		DialogCargarAutorizacionComponent
+		DialogCargarAutorizacionComponent,
+  ExcepcionOperativaListComponent
 	],
 	entryComponents: [
 		ErrorCargaInicialComponent,
 		VerCotizacionesComponent,
 		ListaExcepcionesComponent,
-		ReasignarUsuarioComponent,		
+		ReasignarUsuarioComponent,
 		DialogCargarHabilitanteComponent,
 		PopUpNacimientoComponent,
 		DialogCargarAutorizacionComponent
