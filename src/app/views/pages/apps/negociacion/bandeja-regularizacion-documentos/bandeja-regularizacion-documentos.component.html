@@ -1,5 +1,5 @@
 <re-portlet>
-    <re-portlet-header [title]="'BANDEJA DE EXCEPCIONES OPERATIVAS'" [class]="'kt-portlet__head--lg'"
+    <re-portlet-header [title]="'BANDEJA DE REGULARIZACION DE DOCUMENTOS'" [class]="'kt-portlet__head--lg'"
         style="background-color: rgb(112, 157, 216);">
         <ng-container ktPortletTools>
 
@@ -104,7 +104,7 @@
                     <div class="row">
 
                         <div class="col-4 offset-1">
-                            <button mat-raised-button color="basic" (click)="loadExcepciones(null, 'PENDIENTE', codigo.value, codigoBpm.value, idNegociacion.value)">
+                            <button mat-raised-button color="basic" (click)="loadExcepciones(null, estadoRegularizacion, codigo.value, codigoBpm.value, idNegociacion.value)">
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>
                                 <span>Buscar</span>
                             </button>

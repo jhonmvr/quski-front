@@ -28,6 +28,7 @@ import { ProcesoService } from '../../../../../core/services/quski/proceso.servi
 import { ConsultaCliente } from '../../../../../core/model/softbank/ConsultaCliente';
 import { RelativeDateAdapter } from './../../../../../core/util/relative.dateadapter';
 import { YearMonthDay } from './../../../../../core/model/quski/YearMonthDay';
+import { ExcepcionOperativaService } from './../../../../../core/services/quski/excepcion-operativa.service';
 export interface cliente {
   identificacion: string;
   fechaNacimiento: string;
@@ -98,7 +99,9 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   recibirOpagar: any = '';
   numeroOperacionMadre: any;
   idNego: any;
+  public descuentoServicios = new FormControl('', [Validators.required, ValidateDecimal, Validators.min(0.01)]);
   constructor(
+    private excepcionOperativaService: ExcepcionOperativaService,
     private cre: CreditoNegociacionService,
     private sof: SoftbankService,
     private cal: CalculadoraService,
@@ -177,7 +180,10 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
               this.credit.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
           this.credit.proceso.estadoProceso == 'PENDIENTE_APROBACION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') : 
           this.credit.proceso.estadoProceso == 'PENDIENTE_APROBACION_DEVUELTO' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
-          this.credit.proceso.estadoProceso == 'CADUCADO' ? this.salirDeGestion('CADUCADO.') : '';
+          this.credit.proceso.estadoProceso == 'PENDIENTE_EXCEPCION_OPERATIVA' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
+          this.credit.proceso.estadoProceso == 'CADUCADO' ? this.salirDeGestion('CADUCADO.') : 
+          this.credit.proceso.estadoProceso == 'EXCEPCIONADO_OPERATIVA' ? this.validarExcepcionesOperativa(this.credit): '';
+          
               this.cargarCampos();
             }else{
               this.abrirSalirGestion("Error al intentar cargar el credito.");
@@ -188,10 +194,12 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
           this.cre.buscarRenovacionByNumeroOperacionMadre(json.params.item).subscribe((data: any) => {
            
             this.credit = data.entidad;
+           
             this.riesgoAcumulado();
             this.simularOpciones();
             //console.log("datos ->", this.credit);
             if (this.credit ) {
+              
               this.cargarCampos();
             }else{
               this.abrirSalirGestion("Error al intentar cargar el credito.");
@@ -203,6 +211,27 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         
       } 
     });
+  }
+
+  private validarExcepcionesOperativa(tmp: any) {
+    this.excepcionOperativaService.findByNegociacionAndTipo(tmp.credito.tbQoNegociacion.id,'Cobranza y servicios','APROBADO').subscribe(e=>{
+      if(!e){
+        return;
+      }
+      const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+        width: "800px",
+        height: "auto",
+        data: {
+          mensaje: 'Observacion Aprobador: ' + e.observacionAprobador,
+           titulo: 'EXCEPCION ' +e. estadoExcepcion
+        }
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        //this.calcularOpciones(null);
+        this.descuentoServicios.setValue(e.montoInvolucrado);
+      });
+    });
+    
   }
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     
@@ -791,5 +820,86 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         this.edadCliente.setValue(diff.year);
       });
     }
+  }
+
+  
+  solicitarExcepcionServicios(){
+    if(!this.credit.proceso){
+      if(this.tipoCliente.invalid){
+        this.sinNotSer.setNotice("SELECCIONA UN TIPO DE CLIENTE", 'warning');
+        return;
+      }
+      if(this.formTipoCliente.invalid){
+        this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LA INFORMACION DEL CODEUDOR/APODERADO", 'warning');
+        return;
+      }
+      this.cre.crearCreditoRenovacion({opcion: this.selection.selected.length > 0 ? this.selection.selected[0] : null,
+        nombreApoderado: this.nombreApoderado.value,
+        identificacionApoderado: this.identificacionApoderado.value,
+        fechaNacimientoApoderado: this.fechaNacimientoApoderado.value,
+        fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value,
+        tipoCliente: this.tipoCliente.value?this.tipoCliente.value.codigo:null,
+        nombreCodeudor: this.nombreCodeudor.value,
+        identificacionCodeudor: this.identificacionCodeudor.value },  this.numeroOperacion,
+         this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
+        if(data.entidad){
+          this.credit = data.entidad;
+          const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
+            width: '800px',
+            height: 'auto',
+            data: 'Solicitar excepcion de servicios'
+          });
+          dialogRefGuardar.afterClosed().subscribe((result: any) => {
+            if (result) {
+              let excepcionServicios = {
+                "idNegociacion": this.credit.credito.tbQoNegociacion,
+                "codigoOperacion": this.credit.credito.codigo,
+                "tipoExcepcion": "Cobranza y servicios",
+                "estadoExcepcion": "PENDIENTE",
+                "montoInvolucrado": this.descuentoServicios.value,
+                "usuarioSolicitante": localStorage.getItem("reUser"),
+                "observacionAsesor": "",
+                };
+              this.excepcionOperativaService.solicitarExcepcionServicios(excepcionServicios,"RENOVACION").subscribe(p=>{
+                this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+              });
+              
+            } else {
+              this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
+            }
+          });
+        }
+      });
+    }else{
+      const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
+        width: '800px',
+        height: 'auto',
+        data: 'Solicitar excepcion de servicios'
+      });
+      dialogRefGuardar.afterClosed().subscribe((result: any) => {
+        if (result) {
+          let excepcionServicios = {
+            "idNegociacion": this.credit.credito.tbQoNegociacion,
+            "codigoOperacion": this.credit.credito.codigo,
+            "tipoExcepcion": "Cobranza y servicios",
+            "estadoExcepcion": "PENDIENTE",
+            "montoInvolucrado": this.descuentoServicios.value,
+            "usuarioSolicitante": localStorage.getItem("reUser"),
+            "observacionAsesor": "",
+            };
+          this.excepcionOperativaService.solicitarExcepcionServicios(excepcionServicios,"NUEVO").subscribe(p=>{
+            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+          });
+          
+        } else {
+          this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
+        }
+      });
+    }
+    if(this.descuentoServicios.invalid){
+      this.sinNotSer.setNotice('Complete el valor de descuento', 'warning');
+      return;
+    } 
+    
   }
 }

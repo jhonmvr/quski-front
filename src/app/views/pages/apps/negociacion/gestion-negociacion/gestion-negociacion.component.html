@@ -609,6 +609,20 @@
 							</button>
                         </div>
                     </div>
+                    
+                    <div class="row col-md-2">
+                        <mat-form-field  class="mat-form-field-fluid">
+                            <input [formControl]="descuentoServicios" placeholder="Descuento servicios" autocomplete="off" matInput numeric numericType="number">
+                            <mat-error  *ngIf="descuentoServicios.errors">Completa Correctamente</mat-error>
+                        </mat-form-field>
+                        </div>
+                        <div class="col-md-2">
+                        <button mat-stroked-button color="primary" (click)="solicitarExcepcionServicios()" matTooltip="Solicitar Excepcion de servicios" matTooltipPosition="above">
+                            <mat-icon style="font-size: 24px;" color="primary" >check
+                            </mat-icon>
+                            <span color="primary">Solicitar Excepcion de servicios</span>
+                        </button>
+                    </div>
                     <div class="row mt-3">
                         <div class="col-4 offset-5">
                             <button mat-raised-button color="accent" (click)="guardarCredito()" style="align-self: center;">

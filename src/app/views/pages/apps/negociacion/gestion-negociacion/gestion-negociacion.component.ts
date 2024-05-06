@@ -38,6 +38,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { DialogCargarAutorizacionComponent } from './dialog-cargar-autorizacion/dialog-cargar-autorizacion.component';
 import { DocumentoHabilitanteService } from '../../../../../../app/core/services/quski/documento-habilitante.service';
 import { Page } from "../../../../../../app/core/model/page";
+import { ConfirmarAccionComponent } from '../../../../../../app/views/partials/custom/popups/confirmar-accion/confirmar-accion.component';
+import { ExcepcionOperativaService } from '../../../../../../app/core/services/quski/excepcion-operativa.service';
 
 
 @Component({
@@ -138,6 +140,7 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
   public catTipoCliente;
   public formOpcionesCredito: FormGroup = new FormGroup({});
   public montoSolicitado = new FormControl('', [Validators.required, ValidateDecimal, Validators.min(0.01)]);
+  public descuentoServicios = new FormControl('', [Validators.required, ValidateDecimal, Validators.min(0.01)]);
 
   public formOperacion: FormGroup = new FormGroup({});
 
@@ -168,7 +171,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
     private subheaderService: SubheaderService,
     private laytoutService: LayoutConfigService,
     private procesoService: ProcesoService,
-    public tra: TrackingService
+    public tra: TrackingService,
+    private excepcionOperativaService: ExcepcionOperativaService
   ) {
     super(tra);
     this.sof.setParameter();
@@ -325,7 +329,9 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         //this.negoW.proceso.proceso == 'NUEVO' ? null : 
         this.negoW.proceso.estadoProceso == 'DEVUELTO' ? this.popupDevolucion() : null;
         this.negoW.proceso.estadoProceso == 'EXCEPCIONADO' ? this.validarExcepciones(this.negoW):'';
+        this.negoW.proceso.estadoProceso == 'EXCEPCIONADO_OPERATIVA' ? this.validarExcepcionesOperativa(this.negoW):'';
         this.negoW.proceso.estadoProceso == 'PENDIENTE_EXCEPCION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
+        this.negoW.proceso.estadoProceso == 'PENDIENTE_EXCEPCION_OPERATIVA' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
           this.negoW.proceso.estadoProceso == 'PENDIENTE_APROBACION' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') : 
           this.negoW.proceso.estadoProceso == 'PENDIENTE_APROBACION_DEVUELTO' ? this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.') :
           this.negoW.proceso.estadoProceso == 'CADUCADO' ? this.salirDeGestion('CADUCADO.') : '';
@@ -426,6 +432,23 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         }
       });
     }
+  }
+  private validarExcepcionesOperativa(tmp: NegociacionWrapper) {
+    this.excepcionOperativaService.findByNegociacionAndTipo(tmp.credito.tbQoNegociacion.id,'Cobranza y servicios','APROBADO').subscribe(e=>{
+      const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+        width: "800px",
+        height: "auto",
+        data: {
+          mensaje: 'Observacion Aprobador: ' + e.observacionAprobador,
+           titulo: 'EXCEPCION ' +e. estadoExcepcion
+        }
+      });
+      dialogRef.afterClosed().subscribe(r => {
+        //this.calcularOpciones(null);
+        this.descuentoServicios.setValue(e.montoInvolucrado);
+      });
+    });
+    
   }
 
   private iniciarNegociacionFromCot(id: number) {
@@ -758,6 +781,41 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         }
       }
     });
+  }
+  solicitarExcepcionServicios(){
+    if(this.descuentoServicios.invalid){
+      this.sinNotSer.setNotice('Complete el valor de descuento', 'warning');
+      return;
+    } 
+    if (this.negoW.joyas && this.negoW.joyas.length > 0) {
+    
+      const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
+        width: '800px',
+        height: 'auto',
+        data: 'Solicitar excepcion de servicios'
+      });
+      dialogRefGuardar.afterClosed().subscribe((result: any) => {
+        if (result) {
+          let excepcionServicios = {
+            "idNegociacion": this.negoW.credito.tbQoNegociacion,
+            "codigoOperacion": this.negoW.credito.codigo,
+            "tipoExcepcion": "Cobranza y servicios",
+            "estadoExcepcion": "PENDIENTE",
+            "montoInvolucrado": this.descuentoServicios.value,
+            "usuarioSolicitante": localStorage.getItem("reUser"),
+            "observacionAsesor": "",
+            };
+          this.excepcionOperativaService.solicitarExcepcionServicios(excepcionServicios,"NUEVO").subscribe(p=>{
+            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+          });
+          
+        } else {
+          this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
+        }
+      });
+    } else {
+      this.sinNotSer.setNotice('REGISTRE ALMENOS UNA JOYA EN TASACION', 'warning');
+    }
   }
   solicitarCobertura() {
     let x ;

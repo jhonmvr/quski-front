@@ -366,12 +366,25 @@
                                 <span color="primary">Aplicar Monto</span>
                             </button>
                         </div>
-
+                       
                         <div class="offset-6 col-md-2">
                             <button mat-raised-button color="accent" matStepperNext (click)="solicitarExcepcionCobertura()">
                                 <span color="primary">Solicitar Cobertura </span>
                             </button>
                         </div>
+                    </div>
+                    <div class="row col-md-2">
+                        <mat-form-field  class="mat-form-field-fluid">
+                            <input [formControl]="descuentoServicios" placeholder="Descuento servicios" autocomplete="off" matInput numeric numericType="number">
+                            <mat-error  *ngIf="descuentoServicios.errors">Completa Correctamente</mat-error>
+                        </mat-form-field>
+                        </div>
+                        <div class="col-md-2">
+                        <button mat-stroked-button  (click)="solicitarExcepcionServicios()" matTooltip="Solicitar Excepcion de servicios" matTooltipPosition="above">
+                            <mat-icon style="font-size: 24px;" >check
+                            </mat-icon>
+                            <span color="primary">Solicitar Excepcion de servicios</span>
+                        </button>
                     </div>
                     <div class="row mt-3 justify-content-center">
                         <div class="col-2">

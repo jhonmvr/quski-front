@@ -68,6 +68,11 @@ import { DetallePagoComponent } from './detalle-pago/detalle-pago.component';
 import { DetalleBloqueoComponent } from './detalle-bloqueo/detalle-bloqueo.component';
 import { DialogCargarAutorizacionComponent } from './gestion-negociacion/dialog-cargar-autorizacion/dialog-cargar-autorizacion.component';
 import { ExcepcionOperativaListComponent } from './excepcion-operativa-list/excepcion-operativa-list.component';
+import { AprobadorExcepcionOperativaComponent } from './excepcion-operativa-list/aprobador-excepcion-operativa/aprobador-excepcion-operativa.component';
+import { AprobacionFabricaComponent } from './excepcion-operativa-list/aprobacion-fabrica/aprobacion-fabrica.component';
+import { BandejaRegularizacionDocumentosComponent } from './bandeja-regularizacion-documentos/bandeja-regularizacion-documentos.component';
+import { AprodadorRegularizacionDocumentosComponent } from './bandeja-regularizacion-documentos/aprodador-regularizacion-documentos/aprodador-regularizacion-documentos.component';
+import { DetalleRegularizacionDocumentosComponent } from './bandeja-regularizacion-documentos/detalle-regularizacion-documentos/detalle-regularizacion-documentos.component';
 
 const routes: Routes = [
 	{
@@ -136,7 +141,28 @@ const routes: Routes = [
 			{
 				path: 'excepcion-operativa/list',
 				component: ExcepcionOperativaListComponent
-			}
+			},
+			{
+				path: 'excepcion-operativa/list/aprobador/:id',
+				component: AprobadorExcepcionOperativaComponent
+			},
+			{
+				path: 'excepcion-operativa/list/aprobadorFabrica/:id',
+				component: AprobacionFabricaComponent
+			},
+			{
+				path: 'regularizacion-documentos/list',
+				component: BandejaRegularizacionDocumentosComponent
+			},
+			{
+				path: 'regularizacion-documentos/list/detalle/:id',
+				component: DetalleRegularizacionDocumentosComponent
+			},
+			{
+				path: 'regularizacion-documentos/list/aprobador/:id',
+				component: AprodadorRegularizacionDocumentosComponent
+			},
+			
 
 
 
@@ -214,7 +240,12 @@ const routes: Routes = [
 		DetallePagoComponent,
 		DetalleBloqueoComponent,
 		DialogCargarAutorizacionComponent,
-  ExcepcionOperativaListComponent
+  ExcepcionOperativaListComponent,
+  AprobadorExcepcionOperativaComponent,
+  AprobacionFabricaComponent,
+  BandejaRegularizacionDocumentosComponent,
+  AprodadorRegularizacionDocumentosComponent,
+  DetalleRegularizacionDocumentosComponent
 	],
 	entryComponents: [
 		ErrorCargaInicialComponent,

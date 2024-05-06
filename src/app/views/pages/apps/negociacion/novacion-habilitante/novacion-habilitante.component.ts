@@ -18,6 +18,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { saveAs } from 'file-saver';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
+import { ExcepcionOperativaService } from '../../../../../core/services/quski/excepcion-operativa.service';
+import { TbQoProceso } from '../../../../../core/model/quski/TbQoProceso';
 
 
 @Component({
@@ -65,7 +67,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   public catFirmanteOperacion;
   public catTipoCliente;
   public catExcepcionOperativa: Array<any>;
-  credit: {credito: TbQoCreditoNegociacion, cuentas: any};
+  credit: {credito: TbQoCreditoNegociacion, cuentas: any, proceso:TbQoProceso};
   aprobar: boolean;
   item: any;
   private agencia: any;
@@ -74,6 +76,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
 
 
   constructor(
+    private excepcionOperativaService: ExcepcionOperativaService,
     private cre: CreditoNegociacionService,
     private par: ParametroService,
     private sof: SoftbankService,
@@ -263,7 +266,8 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
         if(r){
           this.cre.solicitarAprobacionRenovacion( this.credit.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor,this.observacionAsesor.value ).subscribe( (data: any) =>{
             if(data.entidad){
-              this.sinNotSer.setNotice('CREDITO ENVIADO A APROBACION FABRICA','success');
+              //
+              this.solicitarExcepcionOperativa();
               this.router.navigate(['negociacion/bandeja-operaciones']);
               this.cre.validacionDocumento(this.credit.credito.tbQoNegociacion.id).subscribe(a=>{
 
@@ -460,5 +464,38 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       const input = this.formOperacion.get("tipoCuenta");
       return input.hasError("required") ? errorRequerido : "";
     }
+  }
+
+  solicitarExcepcionOperativa(){
+    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
+      return;
+    }
+    let excepcionServicios = {
+      "idNegociacion": this.credit.credito.tbQoNegociacion,
+      "codigoOperacion": this.credit.credito.codigo,
+      "tipoExcepcion": "Fabrica",
+      "estadoExcepcion": "PENDIENTE",
+      "usuarioSolicitante": localStorage.getItem("reUser"),
+      "observacionAsesor": this.excepcionOperativa.value ? this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') : null + " \n" + this.observacionAsesor.value
+      };
+    this.excepcionOperativaService.solicitarExcepcionFabrica(excepcionServicios,this.credit.proceso.proceso).subscribe(p=>{
+      this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+    });
+    
+  }
+
+  private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
+    let pData = {
+      mensaje: dataMensaje,
+      titulo: dataTitulo ? dataTitulo : null
+    }
+    const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+      width: "800px",
+      height: "auto",
+      data: pData
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      this.router.navigate(['negociacion/bandeja-operaciones']);
+    });
   }
 }

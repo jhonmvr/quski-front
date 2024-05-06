@@ -146,7 +146,7 @@
                                     <mat-icon matTooltip="Ver traking">timeline</mat-icon>
                                 </a>
                             </ng-container>
-                            <ng-container *ngIf="(row.estadoProceso == 'CREADO' || row.estadoProceso == 'EXCEPCIONADO' || row.estadoProceso == 'DEVUELTO'  || row.estadoProceso == 'ARRIBADO') && row.asesor == usuario">
+                            <ng-container *ngIf="(row.estadoProceso == 'EXCEPCIONADO OPERATIVA' || row.estadoProceso == 'CREADO' || row.estadoProceso == 'EXCEPCIONADO' || row.estadoProceso == 'DEVUELTO'  || row.estadoProceso == 'ARRIBADO'  ) && row.asesor == usuario">
                                 <a (click)="verOperacion(row)">
                                     <mat-icon matTooltip="Ver Operacion">edit</mat-icon>
                                 </a>

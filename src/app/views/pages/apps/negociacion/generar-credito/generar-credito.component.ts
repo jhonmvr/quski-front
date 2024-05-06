@@ -25,6 +25,7 @@ import { saveAs } from 'file-saver';
 import { TrackingService } from '../../../../../core/services/quski/tracking.service';
 import { AddFotoComponent } from '../../../../partials/custom/fotos/add-foto/add-foto.component';
 import { LayoutConfigService } from '../../../../../core/_base/layout';
+import { ExcepcionOperativaService } from '../../../../../core/services/quski/excepcion-operativa.service';
 @Component({
   selector: 'kt-generar-credito',
   templateUrl: './generar-credito.component.html',
@@ -128,6 +129,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
 
 
   constructor(
+    private excepcionOperativaService: ExcepcionOperativaService,
     private cre: CreditoNegociacionService,
     private doc: DocumentoHabilitanteService,
     private obj: ObjectStorageService,
@@ -225,7 +227,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     });
   }
   private validarOperacion(data: OperacionNuevoWrapper) {
-    if (data.proceso.estadoProceso == "CREADO" || data.proceso.estadoProceso == "DEVUELTO" || data.proceso.estadoProceso == "EXCEPCIONADO") {
+    if (data.proceso.estadoProceso == "CREADO" || data.proceso.estadoProceso == "DEVUELTO" || data.proceso.estadoProceso == "EXCEPCIONADO" || data.proceso.estadoProceso == "EXCEPCIONADO_OPERATIVA") {
       if (data.proceso.proceso == "NUEVO") {
         if(data.existe && data.joyas){
           if(data.cuentas){
@@ -629,6 +631,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
         if(r){
           this.cre.solicitarAprobacionNuevo(this.operacionNuevo.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor, this.observacionAsesor.value).subscribe( (data: any) =>{
             if(data){
+              this.solicitarExcepcionOperativa();
               this.router.navigate(['negociacion/bandeja-operaciones']);
               this.cre.validacionDocumento(this.operacionNuevo.credito.tbQoNegociacion.id).subscribe(a=>{
 
@@ -651,5 +654,24 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   onlyOdds = (d: Date): boolean => {
     const date = d.getDate();
     return date<27;
+  }
+
+  
+  solicitarExcepcionOperativa(){
+    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
+      return;
+    }
+    let excepcionServicios = {
+      "idNegociacion": this.operacionNuevo.credito.tbQoNegociacion,
+      "codigoOperacion": this.operacionNuevo.credito.codigo,
+      "tipoExcepcion": "Fabrica",
+      "estadoExcepcion": "PENDIENTE",
+      "usuarioSolicitante": localStorage.getItem("reUser"),
+      "observacionAsesor": this.excepcionOperativa.value ? this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') : null + " \n" + this.observacionAsesor.value
+      };
+    this.excepcionOperativaService.solicitarExcepcionFabrica(excepcionServicios,this.operacionNuevo.proceso.proceso).subscribe(p=>{
+      this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+    });
+    
   }
 }

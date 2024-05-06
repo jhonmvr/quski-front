@@ -1,24 +1,23 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Page } from '../../../../../../app/core/model/page';
-import { ExcepcionOperativaService } from '../../../../../../app/core/services/quski/excepcion-operativa.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatDialog, MatPaginator, MatTableDataSource } from '@angular/material';
-import { LocalStorage } from '@ng-idle/core';
-import { AprobadorExcepcionOperativaComponent } from './aprobador-excepcion-operativa/aprobador-excepcion-operativa.component';
+import { FormGroup, FormControl } from '@angular/forms';
+import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import { Page } from '../../../../../../app/core/model/page';
+import { RegularizacionDocumentosService } from '../../../../../../app/core/services/quski/regularizacion-documentos.service';
+import { environment } from '../../../../../../environments/environment';
 
 @Component({
-  selector: 'kt-excepcion-operativa-list',
-  templateUrl: './excepcion-operativa-list.component.html',
-  styleUrls: ['./excepcion-operativa-list.component.scss']
+  selector: 'kt-bandeja-regularizacion-documentos',
+  templateUrl: './bandeja-regularizacion-documentos.component.html',
+  styleUrls: ['./bandeja-regularizacion-documentos.component.scss']
 })
-export class ExcepcionOperativaListComponent implements OnInit {
+export class BandejaRegularizacionDocumentosComponent implements OnInit {
 
   results: any;
   error: string;
   p: Page = new Page();
   dataSource = new MatTableDataSource<any>();
-  displayedColumns: string[] = ['Accion', 'codigo', 'codigoOperacion', 'tipoExcepcion', 'nivelAprobacion',  'montoInvolucrado', 'usuarioSolicitante', 'fechaSolicitud'];
+  displayedColumns: string[] = ['Accion', 'codigo', 'codigoOperacion', 'tipoExcepcion',  'usuarioSolicitante', 'fechaSolicitud'];
   public formFiltro: FormGroup = new FormGroup({});
   public codigo = new FormControl('');
   public idNegociacion = new FormControl('');
@@ -31,18 +30,22 @@ export class ExcepcionOperativaListComponent implements OnInit {
   public codigoSoft = new FormControl('');
   public agencia = new FormControl('');
   asesor = new FormControl('');
+  public estadoRegularizacion = 'PENDIENTE';
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  constructor(private excepcionOperativaService: ExcepcionOperativaService,public dialog: MatDialog, private router: Router) {
-    this.excepcionOperativaService.setParameter();
+  constructor(private regularizacionDocumentosService: RegularizacionDocumentosService,public dialog: MatDialog, private router: Router) {
+    this.regularizacionDocumentosService.setParameter();
   }
 
   ngOnInit(): void {
-    this.excepcionOperativaService.setParameter();
+    this.regularizacionDocumentosService.setParameter();
     this.p.isPaginated = "Y";
     this.p.pageSize = 10;
     this.p.currentPage = 0;
+    if(localStorage.getItem(environment.rolKey) == '4'){
+      this.estadoRegularizacion = 'PENDIENTE_APROBACION';
+    }
     this.loadExcepciones(null,'PENDIENTE');
   }
 
@@ -52,7 +55,7 @@ export class ExcepcionOperativaListComponent implements OnInit {
       this.p.pageSize = this.paginator.pageSize ? this.paginator.pageSize : 10;
     }
 
-    this.excepcionOperativaService.findAllByParams(this.p, localStorage.getItem('reUser'), estado, codigo, codigoOperacion, idNegociacion).subscribe({
+    this.regularizacionDocumentosService.findAllByParams(this.p, localStorage.getItem('reUser'), estado, codigo, codigoOperacion, idNegociacion).subscribe({
       next: (data) => {
         if (data) {
           this.dataSource.data = data.list;
@@ -79,10 +82,10 @@ export class ExcepcionOperativaListComponent implements OnInit {
   }
 
   verDetalle(element:any){
-    if(element.nivelAprobacion == 1){
-      this.router.navigate(['negociacion/excepcion-operativa/list/aprobadorFabrica/',element.id]);
-    }else{
-      this.router.navigate(['negociacion/excepcion-operativa/list/aprobador/',element.id]);
+    if(element.estadoRegularizacion == 'PENDIENTE'){
+      this.router.navigate(['negociacion/regularizacion-documentos/list/detalle/',element.id]);
+    }else if(element.estadoRegularizacion == 'PENDIENTE_APROBACION'){
+      this.router.navigate(['negociacion/regularizacion-documentos/list/aprobador/',element.id]);
     }
     
   }

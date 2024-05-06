@@ -1,6 +1,7 @@
 import { TbQoCreditoNegociacion } from '../quski/TbQoCreditoNegociacion';
 import { TbQoExcepcion } from '../quski/TbQoExcepcion';
 import { TbQoProceso } from '../quski/TbQoProceso';
+import { TbQoRegularizacionDocumento } from '../quski/TbQoRegularizacionDocumento';
 import { TbQoRiesgoAcumulado } from '../quski/TbQoRiesgoAcumulado';
 import { TbQoTasacion } from '../quski/TbQoTasacion';
 import { TbQoTelefonoCliente } from '../quski/TbQoTelefonoCliente';
@@ -15,6 +16,7 @@ export class DetalleNegociacionWrapper {
     joyas: Array<TbQoTasacion>;
     existeError: boolean;
     mensaje: string;
+    tbQoRegularizacionDocumento: TbQoRegularizacionDocumento;
     constructor() {
 
     }

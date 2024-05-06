@@ -3,6 +3,7 @@ import { TbQoCuentaBancariaCliente } from '../quski/TbQoCuentaBancariaCliente';
 import { TbQoDatoTrabajoCliente } from '../quski/TbQoDatoTrabajoCliente';
 import { TbQoDireccionCliente } from '../quski/TbQoDireccionCliente';
 import { TbQoExcepcion } from '../quski/TbQoExcepcion';
+import { TbQoExcepcionOperativa } from '../quski/TbQoExcepcionOperativa';
 import { TbQoProceso } from '../quski/TbQoProceso';
 import { TbQoRegistrarPago } from '../quski/TbQoRegistrarPago';
 import { TbQoRiesgoAcumulado } from '../quski/TbQoRiesgoAcumulado';
@@ -26,6 +27,7 @@ export class AprobacionWrapper {
     existeError: boolean;
     mensaje: string;
     joyas:any;
+    excepcion: TbQoExcepcionOperativa;
     
     constructor() {
 

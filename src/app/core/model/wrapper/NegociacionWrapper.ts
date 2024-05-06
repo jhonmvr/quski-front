@@ -1,5 +1,6 @@
 import { TbQoCreditoNegociacion } from '../quski/TbQoCreditoNegociacion';
 import { TbQoExcepcion } from '../quski/TbQoExcepcion';
+import { TbQoExcepcionOperativa } from '../quski/TbQoExcepcionOperativa';
 import { TbQoProceso } from '../quski/TbQoProceso';
 import { TbQoRiesgoAcumulado } from '../quski/TbQoRiesgoAcumulado';
 import { TbQoTasacion } from '../quski/TbQoTasacion';
@@ -20,6 +21,7 @@ export class NegociacionWrapper{
     codigoExcepcionBre;
     respuesta : boolean;
     existeError : boolean;
+    excepcionOperativa:TbQoExcepcionOperativa;
     constructor(){
       
     }
