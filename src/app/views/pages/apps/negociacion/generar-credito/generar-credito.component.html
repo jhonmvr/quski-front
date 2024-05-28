@@ -17,7 +17,7 @@
     <re-portlet-body>
         <mat-vertical-stepper [linear]="true" #stepper (animationDone)="guardarTraking('NUEVO',
         operacionNuevo ? operacionNuevo.credito ? operacionNuevo.credito.codigo : null : null, 
-        ['Información Operación','Día de pago','Asignacion de Funda','Datos Instruccion Operativa','Datos del Credito nuevo','Documento Habilitantes'], 
+        ['Información Operación','Día de pago','Asignacion de Funda','Datos Instruccion Operativa','Datos del Credito nuevo','Comprobante de desembolso','Documento Habilitantes'], 
         stepper.selectedIndex, 'GENERAR CREDITO',
         operacionNuevo ? operacionNuevo.credito ? operacionNuevo.credito.numeroOperacion : null : null )">
             <mat-step label="Información Operación" [stepControl]="formInformacion">
@@ -481,6 +481,10 @@
                     </mat-table>
 
                 </form>
+            </mat-step>
+            <mat-step label="Comprobante de desembolso">
+                <kt-comprobante-desembolso></kt-comprobante-desembolso>
+
             </mat-step>
             <mat-step label="Documento Habilitantes">
                 <ng-container *ngIf="existeCredito">

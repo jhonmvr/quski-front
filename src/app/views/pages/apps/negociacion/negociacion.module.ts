@@ -73,6 +73,7 @@ import { AprobacionFabricaComponent } from './excepcion-operativa-list/aprobacio
 import { BandejaRegularizacionDocumentosComponent } from './bandeja-regularizacion-documentos/bandeja-regularizacion-documentos.component';
 import { AprodadorRegularizacionDocumentosComponent } from './bandeja-regularizacion-documentos/aprodador-regularizacion-documentos/aprodador-regularizacion-documentos.component';
 import { DetalleRegularizacionDocumentosComponent } from './bandeja-regularizacion-documentos/detalle-regularizacion-documentos/detalle-regularizacion-documentos.component';
+import { ComprobanteDesembolsoComponent } from './generar-credito/comprobante-desembolso/comprobante-desembolso.component';
 
 const routes: Routes = [
 	{
@@ -245,7 +246,8 @@ const routes: Routes = [
   AprobacionFabricaComponent,
   BandejaRegularizacionDocumentosComponent,
   AprodadorRegularizacionDocumentosComponent,
-  DetalleRegularizacionDocumentosComponent
+  DetalleRegularizacionDocumentosComponent,
+  ComprobanteDesembolsoComponent
 	],
 	entryComponents: [
 		ErrorCargaInicialComponent,
