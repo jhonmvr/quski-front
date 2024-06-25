@@ -1,0 +1,48 @@
+.doubleFactor {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  //text-align: center;
+  width: 70%;
+  position: relative;
+}
+
+.doubleFactor h2 {
+  margin-top: 3rem;
+  font-size: 1rem;
+}
+
+.doubleFactor img {
+  width: 20%;
+  object-fit: cover; /*The object-fit CSS property sets how the content of a replaced element, such as img an or video, should be resized to fit its containe*/
+}
+
+.inputlist {
+  margin-top: -1rem;
+  margin-left: auto;
+  margin-right: auto;
+  //width: 50px;
+  //margin-top: 20rem;
+  width: 90vw; /*90% of the screen view*/
+  max-width: 540px; /*not bigger that this px*/
+  //margin: 5rem auto;
+  /*rem stands for root em, which is a measurement unit that refers to the font-size of the root element of a document. It is a relative unit, 
+    which means all values that use it change when the root's font-size changes. The root element in this case refers to the html element. 1rem means 1 times the root font-size.
+    margin: auto; is used to center an element horizontally within its parent container.*/
+  display: grid 6; /* display: grid te proporciona una cuadrícula de una sola columna, por lo que tus elementos continúan mostrándose uno debajo del otro, como lo hacen en el flujo normal*/
+  //column-gap: 10px;
+  gap: 20rem; /*Gap Property defines the size of the gap between the rows and columns in flexbox , grid , or multi-column layouts*/
+}
+
+.inputlist input {
+  width: 40vw; /*90% of the screen view*/
+  max-width: 40px; /*not bigger that this px*/
+  height: 40vw; /*90% of the screen view*/
+  max-height: 40px; /*not bigger that this px*/
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  text-align: center;
+  margin: 5rem auto; /*rem stands for root em, which is a measurement unit that refers to the font-size of the root element of a document. It is a relative unit, 
+    which means all values that use it change when the root's font-size changes. The root element in this case refers to the html element. 1rem means 1 times the root font-size.
+    margin: auto; is used to center an element horizontally within its parent container.*/
+}
