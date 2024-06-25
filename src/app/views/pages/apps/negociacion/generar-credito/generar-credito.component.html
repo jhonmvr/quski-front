@@ -483,7 +483,31 @@
                 </form>
             </mat-step>
             <mat-step label="Comprobante de desembolso">
-                <kt-comprobante-desembolso></kt-comprobante-desembolso>
+                <div class="row">
+                    <div class="col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="recibirCliente" readonly placeholder="A Recibir Cliente">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3" >
+                        <mat-form-field class="mat-form-field-fluid" style="color: red">
+                            <input matInput [formControl]="valorDescuentoServicios" readonly placeholder="Valor descuento servicios">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field class="mat-form-field-fluid" style="color: green">
+                            <input matInput [value]="recibirCliente.value - valorDescuentoServicios.value" readonly placeholder="Valor descuento servicios">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input matInput [formControl]="totalValorDesembolso" readonly placeholder="Total valor desembolso" [ngClass]="{'correct-value': isValueCorrect(), 'incorrect-value': !isValueCorrect()}">
+                    </mat-form-field>
+                </div>
+                
+               
+                <kt-comprobante-desembolso [idNegociacion]="item" [flagEdit]="true" (totalComprobantes)="handleTotalComprobantes($event)"></kt-comprobante-desembolso>
 
             </mat-step>
             <mat-step label="Documento Habilitantes">

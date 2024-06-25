@@ -1403,6 +1403,9 @@
             ></textarea>
           </mat-form-field>
         </div>
+        <kt-comprobante-desembolso [idNegociacion]="item" ></kt-comprobante-desembolso>
+        <kt-excepciones-operativas-list [idNegociacion]="item" ></kt-excepciones-operativas-list>
+        <kt-comprobante-pago [idNegociacion]="item" [flagEdit]="true" ></kt-comprobante-pago>
       </mat-step>
       <mat-step label="Datos de Operacion Anterior">
         <div class="row">

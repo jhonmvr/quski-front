@@ -303,3 +303,13 @@ table {
 .mat-column-dividendosprorrateoserviciosdiferido {
     flex: 0 0 100px;
 }
+
+.correct-value {
+    background-color: #d4edda; /* Verde claro */
+    color: #155724;
+}
+
+.incorrect-value {
+    background-color: #f8d7da; /* Rojo claro */
+    color: #721c24;
+}

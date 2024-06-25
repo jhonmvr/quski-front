@@ -125,6 +125,8 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   dataSourceCreditoNegociacion = new MatTableDataSource<any>();
   dataSourcesHabilitantes = new MatTableDataSource<any>([{id:""}]);
   displayedColumnsCreditoNegociacion = ['plazo','periodicidadPlazo','tipooferta','montoFinanciado','valorARecibir','cuota','totalGastosNuevaOperacion','costoCustodia', 'costoTransporte','costoTasacion','costoSeguro','costoFideicomiso','impuestoSolca'];
+  public totalValorDesembolso  = new FormControl('');
+  public valorDescuentoServicios  = new FormControl('');
 
 
 
@@ -204,6 +206,15 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
         this.layoutService.setDatosContrato(datosCabecera);
       });
       if (json.params.id) {
+        this.excepcionOperativaService.findByNegociacionAndTipo(json.params.id,'Cobranza y servicios','APROBADO').subscribe(e=>{
+          console.log("valor servicio",e)
+          if(e){
+            this.valorDescuentoServicios.setValue(e.montoInvolucrado)
+          }else{
+            this.valorDescuentoServicios.setValue(0)
+          }
+
+        });
         this.item = json.params.id;
         this.cre.traerCreditoNuevo(this.item).subscribe((data: any) => {
           if (data.entidad) {
@@ -673,5 +684,13 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
     });
     
+  }
+  handleTotalComprobantes(total: number) {
+    console.log("valor de desembolso",total)
+    this.totalValorDesembolso.setValue(total);
+  }
+
+  isValueCorrect(): boolean {
+    return this.totalValorDesembolso.value === (this.recibirCliente.value - this.valorDescuentoServicios.value);
   }
 }

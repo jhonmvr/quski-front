@@ -801,6 +801,8 @@
                         <textarea class="form-control border" [formControl]="observacionAsesor" rows="5" placeholder="Observacion asesor " matInput readonly></textarea>
                     </mat-form-field>
                 </div>
+                <kt-comprobante-desembolso [idNegociacion]="item" ></kt-comprobante-desembolso>
+                <kt-excepciones-operativas-list [idNegociacion]="item" ></kt-excepciones-operativas-list>
             </mat-step>
             <mat-step label="Resultado de la operación">
                 <form [formGroup]="formResultadoOperacion">

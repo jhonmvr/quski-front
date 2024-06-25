@@ -1,0 +1,14 @@
+<h2>Excepciones operativas</h2>
+
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container *ngFor="let column of columnsToDisplay" [matColumnDef]="column">
+      <mat-header-cell *matHeaderCellDef> {{ column | titlecase }} </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element[columnMap.get(column)] }}
+      </mat-cell>
+    </ng-container>
+  
+    <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columnsToDisplay;"></mat-row>
+  </mat-table>
+  

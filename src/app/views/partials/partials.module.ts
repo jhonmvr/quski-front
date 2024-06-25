@@ -142,6 +142,9 @@ import { ArbolComponent } from './custom/arbol/arbol.component';
 import { ContenidoComponent } from './custom/contenido/contenido.component';
 import { PathComponent } from './custom/path/path.component';
 import { ValidacionDocumentoComponent } from './custom/secciones-generales/validacion-documento/validacion-documento.component';
+import { ComprobanteDesembolsoComponent } from './custom/comprobante-desembolso/comprobante-desembolso.component';
+import { ExcepcionesOperativasListComponent } from './custom/excepciones-operativas-list/excepciones-operativas-list.component';
+import { ComprobantePagoComponent } from './custom/comprobante-pago/comprobante-pago.component';
 
 
 
@@ -150,6 +153,7 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 
 @NgModule({
 	declarations: [
+		ComprobanteDesembolsoComponent,
 		RelativeNumberPipe,
 		RelativeDatePipe,
 		RelativeTimePipe,
@@ -235,11 +239,16 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 		ArbolComponent,
 		ContenidoComponent,
 		PathComponent,
-		ValidacionDocumentoComponent
+		ValidacionDocumentoComponent,
+		ExcepcionesOperativasListComponent,
+		ComprobantePagoComponent
 
 
 	],
 	exports: [
+		ComprobantePagoComponent,
+		ExcepcionesOperativasListComponent,
+		ComprobanteDesembolsoComponent,
 		HitoricoObservacionEntregaComponent,
 		HistoricoOperativaComponent,
 		HistoricoObservacionComponent,

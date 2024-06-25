@@ -586,7 +586,7 @@ export class AprobacionCreditoNuevoComponent  extends TrackingUtil implements On
     this.identificacionCodeudor.setValue(ap.credito.identificacionCodeudor);
     /** @COMPROBANTE_DESEMBOLSO */
     console.log(this.catalogos.catBanco.find( x => x.id == ap.credito.desembolsoInstitucionFinanciera));
-    this.institucionFinanciera.setValue(this.catalogos.catBanco.find( x => x.id == ap.credito.desembolsoInstitucionFinanciera).nombre);
+    this.institucionFinanciera.setValue(this.catalogos.catBanco.find( x => x.id == ap.credito.desembolsoInstitucionFinanciera)?this.catalogos.catBanco.find( x => x.id == ap.credito.desembolsoInstitucionFinanciera).nombre:'');
     this.tipoDeCuenta.setValue(ap.credito.desembolsoTipoCuenta);
     this.numeroDeCuenta.setValue(ap.credito.desembolsoNumeroCuenta);
     this.cargarFotoHabilitante('6','FUNDA',ap.credito.tbQoNegociacion.id ).subscribe(data=>{

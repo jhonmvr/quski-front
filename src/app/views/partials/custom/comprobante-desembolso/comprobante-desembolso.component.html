@@ -1,0 +1,65 @@
+<h2>Comprobante de desembolso</h2>
+<div *ngIf="flagEdit">
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-select placeholder="Selecciona una opción" [(value)]="selectedOption" (selectionChange)="updateDisplayedColumns()" class="styled-select">
+      <mat-option [value]="'TRANSFERENCIA'">Transferencia otras cuentas</mat-option>
+      <mat-option [value]="'TRANSFERENCIA_MUPI'">Transferencia mutualista</mat-option>
+      <mat-option [value]="'EFECTIVO'">Efectivo</mat-option>
+      <mat-option [value]="'VALOR_COMPROBANTE'">Valor de comprobante</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div *ngIf="selectedOption === 'TRANSFERENCIA'">
+    <mat-form-field>
+      <mat-label>Banco</mat-label>
+      <mat-select [(value)]="formData.banco">
+        <mat-option *ngFor="let element of catBanco" [value]="element.nombre">{{element.nombre}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Numero de cuenta</mat-label>
+      <input matInput [(ngModel)]="formData.numeroCuenta" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Identificación</mat-label>
+      <input matInput [(ngModel)]="formData.identificacion" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="formData.nombre" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Valor</mat-label>
+      <input matInput type="number" [(ngModel)]="formData.valor" (blur)="validateDecimal(formData.valor)" required>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="selectedOption === 'TRANSFERENCIA_MUPI' || selectedOption === 'EFECTIVO' || selectedOption === 'VALOR_COMPROBANTE'">
+    <mat-form-field>
+      <mat-label>Valor</mat-label>
+      <input matInput type="number" [(ngModel)]="formData.valor" (blur)="validateDecimal(formData.valor)" required>
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button color="primary" (click)="addRecord()">Agregar</button>
+</div>
+
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <ng-container *ngFor="let column of columnsToDisplay" [matColumnDef]="column">
+    <mat-header-cell *matHeaderCellDef> {{ column | titlecase }} </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+        {{ element[column] }}
+        <button *ngIf="column=='actions' && flagEdit" mat-button color="warn" (click)="deleteRecord(element)">Eliminar</button>
+      </mat-cell>
+  </ng-container>
+
+  <!-- <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button mat-button color="warn" (click)="deleteRecord(element)">Eliminar</button>
+    </mat-cell>
+  </ng-container> -->
+
+  <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: columnsToDisplay;"></mat-row>
+</mat-table>

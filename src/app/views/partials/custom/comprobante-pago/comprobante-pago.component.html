@@ -1,0 +1,41 @@
+<h2>Comprobante de pago</h2>
+<div *ngIf="flagEdit">
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-select placeholder="Selecciona una opción" [(value)]="selectedOption" (selectionChange)="updateDisplayedColumns()" class="styled-select">
+      <mat-option [value]="'Enviado aplicar mupi'">Enviado aplicar mupi</mat-option>
+      <mat-option [value]="'Valor aplicado'">Valor aplicado</mat-option>
+      <mat-option [value]="'En cuenta mupi'">En cuenta mupi</mat-option>
+      <mat-option [value]="'Sin valor'">Sin valor</mat-option>
+      <mat-option [value]="'Transferencia'">Transferencia</mat-option>
+      <mat-option [value]="'Cheque'">Cheque</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Valor</mat-label>
+    <input matInput type="number" [(ngModel)]="formData.valor" (blur)="validateDecimal(formData.valor)" required>
+  </mat-form-field>
+
+ 
+    <mat-form-field>
+      <mat-label>observaciones</mat-label>
+      <input matInput type="text" [(ngModel)]="formData.observacion"  required>
+    </mat-form-field>
+
+
+  <button mat-raised-button color="primary" (click)="addRecord()">Agregar</button>
+</div>
+
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <ng-container *ngFor="let column of columnsToDisplay" [matColumnDef]="column">
+    <mat-header-cell *matHeaderCellDef> {{ column | titlecase }} </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+        {{ element[column] }}
+        <button *ngIf="column=='actions' && flagEdit" mat-button color="warn" (click)="deleteRecord(element)">Eliminar</button>
+      </mat-cell>
+  </ng-container>
+
+
+
+  <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: columnsToDisplay;"></mat-row>
+</mat-table>
