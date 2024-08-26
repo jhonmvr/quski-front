@@ -887,7 +887,8 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
             "usuarioSolicitante": localStorage.getItem("reUser"),
             "observacionAsesor": "",
             };
-          this.excepcionOperativaService.solicitarExcepcionServicios(excepcionServicios,"NUEVO").subscribe(p=>{
+            console.log("excepcionServicios", excepcionServicios)
+          this.excepcionOperativaService.solicitarExcepcionServicios(excepcionServicios,"RENOVACION").subscribe(p=>{
             this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
           });
           

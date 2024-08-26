@@ -36,6 +36,8 @@ export class ExcepcionOperativaListComponent implements OnInit {
 
   constructor(private excepcionOperativaService: ExcepcionOperativaService,public dialog: MatDialog, private router: Router) {
     this.excepcionOperativaService.setParameter();
+    
+    this.loadExcepciones(null,'PENDIENTE');
   }
 
   ngOnInit(): void {
@@ -52,7 +54,7 @@ export class ExcepcionOperativaListComponent implements OnInit {
       this.p.pageSize = this.paginator.pageSize ? this.paginator.pageSize : 10;
     }
 
-    this.excepcionOperativaService.findAllByParams(this.p, localStorage.getItem('reUser'), estado, codigo, codigoOperacion, idNegociacion).subscribe({
+    this.excepcionOperativaService.findAllByParams(this.p, null, estado, codigo, codigoOperacion, idNegociacion).subscribe({
       next: (data) => {
         if (data) {
           this.dataSource.data = data.list;

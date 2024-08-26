@@ -55,7 +55,7 @@ export class BandejaRegularizacionDocumentosComponent implements OnInit {
       this.p.pageSize = this.paginator.pageSize ? this.paginator.pageSize : 10;
     }
 
-    this.regularizacionDocumentosService.findAllByParams(this.p, localStorage.getItem('reUser'), estado, codigo, codigoOperacion, idNegociacion).subscribe({
+    this.regularizacionDocumentosService.findAllByParams(this.p, null, estado, codigo, codigoOperacion, idNegociacion).subscribe({
       next: (data) => {
         if (data) {
           this.dataSource.data = data.list;

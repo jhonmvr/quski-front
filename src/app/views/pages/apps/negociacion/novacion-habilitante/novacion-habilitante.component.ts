@@ -53,6 +53,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   public dataSourceComprobante = new MatTableDataSource<any>();
   public excepcionOperativa = new FormControl('');
   public fechaRegularizacion = new FormControl('',[Validators.required]);
+  public recibirCliente = new FormControl('');
   institucionFinanciera = new FormControl('');
   tipoCuenta = new FormControl('');
   numeroCuentaCD = new FormControl('');
@@ -72,7 +73,8 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   item: any;
   private agencia: any;
   mySelections: string[];
-
+  public totalValorDesembolso  = new FormControl('');
+  public valorDescuentoServicios  = new FormControl('');
 
 
   constructor(
@@ -136,6 +138,16 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       if (json.params.idNegociacion) {
 
         this.item = json.params.idNegociacion;
+        
+        this.excepcionOperativaService.findByNegociacionAndTipo(this.item,'Cobranza y servicios','APROBADO').subscribe(e=>{
+          console.log("valor servicio",e)
+          if(e){
+            this.valorDescuentoServicios.setValue(e.montoInvolucrado)
+          }else{
+            this.valorDescuentoServicios.setValue(0)
+          }
+
+        });
 
         this.cre.buscarRenovacionByIdNegociacion(this.item).subscribe((data: any) => {
           this.credit = data.entidad;
@@ -318,9 +330,12 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
     this.cre.crearOperacionRenovacion(this.credit.credito, list , this.usuario).subscribe( (data: any) =>{
       if(data.entidad){
+        console.log("data.entidad",data.entidad)
+        this.recibirCliente.setValue( data.entidad.credito.aRecibirCliente );
         this.pro.getCabecera(this.item,'RENOVACION').subscribe(datosCabecera=>{
           this.layouteService.setDatosContrato(datosCabecera);
         });
+        
         if(this.credit && this.credit.credito.periodoPlazo == 'C'){
           console.log("total==>",data.entidad.cuotasAmortizacion && data.entidad.cuotasAmortizacion[0].total);
           console.log("ingreso==>",(this.ingresoNeto * this.politicaIngreso));
@@ -497,5 +512,14 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     dialogRef.afterClosed().subscribe(r => {
       this.router.navigate(['negociacion/bandeja-operaciones']);
     });
+  }
+
+  handleTotalComprobantes(total: number) {
+    console.log("valor de desembolso",total)
+    this.totalValorDesembolso.setValue(total);
+  }
+
+  isValueCorrect(): boolean {
+    return this.totalValorDesembolso.value === (this.recibirCliente.value - this.valorDescuentoServicios.value);
   }
 }

@@ -17,17 +17,25 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field>
+      <mat-label>Tipo cuenta</mat-label>
+      <mat-select [(value)]="formData.tipoCuenta">
+        <mat-option [value]="">-</mat-option>
+        <mat-option [value]="'AHORROS'">Ahorros</mat-option>
+        <mat-option [value]="'CORRIENTE'">Corriente</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
       <mat-label>Numero de cuenta</mat-label>
       <input matInput [(ngModel)]="formData.numeroCuenta" required>
     </mat-form-field>
-    <mat-form-field>
+    <!-- <mat-form-field>
       <mat-label>Identificación</mat-label>
       <input matInput [(ngModel)]="formData.identificacion" required>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Nombre</mat-label>
       <input matInput [(ngModel)]="formData.nombre" required>
-    </mat-form-field>
+    </mat-form-field> -->
     <mat-form-field>
       <mat-label>Valor</mat-label>
       <input matInput type="number" [(ngModel)]="formData.valor" (blur)="validateDecimal(formData.valor)" required>
@@ -46,7 +54,7 @@
 
 <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   <ng-container *ngFor="let column of columnsToDisplay" [matColumnDef]="column">
-    <mat-header-cell *matHeaderCellDef> {{ column | titlecase }} </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef> {{ camelCaseToCapitalWithSpaces(column)}} </mat-header-cell>
     <mat-cell *matCellDef="let element">
         {{ element[column] }}
         <button *ngIf="column=='actions' && flagEdit" mat-button color="warn" (click)="deleteRecord(element)">Eliminar</button>

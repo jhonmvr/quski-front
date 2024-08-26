@@ -13,6 +13,7 @@ export interface ComprobanteDto {
   identificacion?: string;
   nombre?: string;
   valor: number;
+  tipoCuenta?:string;
 }
 @Component({
   selector: 'kt-comprobante-desembolso',
@@ -40,7 +41,7 @@ export class ComprobanteDesembolsoComponent implements OnInit {
   selectedOption: string;
   formData: ComprobanteDto = { tipo: '', valor: 0 };
   bancos: string[] = ['Banco 1', 'Banco 2', 'Banco 3'];
-  displayedColumns: string[] = ['tipo', 'banco', 'numeroCuenta', 'identificacion', 'nombre', 'valor', 'actions'];
+  displayedColumns: string[] = ['tipo', 'banco', 'tipoCuenta', 'nombre', 'valor', 'actions'];
   columnsToDisplay: string[] = ['tipo', 'valor', 'actions'];
   dataSource = new MatTableDataSource<ComprobanteDto>();
 
@@ -74,8 +75,9 @@ export class ComprobanteDesembolsoComponent implements OnInit {
       console.log("datos de la tablita",p)
       let lista = p as Array<any>;
       console.log("encontrar",lista.find(p=>p.numeroCuenta != null))
-      this.updateDisplayedColumns();
       this.dataSource.data = p;
+      
+      this.updateDisplayedColumns();
       this.dataSource._updateChangeSubscription();
       this.emitTotalComprobantes();
 
@@ -107,6 +109,12 @@ export class ComprobanteDesembolsoComponent implements OnInit {
     this.columnsToDisplay = Array.from(columnsWithData).filter(field => field !== 'id' && field !== 'fecha').concat('actions');
   }
   
+   // Función para transformar camelCase a "Capital With Spaces"
+   camelCaseToCapitalWithSpaces(camelCase: string): string {
+    return camelCase
+      .replace(/([A-Z])/g, ' $1') // Inserta un espacio antes de cada letra mayúscula
+      .replace(/^./, str => str.toUpperCase()); // Capitaliza la primera letra
+  }
    
   addRecord() {
     if (this.dataSource.data.length >= 3) {
