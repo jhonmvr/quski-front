@@ -22,15 +22,23 @@ export interface ComprobanteDto {
 })
 export class ComprobanteDesembolsoComponent implements OnInit {
   idNegociacionObj :BehaviorSubject<number | null> =  new BehaviorSubject<number | null>(null);
+  valorMaximoDesembolsoObj :BehaviorSubject<number | null> =  new BehaviorSubject<number | null>(0);
   @Output()
   totalComprobantes = new EventEmitter<number>();
 
   @Input() set idNegociacion( id :  any){
     this.idNegociacionObj.next( id );
   }
+  @Input() set valorMaximoDesembolso(valor:any){
+    this.valorMaximoDesembolsoObj.next(valor);
+  }
 
   get idNegociacion():any {
     return this.idNegociacionObj.getValue();
+  }
+
+  get valorMaximoDesembolso():any{
+    return this.valorMaximoDesembolsoObj.getValue();
   }
   
   @Input() flagEdit = false;
@@ -117,6 +125,12 @@ export class ComprobanteDesembolsoComponent implements OnInit {
   }
    
   addRecord() {
+    let total = this.dataSource.data.reduce((sum, item) => sum + item.valor, 0);
+    total = total + this.formData.valor ;
+    if(total > this.valorMaximoDesembolso){
+      this.sinNotSer.setNotice("El total desembolso no puede ser mayor que: " + this.valorMaximoDesembolso.toFixed(2), 'warning');
+      return;
+    }
     if (this.dataSource.data.length >= 3) {
       this.sinNotSer.setNotice("Solo puedes agregar hasta 3 comprobantes de desembolso", 'warning');
       return;

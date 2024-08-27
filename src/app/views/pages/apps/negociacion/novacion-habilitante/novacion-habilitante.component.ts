@@ -153,6 +153,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
           this.credit = data.entidad;
           //Valor neto a recibir
           this.recibirPagar = (this.credit.credito.valorARecibir - this.credit.credito.valorAPagar).toFixed(2) ;
+          this.recibirCliente.setValue( this.recibirPagar ? this.recibirPagar : '0');
            if ( this.recibirPagar < 0) {
             this.recibirOPagar = 'warn';
           }else if( this.recibirPagar > 0){
@@ -330,8 +331,8 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
     this.cre.crearOperacionRenovacion(this.credit.credito, list , this.usuario).subscribe( (data: any) =>{
       if(data.entidad){
-        console.log("data.entidad",data.entidad)
-        this.recibirCliente.setValue( data.entidad.credito.aRecibirCliente );
+        
+        
         this.pro.getCabecera(this.item,'RENOVACION').subscribe(datosCabecera=>{
           this.layouteService.setDatosContrato(datosCabecera);
         });

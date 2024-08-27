@@ -619,9 +619,9 @@ export class AprobacionFabricaComponent implements OnInit {
         this.excepcion.observacionAprobador = this.observacionAprobador.value;
         this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.crediW.proceso.proceso).subscribe(p=>{
           if(aprueba=='APROBADO'){
-            this.sinNotSer.setNotice('EXCEPCION DE RIESGO APROBADA','success');
+            this.sinNotSer.setNotice('EXCEPCION APROBADA','success');
           }else{
-           this.sinNotSer.setNotice('EXCEPCION DE RIESGO NEGADA','success');
+           this.sinNotSer.setNotice('EXCEPCION  NEGADA','success');
           }
         });
         //this.exc.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(()=>{

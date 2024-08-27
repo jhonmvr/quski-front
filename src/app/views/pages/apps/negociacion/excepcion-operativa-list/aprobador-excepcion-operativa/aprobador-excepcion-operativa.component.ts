@@ -253,9 +253,9 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
         this.excepcion.observacionAprobador = this.observacionAprobador.value;
         this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.wp.proceso.proceso).subscribe(p=>{
           if(aprueba=='APROBADO'){
-            this.sinNoticeService.setNotice('EXCEPCION DE RIESGO APROBADA','success');
+            this.sinNoticeService.setNotice('EXCEPCION  APROBADA','success');
           }else{
-           this.sinNoticeService.setNotice('EXCEPCION DE RIESGO NEGADA','success');
+           this.sinNoticeService.setNotice('EXCEPCION  NEGADA','success');
           }
         });
         //this.exc.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(()=>{

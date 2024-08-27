@@ -44,7 +44,7 @@ export class BandejaRegularizacionDocumentosComponent implements OnInit {
     this.p.pageSize = 10;
     this.p.currentPage = 0;
     if(localStorage.getItem(environment.rolKey) == '4'){
-      this.estadoRegularizacion = 'PENDIENTE_APROBACION';
+      this.estadoRegularizacion = 'PENDIENTE';
     }
     this.loadExcepciones(null,'PENDIENTE');
   }

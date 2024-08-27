@@ -857,6 +857,9 @@
                 </div>
             </mat-step>
             <mat-step label="Resultado de la Excepcion">
+                <kt-comprobante-desembolso [idNegociacion]="item" ></kt-comprobante-desembolso>
+                <kt-excepciones-operativas-list [idNegociacion]="item" ></kt-excepciones-operativas-list>
+                <kt-comprobante-pago [idNegociacion]="item" [flagEdit]="true" ></kt-comprobante-pago>
                 <form [formGroup]="formResultadoOperacion">
                     <div class="row mt-3">
                         <div class="col-md-12">

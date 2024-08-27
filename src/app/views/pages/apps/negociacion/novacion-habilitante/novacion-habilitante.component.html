@@ -111,7 +111,7 @@
                     </div>
                     <div class="col-2">
                         <button mat-stroked-button color="{{ recibirOPagar }}">
-                        <strong>Neto a recibir: </strong> {{ recibirPagar ? recibirPagar : '0' }}
+                        <strong>Neto a recibir: </strong> {{ recibirPagar ? recibirPagar + valorDescuentoServicios.value : '0' }}
                     </button>
                     </div>
                 </div>
@@ -167,7 +167,7 @@
                     </div>
                 </div>
             </mat-step>
-            <mat-step label="Comprobante de desembolso">
+            <mat-step label="Comprobante de desembolso" *ngIf="this.recibirPagar > 0">
                 <div class="row">
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid">
@@ -181,19 +181,17 @@
                     </div>
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid" style="color: green">
-                            <input matInput [value]="recibirCliente.value - valorDescuentoServicios.value" readonly placeholder="Valor descuento servicios">
+                            <input matInput [value]="recibirCliente.value + valorDescuentoServicios.value" readonly placeholder="Valor A recibir despues del descuento">
                         </mat-form-field>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <mat-form-field class="mat-form-field-fluid">
                         <input matInput [formControl]="totalValorDesembolso" readonly placeholder="Total valor desembolso" [ngClass]="{'correct-value': isValueCorrect(), 'incorrect-value': !isValueCorrect()}">
+                        <mat-error *ngIf="!isValueCorrect()">El Total desembolso debe ser igual a Valor a recibir</mat-error>
                     </mat-form-field>
                 </div>
-                
-               
                 <kt-comprobante-desembolso [idNegociacion]="item" [flagEdit]="true" (totalComprobantes)="handleTotalComprobantes($event)"></kt-comprobante-desembolso>
-
             </mat-step>
             <mat-step label='Documentos Legales'>
                 <!-- <re-habilitante [proceso]="'NUEVO'" [useType]="'FORM'" [referencia]="item" ></re-habilitante> -->

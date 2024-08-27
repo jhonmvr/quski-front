@@ -787,6 +787,10 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       this.sinNotSer.setNotice('Complete el valor de descuento', 'warning');
       return;
     } 
+    if (this.selection.selected.length == 0) {
+      this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO", 'warning');
+      return;
+    } 
     if (this.negoW.joyas && this.negoW.joyas.length > 0) {
     
       const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
