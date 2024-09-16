@@ -486,6 +486,14 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
       return;
     }
+    if (
+      this.excepcionOperativa.value.valor !== 'SERVICIO_BASICO' &&
+      this.excepcionOperativa.value.valor !== 'FIRMA' &&
+      this.excepcionOperativa.value.valor !== 'PAPELETA_DE_VOTACION' &&
+      this.excepcionOperativa.value.valor !== 'DEPOSITO'
+    ) {
+      return;
+    }
     let excepcionServicios = {
       "idNegociacion": this.credit.credito.tbQoNegociacion,
       "codigoOperacion": this.credit.credito.codigo,
