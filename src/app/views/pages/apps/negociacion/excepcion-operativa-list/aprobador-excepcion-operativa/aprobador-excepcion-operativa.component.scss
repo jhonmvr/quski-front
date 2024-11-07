@@ -365,3 +365,16 @@ table {
 .mat-column-abonoCapital {
     flex: 0 0 100px;
 }
+.footer-centrado {
+    display: flex;
+    justify-content: space-around; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    text-align: space-around;
+  }
+  .custom-separator {
+    border-top: 1px solid #e0e0e0; /* Cambia el color y grosor según prefieras */
+    margin: 8px 0;
+  }
+  .custom-alto{
+    height: 100% !important;
+  }

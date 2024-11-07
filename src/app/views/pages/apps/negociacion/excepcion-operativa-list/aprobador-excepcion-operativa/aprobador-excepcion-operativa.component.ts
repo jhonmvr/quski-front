@@ -19,19 +19,21 @@ import { ConfirmarAccionComponent } from '../../../../../../../app/views/partial
 import { environment } from '../../../../../../../environments/environment';
 import { ExcepcionOperativaService } from '../../../../../../../app/core/services/quski/excepcion-operativa.service';
 import { TbQoExcepcionOperativa } from '../.././../../../../../app/core/model/quski/TbQoExcepcionOperativa';
+import { TrackingUtil } from '../../../../../../../app/core/util/TrakingUtil';
 
 @Component({
   selector: 'kt-aprobador-excepcion-operativa',
   templateUrl: './aprobador-excepcion-operativa.component.html',
   styleUrls: ['./aprobador-excepcion-operativa.component.scss']
 })
-export class AprobadorExcepcionOperativaComponent implements OnInit {
+export class AprobadorExcepcionOperativaComponent extends TrackingUtil implements OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading;
-  public observacion: string;
+  //public observacion: string;
   public excepcion: TbQoExcepcionOperativa;
   public usuario;
   public agencia; 
+  public nombreAsesor; 
   dataSourceTelefonosCliente = new MatTableDataSource<any>();
   public simulado: boolean;
   public loadVariables = new BehaviorSubject<boolean>(false);
@@ -42,8 +44,13 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
   public fechaCreacion = new FormControl('', []);
   public proceso = new FormControl('', []);
   public email = new FormControl('', []);
-  public valorDescuentoServicios = new FormControl('', []);
   aprobadoWebMupi = new FormControl('', []);
+
+  public tipoExcepcionServicio = new FormControl('', []);
+  public valorDescuentoServicios = new FormControl('', []);
+  public observacionAsesor = new FormControl('', []);
+  public observacionAprobador = new FormControl('', [Validators.required]);
+
   public componenteVariable: boolean;
   negoW: NegociacionWrapper;
   mensaje;
@@ -59,8 +66,6 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
 
   public formDatosExcepcion: FormGroup = new FormGroup({});
   public cobertura = new FormControl('', [Validators.required, ]);
-  public observacionAprobador = new FormControl('', [Validators.required]);
-  public observacionAsesor = new FormControl('', []);
 
   public coberturaActual = new FormControl('', []);
   public montoActual = new FormControl('', []);
@@ -87,6 +92,7 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
 
   ) {
+    super(tra);
     this.cre.setParameter();
     this.cal.setParameter();
     this.sof.setParameter();
@@ -112,6 +118,7 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
     this.busquedaNegociacion();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem( 'idAgencia' );
+    this.nombreAsesor = localStorage.getItem( 'nombre' );
   }
 
   onNoClick(): void {
@@ -167,9 +174,12 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
     this.router.navigate(['negociacion/excepcion-operativa/list']);
   }
   private cargarCampos( wp: NegociacionWrapper){
-    this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success')
+    
     this.subheaderService.setTitle('Operacion: '+this.wp.credito.codigo);
-
+    this.guardarTraking(wp ? wp.proceso ? wp.proceso.proceso : null : null,
+      wp ? wp.credito ? wp.credito.codigo : null : null, 
+      ['Información Operación','Datos Contacto Cliente','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Excepción'], 
+      0, 'EXCEPCION COBERTURA', wp ? wp.credito ? wp.credito.numeroOperacion : null : null )
 
 
     this.cliente.setValue( wp.credito.tbQoNegociacion.tbQoCliente.nombreCompleto );
@@ -182,13 +192,17 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
     this.email.setValue( wp.credito.tbQoNegociacion.tbQoCliente.email );
     this.aprobadoWebMupi.setValue(wp.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S'? 'Si' : 'No');
     this.observacionAsesor.disable();
+    this.valorDescuentoServicios.disable();
+    this.tipoExcepcionServicio.disable();
     //this.calcularOpciones();
     this.camposAdicinales( );
-    this.observacion = this.excepcion.observacionAsesor;
+    //this.observacion = this.excepcion.observacionAsesor;
     this.observacionAsesor.setValue( this.excepcion.observacionAsesor );
     this.valorDescuentoServicios.setValue(this.excepcion.montoInvolucrado);
+    this.tipoExcepcionServicio.setValue(this.excepcion.tipoExcepcion);
     //this.usuarioAsesor.setValue( this.excepcion.idAsesor);
     this.loadingSubject.next(false);
+    this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success')
   }
   public simular(){ 
     this.loadingSubject.next(true);
@@ -251,7 +265,7 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
       if(r){
         this.excepcion.estadoExcepcion = aprueba;
         this.excepcion.observacionAprobador = this.observacionAprobador.value;
-        this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.wp.proceso.proceso).subscribe(p=>{
+        this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.wp.proceso.proceso, this.nombreAsesor).subscribe(p=>{
           if(aprueba=='APROBADO'){
             this.sinNoticeService.setNotice('EXCEPCION  APROBADA','success');
           }else{

@@ -128,6 +128,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   public totalValorDesembolso  = new FormControl('');
   public valorDescuentoServicios  = new FormControl('');
 
+  public valorRecibirClienteMasDescuentoServicios  = new FormControl('');
 
 
   constructor(
@@ -206,14 +207,32 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
         this.layoutService.setDatosContrato(datosCabecera);
       });
       if (json.params.id) {
-        this.excepcionOperativaService.findByNegociacionAndTipo(json.params.id,'Cobranza y servicios','APROBADO').subscribe(e=>{
-          console.log("valor servicio",e)
-          if(e){
-            this.valorDescuentoServicios.setValue(e.montoInvolucrado)
-          }else{
-            this.valorDescuentoServicios.setValue(0)
+        this.excepcionOperativaService.findByNegociacion(json.params.id).subscribe(e=>{
+          this.valorDescuentoServicios.setValue(0)
+          if(e.entidades == null){
+            return;
           }
-
+          const listExs = e.entidades
+          let exVigente = null;
+    
+          // Implementar la lógica de validación
+          if (listExs.some(ex => ex.estadoExcepcion === 'PENDIENTE')) {
+            // Extraer el primer elemento con estado 'PENDIENTE'
+            exVigente = listExs.find(ex => ex.estadoExcepcion === 'PENDIENTE') || null;
+          } else if (listExs.some(ex => ex.estadoExcepcion === 'APROBADO' && ex.nivelAprobacion != 1)) {
+            // Si no hay 'PENDIENTE', extraer el primer 'APROBADO'
+            exVigente = listExs.find(ex => ex.estadoExcepcion === 'APROBADO') || null;
+          } else if (listExs.some(ex => ex.estadoExcepcion === 'NEGADO')) {
+            // Si no hay ni 'PENDIENTE' ni 'APROBADO', extraer el primer 'NEGADO'
+            exVigente = listExs.find(ex => ex.estadoExcepcion === 'NEGADO') || null;
+          }
+          if(exVigente.estadoExcepcion === 'PENDIENTE'){
+            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.')
+          }
+          if(exVigente.estadoExcepcion === 'APROBADO'){
+            console.log('llego a aqui?')
+            this.valorDescuentoServicios.setValue(exVigente.montoInvolucrado.toFixed(2))
+          }
         });
         this.item = json.params.id;
         this.cre.traerCreditoNuevo(this.item).subscribe((data: any) => {
@@ -223,6 +242,9 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
               this.findHistoricoObservacionByCredito(data.entidad.credito.id);
             }
             this.validarOperacion(this.operacionNuevo);
+            console.log('llego a aqui? valorRecibirClienteMasDescuentoServicios')
+            this.valorRecibirClienteMasDescuentoServicios.setValue(this.recibirCliente.value - this.valorDescuentoServicios.value)
+
           }
         });
         this

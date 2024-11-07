@@ -37,6 +37,8 @@ export class AprobacionFabricaComponent implements OnInit {
   srcFunda;
   srcJoya;
   public agencia: any;
+  public nombreAsesor; 
+
   public fechaActual: string;
   public item;
   public varHabilitante = {proceso:'',referencia:''};
@@ -311,6 +313,8 @@ export class AprobacionFabricaComponent implements OnInit {
     this.subheaderService.setTitle('Aprobación De Credito');
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem( 'idAgencia' );
+    this.nombreAsesor = localStorage.getItem( 'nombre' );
+
     this.traerCreditoNegociacion();
     this.formDisable.disable();
     this.sof.fechasistema( this.agencia ).subscribe( ( data: any) =>{
@@ -617,7 +621,7 @@ export class AprobacionFabricaComponent implements OnInit {
       if(r){
         this.excepcion.estadoExcepcion = aprueba;
         this.excepcion.observacionAprobador = this.observacionAprobador.value;
-        this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.crediW.proceso.proceso).subscribe(p=>{
+        this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.crediW.proceso.proceso, this.nombreAsesor).subscribe(p=>{
           if(aprueba=='APROBADO'){
             this.sinNotSer.setNotice('EXCEPCION APROBADA','success');
           }else{

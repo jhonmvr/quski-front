@@ -60,6 +60,17 @@ export class ExcepcionOperativaService extends BaseService {
       )
     );
   }
+  excepcionServiciosFlujoVariable(excepcionServicios: any, proceso: string) {
+    let serviceUrl = this.appResourcesUrl + "excepcionOperativaRestController/excepcionServiciosFlujoVariable";
+    let params = new HttpParams().set('proceso',proceso);
+    this.options = { headers: this.headers, params: params };
+    return this.http.post(serviceUrl, excepcionServicios,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
 
   findByNegociacionAndTipo(idNegociacion: number, tipoExcepcion: string, estado:string) {
     let serviceUrl = this.appResourcesUrl + "excepcionOperativaRestController/findByNegociacionAndTipo";
@@ -67,6 +78,18 @@ export class ExcepcionOperativaService extends BaseService {
     .set('estado',estado)
     .set('idNegociacion',idNegociacion.toString())
     .set('tipoExcepcion',tipoExcepcion);
+    this.options = { headers: this.headers, params: params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  findByNegociacion(idNegociacion: number) {
+    let serviceUrl = this.appResourcesUrl + "excepcionOperativaRestController/findByNegociacion";
+    let params = new HttpParams()
+    .set('idNegociacion',idNegociacion.toString())
     this.options = { headers: this.headers, params: params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error
@@ -91,10 +114,10 @@ export class ExcepcionOperativaService extends BaseService {
   }
 
   
-  resolverExcepcion(excepcion: TbQoExcepcionOperativa, proceso: string) {
+  resolverExcepcion(excepcion: TbQoExcepcionOperativa, proceso: string, nombreAsesor: string) {
     let serviceUrl = this.appResourcesUrl + "excepcionOperativaRestController/resolverExcepcion";
     let params = new HttpParams()
-      .set('proceso',proceso);
+      .set('proceso',proceso).set('nombreAsesor',nombreAsesor);
     this.options = { headers: this.headers, params: params };
     return this.http.post(serviceUrl, excepcion,this.options).pipe(
       tap( // Log the result or error
@@ -103,7 +126,19 @@ export class ExcepcionOperativaService extends BaseService {
       )
     );
   }
-  
+  cancelarExcepcion(excepcion: TbQoExcepcionOperativa, proceso: string, nombreAsesor: string) {
+    let serviceUrl = this.appResourcesUrl + "excepcionOperativaRestController/cancelarExcepcion";
+    let params = new HttpParams()
+      .set('proceso',proceso).set('nombreAsesor',nombreAsesor);
+    this.options = { headers: this.headers, params: params };
+    return this.http.post(serviceUrl, excepcion,this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+
   solicitarExcepcionFabrica(excepcionServicios: any, proceso: string) {
     let serviceUrl = this.appResourcesUrl + "excepcionOperativaRestController/solicitarExcepcionFabrica";
     let params = new HttpParams()

@@ -496,7 +496,7 @@
                     </div>
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid" style="color: green">
-                            <input matInput [value]="recibirCliente.value + valorDescuentoServicios.value" readonly placeholder="Valor A recibir despues del descuento">
+                            <input matInput [formControl]="valorRecibirClienteMasDescuentoServicios" readonly placeholder="Valor A recibir despues del descuento">
                         </mat-form-field>
                     </div>
                 </div>

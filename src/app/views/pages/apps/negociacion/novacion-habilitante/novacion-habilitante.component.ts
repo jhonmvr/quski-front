@@ -75,6 +75,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   mySelections: string[];
   public totalValorDesembolso  = new FormControl('');
   public valorDescuentoServicios  = new FormControl('');
+  public valorRecibirClienteMasDescuentoServicios  = new FormControl('');
+  
+  public stepperList = ['Datos Instruccion Operacion','Documentos Legales']
 
 
   constructor(
@@ -138,28 +141,41 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       if (json.params.idNegociacion) {
 
         this.item = json.params.idNegociacion;
-        
-        this.excepcionOperativaService.findByNegociacionAndTipo(this.item,'Cobranza y servicios','APROBADO').subscribe(e=>{
-          console.log("valor servicio",e)
-          if(e){
-            this.valorDescuentoServicios.setValue(e.montoInvolucrado)
-          }else{
-            this.valorDescuentoServicios.setValue(0)
+        this.excepcionOperativaService.findByNegociacion(this.item).subscribe(e=>{
+          this.valorDescuentoServicios.setValue('0')
+          if(e.entidades == null){
+            return;
           }
-
+          const listExs = e.entidades
+          let exVigente = null;
+    
+          // Implementar la lógica de validación
+          if (listExs.some(ex => ex.estadoExcepcion === 'PENDIENTE')) {
+            exVigente = listExs.find(ex => ex.estadoExcepcion === 'PENDIENTE') || null;
+          } else if (listExs.some(ex => ex.estadoExcepcion === 'APROBADO' && ex.nivelAprobacion != 1)) {
+            exVigente = listExs.find(ex => ex.estadoExcepcion === 'APROBADO') || null;
+          } else if (listExs.some(ex => ex.estadoExcepcion === 'NEGADO')) {
+            exVigente = listExs.find(ex => ex.estadoExcepcion === 'NEGADO') || null;
+          }
+          if(exVigente.estadoExcepcion === 'PENDIENTE'){
+            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.')
+          }else if(exVigente.estadoExcepcion === 'APROBADO'){
+            this.valorDescuentoServicios.setValue(exVigente.montoInvolucrado.toFixed(2))
+          }
         });
 
         this.cre.buscarRenovacionByIdNegociacion(this.item).subscribe((data: any) => {
           this.credit = data.entidad;
           //Valor neto a recibir
           this.recibirPagar = (this.credit.credito.valorARecibir - this.credit.credito.valorAPagar).toFixed(2) ;
+          this.cambiarStepperList(this.recibirPagar)
           this.recibirCliente.setValue( this.recibirPagar ? this.recibirPagar : '0');
-           if ( this.recibirPagar < 0) {
+           if ( this.recibirPagar < 0) { 
+            this.valorRecibirClienteMasDescuentoServicios.setValue(this.recibirPagar - this.valorDescuentoServicios.value)
             this.recibirOPagar = 'warn';
           }else if( this.recibirPagar > 0){
-
+            this.valorRecibirClienteMasDescuentoServicios.setValue(Number(this.recibirPagar) + Number(this.valorDescuentoServicios.value))
             this.recibirOPagar = 'primary';
-
           }
 
           if(data.entidad && data.entidad.credito && data.entidad.credito.id){
@@ -522,5 +538,10 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
 
   isValueCorrect(): boolean {
     return this.totalValorDesembolso.value === (this.recibirCliente.value - this.valorDescuentoServicios.value);
+  }
+  cambiarStepperList(e){
+    this.stepperList = e < 0 ? ['Datos Instruccion Operacion','Comprobante De Pago','Documentos Legales'] : 
+      e > 0 ? ['Datos Instruccion Operacion','Comprobante de desembolso','Documentos Legales'] :
+      ['Datos Instruccion Operacion','Documentos Legales']
   }
 }
