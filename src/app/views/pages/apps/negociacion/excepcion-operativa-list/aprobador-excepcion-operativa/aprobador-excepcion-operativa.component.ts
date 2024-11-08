@@ -144,6 +144,7 @@ export class AprobadorExcepcionOperativaComponent extends TrackingUtil implement
         this.excepcionOperativaService.traerCreditoNegociacionByExcepcionOperativa(data.params.id).subscribe( (data: any)=>{
           if(data){
             this.wp = data;
+
             this.excepcion = this.wp.excepcionOperativa;
             this.formDisable.disable();
             this.procesoService.getCabecera(this.wp.credito.tbQoNegociacion.id,this.wp.proceso.proceso).subscribe(datosCabecera=>{
@@ -222,15 +223,59 @@ export class AprobadorExcepcionOperativaComponent extends TrackingUtil implement
       this.loadingSubject.next(true);
       this.cal.simularOfertaExcepcion(this.wp.credito.id, null, null,this.codigoAgencia.codigo,this.wp.credito.numeroOperacionAnterior).subscribe((data: any) => {
         this.loadingSubject.next(false);
-        console.log("info", data.entidad)
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
             if(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0]){
               this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado);
-            
             }
-            this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+            this.dataSourceCreditoNegociacion = new MatTableDataSource();
+
+            let calculadora: any = {
+              codigoTabla: this.wp.credito.tablaAmortizacion,
+              costoCustodia: this.wp.credito.costoCustodia,
+              costoFideicomiso: this.wp.credito.costoFideicomiso,
+              costoSeguro: this.wp.credito.costoSeguro,
+              costoTasacion: this.wp.credito.costoTasacion,
+              costoTransporte: this.wp.credito.costoTransporte,
+              costoValoracion: this.wp.credito.costoValoracion,
+              cuota: this.wp.credito.cuota,
+              custodiaDevengada: this.wp.credito.custodiaDevengada,
+              dividendoflujoplaneado: this.wp.credito.dividendoFlujoPlaneado,
+              dividendosprorrateoserviciosdiferido:this.wp.credito.dividendoProrrateo,
+              formaPagoCapital: this.wp.credito.formaPagoCapital,
+              formaPagoCustodia: this.wp.credito.formaPagoCustodia,
+              formaPagoCustodiaDevengada: this.wp.credito.formaPagoCustodiaDevengada,
+              formaPagoFideicomiso: this.wp.credito.formaPagoFideicomiso,
+              formaPagoGastoCobranza: this.wp.credito.formaPagoGastoCobranza,
+              formaPagoImpuestoSolca: this.wp.credito.formaPagoImpuestoSolca,
+              formaPagoInteres: this.wp.credito.formaPagoInteres,
+              formaPagoMora: this.wp.credito.formaPagoMora,
+              formaPagoSeguro: this.wp.credito.formaPagoSeguro,
+              formaPagoTasador: this.wp.credito.formaPagoTasador,
+              formaPagoTransporte: this.wp.credito.formaPagoTransporte,
+              formaPagoValoracion: this.wp.credito.formaPagoValoracion,
+              gastoCobranza: this.wp.credito.gastoCobranza,
+              impuestoSolca: this.wp.credito.impuestoSolca,
+              montoFinanciado: this.wp.credito.montoFinanciado,
+              montoPrevioDesembolso: this.wp.credito.montoPrevioDesembolso,
+              periodicidadPlazo: this.wp.credito.periodicidadPlazo,
+              periodoPlazo: this.wp.credito.periodoPlazo,
+              plazo: this.wp.credito.plazoCredito,
+              porcentajeflujoplaneado: this.wp.credito.porcentajeFlujoPlaneado,
+              saldoCapitalRenov: this.wp.credito.saldoCapitalRenov,
+              saldoInteres: this.wp.credito.saldoInteres,
+              saldoMora: this.wp.credito.saldoMora,
+              tipooferta: this.wp.credito.tipoOferta,
+              totalCostosOperacionAnterior: this.wp.credito.totalCostosOperacionAnterior,
+              totalGastosNuevaOperacion: this.wp.credito.totalGastosNuevaOperacion,
+              valorAPagar: this.wp.credito.valorAPagar,
+              valorARecibir: this.wp.credito.valorARecibir,
+              formaPagoAbonoCapital: this.wp.credito.formaPagoAbonoCapital,
+              abonoCapital: this.wp.credito.abonoCapital
+            }
+            this.dataSourceCreditoNegociacion.data.push( calculadora );
+            //this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
             
             this.mapearVariables(data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable)
           }

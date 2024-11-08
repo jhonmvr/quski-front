@@ -242,8 +242,6 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
               this.findHistoricoObservacionByCredito(data.entidad.credito.id);
             }
             this.validarOperacion(this.operacionNuevo);
-            console.log('llego a aqui? valorRecibirClienteMasDescuentoServicios')
-            this.valorRecibirClienteMasDescuentoServicios.setValue(this.recibirCliente.value - this.valorDescuentoServicios.value)
 
           }
         });
@@ -527,6 +525,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     this.cuotas.setValue( data.valorCuota );
     this.pagarCliente.setValue( data.aPagarCliente );
     this.recibirCliente.setValue( data.aRecibirCliente );
+    this.valorRecibirClienteMasDescuentoServicios.setValue(Number(this.recibirCliente.value) + Number(this.valorDescuentoServicios.value));
     this.numeroFunda.setValue( data.numeroFunda );
     this.anular = data.numeroFunda?true:false;
     this.numeroOperacion.setValue( data.numeroOperacion );
