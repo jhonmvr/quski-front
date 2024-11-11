@@ -62,7 +62,7 @@ export class ExcepcionesOperativasListComponent implements OnInit {
     }
     let page: Page = new Page();
     page.isPaginated = 'N'
-    this.excepcionOperativaService.findAllByParams(page,  null, null, null,null, idNegociacion).subscribe(e=>{
+    this.excepcionOperativaService.findAllByParams(page, null, null,null, idNegociacion).subscribe(e=>{
       console.log("valor findAllByParams",e)
       let lista = e as Array<any>;
       

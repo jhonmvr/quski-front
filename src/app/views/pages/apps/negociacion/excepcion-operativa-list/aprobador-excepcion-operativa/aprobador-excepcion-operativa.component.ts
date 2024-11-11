@@ -180,7 +180,7 @@ export class AprobadorExcepcionOperativaComponent extends TrackingUtil implement
     this.guardarTraking(wp ? wp.proceso ? wp.proceso.proceso : null : null,
       wp ? wp.credito ? wp.credito.codigo : null : null, 
       ['Información Operación','Datos Contacto Cliente','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Excepción'], 
-      0, 'EXCEPCION COBERTURA', wp ? wp.credito ? wp.credito.numeroOperacion : null : null )
+      0, 'EXCEPCION OPERATIVA', wp ? wp.credito ? wp.credito.numeroOperacion : null : null )
 
 
     this.cliente.setValue( wp.credito.tbQoNegociacion.tbQoCliente.nombreCompleto );

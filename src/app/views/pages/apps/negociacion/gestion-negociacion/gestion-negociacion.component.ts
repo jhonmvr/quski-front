@@ -446,39 +446,38 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
         return;
       }
       const listExs = e.entidades
-      this.exVigente = null;
-
-      // Implementar la lógica de validación
-      if (listExs.some(ex => ex.estadoExcepcion === 'PENDIENTE')) {
-        // Extraer el primer elemento con estado 'PENDIENTE'
-        this.exVigente = listExs.find(ex => ex.estadoExcepcion === 'PENDIENTE') || null;
-      } else if (listExs.some(ex => ex.estadoExcepcion === 'APROBADO')) {
-        // Si no hay 'PENDIENTE', extraer el primer 'APROBADO'
-        this.exVigente = listExs.find(ex => ex.estadoExcepcion === 'APROBADO') || null;
-      } else if (listExs.some(ex => ex.estadoExcepcion === 'NEGADO')) {
-        // Si no hay ni 'PENDIENTE' ni 'APROBADO', extraer el primer 'NEGADO'
-        this.exVigente = listExs.find(ex => ex.estadoExcepcion === 'NEGADO') || null;
-      }
-      if(this.exVigente.estadoExcepcion === 'PENDIENTE'){
-        this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.')
-      }
-
-      const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
-        width: "800px",
-        height: "auto",
-        data: {
-          mensaje: 'Observacion Aprobador: ' + this.exVigente.observacionAprobador,
-          titulo: 'EXCEPCION OPERATIVA: ' + this.exVigente.estadoExcepcion
+      if(listExs.length >= 1){
+        this.exVigente = null;
+        if (listExs.some(ex => ex.estadoExcepcion === 'PENDIENTE' && ex.nivelAprobacion != 1)) {
+          this.exVigente = listExs.find(ex => ex.estadoExcepcion === 'PENDIENTE') || null;
+        } else if (listExs.some(ex => ex.estadoExcepcion === 'APROBADO' && ex.nivelAprobacion != 1)) {
+          this.exVigente = listExs.find(ex => ex.estadoExcepcion === 'APROBADO') || null;
+        } else if (listExs.some(ex => ex.estadoExcepcion === 'NEGADO' && ex.nivelAprobacion != 1)) {
+          this.exVigente = listExs.find(ex => ex.estadoExcepcion === 'NEGADO') || null;
         }
-      });
-      dialogRef.afterClosed().subscribe(r => {
-        if(this.exVigente.estadoExcepcion === 'APROBADO'){
-          this.descuentoServicios.setValue(this.exVigente.montoInvolucrado);
-          this.observacionDescuentoServicio.setValue(this.exVigente.observacionAsesor)
-          this.tipoExcepcionServicio.setValue(this.exVigente.tipoExcepcion)
-          this.excepcionServicioAprobada = true
+        if(this.exVigente != null){
+          if(this.exVigente.estadoExcepcion === 'PENDIENTE'){
+            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.')
+          }else{
+            const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+              width: "800px",
+              height: "auto",
+              data: {
+                mensaje: 'Observacion Aprobador: ' + this.exVigente.observacionAprobador,
+                titulo: 'EXCEPCION OPERATIVA: ' + this.exVigente.estadoExcepcion
+              }
+            });
+            dialogRef.afterClosed().subscribe(r => {
+              if(this.exVigente.estadoExcepcion === 'APROBADO'){
+                this.descuentoServicios.setValue(this.exVigente.montoInvolucrado);
+                this.observacionDescuentoServicio.setValue(this.exVigente.observacionAsesor)
+                this.tipoExcepcionServicio.setValue(this.exVigente.tipoExcepcion)
+                this.excepcionServicioAprobada = true
+              }
+            });
+          }
         }
-      });
+      }
     });
     
   }

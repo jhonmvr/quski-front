@@ -18,26 +18,16 @@ export class ExcepcionOperativaListComponent implements OnInit {
   error: string;
   p: Page = new Page();
   dataSource = new MatTableDataSource<any>();
-  displayedColumns: string[] = ['Accion', 'codigo', 'codigoOperacion', 'tipoExcepcion', 'nivelAprobacion',  'montoInvolucrado', 'usuarioSolicitante', 'fechaSolicitud'];
+  displayedColumns: string[] = ['Accion','tipoExcepcion','nivelAprobacion','montoInvolucrado','fechaSolicitud','nombreCliente','identificacion','usuarioSolicitante','numeroOperacion','codigoOperacion','observacionAsesor'];
   public formFiltro: FormGroup = new FormGroup({});
-  public codigo = new FormControl('');
-  public idNegociacion = new FormControl('');
-  public proceso = new FormControl('');
-  public fechaCreacionDesde = new FormControl('');
-  public fechaCreacionHasta = new FormControl('');
-  public estado = new FormControl('');
-  public actividad = new FormControl('');
-  public codigoBpm = new FormControl('');
-  public codigoSoft = new FormControl('');
-  public agencia = new FormControl('');
-  asesor = new FormControl('');
+  public cedula = new FormControl('');
+
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(private excepcionOperativaService: ExcepcionOperativaService,public dialog: MatDialog, private router: Router) {
     this.excepcionOperativaService.setParameter();
-    
-    this.loadExcepciones(null,'PENDIENTE');
+    this.loadExcepciones();
   }
 
   ngOnInit(): void {
@@ -45,39 +35,21 @@ export class ExcepcionOperativaListComponent implements OnInit {
     this.p.isPaginated = "Y";
     this.p.pageSize = 10;
     this.p.currentPage = 0;
-    this.loadExcepciones(null,'PENDIENTE');
+    this.loadExcepciones();
   }
 
-  loadExcepciones(usuario?: string, estado?: string, codigo?: string, codigoOperacion?: string, idNegociacion?: string) {
-    if (this.paginator) {
-      this.p.currentPage = this.paginator.pageIndex;
-      this.p.pageSize = this.paginator.pageSize ? this.paginator.pageSize : 10;
-    }
+  loadExcepciones(cedula?: string) {
 
-    this.excepcionOperativaService.findAllByParams(this.p, usuario ? usuario : localStorage.getItem("reUser"), estado, codigo, codigoOperacion, idNegociacion).subscribe({
+    this.excepcionOperativaService.findAllByParamsWithClient(cedula).subscribe({
       next: (data) => {
         if (data) {
-          this.dataSource.data = data.list;
-          this.paginator.length = data.totalResults;
+          this.dataSource.data = data;
         } else {
           this.dataSource.data = null;
-          this.paginator.length = 0;
         }
       },
       error: (err) => this.error = 'Error fetching data'
     });
-  }
-
-  public numberOnly(event): boolean {
-    const charCode = (event.which) ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
-  }
-
-  limpiarFiltros() {
-
   }
 
   verDetalle(element:any){
@@ -87,22 +59,5 @@ export class ExcepcionOperativaListComponent implements OnInit {
       this.router.navigate(['negociacion/excepcion-operativa/list/aprobador/',element.id]);
     }
     
-  }
-
-  public getErrorMessage(pfield: string) {
-    const errorNumero = 'Ingresar solo numeros';
-    const invalidIdentification = 'La identificacion no es valida';
-    const errorLogitudExedida = 'La longitud sobrepasa el limite';
-    const errorInsuficiente = 'La longitud es insuficiente';
-
-
-    if (pfield && pfield === "identificacion") {
-      const input = this.formFiltro.get("identificacion");
-      return input.hasError("pattern") ? errorNumero :
-        input.hasError("invalid-identification") ? invalidIdentification :
-          input.hasError("maxlength") ? errorLogitudExedida :
-            input.hasError("minlength") ? errorInsuficiente :
-              "";
-    }
   }
 }

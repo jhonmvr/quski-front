@@ -10,7 +10,11 @@
     </re-portlet-header>
 
     <re-portlet-body>
-        <mat-vertical-stepper #stepper>
+        <mat-vertical-stepper #stepper (animationDone)="guardarTraking(this.crediW ? this.crediW.proceso ? this.crediW.proceso.proceso : null : null,
+        this.crediW ? this.crediW.credito ? this.crediW.credito.codigo : null : null, 
+        ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de crédito nuevo','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Resultado de la Excepcion'], 
+        stepper.selectedIndex, 'EXCEPCION OPERATIVA',this.crediW ? this.crediW.credito ? this.crediW.credito.numeroOperacion : null : null )">
+
             <mat-step label="Información Operación">
                 <div class="row">
                     <div class="col-4">
@@ -856,10 +860,22 @@
                     </mat-form-field>
                 </div>
             </mat-step>
+            <mat-step label="Variables crediticias">
+
+            </mat-step>
+            <mat-step label="Riesgo Acumulado">
+
+            </mat-step>
+            <mat-step label="Tasacion">
+
+            </mat-step>
+            <mat-step label="Opciones de Crédito">
+
+            </mat-step>
             <mat-step label="Resultado de la Excepcion">
                 <kt-comprobante-desembolso [idNegociacion]="item" ></kt-comprobante-desembolso>
                 <kt-excepciones-operativas-list [idNegociacion]="item" ></kt-excepciones-operativas-list>
-                <kt-comprobante-pago [idNegociacion]="item" [flagEdit]="true" ></kt-comprobante-pago>
+                <kt-comprobante-pago [idNegociacion]="item" [flagEdit]="false" ></kt-comprobante-pago>
                 <form [formGroup]="formResultadoOperacion">
                     <div class="row mt-3">
                         <div class="col-md-12">

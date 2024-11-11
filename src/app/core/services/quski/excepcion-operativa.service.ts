@@ -22,7 +22,8 @@ export class ExcepcionOperativaService extends BaseService {
     this.setParameter();
 
   }
-  findAllByParams(page: Page,  usuario?: string, estado?: string, codigo?: string, codigoOperacion?: string, idNegociacion?: string) {
+  findAllByParams(page: Page, estado?: string, codigo?: string, codigoOperacion?: string, idNegociacion?: string) {
+    const usuario = localStorage.getItem("reUser")
     let serviceUrl = this.appResourcesUrl + "excepcionOperativaRestController/listAllByParams";
     let params = new HttpParams()
       .set('page', page.currentPage.toString())
@@ -37,6 +38,21 @@ export class ExcepcionOperativaService extends BaseService {
     if (codigoOperacion) params = params.set('codigoOperacion', codigoOperacion);
     if (idNegociacion) params = params.set('idNegociacion', idNegociacion);
 
+    this.options = { headers: this.headers, params: params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  findAllByParamsWithClient(cedula?: string) {
+    const usuario = localStorage.getItem("reUser")
+    let serviceUrl = this.appResourcesUrl + "excepcionOperativaRestController/findAllByParamsWithClient";
+    let params = new HttpParams()
+    if (usuario) params = params.set('usuario', usuario);
+    if (cedula) params = params.set('cedula', cedula);
+   
     this.options = { headers: this.headers, params: params };
     return this.http.get(serviceUrl, this.options).pipe(
       tap( // Log the result or error

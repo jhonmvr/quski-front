@@ -134,35 +134,41 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     });
   }
   private inicioDeFlujo() {
-    this.route.paramMap.subscribe((json: any) => {
+    this.route.paramMap.subscribe(async (json: any) => {
       this.pro.getCabecera(json.params.idNegociacion,'RENOVACION').subscribe(datosCabecera=>{
         this.layouteService.setDatosContrato(datosCabecera);
       });
       if (json.params.idNegociacion) {
 
         this.item = json.params.idNegociacion;
-        this.excepcionOperativaService.findByNegociacion(this.item).subscribe(e=>{
+        await this.excepcionOperativaService.findByNegociacion(this.item).subscribe(e=>{
           this.valorDescuentoServicios.setValue('0')
           if(e.entidades == null){
             return;
           }
           const listExs = e.entidades
-          let exVigente = null;
-    
-          // Implementar la lógica de validación
-          if (listExs.some(ex => ex.estadoExcepcion === 'PENDIENTE')) {
-            exVigente = listExs.find(ex => ex.estadoExcepcion === 'PENDIENTE') || null;
-          } else if (listExs.some(ex => ex.estadoExcepcion === 'APROBADO' && ex.nivelAprobacion != 1)) {
-            exVigente = listExs.find(ex => ex.estadoExcepcion === 'APROBADO') || null;
-          } else if (listExs.some(ex => ex.estadoExcepcion === 'NEGADO')) {
-            exVigente = listExs.find(ex => ex.estadoExcepcion === 'NEGADO') || null;
-          }
-          if(exVigente.estadoExcepcion === 'PENDIENTE'){
-            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.')
-          }else if(exVigente.estadoExcepcion === 'APROBADO'){
-            this.valorDescuentoServicios.setValue(exVigente.montoInvolucrado.toFixed(2))
+          if(listExs.length >= 1){
+            let exVigente = null;
+            // Implementar la lógica de validación
+            if (listExs.some(ex => ex.estadoExcepcion === 'PENDIENTE' )) {
+              exVigente = listExs.find(ex => ex.estadoExcepcion === 'PENDIENTE') || null;
+            } else if (listExs.some(ex => ex.estadoExcepcion === 'APROBADO' )) {
+              exVigente = listExs.find(ex => ex.estadoExcepcion === 'APROBADO') || null;
+            } else if (listExs.some(ex => ex.estadoExcepcion === 'NEGADO' )) {
+              exVigente = listExs.find(ex => ex.estadoExcepcion === 'NEGADO') || null;
+            }
+            if(exVigente != null){
+              if(exVigente.estadoExcepcion === 'PENDIENTE'){
+                this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.')
+              }else {
+                if(exVigente.estadoExcepcion === 'APROBADO'){
+                  this.valorDescuentoServicios.setValue(exVigente.montoInvolucrado.toFixed(2))
+                }
+              }
+            }
           }
         });
+        
 
         this.cre.buscarRenovacionByIdNegociacion(this.item).subscribe((data: any) => {
           this.credit = data.entidad;
@@ -170,13 +176,14 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
           this.recibirPagar = (this.credit.credito.valorARecibir - this.credit.credito.valorAPagar).toFixed(2) ;
           this.cambiarStepperList(this.recibirPagar)
           this.recibirCliente.setValue( this.recibirPagar ? this.recibirPagar : '0');
+          console.log('valorDescuentoServicios:  ' ,this.valorDescuentoServicios.value)
+          console.log('recibirPagar:  ' ,this.recibirPagar)
            if ( this.recibirPagar < 0) { 
-            this.valorRecibirClienteMasDescuentoServicios.setValue(this.recibirPagar - this.valorDescuentoServicios.value)
             this.recibirOPagar = 'warn';
           }else if( this.recibirPagar > 0){
-            this.valorRecibirClienteMasDescuentoServicios.setValue(Number(this.recibirPagar) + Number(this.valorDescuentoServicios.value))
             this.recibirOPagar = 'primary';
           }
+          this.valorRecibirClienteMasDescuentoServicios.setValue(Number(this.recibirPagar) + Number(this.valorDescuentoServicios.value))
 
           if(data.entidad && data.entidad.credito && data.entidad.credito.id){
             this.findHistoricoObservacionByCredito(data.entidad.credito.id);
@@ -284,32 +291,43 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
   }
   public solicitarAprobacion(){
 
-    if(this.formOperacion.valid){
-      let mensaje = "Solicitar la aprobacion del credito: " + this.credit.credito.codigo;
-      const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
-        width: "800px",
-        height: "auto",
-        data: mensaje
-      });
-      dialogRef.afterClosed().subscribe(r => {
-        if(r){
-          this.cre.solicitarAprobacionRenovacion( this.credit.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor,this.observacionAsesor.value ).subscribe( (data: any) =>{
-            if(data.entidad){
-              //
-              this.solicitarExcepcionOperativa();
-              this.router.navigate(['negociacion/bandeja-operaciones']);
-              this.cre.validacionDocumento(this.credit.credito.tbQoNegociacion.id).subscribe(a=>{
-
-              });
-            }
-          });
-        }else{
-          this.sinNotSer.setNotice('SE CANCELO LA ACCION','warning');
-        }
-      });
-    }else{
+    if(!this.formOperacion.valid){
       this.sinNotSer.setNotice('Complete los campos correctamente','warning');
+      return;
     }
+    let exs =  null
+    let mensaje = "Solicitar la aprobacion del credito: " + this.credit.credito.codigo;
+
+    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor != 'SIN EXCEPCION'){
+      mensaje = "Solicitar regularización de documentos antes de solicitar la aprobación del credito: " + this.credit.credito.codigo;
+      exs = {
+        idNegociacion: this.credit.credito.tbQoNegociacion,
+        codigoOperacion: this.credit.credito.codigo,
+        tipoExcepcion: "REGULARIZACION_DOCUMENTOS",
+        estadoExcepcion: "PENDIENTE",
+        montoInvolucrado: 0,
+        usuarioSolicitante: localStorage.getItem("reUser"),
+        observacionAsesor: 'Tipo documentos: '+ this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') + "\n Comentario: " + this.observacionAsesor.value
+      };
+    }
+    const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
+      width: "800px",
+      height: "auto",
+      data: mensaje
+    });
+    dialogRef.afterClosed().subscribe(r => {
+      if(r){
+        this.cre.aprobacionDeFlujo( this.credit.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor,this.observacionAsesor.value,this.credit.proceso.proceso,exs).subscribe( (data: any) =>{
+          if(data.entidad){
+            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', data.entidad.estadoProceso);
+            this.cre.validacionDocumento(this.credit.credito.tbQoNegociacion.id).subscribe(a=>{
+            });
+          }
+        });
+      }else{
+        this.sinNotSer.setNotice('SE CANCELO LA ACCION','warning');
+      }
+    });
   }
   public crearOperacion(){
     if(this.observacionAsesor.invalid){
@@ -497,24 +515,24 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       return input.hasError("required") ? errorRequerido : "";
     }
   }
-
-  solicitarExcepcionOperativa(){
-    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
-      return;
-    }
-    let excepcionServicios = {
-      "idNegociacion": this.credit.credito.tbQoNegociacion,
-      "codigoOperacion": this.credit.credito.codigo,
-      "tipoExcepcion": "Fabrica",
-      "estadoExcepcion": "PENDIENTE",
-      "usuarioSolicitante": localStorage.getItem("reUser"),
-      "observacionAsesor": this.excepcionOperativa.value ? this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') : null + " \n" + this.observacionAsesor.value
-      };
-    this.excepcionOperativaService.solicitarExcepcionFabrica(excepcionServicios,this.credit.proceso.proceso).subscribe(p=>{
-      this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
-    });
-    
-  }
+  //  descontinuado
+  //  solicitarExcepcionOperativa(){
+  //    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
+  //      return;
+  //    }
+  //    let excepcionServicios = {
+  //      "idNegociacion": this.credit.credito.tbQoNegociacion,
+  //      "codigoOperacion": this.credit.credito.codigo,
+  //      "tipoExcepcion": "Fabrica",
+  //      "estadoExcepcion": "PENDIENTE",
+  //      "usuarioSolicitante": localStorage.getItem("reUser"),
+  //      "observacionAsesor": this.excepcionOperativa.value ? this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') : null + " \n" + this.observacionAsesor.value
+  //      };
+  //    this.excepcionOperativaService.solicitarExcepcionFabrica(excepcionServicios,this.credit.proceso.proceso).subscribe(p=>{
+  //      this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+  //    });
+  //    
+  //  }
 
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {

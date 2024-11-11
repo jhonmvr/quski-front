@@ -126,9 +126,14 @@ export class ComprobanteDesembolsoComponent implements OnInit {
    
   addRecord() {
     let total = this.dataSource.data.reduce((sum, item) => sum + item.valor, 0);
+    console.log("valorMaximoDesembolso: " ,this.valorMaximoDesembolso)
     total = total + this.formData.valor ;
-    if(total > this.valorMaximoDesembolso){
-      this.sinNotSer.setNotice("El total desembolso no puede ser mayor que: " + this.valorMaximoDesembolso.toFixed(2), 'warning');
+    
+
+    let desembolso = this.valorMaximoDesembolso ? this.valorMaximoDesembolso.value : 0
+    console.log("? : " ,desembolso);
+    if(total > desembolso){
+      this.sinNotSer.setNotice("El total desembolso no puede ser mayor que: " + desembolso.toFixed(2), 'warning');
       return;
     }
     if (this.dataSource.data.length >= 3) {

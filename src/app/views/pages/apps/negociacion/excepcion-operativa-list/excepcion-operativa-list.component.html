@@ -8,130 +8,30 @@
     <re-portlet-body style="background-color: rgba(112, 157, 216, 0.521);">
         <div class="row">
             <div class="col-12">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="codigo" placeholder="codigo" autocomplete="on"
-                                    matInput />
-                                <mat-error>{{ getErrorMessage("codigo") }}</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-3">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="idNegociacion" placeholder="idNegociacion" autocomplete="off" matInput
-                                    numeric numericType="number" (keypress)="numberOnly($event)" />
-                                <mat-error>{{ getErrorMessage("idNegociacion") }}</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-3">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="codigoBpm" placeholder="Codigo Bpm" autocomplete="off" matInput />
-                            </mat-form-field>
-                        </div>
-                       <!--  <div class="col-md-3">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <input [formControl]="codigoSoft" placeholder="Codigo Soft" autocomplete="off"
-                                    matInput />
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Proceso" (selectionChange)="loadEstadoActividad()"
-                                    [formControl]="proceso" multiple>
-                                    <mat-option #allProceso (click)="allSelecProcesos(allProceso)"
-                                        [value]="0">TODOS</mat-option>
-                                    <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Asesor" [formControl]="asesor">
-                                    <mat-option value="{{ usuario }}" selected>{{ usuario }}</mat-option>
-                                    <mat-option>--</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div> -->
-                        <!-- <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Actividad" [formControl]="actividad">
-                                    <mat-option [value]="0">--</mat-option>
-                                    <mat-option *ngFor="let element of catActividad" [value]="element">{{ element }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div> -->
-                       <!--  <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Estado" [formControl]="estado" multiple>
-                                    <mat-option #allEstado
-                                        [value]="0">TODOS</mat-option>
-                                    <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="offset-2 col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-label>Fecha Creacion Desde: </mat-label>
-                                <input matInput #inputFechaCreacionDesde [matDatepicker]="pickerFechaCreacionDesde"
-                                    [formControl]="fechaCreacionDesde" />
-                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionDesde">
-                                </mat-datepicker-toggle>
-                                <mat-datepicker #pickerFechaCreacionDesde></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-label>Fecha Creacion Hasta: </mat-label>
-                                <input matInput #inputFechaCreacionHasta [matDatepicker]="pickerFechaCreacionHasta"
-                                    [formControl]="fechaCreacionHasta" />
-                                <mat-datepicker-toggle matSuffix [for]="pickerFechaCreacionHasta">
-                                </mat-datepicker-toggle>
-                                <mat-datepicker #pickerFechaCreacionHasta></mat-datepicker>
-                            </mat-form-field>
-                        </div> -->
-                        <!--  <div class="col-md-4 offset-4">
-                            <mat-form-field class="mat-form-field-fluid">
-                                <mat-select placeholder="Agencia" [formControl]="agencia">
-                                    <mat-option *ngFor="let element of catAgencia" [value]="element">{{ element.nombre }}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div> -->
-
+                <div class="row">
+                    <div class="col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input [formControl]="cedula" placeholder="Cedula Cliente" autocomplete="on" matInput />
+                        </mat-form-field>
                     </div>
-                    <div class="row">
-
-                        <div class="col-4 offset-1">
-                            <button mat-raised-button color="basic" (click)="loadExcepciones(null, 'PENDIENTE', codigo.value, codigoBpm.value, idNegociacion.value)">
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>
-                                <span>Buscar</span>
-                            </button>
-                            <!-- <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar"
-                                style="font-size: 12px; vertical-align: middle;">
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">
-                                    layers_clear</mat-icon>
-                                <span style="position: relative; top: -10px; margin-left: 5px;"
-                                    class="orange-icon">Limpiar</span>
-                            </a> -->
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 offset-1">
+                        <button mat-raised-button color="basic" (click)="loadExcepciones(cedula.value)">
+                            <mat-icon style="font-size: 24px;" matTooltipPosition="above">search</mat-icon>
+                            <span>Buscar</span>
+                        </button>
                     </div>
+                </div>
             </div>
         </div>
         <div class="row" style="align-self: flex-end">
-
-
-            <button mat-raised-button
-                (click)="exporter.exportTable('xlsx', {fileName:'proceso', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
-
+            <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'proceso', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
         </div>
         <div class="row">
-
             <div class="col-12 mt-3">
-                <mat-table matTableExporter #table [dataSource]="dataSource" class="mat-elevation-z8 tableOpciones" #exporter="matTableExporter">
-
-                    <!-- Código Column -->
+                <mat-table matTableExporter #table [dataSource]="dataSource" class="mat-elevation-z8 tableOpciones"
+                    #exporter="matTableExporter">
                     <ng-container matColumnDef="Accion">
                         <th mat-header-cell *matHeaderCellDef>Accion</th>
                         <td mat-cell *matCellDef="let element">
@@ -139,14 +39,6 @@
                                 <mat-icon>visibility</mat-icon>
                             </button>
                         </td>
-                    </ng-container>
-                    <ng-container matColumnDef="codigo">
-                        <th mat-header-cell *matHeaderCellDef>Código</th>
-                        <td mat-cell *matCellDef="let element">{{ element.codigo }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="codigoOperacion">
-                        <th mat-header-cell *matHeaderCellDef>Código Operacion</th>
-                        <td mat-cell *matCellDef="let element">{{ element.codigoOperacion }}</td>
                     </ng-container>
                     <ng-container matColumnDef="tipoExcepcion">
                         <th mat-header-cell *matHeaderCellDef>Tipo Excepcion</th>
@@ -156,51 +48,41 @@
                         <th mat-header-cell *matHeaderCellDef>Nivel Aprobacion</th>
                         <td mat-cell *matCellDef="let element">{{ element.nivelAprobacion }}</td>
                     </ng-container>
-                    <ng-container matColumnDef="estadoExcepcion">
-                        <th mat-header-cell *matHeaderCellDef>Estado Solicitud</th>
-                        <td mat-cell *matCellDef="let element">{{ element.estadoExcepcion }}</td>
-                    </ng-container>
                     <ng-container matColumnDef="montoInvolucrado">
                         <th mat-header-cell *matHeaderCellDef>Monto excepcion</th>
-                        <td mat-cell *matCellDef="let element">{{ element.montoInvolucrado }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="usuarioSolicitante">
-                        <th mat-header-cell *matHeaderCellDef>Usuario Solicitud</th>
-                        <td mat-cell *matCellDef="let element">{{ element.usuarioSolicitante }}</td>
+                        <td mat-cell *matCellDef="let element">{{ element.montoInvolucrado | currency:'CAD':'symbol-narrow':'1.2-2' }}</td>
                     </ng-container>
                     <ng-container matColumnDef="fechaSolicitud">
                         <th mat-header-cell *matHeaderCellDef>Fecha Solicitud</th>
                         <td mat-cell *matCellDef="let element">{{ element.fechaSolicitud | rDate }}</td>
                     </ng-container>
-
-                    <!-- Tipo de Excepción Column -->
-                    <ng-container matColumnDef="fechaRespuesta">
-                        <th mat-header-cell *matHeaderCellDef>Fecha respuesta</th>
-                        <td mat-cell *matCellDef="let element">{{ element.fechaRespuesta | rDate }}</td>
+                    <ng-container matColumnDef="nombreCliente">
+                        <th mat-header-cell *matHeaderCellDef>Nombre Cliente</th>
+                        <td mat-cell *matCellDef="let element">{{ element.nombreCompleto }}</td>
                     </ng-container>
-
-                    <!-- Estado Excepción Column -->
+                    <ng-container matColumnDef="identificacion">
+                        <th mat-header-cell *matHeaderCellDef>Identificacion Cliente</th>
+                        <td mat-cell *matCellDef="let element">{{ element.cedulaCliente }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="usuarioSolicitante">
+                        <th mat-header-cell *matHeaderCellDef>Usuario Solicitud</th>
+                        <td mat-cell *matCellDef="let element">{{ element.usuarioSolicitante }}</td>
+                    </ng-container>
                     <ng-container matColumnDef="observacionAsesor">
                         <th mat-header-cell *matHeaderCellDef>Observacion Asesor</th>
                         <td mat-cell *matCellDef="let element">{{ element.observacionAsesor }}</td>
                     </ng-container>
-
-                    <!-- Usuario Aprobador Column -->
-                    <ng-container matColumnDef="observacionAprobador">
-                        <th mat-header-cell *matHeaderCellDef>Observacion Aprobador</th>
-                        <td mat-cell *matCellDef="let element">{{ element.observacionAprobador }}</td>
+                    <ng-container matColumnDef="numeroOperacion">
+                        <th mat-header-cell *matHeaderCellDef>Numero Operacion</th>
+                        <td mat-cell *matCellDef="let element">{{ element.numeroOperacion }}</td>
                     </ng-container>
-
-                    <!-- Observación Asesor Column -->
-                    <ng-container matColumnDef="usuarioAprobador">
-                        <th mat-header-cell *matHeaderCellDef>Usuario Aprobador</th>
-                        <td mat-cell *matCellDef="let element">{{ element.usuarioAprobador }}</td>
+                    <ng-container matColumnDef="codigoOperacion">
+                        <th mat-header-cell *matHeaderCellDef>Código Operacion</th>
+                        <td mat-cell *matCellDef="let element">{{ element.codigoOperacion }}</td>
                     </ng-container>
-
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </mat-table>
-                <mat-paginator #paginator [pageSizeOptions]="[10, 20,50]" (page)="loadExcepciones()"></mat-paginator>
             </div>
 
         </div>

@@ -506,7 +506,7 @@
                         <mat-error *ngIf="!isValueCorrect()">El Total desembolso debe ser igual a Valor a recibir</mat-error>
                     </mat-form-field>
                 </div>
-                <kt-comprobante-desembolso [idNegociacion]="item" [flagEdit]="true" [valorMaximoDesembolso]="recibirCliente.value + valorDescuentoServicios.value" (totalComprobantes)="handleTotalComprobantes($event)"></kt-comprobante-desembolso>
+                <kt-comprobante-desembolso [idNegociacion]="item" [flagEdit]="true" [valorMaximoDesembolso]="valorRecibirClienteMasDescuentoServicios" (totalComprobantes)="handleTotalComprobantes($event)"></kt-comprobante-desembolso>
             </mat-step>
             <mat-step label="Documento Habilitantes">
                 <ng-container *ngIf="existeCredito">
