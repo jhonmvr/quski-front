@@ -427,7 +427,7 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
   private setearValores(ap: AprobacionWrapper) {
     this.guardarTraking(ap ? ap.proceso ? ap.proceso.proceso : null : null,
       ap ? ap.credito ? ap.credito.codigo : null : null, 
-      ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de crédito nuevo','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Resultado de la Excepcion'], 
+      ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de crédito nuevo','Datos de la Excepcion','Resultado de la Excepcion'], 
       0, 'EXCEPCION OPERATIVA', ap ? ap.credito ? ap.credito.numeroOperacion : null : null );
 
     /** @OPERACION */

@@ -307,7 +307,9 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
         estadoExcepcion: "PENDIENTE",
         montoInvolucrado: 0,
         usuarioSolicitante: localStorage.getItem("reUser"),
-        observacionAsesor: 'Tipo documentos: '+ this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') + "\n Comentario: " + this.observacionAsesor.value
+        observacionAsesor: 'Tipo documentos: '+ this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') 
+          + "\n Fecha Regularizacion: " + this.fechaRegularizacion ? this.fechaRegularizacion.value : ""
+          + "\n Comentario: " + this.observacionAsesor.value
       };
     }
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
@@ -319,7 +321,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       if(r){
         this.cre.aprobacionDeFlujo( this.credit.credito.tbQoNegociacion.id, this.correoAsesor, this.nombreAsesor,this.observacionAsesor.value,this.credit.proceso.proceso,exs).subscribe( (data: any) =>{
           if(data.entidad){
-            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', data.entidad.estadoProceso);
+            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', data.entidad.estadoProceso.replaceAll('_', ' '));
             this.cre.validacionDocumento(this.credit.credito.tbQoNegociacion.id).subscribe(a=>{
             });
           }
@@ -515,24 +517,6 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       return input.hasError("required") ? errorRequerido : "";
     }
   }
-  //  descontinuado
-  //  solicitarExcepcionOperativa(){
-  //    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
-  //      return;
-  //    }
-  //    let excepcionServicios = {
-  //      "idNegociacion": this.credit.credito.tbQoNegociacion,
-  //      "codigoOperacion": this.credit.credito.codigo,
-  //      "tipoExcepcion": "Fabrica",
-  //      "estadoExcepcion": "PENDIENTE",
-  //      "usuarioSolicitante": localStorage.getItem("reUser"),
-  //      "observacionAsesor": this.excepcionOperativa.value ? this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') : null + " \n" + this.observacionAsesor.value
-  //      };
-  //    this.excepcionOperativaService.solicitarExcepcionFabrica(excepcionServicios,this.credit.proceso.proceso).subscribe(p=>{
-  //      this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
-  //    });
-  //    
-  //  }
 
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {

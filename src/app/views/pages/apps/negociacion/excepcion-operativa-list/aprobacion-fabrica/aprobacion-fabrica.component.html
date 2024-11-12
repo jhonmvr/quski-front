@@ -10,9 +10,10 @@
     </re-portlet-header>
 
     <re-portlet-body>
-        <mat-vertical-stepper #stepper (animationDone)="guardarTraking(this.crediW ? this.crediW.proceso ? this.crediW.proceso.proceso : null : null,
+        <mat-vertical-stepper #stepper
+            (animationDone)="guardarTraking(this.crediW ? this.crediW.proceso ? this.crediW.proceso.proceso : null : null,
         this.crediW ? this.crediW.credito ? this.crediW.credito.codigo : null : null, 
-        ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de crédito nuevo','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Resultado de la Excepcion'], 
+        ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de crédito nuevo','Datos de la Excepcion','Resultado de la Excepcion'], 
         stepper.selectedIndex, 'EXCEPCION OPERATIVA',this.crediW ? this.crediW.credito ? this.crediW.credito.numeroOperacion : null : null )">
 
             <mat-step label="Información Operación">
@@ -26,7 +27,7 @@
                         <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="codigoBpm" placeholder="Código BPM" />
                         </mat-form-field>
-                    </div>F
+                    </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="proceso" placeholder="Proceso" />
@@ -543,13 +544,7 @@
                     <mat-tab label="Excepciones">
                         <kt-lista-excepciones [idNegociacion]="item"></kt-lista-excepciones>
                     </mat-tab>
-                    <mat-tab label="Historico Excepcion Operativa">
-                        <div class="row mt-1 mb-1">
-                            <div class="col-md-10 offset-md-1">
-                                <kt-historico-operativa [data]="dataHistoricoOperativa"></kt-historico-operativa>
-                            </div>
-                        </div>
-                    </mat-tab>
+
                 </mat-tab-group>
             </mat-step>
             <mat-step label="Datos de crédito nuevo">
@@ -860,48 +855,50 @@
                     </mat-form-field>
                 </div>
             </mat-step>
-            <mat-step label="Variables crediticias">
 
-            </mat-step>
-            <mat-step label="Riesgo Acumulado">
-
-            </mat-step>
-            <mat-step label="Tasacion">
-
-            </mat-step>
-            <mat-step label="Opciones de Crédito">
-
+            <mat-step label="Datos de la Excepcion">
+                <mat-tab-group mat-align-tabs="start">
+                    <mat-tab label="Excepcions Operativas">
+                        <kt-excepciones-operativas-list [idNegociacion]="item"></kt-excepciones-operativas-list>
+                    </mat-tab>
+                    <mat-tab label="Comprobante Desembolso">
+                        <kt-comprobante-desembolso [idNegociacion]="item"></kt-comprobante-desembolso>
+                    </mat-tab>
+                    <!--mat-tab label="Comprobante Pago">
+                        <kt-comprobante-pago [idNegociacion]="item" [flagEdit]="false"></kt-comprobante-pago>
+                    </mat-tab-->
+                    <mat-tab label="Historico Observacion">
+                        <kt-historico-observacion [data]="dataHistoricoObservacion"></kt-historico-observacion>
+                    </mat-tab>
+                </mat-tab-group>
             </mat-step>
             <mat-step label="Resultado de la Excepcion">
-                <kt-comprobante-desembolso [idNegociacion]="item" ></kt-comprobante-desembolso>
-                <kt-excepciones-operativas-list [idNegociacion]="item" ></kt-excepciones-operativas-list>
-                <kt-comprobante-pago [idNegociacion]="item" [flagEdit]="false" ></kt-comprobante-pago>
-                <form [formGroup]="formResultadoOperacion">
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <kt-historico-observacion [data]="dataHistoricoObservacion"></kt-historico-observacion>
-                        </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <form [formGroup]="formResultadoOperacion">
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
+                                        placeholder="Observaciones: " matInput></textarea>
+                                </div>
+                            </div>
+                            <div class="row mt-3 justify-content-center">
+                                <div class="col-2">
+                                    <button mat-raised-button color="primary" (click)="enviarRespuesta('APROBADO')">
+                                        <span class="white-icon">Aprobar Excepcion</span>
+                                    </button>
+                                </div>
+                                <div class="col-2">
+                                    <button mat-raised-button color="warn" (click)="enviarRespuesta('NEGADO')">
+                                        <span class="white-icon">Negar Excepcion</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-md-8">
-                            <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
-                                placeholder="Observaciones: " matInput></textarea>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="offset-md-2 col-md-2">
-                            <button mat-raised-button color="primary" (click)="enviarRespuesta('APROBADO')">
-                                <span class="white-icon">Aprobar Excepcion</span>
-                            </button>
-                        </div>
-                        <div class="offset-md-1 col-md-2">
-                            <button mat-raised-button color="warn" (click)="enviarRespuesta('NEGADO')">
-                                <span class="white-icon">Negar Excepcion</span>
-                            </button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </mat-step>
+
         </mat-vertical-stepper>
     </re-portlet-body>
     <re-portlet-footer></re-portlet-footer>
