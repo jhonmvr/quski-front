@@ -14,6 +14,8 @@ import { ErrorCargaInicialComponent } from '../../../../../../../app/views/parti
 import { RegularizacionDocumentosService } from '../../../../../../../app/core/services/quski/regularizacion-documentos.service';
 import { ConfirmarAccionComponent } from '../../../../../../../app/views/partials/custom/popups/confirmar-accion/confirmar-accion.component';
 import { TbQoRegularizacionDocumento } from '../../../../../../../app/core/model/quski/TbQoRegularizacionDocumento';
+import { TrackingService } from '../../../../../../../app/core/services/quski/tracking.service';
+import { TrackingUtil } from '../../../../../../../app/core/util/TrakingUtil';
 
 
 @Component({
@@ -21,7 +23,7 @@ import { TbQoRegularizacionDocumento } from '../../../../../../../app/core/model
   templateUrl: './detalle-regularizacion-documentos.component.html',
   styleUrls: ['./detalle-regularizacion-documentos.component.scss']
 })
-export class DetalleRegularizacionDocumentosComponent implements OnInit {
+export class DetalleRegularizacionDocumentosComponent extends TrackingUtil implements OnInit {
   varHabilitante = {proceso:'CLIENTE',referencia:''};
   dataHistoricoOperativa;
   dataHistoricoObservacion;
@@ -59,8 +61,11 @@ export class DetalleRegularizacionDocumentosComponent implements OnInit {
     private layoutService: LayoutConfigService,
     private dialog: MatDialog,
     private subheaderService: SubheaderService,
-    private router: Router
+    private router: Router,
+    public tra: TrackingService
+
   ) {
+    super(tra);
     this.par.setParameter();
     this.cre.setParameter();
     this.sof.setParameter();
@@ -88,9 +93,6 @@ export class DetalleRegularizacionDocumentosComponent implements OnInit {
   private traerCreditoNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
-        
-       
-        
         this.regularizacionDocumentosService.traerCreditoNegociacionByRegularizacion(data.params.id).subscribe((data: any) => {
          
             this.detalle = data;
@@ -122,6 +124,11 @@ export class DetalleRegularizacionDocumentosComponent implements OnInit {
     });
   }
   private setearValores(ap: DetalleNegociacionWrapper) {
+    this.guardarTraking(ap ? ap.proceso ? ap.proceso.proceso : null : null,
+      ap ? ap.credito ? ap.credito.codigo : null : null, 
+      ['Información Del Cliente','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Habilitantes','Observaciones'], 
+      0, 'REGULARIZACION DOCUMENTOS', ap ? ap.credito ? ap.credito.numeroOperacion : null : null );
+      
     this.titulo =  ap.credito.codigo;
     this.nombre.setValue( ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto );
     this.cedula.setValue( ap.credito.tbQoNegociacion.tbQoCliente.cedulaCliente );

@@ -36,7 +36,7 @@ export class ExcepcionesCoberturaComponent  extends TrackingUtil implements OnIn
   codigoAgencia
   dataSourceTelefonosCliente = new MatTableDataSource<any>();
 
-  mensaje
+  mensaje 
   public wp: NegociacionWrapper = null;
   public formDisable: FormGroup = new FormGroup({});
   public cliente = new FormControl('', []);

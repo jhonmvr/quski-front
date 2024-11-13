@@ -17,7 +17,10 @@
     </re-portlet-header>
 
     <re-portlet-body>
-        <mat-vertical-stepper #stepper >
+        <mat-vertical-stepper #stepper (animationDone)="guardarTraking(wp ? wp.proceso ? wp.proceso.proceso : null : null,
+        wp ? wp.credito ? wp.credito.codigo : null : null, 
+        ['Información Operación','Datos Contacto Cliente','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Excepción'], 
+        stepper.selectedIndex, 'EXCEPCION OPERATIVA',wp ? wp.credito ? wp.credito.numeroOperacion : null : null )">
             <mat-step label="Información Operación">
                 <div class="row">
                     <div class="col-md-6">
@@ -101,11 +104,10 @@
             <mat-step label="Tasacion">
                 <kt-tabla-tasacion *ngIf="this.wp && this.wp.joyas;" [data]='this.wp.joyas' [tipo]="'T'"></kt-tabla-tasacion>
             </mat-step>
-            <mat-step *ngIf="dataSourceCreditoNegociacion.data.length>0" label="Opciones de Crédito">
+            <mat-step label="Opciones de Crédito">
                 <div class="row">
                     <div class="col">
-                        <mat-table matTableExporter #tableNegociacion class="tableOpciones" #exporter="matTableExporter" [dataSource]="dataSourceCreditoNegociacion ">
-
+                        <mat-table matTableExporter #tableNegociacion class="tableOpciones" #exporter="matTableExporter" [dataSource]="dataSourceCreditoNegociacion">
                             <ng-container matColumnDef="plazo">
                                 <mat-header-cell *matHeaderCellDef>Plazo</mat-header-cell>
                                 <mat-cell *matCellDef="let element">
@@ -279,59 +281,44 @@
                     </div>
                 </div>
             </mat-step>
-            <mat-step>
-                <ng-template matStepLabel>Excepción</ng-template>
+            <mat-step label="Excepción">
                 <div class="kt-form">
                     <form [formGroup]="formDatosExcepcion">
-
-                        <!-- <div class="row mt-3">
-                            <div class="col-md-6">
-                                <mat-card class="warning">
-                                    <span class="material-icons warning-icons">report_problem </span>
-                                    <span>{{mensaje}}</span>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <mat-card class="custom-alto" appearance="outlined">
+                                    <mat-card-header>
+                                        <mat-card-title>Excepcion de servicios</mat-card-title>
+                                    </mat-card-header>
+                                    <mat-card-content>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <mat-form-field class="mat-form-field-fluid">
+                                                    <input [formControl]="tipoExcepcionServicio" placeholder="Tipo Excepcion" matInput >
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <mat-form-field  class="mat-form-field-fluid">
+                                                    <input [formControl]="valorDescuentoServicios" placeholder="Descuento servicios" matInput >
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <mat-form-field class="mat-form-field-fluid">
+                                                    <textarea class="form-control border" [formControl]="observacionAsesor" placeholder="Observacion del asesor" matInput rows="5" >{{ observacionAsesor }}</textarea>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <mat-form-field class="mat-form-field-fluid">
+                                                    <textarea class="form-control border" [formControl]="observacionAprobador" rows="5" placeholder="Observacion del Aprobador: " matInput>{{ observacionAprobador }}</textarea>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </mat-card-content>
+                                    <mat-card-footer class="footer-centrado pb-4">
+                                        <button mat-button mat-raised-button color="primary" (click)="aprobarExcepcion('APROBADO')">Aprobar Excepcion</button>
+                                        <button mat-button mat-raised-button color="accent" (click)="aprobarExcepcion('NEGADO')">Negar Excepcion</button>
+                                    </mat-card-footer>
                                 </mat-card>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4">
-                                <mat-form-field class="mat-form-field-fluid">
-                                    <input matInput [formControl]="usuarioAsesor" placeholder="Usuario Asesor: " />
-                                </mat-form-field>
-                            </div>
-                        </div>-->
-                        <div class="row mt-3">
-                            <div class="col-md-8">
-                                <mat-label> Valor descuento servicios: </mat-label>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-xl-8">
-                                <input [formControl]="valorDescuentoServicios" placeholder="Valor descuento servicios: " matInput>
-                            </div>
-                        </div> 
-                        <div class="row mt-3">
-                            <div class="col-md-8">
-                                <mat-label> Observacion Del Aprobador: </mat-label>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-xl-8">
-                                <textarea class="form-control border" [formControl]="observacionAprobador" rows="5" placeholder="Observacion Del Aprobador: " matInput>{{ observacionAprobador }}</textarea>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-2">
-
-                            </div>
-                            <div class="col-md-3">
-                                <button mat-button mat-raised-button color="primary" (click)="aprobarExcepcion('APROBADO')">Aprobar Excepcion</button>
-                            </div>
-                            <div class="col-md-2">
-
-                            </div>
-                            <div class="col-md-3">
-                                <button mat-button mat-raised-button color="warn" (click)="aprobarExcepcion('NEGADO')">Negar Excepcion</button>
                             </div>
                         </div>
                     </form>

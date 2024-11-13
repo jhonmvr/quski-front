@@ -22,13 +22,14 @@ import { environment } from '../.././../../../../../environments/environment';
 import { CatalogoWrapper } from '../../../aprobador/aprobacion-novacion/aprobacion-novacion.component';
 import { ExcepcionOperativaService } from '../.././../../../../../app/core/services/quski/excepcion-operativa.service';
 import { TbQoExcepcionOperativa } from '../.././../../../../../app/core/model/quski/TbQoExcepcionOperativa';
+import { TrackingUtil } from '../.././../../../../../app/core/util/TrakingUtil';
 
 @Component({
   selector: 'kt-aprobacion-fabrica',
   templateUrl: './aprobacion-fabrica.component.html',
   styleUrls: ['./aprobacion-fabrica.component.scss']
 })
-export class AprobacionFabricaComponent implements OnInit {
+export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
   // VARIABLES PUBLICAS  
   private divicionPolitica: CatalogoWrapper[];
   dataHistoricoObservacion;
@@ -37,6 +38,8 @@ export class AprobacionFabricaComponent implements OnInit {
   srcFunda;
   srcJoya;
   public agencia: any;
+  public nombreAsesor; 
+
   public fechaActual: string;
   public item;
   public varHabilitante = {proceso:'',referencia:''};
@@ -199,6 +202,7 @@ export class AprobacionFabricaComponent implements OnInit {
     private subheaderService: SubheaderService,
     public tra: TrackingService
   ) {
+    super(tra);
     this.cre.setParameter();
     this.sof.setParameter();
     this.pro.setParameter();
@@ -311,6 +315,8 @@ export class AprobacionFabricaComponent implements OnInit {
     this.subheaderService.setTitle('Aprobación De Credito');
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem( 'idAgencia' );
+    this.nombreAsesor = localStorage.getItem( 'nombre' );
+
     this.traerCreditoNegociacion();
     this.formDisable.disable();
     this.sof.fechasistema( this.agencia ).subscribe( ( data: any) =>{
@@ -419,7 +425,11 @@ export class AprobacionFabricaComponent implements OnInit {
     }
   }
   private setearValores(ap: AprobacionWrapper) {
-    console.log("setear valores ", ap)
+    this.guardarTraking(ap ? ap.proceso ? ap.proceso.proceso : null : null,
+      ap ? ap.credito ? ap.credito.codigo : null : null, 
+      ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de crédito nuevo','Datos de la Excepcion','Resultado de la Excepcion'], 
+      0, 'EXCEPCION OPERATIVA', ap ? ap.credito ? ap.credito.numeroOperacion : null : null );
+
     /** @OPERACION */
     this.codigoBpm.setValue(ap.credito.codigo);
     this.proceso.setValue(ap.proceso.proceso);
@@ -617,7 +627,7 @@ export class AprobacionFabricaComponent implements OnInit {
       if(r){
         this.excepcion.estadoExcepcion = aprueba;
         this.excepcion.observacionAprobador = this.observacionAprobador.value;
-        this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.crediW.proceso.proceso).subscribe(p=>{
+        this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.crediW.proceso.proceso, this.nombreAsesor).subscribe(p=>{
           if(aprueba=='APROBADO'){
             this.sinNotSer.setNotice('EXCEPCION APROBADA','success');
           }else{
@@ -648,15 +658,17 @@ export class AprobacionFabricaComponent implements OnInit {
 
   private cargarFotoHabilitante(tipoDocumento, proceso, referencia):Observable<String> {
     //console.log("cargar documentos fotos",tipoDocumento, proceso, referencia);
-    return this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).pipe(switchMap(data=> 
-      
-      
+
+    return this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).pipe(switchMap(data=> {
+      if( !(data && data.entidad) ){
+        return of(null);
+      }
       this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).pipe(switchMap((dataDos: any) => {
         let file = JSON.parse( atob( dataDos.entidad ) );
         return of(file?file.fileBase64:'');
       }))
-    
-        
+    }
+      
     ));
   }
 }

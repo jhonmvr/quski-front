@@ -112,6 +112,23 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
+  public aprobacionDeFlujo( idNegociacion, correoAsesor, nombreAsesor, observacionAsesor, tipoProceso, ex) {
+    let serviceUrl = this.appResourcesUrl + this.urlRest + "aprobacionDeFlujo" ;
+    
+    this.params = this.params.set('idNegociacion',idNegociacion);
+    this.params = this.params.set('correoAsesor',correoAsesor);
+    this.params = this.params.set('nombreAsesor',nombreAsesor);
+    this.params = this.params.set('observacionAsesor',observacionAsesor);
+    this.params = this.params.set('tipoProceso',tipoProceso);
+    console.log('ex: ',ex);
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, ex, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
   public crearOperacionRenovacion( credito: TbQoCreditoNegociacion, pagos : any[], asesor: string) {
     let serviceUrl = this.appResourcesUrl + this.urlRest + "crearOperacionRenovacion" ;
     this.options = { headers: this.headers };

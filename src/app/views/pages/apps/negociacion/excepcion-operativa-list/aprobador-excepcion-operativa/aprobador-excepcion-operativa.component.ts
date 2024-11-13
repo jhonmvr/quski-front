@@ -19,19 +19,21 @@ import { ConfirmarAccionComponent } from '../../../../../../../app/views/partial
 import { environment } from '../../../../../../../environments/environment';
 import { ExcepcionOperativaService } from '../../../../../../../app/core/services/quski/excepcion-operativa.service';
 import { TbQoExcepcionOperativa } from '../.././../../../../../app/core/model/quski/TbQoExcepcionOperativa';
+import { TrackingUtil } from '../../../../../../../app/core/util/TrakingUtil';
 
 @Component({
   selector: 'kt-aprobador-excepcion-operativa',
   templateUrl: './aprobador-excepcion-operativa.component.html',
   styleUrls: ['./aprobador-excepcion-operativa.component.scss']
 })
-export class AprobadorExcepcionOperativaComponent implements OnInit {
+export class AprobadorExcepcionOperativaComponent extends TrackingUtil implements OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading;
-  public observacion: string;
+  //public observacion: string;
   public excepcion: TbQoExcepcionOperativa;
   public usuario;
   public agencia; 
+  public nombreAsesor; 
   dataSourceTelefonosCliente = new MatTableDataSource<any>();
   public simulado: boolean;
   public loadVariables = new BehaviorSubject<boolean>(false);
@@ -42,8 +44,13 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
   public fechaCreacion = new FormControl('', []);
   public proceso = new FormControl('', []);
   public email = new FormControl('', []);
-  public valorDescuentoServicios = new FormControl('', []);
   aprobadoWebMupi = new FormControl('', []);
+
+  public tipoExcepcionServicio = new FormControl('', []);
+  public valorDescuentoServicios = new FormControl('', []);
+  public observacionAsesor = new FormControl('', []);
+  public observacionAprobador = new FormControl('', [Validators.required]);
+
   public componenteVariable: boolean;
   negoW: NegociacionWrapper;
   mensaje;
@@ -59,8 +66,6 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
 
   public formDatosExcepcion: FormGroup = new FormGroup({});
   public cobertura = new FormControl('', [Validators.required, ]);
-  public observacionAprobador = new FormControl('', [Validators.required]);
-  public observacionAsesor = new FormControl('', []);
 
   public coberturaActual = new FormControl('', []);
   public montoActual = new FormControl('', []);
@@ -87,6 +92,7 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
 
   ) {
+    super(tra);
     this.cre.setParameter();
     this.cal.setParameter();
     this.sof.setParameter();
@@ -112,6 +118,7 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
     this.busquedaNegociacion();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.agencia = localStorage.getItem( 'idAgencia' );
+    this.nombreAsesor = localStorage.getItem( 'nombre' );
   }
 
   onNoClick(): void {
@@ -137,6 +144,7 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
         this.excepcionOperativaService.traerCreditoNegociacionByExcepcionOperativa(data.params.id).subscribe( (data: any)=>{
           if(data){
             this.wp = data;
+
             this.excepcion = this.wp.excepcionOperativa;
             this.formDisable.disable();
             this.procesoService.getCabecera(this.wp.credito.tbQoNegociacion.id,this.wp.proceso.proceso).subscribe(datosCabecera=>{
@@ -167,9 +175,12 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
     this.router.navigate(['negociacion/excepcion-operativa/list']);
   }
   private cargarCampos( wp: NegociacionWrapper){
-    this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success')
+    
     this.subheaderService.setTitle('Operacion: '+this.wp.credito.codigo);
-
+    this.guardarTraking(wp ? wp.proceso ? wp.proceso.proceso : null : null,
+      wp ? wp.credito ? wp.credito.codigo : null : null, 
+      ['Información Operación','Datos Contacto Cliente','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Excepción'], 
+      0, 'EXCEPCION OPERATIVA', wp ? wp.credito ? wp.credito.numeroOperacion : null : null )
 
 
     this.cliente.setValue( wp.credito.tbQoNegociacion.tbQoCliente.nombreCompleto );
@@ -182,13 +193,17 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
     this.email.setValue( wp.credito.tbQoNegociacion.tbQoCliente.email );
     this.aprobadoWebMupi.setValue(wp.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S'? 'Si' : 'No');
     this.observacionAsesor.disable();
+    this.valorDescuentoServicios.disable();
+    this.tipoExcepcionServicio.disable();
     //this.calcularOpciones();
     this.camposAdicinales( );
-    this.observacion = this.excepcion.observacionAsesor;
+    //this.observacion = this.excepcion.observacionAsesor;
     this.observacionAsesor.setValue( this.excepcion.observacionAsesor );
     this.valorDescuentoServicios.setValue(this.excepcion.montoInvolucrado);
+    this.tipoExcepcionServicio.setValue(this.excepcion.tipoExcepcion);
     //this.usuarioAsesor.setValue( this.excepcion.idAsesor);
     this.loadingSubject.next(false);
+    this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success')
   }
   public simular(){ 
     this.loadingSubject.next(true);
@@ -208,15 +223,59 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
       this.loadingSubject.next(true);
       this.cal.simularOfertaExcepcion(this.wp.credito.id, null, null,this.codigoAgencia.codigo,this.wp.credito.numeroOperacionAnterior).subscribe((data: any) => {
         this.loadingSubject.next(false);
-        console.log("info", data.entidad)
         if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
           && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
             if(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0]){
               this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado);
-            
             }
-            this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
+            this.dataSourceCreditoNegociacion = new MatTableDataSource();
+
+            let calculadora: any = {
+              codigoTabla: this.wp.credito.tablaAmortizacion,
+              costoCustodia: this.wp.credito.costoCustodia,
+              costoFideicomiso: this.wp.credito.costoFideicomiso,
+              costoSeguro: this.wp.credito.costoSeguro,
+              costoTasacion: this.wp.credito.costoTasacion,
+              costoTransporte: this.wp.credito.costoTransporte,
+              costoValoracion: this.wp.credito.costoValoracion,
+              cuota: this.wp.credito.cuota,
+              custodiaDevengada: this.wp.credito.custodiaDevengada,
+              dividendoflujoplaneado: this.wp.credito.dividendoFlujoPlaneado,
+              dividendosprorrateoserviciosdiferido:this.wp.credito.dividendoProrrateo,
+              formaPagoCapital: this.wp.credito.formaPagoCapital,
+              formaPagoCustodia: this.wp.credito.formaPagoCustodia,
+              formaPagoCustodiaDevengada: this.wp.credito.formaPagoCustodiaDevengada,
+              formaPagoFideicomiso: this.wp.credito.formaPagoFideicomiso,
+              formaPagoGastoCobranza: this.wp.credito.formaPagoGastoCobranza,
+              formaPagoImpuestoSolca: this.wp.credito.formaPagoImpuestoSolca,
+              formaPagoInteres: this.wp.credito.formaPagoInteres,
+              formaPagoMora: this.wp.credito.formaPagoMora,
+              formaPagoSeguro: this.wp.credito.formaPagoSeguro,
+              formaPagoTasador: this.wp.credito.formaPagoTasador,
+              formaPagoTransporte: this.wp.credito.formaPagoTransporte,
+              formaPagoValoracion: this.wp.credito.formaPagoValoracion,
+              gastoCobranza: this.wp.credito.gastoCobranza,
+              impuestoSolca: this.wp.credito.impuestoSolca,
+              montoFinanciado: this.wp.credito.montoFinanciado,
+              montoPrevioDesembolso: this.wp.credito.montoPrevioDesembolso,
+              periodicidadPlazo: this.wp.credito.periodicidadPlazo,
+              periodoPlazo: this.wp.credito.periodoPlazo,
+              plazo: this.wp.credito.plazoCredito,
+              porcentajeflujoplaneado: this.wp.credito.porcentajeFlujoPlaneado,
+              saldoCapitalRenov: this.wp.credito.saldoCapitalRenov,
+              saldoInteres: this.wp.credito.saldoInteres,
+              saldoMora: this.wp.credito.saldoMora,
+              tipooferta: this.wp.credito.tipoOferta,
+              totalCostosOperacionAnterior: this.wp.credito.totalCostosOperacionAnterior,
+              totalGastosNuevaOperacion: this.wp.credito.totalGastosNuevaOperacion,
+              valorAPagar: this.wp.credito.valorAPagar,
+              valorARecibir: this.wp.credito.valorARecibir,
+              formaPagoAbonoCapital: this.wp.credito.formaPagoAbonoCapital,
+              abonoCapital: this.wp.credito.abonoCapital
+            }
+            this.dataSourceCreditoNegociacion.data.push( calculadora );
+            //this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
             
             this.mapearVariables(data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable)
           }
@@ -251,7 +310,7 @@ export class AprobadorExcepcionOperativaComponent implements OnInit {
       if(r){
         this.excepcion.estadoExcepcion = aprueba;
         this.excepcion.observacionAprobador = this.observacionAprobador.value;
-        this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.wp.proceso.proceso).subscribe(p=>{
+        this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.wp.proceso.proceso, this.nombreAsesor).subscribe(p=>{
           if(aprueba=='APROBADO'){
             this.sinNoticeService.setNotice('EXCEPCION  APROBADA','success');
           }else{

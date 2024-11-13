@@ -8,10 +8,9 @@
             </a>
         </ng-container>
     </re-portlet-header>
-    <re-portlet-body>
+    <re-portlet-body>   <!-- Convertir en dinamico la lisde de secciones del stepper -->
         <mat-vertical-stepper #stepper [linear]="true" (animationDone)="guardarTraking('RENOVACION',
-        credit ? credit.credito ? credit.credito.codigo : null : null, 
-        ['Datos Instruccion Operacion','Comprobante De Pago','Documentos Legales'], 
+        credit ? credit.credito ? credit.credito.codigo : null : null, this.stepperList, 
         stepper.selectedIndex, 'GENERAR CREDITO RENOVACION',
         credit ? credit.credito ? credit.credito.numeroOperacion : null : null )">
             <mat-step label='Datos Instruccion Operacion' [stepControl]="formOperacion">
@@ -99,9 +98,8 @@
                         </mat-form-field>
                     </div>					
                 </div>
-            </mat-step> -->
-          
-            <mat-step label='Comprobante De Pago'>
+            </mat-step>  -->        
+            <mat-step label='Comprobante De Pago' *ngIf="this.recibirPagar < 0">
                 <div class="row mt-2 mb-2">
                     <div class="col-2">
                         <button class="mat-elevation-z4" mat-raised-button (click)="agregarComprobante()">
@@ -111,8 +109,9 @@
                     </div>
                     <div class="col-2">
                         <button mat-stroked-button color="{{ recibirOPagar }}">
-                        <strong>Neto a recibir: </strong> {{ recibirPagar ? recibirPagar + valorDescuentoServicios.value : '0' }}
-                    </button>
+                            <strong>Neto a recibir: </strong> {{ (valorRecibirClienteMasDescuentoServicios ? valorRecibirClienteMasDescuentoServicios.value  : 0) | number:'1.2-2' }}
+
+                        </button>
                     </div>
                 </div>
                 <div class="row">
@@ -167,7 +166,7 @@
                     </div>
                 </div>
             </mat-step>
-            <mat-step label="Comprobante de desembolso" *ngIf="this.recibirPagar > 0">
+            <mat-step label='Comprobante de desembolso' *ngIf="this.recibirPagar > 0">
                 <div class="row">
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid">
@@ -181,17 +180,24 @@
                     </div>
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid" style="color: green">
-                            <input matInput [value]="recibirCliente.value + valorDescuentoServicios.value" readonly placeholder="Valor A recibir despues del descuento">
+                            <input matInput [formControl]="valorRecibirClienteMasDescuentoServicios" readonly placeholder="Valor A recibir despues del descuento">
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <mat-form-field class="mat-form-field-fluid">
-                        <input matInput [formControl]="totalValorDesembolso" readonly placeholder="Total valor desembolso" [ngClass]="{'correct-value': isValueCorrect(), 'incorrect-value': !isValueCorrect()}">
-                        <mat-error *ngIf="!isValueCorrect()">El Total desembolso debe ser igual a Valor a recibir</mat-error>
-                    </mat-form-field>
+                <div class="row">
+                    <div class="col-md-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="totalValorDesembolso" readonly placeholder="Total valor desembolso" [ngClass]="{'correct-value': isValueCorrect(), 'incorrect-value': !isValueCorrect()}">
+                            <mat-error *ngIf="!isValueCorrect()">El Total desembolso debe ser igual a Valor a recibir</mat-error>
+                        </mat-form-field>
+                    </div>
                 </div>
-                <kt-comprobante-desembolso [idNegociacion]="item" [flagEdit]="true" (totalComprobantes)="handleTotalComprobantes($event)"></kt-comprobante-desembolso>
+                <kt-comprobante-desembolso [idNegociacion]="item" [flagEdit]="true" [valorMaximoDesembolso]="valorRecibirClienteMasDescuentoServicios" (totalComprobantes)="handleTotalComprobantes($event)"></kt-comprobante-desembolso>
+                <div class="row mt-2 mb-2">
+                    <div class="col-md-2 offset-md-5">
+                        <button class="mat-elevation-z4" mat-raised-button color="primary" (click)="crearOperacion()">Crear Operacion</button>
+                    </div>
+                </div>
             </mat-step>
             <mat-step label='Documentos Legales'>
                 <!-- <re-habilitante [proceso]="'NUEVO'" [useType]="'FORM'" [referencia]="item" ></re-habilitante> -->

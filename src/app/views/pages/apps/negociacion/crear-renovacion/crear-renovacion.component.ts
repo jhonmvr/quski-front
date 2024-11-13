@@ -95,11 +95,16 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       'montoPrevioDesembolso', 
      'formaPagoCustodiaDevengada', 'tipooferta', 
     'dividendoflujoplaneado', 'dividendosprorrateoserviciosdiferido' */
-    
+  exVigente
   recibirOpagar: any = '';
   numeroOperacionMadre: any;
   idNego: any;
   public descuentoServicios = new FormControl('', [Validators.required, ValidateDecimal, Validators.min(0.01)]);
+  public observacionDescuentoServicio = new FormControl('', [Validators.required]);
+  public tipoExcepcionServicio = new FormControl('');
+  public excepcionServicioAprobada = false
+  public catTipoExcepcionServicio: Array<any> = ['excepcion 1', 'excepcion 2','Cobranza y servicios'];
+
   constructor(
     private excepcionOperativaService: ExcepcionOperativaService,
     private cre: CreditoNegociacionService,
@@ -155,6 +160,9 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.sof.consultarMotivoDevolucionAprobacionCS().subscribe((data: any) => {
       this.catMotivoDevolucion = !data.existeError ? data.catalogo : "Error al cargar catalogo";
     });
+    this.par.findByTipo('EXC-OPV2-RENV',).subscribe( (data :any) =>{
+      this.catTipoExcepcionServicio = data.entidades ? data.entidades : {codigo: 'ERR', mensaje: 'Error al cargar catalogo'}
+    });
   }
   /** @CREDITO */
   private inicioDeFlujo() {
@@ -196,7 +204,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
             this.credit = data.entidad;
            
             this.riesgoAcumulado();
-            this.simularOpciones();
+            this.simularOpciones(true);
             //console.log("datos ->", this.credit);
             if (this.credit ) {
               
@@ -214,22 +222,47 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
 
   private validarExcepcionesOperativa(tmp: any) {
-    this.excepcionOperativaService.findByNegociacionAndTipo(tmp.credito.tbQoNegociacion.id,'Cobranza y servicios','APROBADO').subscribe(e=>{
-      if(!e){
+    this.excepcionOperativaService.findByNegociacion(tmp.credito.tbQoNegociacion.id).subscribe(e=>{
+      if(e.entidades == null){
         return;
       }
-      const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
-        width: "800px",
-        height: "auto",
-        data: {
-          mensaje: 'Observacion Aprobador: ' + e.observacionAprobador,
-           titulo: 'EXCEPCION ' +e. estadoExcepcion
+      const listExs = e.entidades
+      if(listExs.length >= 1){
+        this.exVigente = null;
+        // Implementar la lógica de validación
+        if (listExs.some(ex => ex.estadoExcepcion === 'PENDIENTE' && ex.nivelAprobacion != 1)) {
+          // Extraer el primer elemento con estado 'PENDIENTE'
+          this.exVigente = listExs.find(ex => ex.estadoExcepcion === 'PENDIENTE') || null;
+        } else if (listExs.some(ex => ex.estadoExcepcion === 'APROBADO' && ex.nivelAprobacion != 1)) {
+          // Si no hay 'PENDIENTE', extraer el primer 'APROBADO'
+          this.exVigente = listExs.find(ex => ex.estadoExcepcion === 'APROBADO') || null;
+        } else if (listExs.some(ex => ex.estadoExcepcion === 'NEGADO' && ex.nivelAprobacion != 1)) {
+          // Si no hay ni 'PENDIENTE' ni 'APROBADO', extraer el primer 'NEGADO'
+          this.exVigente = listExs.find(ex => ex.estadoExcepcion === 'NEGADO') || null;
         }
-      });
-      dialogRef.afterClosed().subscribe(r => {
-        //this.calcularOpciones(null);
-        this.descuentoServicios.setValue(e.montoInvolucrado);
-      });
+        if(this.exVigente != null){
+          if(this.exVigente.estadoExcepcion === 'PENDIENTE'){
+            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.')
+          }else{
+            const dialogRef = this.dialog.open(ErrorCargaInicialComponent, {
+              width: "800px",
+              height: "auto",
+              data: {
+                mensaje: 'Observacion Aprobador: ' + this.exVigente.observacionAprobador,
+                titulo: 'EXCEPCION OPERATIVA FUE '+this.exVigente.estadoExcepcion
+              }
+            });
+            dialogRef.afterClosed().subscribe(r => {
+              if(this.exVigente.estadoExcepcion === 'APROBADO'){
+                this.descuentoServicios.setValue(this.exVigente.montoInvolucrado);
+                this.observacionDescuentoServicio.setValue(this.exVigente.observacionAsesor)
+                this.tipoExcepcionServicio.setValue(this.exVigente.tipoExcepcion)
+                this.excepcionServicioAprobada = true
+              }
+            });
+          }
+        }
+      }
     });
     
   }
@@ -365,7 +398,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         abonoCapital: this.credit.credito.abonoCapital
       }
       this.dataSourceCreditoNegociacion.data.push( calculadora );
-      this.masterToggle( calculadora ) ;
+      this.masterToggle( calculadora, true ) ;
     }
     this.validarProceso();
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + this.credit.operacionAnterior.credito.numeroOperacion + ".", "success");
@@ -622,7 +655,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       this.sinNotSer.setNotice('SELECCIONE UNA OPCION VALIDA', 'warning');
     }
   }
-  public simularOpciones(){
+  public simularOpciones(inicial){
      if(this.montoSolicitado.value){
       /* if(this.dataSourceCreditoNegociacion.data.length < 1 || ( this.montoSolicitado.value > this.dataSourceCreditoNegociacion.data[0].montoFinanciado  ) ){
         this.sinNotSer.setNotice("EL MONTO SOLICITADO ES MAYOR AL MONTO FINANCIADO ACTUAL", 'error');
@@ -632,61 +665,141 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
         this.sinNotSer.setNotice('INGRESE CORRECTAMENTE EL MONTO SOLICITADO','warning');
       }
     }
-    let cliente = {} as cliente;
-    cliente.identificacion = this.credit.operacionAnterior.cliente.identificacion;
-    if(this.credit.operacionAnterior.cliente.fechaNacimiento){
+    if(this.excepcionServicioAprobada && !inicial){
+      const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
+        width: '800px',
+        height: 'auto',
+        data: 'Cancelar la excepcion de servicios actual'
+      });
+      dialogRefGuardar.afterClosed().subscribe((result: any) => {
+        if (result) {
+          this.exVigente.estadoExcepcion = 'NEGADO';
+          this.exVigente.observacionAprobador = 'Cambio en opciones de credito';
+          this.excepcionOperativaService.cancelarExcepcion(this.exVigente, this.credit.proceso.proceso, localStorage.getItem('nombre')).subscribe(p=>{
+            this.descuentoServicios.setValue(null);
+            this.observacionDescuentoServicio.setValue(null)
+            this.tipoExcepcionServicio.setValue(null)
+            this.excepcionServicioAprobada = false
+            this.sinNotSer.setNotice('EXCEPCION  NEGADA POR CAMBIO DE OPCION','success');
+            let cliente = {} as cliente;
+            cliente.identificacion = this.credit.operacionAnterior.cliente.identificacion;
+            if(this.credit.operacionAnterior.cliente.fechaNacimiento){
 
-    }else{
-      this.sinNotSer.setNotice("ERROR AL VALIDAR LA FECHA DE NACIMIENTO")
-      return;
-    }
-    let fecha = this.credit.operacionAnterior.cliente.fechaNacimiento.split("-")
- 
-    cliente.fechaNacimiento = fecha[2] +'/' + fecha[1] +'/' + fecha[0]; 
-    let wrapper : any = { cliente: null, credito: null, garantias: null}
-    wrapper.cliente =  cliente;
-    wrapper.credito = this.credit.operacionAnterior.credito;
-    wrapper.garantias = this.credit.operacionAnterior.garantias;
-    let cobertura = this.credit.credito ? this.credit.credito.cobertura? this.credit.credito.cobertura : 0 : 0;
-    let monto = this.montoSolicitado.value ? this.montoSolicitado.value : null;
-    this.cal.simularOfertaRenovacion(this.riesgoTotal, cobertura ,this.agencia, monto, wrapper).subscribe( (data: any) =>{
-      if(data.entidad){
-        if(data.entidad.simularResult.codigoError != 0){
-          this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
-          return;
-        }
-        if( data.entidad.simularResult.xmlGarantias.garantias.garantia ){
-          this.garantiasSimuladas = data.entidad.simularResult.xmlGarantias.garantias.garantia;
-          this.credit.operacionAnterior.garantias.forEach(garantia => {
-            this.garantiasSimuladas.forEach(garantiaS=>{
-              if(garantia.descuentoPiedras==garantiaS.descuentoPesoPiedras
-                && garantia.descuentoSuelda==garantiaS.descuentoSuelda
-                && garantia.codigoEstadoJoya==garantiaS.estadoJoya
-                && garantia.pesoBruto==garantiaS.pesoGr
-                && garantia.pesoNeto==garantiaS.pesoNeto
-                && garantia.tienePiedras==(garantiaS.tienePiedras == 'N'?false:true )
-                && garantia.codigoTipoJoya==garantiaS.tipoJoya
-                && garantia.codigoTipoOro==garantiaS.tipoOroKilataje){
-                  garantia.valorAvaluo = garantiaS.valorAvaluo;
-                  garantia.valorComercial = garantiaS.valorAplicable;
-                  garantia.valorOro = garantiaS.valorOro;
-                  garantia.valorRealizacion = garantiaS.valorRealizacion;
+            }else{
+              this.sinNotSer.setNotice("ERROR AL VALIDAR LA FECHA DE NACIMIENTO")
+              return;
+            }
+            let fecha = this.credit.operacionAnterior.cliente.fechaNacimiento.split("-")
+        
+            cliente.fechaNacimiento = fecha[2] +'/' + fecha[1] +'/' + fecha[0]; 
+            let wrapper : any = { cliente: null, credito: null, garantias: null}
+            wrapper.cliente =  cliente;
+            wrapper.credito = this.credit.operacionAnterior.credito;
+            wrapper.garantias = this.credit.operacionAnterior.garantias;
+            let cobertura = this.credit.credito ? this.credit.credito.cobertura? this.credit.credito.cobertura : 0 : 0;
+            let monto = this.montoSolicitado.value ? this.montoSolicitado.value : null;
+            this.cal.simularOfertaRenovacion(this.riesgoTotal, cobertura ,this.agencia, monto, wrapper).subscribe( (data: any) =>{
+              if(data.entidad){
+                if(data.entidad.simularResult.codigoError != 0){
+                  this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
+                  return;
+                }
+                if( data.entidad.simularResult.xmlGarantias.garantias.garantia ){
+                  this.garantiasSimuladas = data.entidad.simularResult.xmlGarantias.garantias.garantia;
+                  this.credit.operacionAnterior.garantias.forEach(garantia => {
+                    this.garantiasSimuladas.forEach(garantiaS=>{
+                      if(garantia.descuentoPiedras==garantiaS.descuentoPesoPiedras
+                        && garantia.descuentoSuelda==garantiaS.descuentoSuelda
+                        && garantia.codigoEstadoJoya==garantiaS.estadoJoya
+                        && garantia.pesoBruto==garantiaS.pesoGr
+                        && garantia.pesoNeto==garantiaS.pesoNeto
+                        && garantia.tienePiedras==(garantiaS.tienePiedras == 'N'?false:true )
+                        && garantia.codigoTipoJoya==garantiaS.tipoJoya
+                        && garantia.codigoTipoOro==garantiaS.tipoOroKilataje){
+                          garantia.valorAvaluo = garantiaS.valorAvaluo;
+                          garantia.valorComercial = garantiaS.valorAplicable;
+                          garantia.valorOro = garantiaS.valorOro;
+                          garantia.valorRealizacion = garantiaS.valorRealizacion;
+                      }
+                    });
+                    
+                  });
+                  
+                  //console.log("estas son las garantias ", this.garantiasSimuladas );
+                }
+                if(data.entidad && data.entidad.simularResult && data.entidad.simularResult.xmlVariablesInternas  && data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable ){
+                  this.variablesInternas = data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable;
+                  //console.log("estas son las variabes", this.variablesInternas)
+                }
+                
+                this.dataSourceCreditoNegociacion.data =  data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
+                //this.validarCliente( data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion );
               }
             });
-            
           });
-          
-          //console.log("estas son las garantias ", this.garantiasSimuladas );
+        } else {
+          this.sinNotSer.setNotice('CAMBIO DE OPCION CANCELADA', 'warning');
+          return;
         }
-        if(data.entidad && data.entidad.simularResult && data.entidad.simularResult.xmlVariablesInternas  && data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable ){
-          this.variablesInternas = data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable;
-          //console.log("estas son las variabes", this.variablesInternas)
-        }
-        
-        this.dataSourceCreditoNegociacion.data =  data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
-        //this.validarCliente( data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion );
+      });
+    }else{
+      let cliente = {} as cliente;
+      cliente.identificacion = this.credit.operacionAnterior.cliente.identificacion;
+      if(this.credit.operacionAnterior.cliente.fechaNacimiento){
+  
+      }else{
+        this.sinNotSer.setNotice("ERROR AL VALIDAR LA FECHA DE NACIMIENTO")
+        return;
       }
-    });
+      let fecha = this.credit.operacionAnterior.cliente.fechaNacimiento.split("-")
+   
+      cliente.fechaNacimiento = fecha[2] +'/' + fecha[1] +'/' + fecha[0]; 
+      let wrapper : any = { cliente: null, credito: null, garantias: null}
+      wrapper.cliente =  cliente;
+      wrapper.credito = this.credit.operacionAnterior.credito;
+      wrapper.garantias = this.credit.operacionAnterior.garantias;
+      let cobertura = this.credit.credito ? this.credit.credito.cobertura? this.credit.credito.cobertura : 0 : 0;
+      let monto = this.montoSolicitado.value ? this.montoSolicitado.value : null;
+      this.cal.simularOfertaRenovacion(this.riesgoTotal, cobertura ,this.agencia, monto, wrapper).subscribe( (data: any) =>{
+        if(data.entidad){
+          if(data.entidad.simularResult.codigoError != 0){
+            this.sinNotSer.setNotice("Error en la simulacion: "+ data.entidad.simularResult.mensaje, 'error')
+            return;
+          }
+          if( data.entidad.simularResult.xmlGarantias.garantias.garantia ){
+            this.garantiasSimuladas = data.entidad.simularResult.xmlGarantias.garantias.garantia;
+            this.credit.operacionAnterior.garantias.forEach(garantia => {
+              this.garantiasSimuladas.forEach(garantiaS=>{
+                if(garantia.descuentoPiedras==garantiaS.descuentoPesoPiedras
+                  && garantia.descuentoSuelda==garantiaS.descuentoSuelda
+                  && garantia.codigoEstadoJoya==garantiaS.estadoJoya
+                  && garantia.pesoBruto==garantiaS.pesoGr
+                  && garantia.pesoNeto==garantiaS.pesoNeto
+                  && garantia.tienePiedras==(garantiaS.tienePiedras == 'N'?false:true )
+                  && garantia.codigoTipoJoya==garantiaS.tipoJoya
+                  && garantia.codigoTipoOro==garantiaS.tipoOroKilataje){
+                    garantia.valorAvaluo = garantiaS.valorAvaluo;
+                    garantia.valorComercial = garantiaS.valorAplicable;
+                    garantia.valorOro = garantiaS.valorOro;
+                    garantia.valorRealizacion = garantiaS.valorRealizacion;
+                }
+              });
+              
+            });
+            
+            //console.log("estas son las garantias ", this.garantiasSimuladas );
+          }
+          if(data.entidad && data.entidad.simularResult && data.entidad.simularResult.xmlVariablesInternas  && data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable ){
+            this.variablesInternas = data.entidad.simularResult.xmlVariablesInternas.variablesInternas && data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable;
+            //console.log("estas son las variabes", this.variablesInternas)
+          }
+          
+          this.dataSourceCreditoNegociacion.data =  data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion;
+          //this.validarCliente( data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion );
+        }
+      });
+    }
+    
   }
 
   public regresar(){
@@ -710,7 +823,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     });
   }
 
-  masterToggle(event) {
+  masterToggle(event, inicial) {
     this.selection.clear()        
     this.selection.select(event) 
     this.recibirPagar = (event.valorARecibir - event.valorAPagar).toFixed(2) ;
@@ -823,84 +936,80 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   }
 
   
-  solicitarExcepcionServicios(){
-    if(!this.credit.proceso){
-      if(this.tipoCliente.invalid){
-        this.sinNotSer.setNotice("SELECCIONA UN TIPO DE CLIENTE", 'warning');
-        return;
-      }
-      if(this.formTipoCliente.invalid){
-        this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LA INFORMACION DEL CODEUDOR/APODERADO", 'warning');
-        return;
-      }
-      this.cre.crearCreditoRenovacion({opcion: this.selection.selected.length > 0 ? this.selection.selected[0] : null,
-        nombreApoderado: this.nombreApoderado.value,
-        identificacionApoderado: this.identificacionApoderado.value,
-        fechaNacimientoApoderado: this.fechaNacimientoApoderado.value,
-        fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value,
-        tipoCliente: this.tipoCliente.value?this.tipoCliente.value.codigo:null,
-        nombreCodeudor: this.nombreCodeudor.value,
-        identificacionCodeudor: this.identificacionCodeudor.value },  this.numeroOperacion,
-         this.numeroOperacionMadre, this.usuario, this.agencia,this.garantiasSimuladas, this.idNego, this.variablesInternas).subscribe( data =>{
-        if(data.entidad){
-          this.credit = data.entidad;
-          const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
-            width: '800px',
-            height: 'auto',
-            data: 'Solicitar excepcion de servicios'
-          });
-          dialogRefGuardar.afterClosed().subscribe((result: any) => {
-            if (result) {
-              let excepcionServicios = {
-                "idNegociacion": this.credit.credito.tbQoNegociacion,
-                "codigoOperacion": this.credit.credito.codigo,
-                "tipoExcepcion": "Cobranza y servicios",
-                "estadoExcepcion": "PENDIENTE",
-                "montoInvolucrado": this.descuentoServicios.value,
-                "usuarioSolicitante": localStorage.getItem("reUser"),
-                "observacionAsesor": "",
-                };
-              this.excepcionOperativaService.solicitarExcepcionServicios(excepcionServicios,"RENOVACION").subscribe(p=>{
-                this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
-              });
-              
-            } else {
-              this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
-            }
-          });
-        }
-      });
-    }else{
-      const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
-        width: '800px',
-        height: 'auto',
-        data: 'Solicitar excepcion de servicios'
-      });
-      dialogRefGuardar.afterClosed().subscribe((result: any) => {
-        if (result) {
-          let excepcionServicios = {
-            "idNegociacion": this.credit.credito.tbQoNegociacion,
-            "codigoOperacion": this.credit.credito.codigo,
-            "tipoExcepcion": "Cobranza y servicios",
-            "estadoExcepcion": "PENDIENTE",
-            "montoInvolucrado": this.descuentoServicios.value,
-            "usuarioSolicitante": localStorage.getItem("reUser"),
-            "observacionAsesor": "",
-            };
-            console.log("excepcionServicios", excepcionServicios)
-          this.excepcionOperativaService.solicitarExcepcionServicios(excepcionServicios,"RENOVACION").subscribe(p=>{
-            this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
-          });
-          
-        } else {
-          this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
-        }
-      });
-    }
-    if(this.descuentoServicios.invalid){
-      this.sinNotSer.setNotice('Complete el valor de descuento', 'warning');
-      return;
-    } 
-    
-  }
+	solicitarExcepcionServicios() {
+		if (this.tipoCliente.invalid) {
+			this.sinNotSer.setNotice("SELECCIONA UN TIPO DE CLIENTE", 'warning');
+			return;
+		}
+		if (this.formTipoCliente.invalid) {
+			this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LA INFORMACION DEL CODEUDOR/APODERADO", 'warning');
+			return;
+		}
+		if (this.tipoExcepcionServicio.value == '') {
+			this.sinNotSer.setNotice('Ingrese el tipo de descuento', 'warning');
+			return;
+		}
+    if (this.descuentoServicios.invalid) {
+			this.sinNotSer.setNotice('Ingrese el valor de descuento', 'warning');
+			return;
+		}
+    if (this.observacionDescuentoServicio.invalid) {
+			this.sinNotSer.setNotice('Ingrese la observacion de la excepcion de descuento', 'warning');
+			return;
+		}
+    if (this.observacionDescuentoServicio.invalid) {
+			this.sinNotSer.setNotice('Ingrese la observacion de la excepcion de descuento', 'warning');
+			return;
+		}
+		if (this.selection.selected.length == 0) {
+			this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO", 'warning');
+			return;
+		}
+		const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
+			width: '800px',
+			height: 'auto',
+			data: 'Solicitar excepcion de servicios'
+		});
+		dialogRefGuardar.afterClosed().subscribe((result: any) => {
+			if (result) {
+				const wpServicio = {
+					numeroOperacion: this.numeroOperacion,
+					idNegociacion: this.idNego,
+					asesor: this.usuario,
+					idAgencia: this.agencia,
+					numeroOperacionMadre: this.numeroOperacionMadre,
+					nombreAgencia: localStorage.getItem('nombreAgencia'),
+					telefonoAsesor: localStorage.getItem('telefono'),
+					nombreAsesor: localStorage.getItem('nombre'),
+					correoAsesor: localStorage.getItem('email'),
+					opcionAndGarantiasWrapper: {
+						opcion: this.selection.selected.length > 0 ? this.selection.selected[0] : null,
+						garantias: this.garantiasSimuladas,
+						variablesInternas: this.variablesInternas,
+						nombreApoderado: this.nombreApoderado.value,
+						identificacionApoderado: this.identificacionApoderado.value,
+						fechaNacimientoApoderado: this.fechaNacimientoApoderado.value,
+						fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value,
+						tipoCliente: this.tipoCliente.value ? this.tipoCliente.value.codigo : null,
+						nombreCodeudor: this.nombreCodeudor.value,
+						identificacionCodeudor: this.identificacionCodeudor.value,
+					},
+					ex: {
+						tipoExcepcion: this.tipoExcepcionServicio.value,
+						estadoExcepcion: "PENDIENTE",
+						montoInvolucrado: this.descuentoServicios.value,
+						usuarioSolicitante: localStorage.getItem("reUser"),
+						observacionAsesor: this.observacionDescuentoServicio.value,
+						idNegociacion: null,	// se completan en back
+            codigoOperacion: null 	// se completan en back
+					}
+				}
+				this.excepcionOperativaService.excepcionServiciosFlujoVariable(wpServicio, "RENOVACION").subscribe(p => {
+					this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+				});
+			} else {
+				this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
+			}
+		});
+	}
 }

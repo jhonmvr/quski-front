@@ -496,7 +496,7 @@
                     </div>
                     <div class="col-md-3">
                         <mat-form-field class="mat-form-field-fluid" style="color: green">
-                            <input matInput [value]="recibirCliente.value + valorDescuentoServicios.value" readonly placeholder="Valor A recibir despues del descuento">
+                            <input matInput [formControl]="valorRecibirClienteMasDescuentoServicios" readonly placeholder="Valor A recibir despues del descuento">
                         </mat-form-field>
                     </div>
                 </div>
@@ -506,7 +506,7 @@
                         <mat-error *ngIf="!isValueCorrect()">El Total desembolso debe ser igual a Valor a recibir</mat-error>
                     </mat-form-field>
                 </div>
-                <kt-comprobante-desembolso [idNegociacion]="item" [flagEdit]="true" [valorMaximoDesembolso]="recibirCliente.value + valorDescuentoServicios.value" (totalComprobantes)="handleTotalComprobantes($event)"></kt-comprobante-desembolso>
+                <kt-comprobante-desembolso [idNegociacion]="item" [flagEdit]="true" [valorMaximoDesembolso]="valorRecibirClienteMasDescuentoServicios" (totalComprobantes)="handleTotalComprobantes($event)"></kt-comprobante-desembolso>
             </mat-step>
             <mat-step label="Documento Habilitantes">
                 <ng-container *ngIf="existeCredito">
