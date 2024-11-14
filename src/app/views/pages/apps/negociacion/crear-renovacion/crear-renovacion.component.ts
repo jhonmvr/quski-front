@@ -44,6 +44,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
   public loading;
   public usuario: string;
   variablesInternas;
+  validarEdadCliente;
   clienteConsultar:   ConsultaCliente;
   agencia: string;
   private validCliente = true;
@@ -220,7 +221,6 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       } 
     });
   }
-
   private validarExcepcionesOperativa(tmp: any) {
     this.excepcionOperativaService.findByNegociacion(tmp.credito.tbQoNegociacion.id).subscribe(e=>{
       if(e.entidades == null){
@@ -403,7 +403,6 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
     this.validarProceso();
     this.sinNotSer.setNotice("SE HA CARGADO EL CREDITO: " + this.credit.operacionAnterior.credito.numeroOperacion + ".", "success");
   }
-
   public validarProceso(){
     if(this.credit.proceso){
       if(this.credit.proceso.proceso != 'RENOVACION'){
@@ -482,8 +481,6 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       }
     });
   }
-
-  validarEdadCliente
   public solicitarExcepcionRiesgo(){
     if(!this.credit.proceso){
       if(this.tipoCliente.invalid){
@@ -934,9 +931,7 @@ export class CrearRenovacionComponent extends TrackingUtil implements OnInit {
       });
     }
   }
-
-  
-	solicitarExcepcionServicios() {
+	public solicitarExcepcionServicios() {
 		if (this.tipoCliente.invalid) {
 			this.sinNotSer.setNotice("SELECCIONA UN TIPO DE CLIENTE", 'warning');
 			return;

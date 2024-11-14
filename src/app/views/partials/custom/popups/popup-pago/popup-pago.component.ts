@@ -130,7 +130,6 @@ export class PopupPagoComponent implements OnInit {
   }
   public aceptar(){
     if(this.formOperacion.valid){
-      console.log('Institucion? =>' , this.intitucionFinanciera.value);
       let wrapperRegistro: WrapperRegistro = {
         comprobante:this.file ? this.file : null,
         intitucionFinanciera: this.intitucionFinanciera.value ? this.intitucionFinanciera.value : '',

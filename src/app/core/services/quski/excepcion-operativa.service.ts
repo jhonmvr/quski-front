@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
+import { environment } from '../../../../../src/environments/environment';
 
 //import { Http, Headers, Response, RequestOptions, HttpParams, ResponseContentType } from '@angular/http';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -64,12 +65,16 @@ export class ExcepcionOperativaService extends BaseService {
 
 
   
-  solicitarExcepcionServicios(excepcionServicios: any, proceso: string) {
+  solicitarExcepcionServiciosNuevo(opcion: any, excepcionServicios: any) {
+    const wp = {
+      opcionCredito : opcion, ex : excepcionServicios
+    }
     let serviceUrl = this.appResourcesUrl + "excepcionOperativaRestController/solicitarExcepcionServicios";
-    let params = new HttpParams()
-      .set('proceso',proceso);
-    this.options = { headers: this.headers, params: params };
-    return this.http.post(serviceUrl, excepcionServicios,this.options).pipe(
+    this.params = new HttpParams().set('asesor',atob(localStorage.getItem(environment.userKey)));
+    this.params = this.params.set('nombreAsesor',localStorage.getItem('nombre')).set("correoAsesor",localStorage.getItem("email"));
+
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, wp,this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }

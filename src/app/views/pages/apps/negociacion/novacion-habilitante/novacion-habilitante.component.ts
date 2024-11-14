@@ -150,7 +150,7 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
           if(listExs.length >= 1){
             let exVigente = null;
             // Implementar la lógica de validación
-            if (listExs.some(ex => ex.estadoExcepcion === 'PENDIENTE' )) {
+            if (listExs.some(ex => ex.estadoExcepcion === 'PENDIENTE')) {
               exVigente = listExs.find(ex => ex.estadoExcepcion === 'PENDIENTE') || null;
             } else if (listExs.some(ex => ex.estadoExcepcion === 'APROBADO' )) {
               exVigente = listExs.find(ex => ex.estadoExcepcion === 'APROBADO') || null;

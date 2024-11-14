@@ -835,7 +835,6 @@ export class SoftbankService extends BaseService {
    * @description Catalogos Diviciones politicas con relaciones
    */
   consultarDivicionPoliticabyIdPais(idPais,esLugarNacimiento) {
-    console.log("====>>>><<<===",idPais,esLugarNacimiento)
     let serviceUrl = this.softBaseBankUrl + this.urlRestCatalogo + "divisionpolitica" ;
     let wrapper =  {
       "idpais":idPais,

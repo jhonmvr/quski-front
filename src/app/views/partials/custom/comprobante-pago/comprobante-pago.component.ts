@@ -67,9 +67,7 @@ export class ComprobantePagoComponent implements OnInit {
       return;
     }
     this.comprobantePagoService.listAllByIdNegociacion(idNegociacion).subscribe(p=>{
-      console.log("datos de la tablita",p)
       let lista = p as Array<any>;
-      console.log("encontrar",lista.find(p=>p.numeroCuenta != null))
       this.updateDisplayedColumns();
       this.dataSource.data = p;
       this.dataSource._updateChangeSubscription();

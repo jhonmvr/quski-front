@@ -68,7 +68,6 @@ export class AprobadorExcepcionOperativaComponent extends TrackingUtil implement
   public cobertura = new FormControl('', [Validators.required, ]);
 
   public coberturaActual = new FormControl('', []);
-  public montoActual = new FormControl('', []);
   public valorComercial = new FormControl('', []);
   public valorAvaluo = new FormControl('', []);
   public usuarioAsesor = new FormControl('', []);
@@ -200,92 +199,59 @@ export class AprobadorExcepcionOperativaComponent extends TrackingUtil implement
     //this.observacion = this.excepcion.observacionAsesor;
     this.observacionAsesor.setValue( this.excepcion.observacionAsesor );
     this.valorDescuentoServicios.setValue(this.excepcion.montoInvolucrado);
-    this.tipoExcepcionServicio.setValue(this.excepcion.tipoExcepcion);
+    this.tipoExcepcionServicio.setValue(this.limpiarTexto(this.excepcion.tipoExcepcion));
     //this.usuarioAsesor.setValue( this.excepcion.idAsesor);
     this.loadingSubject.next(false);
     this.sinNoticeService.setNotice('OPERACION CARGADA CORRECTAMENTE','success')
   }
-  public simular(){ 
-    this.loadingSubject.next(true);
-    //console.log('COBERTURA ---> ', this.cobertura.value )
-    !this.cobertura.valid && this.observacionAprobador.valid  && this.cobertura.value >= 80 ? 
-      this.sinNoticeService.setNotice('COMPLETE LA SECCION CORRECTAMENTE','error'):
-        this.cal.simularOfertaExcepcionada(this.wp.credito.id, this.cobertura.value, this.agencia).subscribe( (data: any) =>{
-          !data.entidades ? this.sinNoticeService.setNotice('NO TRAJE OPCIONES','error'): this.dataSourceCobertura.data = data.entidades;
-          console.log(data.entidades)
-          this.simulado = data.entidades ? true : false;
-          this.loadingSubject.next(false);
-        });
-        this.loadingSubject.next(false);
-  }
   public calcularOpciones() {
     if (this.wp && this.wp.joyas && this.wp.joyas.length > 0) {
-      this.loadingSubject.next(true);
-      this.cal.simularOfertaExcepcion(this.wp.credito.id, null, null,this.codigoAgencia.codigo,this.wp.credito.numeroOperacionAnterior).subscribe((data: any) => {
-        this.loadingSubject.next(false);
-        if (data.entidad.simularResult && data.entidad.simularResult.xmlOpcionesRenovacion 
-          && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion 
-          && data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion) {
-            if(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0]){
-              this.montoActual.setValue(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion[0].montoFinanciado);
-            }
-            this.dataSourceCreditoNegociacion = new MatTableDataSource();
-
-            let calculadora: any = {
-              codigoTabla: this.wp.credito.tablaAmortizacion,
-              costoCustodia: this.wp.credito.costoCustodia,
-              costoFideicomiso: this.wp.credito.costoFideicomiso,
-              costoSeguro: this.wp.credito.costoSeguro,
-              costoTasacion: this.wp.credito.costoTasacion,
-              costoTransporte: this.wp.credito.costoTransporte,
-              costoValoracion: this.wp.credito.costoValoracion,
-              cuota: this.wp.credito.cuota,
-              custodiaDevengada: this.wp.credito.custodiaDevengada,
-              dividendoflujoplaneado: this.wp.credito.dividendoFlujoPlaneado,
-              dividendosprorrateoserviciosdiferido:this.wp.credito.dividendoProrrateo,
-              formaPagoCapital: this.wp.credito.formaPagoCapital,
-              formaPagoCustodia: this.wp.credito.formaPagoCustodia,
-              formaPagoCustodiaDevengada: this.wp.credito.formaPagoCustodiaDevengada,
-              formaPagoFideicomiso: this.wp.credito.formaPagoFideicomiso,
-              formaPagoGastoCobranza: this.wp.credito.formaPagoGastoCobranza,
-              formaPagoImpuestoSolca: this.wp.credito.formaPagoImpuestoSolca,
-              formaPagoInteres: this.wp.credito.formaPagoInteres,
-              formaPagoMora: this.wp.credito.formaPagoMora,
-              formaPagoSeguro: this.wp.credito.formaPagoSeguro,
-              formaPagoTasador: this.wp.credito.formaPagoTasador,
-              formaPagoTransporte: this.wp.credito.formaPagoTransporte,
-              formaPagoValoracion: this.wp.credito.formaPagoValoracion,
-              gastoCobranza: this.wp.credito.gastoCobranza,
-              impuestoSolca: this.wp.credito.impuestoSolca,
-              montoFinanciado: this.wp.credito.montoFinanciado,
-              montoPrevioDesembolso: this.wp.credito.montoPrevioDesembolso,
-              periodicidadPlazo: this.wp.credito.periodicidadPlazo,
-              periodoPlazo: this.wp.credito.periodoPlazo,
-              plazo: this.wp.credito.plazoCredito,
-              porcentajeflujoplaneado: this.wp.credito.porcentajeFlujoPlaneado,
-              saldoCapitalRenov: this.wp.credito.saldoCapitalRenov,
-              saldoInteres: this.wp.credito.saldoInteres,
-              saldoMora: this.wp.credito.saldoMora,
-              tipooferta: this.wp.credito.tipoOferta,
-              totalCostosOperacionAnterior: this.wp.credito.totalCostosOperacionAnterior,
-              totalGastosNuevaOperacion: this.wp.credito.totalGastosNuevaOperacion,
-              valorAPagar: this.wp.credito.valorAPagar,
-              valorARecibir: this.wp.credito.valorARecibir,
-              formaPagoAbonoCapital: this.wp.credito.formaPagoAbonoCapital,
-              abonoCapital: this.wp.credito.abonoCapital
-            }
-            this.dataSourceCreditoNegociacion.data.push( calculadora );
-            //this.dataSourceCreditoNegociacion = new MatTableDataSource<any>(data.entidad.simularResult.xmlOpcionesRenovacion.opcionesRenovacion.opcion);
-            
-            this.mapearVariables(data.entidad.simularResult.xmlVariablesInternas.variablesInternas.variable)
-          }
-      },()=>{
-        this.loadingSubject.next(false);
-      });
-    } else {
-      this.sinNoticeService.setNotice("INGRESE ALGUNA JOYA PARA CALCULAR LAS OPCIONES DE OFERTA", 'error');
+      this.dataSourceCreditoNegociacion = new MatTableDataSource();
+      let calculadora: any = {
+        codigoTabla: this.wp.credito.tablaAmortizacion,
+        costoCustodia: this.wp.credito.costoCustodia,
+        costoFideicomiso: this.wp.credito.costoFideicomiso,
+        costoSeguro: this.wp.credito.costoSeguro,
+        costoTasacion: this.wp.credito.costoTasacion,
+        costoTransporte: this.wp.credito.costoTransporte,
+        costoValoracion: this.wp.credito.costoValoracion,
+        cuota: this.wp.credito.cuota,
+        custodiaDevengada: this.wp.credito.custodiaDevengada,
+        dividendoflujoplaneado: this.wp.credito.dividendoFlujoPlaneado,
+        dividendosprorrateoserviciosdiferido:this.wp.credito.dividendoProrrateo,
+        formaPagoCapital: this.wp.credito.formaPagoCapital,
+        formaPagoCustodia: this.wp.credito.formaPagoCustodia,
+        formaPagoCustodiaDevengada: this.wp.credito.formaPagoCustodiaDevengada,
+        formaPagoFideicomiso: this.wp.credito.formaPagoFideicomiso,
+        formaPagoGastoCobranza: this.wp.credito.formaPagoGastoCobranza,
+        formaPagoImpuestoSolca: this.wp.credito.formaPagoImpuestoSolca,
+        formaPagoInteres: this.wp.credito.formaPagoInteres,
+        formaPagoMora: this.wp.credito.formaPagoMora,
+        formaPagoSeguro: this.wp.credito.formaPagoSeguro,
+        formaPagoTasador: this.wp.credito.formaPagoTasador,
+        formaPagoTransporte: this.wp.credito.formaPagoTransporte,
+        formaPagoValoracion: this.wp.credito.formaPagoValoracion,
+        gastoCobranza: this.wp.credito.gastoCobranza,
+        impuestoSolca: this.wp.credito.impuestoSolca,
+        montoFinanciado: this.wp.credito.montoFinanciado,
+        montoPrevioDesembolso: this.wp.credito.montoPrevioDesembolso,
+        periodicidadPlazo: this.wp.credito.periodicidadPlazo,
+        periodoPlazo: this.wp.credito.periodoPlazo,
+        plazo: this.wp.credito.plazoCredito,
+        porcentajeflujoplaneado: this.wp.credito.porcentajeFlujoPlaneado,
+        saldoCapitalRenov: this.wp.credito.saldoCapitalRenov,
+        saldoInteres: this.wp.credito.saldoInteres,
+        saldoMora: this.wp.credito.saldoMora,
+        tipooferta: this.wp.credito.tipoOferta,
+        totalCostosOperacionAnterior: this.wp.credito.totalCostosOperacionAnterior,
+        totalGastosNuevaOperacion: this.wp.credito.totalGastosNuevaOperacion,
+        valorAPagar: this.wp.credito.valorAPagar,
+        valorARecibir: this.wp.credito.valorARecibir,
+        formaPagoAbonoCapital: this.wp.credito.formaPagoAbonoCapital,
+        abonoCapital: this.wp.credito.abonoCapital
+      }
+      this.dataSourceCreditoNegociacion.data.push( calculadora );
     }
-
   }
   public numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -323,24 +289,12 @@ export class AprobadorExcepcionOperativaComponent extends TrackingUtil implement
         //})
       }
     });
-    
   }
-  private mapearVariables(variables: Array<any>){
-    let variablesBase : Array<TbQoVariablesCrediticia> = new Array<TbQoVariablesCrediticia>();
-    this.loadVariables.next(true);
-    variables.forEach( e=>{
-      let variableBase : TbQoVariablesCrediticia = new TbQoVariablesCrediticia();
-      variableBase.codigo = e.codigo;
-      variableBase.nombre = e.nombre;
-      variableBase.valor  = e.valor;
-      variableBase.orden  = e.orden;
-      variablesBase.push( variableBase );
-    });
-    this.componenteVariable = false;
-    //this.negoW.variables = variablesBase;
-    //console.log("Las variables de bre =>", variablesBase);
-    this.sinNotSer.setNotice("LAS VARIABLES CREDITICIAS FUERON ACTUALIZADAS", 'success');
-    this.componenteVariable = true;
-    this.loadVariables.next(false);
-  }
+  limpiarTexto(texto) {
+    return texto
+        .toLowerCase()
+        .split('_')
+        .map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1))
+        .join(' ');
+}
 }

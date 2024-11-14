@@ -822,15 +822,44 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       this.sinNotSer.setNotice("SELECCIONE UNA OPCION DE CREDITO", 'warning');
       return;
     } 
-    if (this.negoW.joyas && this.negoW.joyas.length > 0) {
+    if(this.email.invalid){
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL EMAIL DEL CLIENTE", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    }
+    if(this.telefonoDomicilio.invalid){
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL TELEFONO DE DOMICILIO DEL CLIENTE", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    }
+    if(this.movil.invalid){
+      this.sinNotSer.setNotice("COMPLETE CORRECTAMENTE LOS DATOS DEL MOVIL DEL CLIENTE", 'warning');
+      this.myStepper.selectedIndex = 1;
+      return;
+    }
+    if(this.clienteBloqueado){
+      this.sinNotSer.setNotice(this.negoW.excepcionBre, 'error');
+      return;
+    }  
     
-      const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
-        width: '800px',
-        height: 'auto',
-        data: 'Solicitar excepcion de servicios'
-      });
+    const dialogRefGuardar = this.dialog.open(ConfirmarAccionComponent, {
+      width: '800px',
+      height: 'auto',
+      data: 'Solicitar excepcion de servicios'
+    });
       dialogRefGuardar.afterClosed().subscribe((result: any) => {
-        if (result) {
+        if (result) {    
+          let opcion = {
+            opcionCredito:this.selection.selected,
+            nombreApoderado: this.nombreApoderado.value,
+            identificacionApoderado: this.identificacionApoderado.value,
+            fechaNacimientoApoderado: this.fechaNacimientoApoderado.value,
+            fechaNacimientoCodeudor: this.fechaNacimientoCodeudor.value,
+            tipoCliente: this.tipoCliente.value ? this.tipoCliente.value.codigo : null,
+            nombreCodeudor: this.nombreCodeudor.value,
+            identificacionCodeudor: this.identificacionCodeudor.value,
+            idCreditoNegociacion: this.negoW.credito.id
+          }
           let excepcionServicios = {
             "idNegociacion": this.negoW.credito.tbQoNegociacion,
             "codigoOperacion": this.negoW.credito.codigo,
@@ -840,17 +869,14 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
             "usuarioSolicitante": localStorage.getItem("reUser"),
             "observacionAsesor": this.observacionDescuentoServicio.value // "",
             };
-          this.excepcionOperativaService.solicitarExcepcionServicios(excepcionServicios,"NUEVO").subscribe(p=>{
+          this.excepcionOperativaService.solicitarExcepcionServiciosNuevo(opcion, excepcionServicios).subscribe(p=>{
             this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
           });
-          
         } else {
           this.sinNotSer.setNotice('SOLICITUD DE EXCEPCION CANCELADA', 'warning');
         }
       });
-    } else {
-      this.sinNotSer.setNotice('REGISTRE ALMENOS UNA JOYA EN TASACION', 'warning');
-    }
+
   }
   solicitarCobertura() {
     let x ;

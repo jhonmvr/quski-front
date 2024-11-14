@@ -80,9 +80,7 @@ export class ComprobanteDesembolsoComponent implements OnInit {
       return;
     }
     this.comprobanteDesembolsoService.listAllByIdNegociacion(idNegociacion).subscribe(p=>{
-      console.log("datos de la tablita",p)
       let lista = p as Array<any>;
-      console.log("encontrar",lista.find(p=>p.numeroCuenta != null))
       this.dataSource.data = p;
       
       this.updateDisplayedColumns();

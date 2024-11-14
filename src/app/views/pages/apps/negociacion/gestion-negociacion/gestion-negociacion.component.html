@@ -397,7 +397,7 @@
                 <kt-tabla-tasacion *ngIf="this.negoW && this.negoW.joyas;" [data]='this.negoW.joyas' (rowEdit)='editar($event)' (rowDelete)='eliminar($event)' [tipo]="'A'"></kt-tabla-tasacion>
                 <div *ngIf="this.negoW && this.negoW.joyas" class="row">
                     <div class="offset-5 col-2 mt-3">
-                        <button mat-stroked-button color="primary" matStepperNext (click)="calcularOpciones(null, inicial)">
+                        <button mat-stroked-button color="primary" matStepperNext (click)="calcularOpciones(null, false)">
 							<mat-icon style="font-size: 32px" color="primary" matTooltipPosition="above">add_circle_outline</mat-icon>
 							<span color="primary">Calcular Opciones</span>
 						</button>

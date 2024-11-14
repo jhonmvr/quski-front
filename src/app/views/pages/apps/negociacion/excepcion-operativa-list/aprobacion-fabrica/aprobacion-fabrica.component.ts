@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatTableDataSource, MatDialog } from '@angular/material';
-import { ActivatedRoute,Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { LayoutConfigService, SubheaderService } from '../.././../../../../../app/core/_base/layout';
@@ -38,11 +38,11 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
   srcFunda;
   srcJoya;
   public agencia: any;
-  public nombreAsesor; 
+  public nombreAsesor;
 
   public fechaActual: string;
   public item;
-  public varHabilitante = {proceso:'',referencia:''};
+  public varHabilitante = { proceso: '', referencia: '' };
   public loadingSubject = new BehaviorSubject<boolean>(false);
   public crediW: AprobacionWrapper;
   public catalogos: CatalogosWrapper;
@@ -92,14 +92,14 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
 
   public direccionCorreoLaboral = new FormControl('', []);
   public direccionLegalLaboral = new FormControl('', []);
-  public ubicacionLaboral= new FormControl('', []);
-  public referenciaUbicacionLaboral= new FormControl('', []);
-  public callePrincipalLaboral= new FormControl('', []);
-  public numeracionLaboral= new FormControl('', []);
-  public barrioLaboral= new FormControl('', []);
-  public calleSecundariaLaboral= new FormControl('', []);
-  public tipoViviendaLaboral= new FormControl('', []);
-  public sectorLaboral= new FormControl('', []);
+  public ubicacionLaboral = new FormControl('', []);
+  public referenciaUbicacionLaboral = new FormControl('', []);
+  public callePrincipalLaboral = new FormControl('', []);
+  public numeracionLaboral = new FormControl('', []);
+  public barrioLaboral = new FormControl('', []);
+  public calleSecundariaLaboral = new FormControl('', []);
+  public tipoViviendaLaboral = new FormControl('', []);
+  public sectorLaboral = new FormControl('', []);
   public actividadEconomicaEmpresa = new FormControl('', []);
   public actividadEconomicaMupi = new FormControl('', []);
   public nombreEmpresa = new FormControl('', []);
@@ -182,8 +182,8 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
   public numeroDeCuenta: FormControl = new FormControl();
   /** @RESULTADO_OPERACION */
   public formResultadoOperacion: FormGroup = new FormGroup({});
-  public motivoDevolucion  = new FormControl('', []);
-  public codigoCash  = new FormControl('', []);
+  public motivoDevolucion = new FormControl('', []);
+  public codigoCash = new FormControl('', []);
   public observacionAprobador = new FormControl('', [Validators.required]);
   excepcion: TbQoExcepcionOperativa;
 
@@ -208,103 +208,103 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
     this.pro.setParameter();
     this.doc.setParameter();
     this.obj.setParameter();
-    this.formDisable.addControl( "codigoBpm", this.codigoBpm );
-    this.formDisable.addControl( "proceso", this.proceso );
-    this.formDisable.addControl( "nombresCompletoCliente", this.nombresCompletoCliente );
-    this.formDisable.addControl( "identificacion", this.identificacion );
-    this.formDisable.addControl( "aprobacionMupi", this.aprobacionMupi );
-    this.formDisable.addControl( "nombresCompletos", this.nombresCompletos );
-    this.formDisable.addControl( "primerNombre", this.primerNombre );
-    this.formDisable.addControl( "segundoNombre", this.segundoNombre );
-    this.formDisable.addControl( "apellidoPaterno", this.apellidoPaterno );
-    this.formDisable.addControl( "apellidoMaterno", this.apellidoMaterno );
-    this.formDisable.addControl( "separacionDeBienes", this.separacionDeBienes );
-    this.formDisable.addControl( "genero", this.genero );
-    this.formDisable.addControl( "estadoCivil", this.estadoCivil );
-    this.formDisable.addControl( "cargaFamiliar", this.cargaFamiliar );
-    this.formDisable.addControl( "nacionalidad", this.nacionalidad );
-    this.formDisable.addControl( "detalleWebMupi", this.detalleWebMupi );
-    this.formDisable.addControl( "lugarDeNacimiento", this.lugarDeNacimiento );
-    this.formDisable.addControl( "edad", this.edad );
-    this.formDisable.addControl( "fechaNacimiento", this.fechaNacimiento );
-    this.formDisable.addControl( "nivelEducacion", this.nivelEducacion );
-    this.formDisable.addControl( "actividadEconomica", this.actividadEconomica );
-    this.formDisable.addControl( "fechaUltimaActualizazion", this.fechaUltimaActualizazion );
-    this.formDisable.addControl( "telefonoDomicilio", this.telefonoDomicilio );
-    this.formDisable.addControl( "telefonoMovil", this.telefonoMovil );
-    this.formDisable.addControl( "correo", this.correo );
-    this.formDisable.addControl( "direccionLegalDomicilio", this.direccionLegalDomicilio );
-    this.formDisable.addControl( "direccionCorreoDomicilio", this.direccionCorreoDomicilio );
-    this.formDisable.addControl( "ubicacion", this.ubicacion );
-    this.formDisable.addControl( "barrio", this.barrio );
-    this.formDisable.addControl( "sector", this.sector );
-    this.formDisable.addControl( "callePrincipal", this.callePrincipal );
-    this.formDisable.addControl( "numeracion", this.numeracion );
-    this.formDisable.addControl( "calleSecundaria", this.calleSecundaria );
-    this.formDisable.addControl( "referenciaUbicacion", this.referenciaUbicacion );
-    this.formDisable.addControl( "tipoVivienda", this.tipoVivienda );
-    this.formDisable.addControl( "direccionCorreoLaboral", this.direccionCorreoLaboral );
-    this.formDisable.addControl( "direccionLegalLaboral", this.direccionLegalLaboral );
-    this.formDisable.addControl( "ubicacionLaboral", this.ubicacionLaboral);
-    this.formDisable.addControl( "referenciaUbicacionLaboral", this.referenciaUbicacionLaboral);
-    this.formDisable.addControl( "callePrincipalLaboral", this.callePrincipalLaboral);
-    this.formDisable.addControl( "numeracionLaboral", this.numeracionLaboral);
-    this.formDisable.addControl( "barrioLaboral", this.barrioLaboral);
-    this.formDisable.addControl( "calleSecundariaLaboral", this.calleSecundariaLaboral);
-    this.formDisable.addControl( "tipoViviendaLaboral", this.tipoViviendaLaboral);
-    this.formDisable.addControl( "sectorLaboral", this.sectorLaboral);
-    this.formDisable.addControl( "actividadEconomicaEmpresa", this.actividadEconomicaEmpresa );
-    this.formDisable.addControl( "actividadEconomicaMupi", this.actividadEconomicaMupi );
-    this.formDisable.addControl( "nombreEmpresa", this.nombreEmpresa );
-    this.formDisable.addControl( "origenIngresos", this.origenIngresos );
-    this.formDisable.addControl( "profesion", this.profesion );
-    this.formDisable.addControl( "ocupacion", this.ocupacion );
-    this.formDisable.addControl( "cargo", this.cargo );
-    this.formDisable.addControl( "relacionDependencia", this.relacionDependencia );
-    this.formDisable.addControl( "tipoProceso", this.tipoProceso );
-    this.formDisable.addControl( "numeroFunda", this.numeroFunda );
-    this.formDisable.addControl( "tipoFunda", this.tipoFunda );
-    this.formDisable.addControl( "plazo", this.plazo );
-    this.formDisable.addControl( "tipoOferta", this.tipoOferta );
-    this.formDisable.addControl( "costoCustodia", this.costoCustodia );
-    this.formDisable.addControl( "formaPagoCustodia", this.formaPagoCustodia );
-    this.formDisable.addControl( "formaPagoFideicomiso", this.formaPagoFideicomiso );
-    this.formDisable.addControl( "costoFideicomiso", this.costoFideicomiso );
-    this.formDisable.addControl( "costoTransporte", this.costoTransporte );
-    this.formDisable.addControl( "formaPagoTransporte", this.formaPagoTransporte );
-    this.formDisable.addControl( "costoValoracion", this.costoValoracion );
-    this.formDisable.addControl( "formaPagoValoracion", this.formaPagoValoracion );
-    this.formDisable.addControl( "costoTasacion", this.costoTasacion );
-    this.formDisable.addControl( "formaPagoTasacion", this.formaPagoTasacion );
-    this.formDisable.addControl( "custodiaDevengada", this.custodiaDevengada );
-    this.formDisable.addControl( "formaPagoCustodiaDevengada", this.formaPagoCustodiaDevengada );
-    this.formDisable.addControl( "costoSeguro", this.costoSeguro );
-    this.formDisable.addControl( "formaPagoSeguro", this.formaPagoSeguro );
-    this.formDisable.addControl( "solca", this.solca );
-    this.formDisable.addControl( "formaPagoSolca", this.formaPagoSolca );
-    this.formDisable.addControl( "aPagarCliente", this.aPagarCliente );
-    this.formDisable.addControl( "aRecibirCliente", this.aRecibirCliente );
-    this.formDisable.addControl( "totalCostoNuevaOperacion", this.totalCostoNuevaOperacion );
-    this.formDisable.addControl( "tipoCuenta", this.tipoCuenta );
-    this.formDisable.addControl( "numeroCuenta", this.numeroCuenta );
-    this.formDisable.addControl( "diaPagoFijo", this.diaPagoFijo );
-    this.formDisable.addControl( "firmadaOperacion", this.firmadaOperacion );
-    this.formDisable.addControl( "tipoCliente", this.tipoCliente );
-    this.formDisable.addControl( "tipoCartera", this.tipoCartera );
-    this.formDisable.addControl( "tablaAmortizacion", this.tablaAmortizacion );
-    this.formDisable.addControl( "numeroOperacion", this.numeroOperacion );
-    this.formDisable.addControl( "descripcionProducto", this.descripcionProducto );
-    this.formDisable.addControl( "estadoOperacion", this.estadoOperacion );
-    this.formDisable.addControl( "fechaVencimiento", this.fechaVencimiento );
-    this.formDisable.addControl( "fechaEfectiva", this.fechaEfectiva );
-    this.formDisable.addControl( "valorDesembolso", this.valorDesembolso );
-    this.formDisable.addControl( "montoFinanciado", this.montoFinanciado );
-    this.formDisable.addControl( "cuota", this.cuota );
-    this.formDisable.addControl( "totalInteres", this.totalInteres );
-    this.formDisable.addControl( "excepcionOperativa", this.excepcionOperativa );
-    this.formDisable.addControl( "institucionFinanciera", this.institucionFinanciera );
-    this.formDisable.addControl( "tipoDeCuenta", this.tipoDeCuenta );
-    this.formDisable.addControl( "numeroDeCuenta", this.numeroDeCuenta );
+    this.formDisable.addControl("codigoBpm", this.codigoBpm);
+    this.formDisable.addControl("proceso", this.proceso);
+    this.formDisable.addControl("nombresCompletoCliente", this.nombresCompletoCliente);
+    this.formDisable.addControl("identificacion", this.identificacion);
+    this.formDisable.addControl("aprobacionMupi", this.aprobacionMupi);
+    this.formDisable.addControl("nombresCompletos", this.nombresCompletos);
+    this.formDisable.addControl("primerNombre", this.primerNombre);
+    this.formDisable.addControl("segundoNombre", this.segundoNombre);
+    this.formDisable.addControl("apellidoPaterno", this.apellidoPaterno);
+    this.formDisable.addControl("apellidoMaterno", this.apellidoMaterno);
+    this.formDisable.addControl("separacionDeBienes", this.separacionDeBienes);
+    this.formDisable.addControl("genero", this.genero);
+    this.formDisable.addControl("estadoCivil", this.estadoCivil);
+    this.formDisable.addControl("cargaFamiliar", this.cargaFamiliar);
+    this.formDisable.addControl("nacionalidad", this.nacionalidad);
+    this.formDisable.addControl("detalleWebMupi", this.detalleWebMupi);
+    this.formDisable.addControl("lugarDeNacimiento", this.lugarDeNacimiento);
+    this.formDisable.addControl("edad", this.edad);
+    this.formDisable.addControl("fechaNacimiento", this.fechaNacimiento);
+    this.formDisable.addControl("nivelEducacion", this.nivelEducacion);
+    this.formDisable.addControl("actividadEconomica", this.actividadEconomica);
+    this.formDisable.addControl("fechaUltimaActualizazion", this.fechaUltimaActualizazion);
+    this.formDisable.addControl("telefonoDomicilio", this.telefonoDomicilio);
+    this.formDisable.addControl("telefonoMovil", this.telefonoMovil);
+    this.formDisable.addControl("correo", this.correo);
+    this.formDisable.addControl("direccionLegalDomicilio", this.direccionLegalDomicilio);
+    this.formDisable.addControl("direccionCorreoDomicilio", this.direccionCorreoDomicilio);
+    this.formDisable.addControl("ubicacion", this.ubicacion);
+    this.formDisable.addControl("barrio", this.barrio);
+    this.formDisable.addControl("sector", this.sector);
+    this.formDisable.addControl("callePrincipal", this.callePrincipal);
+    this.formDisable.addControl("numeracion", this.numeracion);
+    this.formDisable.addControl("calleSecundaria", this.calleSecundaria);
+    this.formDisable.addControl("referenciaUbicacion", this.referenciaUbicacion);
+    this.formDisable.addControl("tipoVivienda", this.tipoVivienda);
+    this.formDisable.addControl("direccionCorreoLaboral", this.direccionCorreoLaboral);
+    this.formDisable.addControl("direccionLegalLaboral", this.direccionLegalLaboral);
+    this.formDisable.addControl("ubicacionLaboral", this.ubicacionLaboral);
+    this.formDisable.addControl("referenciaUbicacionLaboral", this.referenciaUbicacionLaboral);
+    this.formDisable.addControl("callePrincipalLaboral", this.callePrincipalLaboral);
+    this.formDisable.addControl("numeracionLaboral", this.numeracionLaboral);
+    this.formDisable.addControl("barrioLaboral", this.barrioLaboral);
+    this.formDisable.addControl("calleSecundariaLaboral", this.calleSecundariaLaboral);
+    this.formDisable.addControl("tipoViviendaLaboral", this.tipoViviendaLaboral);
+    this.formDisable.addControl("sectorLaboral", this.sectorLaboral);
+    this.formDisable.addControl("actividadEconomicaEmpresa", this.actividadEconomicaEmpresa);
+    this.formDisable.addControl("actividadEconomicaMupi", this.actividadEconomicaMupi);
+    this.formDisable.addControl("nombreEmpresa", this.nombreEmpresa);
+    this.formDisable.addControl("origenIngresos", this.origenIngresos);
+    this.formDisable.addControl("profesion", this.profesion);
+    this.formDisable.addControl("ocupacion", this.ocupacion);
+    this.formDisable.addControl("cargo", this.cargo);
+    this.formDisable.addControl("relacionDependencia", this.relacionDependencia);
+    this.formDisable.addControl("tipoProceso", this.tipoProceso);
+    this.formDisable.addControl("numeroFunda", this.numeroFunda);
+    this.formDisable.addControl("tipoFunda", this.tipoFunda);
+    this.formDisable.addControl("plazo", this.plazo);
+    this.formDisable.addControl("tipoOferta", this.tipoOferta);
+    this.formDisable.addControl("costoCustodia", this.costoCustodia);
+    this.formDisable.addControl("formaPagoCustodia", this.formaPagoCustodia);
+    this.formDisable.addControl("formaPagoFideicomiso", this.formaPagoFideicomiso);
+    this.formDisable.addControl("costoFideicomiso", this.costoFideicomiso);
+    this.formDisable.addControl("costoTransporte", this.costoTransporte);
+    this.formDisable.addControl("formaPagoTransporte", this.formaPagoTransporte);
+    this.formDisable.addControl("costoValoracion", this.costoValoracion);
+    this.formDisable.addControl("formaPagoValoracion", this.formaPagoValoracion);
+    this.formDisable.addControl("costoTasacion", this.costoTasacion);
+    this.formDisable.addControl("formaPagoTasacion", this.formaPagoTasacion);
+    this.formDisable.addControl("custodiaDevengada", this.custodiaDevengada);
+    this.formDisable.addControl("formaPagoCustodiaDevengada", this.formaPagoCustodiaDevengada);
+    this.formDisable.addControl("costoSeguro", this.costoSeguro);
+    this.formDisable.addControl("formaPagoSeguro", this.formaPagoSeguro);
+    this.formDisable.addControl("solca", this.solca);
+    this.formDisable.addControl("formaPagoSolca", this.formaPagoSolca);
+    this.formDisable.addControl("aPagarCliente", this.aPagarCliente);
+    this.formDisable.addControl("aRecibirCliente", this.aRecibirCliente);
+    this.formDisable.addControl("totalCostoNuevaOperacion", this.totalCostoNuevaOperacion);
+    this.formDisable.addControl("tipoCuenta", this.tipoCuenta);
+    this.formDisable.addControl("numeroCuenta", this.numeroCuenta);
+    this.formDisable.addControl("diaPagoFijo", this.diaPagoFijo);
+    this.formDisable.addControl("firmadaOperacion", this.firmadaOperacion);
+    this.formDisable.addControl("tipoCliente", this.tipoCliente);
+    this.formDisable.addControl("tipoCartera", this.tipoCartera);
+    this.formDisable.addControl("tablaAmortizacion", this.tablaAmortizacion);
+    this.formDisable.addControl("numeroOperacion", this.numeroOperacion);
+    this.formDisable.addControl("descripcionProducto", this.descripcionProducto);
+    this.formDisable.addControl("estadoOperacion", this.estadoOperacion);
+    this.formDisable.addControl("fechaVencimiento", this.fechaVencimiento);
+    this.formDisable.addControl("fechaEfectiva", this.fechaEfectiva);
+    this.formDisable.addControl("valorDesembolso", this.valorDesembolso);
+    this.formDisable.addControl("montoFinanciado", this.montoFinanciado);
+    this.formDisable.addControl("cuota", this.cuota);
+    this.formDisable.addControl("totalInteres", this.totalInteres);
+    this.formDisable.addControl("excepcionOperativa", this.excepcionOperativa);
+    this.formDisable.addControl("institucionFinanciera", this.institucionFinanciera);
+    this.formDisable.addControl("tipoDeCuenta", this.tipoDeCuenta);
+    this.formDisable.addControl("numeroDeCuenta", this.numeroDeCuenta);
 
   }
 
@@ -314,21 +314,20 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
     this.pro.setParameter();
     this.subheaderService.setTitle('Aprobación De Credito');
     this.usuario = atob(localStorage.getItem(environment.userKey));
-    this.agencia = localStorage.getItem( 'idAgencia' );
-    this.nombreAsesor = localStorage.getItem( 'nombre' );
+    this.agencia = localStorage.getItem('idAgencia');
+    this.nombreAsesor = localStorage.getItem('nombre');
 
     this.traerCreditoNegociacion();
     this.formDisable.disable();
-    this.sof.fechasistema( this.agencia ).subscribe( ( data: any) =>{
-      if( !data.existeError ){
-        this.fechaSistema.setValue( data.fechaSistema  );
+    this.sof.fechasistema(this.agencia).subscribe((data: any) => {
+      if (!data.existeError) {
+        this.fechaSistema.setValue(data.fechaSistema);
       }
     });
   }
   private traerCatalogos() {
     this.loadingSubject.next(true);
     this.sof.traerCatalogos().subscribe((data: any) => {
-      //console.log('Catalogos --> ', data.entidad);
       if (data.entidad) {
         this.catalogos = data.entidad;
         this.catMotivoDevolucionAprobacion = this.catalogos.catMotivoDevolucionAprobacion;
@@ -345,22 +344,22 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
           this.catDivisionPoliticaByPais = !data.existeError ? data.catalogo : "Error al cargar catalogo";
           this.setearValores(this.crediW);
         });
-       }else{
+      } else {
         this.loadingSubject.next(false);
         this.sinNotSer.setNotice('ERROR AL CARGAR CATALOGOS', 'error');
       }
     });
   }
 
-  private findHistoricoObservacionByCredito(idCredito){
-    this.cre.findHistoricoObservacionByIdCredito(idCredito).subscribe(result=>{
+  private findHistoricoObservacionByCredito(idCredito) {
+    this.cre.findHistoricoObservacionByIdCredito(idCredito).subscribe(result => {
       this.dataHistoricoObservacion = result.entidades;
     });
   }
   private traerCreditoNegociacion() {
     this.route.paramMap.subscribe((data: any) => {
       if (data.params.id) {
-       
+
         this.loadingSubject.next(true);
         this.cre.findHistoricoOperativaByidNegociacion(data.params.id).subscribe((data: any) => {
           this.dataHistoricoOperativa = data.entidades;
@@ -369,17 +368,17 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
           this.crediW = data;
           this.excepcion = this.crediW.excepcion;
           this.item = this.crediW.credito.tbQoNegociacion.id;
-          this.varHabilitante.referencia= this.item;
-          if(this.crediW.proceso.proceso == 'NUEVO'){
-            this.varHabilitante.proceso='NUEVO,FUNDA';
-          }else{
-            this.varHabilitante.proceso='NOVACION,FUNDA';
+          this.varHabilitante.referencia = this.item;
+          if (this.crediW.proceso.proceso == 'NUEVO') {
+            this.varHabilitante.proceso = 'NUEVO,FUNDA';
+          } else {
+            this.varHabilitante.proceso = 'NOVACION,FUNDA';
           }
-          
-          this.pro.getCabecera(this.crediW.credito.tbQoNegociacion.id,this.crediW.proceso.proceso).subscribe(datosCabecera=>{
+
+          this.pro.getCabecera(this.crediW.credito.tbQoNegociacion.id, this.crediW.proceso.proceso).subscribe(datosCabecera => {
             this.layouteService.setDatosContrato(datosCabecera);
           });
-          if(this.crediW && this.crediW.credito && this.crediW.credito.id){
+          if (this.crediW && this.crediW.credito && this.crediW.credito.id) {
             this.findHistoricoObservacionByCredito(this.crediW.credito.id);
           }
           this.traerCatalogos();
@@ -418,17 +417,17 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
   }
   private consultarLugarDeNacimiento(idLugar) {
     let lugar = this.catDivisionPoliticaByPais.find(x => x.id == idLugar);
-    if(idLugar && lugar){
-      let tree = this.findTreeByNode( lugar );
-      this.nombreCiudadSelect( tree );
+    if (idLugar && lugar) {
+      let tree = this.findTreeByNode(lugar);
+      this.nombreCiudadSelect(tree);
       return;
     }
   }
   private setearValores(ap: AprobacionWrapper) {
     this.guardarTraking(ap ? ap.proceso ? ap.proceso.proceso : null : null,
-      ap ? ap.credito ? ap.credito.codigo : null : null, 
-      ['Información Operación','Habilitantes','Datos Del Cliente','Datos De Negociación','Datos de crédito nuevo','Datos de la Excepcion','Resultado de la Excepcion'], 
-      0, 'EXCEPCION OPERATIVA', ap ? ap.credito ? ap.credito.numeroOperacion : null : null );
+      ap ? ap.credito ? ap.credito.codigo : null : null,
+      ['Información Operación', 'Habilitantes', 'Datos Del Cliente', 'Datos De Negociación', 'Datos de crédito nuevo', 'Datos de la Excepcion', 'Resultado de la Excepcion'],
+      0, 'EXCEPCION OPERATIVA', ap ? ap.credito ? ap.credito.numeroOperacion : null : null);
 
     /** @OPERACION */
     this.codigoBpm.setValue(ap.credito.codigo);
@@ -436,28 +435,28 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
     this.nombresCompletoCliente.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
 
     /** @DATOS_CLIENTE */
-    this.nacionalidad.setValue(this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad) ? 
-    this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nombre : 'Error de catalogo');
-    this.consultarLugarDeNacimiento( ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento );
+    this.nacionalidad.setValue(this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad) ?
+      this.catalogos.catPais.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.nacionalidad).nombre : 'Error de catalogo');
+    this.consultarLugarDeNacimiento(ap.credito.tbQoNegociacion.tbQoCliente.lugarNacimiento);
     this.identificacion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cedulaCliente);
-    this.aprobacionMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S'? 'SI': 'NO' );
+    this.aprobacionMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.aprobacionMupi == 'S' ? 'SI' : 'NO');
     this.detalleWebMupi.setValue(ap.credito.tbQoNegociacion.tbQoCliente.detalleWebMupi);
     this.nombresCompletos.setValue(ap.credito.tbQoNegociacion.tbQoCliente.nombreCompleto);
     this.primerNombre.setValue(ap.credito.tbQoNegociacion.tbQoCliente.primerNombre);
     this.segundoNombre.setValue(ap.credito.tbQoNegociacion.tbQoCliente.segundoNombre);
     this.apellidoPaterno.setValue(ap.credito.tbQoNegociacion.tbQoCliente.apellidoPaterno);
     this.apellidoMaterno.setValue(ap.credito.tbQoNegociacion.tbQoCliente.apellidoMaterno);
-    this.separacionDeBienes.setValue(ap.credito.tbQoNegociacion.tbQoCliente.separacionBienes ? ap.credito.tbQoNegociacion.tbQoCliente.separacionBienes : 'NO APLICA' );
-    this.genero.setValue( this.catalogos.catSexo.find( c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.genero).nombre );
-    this.estadoCivil.setValue( this.catalogos.catEstadoCivil.find( c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.estadoCivil).nombre );
+    this.separacionDeBienes.setValue(ap.credito.tbQoNegociacion.tbQoCliente.separacionBienes ? ap.credito.tbQoNegociacion.tbQoCliente.separacionBienes : 'NO APLICA');
+    this.genero.setValue(this.catalogos.catSexo.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.genero).nombre);
+    this.estadoCivil.setValue(this.catalogos.catEstadoCivil.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.estadoCivil).nombre);
     this.cargaFamiliar.setValue(ap.credito.tbQoNegociacion.tbQoCliente.cargasFamiliares);
     this.edad.setValue(ap.credito.tbQoNegociacion.tbQoCliente.edad);
     this.fechaActual = ap.credito.fechaCreacion.toString();
     this.fechaNacimiento.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaNacimiento);
-    this.nivelEducacion.setValue(this.catalogos.catEducacion.find( c => c.codigo ==  ap.credito.tbQoNegociacion.tbQoCliente.nivelEducacion).nombre);
-    this.actividadEconomica.setValue( this.catalogos.catActividadEconomica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.actividadEconomica ) ? 
-    this.catalogos.catActividadEconomica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.actividadEconomica ).nombre  : 'Error de catalogo');
-    this.fechaUltimaActualizazion.setValue( ap.credito.tbQoNegociacion.tbQoCliente.fechaActualizacion );
+    this.nivelEducacion.setValue(this.catalogos.catEducacion.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.nivelEducacion).nombre);
+    this.actividadEconomica.setValue(this.catalogos.catActividadEconomica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.actividadEconomica) ?
+      this.catalogos.catActividadEconomica.find(c => c.id == ap.credito.tbQoNegociacion.tbQoCliente.actividadEconomica).nombre : 'Error de catalogo');
+    this.fechaUltimaActualizazion.setValue(ap.credito.tbQoNegociacion.tbQoCliente.fechaActualizacion);
     this.correo.setValue(ap.credito.tbQoNegociacion.tbQoCliente.email);
     !ap.telefonos ? null : ap.telefonos.forEach(e => {
       if (e.tipoTelefono == "CEL") {
@@ -468,207 +467,202 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
       }
     });
     !ap.direcciones ? null : ap.direcciones.forEach(e => {
-        if (e.tipoDireccion == "OFI") {
-          this.ubicacionLaboral.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica) ?
+      if (e.tipoDireccion == "OFI") {
+        this.ubicacionLaboral.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica) ?
           this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre : 'Error de catalogo');
-          this.tipoViviendaLaboral.setValue(this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda) ?
+        this.tipoViviendaLaboral.setValue(this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda) ?
           this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda).nombre : 'Error de catalogo');
-          this.callePrincipalLaboral.setValue(e.callePrincipal.toUpperCase());
-          this.barrioLaboral.setValue(e.barrio ? e.barrio.toUpperCase() : null);
-          this.numeracionLaboral.setValue(e.numeracion.toUpperCase());
-          this.calleSecundariaLaboral.setValue(e.calleSegundaria.toUpperCase());
-          this.referenciaUbicacionLaboral.setValue(e.referenciaUbicacion.toUpperCase());
-          this.sectorLaboral.setValue(this.catalogos.catSectorvivienda.find(x => x.codigo == e.sector) ?
+        this.callePrincipalLaboral.setValue(e.callePrincipal.toUpperCase());
+        this.barrioLaboral.setValue(e.barrio ? e.barrio.toUpperCase() : null);
+        this.numeracionLaboral.setValue(e.numeracion.toUpperCase());
+        this.calleSecundariaLaboral.setValue(e.calleSegundaria.toUpperCase());
+        this.referenciaUbicacionLaboral.setValue(e.referenciaUbicacion.toUpperCase());
+        this.sectorLaboral.setValue(this.catalogos.catSectorvivienda.find(x => x.codigo == e.sector) ?
           this.catalogos.catSectorvivienda.find(x => x.codigo == e.sector).nombre : 'Error de catalogo');
-          this.direccionLegalLaboral.setValue(e.direccionLegal);
-          this.direccionCorreoLaboral.setValue(e.direccionEnvioCorrespondencia);
-        }
-        if (e.tipoDireccion == "DOM") {
-          this.ubicacion.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica) ?
+        this.direccionLegalLaboral.setValue(e.direccionLegal);
+        this.direccionCorreoLaboral.setValue(e.direccionEnvioCorrespondencia);
+      }
+      if (e.tipoDireccion == "DOM") {
+        this.ubicacion.setValue(this.divicionPolitica.find(x => x.id == e.divisionPolitica) ?
           this.divicionPolitica.find(x => x.id == e.divisionPolitica).nombre : 'Error de catalogo');
-          this.tipoVivienda.setValue(this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda) ?
+        this.tipoVivienda.setValue(this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda) ?
           this.catalogos.catTipoVivienda.find(x => x.codigo == e.tipoVivienda).nombre : 'Error de catalogo');
-          this.callePrincipal.setValue(e.callePrincipal);
-          this.numeracion.setValue(e.numeracion);
-          this.calleSecundaria.setValue(e.calleSegundaria);
-          this.referenciaUbicacion.setValue(e.referenciaUbicacion);
-          this.sector.setValue(this.catalogos.catSectorvivienda.find(x => x.codigo == e.sector) ?
+        this.callePrincipal.setValue(e.callePrincipal);
+        this.numeracion.setValue(e.numeracion);
+        this.calleSecundaria.setValue(e.calleSegundaria);
+        this.referenciaUbicacion.setValue(e.referenciaUbicacion);
+        this.sector.setValue(this.catalogos.catSectorvivienda.find(x => x.codigo == e.sector) ?
           this.catalogos.catSectorvivienda.find(x => x.codigo == e.sector).nombre : 'Error de catalogo');
-          this.barrio.setValue(e.barrio);
-          this.direccionLegalDomicilio.setValue(e.direccionLegal);
-          this.direccionCorreoDomicilio.setValue(e.direccionEnvioCorrespondencia);
-        }
+        this.barrio.setValue(e.barrio);
+        this.direccionLegalDomicilio.setValue(e.direccionLegal);
+        this.direccionCorreoDomicilio.setValue(e.direccionEnvioCorrespondencia);
+      }
     });
-    !ap.trabajos ? null : ap.trabajos.forEach( e=>{
+    !ap.trabajos ? null : ap.trabajos.forEach(e => {
       this.origenIngresos.setValue(this.catalogos.catOrigenIngreso.find(x => x.codigo == e.origenIngreso) ?
-      this.catalogos.catOrigenIngreso.find(x => x.codigo == e.origenIngreso).nombre : 'Error de catalogo');
+        this.catalogos.catOrigenIngreso.find(x => x.codigo == e.origenIngreso).nombre : 'Error de catalogo');
       this.relacionDependencia.setValue(e.esRelacionDependencia ? "SI" : "NO");
       this.nombreEmpresa.setValue(e.nombreEmpresa);
-      this.cargo.setValue(this.catalogos.catCargo.find(x => x.codigo == e.cargo) ? 
-      this.catalogos.catCargo.find(x => x.codigo == e.cargo).nombre: 'Error de catalogo');
-      this.ocupacion.setValue(this.catalogos.catOcupacion.find(x => x.codigo == e.ocupacion) ? 
-      this.catalogos.catOcupacion.find(x => x.codigo == e.ocupacion).nombre: 'Error de catalogo');
-      this.actividadEconomicaMupi.setValue( this.catalogos.catActividadEconomicaMupi.find(x => x.codigo == e.actividadEconomicaMupi ) ? 
-      this.catalogos.catActividadEconomicaMupi.find(x => x.codigo == e.actividadEconomicaMupi ).nombre: 'Error de catalogo');
-      this.actividadEconomicaEmpresa.setValue(this.catalogos.catActividadEconomica.find(x => x.id.toString() == e.actividadEconomica) ? 
-      this.catalogos.catActividadEconomica.find(x => x.id.toString() == e.actividadEconomica).nombre: 'Error de catalogo');
-      this.profesion.setValue(this.catalogos.catProfesion.find( c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.profesion) ? 
-      this.catalogos.catProfesion.find( c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.profesion).nombre : 'Error de catalogo');
+      this.cargo.setValue(this.catalogos.catCargo.find(x => x.codigo == e.cargo) ?
+        this.catalogos.catCargo.find(x => x.codigo == e.cargo).nombre : 'Error de catalogo');
+      this.ocupacion.setValue(this.catalogos.catOcupacion.find(x => x.codigo == e.ocupacion) ?
+        this.catalogos.catOcupacion.find(x => x.codigo == e.ocupacion).nombre : 'Error de catalogo');
+      this.actividadEconomicaMupi.setValue(this.catalogos.catActividadEconomicaMupi.find(x => x.codigo == e.actividadEconomicaMupi) ?
+        this.catalogos.catActividadEconomicaMupi.find(x => x.codigo == e.actividadEconomicaMupi).nombre : 'Error de catalogo');
+      this.actividadEconomicaEmpresa.setValue(this.catalogos.catActividadEconomica.find(x => x.id.toString() == e.actividadEconomica) ?
+        this.catalogos.catActividadEconomica.find(x => x.id.toString() == e.actividadEconomica).nombre : 'Error de catalogo');
+      this.profesion.setValue(this.catalogos.catProfesion.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.profesion) ?
+        this.catalogos.catProfesion.find(c => c.codigo == ap.credito.tbQoNegociacion.tbQoCliente.profesion).nombre : 'Error de catalogo');
     });
-    this.dataSourcePatrimonioActivo = new  MatTableDataSource<TbQoPatrimonio>();
-    this.dataSourcePatrimonioPasivo = new  MatTableDataSource<TbQoPatrimonio>();
+    this.dataSourcePatrimonioActivo = new MatTableDataSource<TbQoPatrimonio>();
+    this.dataSourcePatrimonioPasivo = new MatTableDataSource<TbQoPatrimonio>();
     this.dataSourceIngresoEgreso = new MatTableDataSource<TbQoIngresoEgresoCliente>();
-    this.dataSourcePatrimonioActivo.data.push( new TbQoPatrimonio(ap.credito.tbQoNegociacion.tbQoCliente.activos, true) );
-    this.dataSourcePatrimonioPasivo.data.push( new TbQoPatrimonio(ap.credito.tbQoNegociacion.tbQoCliente.pasivos, false) );
-    this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( ap.credito.tbQoNegociacion.tbQoCliente.ingresos, true) );
-    this.dataSourceIngresoEgreso.data.push( new TbQoIngresoEgresoCliente( ap.credito.tbQoNegociacion.tbQoCliente.egresos, false) );
-    if( ap.referencias){
+    this.dataSourcePatrimonioActivo.data.push(new TbQoPatrimonio(ap.credito.tbQoNegociacion.tbQoCliente.activos, true));
+    this.dataSourcePatrimonioPasivo.data.push(new TbQoPatrimonio(ap.credito.tbQoNegociacion.tbQoCliente.pasivos, false));
+    this.dataSourceIngresoEgreso.data.push(new TbQoIngresoEgresoCliente(ap.credito.tbQoNegociacion.tbQoCliente.ingresos, true));
+    this.dataSourceIngresoEgreso.data.push(new TbQoIngresoEgresoCliente(ap.credito.tbQoNegociacion.tbQoCliente.egresos, false));
+    if (ap.referencias) {
       this.dataSourceReferencia.data = ap.referencias;
-      this.dataSourceReferencia.data.forEach( e=>{
-        e.parentesco = this.catalogos ? 
+      this.dataSourceReferencia.data.forEach(e => {
+        e.parentesco = this.catalogos ?
           this.catalogos.catTipoReferencia ?
-            this.catalogos.catTipoReferencia.find(x => x.codigo == e.parentesco) ? 
-              this.catalogos.catTipoReferencia.find( x => x.codigo == e.parentesco ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
+            this.catalogos.catTipoReferencia.find(x => x.codigo == e.parentesco) ?
+              this.catalogos.catTipoReferencia.find(x => x.codigo == e.parentesco).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo';
       });
     }
-    
-    this.numeroFunda.setValue( ap.credito.numeroFunda ) ;
- 
-    this.tipoFunda.setValue( ap.credito.codigoTipoFunda ? this.catalogos ? this.catalogos.catTipoFunda ? this.catalogos.catTipoFunda.find(x => x.codigo==ap.credito.codigoTipoFunda ) ? this.catalogos.catTipoFunda.find(x => x.codigo == ap.credito.codigoTipoFunda ).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo');
-    
-    try{
-      const x = Number(ap?ap.credito? ap.credito.codigoTipoFunda: 0: 0)+ Number(this.crediW.joyas.map(t=>t['pesoBruto']).reduce((r, n) =>r+n,0)) ;
-      
-      this.totalPesoBrutoFunda.setValue( x.toFixed(2) );
-     }catch(e){
-       console.log("error en la suma de funda y peso bruto");
 
-     }
-    this.tipoProceso.setValue( ap.proceso.proceso );
+    this.numeroFunda.setValue(ap.credito.numeroFunda);
+
+    this.tipoFunda.setValue(ap.credito.codigoTipoFunda ? this.catalogos ? this.catalogos.catTipoFunda ? this.catalogos.catTipoFunda.find(x => x.codigo == ap.credito.codigoTipoFunda) ? this.catalogos.catTipoFunda.find(x => x.codigo == ap.credito.codigoTipoFunda).nombre : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo' : 'Error Catalogo');
+
+    try {
+      const x = Number(ap ? ap.credito ? ap.credito.codigoTipoFunda : 0 : 0) + Number(this.crediW.joyas.map(t => t['pesoBruto']).reduce((r, n) => r + n, 0));
+
+      this.totalPesoBrutoFunda.setValue(x.toFixed(2));
+    } catch (e) {
+      console.log("error en la suma de funda y peso bruto");
+    }
+    this.tipoProceso.setValue(ap.proceso.proceso);
     /** @DATOS_CREDITO_NUEVO */
-    this.plazo.setValue( ap.credito.plazoCredito);
-    this.tipoOferta.setValue( ap.credito.tipoOferta == "N" ? 'NUEVO' : ap.credito.tipoOferta);
-    this.costoCustodia.setValue( ap.credito.costoCustodia);
-    this.formaPagoCustodia.setValue( ap.credito.formaPagoCustodia);
-    this.formaPagoFideicomiso.setValue( ap.credito.formaPagoFideicomiso);
-    this.costoFideicomiso.setValue( ap.credito.costoFideicomiso);
-    this.costoTransporte.setValue( ap.credito.costoTransporte);
-    this.formaPagoTransporte.setValue( ap.credito.formaPagoTransporte);
-    this.costoValoracion.setValue( ap.credito.costoValoracion);
-    this.formaPagoValoracion.setValue( ap.credito.formaPagoValoracion);
-    this.costoTasacion.setValue( ap.credito.costoTasacion);
-    this.formaPagoTasacion.setValue( ap.credito.formaPagoTasador);
+    this.plazo.setValue(ap.credito.plazoCredito);
+    this.tipoOferta.setValue(ap.credito.tipoOferta == "N" ? 'NUEVO' : ap.credito.tipoOferta);
+    this.costoCustodia.setValue(ap.credito.costoCustodia);
+    this.formaPagoCustodia.setValue(ap.credito.formaPagoCustodia);
+    this.formaPagoFideicomiso.setValue(ap.credito.formaPagoFideicomiso);
+    this.costoFideicomiso.setValue(ap.credito.costoFideicomiso);
+    this.costoTransporte.setValue(ap.credito.costoTransporte);
+    this.formaPagoTransporte.setValue(ap.credito.formaPagoTransporte);
+    this.costoValoracion.setValue(ap.credito.costoValoracion);
+    this.formaPagoValoracion.setValue(ap.credito.formaPagoValoracion);
+    this.costoTasacion.setValue(ap.credito.costoTasacion);
+    this.formaPagoTasacion.setValue(ap.credito.formaPagoTasador);
     this.custodiaDevengada.setValue(ap.credito.custodiaDevengada);
-    this.formaPagoCustodiaDevengada.setValue( ap.credito.formaPagoCustodiaDevengada);
-    this.costoSeguro.setValue( ap.credito.costoSeguro);
-    this.formaPagoSeguro.setValue( ap.credito.formaPagoSeguro);
-    this.solca.setValue( ap.credito.impuestoSolca);
-    this.formaPagoSolca.setValue( ap.credito.formaPagoImpuestoSolca);
-    this.aPagarCliente.setValue( ap.credito.aPagarCliente);
-    this.aRecibirCliente.setValue( ap.credito.aRecibirCliente);
-    this.totalCostoNuevaOperacion.setValue( ap.credito.totalGastosNuevaOperacion);
+    this.formaPagoCustodiaDevengada.setValue(ap.credito.formaPagoCustodiaDevengada);
+    this.costoSeguro.setValue(ap.credito.costoSeguro);
+    this.formaPagoSeguro.setValue(ap.credito.formaPagoSeguro);
+    this.solca.setValue(ap.credito.impuestoSolca);
+    this.formaPagoSolca.setValue(ap.credito.formaPagoImpuestoSolca);
+    this.aPagarCliente.setValue(ap.credito.aPagarCliente);
+    this.aRecibirCliente.setValue(ap.credito.aRecibirCliente);
+    this.totalCostoNuevaOperacion.setValue(ap.credito.totalGastosNuevaOperacion);
     this.observacionAsesor.setValue(ap.credito.tbQoNegociacion.observacionAsesor);
     /** @DATOS_INSTRUCCION_OPERATIVA */
-    if(ap.cuenta){
-      this.tipoCuenta.setValue( ap.cuenta.banco ? this.catalogos ? this.catalogos.catBanco ? this.catalogos.catBanco.find( x => x.id == ap.cuenta.banco ) ? this.catalogos.catBanco.find( x => x.id == ap.cuenta.banco ).nombre : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo' );
-      this.numeroCuenta.setValue( ap.cuenta.cuenta  );
+    if (ap.cuenta) {
+      this.tipoCuenta.setValue(ap.cuenta.banco ? this.catalogos ? this.catalogos.catBanco ? this.catalogos.catBanco.find(x => x.id == ap.cuenta.banco) ? this.catalogos.catBanco.find(x => x.id == ap.cuenta.banco).nombre : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo' : 'Error en catalogo');
+      this.numeroCuenta.setValue(ap.cuenta.cuenta);
 
     }
-    this.diaPagoFijo.setValue( ap.credito.pagoDia ? new Date(ap.credito.pagoDia) : 'No aplica');
-    this.firmadaOperacion.setValue( ap.credito.firmanteOperacion ? ap.credito.firmanteOperacion  :  'Falta valdiar' );
+    this.diaPagoFijo.setValue(ap.credito.pagoDia ? new Date(ap.credito.pagoDia) : 'No aplica');
+    this.firmadaOperacion.setValue(ap.credito.firmanteOperacion ? ap.credito.firmanteOperacion : 'Falta valdiar');
 
     /** @OPERACION_NUEVA */
-    this.tipoCartera.setValue( ap.credito.tipoCarteraQuski );
-    this.tablaAmortizacion.setValue( ap.credito.tablaAmortizacion );
-    this.numeroOperacion.setValue(  ap.credito.numeroOperacion );
-    this.descripcionProducto.setValue( ap.credito.descripcionProducto );
-    this.estadoOperacion.setValue( ap.credito.estadoSoftbank );
-    this.fechaVencimiento.setValue( ap.credito.fechaVencimiento );
-    this.fechaEfectiva.setValue( ap.credito.fechaEfectiva );
-    this.valorDesembolso.setValue( ap.credito.aRecibirCliente );
-    this.montoFinanciado.setValue(  ap.credito.montoFinanciado );
-    this.cuota.setValue( ap.credito.cuota );
-    this.totalInteres.setValue(  ap.credito.totalInteresVencimiento );
+    this.tipoCartera.setValue(ap.credito.tipoCarteraQuski);
+    this.tablaAmortizacion.setValue(ap.credito.tablaAmortizacion);
+    this.numeroOperacion.setValue(ap.credito.numeroOperacion);
+    this.descripcionProducto.setValue(ap.credito.descripcionProducto);
+    this.estadoOperacion.setValue(ap.credito.estadoSoftbank);
+    this.fechaVencimiento.setValue(ap.credito.fechaVencimiento);
+    this.fechaEfectiva.setValue(ap.credito.fechaEfectiva);
+    this.valorDesembolso.setValue(ap.credito.aRecibirCliente);
+    this.montoFinanciado.setValue(ap.credito.montoFinanciado);
+    this.cuota.setValue(ap.credito.cuota);
+    this.totalInteres.setValue(ap.credito.totalInteresVencimiento);
     this.nombreApoderado.setValue(ap.credito.nombreCompletoApoderado);
     this.identificacionApoderado.setValue(ap.credito.identificacionApoderado);
     this.fechaNacimientoApoderado.setValue(ap.credito.fechaNacimientoApoderado);
     this.nombreCodeudor.setValue(ap.credito.nombreCompletoCodeudor);
     this.identificacionCodeudor.setValue(ap.credito.identificacionCodeudor);
     /** @COMPROBANTE_DESEMBOLSO */
-    console.log(this.catalogos.catBanco.find( x => x.id == ap.credito.desembolsoInstitucionFinanciera));
-    if(this.catalogos.catBanco.find( x => x.id == ap.credito.desembolsoInstitucionFinanciera)){
-      this.institucionFinanciera.setValue(this.catalogos.catBanco.find( x => x.id == ap.credito.desembolsoInstitucionFinanciera).nombre);
+    if (this.catalogos.catBanco.find(x => x.id == ap.credito.desembolsoInstitucionFinanciera)) {
+      this.institucionFinanciera.setValue(this.catalogos.catBanco.find(x => x.id == ap.credito.desembolsoInstitucionFinanciera).nombre);
 
     }
     this.tipoDeCuenta.setValue(ap.credito.desembolsoTipoCuenta);
     this.numeroDeCuenta.setValue(ap.credito.desembolsoNumeroCuenta);
-    this.cargarFotoHabilitante('6','FUNDA',ap.credito.tbQoNegociacion.id ).subscribe(data=>{
-      this.srcJoya = data;
-    });
-    this.cargarFotoHabilitante('7','FUNDA',ap.credito.tbQoNegociacion.id ).subscribe(data=>{
-      this.srcFunda = data;
-    });
-    
+    //this.cargarFotoHabilitante('6', 'FUNDA', ap.credito.tbQoNegociacion.id).subscribe(data => {
+    //  this.srcJoya = data;
+    //});
+    //this.cargarFotoHabilitante('7', 'FUNDA', ap.credito.tbQoNegociacion.id).subscribe(data => {
+    //  this.srcFunda = data;
+    //});
+
     this.loadingSubject.next(false);
   }
-  public enviarRespuesta( aprueba ){
-    if( !this.observacionAprobador.value ){
-      this.sinNotSer.setNotice('INGRESE LA OBSERVACION DEL APROBADOR','warning');
+  public enviarRespuesta(aprueba) {
+    if (!this.observacionAprobador.value) {
+      this.sinNotSer.setNotice('INGRESE LA OBSERVACION DEL APROBADOR', 'warning');
       return;
     }
-    let mensaje = aprueba == 'APROBADO' ? 'Aprobar la excepcion : ' + this.crediW.credito.codigo+'?' :
-    'Negar la excepcion : ' + this.crediW.credito.codigo+'?'; 
+    let mensaje = aprueba == 'APROBADO' ? 'Aprobar la excepcion : ' + this.crediW.credito.codigo + '?' :
+      'Negar la excepcion : ' + this.crediW.credito.codigo + '?';
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
       width: "800px",
       height: "auto",
       data: mensaje
     });
     dialogRef.afterClosed().subscribe(r => {
-      if(r){
+      if (r) {
         this.excepcion.estadoExcepcion = aprueba;
         this.excepcion.observacionAprobador = this.observacionAprobador.value;
-        this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.crediW.proceso.proceso, this.nombreAsesor).subscribe(p=>{
-          if(aprueba=='APROBADO'){
-            this.sinNotSer.setNotice('EXCEPCION APROBADA','success');
-          }else{
-           this.sinNotSer.setNotice('EXCEPCION  NEGADA','success');
+        this.excepcionOperativaService.resolverExcepcion(this.excepcion, this.crediW.proceso.proceso, this.nombreAsesor).subscribe(p => {
+          if (aprueba == 'APROBADO') {
+            this.sinNotSer.setNotice('EXCEPCION APROBADA', 'success');
+          } else {
+            this.sinNotSer.setNotice('EXCEPCION  NEGADA', 'success');
           }
         });
         //this.exc.aprobarExcepcion(this.excepcion.id,this.observacionAprobador.value,aprueba).subscribe(()=>{
-          
-          this.router.navigate(['negociacion/excepcion-operativa/list']);
+
+        this.router.navigate(['negociacion/excepcion-operativa/list']);
         //})
       }
     });
   }
 
-  public regresar(){
+  public regresar() {
     this.router.navigate(['negociacion/excepcion-operativa/list']);
   }
 
-  cambiarHabilitantes(proceso?:string,referencia?:string){
-    this.varHabilitante = {proceso:'',referencia:''};
+  cambiarHabilitantes(proceso?: string, referencia?: string) {
+    this.varHabilitante = { proceso: '', referencia: '' };
 
     this.varHabilitante = {
-      proceso:proceso=='CLIENTE'?'CLIENTE':this.crediW.proceso.proceso=='NUEVO'?'NUEVO,FUNDA':'NOVACION,FUNDA',
-      referencia:referencia
+      proceso: proceso == 'CLIENTE' ? 'CLIENTE' : this.crediW.proceso.proceso == 'NUEVO' ? 'NUEVO,FUNDA' : 'NOVACION,FUNDA',
+      referencia: referencia
     };
 
   }
 
-  private cargarFotoHabilitante(tipoDocumento, proceso, referencia):Observable<String> {
-    //console.log("cargar documentos fotos",tipoDocumento, proceso, referencia);
-
-    return this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).pipe(switchMap(data=> {
-      if( !(data && data.entidad) ){
+  private cargarFotoHabilitante(tipoDocumento, proceso, referencia): Observable<String> {
+    return this.doc.getHabilitanteByReferenciaTipoDocumentoProceso(tipoDocumento, proceso, referencia).pipe(switchMap(data => {
+      if (!(data && data.entidad)) {
         return of(null);
       }
       this.obj.getObjectById(data.entidad.objectId, this.obj.mongoDb, environment.mongoHabilitanteCollection).pipe(switchMap((dataDos: any) => {
-        let file = JSON.parse( atob( dataDos.entidad ) );
-        return of(file?file.fileBase64:'');
+        let file = JSON.parse(atob(dataDos.entidad));
+        console.log('estoy aqui?')
+        return of(file ? file.fileBase64 : '');
       }))
-    }
-      
-    ));
+    }));
   }
 }

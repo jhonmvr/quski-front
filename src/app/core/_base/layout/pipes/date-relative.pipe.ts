@@ -23,7 +23,7 @@ export class RelativeDatePipe implements PipeTransform {
         return this.datePipe.transform(value, FORMAT_DATE, ...options);
       }
     } catch {
-      console.log("error al intentar parsear la fecha | rDate");
+      //console.log("error al intentar parsear la fecha | rDate");
       return value;
     }
   }

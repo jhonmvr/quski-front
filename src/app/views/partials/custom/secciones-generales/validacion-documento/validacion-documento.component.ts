@@ -34,7 +34,6 @@ export class ValidacionDocumentoComponent implements OnInit {
           });
 
         });
-        console.log("columnas", columnas.keys());
 
       columnas.forEach(c=> {
         if(c!=="tbQoCreditoNegociacion" && c!=="id" )
