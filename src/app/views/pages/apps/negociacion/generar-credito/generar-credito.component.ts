@@ -705,6 +705,33 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
     return date<27;
   }
 
+  
+  private solicitarExcepcionOperativa(){
+    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
+      return;
+    }
+   
+    if (
+      this.excepcionOperativa.value.valor !== 'SERVICIO_BASICO' &&
+      this.excepcionOperativa.value.valor !== 'FIRMA' &&
+      this.excepcionOperativa.value.valor !== 'PAPELETA_DE_VOTACION' &&
+      this.excepcionOperativa.value.valor !== 'DEPOSITO'
+    ) {
+      return;
+    }
+    let excepcionServicios = {
+      "idNegociacion": this.operacionNuevo.credito.tbQoNegociacion,
+      "codigoOperacion": this.operacionNuevo.credito.codigo,
+      "tipoExcepcion": "Fabrica",
+      "estadoExcepcion": "PENDIENTE",
+      "usuarioSolicitante": localStorage.getItem("reUser"),
+      "observacionAsesor": this.excepcionOperativa.value ? this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') : null + " \n" + this.observacionAsesor.value
+      };
+    this.excepcionOperativaService.solicitarExcepcionFabrica(excepcionServicios,this.operacionNuevo.proceso.proceso).subscribe(p=>{
+      this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+    });
+    
+  }
   handleTotalComprobantes(total: number) {
     console.log("valor de desembolso",total)
     this.totalValorDesembolso.setValue(total);

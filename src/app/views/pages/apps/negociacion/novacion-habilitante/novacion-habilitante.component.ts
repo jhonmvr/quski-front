@@ -518,6 +518,32 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     }
   }
 
+  solicitarExcepcionOperativa(){
+    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor == 'SIN EXCEPCION'){
+      return;
+    }
+    if (
+      this.excepcionOperativa.value.valor !== 'SERVICIO_BASICO' &&
+      this.excepcionOperativa.value.valor !== 'FIRMA' &&
+      this.excepcionOperativa.value.valor !== 'PAPELETA_DE_VOTACION' &&
+      this.excepcionOperativa.value.valor !== 'DEPOSITO'
+    ) {
+      return;
+    }
+    let excepcionServicios = {
+      "idNegociacion": this.credit.credito.tbQoNegociacion,
+      "codigoOperacion": this.credit.credito.codigo,
+      "tipoExcepcion": "Fabrica",
+      "estadoExcepcion": "PENDIENTE",
+      "usuarioSolicitante": localStorage.getItem("reUser"),
+      "observacionAsesor": this.excepcionOperativa.value ? this.excepcionOperativa.value.map(p=>{return p.valor}).join(',') : null + " \n" + this.observacionAsesor.value
+      };
+    this.excepcionOperativaService.solicitarExcepcionFabrica(excepcionServicios,this.credit.proceso.proceso).subscribe(p=>{
+      this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', 'EXCEPCION SOLICITADA');
+    });
+    
+  }
+
   private salirDeGestion(dataMensaje: string, dataTitulo?: string) {
     let pData = {
       mensaje: dataMensaje,
