@@ -24,7 +24,7 @@ import { TrackingUtil } from '../../../../../../../app/core/util/TrakingUtil';
   styleUrls: ['./detalle-regularizacion-documentos.component.scss']
 })
 export class DetalleRegularizacionDocumentosComponent extends TrackingUtil implements OnInit {
-  varHabilitante = {proceso:'CLIENTE',referencia:''};
+  varHabilitante = {proceso:'REGULARIZACION_DOCUMENTOS',referencia:''};
   dataHistoricoOperativa;
   dataHistoricoObservacion;
   referencia;
@@ -96,7 +96,7 @@ export class DetalleRegularizacionDocumentosComponent extends TrackingUtil imple
         this.regularizacionDocumentosService.traerCreditoNegociacionByRegularizacion(data.params.id).subscribe((data: any) => {
          
             this.detalle = data;
-            this.referencia = this.detalle.credito.tbQoNegociacion.id+'tmp';
+            this.referencia = this.detalle.credito.tbQoNegociacion.id;
             this.procesoService.getCabecera(this.detalle.credito.tbQoNegociacion.id,this.detalle.proceso.proceso).subscribe(datosCabecera=>{
               this.layoutService.setDatosContrato(datosCabecera);
             });

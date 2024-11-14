@@ -99,7 +99,7 @@ export class AprodadorRegularizacionDocumentosComponent extends TrackingUtil imp
         this.regularizacionDocumentosService.traerCreditoNegociacionByRegularizacion(data.params.id).subscribe((data: any) => {
           
             this.detalle = data;
-            this.referencia = this.detalle.credito.tbQoNegociacion.id+'tmp';
+            this.referencia = this.detalle.credito.tbQoNegociacion.id;
             this.procesoService.getCabecera(this.detalle.credito.tbQoNegociacion.id,this.detalle.proceso.proceso).subscribe(datosCabecera=>{
               this.layoutService.setDatosContrato(datosCabecera);
             });

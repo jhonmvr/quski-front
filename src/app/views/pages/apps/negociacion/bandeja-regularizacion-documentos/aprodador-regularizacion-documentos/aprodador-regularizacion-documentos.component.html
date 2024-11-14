@@ -12,7 +12,7 @@
     <re-portlet-body>
         <mat-vertical-stepper #stepper (animationDone)="guardarTraking(this.detalle ? this.detalle.proceso ? this.detalle.proceso.proceso : null : null,
         this.detalle ? this.detalle.credito ? this.detalle.credito.codigo : null : null, 
-        ['Información Del Cliente','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Habilitantes','Observaciones'], 
+        ['Información Del Cliente','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Observaciones','Habilitantes'], 
         stepper.selectedIndex, 'REGULARIZACION DOCUMENTOS',this.detalle ? this.detalle.credito ? this.detalle.credito.numeroOperacion : null : null )">
 
             <mat-step label="Información Del Cliente">
@@ -286,29 +286,7 @@
                     </div>
                 </div>
             </mat-step>
-            <mat-step label="Habilitantes">
-                <div class="row">
-                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'RENOVACION':false:false" (click)="varHabilitante.proceso='NOVACION';varHabilitante.referencia =referencia+'tmp' " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE' || varHabilitante.proceso=='AUTORIZACION'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'NUEVO':false:false" (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =referencia+'tmp' " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedula.value+'tmp' " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
-                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'RENOVACION':false:false" (click)="varHabilitante.proceso='AUTORIZACION';varHabilitante.referencia =operacionMadre+'tmp' " style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='AUTORIZACION'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Autorizacion</button>
-                </div>
-                <re-habilitante [proceso]="varHabilitante.proceso"  [useType]="'FORM'" [referencia]="varHabilitante.referencia">
-                </re-habilitante>
-                
-                <div class="row mt-3">
-                    <div class="offset-md-2 col-md-2">
-                        <button mat-raised-button color="primary" (click)="enviarRespuesta('APROBADO')">
-                            <span class="white-icon">Aprobar Excepcion</span>
-                        </button>
-                    </div>
-                    <div class="offset-md-1 col-md-2">
-                        <button mat-raised-button color="warn" (click)="enviarRespuesta('PENDIENTE')">
-                            <span class="white-icon">Negar Excepcion</span>
-                        </button>
-                    </div>
-                </div>
-            </mat-step>
+            
             <mat-step label="Observaciones">
                 <mat-tab-group>
                     <mat-tab label="Historico Excepcion Operativa">
@@ -326,6 +304,29 @@
                         </div>
                     </mat-tab>
                 </mat-tab-group>
+            </mat-step>
+            <mat-step label="Habilitantes">
+                <div class="row">
+                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'RENOVACION':false:false" (click)="varHabilitante.proceso='NOVACION';varHabilitante.referencia =referencia" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE' || varHabilitante.proceso=='AUTORIZACION'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'NUEVO':false:false" (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =referencia" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
+                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedula.value" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
+                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'RENOVACION':false:false" (click)="varHabilitante.proceso='AUTORIZACION';varHabilitante.referencia =operacionMadre" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='AUTORIZACION'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Autorizacion</button>
+                </div>
+                <re-habilitante [proceso]="varHabilitante.proceso"  [estadoOperacion]="'REGULARIZACION_DOCUMENTOS'" [useType]="'FORM'" [referencia]="varHabilitante.referencia" >
+                </re-habilitante>
+                
+                <div class="row mt-3">
+                    <div class="offset-md-2 col-md-2">
+                        <button mat-raised-button color="primary" (click)="enviarRespuesta('APROBADO')">
+                            <span class="white-icon">Aprobar Excepcion</span>
+                        </button>
+                    </div>
+                    <div class="offset-md-1 col-md-2">
+                        <button mat-raised-button color="warn" (click)="enviarRespuesta('PENDIENTE')">
+                            <span class="white-icon">Negar Excepcion</span>
+                        </button>
+                    </div>
+                </div>
             </mat-step>
         </mat-vertical-stepper>
     </re-portlet-body>
