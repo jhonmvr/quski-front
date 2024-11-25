@@ -25,6 +25,7 @@ export class ExcepcionOperativaService extends BaseService {
   }
   findAllByParams(page: Page, estado?: string, codigo?: string, codigoOperacion?: string, idNegociacion?: string) {
     const usuario = localStorage.getItem("reUser")
+    const rol = localStorage.getItem( 're1001' );
     let serviceUrl = this.appResourcesUrl + "excepcionOperativaRestController/listAllByParams";
     let params = new HttpParams()
       .set('page', page.currentPage.toString())
@@ -33,7 +34,8 @@ export class ExcepcionOperativaService extends BaseService {
       .set('sortDirections', page.sortDirections)
       .set('isPaginated', page.isPaginated);
 
-    if (usuario) params = params.set('usuario', usuario);
+    //if (rol) params = params.set('rol', usuario);
+    //if (usuario) params = params.set('usuario', usuario);
     if (estado) params = params.set('estado', estado);
     if (codigo) params = params.set('codigo', codigo);
     if (codigoOperacion) params = params.set('codigoOperacion', codigoOperacion);
@@ -48,10 +50,10 @@ export class ExcepcionOperativaService extends BaseService {
     );
   }
   findAllByParamsWithClient(cedula?: string) {
-    const usuario = localStorage.getItem("reUser")
+    const rol = localStorage.getItem( 're1001' );
     let serviceUrl = this.appResourcesUrl + "excepcionOperativaRestController/findAllByParamsWithClient";
     let params = new HttpParams()
-    if (usuario) params = params.set('usuario', usuario);
+    if (rol) params = params.set('usuario', rol);
     if (cedula) params = params.set('cedula', cedula);
    
     this.options = { headers: this.headers, params: params };

@@ -718,12 +718,22 @@
                         <strong class="valorNeto"> {{aRecibirCliente.value}}</strong>
                     </div>
                     <div class="col-md-2">
+                        <strong class="valorNeto">Monto excepcion de servicios:</strong>
+                    </div>
+                    <div class="col-md-2">
+                        <strong class="valorNeto"> {{valorDescuentoServicios.value}}</strong>
+                    </div>
+                    <div class="col-md-2">
                         <strong class="valorNeto">Neto al cliente:</strong>
                     </div>
                     <div class="col-md-2">
-                        <strong class="valorNeto"> {{(aRecibirCliente.value - aPagarCliente.value ) |
-                            currency:'CAD':'symbol-narrow':'1.2-2'}}</strong>
+                        <strong class="valorNeto">
+                            {{
+                                valorTotal | currency:'CAD':'symbol-narrow':'1.2-2'
+                            }}
+                        </strong>
                     </div>
+                    
                 </div>
                 <div class="row">
                     <div class="col-md-2">

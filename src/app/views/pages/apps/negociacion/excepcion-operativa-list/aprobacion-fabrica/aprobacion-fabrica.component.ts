@@ -107,6 +107,7 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
   public profesion = new FormControl('', []);
   public ocupacion = new FormControl('', []);
   public cargo = new FormControl('', []);
+  public valorDescuentoServicios = new FormControl(0, []);
   public relacionDependencia = new FormControl('');
   nombreApoderado = new FormControl('');
   identificacionApoderado = new FormControl('');
@@ -150,10 +151,11 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
   public formaPagoSeguro = new FormControl('', []);
   public solca = new FormControl('', []);
   public formaPagoSolca = new FormControl('', []);
-  public aPagarCliente = new FormControl('', []);
-  public aRecibirCliente = new FormControl('', []);
+  public aPagarCliente = new FormControl(0, []);
+  public montoExcepcionOperativa = new FormControl('', []);
+  public aRecibirCliente = new FormControl(0, []);
   public totalCostoNuevaOperacion = new FormControl('', []);
-
+  public valorTotal: Number = 0;
   /** @INSTRUCCION_OPERATIVA */
   public tipoCuenta = new FormControl('', []);
   public excepcionOperativa = new FormControl('', []);
@@ -283,6 +285,7 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
     this.formDisable.addControl("solca", this.solca);
     this.formDisable.addControl("formaPagoSolca", this.formaPagoSolca);
     this.formDisable.addControl("aPagarCliente", this.aPagarCliente);
+    this.formDisable.addControl("montoExcepcionOperativa", this.montoExcepcionOperativa);
     this.formDisable.addControl("aRecibirCliente", this.aRecibirCliente);
     this.formDisable.addControl("totalCostoNuevaOperacion", this.totalCostoNuevaOperacion);
     this.formDisable.addControl("tipoCuenta", this.tipoCuenta);
@@ -364,10 +367,29 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
         this.cre.findHistoricoOperativaByidNegociacion(data.params.id).subscribe((data: any) => {
           this.dataHistoricoOperativa = data.entidades;
         });
+
         this.excepcionOperativaService.traerCreditoNegociacionExistenteByExcepcionOperativa(data.params.id).subscribe((data: any) => {
           this.crediW = data;
           this.excepcion = this.crediW.excepcion;
           this.item = this.crediW.credito.tbQoNegociacion.id;
+          console.log("id negociacion ", this.item)
+          this.excepcionOperativaService.findByNegociacion(this.item).subscribe(e => {
+            this.valorDescuentoServicios.setValue(0)
+            if (e.entidades == null) {
+              return;
+            }
+            const listExs = e.entidades;
+            const montosInvolucrados = listExs
+              .filter(entidad => entidad.estadoExcepcion === "APROBADO" && entidad.nivelAprobacion > 1)
+              .map(entidad => entidad.montoInvolucrado);
+            console.log(montosInvolucrados);
+            if(montosInvolucrados.length > 0){
+              this.valorDescuentoServicios.setValue(montosInvolucrados[0].toFixed(2));
+              this.valorTotal = Number(this.valorTotal) + Number(this.valorDescuentoServicios.value);
+            } 
+              
+
+          });
           this.varHabilitante.referencia = this.item;
           if (this.crediW.proceso.proceso == 'NUEVO') {
             this.varHabilitante.proceso = 'NUEVO,FUNDA';
@@ -563,7 +585,9 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
     this.solca.setValue(ap.credito.impuestoSolca);
     this.formaPagoSolca.setValue(ap.credito.formaPagoImpuestoSolca);
     this.aPagarCliente.setValue(ap.credito.aPagarCliente);
+
     this.aRecibirCliente.setValue(ap.credito.aRecibirCliente);
+    this.valorTotal = this.valorTotal + this.aRecibirCliente.value - this.aPagarCliente.value;
     this.totalCostoNuevaOperacion.setValue(ap.credito.totalGastosNuevaOperacion);
     this.observacionAsesor.setValue(ap.credito.tbQoNegociacion.observacionAsesor);
     /** @DATOS_INSTRUCCION_OPERATIVA */

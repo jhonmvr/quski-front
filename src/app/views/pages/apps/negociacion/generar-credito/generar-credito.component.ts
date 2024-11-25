@@ -681,8 +681,8 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
             if(data){
               if(data.entidad){
                 this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.', data.entidad.estadoProceso.replaceAll('_', ' '));
-                this.cre.validacionDocumento(this.operacionNuevo.credito.tbQoNegociacion.id).subscribe(a=>{
-                });
+                //this.cre.validacionDocumento(this.operacionNuevo.credito.tbQoNegociacion.id).subscribe(a=>{
+                //});
               }
               
             }

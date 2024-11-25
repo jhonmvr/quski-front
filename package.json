@@ -10,7 +10,7 @@
     "build": "node -max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --output-path=C:/relative/fuentesproyectos/GITPROJECTS/WsQuski/gitlab/quski-oro-web-wf/src/main/webapp --base-href=/quski-front --deploy-url=/quski-front/",
     "build-nginx": "node -max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --output-path=./dist --base-href=/quski-front --deploy-url=/quski-front/",
     "test": "ng test",
-    "build-pre": "node -max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --configuration=staging --output-path=C:/relative/fuentesproyectos/GITPROJECTS/WsQuski/gitlab/quski-oro-web-wf/src/main/webapp --base-href=/quski-front --deploy-url=/quski-front/",
+    "build-pre": "node -max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --configuration=staging --output-path=C:/WORKSPACE/QUSKI/QUSKI-ORO/quski-oro-web/src/main/webapp --base-href=/quski-front --deploy-url=/quski-front/",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
