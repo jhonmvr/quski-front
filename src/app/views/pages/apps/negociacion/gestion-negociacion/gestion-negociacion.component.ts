@@ -440,8 +440,8 @@ export class GestionNegociacionComponent extends TrackingUtil implements OnInit 
       });
     }
   }
-  private validarExcepcionesOperativa(tmp: any) {
-    this.excepcionOperativaService.findByNegociacion(tmp.credito.tbQoNegociacion.id).subscribe(e=>{
+  private async validarExcepcionesOperativa(tmp: any) {
+    await this.excepcionOperativaService.findByNegociacion(tmp.credito.tbQoNegociacion.id).subscribe(e=>{
       if(e.entidades == null){
         return;
       }

@@ -202,12 +202,12 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
   }
   /** ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * @BUSQUEDA ** */
   private traerOperacion() {
-    this.route.paramMap.subscribe((json: any) => {
+    this.route.paramMap.subscribe(async (json: any) => {
       this.pro.getCabecera(json.params.id,'NUEVO').subscribe(datosCabecera=>{
         this.layoutService.setDatosContrato(datosCabecera);
       });
       if (json.params.id) {
-        this.excepcionOperativaService.findByNegociacion(json.params.id).subscribe(e=>{
+        await this.excepcionOperativaService.findByNegociacion(json.params.id).subscribe(e=>{
           this.valorDescuentoServicios.setValue(0)
           if(e.entidades == null){
             return;

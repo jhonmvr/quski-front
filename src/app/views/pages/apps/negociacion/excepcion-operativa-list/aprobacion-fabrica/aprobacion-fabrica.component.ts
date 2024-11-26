@@ -368,12 +368,12 @@ export class AprobacionFabricaComponent extends TrackingUtil implements OnInit {
           this.dataHistoricoOperativa = data.entidades;
         });
 
-        this.excepcionOperativaService.traerCreditoNegociacionExistenteByExcepcionOperativa(data.params.id).subscribe((data: any) => {
+        this.excepcionOperativaService.traerCreditoNegociacionExistenteByExcepcionOperativa(data.params.id).subscribe(async (data: any) => {
           this.crediW = data;
           this.excepcion = this.crediW.excepcion;
           this.item = this.crediW.credito.tbQoNegociacion.id;
           console.log("id negociacion ", this.item)
-          this.excepcionOperativaService.findByNegociacion(this.item).subscribe(e => {
+          await this.excepcionOperativaService.findByNegociacion(this.item).subscribe(e => {
             this.valorDescuentoServicios.setValue(0)
             if (e.entidades == null) {
               return;
