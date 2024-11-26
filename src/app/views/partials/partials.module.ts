@@ -145,6 +145,8 @@ import { ValidacionDocumentoComponent } from './custom/secciones-generales/valid
 import { ComprobanteDesembolsoComponent } from './custom/comprobante-desembolso/comprobante-desembolso.component';
 import { ExcepcionesOperativasListComponent } from './custom/excepciones-operativas-list/excepciones-operativas-list.component';
 import { ComprobantePagoComponent } from './custom/comprobante-pago/comprobante-pago.component';
+import { HabilitanteOperacionComponent } from './custom/secciones-generales/HabilitanteOperacion/habilitante-operacion';
+
 
 
 
@@ -153,6 +155,7 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 
 @NgModule({
 	declarations: [
+		HabilitanteOperacionComponent,
 		ComprobanteDesembolsoComponent,
 		RelativeNumberPipe,
 		RelativeDatePipe,
@@ -246,6 +249,7 @@ const DEFAULT_CURRENCY_CODE: InjectionToken<string> = new InjectionToken<string>
 
 	],
 	exports: [
+		HabilitanteOperacionComponent,
 		ComprobantePagoComponent,
 		ExcepcionesOperativasListComponent,
 		ComprobanteDesembolsoComponent,

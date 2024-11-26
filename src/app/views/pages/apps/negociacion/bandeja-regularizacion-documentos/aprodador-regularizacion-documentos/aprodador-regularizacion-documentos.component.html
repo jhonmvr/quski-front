@@ -306,6 +306,12 @@
                 </mat-tab-group>
             </mat-step>
             <mat-step label="Habilitantes">
+                <app-habilitante-operacion 
+                [cedula]="cedula.value"
+                [detalle]="detalle"
+                [referencia]="referencia"
+                [operacionMadre]="operacionMadre">
+                    </app-habilitante-operacion>
                 <div class="row">
                     <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'RENOVACION':false:false" (click)="varHabilitante.proceso='NOVACION';varHabilitante.referencia =referencia" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE' || varHabilitante.proceso=='AUTORIZACION'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
                     <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'NUEVO':false:false" (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =referencia" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>

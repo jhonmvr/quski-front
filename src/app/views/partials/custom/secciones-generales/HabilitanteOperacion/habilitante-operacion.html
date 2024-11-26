@@ -1,0 +1,50 @@
+<div class="row">
+  <!-- Botón para Renovación -->
+  <button mat-raised-button
+          *ngIf="detalle?.proceso?.proceso === 'RENOVACION'"
+          (click)="setProceso('NOVACION', referencia)"
+          style="color: aliceblue;"
+          [ngStyle]="varHabilitante.proceso === 'CLIENTE' || varHabilitante.proceso === 'AUTORIZACION' ? 
+                      {'background-color':'#3f51b5'} : 
+                      {'background-color':'#ff4081'}">
+    Habilitante Operacion
+  </button>
+
+  <!-- Botón para Nuevo -->
+  <button mat-raised-button
+          *ngIf="detalle?.proceso?.proceso === 'NUEVO'"
+          (click)="setProceso('NUEVO,FUNDA', referencia)"
+          style="color: aliceblue;"
+          [ngStyle]="varHabilitante.proceso === 'CLIENTE' ? 
+                      {'background-color':'#3f51b5'} : 
+                      {'background-color':'#ff4081'}">
+    Habilitante Operacion
+  </button>
+
+  <!-- Botón para Cliente -->
+  <button mat-raised-button
+          (click)="setProceso('CLIENTE', cedula)"
+          style="color: aliceblue;"
+          [ngStyle]="varHabilitante.proceso === 'CLIENTE' ? 
+                      {'background-color':'#ff4081'} : 
+                      {'background-color':'#3f51b5'}">
+    Habilitante Cliente
+  </button>
+
+  <!-- Botón para Autorización -->
+  <button mat-raised-button
+          *ngIf="detalle?.proceso?.proceso === 'RENOVACION'"
+          (click)="setProceso('AUTORIZACION', operacionMadre)"
+          style="color: aliceblue;"
+          [ngStyle]="varHabilitante.proceso === 'AUTORIZACION' ? 
+                      {'background-color':'#ff4081'} : 
+                      {'background-color':'#3f51b5'}">
+    Autorizacion
+  </button>
+</div>
+
+<re-habilitante [proceso]="varHabilitante.proceso"
+                [estadoOperacion]="estado || 'DETALLE'"
+                [useType]="'FORM'"
+                [referencia]="varHabilitante.referencia">
+</re-habilitante>

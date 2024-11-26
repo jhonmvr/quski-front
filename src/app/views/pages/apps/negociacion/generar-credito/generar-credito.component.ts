@@ -213,26 +213,15 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
             return;
           }
           const listExs = e.entidades
-          if(listExs.length >= 1){
-            let exVigente = null;
-            // Implementar la lógica de validación
-            if (listExs.some(ex => ex.estadoExcepcion === 'PENDIENTE')) {
-              exVigente = listExs.find(ex => ex.estadoExcepcion === 'PENDIENTE') || null;
-            } else if (listExs.some(ex => ex.estadoExcepcion === 'APROBADO' )) {
-              exVigente = listExs.find(ex => ex.estadoExcepcion === 'APROBADO') || null;
-            } else if (listExs.some(ex => ex.estadoExcepcion === 'NEGADO' )) {
-              exVigente = listExs.find(ex => ex.estadoExcepcion === 'NEGADO') || null;
-            }
-            if(exVigente != null){
-              if(exVigente.estadoExcepcion === 'PENDIENTE'){
-                this.salirDeGestion('Espere respuesta del aprobador para continuar con la negociacion.')
-              }else {
-                if(exVigente.estadoExcepcion === 'APROBADO'){
-                  this.valorDescuentoServicios.setValue(exVigente.montoInvolucrado.toFixed(2))
-                }
-              }
-            }
-          }
+          const montosInvolucrados = listExs
+              .filter(entidad => entidad.estadoExcepcion === "APROBADO" && entidad.nivelAprobacion > 1)
+              .map(entidad => entidad.montoInvolucrado);
+            console.log(montosInvolucrados);
+            if(montosInvolucrados.length > 0){
+              this.valorDescuentoServicios.setValue(montosInvolucrados[0].toFixed(2));
+              //this.valorTotal = Number(this.valorTotal) + Number(this.valorDescuentoServicios.value);
+            } 
+          
         });
         this.item = json.params.id;
         this.cre.traerCreditoNuevo(this.item).subscribe((data: any) => {

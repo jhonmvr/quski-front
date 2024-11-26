@@ -24,6 +24,8 @@ import { TrackingService } from '../../../../../../../app/core/services/quski/tr
   styleUrls: ['./aprodador-regularizacion-documentos.component.scss']
 })
 export class AprodadorRegularizacionDocumentosComponent extends TrackingUtil implements OnInit {
+
+  parametrosHabilitante = [];
   varHabilitante = {proceso:'CLIENTE',referencia:''};
   dataHistoricoOperativa;
   dataHistoricoObservacion;
@@ -159,6 +161,11 @@ export class AprodadorRegularizacionDocumentosComponent extends TrackingUtil imp
     }else{
       this.varHabilitante.proceso='NOVACION';
     }
+    this.parametrosHabilitante = [
+      { procesos: {proceso:'CLIENTE'}, estados: 'DETALLE', idReferencia: this.cedula.value },
+      { procesos: { proceso: 'NUEVO' }, estados: 'DETALLE', idReferencia: this.referencia },
+      { procesos: { proceso: 'RENOVACION' }, estados: 'DETALLE', idReferencia: this.referencia },
+    ];
     this.sinNotSer.setNotice('DETALLE DE CREDITO EN PROCESO CARGADO', 'success');
   }
   /** ********************************************* @FUNCIONALIDAD ********************* **/
