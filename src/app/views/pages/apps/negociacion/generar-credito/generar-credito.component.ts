@@ -265,7 +265,7 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       this.salirDeGestion("El credito al que intenta ingresar se encuentra en estado \"" + data.proceso.estadoProceso.replace('_', ' ').toLocaleLowerCase() + "\". No es posible entrar. ");
     }
   }
-  public habilitarExcepcionOperativa(){
+  public habilitarExcepcionOperativa(){    
     if(this.excepcionOperativa.value && this.excepcionOperativa.value.find(p=>p.valor == 'SIN EXCEPCION') ){
       this.excepcionOperativa.setValue([this.catExcepcionOperativa.find(p=>p.valor == 'SIN EXCEPCION')]);
       this.mySelections = this.excepcionOperativa.value;
@@ -645,12 +645,19 @@ export class GenerarCreditoComponent extends TrackingUtil implements OnInit {
       let exs =  null
       let mensaje = "Solicitar la aprobacion del credito: " + this.operacionNuevo.credito.codigo;
       if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor != 'SIN EXCEPCION'){
-
+        const excepcionOperativaArray = this.excepcionOperativa.value; // Obtenemos el array
+        let tipoExcepcion = "";
+        if (Array.isArray(excepcionOperativaArray)) { // Verificamos que sea un array
+          tipoExcepcion = excepcionOperativaArray.map(item => item.nombre).join(', ');
+            console.log("Nombres concatenados:", tipoExcepcion);
+        } else {
+            console.log("excepcionOperativa.value no es un array válido:", tipoExcepcion);
+        }
         mensaje = "Solicitar regularización de documentos antes de solicitar la aprobación del credito: " + this.operacionNuevo.credito.codigo;
         exs = {
           idNegociacion: this.operacionNuevo.credito.tbQoNegociacion,
           codigoOperacion: this.operacionNuevo.credito.codigo,
-          tipoExcepcion: "REGULARIZACION_DOCUMENTOS",
+          tipoExcepcion: tipoExcepcion,
           estadoExcepcion: "PENDIENTE",
           montoInvolucrado: 0,
           usuarioSolicitante: localStorage.getItem("reUser"),

@@ -23,7 +23,7 @@ export class BandejaRegularizacionDocumentosComponent implements OnInit {
   public formFiltro: FormGroup = new FormGroup({});
   public cedula = new FormControl('');
 
-  public estadoRegularizacion = 'PENDIENTE';
+  public estadoRegularizacion = 'PENDIENTE_APROBACION';
   /** ** @TABLA ** */
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -37,7 +37,7 @@ export class BandejaRegularizacionDocumentosComponent implements OnInit {
     this.p.pageSize = 10;
     this.p.currentPage = 0;
     if (localStorage.getItem(environment.rolKey) == '4') {
-      this.estadoRegularizacion = 'PENDIENTE';
+      //this.estadoRegularizacion = 'PENDIENTE';
     }
     this.loadExcepciones(null);
   }
