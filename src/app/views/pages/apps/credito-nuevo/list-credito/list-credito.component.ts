@@ -146,7 +146,6 @@ export class ListCreditoComponent implements OnInit {
     this.sof.consultarEstadoUbicacionCS().subscribe( (data: any) =>{
       this.catEstadoUbicacionGarantia = !data.existeError ? data.catalogo : {nombre: 'Error al cargar catalogo'};
     });
-
   }
   public irNegociacion(){
     this.router.navigate(['negociacion/gestion-negociacion']);    

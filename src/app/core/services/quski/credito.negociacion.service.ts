@@ -395,5 +395,22 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
+  public findCompromisoByIdentificacion(numeroOperacion: string) {
+    this.setParameter();
+    const serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/findCompromisoByIdentificacion";
+    this.params = new HttpParams();
+    this.params = this.params.set('rol', localStorage.getItem(environment.rolName));
+    if(numeroOperacion){
+      this.params = this.params.set('numeroOperacion', numeroOperacion);
+    }
+
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
 
 }
