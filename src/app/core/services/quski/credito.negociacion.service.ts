@@ -395,13 +395,16 @@ export class CreditoNegociacionService extends BaseService {
       )
     );
   }
-  public findCompromisoByIdentificacion(numeroOperacion: string) {
+  public findCompromisoByNumeroOperacionEstado(numeroOperacion: string, estado: string) {
     this.setParameter();
-    const serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/findCompromisoByIdentificacion";
+    const serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/findCompromisoByNumeroOperacionEstado";
     this.params = new HttpParams();
-    this.params = this.params.set('rol', localStorage.getItem(environment.rolName));
+    //this.params = this.params.set('rol', localStorage.getItem(environment.rolName));
     if(numeroOperacion){
       this.params = this.params.set('numeroOperacion', numeroOperacion);
+    }
+    if(estado){
+      this.params = this.params.set('estado', estado);
     }
 
     this.options = { headers: this.headers, params: this.params };

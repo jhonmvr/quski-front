@@ -44,14 +44,13 @@ export class BandejaCompromisoComponent implements OnInit {
     this.cre.setParameter();
     this.usuario = atob(localStorage.getItem(environment.userKey));
     this.busqueda();
-    this.dataSource = null;
     this.subheaderService.setTitle("BANDEJA COMPROMISOS DE PAGO");
   }
 
-  private busqueda() {
-    this.cre.findCompromisoByIdentificacion(this.numeroOperacion.value).subscribe((data: any) => {
+  public busqueda() {
+    this.cre.findCompromisoByNumeroOperacionEstado(this.numeroOperacion.value, 'PENDIENTE_COMPROMISO').subscribe((data: any) => {
       if (data && data.entidad) {
-        const wrap : {procesos: TbQoProceso[], comps: TbQoCompromisoPago[]} = data.entidad;
+        const wrap : {procesos: TbQoProceso[], compromisos: TbQoCompromisoPago[]} = data.entidad;
         let sources : {
           codigo : string ,
           numeroOperacion : string ,
@@ -61,19 +60,18 @@ export class BandejaCompromisoComponent implements OnInit {
         }[] = new Array();
         if (wrap.procesos) {
           wrap.procesos.forEach(e => {
-            const comp = wrap.comps.find((item) => item.id === e.idReferencia)
+            const comp = wrap.compromisos.find((item) => item.id === e.idReferencia)
             let source = {
-              codigo : comp.codigo ,
-              numeroOperacion : comp.numeroOperacion ,
-              procesoCompromiso : e.proceso ,
-              usuarioSolicitud : comp.usuarioSolicitud ,
+              codigo : comp.codigo,
+              numeroOperacion : comp.numeroOperacion,
+              procesoCompromiso : e.proceso.replace(/_/g, ' '),
+              usuarioSolicitud : comp.usuarioSolicitud,
               nombreCliente : comp.nombreCliente
             } 
-            console.log(source);
             sources.push(source)
-
           });
-          this.dataSource.data = sources;
+          console.log(sources);
+          this.dataSource = new MatTableDataSource<any>(sources) ;
         }
       }
     });
@@ -89,7 +87,7 @@ export class BandejaCompromisoComponent implements OnInit {
   }
 
 
-  public abrirSolicitud(row ){
+  public abrirSolicitud(row){
     let mensaje = 'Resolver solicitud de compromiso de pago'
     const dialogRef = this.dialog.open(ConfirmarAccionComponent, {
         width: "800px",
@@ -98,11 +96,12 @@ export class BandejaCompromisoComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(r => {
         if(r){
-          if(row.id != null){
-            if(row.procesoCompromiso == 'COMPROMISO_PAGO'){
-              this.router.navigate(['aprobador/compromiso-pago/create/request/', row.numeroOperacion]);    
-            }else{
-              this.router.navigate(['aprobador/compromiso-pago/update/request/', row.numeroOperacion]);    
+          if(row.numeroOperacion != null){
+            if(row.procesoCompromiso == 'COMPROMISO PAGO'){
+              this.router.navigate(['aprobador/compromiso-pago/create/approval/', row.numeroOperacion]);    
+            }
+            if(row.procesoCompromiso == 'CAMBIO COMPROMISO PAGO'){
+              this.router.navigate(['aprobador/compromiso-pago/create/approval/', row.numeroOperacion]);    
             }
           } else{
             this.sinNoticeService.setNotice('ERROR, CONTACTE SOPORTE','error');
