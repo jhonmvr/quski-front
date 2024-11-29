@@ -157,6 +157,13 @@ export class ListCreditoComponent implements OnInit {
   public irDetalle(row: any){
     this.router.navigate(['credito-nuevo/detalle-credito/', row.numeroOperacion]);    
   }
+  public irCompromisoPago(row: any, creacion: boolean){
+    if(creacion){
+      this.router.navigate(['aprobador/compromiso-pago/create/request/', row.numeroOperacion]);    
+    }else{
+      this.router.navigate(['aprobador/compromiso-pago/update/request/', row.numeroOperacion]);    
+    }
+  }
   public irNovar(row: any){
     
     this.router.navigate(['negociacion/crear-novacion/CRE', row.numeroOperacion]);    
@@ -192,6 +199,8 @@ export class ListCreditoComponent implements OnInit {
       e.numeroOperacionMadre = e.numeroOperacionMadre ? e.numeroOperacionMadre : 'No aplica';
       e.tablaArmotizacion = e.codigoTipoTablaArmotizacionQuski;
       e.estado = this.catEstado ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion) ? this.catEstado.find(c => c.codigo == e.codigoEstadoOperacion).nombre : e.codigoEstadoOperacion : e.codigoEstadoOperacion;
+      e.bloqueo = e.datosBloqueo && e.datosBloqueo.codigoMotivoBloqueo ? e.datosBloqueo.codigoMotivoBloqueo : ''
+      console.log(e.bloqueo);
       e.estadoProcesoGarantia = this.catEstadoProcesoGarantia ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia) ? this.catEstadoProcesoGarantia.find(c => c.codigo == e.codigoEstadoProcesoGarantia).nombre : e.codigoEstadoProcesoGarantia: e.codigoEstadoProcesoGarantia;
       e.estadoUbicacionGrantia = this.catEstadoUbicacionGarantia? this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGrantia) ? this.catEstadoUbicacionGarantia.find(c => c.codigo == e.codigoEstadoUbicacionGarantia).nombre : e.codigoEstadoUbicacionGarantia: e.codigoEstadoUbicacionGarantia;
     

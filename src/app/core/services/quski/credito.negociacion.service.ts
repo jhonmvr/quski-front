@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { BaseService } from '../base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TbQoCreditoNegociacion } from '../../model/quski/TbQoCreditoNegociacion';
+import { environment } from '../../../../../src/environments/environment';
 
 
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ReNoticeService } from '../re-notice.service';
+import { TbQoCompromisoPago } from '../../model/quski/TbQoCompromisoPago';
 @Injectable({
   providedIn: 'root'
 })
@@ -289,6 +291,44 @@ export class CreditoNegociacionService extends BaseService {
     this.params = new HttpParams().set('numeroOperacion', numeroOperacion);
     this.options = { headers: this.headers, params: this.params };
     return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  public traerCreditoCompromiso(numeroOperacion: string, procesoCompromiso: string) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'traerCreditoCompromiso';
+    this.params = new HttpParams()
+      .set('numeroOperacion', numeroOperacion)
+      .set('procesoCompromiso', procesoCompromiso)
+      .set('usuario', atob(localStorage.getItem(environment.userKey) ));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.get(serviceUrl, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  public solicitarCompromiso(compromiso: TbQoCompromisoPago, proceso: string) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'solicitarCompromiso';
+    this.params = new HttpParams();
+    this.params = this.params.set('proceso',proceso).set('usuario', localStorage.getItem("reUser")).set('nombreAsesor', localStorage.getItem("nombre"));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, compromiso, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
+  public resolucionCompromiso(compromiso: TbQoCompromisoPago, proceso: string, aprobado: string) {
+    const serviceUrl = this.appResourcesUrl + this.urlRest + 'resolucionCompromiso';
+    this.params = new HttpParams();
+    this.params = this.params.set('proceso',proceso).set('aprobado',aprobado).set('usuario', localStorage.getItem("reUser")).set('nombreAsesor', localStorage.getItem("nombre"));
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl, compromiso, this.options).pipe(
       tap( // Log the result or error
         (data: any) => data,
         error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }

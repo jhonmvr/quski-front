@@ -8,6 +8,7 @@ import { Component, Input } from '@angular/core';
 export class HabilitanteOperacionComponent {
   @Input() detalle: any;
   @Input() referencia: any;
+  @Input() estado: any;
   @Input() operacionMadre: any;
   @Input() cedula: string; // Nuevo Input para manejar el número de cédula
 

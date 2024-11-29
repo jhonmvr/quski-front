@@ -33,30 +33,6 @@
     vertical-align: baseline;
 }
 
-.mat-header-cell {
-    flex-direction: column;
-    justify-content: center;
-    font-size: smaller;
-    text-align: center;
-}
-
-.tableOpciones {
-    overflow: auto;
-}
-
-.mat-cell {
-    text-align: center;
-    justify-content: center;
-    font-size: smaller;
-}
-
-.mat-header-cell,
-.mat-footer-cell,
-.mat-cell {
-    min-width: 80px;
-    box-sizing: border-box;
-}
-
 .mat-button,
 .mat-flat-button,
 .mat-icon-button,
@@ -65,86 +41,12 @@
     height: fit-content !important; //quita fondo cuando sobrepone
 }
 
-#table {
-    overflow: auto;
+.example-container>* {
     width: 100%;
 }
 
-.mat-column-accion {
-    flex: 0 0 200px;
-    text-align: justify;
-}
-
-.mat-column-nombreCliente {
-    flex: 0 0 100px;
-}
-
-.mat-column-identificacion {
-    flex: 0 0 75px;
-}
-
-.mat-column-numeroOperacionMadre {
-    flex: 0 0 90px;
-}
-
-.mat-column-numeroOperacion {
-    flex: 0 0 75px;
-}
-
-.mat-column-fechaSolicitud {
-    flex: 0 0 75px;
-}
-
-.mat-column-fechaAprobacion {
-    flex: 0 0 75px;
-}
-
-.mat-column-estado {
-    flex: 0 0 75px;
-}
-
-.mat-column-tipoCredito {
-    flex: 0 0 75px;
-}
-
-.mat-column-tablaArmotizacion {
-    flex: 0 0 75px;
-}
-
-.mat-column-plazo {
-    flex: 0 0 75px;
-}
-
-.mat-column-impago {
-    flex: 0 0 75px;
-}
-
-.mat-column-retanqueo {
-    flex: 0 0 75px;
-}
-
-.mat-column-coberturaInicial {
-    flex: 0 0 75px;
-}
-
-.mat-column-coberturaActual {
-    flex: 0 0 75px;
-}
-
-.mat-column-EstadoProcesoGarantia {
-    flex: 0 0 75px;
-}
-
-.mat-column-EstadoUbicacionGrantia {
-    flex: 0 0 75px;
-}
-
-.mat-column-esMigrado {
-    flex: 0 0 75px;
-}
-
-.mat-column-numeroCuotas {
-    flex: 0 0 75px;
+table {
+    width: 100%;
 }
 
 .white-icon {
@@ -172,9 +74,6 @@
 .orange-icon {
     color: #ff9900;
 }
-.pink-icon {
-    color: #FF69B4;
-}
 
 
 /* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
@@ -191,10 +90,11 @@
 }
 
 .warning {
-    color: white;
-    background-color: #cc8b00;
+    color: black;
+    background-color: #ffff00;
     border-color: white;
     font-weight: 400;
+    font-size: 14px;
 }
 
 .error-snackbar {
@@ -202,4 +102,48 @@
     background-color: red;
     border-color: white;
     font-weight: 400;
+}
+
+.mat-header-cell {
+    flex-direction: column;
+    justify-content: center;
+    //font-size: smaller;
+}
+
+.mat-cell {
+    text-align: center;
+    justify-content: center;
+    //font-size: smaller;
+}
+
+.mat-footer-cell {
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+    //font-size: smaller;
+}
+
+.row {
+    padding-bottom: 2.5px;
+    padding-top: 2.5px;
+}
+
+.info {
+    color: #000000;
+    opacity: 0.4;
+}
+
+.valorNeto {
+    color: #ff0000;
+}
+.centrado {
+    display: flex;
+    justify-content: space-around; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    text-align: space-around;
+  }
+  .botones-acciones {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
 }

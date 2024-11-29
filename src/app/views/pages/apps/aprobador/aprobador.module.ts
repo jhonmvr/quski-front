@@ -56,6 +56,7 @@ import { ExcepcionesRiesgoComponent } from './excepciones-riesgo/excepciones-rie
 import { AprobacionCreditoNuevoComponent } from './aprobacion-credito-nuevo/aprobacion-credito-nuevo.component';
 import { AprobarBloqueoFondosComponent } from './aprobar-bloqueo-fondos/aprobar-bloqueo-fondos.component';
 import { AprobarPagosComponent } from './aprobar-pagos/aprobar-pagos.component';
+import { AprobacionCompromisoPagoComponent } from './aprobacion-compromiso-pago/aprobacion-compromiso-pago.component';
 
 
 
@@ -108,7 +109,10 @@ const routes: Routes = [
 				path: 'gestion-credito/aprobar-pagos/:id',
 				component: AprobarPagosComponent
 			},
-
+			{
+				path: 'compromiso-pago/:proceso/:tipo/:numeroOperacion',
+				component: AprobacionCompromisoPagoComponent
+			},
 
     ]
   }
@@ -177,7 +181,8 @@ const routes: Routes = [
     ExcepcionesCoberturaComponent,
     ExcepcionesRiesgoComponent,
     AprobarBloqueoFondosComponent,
-    AprobarPagosComponent
+    AprobarPagosComponent,
+    AprobacionCompromisoPagoComponent
 
   ],
   entryComponents: [
