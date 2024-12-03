@@ -288,8 +288,8 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     let exs =  null
     let mensaje = "Solicitar la aprobacion del credito: " + this.credit.credito.codigo;
 
-    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor != 'SIN EXCEPCION'){
-      mensaje = "Solicitar regularización de documentos antes de solicitar la aprobación del credito: " + this.credit.credito.codigo;
+    
+      
       const excepcionOperativaArray = this.excepcionOperativa.value; // Obtenemos el array
       let tipoExcepcion = "";
       if (Array.isArray(excepcionOperativaArray)) { // Verificamos que sea un array
@@ -298,6 +298,8 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       } else {
           console.log("excepcionOperativa.value no es un array válido:", tipoExcepcion);
       }
+    if(tipoExcepcion != 'SIN_EXCEPCION'){
+      mensaje = "Solicitar regularización de documentos antes de solicitar la aprobación del credito: " + this.credit.credito.codigo;
       exs = {
         idNegociacion: this.credit.credito.tbQoNegociacion,
         codigoOperacion: this.credit.credito.codigo,
