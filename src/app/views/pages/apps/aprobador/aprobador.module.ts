@@ -58,6 +58,7 @@ import { AprobarBloqueoFondosComponent } from './aprobar-bloqueo-fondos/aprobar-
 import { AprobarPagosComponent } from './aprobar-pagos/aprobar-pagos.component';
 import { AprobacionCompromisoPagoComponent } from './aprobacion-compromiso-pago/aprobacion-compromiso-pago.component';
 import { BandejaCompromisoComponent } from './bandeja-compromiso/bandeja-compromiso.component';
+import { ReporteCompromisoPagoComponent } from './reporte-compromiso-pago/reporte-compromiso-pago.component';
 
 
 
@@ -117,6 +118,9 @@ const routes: Routes = [
 			{
 				path: 'compromiso-pago/:proceso/:tipo/:numeroOperacion',
 				component: AprobacionCompromisoPagoComponent
+			},{
+				path: 'reporte-compromiso-pago',
+				component: ReporteCompromisoPagoComponent
 			},
 
     ]
@@ -180,6 +184,7 @@ const routes: Routes = [
     AprobadorComponent,
     BandejaExcepcionesComponent,
     BandejaCompromisoComponent,
+    ReporteCompromisoPagoComponent,
     BandejaAprobadorComponent,
     AprobacionCreditoNuevoComponent,
     AprobacionNovacionComponent,

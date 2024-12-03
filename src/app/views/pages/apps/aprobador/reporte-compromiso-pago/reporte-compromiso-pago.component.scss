@@ -1,0 +1,32 @@
+table {
+    overflow: auto;
+    width: 100%;
+}
+
+.mat-cell {
+    font-size: x-small;
+}
+
+.centrado {
+    display: flex;
+    justify-content: space-around;
+    /* Centra horizontalmente */
+    align-items: center;
+    /* Centra verticalmente */
+    text-align: space-around;
+}
+
+.table-container {
+    //width: 100%;
+    overflow-x: auto;
+}
+mat-table {
+    width: 100%;
+    table-layout: fixed; /* Esto asegura que las columnas tengan un ancho fijo */
+}
+
+mat-header-cell, mat-cell {
+    word-wrap: break-word; /* Ajusta las palabras largas */
+    white-space: normal;   /* Permite que el texto se ajuste en varias líneas */
+    max-width: 200px;      /* Establece un ancho máximo para las celdas */
+}
