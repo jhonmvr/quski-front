@@ -91,14 +91,12 @@
                 </button>
             </div>
             <div class="col-1">
-                <button mat-raised-button (click)="descargarBoton()">
-                    <span>Descargar</span>
-                </button>
+                <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'proceso', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Descargar</button>
             </div>
         </div>
         <div class="row mt-5">
             <div class="table-container">
-                <mat-table #table class="mat-elevation-z8" [dataSource]="dataSource">                
+                <mat-table matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSource" #exporter="matTableExporter">                
                     <ng-container matColumnDef="codigo">
                         <mat-header-cell *matHeaderCellDef> Codigo </mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{row.codigo}} </mat-cell>
@@ -166,7 +164,7 @@
                     <mat-header-row *matHeaderRowDef="['codigo','codigoOperacion','tipoCompromiso','estadoCompromiso','fechaCompromisoPago','usuarioSolicitud','usuarioAprobador','observacionSolicitud','observacionAprobador','fechaSolicitud','fechaAprobador','numeroOperacion','fechaCompromisoPagoAnterior','nombreCliente','identificacionCliente','proceso']"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: ['codigo','codigoOperacion','tipoCompromiso','estadoCompromiso','fechaCompromisoPago','usuarioSolicitud','usuarioAprobador','observacionSolicitud','observacionAprobador','fechaSolicitud','fechaAprobador','numeroOperacion','fechaCompromisoPagoAnterior','nombreCliente','identificacionCliente','proceso']"></mat-row>
                 </mat-table>
-                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20, 50]"
+                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20, 50, 100, 200]"
                     [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage"
                     (page)="buscarBoton(this.paginator.pageIndex, this.paginator.pageSize)">
                 </mat-paginator>

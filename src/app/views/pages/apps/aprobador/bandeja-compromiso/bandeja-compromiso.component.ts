@@ -101,7 +101,7 @@ export class BandejaCompromisoComponent implements OnInit {
               this.router.navigate(['aprobador/compromiso-pago/create/approval/', row.numeroOperacion]);    
             }
             if(row.procesoCompromiso == 'CAMBIO COMPROMISO PAGO'){
-              this.router.navigate(['aprobador/compromiso-pago/create/approval/', row.numeroOperacion]);    
+              this.router.navigate(['aprobador/compromiso-pago/update/approval/', row.numeroOperacion]);    
             }
           } else{
             this.sinNoticeService.setNotice('ERROR, CONTACTE SOPORTE','error');

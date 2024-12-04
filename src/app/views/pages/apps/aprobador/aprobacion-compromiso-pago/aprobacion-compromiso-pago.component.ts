@@ -82,6 +82,7 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
   public riesgos;
   public variablesInternas
   public datosBloqueo = new MatTableDataSource<any>();
+  public datosCuotas = new MatTableDataSource<any>();
   public formInformacion: FormGroup = new FormGroup({});
   public formCompromiso: FormGroup = new FormGroup({});
 
@@ -113,9 +114,6 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
   public retanqueo = new FormControl();
   public coberturaActual = new FormControl();
   public coberturaInicial = new FormControl();
-  public diasMora = new FormControl();
-  public estadoUbicacion = new FormControl();
-  public estadoProceso = new FormControl();
   public descripcionBloqueo = new FormControl();
   public esMigrado = new FormControl();
   public numeroCuotas = new FormControl();
@@ -132,8 +130,6 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
   public diasMoraDiaHoy = new FormControl();
   public tablaAmortizacionMupi = new FormControl();
   public fechaAudiencia = new FormControl();
-  public fechaCompromisoSoft = new FormControl();
-
 
   constructor(
     private cre: CreditoNegociacionService,
@@ -181,9 +177,6 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
     this.formInformacion.addControl("retanqueo", this.retanqueo);
     this.formInformacion.addControl("coberturaActual", this.coberturaActual);
     this.formInformacion.addControl("coberturaInicial", this.coberturaInicial);
-    this.formInformacion.addControl("diasMora", this.diasMora);
-    this.formInformacion.addControl("estadoUbicacion", this.estadoUbicacion);
-    this.formInformacion.addControl("estadoProceso", this.estadoProceso);
     this.formInformacion.addControl("descripcionBloqueo", this.descripcionBloqueo);
     this.formInformacion.addControl("esMigrado", this.esMigrado);
     this.formInformacion.addControl("numeroCuotas", this.numeroCuotas);
@@ -192,10 +185,9 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
     this.formInformacion.addControl("diasMoraDiaHoy", this.diasMoraDiaHoy);
     this.formInformacion.addControl("tablaAmortizacionMupi", this.tablaAmortizacionMupi);
     this.formInformacion.addControl("fechaAudiencia", this.fechaAudiencia);
-    this.formInformacion.addControl("fechaCompromisoSoft", this.fechaCompromisoSoft);
+    this.formInformacion.addControl("fechaCompromisoActa", this.fechaCompromisoActa);
 
     this.formCompromiso.addControl("tipoCompromisoPago", this.tipoCompromisoPago);
-    this.formCompromiso.addControl("fechaCompromisoActa", this.fechaCompromisoActa);
     this.formCompromiso.addControl("fechaCompromiso", this.fechaCompromiso);
 
     this.formCompromiso.addControl("observacionSolicitud", this.observacionSolicitud);
@@ -234,7 +226,6 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
       this.cre.traerCreditoCompromiso(this.compromisoNumeroOperacion, this.compromisoProcesoTracking).subscribe((data: any) => {
         if (data.entidad) {
           this.wrapper = data.entidad;
-          console.log(this.wrapper)
           this.cargarCampos();
           this.validarProceso(this.compromiso, this.compromisoActividad);
         }
@@ -272,22 +263,25 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
     this.coberturaActual.setValue(this.wrapper.credito.coberturaActual);
     this.coberturaInicial.setValue(this.wrapper.credito.coberturaInicial);
     this.numeroCuotas.setValue(this.wrapper.credito.numeroCuotas);
-    this.diasMora.setValue(this.wrapper.credito.diasMora);
     this.plazo.setValue(this.wrapper.credito.plazo);
-    this.estadoUbicacion.setValue(this.wrapper.credito.codigoEstadoUbicacionGrantia);
-    this.estadoProceso.setValue(this.wrapper.credito.codigoEstadoProcesoGarantia);
     this.saldoCapital.setValue(this.wrapper.pagMed.saldoCapital)
     this.cuotasPagadas.setValue('sin definicion')
     this.diasMoraDiaHoy.setValue(this.wrapper.pagMed.diasMora)
     this.tablaAmortizacionMupi.setValue('sin definicion')
-    this.fechaAudiencia.setValue(this.wrapper.pagMed.fechaMediacion ? new Date(this.wrapper.pagMed.fechaMediacion).toLocaleDateString('es-ES') : '')
-    this.fechaCompromisoSoft.setValue(this.wrapper.pagMed.fechaCompromisoPago ? new Date(this.wrapper.pagMed.fechaCompromisoPago).toLocaleDateString('es-ES') : '')
-    this.datosBloqueo = new MatTableDataSource<any>();
-    this.datosBloqueo.data.push(this.wrapper.credito.datosBloqueo);
+    this.fechaAudiencia.setValue(this.wrapper.pagMed.fechaMediacion ? new Date(this.wrapper.pagMed.fechaMediacion).toISOString().split('T')[0] : '')
+    if(this.wrapper.credito && this.wrapper.credito.datosBloqueo){
+      this.datosBloqueo = new MatTableDataSource<any>();
+      this.datosBloqueo.data.push(this.wrapper.credito.datosBloqueo);
+    }
+    if(this.wrapper.pagMed && this.wrapper.pagMed.cuotasAtrasadas){
+      this.datosCuotas = new MatTableDataSource<any>(this.wrapper.pagMed.cuotasAtrasadas);
+    }
+    
+
 
     if (this.wrapper.procesos) {
       this.proceso = this.wrapper.procesos.find((item) => item.proceso === this.compromisoProcesoTracking);
-      this.compromiso = this.wrapper.compromisos.find((item) => item.id === this.proceso.idReferencia)
+      this.compromiso = this.wrapper.compromisos.find((item) => item.id === this.proceso.idReferencia);
     }
     this.riesgoAcumulado(this.wrapper.cliente.identificacion);
     this.simularOpciones()
@@ -303,16 +297,18 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
     this.estadoProcesoBPM.setValue(this.compromiso ? this.compromiso.estadoCompromiso.replace(/_/g, ' ') : 'Sin Asignar')
     /**  @CAMPOS_UTILES  */
     this.tipoCompromisoPago.setValue(this.compromiso.tipoCompromiso);
-
     this.fechaCompromiso.setValue(this.compromiso.fechaCompromisoPago ? new Date(this.compromiso.fechaCompromisoPago) : null);
-    this.fechaCompromisoActa.setValue(this.compromiso.fechaCompromisoPagoAnterior ? new Date(this.compromiso.fechaCompromisoPagoAnterior) : null);
+    if (this.compromiso.estadoCompromiso === 'CREADO') {
+      this.fechaCompromisoActa.setValue(this.wrapper.pagMed.fechaCompromisoPago ? new Date(this.wrapper.pagMed.fechaCompromisoPago).toISOString().split('T')[0] : null)
+    } else {
+      this.fechaCompromisoActa.setValue(this.compromiso.fechaCompromisoPagoAnterior ? new Date(this.compromiso.fechaCompromisoPagoAnterior).toISOString().split('T')[0] : null);
+    }
     this.observacionSolicitud.setValue(this.compromiso.observacionSolicitud);
     this.observacionAprobador.setValue(this.compromiso.observacionAprobador);
 
     this.sinNotSer.setNotice('CREDITO CARGADO CORRECTAMENTE', 'success');
   }
   solicitarCompromiso(): void {
-    console.log(this.tipoCompromisoPago.value);
     if (!this.tipoCompromisoPago.value) {
       this.sinNotSer.setNotice('ESCOJA UN TIPO DE COMPROMISO', 'warning');
       return;
@@ -323,10 +319,6 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
     }
     if (!this.observacionSolicitud.value) {
       this.sinNotSer.setNotice('INGRESE LA OBSERVACION DE LA SOLICITUD', 'warning');
-      return;
-    }
-    if (!this.fechaCompromisoActa.value && this.compromisoTipo == 'approval') {
-      this.sinNotSer.setNotice('INGRESE LA FECHA DE COMPROMISO DE PAGO DEL ACTA', 'warning');
       return;
     }
 
@@ -372,14 +364,15 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
     dialogRef.afterClosed().subscribe(r => {
       if (r) {
         this.compromiso.observacionAprobador = this.observacionAprobador.value
-
         this.cre.resolucionCompromiso(this.compromiso, this.compromisoProcesoTracking, aprobado).subscribe((data: any) => {
           if (!data.entidad) {
             this.sinNotSer.setNotice('ERROR RESOLVIENDO LA SOLICITUD: ' + data.entidad, 'error');
             return
           }
           this.sinNotSer.setNotice('SOLICITUD RESUELTA CORRECTAMENTE', 'success');
-          this.router.navigate(['credito-nuevo/lista-credito']) // CAMBIAR A LA BANDEJA DEL APROBADOR
+          this.router.navigate(['aprobador/bandeja-compromiso']) 
+        },error =>{
+          console.log('error: ',error)
         });
       } else {
         this.sinNotSer.setNotice('SE CANCELO LA  ACCION', 'warning');
@@ -438,64 +431,67 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
   }
   onlyOdds = (d: Date): boolean => {
     const date = d.getDate();
-    return date < 27;
+    return date < 26;
   }
   private validarProceso(compromiso: TbQoCompromisoPago, actividad: string): void {
     switch (actividad) {
       case 'SOLICITUD COMPROMISO PAGO':
+        if (this.usuario != compromiso.usuarioSolicitud) {
+          this.salirDeGestion('El proceso de compromiso de pago ya fue iniciado por ' + compromiso.usuarioSolicitud, 'Proceso Invalido');
+        }
         if (['PENDIENTE_COMPROMISO', 'APROBADO', 'RECHAZADO'].includes(compromiso.estadoCompromiso)) {
           this.formCompromiso.disable();
         } else if (compromiso.estadoCompromiso === 'CREADO') {
           this.formCompromiso.enable();
           this.observacionAprobador.disable();
+          this.mostrarBotonSolicitar = true;
+        } else {
+          this.salirDeGestion('El proceso en estado invalido.', 'Proceso Invalido');
         }
-        if (this.usuario != compromiso.usuarioSolicitud) {
-          console.log(compromiso)
-          this.salirDeGestion('El proceso de compromiso de pago ya fue iniciado por ' + compromiso.usuarioSolicitud, 'Proceso Invalido');
-        }
-        // Mostrar/ocultar botones según el estado
-        this.mostrarBotonSolicitar = compromiso.estadoCompromiso === 'CREADO';
-        //this.mostrarBotonesGestion = ['PENDIENTE', 'APROBADO', 'RECHAZADO'].includes(compromiso.estadoCompromiso);
         break;
       case 'APROBACION COMPROMISO PAGO':
-        this.mostrarObsAprobador = true;
-        if (['CREADO', 'APROBADO', 'RECHAZADO'].includes(compromiso.estadoCompromiso)) {
-          this.salirDeGestion('El proceso de compromiso de pago ya revisado por ' + compromiso.usuarioAprobador, 'Proceso Invalido');
+        if (['CREADO'].includes(compromiso.estadoCompromiso)) {
+          this.salirDeGestion('El proceso de compromiso aun esta en creacion.', 'Proceso Invalido');
+        } else if (['APROBADO', 'RECHAZADO'].includes(compromiso.estadoCompromiso)) {
+          this.salirDeGestion('El proceso de compromiso de pago ya fue revisado por ' + compromiso.usuarioAprobador, 'Proceso Invalido');
         } else if (compromiso.estadoCompromiso === 'PENDIENTE_COMPROMISO') {
           this.formCompromiso.disable();
           this.observacionAprobador.enable();
+          this.mostrarObsAprobador = true;
+          this.mostrarBotonesGestion = true;
+        } else {
+          this.salirDeGestion('El proceso en estado invalido.', 'Proceso Invalido');
         }
-        // Mostrar/ocultar botones según el estado
-        this.mostrarBotonesGestion = compromiso.estadoCompromiso === 'PENDIENTE_COMPROMISO';
         break;
       case 'SOLICITUD CAMBIO COMPROMISO':
         this.mostrarInputActa = true;
+        if (this.usuario != compromiso.usuarioSolicitud) {
+          this.salirDeGestion('El proceso de compromiso de pago ya fue iniciado por ' + compromiso.usuarioSolicitud, 'Proceso Invalido');
+        }
         if (['PENDIENTE_COMPROMISO', 'APROBADO', 'RECHAZADO'].includes(compromiso.estadoCompromiso)) {
           this.formCompromiso.disable();
         } else if (compromiso.estadoCompromiso === 'CREADO') {
           this.formCompromiso.enable();
           this.observacionAprobador.disable();
+          this.mostrarBotonSolicitar = true
+        } else {
+          this.salirDeGestion('El proceso en estado invalido.', 'Proceso Invalido');
         }
-        if (this.usuario != compromiso.usuarioSolicitud) {
-          console.log(compromiso)
-          this.salirDeGestion('El proceso de compromiso de pago ya fue iniciado por ' + compromiso.usuarioSolicitud, 'Proceso Invalido');
-        }
-        // Mostrar/ocultar botones según el estado
-        this.mostrarBotonSolicitar = compromiso.estadoCompromiso === 'CREADO';
-
-        //this.mostrarBotonesGestion = ['PENDIENTE', 'APROBADO', 'RECHAZADO'].includes(compromiso.estadoCompromiso);
         break;
       case 'APROBACION CAMBIO COMPROMISO':
         this.mostrarInputActa = true;
         this.mostrarObsAprobador = true;
-        if (['CREADO', 'APROBADO', 'RECHAZADO'].includes(compromiso.estadoCompromiso)) {
-          this.salirDeGestion('El proceso de compromiso de pago ya revisado por ' + compromiso.usuarioAprobador, 'Proceso Invalido');
+        if (['CREADO'].includes(compromiso.estadoCompromiso)) {
+          this.salirDeGestion('El proceso de compromiso aun esta en creacion.', 'Proceso Invalido');
+        } else if (['APROBADO', 'RECHAZADO'].includes(compromiso.estadoCompromiso)) {
+          this.salirDeGestion('El proceso de compromiso de pago ya fue revisado por ' + compromiso.usuarioAprobador, 'Proceso Invalido');
         } else if (compromiso.estadoCompromiso === 'PENDIENTE_COMPROMISO') {
           this.formCompromiso.disable();
           this.observacionAprobador.enable();
+          this.mostrarBotonesGestion = true;
+        } else {
+          this.salirDeGestion('El proceso en estado invalido.', 'Proceso Invalido');
         }
-        // Mostrar/ocultar botones según el estado
-        this.mostrarBotonesGestion = compromiso.estadoCompromiso === 'PENDIENTE_COMPROMISO';
         break;
 
       default:

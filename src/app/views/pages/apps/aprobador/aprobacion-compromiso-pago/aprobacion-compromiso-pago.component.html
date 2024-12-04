@@ -149,22 +149,6 @@
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="diasMora" placeholder="Dias Mora" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="estadoUbicacion"
-                                placeholder="Estado Ubicacion De Garantia" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="estadoProceso" placeholder="Estado Proceso De Garantia" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="esMigrado" placeholder="Es Migrado" />
                         </mat-form-field>
                     </div>
@@ -175,18 +159,7 @@
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="cuotasPagadas" placeholder="Cuotas Pagadas" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
                             <input matInput [formControl]="diasMoraDiaHoy" placeholder="Dias Mora al Dia Hoy" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="tablaAmortizacionMupi"
-                                placeholder="Tabla de Amortizacion Mupi" />
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -194,12 +167,39 @@
                             <input matInput [formControl]="fechaAudiencia" placeholder="Fecha Audiencia" />
                         </mat-form-field>
                     </div>
-                    <div class="col-4">
-                        <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaCompromisoSoft" placeholder="Fecha Compromiso Actual" />
-                        </mat-form-field>
+                </div>
+                <div class="row centrado mt-3" *ngIf="wrapper && wrapper.pagMed && wrapper.pagMed.cuotasAtrasadas">
+                    <div class="col-2">
+                        <h4>Cuotas Atrasadas</h4>
                     </div>
-
+                </div>
+                <div class="row centrado" *ngIf="wrapper && wrapper.pagMed && wrapper.pagMed.cuotasAtrasadas">
+                    <div class="col-10">
+                        <mat-table #table class="mat-elevation-z8" [dataSource]="datosCuotas">
+                            <ng-container matColumnDef="numeroDividendo">
+                                <mat-header-cell *matHeaderCellDef>No Dividendo</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.numeroDividendo}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="valorAPagar">
+                                <mat-header-cell *matHeaderCellDef>Valor a Pagar</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.valorAPagar}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="valorPagado">
+                                <mat-header-cell *matHeaderCellDef>Valor Pagado</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.valorPagado}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="fechaFinDividendo">
+                                <mat-header-cell *matHeaderCellDef>Fecha Fin Dividendo</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.fechaFinDividendo}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="fechaUltimoPago">
+                                <mat-header-cell *matHeaderCellDef>Fecha Ultimo Pago</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.fechaUltimoPago}}</mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="['numeroDividendo','valorAPagar','valorPagado','fechaFinDividendo','fechaUltimoPago']"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: ['numeroDividendo','valorAPagar','valorPagado','fechaFinDividendo','fechaUltimoPago']"></mat-row>
+                        </mat-table>
+                    </div>
                 </div>
                 <div class="row centrado mt-3" *ngIf="wrapper && wrapper.credito && wrapper.credito.datosBloqueo">
                     <div class="col-1">
@@ -267,11 +267,7 @@
                     </div>
                     <div class="col-md-4" *ngIf="mostrarInputActa">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input [matDatepickerFilter]="onlyOdds" [min]="diasMin" [max]="diasMax" matInput
-                                #inputFechaCuota [matDatepicker]="pickerFechaCompActa" placeholder="Fecha Compromiso Pago (Acta)"
-                                [formControl]="fechaCompromisoActa" />
-                            <mat-datepicker-toggle matSuffix [for]="pickerFechaCompActa"></mat-datepicker-toggle>
-                            <mat-datepicker #pickerFechaCompActa></mat-datepicker>
+                            <input matInput [formControl]="fechaCompromisoActa" placeholder="Fecha Compromiso Pago (Acta)"/>
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">
