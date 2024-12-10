@@ -56,6 +56,9 @@ import { ExcepcionesRiesgoComponent } from './excepciones-riesgo/excepciones-rie
 import { AprobacionCreditoNuevoComponent } from './aprobacion-credito-nuevo/aprobacion-credito-nuevo.component';
 import { AprobarBloqueoFondosComponent } from './aprobar-bloqueo-fondos/aprobar-bloqueo-fondos.component';
 import { AprobarPagosComponent } from './aprobar-pagos/aprobar-pagos.component';
+import { AprobacionCompromisoPagoComponent } from './aprobacion-compromiso-pago/aprobacion-compromiso-pago.component';
+import { BandejaCompromisoComponent } from './bandeja-compromiso/bandeja-compromiso.component';
+import { ReporteCompromisoPagoComponent } from './reporte-compromiso-pago/reporte-compromiso-pago.component';
 
 
 
@@ -75,6 +78,10 @@ const routes: Routes = [
       {
         path: 'bandeja-excepciones',
         component: BandejaExcepcionesComponent
+      },
+      {
+        path: 'bandeja-compromiso',
+        component: BandejaCompromisoComponent
       },
       {
         path: 'bandeja-aprobador',
@@ -108,7 +115,13 @@ const routes: Routes = [
 				path: 'gestion-credito/aprobar-pagos/:id',
 				component: AprobarPagosComponent
 			},
-
+			{
+				path: 'compromiso-pago/:proceso/:tipo/:numeroOperacion',
+				component: AprobacionCompromisoPagoComponent
+			},{
+				path: 'reporte-compromiso-pago',
+				component: ReporteCompromisoPagoComponent
+			},
 
     ]
   }
@@ -170,6 +183,8 @@ const routes: Routes = [
   declarations: [
     AprobadorComponent,
     BandejaExcepcionesComponent,
+    BandejaCompromisoComponent,
+    ReporteCompromisoPagoComponent,
     BandejaAprobadorComponent,
     AprobacionCreditoNuevoComponent,
     AprobacionNovacionComponent,
@@ -177,7 +192,8 @@ const routes: Routes = [
     ExcepcionesCoberturaComponent,
     ExcepcionesRiesgoComponent,
     AprobarBloqueoFondosComponent,
-    AprobarPagosComponent
+    AprobarPagosComponent,
+    AprobacionCompromisoPagoComponent
 
   ],
   entryComponents: [

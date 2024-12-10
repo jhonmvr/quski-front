@@ -92,6 +92,18 @@ export class CreditoService extends BaseService {
       )
     );
   }
+  reporteCompromiso(p: Page, value: any) {
+    this.setSearchParams(p);
+  
+    let serviceUrl = this.appResourcesUrl + "creditoNegociacionRestController/reporteCompromiso";
+    this.options = { headers: this.headers, params: this.params };
+    return this.http.post(serviceUrl,value, this.options).pipe(
+      tap( // Log the result or error
+        (data: any) => data,
+        error => { /*this.HandleError(error, new ReNoticeService(),this.dialog);*/ }
+      )
+    );
+  }
 
 
 

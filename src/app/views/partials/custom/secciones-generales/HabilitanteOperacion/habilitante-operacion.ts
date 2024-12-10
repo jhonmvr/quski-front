@@ -18,6 +18,7 @@ export class HabilitanteOperacionComponent implements OnInit, OnChanges {
 
   @Input() detalle: any;
   @Input() referencia: any;
+  @Input() estado: any;
   @Input() operacionMadre: any;
   @Input() cedula: string;
   @Input() estado: string;
