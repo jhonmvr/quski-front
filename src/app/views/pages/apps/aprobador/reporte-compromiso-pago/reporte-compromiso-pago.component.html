@@ -1,0 +1,179 @@
+<re-portlet>
+    <re-portlet-header [title]="'REPORTES DE ENTREGA DE GARANTIAS'" [class]="'kt-portlet__head--lg'">
+    </re-portlet-header>
+    <re-portlet-body>
+        <div class="row">
+            <mat-form-field class="col-3 mat-form-field-fluid">
+                <input matInput [formControl]="identificacionCliente" placeholder="Identificacion Cliente">
+            </mat-form-field>
+            <mat-form-field class="col-3 mat-form-field-fluid">
+                <input matInput [formControl]="codigo" placeholder="Código Bpm">
+            </mat-form-field>
+            <mat-form-field class="col-3 mat-form-field-fluid">
+                <input matInput [formControl]="codigoOperacion" placeholder="Código Mediacion">
+            </mat-form-field>
+            <mat-form-field class="col-3 mat-form-field-fluid">
+                <input matInput [formControl]="numeroOperacion" placeholder="Numero Operacion">
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="col-3 mat-form-field-fluid">
+                <mat-select [formControl]="proceso" placeholder="Proceso Compromiso">
+                    <mat-option> </mat-option>
+                    <mat-option *ngFor="let element of catProceso" [value]="element">{{ element }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-3 mat-form-field-fluid">
+                <mat-select [formControl]="estadoCompromiso" placeholder="Estado Compromiso">
+                    <mat-option> </mat-option>
+                    <mat-option *ngFor="let element of catEstadoProceso" [value]="element">{{ element }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-2 mat-form-field-fluid">
+                <input matInput [formControl]="tipoCompromiso" placeholder="Tipo Compromiso">
+            </mat-form-field>
+            <mat-form-field class="col-2 mat-form-field-fluid">
+                <input matInput [formControl]="usuarioSolicitud" placeholder="Usuario Solicitud">
+            </mat-form-field>
+            <mat-form-field class="col-2 mat-form-field-fluid">
+                <input matInput [formControl]="usuarioAprobador" placeholder="Usuario Aprobador">
+            </mat-form-field>
+
+        </div>
+        <div class="row">
+            <mat-form-field class="col-4 mat-form-field-fluid">
+                <input matInput [matDatepicker]="fcd" [formControl]="fechaCompromisoDesde"
+                    placeholder="Fecha Compromiso Desde">
+                <mat-datepicker-toggle matSuffix [for]="fcd"></mat-datepicker-toggle>
+                <mat-datepicker #fcd></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="col-4 mat-form-field-fluid">
+                <input matInput [matDatepicker]="fch" [formControl]="fechaCompromisoHasta"
+                    placeholder="Fecha Compromiso Hasta">
+                <mat-datepicker-toggle matSuffix [for]="fch"></mat-datepicker-toggle>
+                <mat-datepicker #fch></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="col-4 mat-form-field-fluid">
+                <input matInput [matDatepicker]="fad" [formControl]="fechaSolicitudDesde"
+                    placeholder="Fecha Solicitud Desde">
+                <mat-datepicker-toggle matSuffix [for]="fad"></mat-datepicker-toggle>
+                <mat-datepicker #fad></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="col-4 mat-form-field-fluid">
+                <input matInput [matDatepicker]="fah" [formControl]="fechaSolicitudHasta"
+                    placeholder="Fecha Solicitud Hasta">
+                <mat-datepicker-toggle matSuffix [for]="fah"></mat-datepicker-toggle>
+                <mat-datepicker #fah></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="col-4 mat-form-field-fluid">
+                <input matInput [matDatepicker]="fed" [formControl]="fechaCompromisoAnteriorDesde"
+                    placeholder="Fecha Compromiso Anterior Desde">
+                <mat-datepicker-toggle matSuffix [for]="fed"></mat-datepicker-toggle>
+                <mat-datepicker #fed></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="col-4 mat-form-field-fluid">
+                <input matInput [matDatepicker]="feh" [formControl]="fechaCompromisoAnteriorHasta"
+                    placeholder="Fecha Compromiso Anterior Hasta">
+                <mat-datepicker-toggle matSuffix [for]="feh"></mat-datepicker-toggle>
+                <mat-datepicker #feh></mat-datepicker>
+            </mat-form-field>
+
+        </div>
+        <div class="row centrado mt-2">
+            <div class="col-1">
+                <button mat-raised-button (click)="buscarBoton()">
+                    <span>Buscar</span>
+                </button>
+            </div>
+            <div class="col-1">
+                <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'proceso', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Descargar</button>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="table-container">
+                <mat-table matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSource" #exporter="matTableExporter">                
+                    <ng-container matColumnDef="codigo">
+                        <mat-header-cell *matHeaderCellDef> Codigo </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.codigo}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="codigoOperacion">
+                        <mat-header-cell *matHeaderCellDef> Codigo Operacion </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.codigoOperacion}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="tipoCompromiso">
+                        <mat-header-cell *matHeaderCellDef> Tipo Compromiso </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.tipoCompromiso ? row.tipoCompromiso.replace('_', ' ').replace('_', ' ') : ''}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="estadoCompromiso">
+                        <mat-header-cell *matHeaderCellDef> Estado Compromiso </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.estadoCompromiso ? row.estadoCompromiso.replace('_', ' ').replace('_', ' ') : ''}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaCompromisoPago">
+                        <mat-header-cell *matHeaderCellDef> Fecha Compromiso Pago </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.fechaCompromisoPago}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="usuarioSolicitud">
+                        <mat-header-cell *matHeaderCellDef> Usuario Solicitud </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.usuarioSolicitud}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="usuarioAprobador">
+                        <mat-header-cell *matHeaderCellDef> Usuario Aprobador </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.usuarioAprobador}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="observacionSolicitud">
+                        <mat-header-cell *matHeaderCellDef> Observacion Solicitud </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.observacionSolicitud}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="observacionAprobador">
+                        <mat-header-cell *matHeaderCellDef> Observacion Aprobador </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.observacionAprobador}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaSolicitud">
+                        <mat-header-cell *matHeaderCellDef> Fecha Solicitud </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.fechaSolicitud}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaAprobador">
+                        <mat-header-cell *matHeaderCellDef> Fecha Aprobador </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.fechaAprobador}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="numeroOperacion">
+                        <mat-header-cell *matHeaderCellDef> Numero Operacion </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.numeroOperacion}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="fechaCompromisoPagoAnterior">
+                        <mat-header-cell *matHeaderCellDef> Fecha Compromiso Pago Anterior </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.fechaCompromisoPagoAnterior}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="nombreCliente">
+                        <mat-header-cell *matHeaderCellDef> Nombre Cliente </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.nombreCliente}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="identificacionCliente">
+                        <mat-header-cell *matHeaderCellDef> Identificacion Cliente </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.identificacionCliente}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="proceso">
+                        <mat-header-cell *matHeaderCellDef> Proceso </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.proceso ? row.proceso.replace('_', ' ').replace('_', ' ') : ''}} </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="['codigo','codigoOperacion','tipoCompromiso','estadoCompromiso','fechaCompromisoPago','usuarioSolicitud','usuarioAprobador','observacionSolicitud','observacionAprobador','fechaSolicitud','fechaAprobador','numeroOperacion','fechaCompromisoPagoAnterior','nombreCliente','identificacionCliente','proceso']"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: ['codigo','codigoOperacion','tipoCompromiso','estadoCompromiso','fechaCompromisoPago','usuarioSolicitud','usuarioAprobador','observacionSolicitud','observacionAprobador','fechaSolicitud','fechaAprobador','numeroOperacion','fechaCompromisoPagoAnterior','nombreCliente','identificacionCliente','proceso']"></mat-row>
+                </mat-table>
+                <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20, 50, 100, 200]"
+                    [showFirstLastButtons]="true" [length]="totalResults" [pageIndex]="currentPage"
+                    (page)="buscarBoton(this.paginator.pageIndex, this.paginator.pageSize)">
+                </mat-paginator>
+
+            </div>
+            
+
+
+            
+        </div>
+    </re-portlet-body>
+</re-portlet>

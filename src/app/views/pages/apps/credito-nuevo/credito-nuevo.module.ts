@@ -58,6 +58,8 @@ import { PickDateAdapter, PICK_FORMATS } from '../../../../../app/core/util/pick
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { VentanaPrecancelacionComponent } from '../../../partials/custom/popups/ventana-precancelacion/ventana-precancelacion.component';
 import { BloquearCreditoComponent } from './bloquear-credito/bloquear-credito.component';
+import { AprobacionCompromisoPagoComponent } from '../aprobador/aprobacion-compromiso-pago/aprobacion-compromiso-pago.component';
+import { AprobadorModule } from '../aprobador/aprobador.module';
 
 
 
@@ -135,7 +137,8 @@ const routes: Routes = [
 	NgbProgressbarModule,
 	
 	MatStepperModule,
-	PartialsModule
+	PartialsModule,
+	AprobadorModule
 ],
 providers: [
 	ModuleGuard,

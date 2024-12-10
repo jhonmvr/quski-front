@@ -1,0 +1,70 @@
+<re-portlet>
+    <re-portlet-header [title]="" [class]="'kt-portlet__head--lg'">
+        <ng-container class="d-flex justify-content-around" ktPortletTools>
+            <a href="javascript:void(0);" (click)="limpiarFiltros()" matTooltip="Limpiar" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">layers_clear</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Limpiar</span>
+            </a>
+        </ng-container>
+
+
+    </re-portlet-header>
+    <re-portlet-body>
+        <div class="kt-form">
+            <form [formGroup]="formBusqueda">
+                <div class="row justify-content-center">
+                    <div class="col-3">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input [formControl]="numeroOperacion" placeholder="Numero Operacion" autocomplete="off" required matInput [required]="true" />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row mb-5 justify-content-center">
+                    <div class="col-1">
+                        <button mat-raised-button matTooltip="Buscar" (click)="busqueda()">
+              <mat-icon style="font-size: 24px;" class="orange-icon" matTooltipPosition="above">search</mat-icon>
+              <span class="orange-icon">Buscar</span>
+            </button>
+                    </div>
+                </div>
+            </form>
+            <mat-table class="mat-elevation-z8" [dataSource]="dataSource">
+                <ng-container matColumnDef="accion">
+                    <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <ng-container>
+                            <button mat-raised-button color="basic" (click)="abrirSolicitud(element)">
+                <span> Resolver </span>
+              </button>
+                        </ng-container>
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="codigo">
+                    <mat-header-cell *matHeaderCellDef>Codigo</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.codigo}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="numeroOperacion">
+                    <mat-header-cell *matHeaderCellDef>Numero Operacion</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.numeroOperacion }} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="procesoCompromiso">
+                    <mat-header-cell *matHeaderCellDef>Proceso Compromiso</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.procesoCompromiso }} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="usuarioSolicitud">
+                    <mat-header-cell *matHeaderCellDef>Usuario Solicitud</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.usuarioSolicitud}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="nombreCliente">
+                    <mat-header-cell *matHeaderCellDef>Nombre Cliente</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.nombreCliente |titlecase}} </mat-cell>
+                </ng-container>
+               
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+        <!-- END FILTERS -->
+    </re-portlet-body>
+    <re-portlet-footer></re-portlet-footer>
+</re-portlet>

@@ -1,0 +1,308 @@
+<re-portlet>
+    <re-portlet-header [title]="'Flujo Compromiso de Pago'" [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTools>
+            <a (click)="regresar()" matTooltip="Regresar al listado" style="font-size: 12px; vertical-align: middle;">
+                <mat-icon style="font-size: 24px;" matTooltipPosition="above" matTooltip="" class="orange-icon">
+                    arrow_back</mat-icon>
+                <span style="position: relative; top: -10px; margin-left: 5px;" class="orange-icon">Regresar</span>
+            </a>
+        </ng-container>
+    </re-portlet-header>
+
+    <re-portlet-body>
+        <mat-vertical-stepper #stepper (animationDone)="guardarTraking(compromisoProcesoTracking, compromiso ? (compromiso.codigo ? compromiso.codigo : null) : null,
+        ['Datos Proceso','Datos Cliente','Datos Credito','Variables crediticias','Riesgo Acumulado','Garantias','Resultado del Compromiso'],
+        stepper.selectedIndex,compromisoActividad, compromiso ? compromiso.numeroOperacion ? compromiso.numeroOperacion : null : null ) ">
+            <mat-step label="Datos Proceso">
+                <div class="row">
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="numeroOperacionMupi" placeholder="Numero Operacion Mupi" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="numeroOperacion" placeholder="Numero Operacion" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="numeroOperacionMadre" placeholder="Numero Operacion Madre" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="procesoBPM" placeholder="Proceso BPM" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="codigoBPM" placeholder="codigo BPM" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="estadoProcesoBPM" placeholder="Estado Proceso BPM" />
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Datos Cliente">
+                <div class="row">
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="nombre" placeholder="Nombre Del Cliente" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="cedula" placeholder="Identificacion" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="email" placeholder="Correo" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="telefonoMovil" placeholder="Telefono Movil" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="telefonoCasa" placeholder="Telefono Domicilio" />
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Datos Credito">
+                <div class="row">
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="fechaAprobacion" placeholder="Fecha Aprobacion"
+                                [value]="fechaAprobacion.value  | rDate" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="fechaVencimiento" placeholder="Fecha Vencimiento"
+                                [value]="fechaVencimiento.value | rDate" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="montoFinanciado" placeholder="Monto Financiado" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="asesor" placeholder="Asesor" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="estadoOperacion" placeholder="Estado Operacion" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="tipoCredito" placeholder="Tipo Credito" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="tablaAmortizacion" placeholder="Tabla Amortizacion" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4" *ngIf="tipoCredito.value == 'Vencimiento'">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="plazo" placeholder="Plazo" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4" *ngIf="tipoCredito.value == 'Cuotas'">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="numeroCuotas" placeholder="Numero Cuotas" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="impago" placeholder="Es Impago" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="retanqueo" placeholder="Es Retanqueo" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="coberturaActual" placeholder="Cobertura Actual"
+                                [value]="coberturaActual.value | percent" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="coberturaInicial" placeholder="Cobertura Inicial"
+                                [value]="coberturaInicial.value | percent" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="esMigrado" placeholder="Es Migrado" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="saldoCapital" placeholder="Saldo Capital" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="diasMoraDiaHoy" placeholder="Dias Mora al Dia Hoy" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="fechaAudiencia" placeholder="Fecha Audiencia" />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row centrado mt-3" *ngIf="wrapper && wrapper.pagMed && wrapper.pagMed.cuotasAtrasadas">
+                    <div class="col-2">
+                        <h4>Cuotas Atrasadas</h4>
+                    </div>
+                </div>
+                <div class="row centrado" *ngIf="wrapper && wrapper.pagMed && wrapper.pagMed.cuotasAtrasadas">
+                    <div class="col-10">
+                        <mat-table #table class="mat-elevation-z8" [dataSource]="datosCuotas">
+                            <ng-container matColumnDef="numeroDividendo">
+                                <mat-header-cell *matHeaderCellDef>No Dividendo</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.numeroDividendo}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="valorAPagar">
+                                <mat-header-cell *matHeaderCellDef>Valor a Pagar</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.valorAPagar}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="valorPagado">
+                                <mat-header-cell *matHeaderCellDef>Valor Pagado</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.valorPagado}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="fechaFinDividendo">
+                                <mat-header-cell *matHeaderCellDef>Fecha Fin Dividendo</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.fechaFinDividendo}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="fechaUltimoPago">
+                                <mat-header-cell *matHeaderCellDef>Fecha Ultimo Pago</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.fechaUltimoPago}}</mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="['numeroDividendo','valorAPagar','valorPagado','fechaFinDividendo','fechaUltimoPago']"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: ['numeroDividendo','valorAPagar','valorPagado','fechaFinDividendo','fechaUltimoPago']"></mat-row>
+                        </mat-table>
+                    </div>
+                </div>
+                <div class="row centrado mt-3" *ngIf="wrapper && wrapper.credito && wrapper.credito.datosBloqueo">
+                    <div class="col-1">
+                        <h4>Bloqueos</h4>
+                    </div>
+                </div>
+                <div class="row centrado" *ngIf="wrapper && wrapper.credito && wrapper.credito.datosBloqueo">
+                    <div class="col-10">
+                        <mat-table #table class="mat-elevation-z8" [dataSource]="datosBloqueo">
+                            <ng-container matColumnDef="codigo">
+                                <mat-header-cell *matHeaderCellDef>Codigo</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.codigoMotivoBloqueo}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="descripcion">
+                                <mat-header-cell *matHeaderCellDef>Descripcion</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.descripcion}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="estransitorio">
+                                <mat-header-cell *matHeaderCellDef>Es transitorio</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.esTransitorio?"SI":"NO"}}</mat-cell>
+                            </ng-container>
+                            <mat-header-row
+                                *matHeaderRowDef="['codigo','descripcion','estransitorio']"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: ['codigo','descripcion','estransitorio']"></mat-row>
+                        </mat-table>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Variables crediticias">
+                <div class="row mt-2">
+                    <div class="col-md-8">
+                        <kt-tabla-variables-crediticias *ngIf="variablesInternas"
+                            [base]='variablesInternas'></kt-tabla-variables-crediticias>
+                        <div class="row" *ngIf="!variablesInternas">
+                            <strong> EL CLIENTE NO TIENE VARIABLES</strong>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Riesgo Acumulado">
+                <div class="row mt-2">
+                    <div class="col">
+                        <kt-tabla-riesgo-acumulado *ngIf="riesgos" [base]='riesgos'></kt-tabla-riesgo-acumulado>
+                        <div class="row" *ngIf="!riesgos">
+                            <strong> EL CLIENTE NO TIENE RIESGO</strong>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Garantias">
+                <kt-tabla-tasacion *ngIf="this.wrapper && this.wrapper.garantias;" [data]='this.wrapper.garantias'
+                    [tipo]="'G'"></kt-tabla-tasacion>
+            </mat-step>
+            <mat-step label="Resultado del Compromiso">
+                <div class="row centrado">
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <mat-select required placeholder="Tipo Compromiso de Pago"
+                                [formControl]="tipoCompromisoPago">
+                                <mat-option *ngFor="let element of catTipoCompromiso" [value]="element.nombre">
+                                    {{element.valor}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4" *ngIf="mostrarInputActa">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput [formControl]="fechaCompromisoActa" placeholder="Fecha Compromiso Pago (Acta)"/>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input [matDatepickerFilter]="onlyOdds" [min]="diasMin" [max]="diasMax" matInput
+                                #inputFechaCuota [matDatepicker]="pickerFechaComp" placeholder="Fecha Compromiso Pago"
+                                [formControl]="fechaCompromiso" />
+                            <mat-datepicker-toggle matSuffix [for]="pickerFechaComp"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerFechaComp></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-10">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <textarea class="form-control border" [formControl]="observacionSolicitud" rows="5"
+                                placeholder="Observacion de la solicitud" matInput></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-10" *ngIf="mostrarObsAprobador">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <textarea class="form-control border" [formControl]="observacionAprobador" rows="5"
+                                placeholder="Observacion de la aprobacion" matInput></textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="botones-acciones centrado">
+                    <!-- Botón de Solicitar Compromiso de Pago -->
+                    <button *ngIf="mostrarBotonSolicitar" mat-raised-button color="primary" (click)="solicitarCompromiso()">Solicitar Compromiso de Pago</button>
+                    <!-- Botones de Aprobar y Rechazar -->
+                    <ng-container *ngIf="mostrarBotonesGestion">
+                        <button mat-raised-button color="accent" (click)="resolucionCompromiso(true)">Aprobar</button>
+                        <button mat-raised-button color="warn" (click)="resolucionCompromiso(false)">Rechazar</button>
+                    </ng-container>
+                </div>
+            </mat-step>
+        </mat-vertical-stepper>
+    </re-portlet-body>
+    <re-portlet-footer></re-portlet-footer>
+</re-portlet>
