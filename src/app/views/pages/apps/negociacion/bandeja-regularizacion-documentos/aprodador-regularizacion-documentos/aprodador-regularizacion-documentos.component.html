@@ -10,7 +10,8 @@
     </re-portlet-header>
 
     <re-portlet-body>
-        <mat-vertical-stepper #stepper (animationDone)="guardarTraking(this.detalle ? this.detalle.proceso ? this.detalle.proceso.proceso : null : null,
+        <mat-vertical-stepper #stepper
+            (animationDone)="guardarTraking(this.detalle ? this.detalle.proceso ? this.detalle.proceso.proceso : null : null,
         this.detalle ? this.detalle.credito ? this.detalle.credito.codigo : null : null, 
         ['Información Del Cliente','Variables crediticias','Riesgo Acumulado','Tasacion','Opciones de Crédito','Observaciones','Habilitantes'], 
         stepper.selectedIndex, 'REGULARIZACION DOCUMENTOS',this.detalle ? this.detalle.credito ? this.detalle.credito.numeroOperacion : null : null )">
@@ -29,7 +30,8 @@
                     </div>
                     <div class="col-4">
                         <mat-form-field class="mat-form-field-fluid">
-                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento" [value]="fechaNacimiento.value | rDate" />
+                            <input matInput [formControl]="fechaNacimiento" placeholder="Fecha de nacimiento"
+                                [value]="fechaNacimiento.value | rDate" />
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -124,7 +126,8 @@
                             <ng-container matColumnDef="periodicidadPlazo">
                                 <mat-header-cell *matHeaderCellDef>Periodicidad Plazo</mat-header-cell>
                                 <mat-cell *matCellDef="let element">
-                                    {{ element.periodicidadPlazo ? element.periodicidadPlazo == 'M' ? 'Meses' : element.periodicidadPlazo : 'Error' }}
+                                    {{ element.periodicidadPlazo ? element.periodicidadPlazo == 'M' ? 'Meses' :
+                                    element.periodicidadPlazo : 'Error' }}
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="montoFinanciado">
@@ -241,7 +244,8 @@
                             </ng-container>
                             <ng-container matColumnDef="totalCostosOperacionAnterior">
                                 <mat-header-cell *matHeaderCellDef>Total Costos Operacion Anterior</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.totalCostosOperacionAnterior }}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.totalCostosOperacionAnterior
+                                    }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="custodiaDevengada">
                                 <mat-header-cell *matHeaderCellDef>Custodia Devengada</mat-header-cell>
@@ -254,12 +258,14 @@
                             <ng-container matColumnDef="tipooferta">
                                 <mat-header-cell *matHeaderCellDef>Tipo oferta</mat-header-cell>
                                 <mat-cell *matCellDef="let element">
-                                    {{ element.tipoOferta ? element.tipoOferta == 'N' ? 'Nuevo' : element.tipoOferta : 'Error' }}
+                                    {{ element.tipoOferta ? element.tipoOferta == 'N' ? 'Nuevo' : element.tipoOferta :
+                                    'Error' }}
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="abonoCapital">
                                 <mat-header-cell *matHeaderCellDef>Abono Capital</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{ element.abonoCapital | currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
+                                <mat-cell *matCellDef="let element"> {{ element.abonoCapital |
+                                    currency:'CAD':'symbol-narrow':'1.2-2'}}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="formaPagoAbonoCapital">
                                 <mat-header-cell *matHeaderCellDef>Forma de Abono Capital</mat-header-cell>
@@ -274,7 +280,8 @@
                                 <mat-cell *matCellDef="let element"> {{element.dividendoFlujoPlaneado }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="dividendosprorrateoserviciosdiferido">
-                                <mat-header-cell *matHeaderCellDef>Dividendos prorrateo servicios diferido</mat-header-cell>
+                                <mat-header-cell *matHeaderCellDef>Dividendos prorrateo servicios
+                                    diferido</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{ element.dividendoProrrateo }}</mat-cell>
                             </ng-container>
                             <mat-header-row *matHeaderRowDef="displayedColumnsCreditoNegociacion"></mat-header-row>
@@ -286,7 +293,7 @@
                     </div>
                 </div>
             </mat-step>
-            
+
             <mat-step label="Observaciones">
                 <mat-tab-group>
                     <mat-tab label="Historico Excepcion Operativa">
@@ -306,21 +313,50 @@
                 </mat-tab-group>
             </mat-step>
             <mat-step label="Habilitantes">
-                <app-habilitante-operacion 
-                [cedula]="cedula.value"
-                [detalle]="detalle"
-                [referencia]="referencia"
-                [operacionMadre]="operacionMadre">
-                    </app-habilitante-operacion>
-                <div class="row">
-                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'RENOVACION':false:false" (click)="varHabilitante.proceso='NOVACION';varHabilitante.referencia =referencia" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE' || varHabilitante.proceso=='AUTORIZACION'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'NUEVO':false:false" (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =referencia" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedula.value" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
-                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'RENOVACION':false:false" (click)="varHabilitante.proceso='AUTORIZACION';varHabilitante.referencia =operacionMadre" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='AUTORIZACION'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Autorizacion</button>
+                <kt-excepciones-operativas-list [idNegociacion]="referencia"></kt-excepciones-operativas-list>
+                <!-- Sección de Habilitantes de Operación -->
+                <div class="process-section">
+                    <h2 class="section-title" style="color: #3f51b5;">Documentos del Proceso de Crédito</h2>
+                    <div class="row">
+                        <button varHabilitante mat-raised-button *ngIf="detalle?.proceso?.proceso === 'RENOVACION'"
+                            (click)="varHabilitante.proceso='NOVACION'; varHabilitante.referencia = referencia"
+                            style="color: aliceblue;"
+                            [ngStyle]="{'background-color': varHabilitante.proceso === 'CLIENTE' || varHabilitante.proceso === 'AUTORIZACION' ? '#3f51b5' : '#ff4081'}">
+                            Habilitante Operación
+                        </button>
+                        <button varHabilitante mat-raised-button *ngIf="detalle?.proceso?.proceso === 'NUEVO'"
+                            (click)="varHabilitante.proceso='NUEVO,FUNDA'; varHabilitante.referencia = referencia"
+                            style="color: aliceblue;"
+                            [ngStyle]="{'background-color': varHabilitante.proceso === 'CLIENTE' ? '#3f51b5' : '#ff4081'}">
+                            Habilitante Operación
+                        </button>
+                        <button varHabilitante mat-raised-button
+                            (click)="varHabilitante.proceso='CLIENTE'; varHabilitante.referencia = cedula.value"
+                            style="color: aliceblue;"
+                            [ngStyle]="{'background-color': varHabilitante.proceso === 'CLIENTE' ? '#ff4081' : '#3f51b5'}">
+                            Habilitante Cliente
+                        </button>
+                        <button varHabilitante mat-raised-button *ngIf="detalle?.proceso?.proceso === 'RENOVACION'"
+                            (click)="varHabilitante.proceso='AUTORIZACION'; varHabilitante.referencia = operacionMadre"
+                            style="color: aliceblue;"
+                            [ngStyle]="{'background-color': varHabilitante.proceso === 'AUTORIZACION' ? '#ff4081' : '#3f51b5'}">
+                            Autorización
+                        </button>
+                    </div>
+                    <re-habilitante [proceso]="varHabilitante.proceso" [estadoOperacion]="'DETALLE'" [useType]="'FORM'"
+                        [referencia]="varHabilitante.referencia">
+                    </re-habilitante>
                 </div>
-                <re-habilitante [proceso]="varHabilitante.proceso"  [estadoOperacion]="'REGULARIZACION_DOCUMENTOS'" [useType]="'FORM'" [referencia]="varHabilitante.referencia" >
-                </re-habilitante>
-                
+
+                <!-- Sección de Regularización -->
+                <div class="process-section">
+                    <h2 class="section-title" style="color: #ff4081;">Documentos del Proceso de Regularización</h2>
+                    <re-habilitante [proceso]="varHabilitante.proceso" [estadoOperacion]="'REGULARIZACION_DOCUMENTOS'"
+                        [useType]="'FORM'" [referencia]="varHabilitante.referencia">
+                    </re-habilitante>
+
+                </div>
+
                 <div class="row mt-3">
                     <div class="offset-md-2 col-md-2">
                         <button mat-raised-button color="primary" (click)="enviarRespuesta('APROBADO')">

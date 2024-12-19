@@ -286,14 +286,49 @@
                 </div>
             </mat-step>
             <mat-step label="Habilitantes">
-                <div class="row">
-                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'RENOVACION':false:false" (click)="varHabilitante.proceso='NOVACION';varHabilitante.referencia =referencia" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE' || varHabilitante.proceso=='AUTORIZACION'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'NUEVO':false:false" (click)="varHabilitante.proceso='NUEVO,FUNDA';varHabilitante.referencia =referencia" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#3f51b5'}:{'background-color':'#ff4081'}">Habilitante Operacion</button>
-                    <button varHabilitante mat-raised-button (click)="varHabilitante.proceso='CLIENTE';varHabilitante.referencia =cedula.value" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='CLIENTE'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Habilitante Cliente</button>
-                    <button varHabilitante mat-raised-button *ngIf="detalle?detalle.proceso?detalle.proceso.proceso == 'RENOVACION':false:false" (click)="varHabilitante.proceso='AUTORIZACION';varHabilitante.referencia =operacionMadre" style="color: aliceblue;" [ngStyle]="varHabilitante.proceso=='AUTORIZACION'?{'background-color':'#ff4081'}:{'background-color':'#3f51b5'}">Autorizacion</button>
+                <kt-excepciones-operativas-list [idNegociacion]="referencia"></kt-excepciones-operativas-list>
+                <!-- Sección de Habilitantes de Operación -->
+                <div class="process-section">
+                    <h2 class="section-title" style="color: #3f51b5;">Documentos del Proceso de Crédito</h2>
+                    <div class="row">
+                        <button varHabilitante mat-raised-button *ngIf="detalle?.proceso?.proceso === 'RENOVACION'"
+                            (click)="varHabilitante.proceso='NOVACION'; varHabilitante.referencia = referencia"
+                            style="color: aliceblue;"
+                            [ngStyle]="{'background-color': varHabilitante.proceso === 'CLIENTE' || varHabilitante.proceso === 'AUTORIZACION' ? '#3f51b5' : '#ff4081'}">
+                            Habilitante Operación
+                        </button>
+                        <button varHabilitante mat-raised-button *ngIf="detalle?.proceso?.proceso === 'NUEVO'"
+                            (click)="varHabilitante.proceso='NUEVO,FUNDA'; varHabilitante.referencia = referencia"
+                            style="color: aliceblue;"
+                            [ngStyle]="{'background-color': varHabilitante.proceso === 'CLIENTE' ? '#3f51b5' : '#ff4081'}">
+                            Habilitante Operación
+                        </button>
+                        <button varHabilitante mat-raised-button
+                            (click)="varHabilitante.proceso='CLIENTE'; varHabilitante.referencia = cedula.value"
+                            style="color: aliceblue;"
+                            [ngStyle]="{'background-color': varHabilitante.proceso === 'CLIENTE' ? '#ff4081' : '#3f51b5'}">
+                            Habilitante Cliente
+                        </button>
+                        <button varHabilitante mat-raised-button *ngIf="detalle?.proceso?.proceso === 'RENOVACION'"
+                            (click)="varHabilitante.proceso='AUTORIZACION'; varHabilitante.referencia = operacionMadre"
+                            style="color: aliceblue;"
+                            [ngStyle]="{'background-color': varHabilitante.proceso === 'AUTORIZACION' ? '#ff4081' : '#3f51b5'}">
+                            Autorización
+                        </button>
+                    </div>
+                    <re-habilitante [proceso]="varHabilitante.proceso" [estadoOperacion]="'DETALLE'" [useType]="'FORM'"
+                        [referencia]="varHabilitante.referencia">
+                    </re-habilitante>
                 </div>
-                <re-habilitante [proceso]="varHabilitante.proceso"  [estadoOperacion]="'REGULARIZACION_DOCUMENTOS'" [useType]="'FORM'" [referencia]="varHabilitante.referencia" >
-                </re-habilitante>
+
+                <!-- Sección de Regularización -->
+                <div class="process-section">
+                    <h2 class="section-title" style="color: #ff4081;">Documentos del Proceso de Regularización</h2>
+                    <re-habilitante [proceso]="varHabilitante.proceso" [estadoOperacion]="'REGULARIZACION_DOCUMENTOS'"
+                        [useType]="'FORM'" [referencia]="varHabilitante.referencia">
+                    </re-habilitante>
+
+                </div>
                 <div class="row">
                     <div class="col-md-5 offset-md-5">
                         <button mat-raised-button color="accent" (click)="solicitarAprobacion()">Solicitar Aprobacion</button>

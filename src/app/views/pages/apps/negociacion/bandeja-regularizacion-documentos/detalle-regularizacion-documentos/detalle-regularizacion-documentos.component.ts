@@ -199,7 +199,7 @@ export class DetalleRegularizacionDocumentosComponent extends TrackingUtil imple
         regularizacion.usuarioAprobador = localStorage.getItem('reUser');
 
         this.regularizacionDocumentosService.solicitarAprobacion(regularizacion).subscribe(p=>{
-          
+          this.router.navigate(['negociacion/bandeja-operaciones']);    
         })
       }
     })

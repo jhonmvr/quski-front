@@ -112,10 +112,10 @@ export class ComprobantePagoComponent implements OnInit {
       this.sinNotSer.setNotice("SELECCIONA UNA OPCION", 'warning');
       return;
     }
-    if (this.formData.valor === 0) {
+    /* if (this.formData.valor === 0) {
       this.sinNotSer.setNotice("EL VALOR DEBE SER MAYOR A CERO", 'warning');
       return;
-    }
+    } */
     if (this.formData.observacion === '') {
       this.sinNotSer.setNotice("COMPLETE LA OBSERVACION", 'warning');
       return;

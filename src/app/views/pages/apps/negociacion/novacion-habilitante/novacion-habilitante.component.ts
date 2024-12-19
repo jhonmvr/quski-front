@@ -141,11 +141,12 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
       if (json.params.idNegociacion) {
 
         this.item = json.params.idNegociacion;
-        await this.excepcionOperativaService.findByNegociacion(json.params.id).subscribe(e=>{
+        await this.excepcionOperativaService.findByNegociacion(this.item).subscribe(e=>{
           this.valorDescuentoServicios.setValue(0)
           if(e.entidades == null){
             return;
           }
+          console.log("excepciones", e)
           const listExs = e.entidades
           const montosInvolucrados = listExs
               .filter(entidad => entidad.estadoExcepcion === "APROBADO" && entidad.nivelAprobacion > 1)
@@ -287,12 +288,22 @@ export class NovacionHabilitanteComponent extends TrackingUtil implements OnInit
     let exs =  null
     let mensaje = "Solicitar la aprobacion del credito: " + this.credit.credito.codigo;
 
-    if(this.excepcionOperativa.value && this.excepcionOperativa.value.valor != 'SIN EXCEPCION'){
+    
+      
+      const excepcionOperativaArray = this.excepcionOperativa.value; // Obtenemos el array
+      let tipoExcepcion = "";
+      if (Array.isArray(excepcionOperativaArray)) { // Verificamos que sea un array
+        tipoExcepcion = excepcionOperativaArray.map(item => item.nombre).join(', ');
+          console.log("Nombres concatenados:", tipoExcepcion);
+      } else {
+          console.log("excepcionOperativa.value no es un array válido:", tipoExcepcion);
+      }
+    if(tipoExcepcion != 'SIN_EXCEPCION'){
       mensaje = "Solicitar regularización de documentos antes de solicitar la aprobación del credito: " + this.credit.credito.codigo;
       exs = {
         idNegociacion: this.credit.credito.tbQoNegociacion,
         codigoOperacion: this.credit.credito.codigo,
-        tipoExcepcion: "REGULARIZACION_DOCUMENTOS",
+        tipoExcepcion: tipoExcepcion,
         estadoExcepcion: "PENDIENTE",
         montoInvolucrado: 0,
         usuarioSolicitante: localStorage.getItem("reUser"),

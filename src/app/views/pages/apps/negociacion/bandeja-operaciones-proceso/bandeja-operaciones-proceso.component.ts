@@ -327,6 +327,11 @@ export class BandejaOperacionesProcesoComponent implements OnInit {
       }
     }
   }
+  public verRegularizacion(row: OperacionesProcesoWrapper ){
+    if(row.id != null){
+      this.router.navigate(['negociacion/regularizacion-documentos/list/detalle/',row.id]);    
+    }
+  }
   public reasignar(row: OperacionesProcesoWrapper ){
     const dialogRefGuardar = this.dialog.open(ReasignarUsuarioComponent, {
       width: '500px',

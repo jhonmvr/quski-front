@@ -213,7 +213,7 @@ export class AprodadorRegularizacionDocumentosComponent extends TrackingUtil imp
         regularizacion.estadoRegularizacion = respuesta;
 
         this.regularizacionDocumentosService.enviarRespuesta(regularizacion).subscribe(p=>{
-          
+          this.router.navigate(['negociacion/regularizacion-documentos/list']);    
         })
       }
     })

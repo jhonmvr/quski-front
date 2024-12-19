@@ -1,7 +1,7 @@
 <div class="row">
   <!-- Botón para Renovación -->
   <button mat-raised-button
-          *ngIf="detalle?.proceso?.proceso === 'RENOVACION'"
+          *ngIf="detalle === 'RENOVACION'"
           (click)="setProceso('NOVACION', referencia)"
           style="color: aliceblue;"
           [ngStyle]="varHabilitante.proceso === 'CLIENTE' || varHabilitante.proceso === 'AUTORIZACION' ? 
@@ -12,7 +12,7 @@
 
   <!-- Botón para Nuevo -->
   <button mat-raised-button
-          *ngIf="detalle?.proceso?.proceso === 'NUEVO'"
+          *ngIf="detalle === 'NUEVO'"
           (click)="setProceso('NUEVO,FUNDA', referencia)"
           style="color: aliceblue;"
           [ngStyle]="varHabilitante.proceso === 'CLIENTE' ? 
@@ -33,7 +33,7 @@
 
   <!-- Botón para Autorización -->
   <button mat-raised-button
-          *ngIf="detalle?.proceso?.proceso === 'RENOVACION'"
+          
           (click)="setProceso('AUTORIZACION', operacionMadre)"
           style="color: aliceblue;"
           [ngStyle]="varHabilitante.proceso === 'AUTORIZACION' ? 
@@ -45,6 +45,5 @@
 
 <re-habilitante [proceso]="varHabilitante.proceso"
                 [estadoOperacion]="estado || 'DETALLE'"
-                [useType]="'FORM'"
                 [referencia]="varHabilitante.referencia">
 </re-habilitante>

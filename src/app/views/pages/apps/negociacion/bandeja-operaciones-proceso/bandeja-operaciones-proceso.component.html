@@ -141,32 +141,42 @@
                     <ng-container matColumnDef="Accion">
                         <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
                         <mat-cell *matCellDef="let row">
-                            <ng-container>
-                                <a (click)="verTraking(row)">
-                                    <mat-icon matTooltip="Ver traking">timeline</mat-icon>
-                                </a>
-                            </ng-container>
-                            <ng-container *ngIf="(row.estadoProceso == 'EXCEPCIONADO OPERATIVA' || row.estadoProceso == 'CREADO' || row.estadoProceso == 'EXCEPCIONADO' || row.estadoProceso == 'DEVUELTO'  || row.estadoProceso == 'ARRIBADO'  ) && row.asesor == usuario">
-                                <a (click)="verOperacion(row)">
-                                    <mat-icon matTooltip="Ver Operacion">edit</mat-icon>
-                                </a>
-                            </ng-container>
-                            <ng-container *ngIf="row.proceso != 'CANCELACION DEVOLUCION'">
-                                <a (click)="verDetalle(row)">
-                                    <mat-icon matTooltip="Ver Detalle" class="blue-icon">remove_red_eye</mat-icon>
-                                </a>
-                            </ng-container>
-                            <ng-container *ngIf="validarReasignacion(row)">
-                                <a (click)="reasignar(row)">
-                                    <mat-icon matTooltip="Reasignar Asesor">account_circle</mat-icon>
-                                </a>
-                            </ng-container>
-                            <ng-container *ngIf="row.proceso == 'DEVOLUCION' && row.estadoProceso != 'APROBADO' && row.estadoProceso != 'RECHAZADO' && row.estadoProceso != 'CANCELADO' && row.asesor == usuario">
-                                <a (click)="cancelarDevolucion(row)" matTooltip="Cancelar Entrega de garantias" style="font-size: 12px; vertical-align: middle;">
-                                    <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">
-                                        highlight_off</mat-icon>
-                                </a>
-                            </ng-container>
+                            <div *ngIf="row.proceso == 'REGULARIZACION DOCUMENTOS'">
+                                <ng-container *ngIf="(( row.estadoProceso == 'PENDIENTE' ) && row.asesor == usuario)">
+                                    <a (click)="verRegularizacion(row)">
+                                        <mat-icon matTooltip="Ver Operacion">edit</mat-icon>
+                                    </a>
+                                </ng-container>
+                            </div>
+                            <div *ngIf="row.proceso != 'REGULARIZACION DOCUMENTOS'">
+                                <ng-container >
+                                    <a (click)="verTraking(row)">
+                                        <mat-icon matTooltip="Ver traking">timeline</mat-icon>
+                                    </a>
+                                </ng-container>
+                                <ng-container *ngIf="(( row.estadoProceso == 'EXCEPCIONADO OPERATIVA' || row.estadoProceso == 'CREADO' || row.estadoProceso == 'EXCEPCIONADO' || row.estadoProceso == 'DEVUELTO'  || row.estadoProceso == 'ARRIBADO'  ) && row.asesor == usuario)">
+                                    <a (click)="verOperacion(row)">
+                                        <mat-icon matTooltip="Ver Operacion">edit</mat-icon>
+                                    </a>
+                                </ng-container>
+                                <ng-container *ngIf="row.proceso != 'CANCELACION DEVOLUCION'">
+                                    <a (click)="verDetalle(row)">
+                                        <mat-icon matTooltip="Ver Detalle" class="blue-icon">remove_red_eye</mat-icon>
+                                    </a>
+                                </ng-container>
+                                <ng-container *ngIf=" validarReasignacion(row)">
+                                    <a (click)="reasignar(row)">
+                                        <mat-icon matTooltip="Reasignar Asesor">account_circle</mat-icon>
+                                    </a>
+                                </ng-container>
+                                <ng-container *ngIf="(row.proceso == 'DEVOLUCION' && row.estadoProceso != 'APROBADO' && row.estadoProceso != 'RECHAZADO' && row.estadoProceso != 'CANCELADO' && row.asesor == usuario)">
+                                    <a (click)="cancelarDevolucion(row)" matTooltip="Cancelar Entrega de garantias" style="font-size: 12px; vertical-align: middle;">
+                                        <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="orange-icon">
+                                            highlight_off</mat-icon>
+                                    </a>
+                                </ng-container>
+                            </div>
+                            
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="codigoBpm">
