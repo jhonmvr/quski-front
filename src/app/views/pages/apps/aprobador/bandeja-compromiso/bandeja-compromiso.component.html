@@ -28,7 +28,10 @@
                     </div>
                 </div>
             </form>
-            <mat-table class="mat-elevation-z8" [dataSource]="dataSource">
+            <div class="row" style="align-self: flex-end">
+                <button mat-raised-button (click)="exporter.exportTable('xlsx', {fileName:'proceso', sheet: 'sheet_name', Props: {Author: 'Talha'}})">Exportar</button>
+            </div>
+            <mat-table  matTableExporter #table class="mat-elevation-z8" [dataSource]="dataSource" #exporter="matTableExporter">
                 <ng-container matColumnDef="accion">
                     <mat-header-cell *matHeaderCellDef>Accion</mat-header-cell>
                     <mat-cell *matCellDef="let element">

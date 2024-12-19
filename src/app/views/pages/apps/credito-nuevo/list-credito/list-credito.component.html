@@ -198,11 +198,11 @@
                                 <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="blue-icon">
                                     remove_red_eye</mat-icon>
                             </a>
-                            <a  (click)="irCompromisoPago(row, true)" matTooltip="Crear Compromiso Pago" style="vertical-align: middle;">
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="pink-icon">pan_tool</mat-icon>
+                            <a *ngIf="row.bloqueo == 'ASIGMEDIACION' || row.bloqueo == 'PROMEDIACION'" (click)="irCompromisoPago(row, true)" matTooltip="Crear Compromiso Pago" style="vertical-align: middle;">
+                                <mat-icon style="font-size: 24px; color: green;" matTooltipPosition="above" class="pink-icon">pan_tool</mat-icon>
                             </a>
-                            <a  (click)="irCompromisoPago(row, false)" matTooltip="Actualizar Compromiso Pago" style="vertical-align: middle;">
-                                <mat-icon style="font-size: 24px;" matTooltipPosition="above" class="pink-icon">pan_tool</mat-icon>
+                            <a *ngIf="row.bloqueo == 'COMPMEDIACION'" (click)="irCompromisoPago(row, false)" matTooltip="Actualizar Compromiso Pago" style="vertical-align: middle;">
+                                <mat-icon style="font-size: 24px; color: red;" matTooltipPosition="above" class="pink-icon">pan_tool</mat-icon>
                             </a>
                             <!--*ngIf="row.bloqueo == 'ASIGMEDIACION' || row.bloqueo == 'PROMEDIACION'" -->
                             <!--*ngIf="row.bloqueo == 'COMPMEDIACION'" -->
