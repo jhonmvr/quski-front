@@ -436,9 +436,9 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
   private validarProceso(compromiso: TbQoCompromisoPago, actividad: string): void {
     switch (actividad) {
       case 'SOLICITUD COMPROMISO PAGO':
-        if (this.usuario != compromiso.usuarioSolicitud) {
+        /* if (this.usuario != compromiso.usuarioSolicitud) {
           this.salirDeGestion('El proceso de compromiso de pago ya fue iniciado por ' + compromiso.usuarioSolicitud, 'Proceso Invalido');
-        }
+        } */
         if (['PENDIENTE_COMPROMISO', 'APROBADO', 'RECHAZADO'].includes(compromiso.estadoCompromiso)) {
           this.formCompromiso.disable();
         } else if (compromiso.estadoCompromiso === 'CREADO') {
@@ -465,9 +465,9 @@ export class AprobacionCompromisoPagoComponent extends TrackingUtil implements O
         break;
       case 'SOLICITUD CAMBIO COMPROMISO':
         this.mostrarInputActa = true;
-        if (this.usuario != compromiso.usuarioSolicitud) {
+        /* if (this.usuario != compromiso.usuarioSolicitud) {
           this.salirDeGestion('El proceso de compromiso de pago ya fue iniciado por ' + compromiso.usuarioSolicitud, 'Proceso Invalido');
-        }
+        } */
         if (['PENDIENTE_COMPROMISO', 'APROBADO', 'RECHAZADO'].includes(compromiso.estadoCompromiso)) {
           this.formCompromiso.disable();
         } else if (compromiso.estadoCompromiso === 'CREADO') {
