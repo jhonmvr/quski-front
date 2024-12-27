@@ -7,7 +7,7 @@
     "start": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng serve --host 0.0.0.0 --port 4200 --baseHref /quski-front --serve-path /quski-front",
     "start-pre": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng serve --configuration=staging --host 0.0.0.0 --port 4200 --baseHref /quski-front --serve-path /quski-front",
     "start-prod": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng serve --configuration=production --host 0.0.0.0 --port 4200 --baseHref /quski-front --serve-path /quski-front",
-    "build": "node -max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --output-path=C:/relative/fuentesproyectos/GITPROJECTS/WsQuski/gitlab/quski-oro-web-wf/src/main/webapp --base-href=/quski-front --deploy-url=/quski-front/",
+    "build": "node -max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --output-path=C:/WORKSPACE/QUSKI/QUSKI-ORO/quski-oro-web/src/main/webapp --base-href=/quski-front --deploy-url=/quski-front/",
     "build-nginx": "node -max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --output-path=./dist --base-href=/quski-front --deploy-url=/quski-front/",
     "test": "ng test",
     "build-pre": "node -max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --configuration=staging --output-path=C:/WORKSPACE/QUSKI/QUSKI-ORO/quski-oro-web/src/main/webapp --base-href=/quski-front --deploy-url=/quski-front/",
